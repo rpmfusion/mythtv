@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r17859
+%define _svnver r18161
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 7%{?dist}
+Release: 8%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -114,7 +114,7 @@ BuildRequires: libdvdread-devel >= 0.9.4, nasm
 BuildRequires: mjpegtools-devel >= 1.6.1, xvidcore-devel >= 0.9.1
 BuildRequires: libfame-devel >= 0.9.0
 BuildRequires: transcode >= 0.6.8
-BuildRequires: libdvdcss-devel >= 1.2.7
+#BuildRequires: libdvdcss-devel >= 1.2.7
 # mythbrowser
 BuildRequires: kdelibs3-devel
 # mythphone
@@ -1003,6 +1003,11 @@ fi
 %endif
 
 %changelog
+* Fri Aug 15 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-8
+- Don't BR: libdvdcss-devel
+- Update release-0-21-fixes patches (r18161)
+- Rebuild for libraw1394 v2.0.0
+
 * Sun Aug 03 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 0.21-7
 - rebuild
 
