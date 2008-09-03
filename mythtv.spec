@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 8%{?dist}
+Release: 9%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -50,14 +50,19 @@ Patch200: mythplugins-0.21-svnfixes.patch
 #
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel >= 2
-BuildRequires: qt3-devel, mysql-devel >= 5
+%if 0%{?fedora} >= 9
+BuildRequires: qt3-devel
+%else
+BuildRequires: qt-devel >= 3, qt-devel < 4
+%endif
+BuildRequires: mysql-devel >= 5
 # Audio framework support
 BuildRequires: alsa-lib-devel, arts-devel
 BuildRequires: jack-audio-connection-kit-devel
 # Need dvb headers to build in dvb support
 BuildRequires: kernel-headers
-# Remote control support
-BuildRequires: lirc-devel
+# Remote control support (BR: on lirc-lib works around some mock funkiness on f8)
+BuildRequires: lirc-devel, lirc-lib
 # X, Xv, and XvMC video support
 BuildRequires: libXxf86vm-devel, libXmu-devel
 BuildRequires: libXvMC-devel, libXv-devel
@@ -176,8 +181,12 @@ and miscellaneous other bits and pieces.
 %package -n libmyth
 Summary: Library providing mythtv support
 Group: System Environment/Libraries
-Requires: lame, qt3
-Requires: qt3-MySQL
+Requires: lame
+%if 0%{?fedora} >= 9
+Requires: qt3, qt3-MySQL
+%else
+Requires: qt, qt-MySQL
+%endif
 
 %description -n libmyth
 Common library code for MythTV and add-on modules (development)
@@ -188,7 +197,12 @@ television programs.  Refer to the mythtv package for more information.
 Summary: Development files for libmyth
 Group: Development/Libraries
 Requires: libmyth = %{version}-%{release}
-Requires: freetype-devel >= 2, lame-devel, qt3-devel,
+Requires: freetype-devel >= 2, lame-devel
+%if 0%{?fedora} >= 9
+Requires: qt3-devel
+%else
+Requires: qt-devel
+%endif
 Requires: mysql-devel
 Requires: alsa-lib-devel, arts-devel
 Requires: libGL-devel, libGLU-devel
@@ -1003,6 +1017,11 @@ fi
 %endif
 
 %changelog
+* Wed Sep 03 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-9
+- Conditionalize some qt/qt3 stuff so spec builds on
+  all currently supported Fedora releases
+- Add work-around for lirc-lib mock quirk on f8 builds
+
 * Fri Aug 15 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-8
 - Don't BR: libdvdcss-devel
 - Update release-0-21-fixes patches (r18161)
