@@ -61,8 +61,8 @@ BuildRequires: alsa-lib-devel, arts-devel
 BuildRequires: jack-audio-connection-kit-devel
 # Need dvb headers to build in dvb support
 BuildRequires: kernel-headers
-# Remote control support (BR: on lirc-lib works around some mock funkiness on f8)
-BuildRequires: lirc-devel, lirc-lib
+# Remote control support (BR: on lirc-libs works around some mock funkiness on f8)
+BuildRequires: lirc-devel, lirc-libs
 # X, Xv, and XvMC video support
 BuildRequires: libXxf86vm-devel, libXmu-devel
 BuildRequires: libXvMC-devel, libXv-devel
@@ -1020,7 +1020,7 @@ fi
 * Wed Sep 03 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-9
 - Conditionalize some qt/qt3 stuff so spec builds on
   all currently supported Fedora releases
-- Add work-around for lirc-lib mock quirk on f8 builds
+- Add work-around for lirc-libs mock quirk on f8 builds
 
 * Fri Aug 15 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-8
 - Don't BR: libdvdcss-devel
