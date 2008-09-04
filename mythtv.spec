@@ -53,7 +53,7 @@ BuildRequires: freetype-devel >= 2
 %if 0%{?fedora} >= 9
 BuildRequires: qt3-devel
 %else
-BuildRequires: qt-devel >= 3, qt-devel < 4
+BuildRequires: qt-devel >= 3
 %endif
 BuildRequires: mysql-devel >= 5
 # Audio framework support
