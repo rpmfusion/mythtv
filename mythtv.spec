@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 9%{?dist}
+Release: 10%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1017,6 +1017,9 @@ fi
 %endif
 
 %changelog
+* Wed Sep 10 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-10
+- Bump and rebuild for newer x264
+
 * Wed Sep 03 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-9
 - Conditionalize some qt/qt3 stuff so spec builds on
   all currently supported Fedora releases
