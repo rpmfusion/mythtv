@@ -89,15 +89,15 @@ BuildRequires: perl(DBD::mysql), perl(Date::Manip), perl(HTTP::Request)
 BuildRequires: perl(LWP::UserAgent)
 BuildRequires: python-devel
 # Misc A/V format support
-BuildRequires: lame-devel
+#BuildRequires: lame-devel
 BuildRequires: libogg-devel, libvorbis-devel, libtheora-devel
 BuildRequires: faad2-devel
-BuildRequires: faac-devel
-BuildRequires: x264-devel
-BuildRequires: xvidcore-devel
-BuildRequires: a52dec-devel
-BuildRequires: libdca-devel
-BuildRequires: gsm-devel
+#BuildRequires: faac-devel
+#BuildRequires: x264-devel
+#BuildRequires: xvidcore-devel
+#BuildRequires: a52dec-devel
+#BuildRequires: libdca-devel
+#BuildRequires: gsm-devel
 # mythmusic
 BuildRequires: libmad-devel, taglib-devel >= 1.4
 BuildRequires: libvorbis-devel >= 1.0, flac-devel >= 1.0.4
@@ -606,10 +606,7 @@ cd mythtv-%{version}
 %else
   --disable-directfb \
 %endif
-  --enable-liba52 --enable-libmp3lame \
-  --enable-libfaac --enable-libfaad \
-  --enable-libtheora --enable-libvorbis \
-  --enable-libx264 --enable-libxvid \
+  --enable-libfaad --enable-libtheora \
   --with-bindings="perl, python"
 
 echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
@@ -1017,8 +1014,9 @@ fi
 %endif
 
 %changelog
-* Wed Sep 10 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-10
-- Bump and rebuild for newer x264
+* Wed Sep 17 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-10
+- Nuke a bunch of configure flags that really shouldn't be
+  enabled anymore, per discussion with mythtv devs.
 
 * Wed Sep 03 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-9
 - Conditionalize some qt/qt3 stuff so spec builds on
