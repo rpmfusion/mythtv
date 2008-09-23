@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 10%{?dist}
+Release: 11%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -47,6 +47,7 @@ Patch101: mythtv-0.20-mythstreammenu.diff
 #Patch102: mythtv-0.21-fedora-settings.patch
 Patch200: mythplugins-0.21-svnfixes.patch
 #Patch201: mythplugins-0.21-fedora-settings.patch
+Patch202: mythmusic-busted-cdparanoia-workaround.patch
 #
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel >= 2
@@ -527,6 +528,7 @@ temp=`pwd`/temp
 cd mythplugins-%{version}
 %patch200 -p1 -b .svnfixes
 #patch201 -p1 -b .settings
+%patch202 -p1
 
 mv mytharchive/mythburn/themes/Simple\ -\ Autoplay \
    mytharchive/mythburn/themes/Simple_-_Autoplay
@@ -1014,6 +1016,9 @@ fi
 %endif
 
 %changelog
+* Tue Sep 23 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-11
+- Work-around for broken cdparanoia header (rhbz#463009)
+
 * Wed Sep 17 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-10
 - Nuke a bunch of configure flags that really shouldn't be
   enabled anymore, per discussion with mythtv devs.
