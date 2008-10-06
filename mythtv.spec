@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r18161
+%define _svnver r18567
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 11%{?dist}
+Release: 12%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1016,6 +1016,9 @@ fi
 %endif
 
 %changelog
+* Mon Oct 06 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-12
+- Update release-0-21-fixes patches (r18567)
+
 * Tue Sep 23 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-11
 - Work-around for broken cdparanoia header (rhbz#463009)
 
