@@ -919,6 +919,7 @@ fi
 %exclude %{_datadir}/mythtv/games/xmame
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
+%exclude %{_datadir}/mame/screens
 
 #files -n mythgame-emulators
 #defattr(-,root,root,-)
