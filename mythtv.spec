@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r18161
+%define _svnver r18567
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 9%{?dist}
+Release: 13%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -45,6 +45,7 @@ Source401: mythweb.conf
 Patch100: mythtv-0.21-svnfixes.patch
 Patch101: mythtv-0.20-mythstreammenu.diff
 #Patch102: mythtv-0.21-fedora-settings.patch
+Patch103: mythtv-0.21-enable-64bit-fast_cmov.patch
 Patch200: mythplugins-0.21-svnfixes.patch
 #Patch201: mythplugins-0.21-fedora-settings.patch
 #
@@ -89,15 +90,15 @@ BuildRequires: perl(DBD::mysql), perl(Date::Manip), perl(HTTP::Request)
 BuildRequires: perl(LWP::UserAgent)
 BuildRequires: python-devel
 # Misc A/V format support
-BuildRequires: lame-devel
+#BuildRequires: lame-devel
 BuildRequires: libogg-devel, libvorbis-devel, libtheora-devel
 BuildRequires: faad2-devel
-BuildRequires: faac-devel
-BuildRequires: x264-devel
-BuildRequires: xvidcore-devel
-BuildRequires: a52dec-devel
-BuildRequires: libdca-devel
-BuildRequires: gsm-devel
+#BuildRequires: faac-devel
+#BuildRequires: x264-devel
+#BuildRequires: xvidcore-devel
+#BuildRequires: a52dec-devel
+#BuildRequires: libdca-devel
+#BuildRequires: gsm-devel
 # mythmusic
 BuildRequires: libmad-devel, taglib-devel >= 1.4
 BuildRequires: libvorbis-devel >= 1.0, flac-devel >= 1.0.4
@@ -369,21 +370,21 @@ Requires: mythtv-frontend-api = %{mythfeapiver}
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
 
-%package -n mythgame-emulators
-Summary: Meta-package requiring emulators for game types mythgame knows about
-Group: Applications/Multimedia
-Requires: mythgame = %{version}-%{release}
+#package -n mythgame-emulators
+#Summary: Meta-package requiring emulators for game types mythgame knows about
+#Group: Applications/Multimedia
+#Requires: mythgame = %{version}-%{release}
 # Multi Arcade Machine Emulator, Amiga, Atari 2600
-Requires: sdlmame, e-uae, stella
+#Requires: sdlmame, e-uae, stella
 # Nintendo, Super Nintendo, Nintendo 64
-Requires: fceultra, zsnes, mupen64, mupen64-ricevideo
+#Requires: fceultra, zsnes, mupen64, mupen64-ricevideo
 # Sega Genesis, Sega Master System, Game Gear
-Requires: gens, dega-sdl, osmose
+#Requires: gens, dega-sdl, osmose
 # TurboGraphx 16 (and others)
-Requires: mednafen
+#Requires: mednafen
 
-%description -n mythgame-emulators
-Meta-package requiring emulators for game types mythgame knows about.
+#description -n mythgame-emulators
+#Meta-package requiring emulators for game types mythgame knows about.
 
 %package -n mythnews
 Summary: An RSS news feed plugin for MythTV
@@ -492,6 +493,7 @@ cd mythtv-%{version}
 %patch100 -p1 -b .svnfixes
 #patch101 -p0 -b .mythstreammenu
 #patch102 -p1 -b .settings
+%patch103 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
 find contrib/ -type f -exec chmod -x "{}" \;
@@ -591,7 +593,7 @@ cd mythtv-%{version}
   --enable-audio-jack \
   --enable-xvmc --enable-xvmcw \
 %if %with_xvmcnvidia
-  --xvmc-lib=XvMCNVIDIA_dynamic --enable-xvmc-opengl \
+  --xvmc-lib=XvMCNVIDIA --enable-xvmc-opengl \
 %else
 %ifarch %{ix86} x86_64
   --enable-xvmc-vld --enable-xvmc-pro \
@@ -606,10 +608,7 @@ cd mythtv-%{version}
 %else
   --disable-directfb \
 %endif
-  --enable-liba52 --enable-libmp3lame \
-  --enable-libfaac --enable-libfaad \
-  --enable-libtheora --enable-libvorbis \
-  --enable-libx264 --enable-libxvid \
+  --enable-libfaad --enable-libtheora \
   --with-bindings="perl, python"
 
 echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
@@ -918,12 +917,13 @@ fi
 %exclude %{_datadir}/mythtv/games/xmame
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
+%exclude %{_datadir}/mame/screens
 
-%files -n mythgame-emulators
-%defattr(-,root,root,-)
-%{_datadir}/mythtv/games/xmame
-%{_datadir}/mame/screens
-%{_datadir}/mame/flyers
+#files -n mythgame-emulators
+#defattr(-,root,root,-)
+#{_datadir}/mythtv/games/xmame
+#{_datadir}/mame/screens
+#{_datadir}/mame/flyers
 
 %files -n mythnews
 %defattr(-,root,root,-)
@@ -1017,6 +1017,21 @@ fi
 %endif
 
 %changelog
+* Tue Oct 14 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-13
+- Enable fast cmov on x86_64
+- Disable mythgame-emulators convenience meta-package, deps not
+  available in the free repo (if available at all)
+
+* Mon Oct 06 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-12
+- Update release-0-21-fixes patches (r18567)
+
+* Tue Sep 23 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-11
+- Work-around for broken cdparanoia header (rhbz#463009)
+
+* Wed Sep 17 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-10
+- Nuke a bunch of configure flags that really shouldn't be
+  enabled anymore, per discussion with mythtv devs.
+
 * Wed Sep 03 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-9
 - Conditionalize some qt/qt3 stuff so spec builds on
   all currently supported Fedora releases

@@ -15,11 +15,38 @@ Index: mythplugins/mythweb/modules/music/stream.php
          default:
              $mime = 'application/octet-stream';
      }
+Index: mythplugins/mythweb/modules/_shared/lang/German.cat
+===================================================================
+--- mythplugins/mythweb/modules/_shared/lang/German.cat	(revision 16468)
++++ mythplugins/mythweb/modules/_shared/lang/German.cat	(working copy)
+@@ -2,7 +2,7 @@
+     Action
+     \b(?:\w*action|adven|\w*abenteuer)
+ "Adult"
+-    Erwachsene
++    Erotik
+     \b(?:adult|erot)
+ "Animals"
+     Tiere
 Index: mythplugins/mythweb/modules/_shared/lang/German.lang
 ===================================================================
 --- mythplugins/mythweb/modules/_shared/lang/German.lang	(revision 16468)
 +++ mythplugins/mythweb/modules/_shared/lang/German.lang	(working copy)
-@@ -17,6 +17,7 @@
+@@ -2,10 +2,13 @@
+ " at "
+     um
+ "# Tracks"
++    # Lieder
+ "$1 B"
+     $1 B
+ "$1 day"
++    $1 Tag
+ "$1 days"
++    $1 Tage
+ "$1 episode"
+     $1 Folge
+ "$1 episodes"
+@@ -17,6 +20,7 @@
  "$1 hrs"
      $1 Std.
  "$1 is not responding."
@@ -27,7 +54,17 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "$1 KB"
      $1 kB
  "$1 MB"
-@@ -34,6 +35,7 @@
+@@ -26,7 +30,9 @@
+ "$1 mins"
+     $1 Min.
+ "$1 month"
++    $1 Monat
+ "$1 months"
++    $1 Monate
+ "$1 programs, using $2 ($3) out of $4 ($5 free)."
+     $1 Aufnahmen, belegen $2 ($3) von $4.
+ "$1 recording"
+@@ -34,6 +40,7 @@
  "$1 recordings"
      $1 Aufnahmen
  "$1 requests pending."
@@ -35,12 +72,13 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "$1 Search"
      $1 Suche
  "$1 TB"
-@@ -41,35 +43,50 @@
+@@ -41,35 +48,51 @@
  "$1 to $2"
      $1 bis $2
  "$1 wasted"
 +    $1 verschwendet
  "$1 year"
++    $1 Jahr
  "$1 years"
 +    $1 Jahre
  "%s Song (%s)"
@@ -61,7 +99,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
      Aktivieren
  "Active Screens"
  "Add"
-+    hinzufügen
++    Hinzufügen
  "Add Album to Current Playlist"
 +    zur Wiedergabelsite hinzufügen
  "Add Mix"
@@ -69,11 +107,12 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Add Song to Current Playlist"
 +    Lied hinzufügen
  "add string"
-+    hinzufügen
++    weitere
  "Add this Playlist as a Subplaylist"
  "Add To Active Screens"
  "Additional Tables"
-     zus. Tabellen
+-    zus. Tabellen
++    zusätzl. Tabellen
  "Admin Key"
  "Advanced"
 +    erweitert
@@ -86,7 +125,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Airdate"
      Sendezeit
  "Airtime"
-@@ -77,11 +94,16 @@
+@@ -77,11 +100,16 @@
  "Album Listing"
  "Album Tracks"
  "Albums"
@@ -103,7 +142,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "All Genres"
  "All groups"
      Alle Gruppen
-@@ -94,6 +116,7 @@
+@@ -94,6 +122,7 @@
  "ALLOCINETYPE"
  "An error occured while adding your playlist."
  "and"
@@ -111,7 +150,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Any"
      Jeder
  "Any Category"
-@@ -103,18 +126,23 @@
+@@ -103,18 +132,23 @@
  "Any Program Type"
      Jeder Programmtyp
  "Append"
@@ -135,7 +174,15 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Auto-expire recordings"
      Aufnahmen autom. löschen
  "Auto-flag commercials"
-@@ -135,17 +163,25 @@
+@@ -127,6 +161,7 @@
+ "Back to the program listing"
+     Zurück zum TV Programm
+ "Back to the recorded programs"
++    Zurück zu den Aufnahmen
+ "Back to the recording schedules"
+     Zurück zum Aufnahmeplan
+ "Backend Logs"
+@@ -135,17 +170,25 @@
      Backend Status
  "Backspace"
  "Begin a New Search"
@@ -161,7 +208,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "callsign"
      Kurzname
  "Cancel"
-@@ -153,6 +189,7 @@
+@@ -153,6 +196,7 @@
      Aufnahme abbrechen
  "Cancelled"
  "Caps Lock"
@@ -169,7 +216,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Cast"
      Besetzung
  "category"
-@@ -164,8 +201,11 @@
+@@ -164,8 +208,11 @@
  "CC"
      CC
  "Chan. Callsign"
@@ -181,7 +228,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Channel"
      Sender
  "channel"
-@@ -175,26 +215,36 @@
+@@ -175,26 +222,36 @@
  "Channel Detail"
      Details zum Sender
  "Channel Info"
@@ -218,7 +265,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Conflicts"
      Überschneidungen
  "Context"
-@@ -203,25 +253,32 @@
+@@ -203,25 +260,32 @@
      Kontrast
  "Count"
  "Create a New Playlist"
@@ -251,7 +298,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Date"
      Datum
  "Date Formats"
-@@ -253,6 +310,7 @@
+@@ -253,6 +317,7 @@
      Ziel
  "Details for: $1"
  "Direct Download"
@@ -259,7 +306,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Directed by"
      Regie
  "Display"
-@@ -263,7 +321,9 @@
+@@ -263,52 +328,77 @@
  "Don't record this program."
      Diese Sendung nicht aufnehmen
  "Done, Unknown Status"
@@ -267,9 +314,13 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Down"
 +    runter
  "Download URL override"
++    Download URL überschreiben
  "Dup Method"
      Methode für Wdhgn.
-@@ -273,7 +333,9 @@
+ "Duplicate"
++    Wiederholung
+ "Duplicate Check method"
+     Testmethode für Wdhgn.
  "Duplicates"
      Wiederholungen
  "Earlier"
@@ -279,12 +330,15 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Edit"
      Bearbeiten
  "Edit existing group"
-@@ -281,34 +343,47 @@
++    bestehende Gruppe bearbeiten
+ "Edit MythWeb and some MythTV settings."
      Einstellungen für MythWeb & MythTV ändern
  "Edit Screen"
++    Bearbeiten
  "Edit settings for: $1"
 +    Einstellungen für $1 bearbeiten
  "Editing "
++    bearbeite...
  "Enable Video Playback"
 +    Aktiviere Videowiedergabe
  "End"
@@ -306,7 +360,9 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "error: playgroup $1 exists"
 +    Fehler: Wiedergabeliste $1 schon vorhanden
  "Errored"
++    Fehler
  "Erroring"
++    Fehler
  "Escape"
 +    ESC
  "Everything"
@@ -314,6 +370,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Exclude Generic Episodes"
  "Exclude Repeat and Generic Episodes"
  "Exclude Repeat Episodes"
++    keine Wiederholungen
  "Exec. Producer"
      Produzent
  "Extended Check"
@@ -327,7 +384,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Find Date & Time Options"
      Finde Datum & Zeit Optionen
  "Find Day"
-@@ -324,11 +399,17 @@
+@@ -324,11 +414,17 @@
  "finetune"
      Feinabstimmung
  "Finished"
@@ -345,7 +402,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Forecast"
      Vorhersage
  "Forget Old"
-@@ -336,6 +417,7 @@
+@@ -336,6 +432,7 @@
  "format help"
      Format Hilfe
  "Found %s results for '%s'"
@@ -353,7 +410,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "freqid"
      Kanal
  "Friday"
-@@ -353,6 +435,7 @@
+@@ -353,6 +450,7 @@
  "Google"
      Google
  "Group timeslots every"
@@ -361,7 +418,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Guest Starring"
      Gaststar
  "Guide rating"
-@@ -364,15 +447,21 @@
+@@ -364,15 +462,21 @@
  "handy: overview"
      Handy: Übersicht
  "has Bookmark"
@@ -383,8 +440,31 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Host"
  "Hosted by"
  "Hour"
-@@ -409,38 +498,48 @@
-     official help until it has left the experimental phase.
+@@ -394,53 +498,63 @@
+ "info: dont record"
+ "info: flvplayer"
+     <p>
+-    Flash video playback is currently only a proof-of-concept and should be
+-    considered <b>EXTREMELY</b> experimental, which is why it has been disabled by
+-    default.
++    Die Flashvideointegration ist im Moment noch als <b>SEHR</b> experimentell anzusehen, darum ist sie standardmäßig deaktiviert.
+     </p>
+     <p>
+-    It currently expects that ffmpeg is installed and compiled with mp3
+-    support, and that the recordings files are accessible to your webserver
+-    userid.  It probably won't work with Nupplevideo files, and in the end,
+-    it may just not work at all (or maybe even worse).
++    - ffmpeg mit mp3 Unterstützung muss installiert sein<br>
++    - Die Aufnahmen müssen für den Webserver/Apache-User zugänglich sein<br>
++    - funktioniert wahrscheinlich nicht mit Nupplevideodateien<br>
++    - funktioniert eventuell auch gar nicht<br>
++    - oder noch schlimmer :)
+     </p>
+     <p>
+-    Enable this feature at your own risk, and don't expect too much
+-    official help until it has left the experimental phase.
++    Benutzung auf eigene Gefahr!<br>
++    Erwarte (noch) nicht all zu viel Hilfe :)<br>
      </p>
  "info: hidden advanced schedule"
 +    info: erweiterte Optionen versteckt
@@ -420,12 +500,13 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Language"
      Sprache
  "Last Recorded"
-+    zuletzt
++    zuletzt aufgenommen
  "Last recording"
 +    letzte Aufnahme
  "Last Updated"
      zuletzt aktualisiert
  "Later"
++    später
  "left"
 +    links
  "Left"
@@ -433,7 +514,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "leftl"
  "length"
      Dauer
-@@ -451,38 +550,56 @@
+@@ -451,38 +565,56 @@
  "Listing &quot;Jump to&quot;"
      TV Programm &quot;Gehe zu&quot;
  "Listing Time Key"
@@ -490,7 +571,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Movies"
      Spielfilme
  "Movies, 3&frac12; Stars or more"
-@@ -494,6 +611,7 @@
+@@ -494,13 +626,16 @@
  "Music Specials"
      Musiksendungen
  "My Session"
@@ -498,26 +579,35 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "MythMusic on the web."
      MythMusic
  "MythTV"
-@@ -508,37 +626,50 @@
+ "MythTV Status"
+     MythTV Status
+ "MythVideo Artwork Dir"
++    MythVideo Artwork-Verzeichnis
+ "MythVideo Dir"
++    MythVideo Verzeichnis
+ "MythVideo on the web."
+     MythVideo
+ "mythvideo.db_folder_view"
+@@ -508,37 +643,50 @@
  "mythvideo.sort_ignores_case"
  "MythWeb"
  "MythWeb Defaults"
 +    MythWeb Standardwerte
  "MythWeb Global Defaults"
-+    MythWeb Globale Standards
++    MythWeb glob. Standardwerte
  "MythWeb Session"
 +    MythWeb Sitzung
  "MythWeb Skin"
 +    MythWeb Aussehen
  "MythWeb Template"
-+    MythWeb Schema
++    MythWeb Vorlage
  "MythWeb Weather."
      Wettervorhersage
  "Name"
  "name"
      Name
  "Narrow Your Search"
-+    Verfeinerung
++    Suche verfeinern
  "Never Record"
      Niemals aufnehmen
  "New"
@@ -533,7 +623,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "NO DATA"
      Kein Programm verfügbar
  "No Frontends allow remote control."
-+    Kein Frontend erlaubt Fernsteuerung
++    Kein Frontend erlaubt Fernsteuerung.
  "No matches found"
      Nichts gefunden
  "No matching programs found."
@@ -549,17 +639,17 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Non-Series HDTV"
      HDTV, keine Serien
  "None"
-@@ -546,58 +677,93 @@
+@@ -546,58 +694,94 @@
  "Notes"
      Hinweis
  "Number of episodes"
-+    Folgen
++    Anzahl Folgen
  "Number of shows"
-+    Sendungen
++    Anzahl Sendungen
  "Number of Songs"
 +    Lieder
  "Number of timeslots"
-+    Anzahl Zeitleistenabschnitte
++    Anzahl der Zeitfenster
  "Only display favourite channels"
      Nur Favoriten anzeigen
  "Only match commercial-free channels"
@@ -575,8 +665,9 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Original Airdate"
      Produktion
  "Originally aired between"
-+    Erstaustrahlung
++    Produziert zwischen
  "Override"
++    Überschreiben
  "Page Down"
 +    Bild runter
  "Page Up"
@@ -643,7 +734,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Possible conflicts with this show"
      Mögliche Konflikte mit dieser Sendung
  "Power"
-@@ -605,15 +771,19 @@
+@@ -605,15 +789,19 @@
  "Power Search"
      Erweiterte Suche
  "Prefer Channum"
@@ -664,7 +755,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Produced by"
      Produzent
  "Profile"
-@@ -627,21 +797,30 @@
+@@ -627,21 +815,30 @@
  "Program Listing"
      TV Programm
  "Program Type"
@@ -695,7 +786,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "recgroup"
      Aufnahmegruppe
  "Record new and expire old"
-@@ -649,9 +828,11 @@
+@@ -649,9 +846,11 @@
  "Record This"
      Diese Sendung aufnehmen
  "Recorded"
@@ -707,7 +798,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Recording Group"
      Aufnahmegruppe
  "Recording Options"
-@@ -663,6 +844,7 @@
+@@ -663,6 +862,7 @@
  "Recording Schedules"
      Aufnahmemodi
  "Recording Statistics"
@@ -715,7 +806,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "recpriority"
      Aufnahmepriorität
  "recstatus: cancelled"
-@@ -750,29 +932,43 @@
+@@ -750,29 +950,43 @@
  "regex: articles"
      D(e[rmn]|ie|as)
  "Remote"
@@ -759,7 +850,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Scan Collection"
  "Schedule"
      Modus
-@@ -785,6 +981,7 @@
+@@ -785,6 +999,7 @@
  "Schedule Override"
      manuelle Korrektur
  "Schedule via $1."
@@ -767,7 +858,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Scheduled"
      Geplant
  "Scheduled Popup"
-@@ -794,19 +991,23 @@
+@@ -794,19 +1009,23 @@
  "Search"
      Suche
  "Search $1"
@@ -791,12 +882,13 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Set Host"
      Setze Host
  "Settings"
-@@ -814,41 +1015,58 @@
+@@ -814,41 +1033,59 @@
  "settings"
      Einstellungen
  "Settings Table"
 +    Einstellungen
  "settings/stream: protocol"
++    Streamprotokoll
  "settings: notice"
      Achtung! Falls diese Tabelle ohne das nötige Hintergrundwissen verändert wird, könnte MythTVs Funktionalität nachhaltig gestört werden.
  "Shift"
@@ -850,7 +942,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Start Date"
      Datum
  "Start Early"
-@@ -857,7 +1075,9 @@
+@@ -857,7 +1094,9 @@
      Uhrzeit
  "Starting"
  "Statistics"
@@ -860,7 +952,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Status"
      Status
  "Status Bar"
-@@ -865,12 +1085,15 @@
+@@ -865,12 +1104,15 @@
  "Stereo"
      Stereo
  "Still Recording: Edit"
@@ -876,7 +968,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Subtitle"
      Untertitel
  "Subtitle and Description"
-@@ -894,32 +1117,46 @@
+@@ -894,33 +1136,48 @@
  "Time"
      Zeit
  "Time Span"
@@ -922,9 +1014,11 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Track #%s from the album '%s'"
 +    %s. Lied auf '%s'
  "Transcode"
++    Umwandeln
  "transcoder"
      Umwandlungsprofil
-@@ -947,6 +1184,7 @@
+ "Transcoder"
+@@ -947,6 +1204,7 @@
  "Unknown Recording Schedule."
      Unbekannter Aufnahmeplan
  "Up"
@@ -932,7 +1026,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Upcoming Recordings"
      Aufnahmeplan
  "Update"
-@@ -974,6 +1212,7 @@
+@@ -974,6 +1232,7 @@
      Video
  "Video Bitrate"
  "Video Playback"
@@ -940,7 +1034,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Video: Error: IMDB"
  "Video: Error: IMDB: Not Found"
  "Video: Error: Missing ID"
-@@ -1025,9 +1264,11 @@
+@@ -1025,9 +1284,11 @@
  "welcome: music"
      Musik
  "welcome: remote"
@@ -952,7 +1046,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "welcome: status"
      Status
  "welcome: tv"
-@@ -1040,7 +1281,9 @@
+@@ -1040,7 +1301,9 @@
      Was läuft noch zu dieser Zeit?
  "Widescreen"
  "Width"
@@ -962,7 +1056,7 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
  "Wind"
      Windgeschwindigkeit
  "Wind Chill"
-@@ -1050,6 +1293,8 @@
+@@ -1050,6 +1313,8 @@
  "xmltvid"
      XMLTV ID
  "Year"
@@ -3900,6 +3994,23 @@ Index: mythplugins/mythmusic/mythmusic/metaiomp4.cpp
  
  using namespace std;
  
+Index: mythplugins/mythmusic/mythmusic/mainvisual.cpp
+===================================================================
+--- mythplugins/mythmusic/mythmusic/mainvisual.cpp	(revision 16468)
++++ mythplugins/mythmusic/mythmusic/mainvisual.cpp	(working copy)
+@@ -965,8 +965,11 @@
+     }
+ 
+     alpha = x;
+-    for (i = 1; i < (int) domain; i++) {
++    for (i = 1; i < (int) domain; i++)
++    {
+         scaled = (int) floor(0.5 + (alpha * log((double(i) + alpha) / alpha)));
++        if (scaled < 1)
++            scaled = 1;
+         if (indices[scaled - 1] < i)
+             indices[scaled - 1] = i;
+     }
 Index: mythplugins/mythmusic/mythmusic/miniplayer.h
 ===================================================================
 --- mythplugins/mythmusic/mythmusic/miniplayer.h	(revision 16468)
@@ -4541,6 +4652,472 @@ Index: mythplugins/mytharchive/i18n/mytharchive_fi.ts
      </message>
  </context>
  </TS>
+Index: mythplugins/mytharchive/i18n/mytharchive_dk.ts
+===================================================================
+--- mythplugins/mytharchive/i18n/mytharchive_dk.ts	(revision 16468)
++++ mythplugins/mytharchive/i18n/mytharchive_dk.ts	(working copy)
+@@ -25,47 +25,47 @@
+     <name>ExportNativeWizard</name>
+     <message>
+         <source>0 Mb</source>
+-        <translation type="unfinished">0 Mb</translation>
++        <translation>0 Mb</translation>
+     </message>
+     <message>
+         <source>Next</source>
+-        <translation type="unfinished">Næste</translation>
++        <translation>Næste</translation>
+     </message>
+     <message>
+         <source>Previous</source>
+-        <translation type="unfinished">Forrige</translation>
++        <translation>Forrige</translation>
+     </message>
+     <message>
+         <source>Cancel</source>
+-        <translation type="unfinished">Afbryd</translation>
++        <translation>Afbryd</translation>
+     </message>
+     <message>
+         <source>Choose File...</source>
+-        <translation type="unfinished">Vælg fil...</translation>
++        <translation>Vælg fil...</translation>
+     </message>
+     <message>
+         <source>Add Recording</source>
+-        <translation type="unfinished"></translation>
++        <translation>Tilføj optagelse</translation>
+     </message>
+     <message>
+         <source>Add Video</source>
+-        <translation type="unfinished"></translation>
++        <translation>Tilføj video</translation>
+     </message>
+     <message>
+         <source>Myth Archive</source>
+-        <translation type="unfinished"></translation>
++        <translation>Filarkivering</translation>
+     </message>
+     <message>
+         <source>You need to add at least one item to archive!</source>
+-        <translation type="unfinished"></translation>
++        <translation>Du skal tilføje mindst en fil til arkivet!</translation>
+     </message>
+     <message>
+         <source>Finish</source>
+-        <translation type="unfinished">Færdig</translation>
++        <translation>Færdig</translation>
+     </message>
+     <message>
+         <source>Remove Item</source>
+-        <translation type="unfinished">Fjern</translation>
++        <translation>Fjern</translation>
+     </message>
+ </context>
+ <context>
+@@ -103,55 +103,55 @@
+     <name>ImportNativeWizard</name>
+     <message>
+         <source>Back</source>
+-        <translation type="unfinished">Tilbage</translation>
++        <translation>Tilbage</translation>
+     </message>
+     <message>
+         <source>Home</source>
+-        <translation type="unfinished">Hjem</translation>
++        <translation>Hjem</translation>
+     </message>
+     <message>
+         <source>Next</source>
+-        <translation type="unfinished">Næste</translation>
++        <translation>Næste</translation>
+     </message>
+     <message>
+         <source>Previous</source>
+-        <translation type="unfinished">Forrige</translation>
++        <translation>Forrige</translation>
+     </message>
+     <message>
+         <source>Cancel</source>
+-        <translation type="unfinished">Afbryd</translation>
++        <translation>Afbryd</translation>
+     </message>
+     <message>
+         <source>Myth Archive</source>
+-        <translation type="unfinished"></translation>
++        <translation>Filarkivering</translation>
+     </message>
+     <message>
+         <source>You need to select a valid archive XML file!</source>
+-        <translation type="unfinished"></translation>
++        <translation>Du skal vælge en gyldig arkiv-XML-fil!</translation>
+     </message>
+     <message>
+         <source>You need to select a valid chanID!</source>
+-        <translation type="unfinished"></translation>
++        <translation>Du skal vælge et gyldigt kanal-ID!</translation>
+     </message>
+     <message>
+         <source>Finish</source>
+-        <translation type="unfinished">Færdig</translation>
++        <translation>Færdig</translation>
+     </message>
+     <message>
+         <source>Select a ChanID</source>
+-        <translation type="unfinished"></translation>
++        <translation>Vælg et kanal-ID</translation>
+     </message>
+     <message>
+         <source>Select a ChanNo</source>
+-        <translation type="unfinished"></translation>
++        <translation>Vælg et kanalnummer</translation>
+     </message>
+     <message>
+         <source>Select a Channel Name</source>
+-        <translation type="unfinished"></translation>
++        <translation>Vælg et kanalnavn</translation>
+     </message>
+     <message>
+         <source>Select a Callsign</source>
+-        <translation type="unfinished"></translation>
++        <translation>Vælg et callsign</translation>
+     </message>
+ </context>
+ <context>
+@@ -178,19 +178,19 @@
+     </message>
+     <message>
+         <source>Increase Font Size</source>
+-        <translation type="unfinished"></translation>
++        <translation>Forøg skriftstørrelse</translation>
+     </message>
+     <message>
+         <source>Decrease Font Size</source>
+-        <translation type="unfinished"></translation>
++        <translation>Formindsk skriftstørrelse</translation>
+     </message>
+     <message>
+         <source>Show Progress Log</source>
+-        <translation type="unfinished"></translation>
++        <translation>Vis fremskridt</translation>
+     </message>
+     <message>
+         <source>Show Full Log</source>
+-        <translation type="unfinished"></translation>
++        <translation>Vis alt</translation>
+     </message>
+ </context>
+ <context>
+@@ -343,35 +343,35 @@
+     </message>
+     <message>
+         <source>Choose File...</source>
+-        <translation type="unfinished">Vælg fil...</translation>
++        <translation>Vælg fil...</translation>
+     </message>
+     <message>
+         <source>Add Recording</source>
+-        <translation type="unfinished"></translation>
++        <translation>Tilføj optagelse</translation>
+     </message>
+     <message>
+         <source>Add Video</source>
+-        <translation type="unfinished"></translation>
++        <translation>Tilføj video</translation>
+     </message>
+     <message>
+         <source>Add File</source>
+-        <translation type="unfinished"></translation>
++        <translation>Vælg fil</translation>
+     </message>
+     <message>
+         <source>Don&apos;t re-encode</source>
+-        <translation type="unfinished"></translation>
++        <translation>Undlad genkodning</translation>
+     </message>
+     <message>
+         <source>New Size </source>
+-        <translation type="unfinished"></translation>
++        <translation>Ny størrelse </translation>
+     </message>
+     <message>
+         <source>Original Size </source>
+-        <translation type="unfinished"></translation>
++        <translation>Oprindelig størrelse </translation>
+     </message>
+     <message>
+         <source>You need to add at least one item to archive!</source>
+-        <translation type="unfinished"></translation>
++        <translation>Du skal tilføje mindst en fil til arkivet!</translation>
+     </message>
+ </context>
+ <context>
+@@ -398,7 +398,7 @@
+     </message>
+     <message>
+         <source>Video format for DVD recordings, PAL or NTSC.</source>
+-        <translation>Videoformat for DVD-optagelser (PAL eller NTSC).
++        <translation>Videoformat for dvd-optagelser (PAL eller NTSC).
+ </translation>
+     </message>
+     <message>
+@@ -411,11 +411,11 @@
+     </message>
+     <message>
+         <source>Location of DVD</source>
+-        <translation>Sti til DVD</translation>
++        <translation>Sti til dvd</translation>
+     </message>
+     <message>
+         <source>Which DVD drive to use when burning discs.</source>
+-        <translation>Hvilket DVD-drev der skal bruges ved brænding</translation>
++        <translation>Hvilket dvd-drev der skal bruges ved brænding.</translation>
+     </message>
+     <message>
+         <source>ffmpeg Command</source>
+@@ -455,7 +455,7 @@
+     </message>
+     <message>
+         <source>Command to run growisofs. (Used to burn DVD&apos;s)</source>
+-        <translation>Kommandoen for at køre growisofs (bruges til at brænde DVD&apos;er)</translation>
++        <translation>Kommandoen for at køre growisofs (bruges til at brænde dvd&apos;er)</translation>
+     </message>
+     <message>
+         <source>tcrequant command</source>
+@@ -517,7 +517,7 @@
+     </message>
+     <message>
+         <source>It was not possible to create the DVD.  An error occured when running the scripts</source>
+-        <translation>Det var ikke muligt at lave DVD&apos;en.  Der opstod en fejl under kørsel af scripts</translation>
++        <translation>Det var ikke muligt at lave dvd&apos;en.  Der opstod en fejl under kørsel af scripts</translation>
+     </message>
+     <message>
+         <source>It was not possible to create the Archive.  An error occured when running &apos;mytharchivehelper&apos;</source>
+@@ -525,155 +525,155 @@
+     </message>
+     <message>
+         <source>Location where MythArchive should create its temporory work files. LOTS of free space required here.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Placering af filarkiveringens arbejdsfiler. Der kræves MEGET fri plads her.</translation>
+     </message>
+     <message>
+         <source>DVD Drive Write Speed</source>
+-        <translation type="unfinished"></translation>
++        <translation>Skrivehastighed for dvd-drev </translation>
+     </message>
+     <message>
+         <source>This is the write speed to use when burning a DVD. Set to 0 to allow growisofs to choose the fastest available speed.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dette er skrivehastigheden under brænding af en dvd. Sæt den til 0 for at tillade growisofs at vælge den hurtigst tilgængelige hastighed.</translation>
+     </message>
+     <message>
+         <source>Command to play DVD</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kommandoen for at afspille en dvd</translation>
+     </message>
+     <message>
+         <source>Command to run when test playing a created DVD. &apos;Internal&apos; will use the internal MythTV player. %f will be replaced with the path to the created DVD structure eg. &apos;xine -pfhq --no-splash dvd:/%f&apos;.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kommandoen for at foretage en testafspilning af en ny dvd. &apos;Intern&apos; vil bruge MythTVs indbyggede afspiller. %f vil blive erstattet af stien til den oprettede dvd-struktur, f.eks. &apos;xine -pfhq --no-splash dvd:/%f&apos;.</translation>
+     </message>
+     <message>
+         <source>Always Encode to AC3</source>
+-        <translation type="unfinished"></translation>
++        <translation>Genkod altid til AC3</translation>
+     </message>
+     <message>
+         <source>If set audio tracks will always be re-encoded to AC3 for better compatibility with DVD players in NTSC countries.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Hvis valgt, vil lydsporet altid blive genkodet til AC3 for bedre kompabilitet med dvd-afspillere i lande der bruger NTSC.</translation>
+     </message>
+     <message>
+         <source>Copy remote files</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kopier ikke-lokale filer</translation>
+     </message>
+     <message>
+         <source>If set files on remote filesystems will be copied over to the local filesystem before processing. Speeds processing and reduces bandwidth on the network</source>
+-        <translation type="unfinished"></translation>
++        <translation>Hvis valgt, vil filer på andre maskiner blive kopieret til det lokale filsystem før behandling. Dette gør behandlingen hurtigere og sparer båndbredde på netværket</translation>
+     </message>
+     <message>
+         <source>Always Use Mythtranscode</source>
+-        <translation type="unfinished"></translation>
++        <translation>Brug altid mythtranscode</translation>
+     </message>
+     <message>
+         <source>If set mpeg2 files will always be passed though mythtranscode to clean up any errors. May help to fix some audio problems. Ignored if &apos;Use ProjectX&apos; is set.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Hvis valgt, vil filer altid blive sendt igennem mythtranscode for at rette eventuelle fejl. Dette kan afhjælpe visse lydproblemer. Ignoreres hvis &apos;Brug ProjectX&apos; er valgt.</translation>
+     </message>
+     <message>
+         <source>Use ProjectX</source>
+-        <translation type="unfinished"></translation>
++        <translation>Brug ProjectX</translation>
+     </message>
+     <message>
+         <source>If set ProjectX will be used to cut commercials and split mpeg2 files instead of mythtranscode and mythreplex.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Hvis valgt, bruges ProjectX til at fjerne reklamer og opdele MPEG-2 filer i stedet for mythtranscode og mythreplex.</translation>
+     </message>
+     <message>
+         <source>Use FIFOs</source>
+-        <translation type="unfinished"></translation>
++        <translation>Brug FIFOer</translation>
+     </message>
+     <message>
+         <source>The script will use FIFOs to pass the output of mplex into dvdauthor rather than creating intermediate files. Saves time and disk space during multiplex operations but not  supported on Windows platform</source>
+-        <translation type="unfinished"></translation>
++        <translation>Brug FIFOer for at sende resultatet af mplex ind i dvdauthor i stedet for at oprette midlertidige filer. Sparer tid og diskplads, men er ikke understøttet på Windows</translation>
+     </message>
+     <message>
+         <source>Add Subtitles</source>
+-        <translation type="unfinished"></translation>
++        <translation>Tilføj undertekster</translation>
+     </message>
+     <message>
+         <source>If available this option will add subtitles to the final DVD. Requires &apos;Use ProjectX&apos; to be on.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Hvis valgt, tilføjes der undertekster til dvd&apos;en. Kræver at &apos;Brug ProjectX&apos; er valgt.</translation>
+     </message>
+     <message>
+         <source>Main Menu Aspect Ratio</source>
+-        <translation type="unfinished"></translation>
++        <translation>Aspektforhold for hovedmenu</translation>
+     </message>
+     <message>
+         <source>Aspect ratio to use when creating the main menu.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Det aspektforhold der bruges ved oprettelse af hovedmenuen.</translation>
+     </message>
+     <message>
+         <source>Chapter Menu Aspect Ratio</source>
+-        <translation type="unfinished"></translation>
++        <translation>Aspektforhold for kapitelmenu</translation>
+     </message>
+     <message>
+         <source>Aspect ratio to use when creating the chapter menu. Video means use the same aspect ratio as the associated video.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Det aspektforhold der bruges ved oprettelse af kapitelmenuen. &apos;Video&apos; betyder at der bruges samme aspektforhold som den tilknyttede video.</translation>
+     </message>
+     <message>
+         <source>Date format</source>
+-        <translation type="unfinished"></translation>
++        <translation>Datoformat</translation>
+     </message>
+     <message>
+         <source>Samples are shown using today&apos;s date.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Prøver vises med datoen i dag.</translation>
+     </message>
+     <message>
+         <source>Samples are shown using tomorrow&apos;s date.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Prøver vises med datoen i morgen.</translation>
+     </message>
+     <message>
+         <source>Your preferred date format to use on DVD menus.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dit foretrukne datoformat på dvd-menuer.</translation>
+     </message>
+     <message>
+         <source>Time format</source>
+-        <translation type="unfinished"></translation>
++        <translation>Tidsformat</translation>
+     </message>
+     <message>
+         <source>Your preferred time format to display on DVD menus. You must choose a format with &quot;AM&quot; or &quot;PM&quot; in it, otherwise your time display will be 24-hour or &quot;military&quot; time.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dit foretrukne tidsformat på dvd-menuer. Hvis du ikke vælger et format med &apos;AM&apos; eller &apos;PM&apos;, bruges der 24-timers tidsformat.</translation>
+     </message>
+     <message>
+         <source>Default Encoder Profile</source>
+-        <translation type="unfinished"></translation>
++        <translation>Standard kodningsprofil</translation>
+     </message>
+     <message>
+         <source>Default encoding profile to use if a file needs re-encoding.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Standard kodningsprofil hvis det er nødvendigt at rekode en fil.</translation>
+     </message>
+     <message>
+         <source>jpeg2yuv command</source>
+-        <translation type="unfinished"></translation>
++        <translation>jpeg2yuv-kommando</translation>
+     </message>
+     <message>
+         <source>Command to run jpeg2yuv. Part of mjpegtools package</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kommandoen for at køre jpeg2yuv. En del af mjpegtools-pakken</translation>
+     </message>
+     <message>
+         <source>projectx command</source>
+-        <translation type="unfinished"></translation>
++        <translation>projectx-kommando</translation>
+     </message>
+     <message>
+         <source>Command to run ProjectX. Will be used to cut commercials and split mpegs files instead of mythtranscode and mythreplex.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kommandoen for at køre ProjectX. Bruges til at fjerne reklamer og opdele MPEG-2 filer i stedet for mythtranscode og mythreplex.</translation>
+     </message>
+     <message>
+         <source>MythArchive Settings (2)</source>
+-        <translation type="unfinished"></translation>
++        <translation>MythArchive indstillinger (2)</translation>
+     </message>
+     <message>
+         <source>DVD Menu Settings</source>
+-        <translation type="unfinished"></translation>
++        <translation>Indstilinger for dvd-menu</translation>
+     </message>
+     <message>
+         <source>Video Selector</source>
+-        <translation type="unfinished">Video-vælger</translation>
++        <translation>Video-vælger</translation>
+     </message>
+     <message>
+         <source>You don&apos;t have any videos!</source>
+-        <translation type="unfinished"></translation>
++        <translation>Du har ingen videoer!</translation>
+     </message>
+     <message>
+         <source>It was not possible to import the Archive.  An error occured when running &apos;mytharchivehelper&apos;</source>
+-        <translation type="unfinished"></translation>
++        <translation>Det var ikke muligt at importere arkivet.  Der opstod en fejl under kørsel af &apos;mytharchivehelper&apos;</translation>
+     </message>
+ </context>
+ <context>
+@@ -720,13 +720,15 @@
+     </message>
+     <message>
+         <source>MythArchive</source>
+-        <translation type="unfinished"></translation>
++        <translation>Filarkivering</translation>
+     </message>
+     <message>
+         <source>Either you don&apos;t have any recordings or no recordings are available locally!
+ 
+ Click OK</source>
+-        <translation type="unfinished"></translation>
++        <translation>Enten har du ingen optagelser, eller også er de ikke tilgængelige lokalt!
++
++Klik OK</translation>
+     </message>
+ </context>
+ <context>
+@@ -773,7 +775,7 @@
+     </message>
+     <message>
+         <source>Parental Pin:</source>
+-        <translation type="unfinished"></translation>
++        <translation>Forældre-PIN:</translation>
+     </message>
+ </context>
+ </TS>
+Index: mythplugins/mytharchive/i18n/mytharchive_nl.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mytharchive/i18n/mytharchive_nl.ts
 ===================================================================
 --- mythplugins/mytharchive/i18n/mytharchive_nl.ts	(revision 16468)
@@ -5432,6 +6009,14 @@ Index: mythplugins/mytharchive/i18n/mytharchive_nl.ts
          <source>Parental Pin:</source>
          <translation>Pincode:</translation>
      </message>
+Index: mythplugins/mytharchive/i18n/mytharchive_fi.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: mythplugins/mytharchive/i18n/mytharchive_dk.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mytharchive/mytharchive/archivemenu.xml
 ===================================================================
 --- mythplugins/mytharchive/mytharchive/archivemenu.xml	(revision 16468)
@@ -5964,6 +6549,10 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
              title = title[:32]
  
              #Create the DVD ISO image
+Index: mythplugins/mythbrowser/i18n/mythbrowser_fi.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythbrowser/i18n/mythbrowser_fi.ts
 ===================================================================
 --- mythplugins/mythbrowser/i18n/mythbrowser_fi.ts	(revision 16468)
@@ -5977,6 +6566,10 @@ Index: mythplugins/mythbrowser/i18n/mythbrowser_fi.ts
      </message>
  </context>
  </TS>
+Index: mythplugins/mythbrowser/i18n/mythbrowser_nl.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythbrowser/i18n/mythbrowser_nl.ts
 ===================================================================
 --- mythplugins/mythbrowser/i18n/mythbrowser_nl.ts	(revision 16468)
@@ -7370,6 +7963,14 @@ Index: mythplugins/mythweather/i18n/mythweather_fi.ts
      </message>
  </context>
  </TS>
+Index: mythplugins/mythweather/i18n/mythweather_nl.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: mythplugins/mythweather/i18n/mythweather_fi.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl
 ===================================================================
 --- mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl	(revision 16468)
@@ -8685,6 +9286,10 @@ Index: mythplugins/mythweather/README
      a multi-location screen you have to set the location of each individual data
      item.  This may not be ideal, but it does allow for very easy screen and
      source development, along with very customizable location setups.  The
+Index: mythplugins/mythgallery/i18n/mythgallery_fi.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythgallery/i18n/mythgallery_nl.ts
 ===================================================================
 --- mythplugins/mythgallery/i18n/mythgallery_nl.ts	(revision 16468)
@@ -9201,6 +9806,10 @@ Index: mythplugins/mythgallery/i18n/mythgallery_fi.ts
      </message>
  </context>
  <context>
+Index: mythplugins/mythgallery/i18n/mythgallery_nl.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythmovies/ignyte/ignytegrabber.cpp
 ===================================================================
 --- mythplugins/mythmovies/ignyte/ignytegrabber.cpp	(revision 16468)
@@ -9450,6 +10059,10 @@ Index: mythplugins/mythflix/i18n/mythflix_nl.ts
          <source>Minutes</source>
          <translation>Minuten</translation>
      </message>
+Index: mythplugins/mythflix/i18n/mythflix_fi.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythflix/i18n/mythflix_fi.ts
 ===================================================================
 --- mythplugins/mythflix/i18n/mythflix_fi.ts	(revision 16468)
@@ -9536,6 +10149,10 @@ Index: mythplugins/mythflix/i18n/mythflix_fi.ts
      </message>
  </context>
  <context>
+Index: mythplugins/mythflix/i18n/mythflix_nl.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.ts
 ===================================================================
 --- mythplugins/mythcontrols/i18n/mythcontrols_nl.ts	(revision 16468)
@@ -9824,6 +10441,10 @@ Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.ts
          <source>No</source>
          <translation type="obsolete">Nee</translation>
      </message>
+Index: mythplugins/mythcontrols/i18n/mythcontrols_fi.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythcontrols/i18n/mythcontrols_fi.ts
 ===================================================================
 --- mythplugins/mythcontrols/i18n/mythcontrols_fi.ts	(revision 16468)
@@ -9960,6 +10581,14 @@ Index: mythplugins/mythcontrols/i18n/mythcontrols_fi.ts
      </message>
  </context>
  <context>
+Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: mythplugins/mythvideo/i18n/mythvideo_fi.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythvideo/i18n/mythvideo_nl.ts
 ===================================================================
 --- mythplugins/mythvideo/i18n/mythvideo_nl.ts	(revision 16468)
@@ -11237,7 +11866,27 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
     }
  
     # try looking on nexbase
-@@ -330,10 +338,9 @@
+@@ -313,12 +321,14 @@
+       if ($1 ne "") {
+          if (defined $opt_d) { print "# found nexbase poster page: $1 \n"; }
+          my $cinres = get $1;
+-         if (defined $opt_d) { printf("# got %i bytes\n", length($cinres)); }
+-         if (defined $opt_r) { printf("%s", $cinres); }
++         if (defined $cinres) {
++            if (defined $opt_d) { printf("# got %i bytes\n", length($cinres)); }
++            if (defined $opt_r) { printf("%s", $cinres); }
+ 
+-         if ($cinres =~ m/<a id="photo_url" href="([^"]*?)" ><\/a>/i) {
+-            if (defined $opt_d) { print "# nexbase url retreived\n"; }
+-            $uri = $1;
++            if ($cinres =~ m/<a id="photo_url" href="([^"]*?)" ><\/a>/i) {
++               if (defined $opt_d) { print "# nexbase url retreived\n"; }
++               $uri = $1;
++            }
+          }
+       }
+    }
+@@ -330,10 +340,9 @@
           my $cinres = get $1;
           if (defined $opt_d) { printf("# got %i bytes\n", length($cinres)); }
           if (defined $opt_r) { printf("%s", $cinres); }
@@ -11250,7 +11899,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
           }
        }
     }
-@@ -356,7 +363,7 @@
+@@ -356,7 +365,7 @@
     my @movie_titles;
     my $found_low_res = 0;
     my $k = 0;
@@ -11259,7 +11908,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
     # no poster found, take lowres image from imdb
     if ($uri eq "") {
        if (defined $opt_d) { print "# looking for lowres imdb posters\n"; }
-@@ -364,7 +371,7 @@
+@@ -364,7 +373,7 @@
        $response = get $host;
  
        # Better handling for low resolution posters
@@ -11268,7 +11917,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
        if ($response =~ m/<a name="poster".*<img.*src="([^"]*).*<\/a>/ig) {
           if (defined $opt_d) { print "# found low res poster at: $1\n"; }
           $uri = $1;
-@@ -375,7 +382,7 @@
+@@ -375,7 +384,7 @@
        }
  
        if (defined $opt_d) { print "# starting to look for movie title\n"; }
@@ -11277,7 +11926,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
        # get main title
        if (defined $opt_d) { print "# Getting possible movie titles:\n"; }
        $movie_titles[$k++] = parseBetween($response, "<title>", "<\/title>");
-@@ -386,9 +393,9 @@
+@@ -386,9 +395,9 @@
           $movie_titles[$k++] = trim($1);
           if (defined $opt_d) { print "# Title: ".$movie_titles[$k-1]."\n"; }
        }
@@ -11289,7 +11938,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
     print "$uri\n";
  }
  
-@@ -399,7 +406,7 @@
+@@ -399,7 +408,7 @@
     # If we wanted to inspect the file for any reason we can do that now
  
     #
@@ -11298,7 +11947,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
     # (use same rules that Metadata::guesTitle does)
     my $query = $filename;
     $query = uri_unescape($query);  # in case it was escaped
-@@ -409,26 +416,26 @@
+@@ -409,26 +418,26 @@
     }
     # Strip off anything following '(' - people use this for general comments
     if (rindex($query, '(') != -1) {
@@ -11332,7 +11981,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
     #         type=[fuzy]         looser search
     #         from_year=[int]     limit matches to year (broken at imdb)
     #         to_year=[int]       limit matches to year (broken at imdb)
-@@ -442,10 +449,10 @@
+@@ -442,11 +451,11 @@
        print $response;
        exit(0);
     }
@@ -11341,11 +11990,13 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
     # check to see if we got a results page or a movie page
     #    looking for 'add=<movieid>" target=' which only exists
 -   #    in a movie description page 
+-   my $movienum = parseBetween($response, "add=", "\" ");
 +   #    in a movie description page
-    my $movienum = parseBetween($response, "add=", "\" ");
++   my $movienum = parseBetween($response, "add=", "\"");
     if (!$movienum) {
        $movienum = parseBetween($response, ";add=", "'");
-@@ -459,7 +466,7 @@
+    }
+@@ -459,7 +468,7 @@
        }
  
        if (defined $opt_d) { printf("# redirected to movie page\n"); }
@@ -11354,7 +12005,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
        $movietitle =~ m#(.+) \((\d+)\)#;
        $movietitle = $1;
        print "$movienum:$movietitle\n";
-@@ -467,15 +474,15 @@
+@@ -467,15 +476,15 @@
     }
  
     # extract possible matches
@@ -11373,7 +12024,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
  #                                               "</table>");
     # parse movie list from matches
     my $beg = "<tr>";
-@@ -491,7 +498,7 @@
+@@ -491,7 +500,7 @@
  #   if ($data eq "") { $data = $approx_matches; }
     if ($data eq "") {
        if (defined $opt_d) { printf("# no results\n"); }
@@ -11382,7 +12033,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
     }
     my $start = index($data, $beg);
     my $finish = index($data, $end, $start);
-@@ -530,27 +537,27 @@
+@@ -530,27 +539,27 @@
        if ($options =~ /tv=no/) {
           if ($type eq "TV") {
              if (defined $opt_d) {printf("# skipping TV program: %s\n", $title);}
@@ -11414,7 +12065,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
           }
        }
  
-@@ -560,14 +567,14 @@
+@@ -560,14 +569,14 @@
              if (defined $opt_d) {
                  printf("# skipping Video program: %s\n", $title);
              }
@@ -11432,7 +12083,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
        }
  
        # add to array
-@@ -590,10 +597,10 @@
+@@ -590,10 +599,10 @@
  # Main Program
  #
  
@@ -11488,6 +12139,10 @@ Index: mythplugins/mythvideo/mythvideo/main.cpp
  
              command_string = "Internal";
              gContext->GetMainWindow()->HandleMedia(command_string, filename);
+Index: mythplugins/mythphone/i18n/mythphone_nl.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythphone/i18n/mythphone_nl.ts
 ===================================================================
 --- mythplugins/mythphone/i18n/mythphone_nl.ts	(revision 16468)
@@ -12265,6 +12920,10 @@ Index: mythplugins/mythphone/i18n/mythphone_nl.ts
      </message>
  </context>
  </TS>
+Index: mythplugins/mythgame/i18n/mythgame_nl.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythgame/i18n/mythgame_nl.ts
 ===================================================================
 --- mythplugins/mythgame/i18n/mythgame_nl.ts	(revision 16468)
@@ -12694,6 +13353,10 @@ Index: mythplugins/mythgame/i18n/mythgame_nl.ts
          <source>Favorite:</source>
          <translation>Favoriet:</translation>
      </message>
+Index: mythplugins/mythgame/i18n/mythgame_fi.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythgame/i18n/mythgame_fi.ts
 ===================================================================
 --- mythplugins/mythgame/i18n/mythgame_fi.ts	(revision 16468)
@@ -13847,6 +14510,14 @@ Index: mythplugins/mythnews/i18n/mythnews_fi.ts
      </message>
  </context>
  <context>
+Index: mythplugins/mythnews/i18n/mythnews_nl.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: mythplugins/mythnews/i18n/mythnews_fi.qm
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythnews/i18n/mythnews_nl.ts
 ===================================================================
 --- mythplugins/mythnews/i18n/mythnews_nl.ts	(revision 16468)
