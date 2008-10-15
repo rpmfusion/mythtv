@@ -1,0 +1,12 @@
+Index: mythtv/configure
+===================================================================
+--- mythtv/configure	(revision 18567)
++++ mythtv/configure	(working copy)
+@@ -1488,6 +1488,7 @@
+       fi
+     fi
+     cmov="yes"
++    fast_cmov="yes"
+   ;;
+   # armv4l is a subset of armv[567]*l
+   arm|armv[4567]*l)
