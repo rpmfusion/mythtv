@@ -48,7 +48,6 @@ Patch101: mythtv-0.20-mythstreammenu.diff
 Patch103: mythtv-0.21-enable-64bit-fast_cmov.patch
 Patch200: mythplugins-0.21-svnfixes.patch
 #Patch201: mythplugins-0.21-fedora-settings.patch
-Patch202: mythmusic-busted-cdparanoia-workaround.patch
 #
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel >= 2
@@ -530,7 +529,6 @@ temp=`pwd`/temp
 cd mythplugins-%{version}
 %patch200 -p1 -b .svnfixes
 #patch201 -p1 -b .settings
-%patch202 -p1
 
 mv mytharchive/mythburn/themes/Simple\ -\ Autoplay \
    mytharchive/mythburn/themes/Simple_-_Autoplay
