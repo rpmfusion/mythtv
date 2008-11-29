@@ -7332,15 +7332,19 @@ Index: mythtv/i18n/mythfrontend_cz.ts
      </message>
  </context>
  </TS>
-Index: mythtv/i18n/mythfrontend_nb.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythtv/i18n/mythfrontend_de.ts
 ===================================================================
 --- mythtv/i18n/mythfrontend_de.ts	(revision 16468)
 +++ mythtv/i18n/mythfrontend_de.ts	(working copy)
-@@ -66,19 +66,19 @@
+@@ -1,4 +1,6 @@
+-<!DOCTYPE TS><TS>
++<?xml version="1.0" encoding="utf-8"?>
++<!DOCTYPE TS><TS version="1.1" language="de">
++<defaultcodec></defaultcodec>
+ <context>
+     <name>@default</name>
+     <message>
+@@ -66,19 +68,19 @@
      <name>BackendSelect</name>
      <message>
          <source>Please select default Myth Backend Server</source>
@@ -7364,7 +7368,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -116,11 +116,11 @@
+@@ -116,11 +118,11 @@
      </message>
      <message>
          <source>No, don&apos;t</source>
@@ -7378,7 +7382,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Yes, delete capture cards</source>
-@@ -136,7 +136,7 @@
+@@ -136,7 +138,7 @@
      </message>
      <message>
          <source>Unable to delete capturecards for %1</source>
@@ -7387,7 +7391,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -171,23 +171,23 @@
+@@ -171,23 +173,23 @@
      </message>
      <message>
          <source>Create Input Group</source>
@@ -7416,7 +7420,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -201,7 +201,7 @@
+@@ -201,7 +203,7 @@
      <name>ChannelEditor</name>
      <message>
          <source>Channels</source>
@@ -7425,7 +7429,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Are you sure you would like to delete this channel?</source>
-@@ -245,36 +245,36 @@
+@@ -245,36 +247,36 @@
      </message>
      <message>
          <source>Are you sure you would like to delete ALL channels?</source>
@@ -7473,7 +7477,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
  </context>
  <context>
      <name>ChannelRecPriority</name>
-@@ -435,7 +435,7 @@
+@@ -435,7 +437,7 @@
      </message>
      <message>
          <source>Additional Tables</source>
@@ -7482,7 +7486,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Test</source>
-@@ -447,7 +447,7 @@
+@@ -447,7 +449,7 @@
      </message>
      <message>
          <source>Store</source>
@@ -7491,7 +7495,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Cancel</source>
-@@ -467,35 +467,35 @@
+@@ -467,35 +469,35 @@
      </message>
      <message>
          <source>First showing of each episode</source>
@@ -7526,7 +7530,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      <message>
          <source>Only shows marked as widescreen</source>
 -        <translation type="unfinished"></translation>
-+        <translation>Nur Sendungen in &apos;widescreen&apos;</translation>
++        <translation>Nur Sendungen im Breitbildformat</translation>
      </message>
      <message>
          <source>Exclude H.264 encoded streams (EIT only)</source>
@@ -7535,7 +7539,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -669,11 +669,11 @@
+@@ -669,11 +671,11 @@
      <name>DTVSignalMonitor</name>
      <message>
          <source>Seen</source>
@@ -7549,7 +7553,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -712,19 +712,19 @@
+@@ -712,19 +714,19 @@
      <name>DVBSignalMonitor</name>
      <message>
          <source>Signal To Noise</source>
@@ -7573,7 +7577,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -788,7 +788,7 @@
+@@ -788,7 +790,7 @@
      <name>DeviceTree</name>
      <message>
          <source>The Cartesian latitude for your location.</source>
@@ -7582,7 +7586,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Use negative numbers for southern and western coordinates.</source>
-@@ -828,8 +828,7 @@
+@@ -828,8 +830,7 @@
      </message>
      <message>
          <source>Select the type of switch from the list.</source>
@@ -7592,7 +7596,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Tone</source>
-@@ -845,15 +844,15 @@
+@@ -845,15 +846,15 @@
      </message>
      <message>
          <source>Legacy SW21</source>
@@ -7611,7 +7615,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Number of ports</source>
-@@ -861,7 +860,7 @@
+@@ -861,7 +862,7 @@
      </message>
      <message>
          <source>The number of ports this switch has.</source>
@@ -7620,7 +7624,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Switch Configuration</source>
-@@ -885,7 +884,7 @@
+@@ -885,7 +886,7 @@
      </message>
      <message>
          <source>Rotor Low Speed (deg/sec)</source>
@@ -7629,7 +7633,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>To allow the approximate monitoring of rotor movement, enter the rated angular speed of the rotor when powered at 13V.</source>
-@@ -893,7 +892,7 @@
+@@ -893,7 +894,7 @@
      </message>
      <message>
          <source>Rotor High Speed (deg/sec)</source>
@@ -7638,7 +7642,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>To allow the approximate monitoring of rotor movement, enter the rated angular speed of the rotor when powered at 18V.</source>
-@@ -907,7 +906,7 @@
+@@ -907,7 +908,7 @@
      <message>
          <source>W</source>
          <comment>Western Hemisphere</comment>
@@ -7647,22 +7651,25 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Position Index %1</source>
-@@ -1089,6 +1088,14 @@
+@@ -1087,8 +1088,16 @@
+     </message>
+     <message>
          <source>DiSEqC Device Tree</source>
-         <translation type="unfinished"></translation>
+-        <translation type="unfinished"></translation>
++        <translation>DiSEqC  Geräte Baum</translation>
      </message>
 +    <message>
 +        <source>Voltage</source>
-+        <translation type="unfinished"></translation>
++        <translation>Spannung</translation>
 +    </message>
 +    <message>
 +        <source>Mini DiSEqC</source>
-+        <translation type="unfinished"></translation>
++        <translation>Mini DiSEqC</translation>
 +    </message>
  </context>
  <context>
      <name>FirewireDesc</name>
-@@ -1251,7 +1258,7 @@
+@@ -1251,7 +1260,7 @@
      </message>
      <message>
          <source>Date or day of the week</source>
@@ -7671,7 +7678,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>minute</source>
-@@ -1275,7 +1282,7 @@
+@@ -1275,7 +1284,7 @@
      </message>
      <message>
          <source>5 weekdays if daily</source>
@@ -7680,7 +7687,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>7 days per week if daily</source>
-@@ -1286,11 +1293,11 @@
+@@ -1286,43 +1295,43 @@
      <name>MediaMonitor</name>
      <message>
          <source>Cancel</source>
@@ -7694,7 +7701,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>No devices to eject</source>
-@@ -1298,31 +1305,31 @@
+-        <translation type="unfinished"></translation>
++        <translation>Keine Geräte zum Auswerfen</translation>
      </message>
      <message>
          <source>Failed to unmount %1</source>
@@ -7733,7 +7741,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -1336,49 +1343,51 @@
+@@ -1336,49 +1345,51 @@
      <name>MythContext</name>
      <message>
          <source>Could not connect to the master backend server -- is it running?  Is the IP address set for it in the setup program correct?</source>
@@ -7796,7 +7804,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -1514,15 +1523,15 @@
+@@ -1495,7 +1506,7 @@
+     </message>
+     <message>
+         <source>Enter group name or press SELECT to enter text via the On Screen Keyboard</source>
+-        <translation>Den Gruppennamen oder nach &apos;SELECT&apos; den Text über die virtuelle Tastatur eingeben.</translation>
++        <translation>Gruppennamen eigeben oder nach &apos;SELECT&apos; den Text über die Bilschirm Tastatur eingeben.</translation>
+     </message>
+     <message>
+         <source>(Create new group)</source>
+@@ -1514,15 +1525,15 @@
      </message>
      <message>
          <source>You have finished watching:</source>
@@ -7815,7 +7832,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Allow this program to AutoExpire?</source>
-@@ -1566,7 +1575,7 @@
+@@ -1566,7 +1577,7 @@
      </message>
      <message>
          <source>Status Icons</source>
@@ -7824,7 +7841,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Commercials are flagged</source>
-@@ -1590,7 +1599,7 @@
+@@ -1590,7 +1601,7 @@
      </message>
      <message>
          <source>Ok</source>
@@ -7833,7 +7850,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Recording List Menu</source>
-@@ -1666,7 +1675,7 @@
+@@ -1666,7 +1677,7 @@
      </message>
      <message>
          <source>Yes, and allow re-record</source>
@@ -7842,7 +7859,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>^(The |A |An )</source>
-@@ -1698,7 +1707,7 @@
+@@ -1698,7 +1709,7 @@
      </message>
      <message>
          <source>Storage Options</source>
@@ -7851,7 +7868,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Recording Options</source>
-@@ -1902,23 +1911,23 @@
+@@ -1902,23 +1913,23 @@
      </message>
      <message>
          <source>Recording has been transcoded</source>
@@ -7880,7 +7897,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>High Quality</source>
-@@ -1986,51 +1995,51 @@
+@@ -1986,74 +1997,74 @@
      </message>
      <message>
          <source>_NO_TITLE_</source>
@@ -7944,7 +7961,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Recording is in WideScreen</source>
-@@ -2038,15 +2047,15 @@
+-        <translation type="unfinished"></translation>
++        <translation>Aufnahme ist im Breitbildformat</translation>
      </message>
      <message>
          <source>Recording has been watched</source>
@@ -7963,7 +7981,20 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -2069,7 +2078,7 @@
+     <name>PlaybackProfileItemConfig</name>
+     <message>
+         <source>Match Criteria</source>
+-        <translation type="unfinished"></translation>
++        <translation>Übereinstimmungs Kriterien</translation>
+     </message>
+     <message>
+         <source>W</source>
+@@ -2065,51 +2076,51 @@
+     </message>
+     <message>
+         <source>Decoder</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dekoder</translation>
      </message>
      <message>
          <source>Max CPUs</source>
@@ -7972,7 +8003,28 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Video Renderer</source>
-@@ -2093,7 +2102,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>Video Wiedergabe</translation>
+     </message>
+     <message>
+         <source>OSD Renderer</source>
+-        <translation type="unfinished"></translation>
++        <translation>OSD Wiedergabe</translation>
+     </message>
+     <message>
+         <source>OSD Fade</source>
+-        <translation type="unfinished"></translation>
++        <translation>OSD Einblenden</translation>
+     </message>
+     <message>
+         <source>Primary Deinterlacer</source>
+-        <translation type="unfinished"></translation>
++        <translation>Erster Deinterlacer</translation>
+     </message>
+     <message>
+         <source>Fallback Deinterlacer</source>
+-        <translation type="unfinished"></translation>
++        <translation>Ersatz Deinterlacer</translation>
      </message>
      <message>
          <source>Custom Filters</source>
@@ -7981,7 +8033,27 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Maximum number of CPU cores used for decoding.</source>
-@@ -2164,11 +2173,11 @@
+-        <translation type="unfinished"></translation>
++        <translation>Maximale Anzahl CPU Kerne für Dekodierung verwendet.</translation>
+     </message>
+     <message>
+         <source> Multithreaded decoding disabled-only one CPU will be used, please recompile with --enable-ffmpeg-pthreads to enable.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Multithreaded Dekodierung deaktiviert - nur eine CPU wird verwendet. Bitte mit --enable-ffmpeg-pthreads neu compilieren um dies zu aktivieren.</translation>
+     </message>
+     <message>
+         <source>When unchecked the OSD will not fade away but instead will disappear abruptly.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Wenn nicht markiert wird das OSD nicht langsam ausgeblendet sondern verschwindet abrupt.</translation>
+     </message>
+     <message>
+         <source>Uncheck this if the video studders while the OSD is fading away.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Nicht markieren wenn die Wiedergabe stottert während das OSD ausgeblendet wird.</translation>
+     </message>
+ </context>
+ <context>
+@@ -2164,11 +2175,11 @@
      </message>
      <message>
          <source>Time</source>
@@ -7995,7 +8067,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -2385,11 +2394,11 @@
+@@ -2385,51 +2396,51 @@
      </message>
      <message>
          <source>Stored Search</source>
@@ -8009,7 +8081,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Custom Record</source>
-@@ -2397,39 +2406,39 @@
+-        <translation type="unfinished"></translation>
++        <translation>Eigene Aufnahmen</translation>
      </message>
      <message>
          <source>0 .. 9 moves to Nx10 percent in list</source>
@@ -8058,18 +8131,18 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -2507,6 +2516,10 @@
+@@ -2507,6 +2518,10 @@
          <translation>Lösche Regel &apos;%1&apos; %2?
  </translation>
      </message>
 +    <message>
 +        <source> + %1 automatic priority (%2hr)</source>
-+        <translation type="unfinished"></translation>
++        <translation>+ %1 automatische Priorität (%2 Std)</translation>
 +    </message>
  </context>
  <context>
      <name>QObject</name>
-@@ -2648,7 +2661,7 @@
+@@ -2648,7 +2663,7 @@
      </message>
      <message>
          <source>Changing the volume adjusts the selected mixer.</source>
@@ -8078,7 +8151,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Master Mixer Volume</source>
-@@ -2692,7 +2705,7 @@
+@@ -2692,7 +2707,7 @@
      </message>
      <message>
          <source>Commercial Skip Method</source>
@@ -8087,7 +8160,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Blank Frame Detection (default)</source>
-@@ -2700,11 +2713,11 @@
+@@ -2700,11 +2715,11 @@
      </message>
      <message>
          <source>Blank Frame + Scene Change</source>
@@ -8101,7 +8174,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Automatically Skip Commercials</source>
-@@ -2752,7 +2765,7 @@
+@@ -2752,7 +2767,7 @@
      </message>
      <message>
          <source>Setup Pin Code</source>
@@ -8110,7 +8183,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Require Setup PIN</source>
-@@ -2792,7 +2805,7 @@
+@@ -2792,7 +2807,7 @@
      </message>
      <message>
          <source>channel name</source>
@@ -8119,7 +8192,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Vertical over/underscan percentage</source>
-@@ -2832,11 +2845,11 @@
+@@ -2832,11 +2847,11 @@
      </message>
      <message>
          <source>Clear Saved Position on playback</source>
@@ -8133,7 +8206,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Action on playback exit</source>
-@@ -2860,11 +2873,11 @@
+@@ -2860,11 +2875,11 @@
      </message>
      <message>
          <source>Prompt at end of recording</source>
@@ -8147,7 +8220,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Display live preview of recordings</source>
-@@ -2920,7 +2933,7 @@
+@@ -2920,7 +2935,7 @@
      </message>
      <message>
          <source>Xinerama screen</source>
@@ -8156,7 +8229,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>The width of the GUI.  Do not make the GUI wider than your actual screen resolution.  Set to 0 to automatically scale to fullscreen.</source>
-@@ -2952,7 +2965,7 @@
+@@ -2952,7 +2967,7 @@
      </message>
      <message>
          <source>Use a random theme each time MythTV is started.</source>
@@ -8165,7 +8238,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Date format</source>
-@@ -3529,11 +3542,11 @@
+@@ -3529,11 +3544,11 @@
      </message>
      <message>
          <source>Monitor CD/DVD</source>
@@ -8179,7 +8252,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Hardware Decoding Settings</source>
-@@ -3657,7 +3670,7 @@
+@@ -3657,7 +3672,7 @@
      </message>
      <message>
          <source>Channel Options</source>
@@ -8188,7 +8261,31 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Video Source</source>
-@@ -4040,7 +4053,7 @@
+@@ -3785,19 +3800,19 @@
+     </message>
+     <message>
+         <source>LP Coderate</source>
+-        <translation type="unfinished"></translation>
++        <translation type="unfinished">LP Coderate</translation>
+     </message>
+     <message>
+         <source>HP Coderate</source>
+-        <translation type="unfinished"></translation>
++        <translation type="unfinished">HP Coderate</translation>
+     </message>
+     <message>
+         <source>Guard Interval</source>
+-        <translation type="unfinished"></translation>
++        <translation type="unfinished">Guard Interval</translation>
+     </message>
+     <message>
+         <source>Trans. Mode</source>
+-        <translation type="unfinished"></translation>
++        <translation></translation>
+     </message>
+     <message>
+         <source>Hierarchy</source>
+@@ -4040,7 +4055,7 @@
      </message>
      <message>
          <source>Master Backend Override</source>
@@ -8197,7 +8294,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Reconnect wait time (secs)</source>
-@@ -4080,7 +4093,7 @@
+@@ -4080,7 +4095,7 @@
      </message>
      <message>
          <source>The amount of time the master backend idles before it shuts down all backends. Set to 0 to disable auto shutdown.</source>
@@ -8206,7 +8303,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Max. wait for recording (min)</source>
-@@ -4088,7 +4101,7 @@
+@@ -4088,7 +4103,7 @@
      </message>
      <message>
          <source>The amount of time the master backend waits for a recording.  If it&apos;s idle but a recording starts within this time period, the backends won&apos;t shut down.</source>
@@ -8215,7 +8312,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Startup before rec. (secs)</source>
-@@ -4232,7 +4245,7 @@
+@@ -4232,7 +4247,7 @@
      </message>
      <message>
          <source>Logo Detection</source>
@@ -8224,7 +8321,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Unable to create AudioOutput.</source>
-@@ -4240,11 +4253,11 @@
+@@ -4240,11 +4255,11 @@
      </message>
      <message>
          <source>Continue WITHOUT AUDIO!</source>
@@ -8238,7 +8335,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Earlier Showing</source>
-@@ -4268,11 +4281,11 @@
+@@ -4268,11 +4283,11 @@
      </message>
      <message>
          <source>1h</source>
@@ -8252,7 +8349,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>2h</source>
-@@ -4420,7 +4433,7 @@
+@@ -4420,7 +4435,7 @@
      </message>
      <message>
          <source>Any arguments you want passed to the mythfilldatabase program.</source>
@@ -8261,7 +8358,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>mythfilldatabase Log Path</source>
-@@ -4472,7 +4485,7 @@
+@@ -4472,7 +4487,7 @@
      </message>
      <message>
          <source>Enable interlaced motion estimation</source>
@@ -8270,7 +8367,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>If set, the MPEG4 encoder will use interlaced motion estimation.  You probably want this when encoding interlaced video.</source>
-@@ -4660,7 +4673,7 @@
+@@ -4660,7 +4675,7 @@
      </message>
      <message>
          <source>This PIN is used to control access to the setup menus. If you want to use this feature, then setting the value to all numbers will make your life much easier.  Set it to blank to disable.</source>
@@ -8279,7 +8376,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Separate video modes for GUI and TV playback</source>
-@@ -4692,7 +4705,7 @@
+@@ -4692,7 +4707,7 @@
      </message>
      <message>
          <source>Commercial Free</source>
@@ -8288,7 +8385,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Startup command</source>
-@@ -4811,11 +4824,11 @@
+@@ -4811,11 +4826,11 @@
      </message>
      <message>
          <source>Initial volume for PCM output.  Using the volume keys in MythTV will adjust this parameter.</source>
@@ -8302,7 +8399,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Make the video look normal on a progressive display (i.e. monitor).</source>
-@@ -4895,7 +4908,7 @@
+@@ -4895,7 +4910,7 @@
      </message>
      <message>
          <source>If set, MythTV will act like a commercial begins this many seconds early.  This can be useful when commercial notification is used in place of automatic skipping.</source>
@@ -8311,7 +8408,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>When enabled, any newly recorded programs will be marked as eligible for Auto-Expiration. Existing recordings will keep their current value.</source>
-@@ -4911,7 +4924,7 @@
+@@ -4911,7 +4926,7 @@
      </message>
      <message>
          <source>If enabled, pressing the sticky rewind key in fast forward mode switches to rewind mode, and vice versa.  If disabled, it will decrease the current speed or switch to play mode if the speed can&apos;t be decreased further.</source>
@@ -8320,7 +8417,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Always display Closed Captioning</source>
-@@ -4967,11 +4980,11 @@
+@@ -4967,11 +4982,11 @@
      </message>
      <message>
          <source>Confirm Exit</source>
@@ -8334,7 +8431,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>If you have configured an exit key using the System Shutdown option, you will be given the opportunity to exit MythTV or halt the system completely. Another possibility for this field is &quot;poweroff&quot;</source>
-@@ -4979,7 +4992,7 @@
+@@ -4979,7 +4994,7 @@
      </message>
      <message>
          <source>Use Arrow Key Accelerators</source>
@@ -8343,7 +8440,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>If enabled, Arrow key accelerators will be used, with LEFT performing an exit action and RIGHT selecting the current item.</source>
-@@ -5003,7 +5016,7 @@
+@@ -5003,7 +5018,7 @@
      </message>
      <message>
          <source>If enabled, use the above size for TV, otherwise use full screen.</source>
@@ -8352,7 +8449,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Switch X Window video modes for TV. Requires &quot;xrandr&quot; support.</source>
-@@ -5095,7 +5108,7 @@
+@@ -5095,7 +5110,7 @@
      </message>
      <message>
          <source>If enabled, MythTV modules will send event details to the database, where they can be viewed with MythLog or periodically emailed to the administrator.</source>
@@ -8361,7 +8458,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Maximum Number of Entries per Module</source>
-@@ -5411,7 +5424,7 @@
+@@ -5411,7 +5426,7 @@
      </message>
      <message>
          <source>The horizontal offset the GUI will be displayed at.  May only work if run in a window.</source>
@@ -8370,7 +8467,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Default size is 12.</source>
-@@ -5793,7 +5806,7 @@
+@@ -5793,7 +5808,7 @@
      </message>
      <message>
          <source>Use custom identifier for frontend preferences</source>
@@ -8379,7 +8476,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Wake-On-LAN settings</source>
-@@ -5877,7 +5890,7 @@
+@@ -5833,7 +5848,7 @@
+     </message>
+     <message>
+         <source>The user name to use while connecting to the database. This information is required.</source>
+-        <translation>Der Benutzername für die Anmeldung am Datenbankserver.</translation>
++        <translation>Der Benutzername für die Anmeldung am Datenbankserver. Diese Information ist verpflichtend.</translation>
+     </message>
+     <message>
+         <source>The password to use while connecting to the database. This information is required.</source>
+@@ -5877,7 +5892,7 @@
      </message>
      <message>
          <source>The time in seconds to wait for the server to wake up.</source>
@@ -8388,7 +8494,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Retry attempts</source>
-@@ -5885,7 +5898,7 @@
+@@ -5885,7 +5900,7 @@
      </message>
      <message>
          <source>The number of retries to wake the server before the frontend gives up.</source>
@@ -8397,7 +8503,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Wake command</source>
-@@ -5925,15 +5938,15 @@
+@@ -5925,15 +5940,15 @@
      </message>
      <message>
          <source>Unable to initialize video.</source>
@@ -8416,7 +8522,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Single Record</source>
-@@ -6045,7 +6058,7 @@
+@@ -6045,7 +6060,7 @@
      </message>
      <message>
          <source>Sort Episodes</source>
@@ -8425,7 +8531,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Record date</source>
-@@ -6053,7 +6066,7 @@
+@@ -6053,7 +6068,7 @@
      </message>
      <message>
          <source>Selects how to sort a shows episodes</source>
@@ -8434,7 +8540,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>S</source>
-@@ -6317,7 +6330,7 @@
+@@ -6317,7 +6332,7 @@
      </message>
      <message>
          <source>Guard Interval (Default: Auto)</source>
@@ -8443,7 +8549,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Transmission Mode (Default: Auto)</source>
-@@ -6425,7 +6438,7 @@
+@@ -6425,7 +6440,7 @@
      </message>
      <message>
          <source>This is the default value used for the Auto-Commercial Flagging setting when a new scheduled recording is created.</source>
@@ -8452,7 +8558,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Run on the specified screen or spanning all screens.</source>
-@@ -6551,7 +6564,7 @@
+@@ -6551,7 +6566,7 @@
      </message>
      <message>
          <source>DVB Transport</source>
@@ -8461,7 +8567,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Transport Options</source>
-@@ -6567,15 +6580,15 @@
+@@ -6559,7 +6574,7 @@
+     </message>
+     <message>
+         <source>Signal Lock</source>
+-        <translation>Signal-Lock</translation>
++        <translation>Signalverriegelung</translation>
+     </message>
+     <message>
+         <source>Signal Power</source>
+@@ -6567,15 +6582,15 @@
      </message>
      <message>
          <source>Failed to Reinit Video.</source>
@@ -8480,7 +8595,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>c</source>
-@@ -6689,51 +6702,51 @@
+@@ -6689,51 +6704,51 @@
      </message>
      <message>
          <source>Default group filter to apply on the View Recordings screen.</source>
@@ -8544,7 +8659,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Show filter name instead of &quot;All Programs&quot;</source>
-@@ -6741,7 +6754,7 @@
+@@ -6741,7 +6756,7 @@
      </message>
      <message>
          <source>Use the name of the display filter currently applied in place of the term &quot;All Programs&quot; in the playback screen.</source>
@@ -8553,7 +8668,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Commercial Flag New Recordings</source>
-@@ -6753,7 +6766,7 @@
+@@ -6753,7 +6768,7 @@
      </message>
      <message>
          <source>This is the default value used for the Auto-Transcode setting when a new scheduled recording is created.</source>
@@ -8562,7 +8677,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Default Transcoder</source>
-@@ -6761,7 +6774,7 @@
+@@ -6761,7 +6776,7 @@
      </message>
      <message>
          <source>This is the default value used for the transcoder setting when a new scheduled recording is created.</source>
@@ -8571,7 +8686,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Run User Job #%1 On New Recordings</source>
-@@ -6785,7 +6798,7 @@
+@@ -6785,7 +6800,7 @@
      </message>
      <message>
          <source>category name</source>
@@ -8580,7 +8695,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>For a specific category (e.g. &quot;Sports event&quot;), request that shows be autoextended.  Only works if a show&apos;s category can be determined.</source>
-@@ -6889,7 +6902,7 @@
+@@ -6889,7 +6904,7 @@
      </message>
      <message>
          <source>Use an LCD display to view MythTV status information.</source>
@@ -8589,7 +8704,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>General (Basic)</source>
-@@ -7007,7 +7020,7 @@
+@@ -7007,7 +7022,7 @@
      </message>
      <message>
          <source>If this is the master backend server, please run &apos;mythfilldatabase&apos; to populate the database with channel information.</source>
@@ -8598,7 +8713,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>CC/TXT enabled</source>
-@@ -7068,7 +7081,7 @@
+@@ -7068,7 +7083,7 @@
      </message>
      <message>
          <source>Auto Expire Default</source>
@@ -8607,7 +8722,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Turn on the LCD heartbeat.</source>
-@@ -7076,7 +7089,7 @@
+@@ -7076,7 +7091,7 @@
      </message>
      <message>
          <source>A command executed before the backend would shutdown. The return value determines if the backend can shutdown. 0 - yes, 1 - restart idleing, 2 - reset the backend to wait for a frontend.</source>
@@ -8616,7 +8731,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Number of bonus points to be added to any recording on this channel during scheduling.</source>
-@@ -7154,7 +7167,7 @@
+@@ -7154,7 +7169,7 @@
      </message>
      <message>
          <source>Always prompt the user for the initial filter to apply when entering the Watch Recordings screen.</source>
@@ -8625,7 +8740,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Lowest Priority First</source>
-@@ -7234,11 +7247,11 @@
+@@ -7234,11 +7249,11 @@
      </message>
      <message>
          <source>LCD Key order</source>
@@ -8639,7 +8754,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Save original files after transcoding (globally)</source>
-@@ -7426,7 +7439,7 @@
+@@ -7426,7 +7441,7 @@
      </message>
      <message>
          <source>Set to a value less than or equal to the number of processors on the backend that will be doing the encoding.</source>
@@ -8648,7 +8763,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>MPEG-2 Parameters</source>
-@@ -7498,11 +7511,11 @@
+@@ -7498,11 +7513,11 @@
      </message>
      <message>
          <source>Could not query inputs.</source>
@@ -8662,7 +8777,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Subtype</source>
-@@ -7534,11 +7547,11 @@
+@@ -7534,11 +7549,11 @@
      </message>
      <message>
          <source>Could not open &apos;%1&apos; to probe its inputs.</source>
@@ -8676,7 +8791,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Deinterlace algorithm.</source>
-@@ -7670,7 +7683,7 @@
+@@ -7670,7 +7685,7 @@
      </message>
      <message>
          <source>CC font</source>
@@ -8685,7 +8800,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Recording Available</source>
-@@ -7750,7 +7763,7 @@
+@@ -7750,7 +7765,7 @@
      </message>
      <message>
          <source>Automatically set new recording rules to use this group if the title matches this regular expression.  For example, &quot;(News|CNN)&quot; would match any title in which &quot;News&quot; or &quot;CNN&quot; appears.</source>
@@ -8694,7 +8809,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Skip ahead (seconds)</source>
-@@ -7786,7 +7799,7 @@
+@@ -7786,7 +7801,7 @@
      </message>
      <message>
          <source>If set, MythTV will automatically rewind this many seconds after performing a commercial skip.</source>
@@ -8703,7 +8818,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Title Pronounce</source>
-@@ -7874,7 +7887,7 @@
+@@ -7814,7 +7829,7 @@
+     </message>
+     <message>
+         <source>Adapter</source>
+-        <translation type="unfinished"></translation>
++        <translation>Adapter</translation>
+     </message>
+     <message>
+         <source>Presenter</source>
+@@ -7874,7 +7889,7 @@
      </message>
      <message>
          <source>Enable sending DTS audio directly to your sound card&apos;s SPDIF output, on sources which contain DTS soundtracks (usually DVDs).  Requires that the audio output device be set to something suitable.</source>
@@ -8712,7 +8836,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Show &apos;LiveTV&apos; recordings when using &quot;All Programs&quot; filter</source>
-@@ -7918,7 +7931,7 @@
+@@ -7918,7 +7933,7 @@
      </message>
      <message>
          <source>AutoExpire List</source>
@@ -8721,7 +8845,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>The AutoExpire List shows all recordings which may be expired and the order of their expiration. Recordings at the top of the list will be expired first.</source>
-@@ -7954,15 +7967,15 @@
+@@ -7954,15 +7969,15 @@
      </message>
      <message>
          <source>Defines a period the master backend should be awake</source>
@@ -8740,7 +8864,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Command to run to start the Frontend</source>
-@@ -8042,11 +8055,11 @@
+@@ -8042,11 +8057,11 @@
      </message>
      <message>
          <source>All Available Methods</source>
@@ -8754,7 +8878,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>This determines the method used by MythTV to detect when commercials start and end.</source>
-@@ -8054,7 +8067,7 @@
+@@ -8054,7 +8069,7 @@
      </message>
      <message>
          <source>Maximum commercial skip (in seconds)</source>
@@ -8763,7 +8887,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Weighted Time/Priority Combination</source>
-@@ -8066,7 +8079,7 @@
+@@ -8066,7 +8081,7 @@
      </message>
      <message>
          <source>The number of days bonus a program gets for each priority point. This is only used when the Weighted Time/Priority Auto Expire Method is selected.</source>
@@ -8772,7 +8896,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Mac hardware acceleration</source>
-@@ -8095,15 +8108,15 @@
+@@ -8095,20 +8110,20 @@
      <message>
          <source>F</source>
          <comment>RecStatusChar rsOffLine</comment>
@@ -8791,7 +8915,40 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>CC</source>
-@@ -8564,7 +8577,7 @@
+         <comment>Closed Captioned</comment>
+-        <translation type="unfinished">CC</translation>
++        <translation>UT</translation>
+     </message>
+     <message>
+         <source>Use DishNet Long-term EIT Data</source>
+@@ -8496,7 +8511,7 @@
+     </message>
+     <message>
+         <source>DataDirect</source>
+-        <translation type="unfinished"></translation>
++        <translation>DataDirect</translation>
+     </message>
+     <message>
+         <source>Time Offset</source>
+@@ -8549,22 +8564,22 @@
+     <message>
+         <source>CC</source>
+         <comment>EIA-608 closed captions</comment>
+-        <translation type="unfinished">CC</translation>
++        <translation>UT</translation>
+     </message>
+     <message>
+         <source>ATSC CC</source>
+         <comment>EIA-708 closed captions</comment>
+-        <translation type="unfinished"></translation>
++        <translation>ATSC UT</translation>
+     </message>
+     <message>
+         <source>TT CC</source>
+         <comment>Teletext closed captions</comment>
+-        <translation type="unfinished"></translation>
++        <translation>TT UT</translation>
+     </message>
      <message>
          <source>TT Menu</source>
          <comment>Teletext Menu</comment>
@@ -8800,7 +8957,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>TXT CAP</source>
-@@ -8621,7 +8634,7 @@
+@@ -8621,7 +8636,7 @@
      </message>
      <message>
          <source>Use any available input</source>
@@ -8809,7 +8966,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Prefer input %1</source>
-@@ -8634,7 +8647,7 @@
+@@ -8634,7 +8649,7 @@
      <message>
          <source>UNKNOWN%1</source>
          <comment>Synthesized callsign</comment>
@@ -8818,7 +8975,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>DVB Tuning Delay (msec)</source>
-@@ -8642,11 +8655,11 @@
+@@ -8642,11 +8657,11 @@
      </message>
      <message>
          <source>Some Linux DVB drivers, in particular for the Hauppauge Nova-T, require that we slow down the tuning process.</source>
@@ -8832,7 +8989,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Tuner</source>
-@@ -8666,23 +8679,23 @@
+@@ -8666,23 +8681,23 @@
      </message>
      <message>
          <source>(Delete all capture cards on %1)</source>
@@ -8852,7 +9009,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      <message>
          <source>MythTV will discourage long manual commercial skips.  Skips which are longer than this will require the user to hit the SKIP key twice.  Automatic commercial skipping is not affected by this limit.</source>
 -        <translation>MythTV wird vor langen manuellen Werbeblocksprüngen abstand nehmen. Werbesprünge, die länger sind als dieser Wert sind müssen mit einem weiteren Knopfdruck wiederholt werden. Automatische Werbesprünge sind hiervon nicht betroffen.</translation>
-+        <translation type="unfinished">MythTV wird von langen manuellen Werbeblocksprüngen Abstand nehmen. Werbesprünge, die länger als dieser Wert sind, müssen mit einem weiteren Tastendruck (SKIP-Taste) wiederholt werden. Automatische Werbesprünge sind hiervon nicht betroffen.</translation>
++        <translation>MythTV wird von langen manuellen Werbeblocksprüngen Abstand nehmen. Werbesprünge, die länger als dieser Wert sind, müssen mit einem weiteren Tastendruck (SKIP-Taste) wiederholt werden. Automatische Werbesprünge sind hiervon nicht betroffen.</translation>
      </message>
      <message>
          <source>Text zoom percentage</source>
@@ -8861,7 +9018,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Use this to enlage or shrink captions.</source>
-@@ -8694,23 +8707,23 @@
+@@ -8694,23 +8709,23 @@
      </message>
      <message>
          <source>This allows you to set which font type to use when the broadcaster does not specify a font.</source>
@@ -8890,7 +9047,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Casual</source>
-@@ -8738,15 +8751,15 @@
+@@ -8738,15 +8753,15 @@
      </message>
      <message>
          <source>Black background for analog closed captioning</source>
@@ -8909,7 +9066,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Enable Interactive TV</source>
-@@ -8758,11 +8771,11 @@
+@@ -8758,15 +8773,15 @@
      </message>
      <message>
          <source>Paint Engine</source>
@@ -8923,7 +9080,12 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>OpenGL</source>
-@@ -8802,7 +8815,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>OpenGL</translation>
+     </message>
+     <message>
+         <source>This selects what Myth uses to draw.  If you have decent hardware, select OpenGL. Changing this requires a restart.</source>
+@@ -8802,7 +8817,7 @@
      </message>
      <message>
          <source>Additional priority when a showing matches the preferred input selected in the &apos;Scheduling Options&apos; section of the recording rule.</source>
@@ -8932,7 +9094,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>HDTV Recording Priority</source>
-@@ -8850,11 +8863,11 @@
+@@ -8850,11 +8865,11 @@
      </message>
      <message>
          <source>Disable AutoExpire</source>
@@ -8946,7 +9108,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Time offset for EIT listings</source>
-@@ -8870,11 +8883,11 @@
+@@ -8870,11 +8885,11 @@
      </message>
      <message>
          <source>If enabled, listings data collected on one Video Source will be applied to the first matching DVB channel on any Video Source. This is sometimes useful for DVB-S, but may insert bogus data into any ATSC listings stored in the same database.</source>
@@ -8960,7 +9122,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>The minimum number of seconds after a recorder becomes idle to wait before MythTV begins collecting EIT listings data.</source>
-@@ -8882,7 +8895,7 @@
+@@ -8882,7 +8897,7 @@
      </message>
      <message>
          <source>Length of time the frontend waits between tries to wake up the master backend. This should be the time your masterbackend needs to startup. Set 0 to disable.</source>
@@ -8969,7 +9131,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>EIT Scanner Options</source>
-@@ -8895,7 +8908,7 @@
+@@ -8895,7 +8910,7 @@
      </message>
      <message>
          <source>Choose the model that most closely resembles your set top box. Depending on firmware revision SA4200HD may work better for a SA3250HD box.</source>
@@ -8978,7 +9140,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>channel number</source>
-@@ -8911,11 +8924,11 @@
+@@ -8911,11 +8926,11 @@
      </message>
      <message>
          <source>Display Large Clock</source>
@@ -8992,7 +9154,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>If set, the MPEG4 encoder will use interlaced DCT encoding. You may want this when encoding interlaced video, however, this is experimental and may cause damaged video.</source>
-@@ -8931,15 +8944,15 @@
+@@ -8931,15 +8946,15 @@
      </message>
      <message>
          <source>Upcoming episodes for this title</source>
@@ -9011,7 +9173,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>(CH)</source>
-@@ -8947,7 +8960,7 @@
+@@ -8947,7 +8962,7 @@
      </message>
      <message>
          <source>(REC)</source>
@@ -9020,7 +9182,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Adjust Playback</source>
-@@ -8979,23 +8992,24 @@
+@@ -8979,23 +8994,24 @@
      </message>
      <message>
          <source>This option makes the backend dvb-recorder only open the card when it is actually in-use, leaving it free for other programs at other times.</source>
@@ -9051,7 +9213,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Delete files slowly</source>
-@@ -9015,15 +9029,15 @@
+@@ -9015,15 +9031,15 @@
      </message>
      <message>
          <source>This section lists each transport that MythTV currently knows about. The display fields are video source, modulation, frequency, and when relevant symbol rate, network id, and transport id.</source>
@@ -9070,7 +9232,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>The Video Sources to which this Transport is connected are incompatible, please create seperate video sources for these cards. </source>
-@@ -9035,7 +9049,7 @@
+@@ -9035,15 +9051,15 @@
      </message>
      <message>
          <source>Guiding standard to use for making sense of the data streams after they have been demodulated, error corrected and demultiplexed.</source>
@@ -9079,7 +9241,26 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>OpenCable</source>
-@@ -9078,7 +9092,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>OpenCable</translation>
+     </message>
+     <message>
+         <source>MPEG</source>
+-        <translation type="unfinished"></translation>
++        <translation>MPEG</translation>
+     </message>
+     <message>
+         <source>Frequency (Option has no default).
+@@ -9057,7 +9073,7 @@
+     </message>
+     <message>
+         <source>QAM Auto</source>
+-        <translation type="unfinished"></translation>
++        <translation></translation>
+     </message>
+     <message>
+         <source>seconds</source>
+@@ -9078,7 +9094,7 @@
      <message>
          <source>Group</source>
          <comment>Play Group</comment>
@@ -9088,7 +9269,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>f</source>
-@@ -9120,7 +9134,7 @@
+@@ -9120,7 +9136,7 @@
      </message>
      <message>
          <source>Auto-expire off</source>
@@ -9097,7 +9278,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Marked as &apos;watched&apos;</source>
-@@ -9184,7 +9198,7 @@
+@@ -9176,7 +9192,7 @@
+     </message>
+     <message>
+         <source>Modulation, 8-VSB, QAM-256, etc.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Modulation, 8-VSB, QAM-256, etc.</translation>
+     </message>
+     <message>
+         <source>ATSC Channel Separator</source>
+@@ -9184,7 +9200,7 @@
      </message>
      <message>
          <source>Include in the &quot;%1&quot; recording group</source>
@@ -9106,7 +9296,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Exclude unidentified episodes</source>
-@@ -9196,11 +9210,11 @@
+@@ -9196,11 +9212,11 @@
      </message>
      <message>
          <source>Select Storage Group</source>
@@ -9120,7 +9310,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>LiveTV</source>
-@@ -9220,7 +9234,7 @@
+@@ -9212,7 +9228,7 @@
+     </message>
+     <message>
+         <source>GUID</source>
+-        <translation type="unfinished"></translation>
++        <translation>GUID</translation>
+     </message>
+     <message>
+         <source>Generic</source>
+@@ -9220,7 +9236,7 @@
      </message>
      <message>
          <source>800Mbps</source>
@@ -9129,7 +9328,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>IP address or Device ID from the bottom of the HDHomeRun.  You may use &apos;FFFFFFFF&apos; if there is only one unit on your your network.</source>
-@@ -9288,7 +9302,7 @@
+@@ -9228,7 +9244,7 @@
+     </message>
+     <message>
+         <source>M3U URL</source>
+-        <translation type="unfinished"></translation>
++        <translation>M3U URL</translation>
+     </message>
+     <message>
+         <source>URL of M3U containing IPTV channel URLs.</source>
+@@ -9288,7 +9304,7 @@
      </message>
      <message>
          <source>If set, programs that have been marked as watched and are auto-expired will be re-recorded if they are shown again.</source>
@@ -9138,7 +9346,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Sort all sub-titles/multi-titles Ascending</source>
-@@ -9308,11 +9322,11 @@
+@@ -9308,11 +9324,11 @@
      </message>
      <message>
          <source>Selects how to sort show episodes. Sub-titles refers to the episodes listed under a specific show title. Multi-title refers to sections (e.g. &quot;All Programs&quot;) which list multiple titles. Sections in parentheses are not affected.</source>
@@ -9152,7 +9360,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Theme cache size</source>
-@@ -9324,11 +9338,11 @@
+@@ -9324,11 +9340,11 @@
      </message>
      <message>
          <source>Always stream recordings from the backend</source>
@@ -9166,7 +9374,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Jump to Program OSD</source>
-@@ -9336,7 +9350,7 @@
+@@ -9336,7 +9352,7 @@
      </message>
      <message>
          <source>Set the choice between viewing the current recording group in the OSD, or showing the &apos;Watch Recording&apos; screen when &apos;Jump to Program&apos; is activated. If set, the recordings are shown in the OSD</source>
@@ -9175,7 +9383,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Automatically mark a record watched</source>
-@@ -9344,19 +9358,19 @@
+@@ -9344,19 +9360,19 @@
      </message>
      <message>
          <source>If set, when you exit near the end of a recording it will be marked as watched. The automatic detection is not foolproof, so do not enable this setting if you don&apos;t want an unwatched recording marked as watched.</source>
@@ -9199,7 +9407,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Start from the Watch List view</source>
-@@ -9364,23 +9378,23 @@
+@@ -9364,23 +9380,23 @@
      </message>
      <message>
          <source>If set, the &apos;Watch List&apos; will be the initial view each time you enter the Watch Recordings screen</source>
@@ -9228,7 +9436,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Days to exclude weekly episodes after delete</source>
-@@ -9388,7 +9402,7 @@
+@@ -9388,7 +9404,7 @@
      </message>
      <message>
          <source>When an episode is deleted or marked as watched, other episodes of the series are excluded from the &apos;Watch List&apos; for this interval of time. Daily shows also have a smaller interval based on this setting.</source>
@@ -9237,7 +9445,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>This setting and the following one define a time period when the mythfilldatabase process is allowed to run.  For example, setting Start to 11 and End to 13 would mean that the process would only run between 11 AM and 1 PM.</source>
-@@ -9400,11 +9414,11 @@
+@@ -9400,11 +9416,11 @@
      </message>
      <message>
          <source>mythfilldatabase Program</source>
@@ -9251,7 +9459,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>View Recordings (Views)</source>
-@@ -9416,15 +9430,15 @@
+@@ -9416,15 +9432,15 @@
      </message>
      <message>
          <source>Schedule Status</source>
@@ -9270,7 +9478,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>MythTV Drive #%1:</source>
-@@ -9448,7 +9462,7 @@
+@@ -9448,7 +9464,7 @@
      </message>
      <message>
          <source>No Storage Group directories are defined.  You must add at least one directory to the Default Storage Group where new recordings will be stored.</source>
@@ -9279,7 +9487,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Command to Set Wakeup Time</source>
-@@ -9472,7 +9486,7 @@
+@@ -9472,7 +9488,7 @@
      </message>
      <message>
          <source>Use Global Setting</source>
@@ -9288,7 +9496,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Channel Options - Filters</source>
-@@ -9480,75 +9494,75 @@
+@@ -9480,225 +9496,225 @@
      </message>
      <message>
          <source>Aspect ratio when watching a video at a specific resolution.</source>
@@ -9382,7 +9590,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Upgrade</source>
-@@ -9556,15 +9570,15 @@
+-        <translation type="unfinished"></translation>
++        <translation>Aktualisierung</translation>
      </message>
      <message>
          <source>Use current schema</source>
@@ -9401,7 +9610,13 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Icon Download</source>
-@@ -9576,23 +9590,23 @@
+-        <translation type="unfinished"></translation>
++        <translation>Symbol Download</translation>
+     </message>
+     <message>
+         <source>Starts the icon downloader</source>
+-        <translation type="unfinished"></translation>
++        <translation>Startet den Symbol Downloader</translation>
      </message>
      <message>
          <source>as a search</source>
@@ -9430,7 +9645,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>The theme you are using does not contain the %1 element. Please contact the theme creator and ask if they could please update it.&lt;br&gt;&lt;br&gt;The next screen will be empty. Escape out of it to return to the menu.</source>
-@@ -9600,39 +9614,39 @@
+-        <translation type="unfinished"></translation>
++        <translation>Das Thema das sie beutzen enthält das Element %1 nicht. Bitte kontaktieren sie den Themen Author und bitten sie um eine Aktualisierung.&lt;br&gt;&lt;br&gt;Der nächste Bildschirm wird leer sein. Brechen sie ab um ins Hauptmenü zu gelangen.</translation>
      </message>
      <message>
          <source>the recorder failed to record.</source>
@@ -9475,11 +9691,12 @@ Index: mythtv/i18n/mythfrontend_de.ts
      <message>
          <source>Widescreen</source>
 -        <translation type="unfinished"></translation>
-+        <translation type="unfinished">Breitbild</translation>
++        <translation>Breitbild</translation>
      </message>
      <message>
          <source>AVC/H.264</source>
-@@ -9640,23 +9654,23 @@
+-        <translation type="unfinished"></translation>
++        <translation>AVC/H.264</translation>
      </message>
      <message>
          <source>Subtitles Available</source>
@@ -9508,7 +9725,30 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>If set, the bitrate specified will be used for 640x480.  If other resolutions are used, the bitrate will be scaled appropriately.</source>
-@@ -9682,7 +9696,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>Wenn gesetzt wird diese Bitrate für 640x480 verwendet. Bei anderen Auflösungen wird die Bitrate entsprechend skaliert.</translation>
+     </message>
+     <message>
+         <source>Frequency (%1)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Frequenz (%1)</translation>
+     </message>
+     <message>
+         <source>Frequency (Option has no default).
+ The frequency for this channel in %1.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Frequenz (Option hat keinen Standardwert).Die Frequenz für diesen Kanal in %1.</translation>
+     </message>
+     <message>
+         <source>Symbol Rate (symbols/second).
+ Most dvb-s transponders transmit at 27.5 million symbols per second.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Symbolrate (Symbole/Sekunde).Die meisten DVB-S Transponder senden mit 27.5 Millionen Symbolen pro Sekunde.</translation>
+     </message>
+     <message>
+         <source>Could not open tuner device</source>
+-        <translation type="unfinished"></translation>
++        <translation>Konnte das Empfangsgerät nicht öffnen</translation>
      </message>
      <message>
          <source>Bad connection to backend</source>
@@ -9517,7 +9757,27 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source> offset %2</source>
-@@ -9706,19 +9720,19 @@
+-        <translation type="unfinished"></translation>
++        <translation>Abweichung %2</translation>
+     </message>
+     <message>
+         <source>Timeout Scanning %1 -- no tables</source>
+-        <translation type="unfinished"></translation>
++        <translation>Timeout beim Scannen von %1 -- keine Tabellen</translation>
+     </message>
+     <message>
+         <source>Timeout Scanning %1 -- no signal</source>
+-        <translation type="unfinished"></translation>
++        <translation>Timeout beim Scannen von %1 -- kein Signal</translation>
+     </message>
+     <message>
+         <source>Tuning to %1 mplexid(%2)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Einstellen auf %1 mplexid(%2)</translation>
+     </message>
+     <message>
+         <source>Record new episode first showings</source>
+@@ -9706,19 +9722,19 @@
      </message>
      <message>
          <source>MythTV wants to record these programs in %d seconds:</source>
@@ -9541,7 +9801,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>On known multiplex...</source>
-@@ -9726,7 +9740,7 @@
+@@ -9726,1353 +9742,1494 @@
      </message>
      <message>
          <source>PVR-350 decoder</source>
@@ -9550,7 +9810,203 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>libmpeg2 will use mpeg2 library; this is faster on some 32 bit AMD processors.</source>
-@@ -9890,7 +9904,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>libmpeg2 wird die mpeg2 Bibliothek verwenden; das ist auf einigen 32 bit AMD Prozessoren schneller.</translation>
+     </message>
+     <message>
+         <source>Note: Closed caption decoding will not work with libmpeg2.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Anmerkung: Untertitel Dekodierung wird mit libmpeg2 nicht funktionieren.</translation>
+     </message>
+     <message>
+         <source>Kernel</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kernel</translation>
+     </message>
+     <message>
+         <source>Greedy HighMotion</source>
+-        <translation type="unfinished"></translation>
++        <translation>Greedy HighMotion</translation>
+     </message>
+     <message>
+         <source>Greedy HighMotion (2x)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Greedy HighMotion (2x)</translation>
+     </message>
+     <message>
+         <source>Yadif</source>
+-        <translation type="unfinished"></translation>
++        <translation>Yadif</translation>
+     </message>
+     <message>
+         <source>Yadif (2x)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Yadif (2x)</translation>
+     </message>
+     <message>
+         <source>Bob (2x)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Bob (2x)</translation>
+     </message>
+     <message>
+         <source>Linear blend (HW)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Lineare Überblendung (HW)</translation>
+     </message>
+     <message>
+         <source>Kernel (HW)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kernel (HW)</translation>
+     </message>
+     <message>
+         <source>Bob (2x, HW)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Bob (2x, HW)</translation>
+     </message>
+     <message>
+         <source>One field (HW)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Ein Feld (HW)</translation>
+     </message>
+     <message>
+         <source>One Field (2x, HW)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Ein Feld (2x, HW)</translation>
+     </message>
+     <message>
+         <source>Kernel (2x, HW)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kernel (2x, HW)</translation>
+     </message>
+     <message>
+         <source>Linear blend (2x, HW)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Lineare Überblendung (2x, HW)</translation>
+     </message>
+     <message>
+         <source>Interlaced (2x, Hw)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Interlaced (2x, Hw)</translation>
+     </message>
+     <message>
+         <source>Video rendering method</source>
+-        <translation type="unfinished"></translation>
++        <translation>Video Darstellungs Methode</translation>
+     </message>
+     <message>
+         <source>Render video offscreen. Used internally.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Video außerhalb vom Schirm erzeugen. Intern verwendet.</translation>
+     </message>
+     <message>
+         <source>Use X11 pixel copy to render video. This is not recommended if any other option is available. The video will not be scaled to fit the screen. This will work with all X11 servers, local and remote.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Verwende X11 Pixelkopie um das Video darzustellen. Dies ist nicht zu empfehlen, falls irgendeine andere Option möglich ist. Das Video wird nicht auf die Bildschirmgröße skaliert. Diese Methode funktioniert mit allen X11 Servern, lokal sowie entfernt.</translation>
+     </message>
+     <message>
+         <source>Use X11 shared memory pixel transfer to render video. This is only recommended over the X11 pixel copy renderer. The video will not be scaled to fit the screen. This works with most local X11 servers.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Verwende X11 shared memory Pixel Transfer um das Video zu erzeugen. Dies ist nur anstat dem X11 Pixelkopie Verfahren zu empfehlen. Das Video wird nicht auf die Bildschirmgröße skaliert. Diese Methode funktioniert mit den meisten lokalen X11 Servern.</translation>
+     </message>
+     <message>
+         <source>This is the standard video renderer for X11 systems. It uses XVideo hardware assist for scaling, color conversion. If the hardware offers picture controls the renderer supports them.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dies ist der Standard für X11 Systeme. Es verwendet XVideo Hardware Unterstützung für das Skalieren und die Farbkonvertierung. Wenn die Hardware Bildkontrolle unterstützt, wird dieses Verfahren dies verwenden.</translation>
+     </message>
+     <message>
+         <source>This is the standard video renderer for XvMC decoders. It uses XVideo hardware assist for scaling, color conversion and when available offers XVideo picture controls.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dies ist der Standard für XvMC Dekoder. Es verwendet XVideo Hardware Unterstützung für das Skalieren, Farbkonvertierung und, wenn verfügbar, XVideo Bildkontrolle.</translation>
+     </message>
+     <message>
+         <source>This video renderer for XvMC on nVidia cards uses XVideo for color conversion and OpenGL for scaling. The main benefit of this renderer is that it allows OpenGL OSD rendering, which frees two XvMC buffers for decoding. It requires a reasonably fast nVidia card.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dieses Verfahren für XvMC auf nVidia Karten verwendet XVideo für die Farbkonvertierung und OpenGL für das Skalieren. Der Hauptvorteil dieses Verfahrens ist die Verwendung der OpenGL OSD Darstellung, welche zwei XvMC Puffer für das Dekodieren einspart. Es benötigt eine halbwegs schnelle nVidia Karte.</translation>
+     </message>
+     <message>
+         <source>This video renderer uses DirectFB for scaling and color conversion. It is not as feature rich as the standard video renderer, but can run on Linux hardware without an X11 server.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dieses Verfahren verwendet DirectFB für das Skalieren und die Farbkonvertierung. Es bietet weniger Funktionalitäten als das Standard Verfahren, aber es kann auf Linux Hardware ohne einen X11 Server verwendet werden.</translation>
+     </message>
+     <message>
+         <source>Windows video renderer based on overlays. Not compatible with Vista Aero Glass.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Windows Video Darstellung basierend auf Overlays. Nicht kompatibel mit Vista Aero Glass.</translation>
+     </message>
+     <message>
+         <source>Windows video renderer based on Direct3D. Requires video card compatible with Direct3D 9. This is the preferred renderer for current Windows systems.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Windows Video Darstellung basierend auf Direct3D. Benötigt eine Videokarte die mit Direct3D 9 kompatibel ist. Dies ist das bevorzugte Verfahren auf aktuellen Windows Systemen.</translation>
+     </message>
+     <message>
+         <source>This is the standard video render for Macintosh OS X systems.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dies ist das Standardverfahren für  Macintosh OS X Systeme.</translation>
+     </message>
+     <message>
+         <source>This is the only video renderer for the MacAccel decoder.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dies ist das einzige Verfahren für den MacAccel Dekoder.</translation>
+     </message>
+     <message>
+         <source>This is only video renderer for the PVR-350 decoder.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dies ist das einzige Verfahren für den PVR-350 Dekoder.</translation>
+     </message>
+     <message>
+         <source>This video renderer uses OpenGL for scaling and color conversion and can offer limited picture contols. This requires a faster GPU than XVideo. Also, when enabled, picture controls consume additional resources.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dieses Verfahren verwendet OpenGL für das Skalieren und die Farbkonvertierung und bietet eingeschränkte Bildkontrolle. Es benötigt eine schnellere GPU als XVideo. Wenn aktiviert benötigt die Bildkontrolle zusätzliche Resourcen.</translation>
+     </message>
+     <message>
+         <source>This deinterlacer requires the display to be capable of twice the frame rate as the source video.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dieser Deinterlacer benötigt ein Display welches die doppelte Bildrate des Videos anzeigen kann.</translation>
+     </message>
+     <message>
+         <source>Perform no deinterlacing.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kein Deinterlacing anwenden.</translation>
+     </message>
+     <message>
+         <source>Use this with an interlaced display whose resolution exactly matches the video size. This is incompatible with MythTV zoom modes.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Verwenden sie dies mit einem interlaced Display dessen Auflösung exakt zur Videogröße paßt. Dies ist mit den MythTV Zoom Modi nicht kompatibel.</translation>
+     </message>
+     <message>
+         <source>Shows only one of the two fields in the frame. This looks good when displaying a high motion 1080i video on a 720p display.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Zeigt nur eines der beiden Felder im Bild. Dies schaut gut aus, wenn ein high motion 1080i Video auf einem 720p Display angezeigt wird.</translation>
+     </message>
+     <message>
+         <source>Shows one field of the frame followed by the other field displaced vertically.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Zeigt ein Feld des Bildes gefolgt vom anderen Feld vertikal dargestellt.</translation>
+     </message>
+     <message>
+         <source>Blends the odd and even fields linearly into one frame.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Überblendet die ungeraden und geraden Felder linear in ein Bild.</translation>
+     </message>
+     <message>
+         <source>This filter disables deinterlacing when the two fields are similar, and performs linear deinterlacing otherwise.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dieser Filter deaktiviert Deinterlacing wenn die beiden Felder ähnlich sind und verwendet ansonsten lineares Deinterlacing.</translation>
+     </message>
+     <message>
+         <source>(Hardware Accelerated)</source>
+-        <translation type="unfinished"></translation>
++        <translation>(Hardware beschleunigt)</translation>
+     </message>
+     <message>
+         <source>With workaround for broken interlaced modelines.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Mit Umgehung für unkorrekte interlaced modelines.</translation>
+     </message>
+     <message>
+         <source>This deinterlacer uses several fields to reduce motion blur. It has increased CPU requirements.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dieser Deinterlacer verwendet mehrere Felder um die Bewegungsunschärfe zu reduzieren. Er benötigt dafür mehr CPU Leistung.</translation>
      </message>
      <message>
          <source>&apos;%1&apos; has not been documented yet.</source>
@@ -9559,7 +10015,43 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>OSD rendering method</source>
-@@ -9926,35 +9940,35 @@
+-        <translation type="unfinished"></translation>
++        <translation>OSD Zeichenmethode</translation>
+     </message>
+     <message>
+         <source>Render the OSD using the XVideo chromakey feature.This renderer does not alpha blend. But it is the fastest OSD renderer; and is particularly efficient compared to the ia44blend OSD renderer for XvMC.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Zeichne das OSD mit dem XVideo chromakey feature. Diese Art verwendet keine Teiltransparenz, aber es ist die schnellste Art zu zeichnen, und ist besonders effizient verglichen mit dem ia44blend OSD renderer for XvMC.</translation>
+     </message>
+     <message>
+         <source>Note: nVidia hardware after the 5xxx series does not have XVideo chromakey support.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Anmerkung: nVidia hardware nach der 5xxx Serie hat keine XVideo chromakey Unterstützung.</translation>
+     </message>
+     <message>
+         <source>Software OSD rendering uses your CPU to alpha blend the OSD.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Software OSD rendering verwendet ihre CPU im die Teiltransparenz darzustellen.</translation>
+     </message>
+     <message>
+         <source>Uses hardware support for 16 color alpha-blend surfaces for rendering the OSD. Because of the limited color range, MythTV renders the OSD in 16 level grayscale.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Verwendet Hardware Unterstützung für 16 Farben alpha-blend Oberflächen für die Darstellung des OSD. Wegen der eingeschränkten Farbanzahl zeichnet MythTV das OSD in 16 Graustufen.</translation>
+     </message>
+     <message>
+         <source>Note: Not recommended for nVidia or Intel chipsets. This removes two of the limited XvMC buffers from decoding duty.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Anmerkung: Nicht empfohlen für nVidia oder Intel Chipsätze. Dies befreit zwei der limitierten XvMC Puffer von deren Dekodier Aufgabe.</translation>
+     </message>
+     <message>
+         <source>Renders the OSD using the PVR-350 chromakey feature.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Zeichnet das OSD durch die PVR-350 chromakey Funktionalität.</translation>
+     </message>
+     <message>
+         <source>Uses OpenGL to alpha blend the OSD onto the video.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Verwendet OpenGL um das OSD über das Video einzublenden.</translation>
      </message>
      <message>
          <source>Max recordings</source>
@@ -9603,7 +10095,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Leave as &apos;Generic&apos; unless this input is shared with another device. Only one of the inputs in an input group will be allowed to record at any given time.</source>
-@@ -9962,7 +9976,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>Auf &apos;Generisch&apos; belassen, ausser dieser Eingang wird mit anderen Geräten geteilt. Nur einer der Eingänge einer Eingangsgruppe kann eine Aufnahme zu einem Zeitpunkt durchführen.</translation>
      </message>
      <message>
          <source>Live TV only</source>
@@ -9612,7 +10105,13 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>If enabled MythTV will tune using only the MPEG program number. The program numbers change more often than DVB or ATSC tuning parameters, so this is slightly less reliable. This will also inhibit EIT gathering during Live TV and recording.</source>
-@@ -9974,63 +9988,63 @@
+-        <translation type="unfinished"></translation>
++        <translation>Wenn aktiviert wird MythTV nur aufgrund der MPEG Programm Nummer einstellen. Die Programm Nummern ändern sich öfter als DVB oder ATSC Einstellungs Parameter, daher ist dies weniger zuverlässig. Dies verhindert auch die Programmdaten Suche (EIT) während Live TV und Aufnahme.</translation>
+     </message>
+     <message>
+         <source>Interactions between inputs</source>
+-        <translation type="unfinished"></translation>
++        <translation>Interaktionen zwischen Eingängen</translation>
      </message>
      <message>
          <source>Create a New Input Group</source>
@@ -9691,7 +10190,364 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>SCTE mode 1</source>
-@@ -10323,7 +10337,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>SCTE Modus 1</translation>
+     </message>
+     <message>
+         <source>SCTE mode 2</source>
+-        <translation type="unfinished"></translation>
++        <translation>SCTE Modus 2</translation>
+     </message>
+     <message>
+         <source>ATSC 8-VSB</source>
+-        <translation type="unfinished"></translation>
++        <translation>ATSC 8-VSB</translation>
+     </message>
+     <message>
+         <source>ATSC 16-VSB</source>
+-        <translation type="unfinished"></translation>
++        <translation>ATSC 16-VSB</translation>
+     </message>
+     <message>
+         <source>Detective/Thriller</source>
+-        <translation type="unfinished"></translation>
++        <translation>Detektiv/Thriller</translation>
+     </message>
+     <message>
+         <source>Adventure/Western/War</source>
+-        <translation type="unfinished"></translation>
++        <translation>Abenteuer/Western/Krieg</translation>
+     </message>
+     <message>
+         <source>Science Fiction/Fantasy/Horror</source>
+-        <translation type="unfinished"></translation>
++        <translation>Science Fiction/Fantasy/Horror</translation>
+     </message>
+     <message>
+         <source>Soap/melodrama/folkloric</source>
+-        <translation type="unfinished"></translation>
++        <translation>Soap/Melodrama/Folklore</translation>
+     </message>
+     <message>
+         <source>Serious/Classical/Religious/Historical Movie/Drama</source>
+-        <translation type="unfinished"></translation>
++        <translation>Seriös/Klassik/Religion/Historisch/Drama</translation>
+     </message>
+     <message>
+         <source>Adult</source>
+         <comment>Adult Movie</comment>
+-        <translation type="unfinished"></translation>
++        <translation>Film für Erwachsene</translation>
+     </message>
+     <message>
+         <source>News/weather report</source>
+-        <translation type="unfinished"></translation>
++        <translation>Nachrichten/Wetterbericht</translation>
+     </message>
+     <message>
+         <source>News magazine</source>
+-        <translation type="unfinished"></translation>
++        <translation>Nachrichtenmagazin</translation>
+     </message>
+     <message>
+         <source>Intelligent Programmes</source>
+-        <translation type="unfinished"></translation>
++        <translation>Intelligente Programme</translation>
+     </message>
+     <message>
+         <source>Game Show</source>
+-        <translation type="unfinished"></translation>
++        <translation>Spiele Show</translation>
+     </message>
+     <message>
+         <source>Variety Show</source>
+-        <translation type="unfinished"></translation>
++        <translation>Varieté Show</translation>
+     </message>
+     <message>
+         <source>Talk Show</source>
+-        <translation type="unfinished"></translation>
++        <translation>Talkshow</translation>
+     </message>
+     <message>
+         <source>Special Events (World Cup, World Series..)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Spezielle Veranstaltungen (Weltmeisterschaft, ...)</translation>
+     </message>
+     <message>
+         <source>Sports Magazines</source>
+-        <translation type="unfinished"></translation>
++        <translation>Sportmagazine</translation>
+     </message>
+     <message>
+         <source>Football (Soccer)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Fußball</translation>
+     </message>
+     <message>
+         <source>Tennis/Squash</source>
+-        <translation type="unfinished"></translation>
++        <translation>Tennis/Squash</translation>
+     </message>
+     <message>
+         <source>Misc. Team Sports</source>
+-        <translation type="unfinished"></translation>
++        <translation>Div. Team Sportarten</translation>
+     </message>
+     <message>
+         <source>Athletics</source>
+-        <translation type="unfinished"></translation>
++        <translation>Athletik</translation>
+     </message>
+     <message>
+         <source>Motor Sport</source>
+-        <translation type="unfinished"></translation>
++        <translation>Motorsport</translation>
+     </message>
+     <message>
+         <source>Water Sport</source>
+-        <translation type="unfinished"></translation>
++        <translation>Wassersport</translation>
+     </message>
+     <message>
+         <source>Winter Sports</source>
+-        <translation type="unfinished"></translation>
++        <translation>Wintersport</translation>
+     </message>
+     <message>
+         <source>Equestrian</source>
+-        <translation type="unfinished"></translation>
++        <translation>Reiter</translation>
+     </message>
+     <message>
+         <source>Martial Sports</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kampfsport</translation>
+     </message>
+     <message>
+         <source>Kids</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kinder</translation>
+     </message>
+     <message>
+         <source>Pre-School Children&apos;s Programmes</source>
+-        <translation type="unfinished"></translation>
++        <translation>Vorschul Programm</translation>
+     </message>
+     <message>
+         <source>Entertainment Programmes for 6 to 14</source>
+-        <translation type="unfinished"></translation>
++        <translation>Unterhaltung für 6 bis 14 jährige</translation>
+     </message>
+     <message>
+         <source>Entertainment Programmes for 10 to 16</source>
+-        <translation type="unfinished"></translation>
++        <translation>Unterhaltung für 10 bis 16 jährige</translation>
+     </message>
+     <message>
+         <source>Informational/Educational</source>
+-        <translation type="unfinished"></translation>
++        <translation>Information/Bildung</translation>
+     </message>
+     <message>
+         <source>Cartoons/Puppets</source>
+-        <translation type="unfinished"></translation>
++        <translation>Zeichentrick/Puppen</translation>
+     </message>
+     <message>
+         <source>Music/Ballet/Dance</source>
+-        <translation type="unfinished"></translation>
++        <translation>Musik/Ballett/Tanz</translation>
+     </message>
+     <message>
+         <source>Rock/Pop</source>
+-        <translation type="unfinished"></translation>
++        <translation>Rock/Pop</translation>
+     </message>
+     <message>
+         <source>Classical Music</source>
+-        <translation type="unfinished"></translation>
++        <translation>Klassische Musik</translation>
+     </message>
+     <message>
+         <source>Folk Music</source>
+-        <translation type="unfinished"></translation>
++        <translation>Volksmusik</translation>
+     </message>
+     <message>
+         <source>Jazz</source>
+-        <translation type="unfinished"></translation>
++        <translation>Jazz</translation>
+     </message>
+     <message>
+         <source>Musical/Opera</source>
+-        <translation type="unfinished"></translation>
++        <translation>Musical/Oper</translation>
+     </message>
+     <message>
+         <source>Ballet</source>
+-        <translation type="unfinished"></translation>
++        <translation>Ballet</translation>
+     </message>
+     <message>
+         <source>Arts/Culture</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kunst/Kultur</translation>
+     </message>
+     <message>
+         <source>Performing Arts</source>
+-        <translation type="unfinished"></translation>
++        <translation>Angewandte Kunst</translation>
+     </message>
+     <message>
+         <source>Fine Arts</source>
+-        <translation type="unfinished"></translation>
++        <translation>Bildende Kunst</translation>
+     </message>
+     <message>
+         <source>Religion</source>
+-        <translation type="unfinished"></translation>
++        <translation>Religion</translation>
+     </message>
+     <message>
+         <source>Popular Culture/Traditional Arts</source>
+-        <translation type="unfinished"></translation>
++        <translation>Populäre Kultur/Traditionelle Kunst</translation>
+     </message>
+     <message>
+         <source>Literature</source>
+-        <translation type="unfinished"></translation>
++        <translation>Literatur</translation>
+     </message>
+     <message>
+         <source>Film/Cinema</source>
+-        <translation type="unfinished"></translation>
++        <translation>Film/Kino</translation>
+     </message>
+     <message>
+         <source>Experimental Film/Video</source>
+-        <translation type="unfinished"></translation>
++        <translation>Experimenteller Film/Video</translation>
+     </message>
+     <message>
+         <source>Broadcasting/Press</source>
+-        <translation type="unfinished"></translation>
++        <translation>Rundfunk/Presse</translation>
+     </message>
+     <message>
+         <source>New Media</source>
+-        <translation type="unfinished"></translation>
++        <translation>Neue Medien</translation>
+     </message>
+     <message>
+         <source>Arts/Culture Magazines</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kunst/Kulturmagazin</translation>
+     </message>
+     <message>
+         <source>Social/Policical/Economics</source>
+-        <translation type="unfinished"></translation>
++        <translation>gesellschaftlich/politisch/wirtschaftlich</translation>
+     </message>
+     <message>
+         <source>Magazines/Reports/Documentary</source>
+-        <translation type="unfinished"></translation>
++        <translation>Magazin/Dokumentation</translation>
+     </message>
+     <message>
+         <source>Economics/Social Advisory</source>
+-        <translation type="unfinished"></translation>
++        <translation>Wirtschaft/Gesellschafts Beratung</translation>
+     </message>
+     <message>
+         <source>Remarkable People</source>
+-        <translation type="unfinished"></translation>
++        <translation>Bemerkenswerte Personen</translation>
+     </message>
+     <message>
+         <source>Education/Science/Factual</source>
+-        <translation type="unfinished"></translation>
++        <translation>Erziehung/Wissenschaft/Tatsachen</translation>
+     </message>
+     <message>
+         <source>Nature/animals/Environment</source>
+-        <translation type="unfinished"></translation>
++        <translation>Natur/Tiere/Umwelt</translation>
+     </message>
+     <message>
+         <source>Technology/Natural Sciences</source>
+-        <translation type="unfinished"></translation>
++        <translation>Technologie/Naturwissenschaften</translation>
+     </message>
+     <message>
+         <source>Medicine/Physiology/Psychology</source>
+-        <translation type="unfinished"></translation>
++        <translation>Medizin/Physiologie/Psychologie</translation>
+     </message>
+     <message>
+         <source>Foreign Countries/Expeditions</source>
+-        <translation type="unfinished"></translation>
++        <translation>Fremde Länder/Expeditionen</translation>
+     </message>
+     <message>
+         <source>Social/Spiritual Sciences</source>
+-        <translation type="unfinished"></translation>
++        <translation>Gesellschaftliche/Spirituelle Wissenschaften</translation>
+     </message>
+     <message>
+         <source>Further Education</source>
+-        <translation type="unfinished"></translation>
++        <translation>Weiterbildung</translation>
+     </message>
+     <message>
+         <source>Languages</source>
+-        <translation type="unfinished"></translation>
++        <translation>Sprachen</translation>
+     </message>
+     <message>
+         <source>Leisure/Hobbies</source>
+-        <translation type="unfinished"></translation>
++        <translation>Freizeit/Hobby</translation>
+     </message>
+     <message>
+         <source>Tourism/Travel</source>
+-        <translation type="unfinished"></translation>
++        <translation>Tourismus/Reisen</translation>
+     </message>
+     <message>
+         <source>Handicraft</source>
+-        <translation type="unfinished"></translation>
++        <translation>Handwerk</translation>
+     </message>
+     <message>
+         <source>Motoring</source>
+-        <translation type="unfinished"></translation>
++        <translation>Motorsport</translation>
+     </message>
+     <message>
+         <source>Fitness &amp; Health</source>
+-        <translation type="unfinished"></translation>
++        <translation>Fitness &amp; Gesundheit</translation>
+     </message>
+     <message>
+         <source>Cooking</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kochen</translation>
+     </message>
+     <message>
+         <source>Advertizement/Shopping</source>
+-        <translation type="unfinished"></translation>
++        <translation>Werbung/Einkaufen</translation>
+     </message>
+     <message>
+         <source>Gardening</source>
+-        <translation type="unfinished"></translation>
++        <translation>Gartenarbeit</translation>
+     </message>
+     <message>
+         <source>Original Language</source>
+-        <translation type="unfinished"></translation>
++        <translation>Originalsprache</translation>
      </message>
      <message>
          <source>Black &amp; White</source>
@@ -9700,7 +10556,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>&quot;Unpublished&quot; Programmes</source>
-@@ -10331,7 +10345,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>Unveröffentlichte Programme</translation>
      </message>
      <message>
          <source>Live Broadcast</source>
@@ -9709,7 +10566,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>currently running.</source>
-@@ -10339,31 +10353,31 @@
+-        <translation type="unfinished"></translation>
++        <translation>läuft derzeit.</translation>
      </message>
      <message>
          <source>Successful.</source>
@@ -9748,7 +10606,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Upmix</source>
-@@ -10371,27 +10385,23 @@
+-        <translation type="unfinished"></translation>
++        <translation>Upmix</translation>
      </message>
      <message>
          <source>Passive</source>
@@ -9781,7 +10640,13 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Deferral days for Auto-Transcode jobs</source>
-@@ -10403,35 +10413,35 @@
+-        <translation type="unfinished"></translation>
++        <translation>Verschiebungstage für automatische Umwandlungs Aufträge</translation>
+     </message>
+     <message>
+         <source>If non-zero, Auto-Transcode jobs will be scheduled to run this many days after a recording completes instead of immediately afterwards.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Wenn nicht null werden die automatischen Umwandlungsaufträge so viele Tage nach der beendeten Aufnahme ablaufen anstatt sofort nach der Aufnahme.</translation>
      </message>
      <message>
          <source>Run User Job #%1</source>
@@ -9825,7 +10690,28 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Deleted Max Age</source>
-@@ -10455,37 +10465,33 @@
+-        <translation type="unfinished"></translation>
++        <translation>Gelöscht Maximales Alter</translation>
+     </message>
+     <message>
+         <source>When set to a number greater than zero, AutoExpire will force expiration of Deleted recordings when they are this many days old.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Wenn auf eine Zahl größer Null eingestellt, wird AutoExpire den Verfall von gelöschten Aufnahmen erzwingen wenn diese die eingestellte Anzahl Tage alt sind.</translation>
+     </message>
+     <message>
+         <source>Expire in deleted order</source>
+-        <translation type="unfinished"></translation>
++        <translation>Verfall in Löschreihenfolge</translation>
+     </message>
+     <message>
+         <source>Expire Deleted recordings in the order which they were originally deleted.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Gelöschte Aufnahmen verfallen in der Reihenfolge in welcher sie ursprünglich gelöscht wurden.</translation>
+     </message>
+     <message>
+         <source>DeletedExpireOptions</source>
+-        <translation type="unfinished"></translation>
++        <translation>Gelöschte Verfall Einstellungen</translation>
      </message>
      <message>
          <source>Watched before UNwatched</source>
@@ -9868,9 +10754,29 @@ Index: mythtv/i18n/mythfrontend_de.ts
 -    </message>
 -    <message>
          <source>Profile Item</source>
-         <translation type="unfinished"></translation>
+-        <translation type="unfinished"></translation>
++        <translation>Profil Element</translation>
      </message>
-@@ -10508,31 +10514,31 @@
+     <message>
+         <source>Example Custom filter list: &apos;ivtc,denoise3d&apos;</source>
+-        <translation type="unfinished"></translation>
++        <translation>Beispiel für eigene Filter Liste:  &apos;ivtc,denoise3d&apos;</translation>
+     </message>
+     <message>
+         <source>Main deinterlacing method.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Haupt Deinterlacing Methode.</translation>
+     </message>
+     <message>
+         <source>Fallback deinterlacing method.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Ersatz Deinterlacing Methode.</translation>
+     </message>
+     <message>
+         <source>&amp;</source>
+         <comment>and</comment>
+-        <translation type="unfinished"></translation>
++        <translation>&amp;</translation>
      </message>
      <message>
          <source>if rez</source>
@@ -9909,7 +10815,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Sorry, playback group
-@@ -10546,91 +10552,91 @@
+ name can not be blank.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Der Wiedergabegruppenname kann nicht leer sein.</translation>
+     </message>
+     <message>
+         <source>Sorry, playback group name
+ &apos;%1&apos; is already being used.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Der Wiedergabegruppenname
++ &apos;%1&apos; wird schon verwendet.</translation>
      </message>
      <message>
          <source>Error</source>
@@ -10023,7 +10938,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>If enabled, MythTV attempts to initialize picture controls (brightness, contrast, etc.) that are applied during playback.</source>
-@@ -10638,103 +10644,103 @@
+-        <translation type="unfinished"></translation>
++        <translation>Wenn aktiviert versucht MythTV die Bildkontrolle (Helligkeit, Kontrast, etc.) so einzustellen wie diese während der Wiedergabe verwendet wurden.</translation>
      </message>
      <message>
          <source>Warn on no audio output</source>
@@ -10152,7 +11068,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Zoom</source>
-@@ -10742,71 +10748,71 @@
+-        <translation type="unfinished"></translation>
++        <translation>Zoom</translation>
      </message>
      <message>
          <source>When enabled, these will apply a predefined zoom to all video playback in MythTV.</source>
@@ -10241,7 +11158,13 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>If set, the scheduler will avoid assigning shows from different channels to the same card if their end time and start time match. This will be allowed when necessary in order to resolve conflicts.</source>
-@@ -10818,31 +10824,31 @@
+-        <translation type="unfinished"></translation>
++        <translation>Wenn aktiviert wird die Zeitsteuerung die Zuweisung von Programmen verschiedener Kanäle auf die selbe Karte verhindern, falls deren Start- und Endzeit übereinstimmen. Um Konflikte zu lösen wird dies bei Bedarf erlaubt.</translation>
+     </message>
+     <message>
+         <source>The &apos;All&apos; Recording type will receive this additional recording priority value.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Der &apos;Alle&apos; Aufnahmetyp wird diesen zusätzlichen Aufnahme-Prioritätswert erhalten.</translation>
      </message>
      <message>
          <source>Ignore LiveTV Recordings</source>
@@ -10280,7 +11203,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>MythMediaMonitor</source>
-@@ -10850,87 +10856,87 @@
+-        <translation type="unfinished"></translation>
++        <translation>MythMediaMonitor</translation>
      </message>
      <message>
          <source>PVR-350 Hardware Decoder Settings</source>
@@ -10389,7 +11313,13 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Security Pin (Required)</source>
-@@ -10942,7 +10948,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>Sicherheitscode (Benötigt)</translation>
+     </message>
+     <message>
+         <source>Pin code required for a frontend to connect to the backend. Blank prevents all connections, 0000 allows any client to connect.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Benötigter Sicherheitscode damit ein Frontend sich zum Backend verbinden kann. Leer verhindert alle Verbindungen, 0000 erlaubt alle Verbindungen.</translation>
      </message>
      <message>
          <source>Disable Firewire Reset</source>
@@ -10398,7 +11328,18 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>By default MythTV will reset the firewire bus when a firewire recorder stops responding to commands. But if this causes problems you can disable this here for Linux firewire recorders.</source>
-@@ -10958,7 +10964,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>Im Normalfall wird MythTV den Firewire Bus zurücksetzen wenn ein Firewire Rekorder nicht mehr auf Kommandos reagiert. Wenn dies Probleme verursachen sollte können sie dieses Verhalten für Linux Firewire Rekorder ausschalten.</translation>
+     </message>
+     <message>
+         <source>Miscellaneous Status Application</source>
+-        <translation type="unfinished"></translation>
++        <translation>Verschiedene Status Anwendungen</translation>
+     </message>
+     <message>
+         <source>External application or script that outputs extra information for inclusion in the backend status page.  See contrib/misc_status_info/README</source>
+-        <translation type="unfinished"></translation>
++        <translation>Externe Anwendung oder Script welches extra Informationen für die Backend Status Seite erzeugt. Siehe contrib/misc_status_info/README</translation>
      </message>
      <message>
          <source>Your Local Timezone (for XMLTV)</source>
@@ -10407,7 +11348,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Used if the XMLTV data comes from a different timezone than your own. This adjust the times in the XMLTV EPG data to compensate. &apos;Auto&apos; converts the XMLTV time to local time using your computer&apos;s timezone.  &apos;None&apos; ignores the XMLTV timezone, interpreting times as local.</source>
-@@ -10966,16 +10972,17 @@
+-        <translation type="unfinished"></translation>
++        <translation>Verwendet falls die XMLTV Daten aus einer anderen als der eigenen Zeitzone stammen. Dies paßt die Zeiten in den XMLTV EPG Daten an. &apos;Auto&apos; konvertiert die XMLTV Zeit auf die Lokalzeit unter Verwendung der Zeitzone des Computers. &apos;Keine&apos; ignoriert die XMLTV Zeitzone und interpretiert Zeiten als Lokalzeit.</translation>
      </message>
      <message>
          <source>Delay between wake attempts (secs)</source>
@@ -10428,7 +11370,23 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Idle shutdown timeout (secs)</source>
-@@ -10995,35 +11002,35 @@
+-        <translation type="unfinished"></translation>
++        <translation>Leerlauf Abschaltzeit (Sekunden)</translation>
+     </message>
+     <message>
+         <source>Command to set Wakeup Time</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kommando um die Aufweckzeit zu setzen</translation>
+     </message>
+     <message>
+         <source>The command used to set the wakeup time (passed as $time) for the Master Backend</source>
+-        <translation type="unfinished"></translation>
++        <translation>Das Kommando um die Aufweckzeit für das Master-Backend zu setzen (übergeben als $time)</translation>
+     </message>
+     <message>
+         <source>Run Jobs only on original recording backend</source>
+-        <translation type="unfinished"></translation>
++        <translation>Starte Aufträge nur auf dem ursprünglichen Aufnahme Backend</translation>
      </message>
      <message>
          <source>User Job #%1 Command</source>
@@ -10472,7 +11430,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Backend Wakeup settings</source>
-@@ -11031,7 +11038,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>Backend Aufwach-Einstellungen</translation>
      </message>
      <message>
          <source>Slave Backends</source>
@@ -10481,7 +11440,9 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Job Queue (Backend-Specific)</source>
-@@ -11040,27 +11047,174 @@
+-        <translation type="unfinished"></translation>
++        <translation>Auftragsliste (Backend spezifisch)</translation>
+     </message>
      <message>
          <source>Tuner %1 is recording:
  </source>
@@ -10534,22 +11495,22 @@ Index: mythtv/i18n/mythfrontend_de.ts
 +    <message>
 +        <source>Mythtv has was set to sleep for %1 minutes and will exit in %2 seconds.
 +Do you wish to continue watching?</source>
-         <translation type="unfinished"></translation>
-     </message>
++        <translation>MythTV wurde eingestellt um %1 Minuten zu schlafen und wird sich in %2 Sekunden beenden.Wollen sie weiter schauen ?</translation>
++    </message>
 +    <message>
 +        <source>CPU++</source>
 +        <comment>Sample: No hardware assist</comment>
-+        <translation type="unfinished"></translation>
++        <translation>CPU++</translation>
 +    </message>
 +    <message>
 +        <source>CPU+</source>
 +        <comment>Sample: Hardware assist HD only</comment>
-+        <translation type="unfinished"></translation>
++        <translation>CPU+</translation>
 +    </message>
 +    <message>
 +        <source>CPU--</source>
 +        <comment>Sample: Hardware assist all</comment>
-+        <translation type="unfinished"></translation>
++        <translation>CPU--</translation>
 +    </message>
 +    <message>
 +        <source>High Quality</source>
@@ -10564,12 +11525,12 @@ Index: mythtv/i18n/mythfrontend_de.ts
 +    <message>
 +        <source>Slim</source>
 +        <comment>Sample: low CPU usage</comment>
-+        <translation type="unfinished"></translation>
++        <translation>Kompakt</translation>
 +    </message>
 +    <message>
 +        <source>If other than None, override the audio sampling rate in the recording profile when this card is used.  Use this if your capture card does not support all of the standard rates.</source>
-+        <translation type="unfinished"></translation>
-+    </message>
+         <translation type="unfinished"></translation>
+     </message>
 +    <message>
 +        <source>Set the audio upmix type for 2ch to 6ch conversion. This is for multi-channel/surround audio playback. &apos;Passive&apos; is the least demanding on the CPU. &apos;Active Simple&apos; is more demanding and &apos;Active Linear&apos; is the most demanding (but highest quality).</source>
 +        <translation>Bestimmt, wie Stereo-Ton in Mehrkanalton konvertiert wird. Dies betrifft die Mehrkanal/Surround-Ton Wiedergabe. Von &apos;Passiv&apos; über &apos;Aktiv simpel&apos; nach &apos;Aktiv linear&apos; (höchste Qualität) steigt die CPU-Belastung.</translation>
@@ -10580,19 +11541,19 @@ Index: mythtv/i18n/mythfrontend_de.ts
 +    </message>
 +    <message>
 +        <source>ScreenShotPath</source>
-+        <translation type="unfinished"></translation>
++        <translation>ScreenShotPath</translation>
 +    </message>
 +    <message>
 +        <source>Path to screenshot storage location. Should be writable by the frontend</source>
-+        <translation type="unfinished"></translation>
++        <translation>Pfad zur Bildschirm Foto Ablage. Sollte vom Frontend beschrieben werden können.</translation>
 +    </message>
 +    <message>
 +        <source>Display on screen</source>
-+        <translation type="unfinished"></translation>
++        <translation>Anzeige am Schirm</translation>
 +    </message>
 +    <message>
 +        <source>Automatic Priority Range (+/-)</source>
-+        <translation type="unfinished"></translation>
++        <translation>Automatischer Prioritätsbereich (+/-)</translation>
 +    </message>
 +    <message>
 +        <source>Up to this number of priority points may be added for titles that are usually watched soon after recording or subtracted for titles that are often watched several days or weeks later.</source>
@@ -10600,19 +11561,19 @@ Index: mythtv/i18n/mythfrontend_de.ts
 +    </message>
 +    <message>
 +        <source>MythTV Frontend</source>
-+        <translation type="unfinished"></translation>
++        <translation>MythTV Frontend</translation>
 +    </message>
 +    <message>
 +        <source>Length of time the frontend waits between tries to wake up the master backend. This should be the time your master backend needs to startup. Set 0 to disable.</source>
-+        <translation type="unfinished"></translation>
++        <translation>Zeitspanne die das Frontend zwischen den Versuchen das Master-Backend aufzuwecken wartet. Dies sollte der Zeit entsprechen, die das Master-Backend benötigt um zu starten. Zum Deaktivieren 0 setzen.</translation>
 +    </message>
 +    <message>
 +        <source>A command executed before the backend would shutdown. The return value determines if the backend can shutdown. 0 - yes, 1 - restart idling, 2 - reset the backend to wait for a frontend.</source>
-+        <translation type="unfinished"></translation>
++        <translation>Ein Kommando welches ausgeführt wird bevor das Backend abgeschaltet würde. Der Rückgabewert definiert ob das Backend abgeschaltet werden darf. 0 - Ja, 1 - Warten neu starten, 2 - Backend rücksetzen um auf ein Frontend zu warten.</translation>
 +    </message>
 +    <message>
 +        <source>Include Recordings in Video List</source>
-+        <translation type="unfinished"></translation>
++        <translation>Inkludiere Aufnahmen in Video Liste</translation>
 +    </message>
 +    <message>
 +        <source>If enabled, the master backend will include the  list of recorded shows in the list of videos  This is mainly to accommodate UPnP players which do not allow more than 1 video section.</source>
@@ -10620,15 +11581,15 @@ Index: mythtv/i18n/mythfrontend_de.ts
 +    </message>
 +    <message>
 +        <source>Upnp Media Update Time</source>
-+        <translation type="unfinished"></translation>
++        <translation>Upnp Medien Aktualisierungs Zeit</translation>
 +    </message>
 +    <message>
 +        <source>The number of minutes between mythbackend checking  for new videos to serve via upnp. 0 = Off. </source>
-+        <translation type="unfinished"></translation>
++        <translation>Minutenintervall in dem mythbackend nach neuen Videos prüft, die via UPNP bereitgestellt werden. 0 = Aus.</translation>
 +    </message>
 +    <message>
 +        <source>Video content to show a WMP Client</source>
-+        <translation type="unfinished"></translation>
++        <translation>Video Inhalt der einem WMP Client gezeigt wird</translation>
 +    </message>
 +    <message>
 +        <source>Recordings</source>
@@ -10644,11 +11605,11 @@ Index: mythtv/i18n/mythfrontend_de.ts
 +    </message>
 +    <message>
 +        <source>UPNP Server Settings</source>
-+        <translation type="unfinished"></translation>
++        <translation>UPNP Server Einstellungen</translation>
 +    </message>
 +    <message>
 +        <source>MythTV Setup</source>
-+        <translation type="unfinished"></translation>
++        <translation>MythTV Einstellungen</translation>
 +    </message>
  </context>
  <context>
@@ -10660,7 +11621,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>The theme you are using does not contain a &apos;recording_options&apos; element.  Please contact the theme creator and ask if they could please update it.&lt;br&gt;&lt;br&gt;The next screen will be empty.  Press EXIT to return to the menu.</source>
-@@ -11068,11 +11222,11 @@
+-        <translation type="unfinished"></translation>
++        <translation>Das Thema welches sie benutzen enthält kein &apos;&apos;recording_options&apos; Element. Bitte kontaktieren sie den Themen Autor und bitten sie um eine Aktualisierung.&lt;br&gt;&lt;br&gt;Der nächste Schirm wird leer sein. Drücken sie EXIT um zum Menü zu gelangen.</translation>
      </message>
      <message>
          <source>Unknown Element</source>
@@ -10670,11 +11632,11 @@ Index: mythtv/i18n/mythfrontend_de.ts
      <message>
          <source>The theme you are using contains an unknown element (&apos;%1&apos;).  It will be ignored</source>
 -        <translation type="unfinished">Das verwendete Thema enthält ein unbekanntes Element &apos;%1&apos;. Es wird ignoriert.</translation>
-+        <translation>Das verwendete Thema enthält ein unbekanntes Element &apos;%1&apos;. Es wird ignoriert.</translation>
++        <translation>Das verwendete Thema enthält ein unbekanntes Element (&apos;%1&apos;). Es wird ignoriert.</translation>
      </message>
  </context>
  <context>
-@@ -11090,15 +11244,15 @@
+@@ -11090,91 +11247,91 @@
      <name>SIScan</name>
      <message>
          <source>Updated Channel %1</source>
@@ -10693,7 +11655,111 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Network %1 Processing</source>
-@@ -11412,19 +11566,19 @@
+-        <translation type="unfinished"></translation>
++        <translation>Netzwerk %1 Verarbeitung</translation>
+     </message>
+     <message>
+         <source>Finished processing Transport List</source>
+-        <translation type="unfinished"></translation>
++        <translation>Transportliste fertig abgearbeitet</translation>
+     </message>
+     <message>
+         <source>Updating Services</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dienste werden aktualisiert</translation>
+     </message>
+     <message>
+         <source>Finished processing Services</source>
+-        <translation type="unfinished"></translation>
++        <translation>Dienste fertig abgearbeitet</translation>
+     </message>
+     <message>
+         <source>Frequency %1</source>
+-        <translation type="unfinished"></translation>
++        <translation>Frequenz %1</translation>
+     </message>
+     <message>
+         <source>as</source>
+-        <translation type="unfinished"></translation>
++        <translation>als</translation>
+     </message>
+     <message>
+         <source>Skipping %1, not in imported channel map</source>
+-        <translation type="unfinished"></translation>
++        <translation>Überspringe %1, nicht in importierter Kanaltabelle</translation>
+     </message>
+     <message>
+         <source>%1%2%3 on %4 (%5)</source>
+-        <translation type="unfinished"></translation>
++        <translation>%1%2%3 auf %4 (%5)</translation>
+     </message>
+     <message>
+         <source>Adding %1</source>
+-        <translation type="unfinished"></translation>
++        <translation>Füge %1 hinzu</translation>
+     </message>
+     <message>
+         <source>Updating %1</source>
+-        <translation type="unfinished"></translation>
++        <translation>Aktualisiere %1</translation>
+     </message>
+     <message>
+         <source>Skipping %1</source>
+-        <translation type="unfinished"></translation>
++        <translation>Überspringe %1</translation>
+     </message>
+     <message>
+         <source>on %1</source>
+-        <translation type="unfinished"></translation>
++        <translation>auf %1</translation>
+     </message>
+     <message>
+         <source>Data Only Channel (off-air?)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Nur Datenkanal (nicht in Betrieb?)</translation>
+     </message>
+     <message>
+         <source>Empty Channel (off-air?)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Leerer Kanal (nicht in Betrieb?)</translation>
+     </message>
+     <message>
+         <source>Audio Only Channel</source>
+-        <translation type="unfinished"></translation>
++        <translation>Nur Tonkanal</translation>
+     </message>
+     <message>
+         <source>Encrypted Channel</source>
+-        <translation type="unfinished"></translation>
++        <translation>Verschlüsselter Kanal</translation>
+     </message>
+     <message>
+         <source>%1 %2-%3 as %4 on %5 (%6)</source>
+-        <translation type="unfinished"></translation>
++        <translation>%1 %2-%3 als %4 auf %5 (%6)</translation>
+     </message>
+     <message>
+         <source>Found channel, but it doesn&apos;t match existing tsid. You may wish to delete existing channels and do a full scan.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Kanal gefunden, aber er paßt nicht zur existierenden TSID. Eventuell sollten sie die existierenden Kanäle löschen und eine vollständinge Suche durchführen.</translation>
+     </message>
+     <message>
+         <source>Skipping %1 - already in DB, and we don&apos;t have better data.</source>
+-        <translation type="unfinished"></translation>
++        <translation>Überspringe %1 - schon vorhanden und wir haben keine besseren Daten.</translation>
+     </message>
+ </context>
+ <context>
+@@ -11208,7 +11365,7 @@
+     </message>
+     <message>
+         <source>Tuning</source>
+-        <translation type="unfinished"></translation>
++        <translation>Einstellen</translation>
+     </message>
+     <message>
+         <source>Scan</source>
+@@ -11412,94 +11569,95 @@
      </message>
      <message>
          <source>marked as HDTV</source>
@@ -10717,7 +11783,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -11439,7 +11593,7 @@
+     <name>StorageGroupEditor</name>
+     <message>
+         <source>&apos;%1&apos; Storage Group Directories</source>
+-        <translation type="unfinished"></translation>
++        <translation>&apos;%1&apos; Speichergruppen Verzeichnisse</translation>
+     </message>
+     <message>
+         <source>Local &apos;%1&apos; Storage Group Directories</source>
+-        <translation type="unfinished"></translation>
++        <translation>Lokale &apos;%1&apos; Speichergruppen Verzeichnisse</translation>
      </message>
      <message>
          <source>Add Storage Group Directory</source>
@@ -10726,7 +11801,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Enter directory name or press SELECT to enter text via the On Screen Keyboard</source>
-@@ -11447,24 +11601,25 @@
+-        <translation type="unfinished"></translation>
++        <translation>Verzeichnis eingeben oder SELECT drücken um Text mit der Bildschirm Tastatur einzugeben</translation>
      </message>
      <message>
          <source>Edit Storage Group Directory</source>
@@ -10757,7 +11833,16 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -11479,7 +11634,7 @@
+     <name>StorageGroupListEditor</name>
+     <message>
+         <source>Storage Groups (directories for new recordings)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Speichergruppen (Verzeichnisse für neue Aufnahmen)</translation>
+     </message>
+     <message>
+         <source>Local Storage Groups (directories for new recordings)</source>
+-        <translation type="unfinished"></translation>
++        <translation>Lokale Speichergruppen (Verzeichnisse für neue Aufnahmen)</translation>
      </message>
      <message>
          <source>Create New Storage Group</source>
@@ -10766,7 +11851,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Enter group name or press SELECT to enter text via the On Screen Keyboard</source>
-@@ -11487,15 +11642,15 @@
+-        <translation type="unfinished"></translation>
++        <translation>Gruppenname eingeben oder SELECT drücken um Text mit der Bildschirm Tastatur einzugeben</translation>
      </message>
      <message>
          <source>Delete &apos;%1&apos; Storage Group?</source>
@@ -10785,7 +11871,12 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>(Create %1 group)</source>
-@@ -11586,7 +11741,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>(Erzeuge %1 Gruppen)</translation>
+     </message>
+ </context>
+ <context>
+@@ -11586,7 +11744,7 @@
      </message>
      <message>
          <source>Adjust Volume</source>
@@ -10794,7 +11885,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Mute On</source>
-@@ -11746,7 +11901,7 @@
+@@ -11746,7 +11904,7 @@
      </message>
      <message>
          <source>Sleep </source>
@@ -10803,7 +11894,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>16:9 Stretch</source>
-@@ -12080,7 +12235,7 @@
+@@ -12080,7 +12238,7 @@
      </message>
      <message>
          <source>DVD Root Menu</source>
@@ -10812,7 +11903,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Schedule Recordings</source>
-@@ -12128,7 +12283,7 @@
+@@ -12128,7 +12286,7 @@
      </message>
      <message>
          <source>[O]k</source>
@@ -10821,7 +11912,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Jump to Program</source>
-@@ -12144,7 +12299,7 @@
+@@ -12144,7 +12302,7 @@
      </message>
      <message>
          <source>Autodetect</source>
@@ -10830,7 +11921,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>High Quality</source>
-@@ -12160,15 +12315,15 @@
+@@ -12160,15 +12318,15 @@
      </message>
      <message>
          <source>Toggle Teletext Captions</source>
@@ -10849,7 +11940,39 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>(I)</source>
-@@ -12270,11 +12425,11 @@
+@@ -12183,11 +12341,11 @@
+     <message>
+         <source>(P)</source>
+         <comment>Progressive</comment>
+-        <translation type="unfinished">Progressiv</translation>
++        <translation>(P)</translation>
+     </message>
+     <message>
+         <source>Video Scan</source>
+-        <translation type="unfinished"></translation>
++        <translation>Video Scan</translation>
+     </message>
+     <message>
+         <source>Detect</source>
+@@ -12254,7 +12412,7 @@
+     </message>
+     <message>
+         <source>DVD</source>
+-        <translation type="unfinished"></translation>
++        <translation>DVD</translation>
+     </message>
+     <message>
+         <source>Menu</source>
+@@ -12262,7 +12420,7 @@
+     </message>
+     <message>
+         <source>Still Frame</source>
+-        <translation type="unfinished"></translation>
++        <translation>Standbild</translation>
+     </message>
+     <message>
+         <source>Title: %1 (%2)</source>
+@@ -12270,11 +12428,11 @@
      </message>
      <message>
          <source>Chapter: %1/%2</source>
@@ -10863,7 +11986,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>You are exiting this %1</source>
-@@ -12306,27 +12461,27 @@
+@@ -12306,43 +12464,43 @@
      </message>
      <message>
          <source>Exit</source>
@@ -10897,7 +12020,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>You should have gotten a channel lock by now. You can continue to wait for a signal, or you can change the channels with %1 or %2, change video source (%3), inputs (%4), etc.</source>
-@@ -12334,7 +12489,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>Sie sollten schon eine Kanalverriegelung bekommen haben. Sie können weiter auf ein Signal warten oder sie können den Kanal mit %1 oder %2 wechseln, die Video Quelle wechseln (%3), Eingänge wechseln (%4), etc.</translation>
      </message>
      <message>
          <source>Yes</source>
@@ -10906,7 +12030,8 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Adjust Fill</source>
-@@ -12342,7 +12497,7 @@
+-        <translation type="unfinished"></translation>
++        <translation>Füllung Einstellen</translation>
      </message>
      <message>
          <source>Switch Input</source>
@@ -10915,7 +12040,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>C</source>
-@@ -12356,24 +12511,36 @@
+@@ -12356,24 +12514,36 @@
      </message>
      <message>
          <source>Switch Source</source>
@@ -10957,7 +12082,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
  </context>
  <context>
      <name>ThemeUI</name>
-@@ -12495,23 +12662,23 @@
+@@ -12495,23 +12665,23 @@
      </message>
      <message>
          <source>Select a recording to permanently erase</source>
@@ -10986,7 +12111,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Description:</source>
-@@ -12578,7 +12745,7 @@
+@@ -12578,7 +12748,7 @@
      <name>TransportList</name>
      <message>
          <source>New Transport</source>
@@ -10995,7 +12120,15 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -12616,19 +12783,19 @@
+@@ -12609,26 +12779,26 @@
+     </message>
+     <message>
+         <source>Multiplex Editor</source>
+-        <translation type="unfinished"></translation>
++        <translation>Multiplex Editor</translation>
+     </message>
+ </context>
+ <context>
      <name>UIListBtnType</name>
      <message>
          <source>Search</source>
@@ -11019,7 +12152,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
  </context>
  <context>
-@@ -12750,18 +12917,18 @@
+@@ -12750,18 +12920,18 @@
      </message>
      <message>
          <source>Conflict Today</source>
@@ -11041,7 +12174,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Cannot connect to server!</source>
-@@ -12791,7 +12958,7 @@
+@@ -12791,7 +12961,7 @@
      </message>
      <message>
          <source>MythTV is about to start recording.</source>
@@ -11050,7 +12183,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>MythTV is busy recording.</source>
-@@ -12827,15 +12994,15 @@
+@@ -12827,15 +12997,15 @@
      </message>
      <message>
          <source>Menu</source>
@@ -11069,7 +12202,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Run mythfilldatabase</source>
-@@ -12843,7 +13010,7 @@
+@@ -12843,7 +13013,7 @@
      </message>
      <message>
          <source>Shutdown Now</source>
@@ -11078,7 +12211,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Exit</source>
-@@ -12859,7 +13026,7 @@
+@@ -12859,7 +13029,7 @@
      </message>
      <message>
          <source>Cannot shutdown because MythTV is about to start recording</source>
@@ -11087,7 +12220,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      </message>
      <message>
          <source>Cannot shutdown because MythTV is about to start a wakeup/shutdown period.</source>
-@@ -12871,11 +13038,11 @@
+@@ -12871,11 +13041,11 @@
      </message>
      <message>
          <source>to</source>
@@ -23981,34 +25114,6 @@ Index: mythtv/i18n/mythfrontend_dk.ts
      </message>
  </context>
  <context>
-Index: mythtv/i18n/mythfrontend_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythtv/i18n/mythfrontend_cz.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythtv/i18n/mythfrontend_de.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythtv/i18n/mythfrontend_sv.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythtv/i18n/mythfrontend_he.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythtv/i18n/mythfrontend_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythtv/i18n/mythfrontend_dk.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythtv/configure
 ===================================================================
 --- mythtv/configure	(revision 16468)
@@ -24079,7 +25184,23 @@ Index: mythtv/configure
    --previous|--prev)
        echo "No history of previous configure parameters."
    ;;
-@@ -1599,10 +1612,13 @@
+@@ -1475,6 +1488,7 @@
+       fi
+     fi
+     cmov="yes"
++    fast_cmov="yes"
+   ;;
+   # armv4l is a subset of armv[567]*l
+   arm|armv[4567]*l)
+@@ -1586,6 +1600,7 @@
+     ;;
+   freebsd)
+     append CCONFIG "freebsd"
++    disable ivtv
+     disable need_memalign
+     backend="yes"
+     ;;
+@@ -1599,10 +1614,13 @@
      enable  darwin
      disable dvb
      disable ivtv
@@ -24096,7 +25217,7 @@ Index: mythtv/configure
      disable need_memalign
      disable opengl_video
      disable opengl_vsync
-@@ -1619,9 +1635,23 @@
+@@ -1619,9 +1637,23 @@
      FFSERVERLDFLAGS=-Wl,-bind_at_load
      ;;
    mingw32*)
@@ -24122,7 +25243,7 @@ Index: mythtv/configure
      shlibdir="$bindir"
      VHOOKSHFLAGS='-shared -L$(BUILD_ROOT)/libavformat -L$(BUILD_ROOT)/libavcodec -L$(BUILD_ROOT)/libavutil'
      VHOOKLIBS='-lavformat$(BUILDSUF) -lavcodec$(BUILDSUF) -lavutil$(BUILDSUF) $(EXTRALIBS)'
-@@ -1629,17 +1659,7 @@
+@@ -1629,17 +1661,7 @@
          VHOOKSHFLAGS="$VHOOKSHFLAGS -L\$(BUILD_ROOT)/libswscale"
          VHOOKLIBS="$VHOOKLIBS -lswscale\$(BUILDSUF)"
      fi
@@ -24140,7 +25261,7 @@ Index: mythtv/configure
      SLIBPREF="lib"
      SLIBSUF=".dll"
      EXESUF=".exe"
-@@ -2034,6 +2054,8 @@
+@@ -2034,6 +2056,8 @@
  # EM64T era Intel Xeon
     if expr "$processor" : ".*Intel(R) Xeon(R) CPU.*5110" > /dev/null ; then
         ARCHFLAGS="-march=k8" # this would be pentium4 on 32 bit systems
@@ -24149,7 +25270,7 @@ Index: mythtv/configure
  # Various Intel Duo processors (EMT64T capable)
     elif expr "$processor" : ".*Intel(R).*Core(TM)2.*CPU" > /dev/null ; then
         ARCHFLAGS="-march=k8" # this would be pentium4 on 32 bit systems
-@@ -2691,6 +2713,9 @@
+@@ -2691,6 +2715,9 @@
      fi
  fi
  
@@ -24159,7 +25280,7 @@ Index: mythtv/configure
  enabled x11 && has_library libX11 || disable x11
  enabled xrandr && has_header X11/extensions/Xrandr.h || disable xrandr
  enabled xv && has_library libXv || disable xv
-@@ -2702,8 +2727,6 @@
+@@ -2702,38 +2729,38 @@
  check_header X11/extensions/XvMClib.h
  has_library libXvMCW || disable xvmcw
  check_header X11/extensions/vldXvMC.h
@@ -24168,32 +25289,41 @@ Index: mythtv/configure
  
  if test x"$xvmc_lib" != x""; then
      VENDOR_XVMC_LIBS="-l"$xvmc_lib
-@@ -2715,25 +2738,34 @@
-         VENDOR_XVMC_LIBS="-lviaXvMCPro"
-     elif has_library libchromeXvMCPro ; then
-         VENDOR_XVMC_LIBS="-lchromeXvMCPro"
-+    else
-+        disable xvmc_pro
-     fi
- elif enabled xvmc_vld; then
-     if has_library libviaXvMC ; then
-         VENDOR_XVMC_LIBS="-lviaXvMC"
-     elif has_library libchromeXvMC ; then
-         VENDOR_XVMC_LIBS="-lchromeXvMC"
-+    else
-+        disable xvmc_pro
-     fi
+     disable xvmcw
+ elif enabled xvmcw; then
+     VENDOR_XVMC_LIBS="-lXvMCW"
+-elif enabled xvmc_pro; then
+-    if has_library libviaXvMCPro ; then
+-        VENDOR_XVMC_LIBS="-lviaXvMCPro"
+-    elif has_library libchromeXvMCPro ; then
+-        VENDOR_XVMC_LIBS="-lchromeXvMCPro"
+-    fi
+-elif enabled xvmc_vld; then
+-    if has_library libviaXvMC ; then
+-        VENDOR_XVMC_LIBS="-lviaXvMC"
+-    elif has_library libchromeXvMC ; then
+-        VENDOR_XVMC_LIBS="-lchromeXvMC"
+-    fi
++elif enabled xvmc_pro && has_library libviaXvMCPro ; then
++    VENDOR_XVMC_LIBS="-lviaXvMCPro"
++elif enabled xvmc_pro && has_library libchromeXvMCPro ; then
++    VENDOR_XVMC_LIBS="-lchromeXvMCPro"
++elif enabled xvmc_vld && has_library libviaXvMC ; then
++    VENDOR_XVMC_LIBS="-lviaXvMC"
++elif enabled xvmc_vld && has_library libchromeXvMC ; then
++    VENDOR_XVMC_LIBS="-lchromeXvMC"
  elif has_library libXvMCNVIDIA ; then
      VENDOR_XVMC_LIBS="-lXvMCNVIDIA"
  elif has_library libI810XvMC ; then
      VENDOR_XVMC_LIBS="-lI810XvMC"
++    disable xvmc_vld xvmc_pro
  else
 -    disable xvmc
 +    disable xvmc xvmcw
  fi
  
 -test x"$VENDOR_XVMC_LIBS" != x"-lXvMCNVIDIA" && disable xvmc_opengl
-+if test x"$VENDOR_XVMC_LIBS" == x"-lXvMCNVIDIA" ; then
++if test x"$VENDOR_XVMC_LIBS" = x"-lXvMCNVIDIA" ; then
 +    enable xvmc_opengl
 +    disable xvmc_vld xvmc_pro
 +elif enabled xvmc_opengl ; then
@@ -24206,7 +25336,7 @@ Index: mythtv/configure
  
  
  # Can only do Mac accel on Mac platform
-@@ -2838,6 +2870,9 @@
+@@ -2838,6 +2865,9 @@
      libdir="${PREFIX}/${libdir_name}"
  fi
  
@@ -24216,7 +25346,7 @@ Index: mythtv/configure
  
  echo "# Basic Settings"
  echo "Compile type              $compile_type"
-@@ -2848,6 +2883,7 @@
+@@ -2848,6 +2878,7 @@
  echo "Compiler cache            $ccache$ccache_txt"
  echo "DistCC                    $distcc$distcc_txt"
  echo "install prefix            $PREFIX"
@@ -24224,7 +25354,7 @@ Index: mythtv/configure
  <<BLOCK_QUOTE
  echo "source path               $source_path"
  echo "C compiler                $cc"
-@@ -3032,7 +3068,9 @@
+@@ -3032,7 +3063,9 @@
  echo "#define FFMPEG_CONFIG_H" >> $TMPH
  echo "#define FFMPEG_CONFIGURATION \"$FFMPEG_CONFIGURATION\"" >> $TMPH
  
@@ -24272,6 +25402,19 @@ Index: mythtv/themes/G.A.N.T/ui.xml
          <items>8</items>
          <image function="selectionbar" filename="rk-selectbar.png" location="-8,3"></image>
          <image function="uparrow" filename="gantup.png" location="740,15"></image>
+Index: mythtv/themes/default-wide/netflix-ui.xml
+===================================================================
+--- mythtv/themes/default-wide/netflix-ui.xml	(revision 16468)
++++ mythtv/themes/default-wide/netflix-ui.xml	(working copy)
+@@ -266,7 +266,7 @@
+       <area>0,400,800,200</area>
+ 
+       <image name="background" draworder="0" fleximage="no">
+-        <filename>news-info-bg.png</filename>
++        <filename>mythflix_background.png</filename>
+         <position>0,0</position>
+       </image>
+ 
 Index: mythtv/docs/doxygen-architecture-document.cpp
 ===================================================================
 --- mythtv/docs/doxygen-architecture-document.cpp	(revision 16468)
@@ -24453,15 +25596,6 @@ Index: mythtv/docs/mythtv-HOWTO-3.html
  </FIGURE>
  </P>
  
-@@ -564,7 +561,7 @@
- <A HREF="mythtv-HOWTO-6.html#mysql">configuring MySQL</A>, which you may or may not have to
- perform.  See your package documentation.</P>
- 
--<H3><A NAME="atrpms"></A> Red Hat Linux / Fedora Core </H3>
-+<H3><A NAME="atrpms"></A> Red Hat Linux / Fedora Core</H3>
- 
- <P>The definitive documentation on installing MythTV on Red Hat Linux /
- Fedora Core can be found in Jarod Wilson's (
 Index: mythtv/docs/mythtv-HOWTO.html
 ===================================================================
 --- mythtv/docs/mythtv-HOWTO.html	(revision 16468)
@@ -24471,19 +25605,10 @@ Index: mythtv/docs/mythtv-HOWTO.html
  
  <H2>Robert Kulagowski, 
 -<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-03-05, v0.21.00pre
-+<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-06-04, v0.21.02
++<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-10-27, v0.21.03
  <HR>
  <EM>Initially, installation of MythTV seems like a huge task.  There are lots
  of dependencies, and various distributions seem to do the same thing
-@@ -209,7 +209,7 @@
- <UL>
- <LI><A NAME="toc23.1">23.1</A> <A HREF="mythtv-HOWTO-23.html#ss23.1">I'd like to watch the files without using MythTV / I'd like to convert the files to some other format</A>
- <LI><A NAME="toc23.2">23.2</A> <A HREF="mythtv-HOWTO-23.html#ss23.2">Using a different window manager</A>
--<LI><A NAME="toc23.3">23.3</A> <A HREF="mythtv-HOWTO-23.html#ss23.3">What capture resolution should I use?  How does video work? </A>
-+<LI><A NAME="toc23.3">23.3</A> <A HREF="mythtv-HOWTO-23.html#ss23.3">What capture resolution should I use?  How does video work?</A>
- <LI><A NAME="toc23.4">23.4</A> <A HREF="mythtv-HOWTO-23.html#ss23.4">MythTV GUI and X Display Sizes</A>
- <LI><A NAME="toc23.5">23.5</A> <A HREF="mythtv-HOWTO-23.html#ss23.5">Saving or restoring the database </A>
- <LI><A NAME="toc23.6">23.6</A> <A HREF="mythtv-HOWTO-23.html#ss23.6">Deleting the MySQL database</A>
 Index: mythtv/docs/mythtv-HOWTO.txt
 ===================================================================
 --- mythtv/docs/mythtv-HOWTO.txt	(revision 16468)
@@ -24493,7 +25618,7 @@ Index: mythtv/docs/mythtv-HOWTO.txt
    Robert Kulagowski, mailto:rkulagow@rocketmail.com
    <mailto:rkulagow@rocketmail.com>
 -  2008-03-05, v0.21.00pre
-+  2008-06-04, v0.21.02
++  2008-10-27, v0.21.03
  
    Initially, installation of MythTV seems like a huge task.  There are
    lots of dependencies, and various distributions seem to do the same
@@ -24884,19 +26009,32 @@ Index: mythtv/docs/mythtv-HOWTO.txt
         set args -l myth.log -v record,channel,siparser
         run
         thread apply all bt full
+@@ -8616,9 +8622,9 @@
+ 
+   This is covered in the hardware section, and extensively covered on
+   the Hauppauge website.
+-  (http://www.hauppauge.com/pages/compare_pvr.html
+-  <http://www.hauppauge.com/pages/compare_pvr.html>) Please check the
+-  Hauppauge website for the most accurate information.
++  (http://www.hauppauge.com/site/compare/compare_pvr.html
++  <http://www.hauppauge.com/site/compare/compare_pvr.html>) Please check
++  the Hauppauge website for the most accurate information.
+ 
+   A PVR-150 comes in a number of versions:
+ 
 Index: mythtv/docs/mythtv-HOWTO-23.html
 ===================================================================
 --- mythtv/docs/mythtv-HOWTO-23.html	(revision 16468)
 +++ mythtv/docs/mythtv-HOWTO-23.html	(working copy)
-@@ -111,7 +111,7 @@
- run a lightweight window manager, the <CODE>contrib/configfiles/</CODE> directory has an
- example of a <CODE>.twmrc</CODE> and <CODE>.fvwmrc</CODE> file you may use.</P>
+@@ -1085,7 +1085,7 @@
  
--<H2><A NAME="capture_resolution_"></A> <A NAME="ss23.3">23.3</A> <A HREF="mythtv-HOWTO.html#toc23.3">What capture resolution should I use?  How does video work? </A>
-+<H2><A NAME="capture_resolution_"></A> <A NAME="ss23.3">23.3</A> <A HREF="mythtv-HOWTO.html#toc23.3">What capture resolution should I use?  How does video work?</A>
- </H2>
- 
- <P>While MythTV allows you to set various GUI and capture resolutions, not
+ <P>This is covered in the hardware section, and extensively covered on the
+ Hauppauge website.  (
+-<A HREF="http://www.hauppauge.com/pages/compare_pvr.html">http://www.hauppauge.com/pages/compare_pvr.html</A>) Please check the
++<A HREF="http://www.hauppauge.com/site/compare/compare_pvr.html">http://www.hauppauge.com/site/compare/compare_pvr.html</A>) Please check the
+ Hauppauge website for the most accurate information.</P>
+ <P>A PVR-150 comes in a number of versions:
+ <UL>
 Index: mythtv/docs/doxygen-create-developer-docs.cfg
 ===================================================================
 --- mythtv/docs/doxygen-create-developer-docs.cfg	(revision 16468)
@@ -24919,7 +26057,7 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
  <author>Robert Kulagowski, <url url="mailto:rkulagow@rocketmail.com"
  name="mailto:rkulagow@rocketmail.com">
 -<date>2008-03-05, v0.21.00pre
-+<date>2008-06-04, v0.21.02
++<date>2008-10-27, v0.21.03
  <abstract>
  Initially, installation of MythTV seems like a huge task.  There are lots
  of dependencies, and various distributions seem to do the same thing
@@ -25037,7 +26175,18 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
  set args -l myth.log -v record,channel,siparser
  run
  thread apply all bt full
-@@ -7931,13 +7936,13 @@
+@@ -7380,8 +7385,8 @@
+ <sect1>What is the difference between the various Hauppauge PVR models?
+ <p>This is covered in the hardware section, and extensively covered on the
+ Hauppauge website.  (<url
+-url="http://www.hauppauge.com/pages/compare_pvr.html"
+-name="http://www.hauppauge.com/pages/compare_pvr.html">) Please check the
++url="http://www.hauppauge.com/site/compare/compare_pvr.html"
++name="http://www.hauppauge.com/site/compare/compare_pvr.html">) Please check the
+ Hauppauge website for the most accurate information.
+ 
+ A PVR-150 comes in a number of versions:
+@@ -7931,13 +7936,14 @@
  You can then press ESC until you return to the main screen.
  </article>
  <!-- Revision History
@@ -25054,6 +26203,7 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
 +Update minimum MySQL version.
 +v0.21.01, 2008-06-03.  Add mythbuntu.
 +v0.21.02, 2008-06-04.  Update minimyth link.
++v0.21.03, 2008-10-27.  Update Hauppauge link.
  -->
  
  <!--
@@ -25088,19 +26238,10 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  
  <H2>Robert Kulagowski, 
 -<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-03-05, v0.21.00pre
-+<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-06-04, v0.21.02
++<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-10-27, v0.21.03
  <HR>
  <EM>Initially, installation of MythTV seems like a huge task.  There are lots
  of dependencies, and various distributions seem to do the same thing
-@@ -202,7 +202,7 @@
- <UL>
- <LI><A NAME="toc23.1">23.1</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss23.1">I'd like to watch the files without using MythTV / I'd like to convert the files to some other format</A>
- <LI><A NAME="toc23.2">23.2</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss23.2">Using a different window manager</A>
--<LI><A NAME="toc23.3">23.3</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss23.3">What capture resolution should I use?  How does video work? </A>
-+<LI><A NAME="toc23.3">23.3</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss23.3">What capture resolution should I use?  How does video work?</A>
- <LI><A NAME="toc23.4">23.4</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss23.4">MythTV GUI and X Display Sizes</A>
- <LI><A NAME="toc23.5">23.5</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss23.5">Saving or restoring the database </A>
- <LI><A NAME="toc23.6">23.6</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss23.6">Deleting the MySQL database</A>
 @@ -322,14 +322,18 @@
  <A HREF="http://mysettopbox.tv">http://mysettopbox.tv</A> if you'd
  like to install a custom version of Knoppix optimized for MythTV.</P>
@@ -25181,15 +26322,6 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  </FIGURE>
  </P>
  
-@@ -1044,7 +1045,7 @@
- <A HREF="#mysql">configuring MySQL</A>, which you may or may not have to
- perform.  See your package documentation.</P>
- 
--<H3><A NAME="atrpms"></A> Red Hat Linux / Fedora Core </H3>
-+<H3><A NAME="atrpms"></A> Red Hat Linux / Fedora Core</H3>
- 
- <P>The definitive documentation on installing MythTV on Red Hat Linux /
- Fedora Core can be found in Jarod Wilson's (
 @@ -1849,7 +1850,7 @@
  </P>
  <H2><A NAME="mysql"></A> <A NAME="s6">6.</A> <A HREF="#toc6">MySQL.</A></H2>
@@ -25208,15 +26340,6 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  configuration.</P>
  
  <H2><A NAME="s7">7.</A> <A HREF="#toc7">Configuring Sound.</A></H2>
-@@ -6357,7 +6358,7 @@
- your distribution hasn't set it up correctly.  This needs to be fixed before
- MythTV will compile.</P>
- 
--<H3><A NAME="mkspecs_error"></A> make: *** No rule to make target /usr/lib/qt3/mkspecs/default/qmake.conf', needed by Makefile'.  Stop. </H3>
-+<H3><A NAME="mkspecs_error"></A> make: *** No rule to make target /usr/lib/qt3/mkspecs/default/qmake.conf', needed by Makefile'.  Stop.</H3>
- 
- <P>This error happens when there's a missing link in the
- <CODE>/usr/lib/qt3/mkspecs</CODE> directory.  There are two ways to fix this
 @@ -6432,6 +6433,8 @@
  handle SIG33 nostop noprint
  set logging on
@@ -25226,19 +26349,15 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  set args -l myth.log -v record,channel,siparser
  run
  thread apply all bt full
-@@ -7020,7 +7023,7 @@
- run a lightweight window manager, the <CODE>contrib/configfiles/</CODE> directory has an
- example of a <CODE>.twmrc</CODE> and <CODE>.fvwmrc</CODE> file you may use.</P>
+@@ -7994,7 +7997,7 @@
  
--<H2><A NAME="capture_resolution_"></A> <A NAME="ss23.3">23.3</A> <A HREF="#toc23.3">What capture resolution should I use?  How does video work? </A>
-+<H2><A NAME="capture_resolution_"></A> <A NAME="ss23.3">23.3</A> <A HREF="#toc23.3">What capture resolution should I use?  How does video work?</A>
- </H2>
- 
- <P>While MythTV allows you to set various GUI and capture resolutions, not
-Index: mythtv/docs/mythtv-HOWTO.pdf
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
+ <P>This is covered in the hardware section, and extensively covered on the
+ Hauppauge website.  (
+-<A HREF="http://www.hauppauge.com/pages/compare_pvr.html">http://www.hauppauge.com/pages/compare_pvr.html</A>) Please check the
++<A HREF="http://www.hauppauge.com/site/compare/compare_pvr.html">http://www.hauppauge.com/site/compare/compare_pvr.html</A>) Please check the
+ Hauppauge website for the most accurate information.</P>
+ <P>A PVR-150 comes in a number of versions:
+ <UL>
 Index: mythtv/docs/index.html
 ===================================================================
 --- mythtv/docs/index.html	(revision 16468)
@@ -25248,32 +26367,14 @@ Index: mythtv/docs/index.html
  
  <H2>Robert Kulagowski, 
 -<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-03-05, v0.21.00pre
-+<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-06-04, v0.21.02
++<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-10-27, v0.21.03
  <HR>
  <EM>Initially, installation of MythTV seems like a huge task.  There are lots
  of dependencies, and various distributions seem to do the same thing
-@@ -209,7 +209,7 @@
- <UL>
- <LI><A NAME="toc23.1">23.1</A> <A HREF="mythtv-HOWTO-23.html#ss23.1">I'd like to watch the files without using MythTV / I'd like to convert the files to some other format</A>
- <LI><A NAME="toc23.2">23.2</A> <A HREF="mythtv-HOWTO-23.html#ss23.2">Using a different window manager</A>
--<LI><A NAME="toc23.3">23.3</A> <A HREF="mythtv-HOWTO-23.html#ss23.3">What capture resolution should I use?  How does video work? </A>
-+<LI><A NAME="toc23.3">23.3</A> <A HREF="mythtv-HOWTO-23.html#ss23.3">What capture resolution should I use?  How does video work?</A>
- <LI><A NAME="toc23.4">23.4</A> <A HREF="mythtv-HOWTO-23.html#ss23.4">MythTV GUI and X Display Sizes</A>
- <LI><A NAME="toc23.5">23.5</A> <A HREF="mythtv-HOWTO-23.html#ss23.5">Saving or restoring the database </A>
- <LI><A NAME="toc23.6">23.6</A> <A HREF="mythtv-HOWTO-23.html#ss23.6">Deleting the MySQL database</A>
 Index: mythtv/docs/mythtv-HOWTO-22.html
 ===================================================================
 --- mythtv/docs/mythtv-HOWTO-22.html	(revision 16468)
 +++ mythtv/docs/mythtv-HOWTO-22.html	(working copy)
-@@ -36,7 +36,7 @@
- your distribution hasn't set it up correctly.  This needs to be fixed before
- MythTV will compile.</P>
- 
--<H3><A NAME="mkspecs_error"></A> make: *** No rule to make target /usr/lib/qt3/mkspecs/default/qmake.conf', needed by Makefile'.  Stop. </H3>
-+<H3><A NAME="mkspecs_error"></A> make: *** No rule to make target /usr/lib/qt3/mkspecs/default/qmake.conf', needed by Makefile'.  Stop.</H3>
- 
- <P>This error happens when there's a missing link in the
- <CODE>/usr/lib/qt3/mkspecs</CODE> directory.  There are two ways to fix this
 @@ -111,6 +111,8 @@
  handle SIG33 nostop noprint
  set logging on
@@ -25286,7 +26387,7 @@ Index: mythtv/docs/mythtv-HOWTO-22.html
 Index: mythtv/libs/libs-targetfix.pro
 ===================================================================
 --- mythtv/libs/libs-targetfix.pro	(revision 0)
-+++ mythtv/libs/libs-targetfix.pro	(revision 18567)
++++ mythtv/libs/libs-targetfix.pro	(revision 19169)
 @@ -0,0 +1,20 @@
 +# Common project modifications to change the generated target.
 +
@@ -25578,6 +26679,19 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
          image->SetDontRoundPosition(true);
  
          subtitleOSD->AddType(image);
+Index: mythtv/libs/libmythtv/videoout_d3d.cpp
+===================================================================
+--- mythtv/libs/libmythtv/videoout_d3d.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/videoout_d3d.cpp	(working copy)
+@@ -118,7 +118,7 @@
+ {
+     QMutexLocker locker(&m_lock);
+     VideoOutput::InputChanged(input_size, aspect, av_codec_id, codec_private);
+-    db_vdisp_profile->SetVideoRenderer("didect3d");
++    db_vdisp_profile->SetVideoRenderer("direct3d");
+ 
+     if (video_dim.width() == m_InputCX && video_dim.height() == m_InputCY)
+     {
 Index: mythtv/libs/libmythtv/firewiredevice.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/firewiredevice.cpp	(revision 16468)
@@ -25630,7 +26744,24 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/avformatdecoder.cpp	(revision 16468)
 +++ mythtv/libs/libmythtv/avformatdecoder.cpp	(working copy)
-@@ -410,11 +410,10 @@
+@@ -1,6 +1,7 @@
+ // C headers
+ #include <cassert>
+ #include <unistd.h>
++#include <cmath>
+ 
+ // C++ headers
+ #include <algorithm>
+@@ -51,6 +52,8 @@
+ 
+ #define MAX_AC3_FRAME_SIZE 6144
+ 
++static const float eps = 1E-5;
++
+ static int cc608_parity(uint8_t byte);
+ static int cc608_good_parity(const int *parity_table, uint16_t data);
+ static void cc608_build_parity_table(int *parity_table);
+@@ -410,11 +413,10 @@
        disable_passthru(false),      max_channels(2),
        dummy_frame(NULL),
        // DVD
@@ -25644,7 +26775,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
  {
      bzero(&params, sizeof(AVFormatParameters));
      bzero(audioSamples, AVCODEC_MAX_AUDIO_FRAME_SIZE * sizeof(short int));
-@@ -446,9 +445,6 @@
+@@ -446,9 +448,6 @@
          delete pkt;
      }
  
@@ -25654,7 +26785,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      CloseContext();
      delete ccd608;
      delete ccd708;
-@@ -1444,6 +1440,13 @@
+@@ -1444,6 +1443,13 @@
      map<int,uint> lang_sub_cnt;
      map<int,uint> lang_aud_cnt;
  
@@ -25668,7 +26799,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      for (uint i = 0; i < ic->nb_streams; i++)
      {
          AVCodecContext *enc = ic->streams[i]->codec;
-@@ -1511,7 +1514,7 @@
+@@ -1511,7 +1517,7 @@
                      // HACK -- end
  
                      bool force_xv = false;
@@ -25677,7 +26808,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      {
                          if (dec.left(4) == "xvmc")
                              dvd_xvmc_enabled = true;
-@@ -1536,7 +1539,8 @@
+@@ -1536,7 +1542,8 @@
                      enc->codec_id = (CodecID)
                          myth2av_codecid(mcid, vcd, idct, mc);
  
@@ -25687,7 +26818,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                          dvd_video_codec_changed)
                      {
                          dvd_video_codec_changed = false;
-@@ -1617,9 +1621,9 @@
+@@ -1617,9 +1624,9 @@
  
                  InitVideoCodec(ic->streams[i], enc,
                                 selectedVideoIndex == (int) i);
@@ -25699,7 +26830,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                  VERBOSE(VB_PLAYBACK, LOC + 
                          QString("Using %1 for video decoding")
                          .arg(GetCodecDecoderName()));
-@@ -1798,7 +1802,7 @@
+@@ -1798,7 +1805,7 @@
              ringBuffer->UpdateRawBitrate(bitrate);
      }
  
@@ -25708,7 +26839,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      {
          if (tracks[kTrackTypeAudio].size() > 1)
          {
-@@ -1859,6 +1863,8 @@
+@@ -1859,6 +1866,8 @@
      {
          GetNVP()->SetAudioParams(-1, -1, -1, false /* AC3/DTS pass-through */);
          GetNVP()->ReinitAudio();
@@ -25717,7 +26848,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      }
  
      // if we don't have a video stream we still need to make sure some
-@@ -1980,6 +1986,9 @@
+@@ -1980,6 +1989,9 @@
   */
  void AvFormatDecoder::RemoveAudioStreams()
  {
@@ -25727,7 +26858,25 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      QMutexLocker locker(&avcodeclock);
      for (uint i = 0; i < ic->nb_streams;)
      {
-@@ -3014,14 +3023,15 @@
+@@ -2337,7 +2349,7 @@
+             bool changed = (seqFPS > fps+0.01) || (seqFPS < fps-0.01);
+             changed |= (width  != (uint)current_width );
+             changed |= (height != (uint)current_height);
+-            changed |= (aspect != current_aspect);
++            changed |= fabs(aspect - current_aspect) > eps;
+ 
+             if (changed)
+             {
+@@ -2414,7 +2426,7 @@
+         bool changed = (seqFPS > fps+0.01) || (seqFPS < fps-0.01);
+         changed |= (width  != (uint)current_width );
+         changed |= (height != (uint)current_height);
+-        changed |= (aspect_ratio != current_aspect);
++        changed |= fabs(aspect_ratio - current_aspect) > eps;
+ 
+         if (changed)
+         {
+@@ -3014,14 +3026,15 @@
              int dvdtitle  = 0;
              int dvdpart = 0;
              ringBuffer->DVD()->GetPartAndTitle(dvdpart, dvdtitle);
@@ -25745,7 +26894,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      storevideoframes = false;
                      dvdTitleChanged = false;
                      ScanStreams(true);
-@@ -3032,45 +3042,23 @@
+@@ -3032,45 +3045,23 @@
              else
              {
                  storevideoframes = false;
@@ -25800,7 +26949,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      VERBOSE(VB_PLAYBACK, LOC + "DVD Title Changed");
                      lastdvdtitle = dvdtitle;
                      if (lastdvdtitle != -1 )
-@@ -3083,11 +3071,18 @@
+@@ -3083,26 +3074,37 @@
                              GetNVP()->getVideoOutput()->SetPrebuffering(true);
                      }
                  }
@@ -25820,7 +26969,29 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
              }
          }
  
-@@ -3221,7 +3216,6 @@
+         if (gotvideo)
+         {
+-            if (lowbuffers && onlyvideo == 0 && 
++            if (lowbuffers && onlyvideo == 0 &&
++                storedPackets.count() < 75 &&
+                 lastapts < lastvpts + 100 &&
+-                lastapts > lastvpts - 10000 && 
+                 !ringBuffer->InDVDMenuOrStillFrame())
+             {
+-                //cout << "behind: " << lastapts << " " << lastvpts << endl;
+                 storevideoframes = true;
+             }
+             else if (onlyvideo >= 0)
+             {
++                if (storedPackets.count() >=75)
++                    VERBOSE(VB_IMPORTANT,
++                            QString("Audio %1 ms behind video but already %2 "
++                               "video frames queued. AV-Sync might be broken.")
++                            .arg(lastvpts-lastapts).arg(storedPackets.count()));
+                 allowedquit = true;
+                 continue;
+             }
+@@ -3221,7 +3223,6 @@
                      av_free_packet(pkt);
                      CloseCodecs();
                      ScanStreams(false);
@@ -25828,7 +26999,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      allowedquit = true;
                      dvd_video_codec_changed = false;
                      continue;
-@@ -3749,9 +3743,6 @@
+@@ -3749,9 +3750,6 @@
  
                      picframe->frameNumber = framesPlayed;
                      GetNVP()->ReleaseNextVideoFrame(picframe, temppts);
@@ -25838,7 +27009,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      if (d->HasMPEG2Dec() && mpa_pic.data[3])
                          context->release_buffer(context, &mpa_pic);
  
-@@ -3759,15 +3750,8 @@
+@@ -3759,15 +3757,8 @@
                      gotvideo = 1;
                      framesPlayed++;
  
@@ -25855,7 +27026,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
  
                      lastvpts = temppts;
                      break;
-@@ -3780,7 +3764,7 @@
+@@ -3780,7 +3771,7 @@
  
                      if (ringBuffer->isDVD())
                      {
@@ -26284,6 +27455,18 @@ Index: mythtv/libs/libmythtv/DVDRingBuffer.cpp
                      find_smallest_bounding_rectangle(sub);
                  *gotSubtitles = 1;
              }
+@@ -1003,9 +1033,9 @@
+         {
+             uint captionmode = parent->GetCaptionMode();
+             if (force_subtitle_display && captionmode != kDisplayAVSubtitle)
+-                parent->SetCaptionsEnabled(true, false);
++                parent->EnableCaptions(kDisplayAVSubtitle, false);
+             else if (!force_subtitle_display && captionmode == kDisplayAVSubtitle)
+-                parent->SetCaptionsEnabled(false, false);
++                parent->DisableCaptions(kDisplayAVSubtitle, false);
+         }
+         return true;
+     }
 @@ -1036,28 +1066,14 @@
      if (dvdRet == DVDNAV_STATUS_ERR)
          return false;
@@ -26508,6 +27691,48 @@ Index: mythtv/libs/libmythtv/scanwizardhelpers.h
      }
  
      QString frequency(void)  const { return pfrequency->getValue();  }
+Index: mythtv/libs/libmythtv/diseqc.h
+===================================================================
+--- mythtv/libs/libmythtv/diseqc.h	(revision 16468)
++++ mythtv/libs/libmythtv/diseqc.h	(working copy)
+@@ -224,6 +224,8 @@
+         kTypeLegacySW21        = 3,
+         kTypeLegacySW42        = 4,
+         kTypeLegacySW64        = 5,
++        kTypeVoltage           = 6,
++        kTypeMiniDiSEqC        = 7,
+     };
+     void SetType(dvbdev_switch_t type)        { m_type = type;      }
+     void SetNumPorts(uint num_ports);
+@@ -252,9 +254,16 @@
+ 
+ 
+   protected:
+-    bool ExecuteLegacy(const DiSEqCDevSettings&, const DTVMultiplex&, uint pos);
+-    bool ExecuteTone(  const DiSEqCDevSettings&, const DTVMultiplex&, uint pos);
+-    bool ExecuteDiseqc(const DiSEqCDevSettings&, const DTVMultiplex&, uint pos);
++    bool ExecuteLegacy(
++        const DiSEqCDevSettings&, const DTVMultiplex&, uint pos);
++    bool ExecuteTone(
++        const DiSEqCDevSettings&, const DTVMultiplex&, uint pos);
++    bool ExecuteVoltage(
++        const DiSEqCDevSettings&, const DTVMultiplex&, uint pos);
++    bool ExecuteMiniDiSEqC(
++        const DiSEqCDevSettings&, const DTVMultiplex&, uint pos);
++    bool ExecuteDiseqc(
++        const DiSEqCDevSettings&, const DTVMultiplex&, uint pos);
+ 
+     int  GetPosition(  const DiSEqCDevSettings&) const;
+ 
+@@ -266,7 +275,7 @@
+     uint            m_last_horizontal;
+     dvbdev_vec_t    m_children;
+ 
+-    static const TypeTable SwitchTypeTable[7];
++    static const TypeTable SwitchTypeTable[9];
+ };
+ 
+ class DiSEqCDevRotor : public DiSEqCDevDevice
 Index: mythtv/libs/libmythtv/dbcheck.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/dbcheck.cpp	(revision 16468)
@@ -26697,6 +27922,20 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.h
      // State
      QWaitCondition decoderThreadPaused;
      QWaitCondition videoThreadPaused;
+Index: mythtv/libs/libmythtv/filtermanager.cpp
+===================================================================
+--- mythtv/libs/libmythtv/filtermanager.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/filtermanager.cpp	(working copy)
+@@ -89,6 +89,9 @@
+                 LoadFilterLib(Path);
+         }
+     }
++    else
++        VERBOSE(VB_IMPORTANT,
++                "Filter dir '" + FiltDir.absPath() + "' doesn't exist?");
+ }
+ 
+ FilterManager::~FilterManager()
 Index: mythtv/libs/libmythtv/channelutil.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/channelutil.cpp	(revision 16468)
@@ -26743,7 +27982,7 @@ Index: mythtv/libs/libmythtv/channelutil.cpp
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 18567)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 19169)
 @@ -0,0 +1,12 @@
 +#ifndef _FREESAT_HUFFMAN_H_
 +#define _FREESAT_HUFFMAN_H_
@@ -26766,7 +28005,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_tables.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 18567)
++++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 19169)
 @@ -0,0 +1,3042 @@
 +/*
 + *  This table was derived from on-air transmissions.  It certainly has omissions and
@@ -29819,7 +31058,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 18567)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 19169)
 @@ -0,0 +1,118 @@
 +#include "freesat_huffman.h"
 +
@@ -30308,6 +31547,30 @@ Index: mythtv/libs/libmythtv/videosource.cpp
      command = QString("%1 --config-file '%2' --configure")
          .arg(grabber).arg(filename);
  
+Index: mythtv/libs/libmythtv/diseqcsettings.cpp
+===================================================================
+--- mythtv/libs/libmythtv/diseqcsettings.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/diseqcsettings.cpp	(working copy)
+@@ -147,6 +147,10 @@
+ 
+         addSelection(DeviceTree::tr("Tone"),
+                      QString::number((uint) DiSEqCDevSwitch::kTypeTone));
++        addSelection(DeviceTree::tr("Voltage"),
++                     QString::number((uint) DiSEqCDevSwitch::kTypeVoltage));
++        addSelection(DeviceTree::tr("Mini DiSEqC"),
++                     QString::number((uint) DiSEqCDevSwitch::kTypeMiniDiSEqC));
+         addSelection(DeviceTree::tr("DiSEqC"),
+                      QString::number((uint)
+                                      DiSEqCDevSwitch::kTypeDiSEqCCommitted));
+@@ -232,6 +236,8 @@
+     switch ((DiSEqCDevSwitch::dvbdev_switch_t) m_type->getValue().toUInt())
+     {
+         case DiSEqCDevSwitch::kTypeTone:
++        case DiSEqCDevSwitch::kTypeVoltage:
++        case DiSEqCDevSwitch::kTypeMiniDiSEqC:
+         case DiSEqCDevSwitch::kTypeLegacySW21:
+         case DiSEqCDevSwitch::kTypeLegacySW42:
+             m_ports->setValue("2");
 Index: mythtv/libs/libmythtv/frequencytables.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/frequencytables.cpp	(revision 16468)
@@ -30371,6 +31634,19 @@ Index: mythtv/libs/libmythtv/videoout_xv.cpp
      xv_set_attrib(XJ_disp, xv_port, attrName.ascii(), value);
  
  #ifdef USING_XVMC
+Index: mythtv/libs/libmythtv/iptv/iptvfeederudp.cpp
+===================================================================
+--- mythtv/libs/libmythtv/iptv/iptvfeederudp.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/iptv/iptvfeederudp.cpp	(working copy)
+@@ -70,6 +70,8 @@
+     if (!InitEnv())
+         return false;
+     
++    ReceivingSocketAddr = our_inet_addr(parse.host().latin1());
++
+     Groupsock *socket = new Groupsock(*_live_env, addr, parse.port(), 0);
+     if (!socket)
+     {
 Index: mythtv/libs/libmythtv/avformatdecoder.h
 ===================================================================
 --- mythtv/libs/libmythtv/avformatdecoder.h	(revision 16468)
@@ -30560,6 +31836,179 @@ Index: mythtv/libs/libmythtv/scanwizardhelpers.cpp
  }
  
  AnalogPane::AnalogPane() :
+Index: mythtv/libs/libmythtv/diseqc.cpp
+===================================================================
+--- mythtv/libs/libmythtv/diseqc.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/diseqc.cpp	(working copy)
+@@ -941,7 +941,7 @@
+  *  \brief Switch class, including tone, legacy and DiSEqC switches.
+  */
+ 
+-const DiSEqCDevDevice::TypeTable DiSEqCDevSwitch::SwitchTypeTable[7] =
++const DiSEqCDevDevice::TypeTable DiSEqCDevSwitch::SwitchTypeTable[9] =
+ {
+     { "legacy_sw21",  kTypeLegacySW21        },
+     { "legacy_sw42",  kTypeLegacySW42        },
+@@ -949,7 +949,9 @@
+     { "tone",         kTypeTone          },
+     { "diseqc",       kTypeDiSEqCCommitted   },
+     { "diseqc_uncom", kTypeDiSEqCUncommitted },
+-    { QString::null,  kTypeTone          },
++    { "voltage",      kTypeVoltage           },
++    { "mini_diseqc",  kTypeMiniDiSEqC        },
++    { QString::null,  kTypeTone              },
+ };
+ 
+ DiSEqCDevSwitch::DiSEqCDevSwitch(DiSEqCDevTree &tree, uint devid)
+@@ -1001,6 +1003,12 @@
+             case kTypeLegacySW64:
+                 success = ExecuteLegacy(settings, tuning, pos);
+                 break;
++            case kTypeVoltage:
++                success = ExecuteVoltage(settings, tuning, pos);
++                break;
++            case kTypeMiniDiSEqC:
++                success = ExecuteMiniDiSEqC(settings, tuning, pos);
++                break;
+             default:
+                 success = false;
+                 VERBOSE(VB_IMPORTANT, LOC_ERR +
+@@ -1328,6 +1336,56 @@
+ }
+ 
+ #ifdef USING_DVB
++static bool set_tone(int fd, fe_sec_tone_mode tone)
++{
++    (void) fd;
++    (void) tone;
++
++    bool success = false;
++
++    for (uint retry = 0; !success && (retry < TIMEOUT_RETRIES); retry++)
++    {
++        if (ioctl(fd, FE_SET_TONE, tone) == 0)
++            success = true;
++        else
++            usleep(TIMEOUT_WAIT);
++    }
++
++    if (!success)
++    {
++        VERBOSE(VB_IMPORTANT, "set_tone failed" + ENO);
++    }
++
++    return success;
++}
++#endif // USING_DVB
++
++#ifdef USING_DVB
++static bool set_voltage(int fd, fe_sec_voltage volt)
++{
++    (void) fd;
++    (void) volt;
++
++    bool success = false;
++
++    for (uint retry = 0; !success && (retry < TIMEOUT_RETRIES); retry++)
++    {
++        if (0 == ioctl(fd, FE_SET_VOLTAGE, volt))
++            success = true;
++        else
++            usleep(TIMEOUT_WAIT);
++    }
++
++    if (!success)
++    {
++        VERBOSE(VB_IMPORTANT, "FE_SET_VOLTAGE failed" + ENO);
++    }
++
++    return success;
++}
++#endif // USING_DVB
++
++#ifdef USING_DVB
+ static bool mini_diseqc(int fd, fe_sec_mini_cmd cmd)
+ {
+     (void) fd;
+@@ -1360,7 +1418,7 @@
+             QString("%1/2").arg(pos + 1));
+ 
+ #ifdef USING_DVB
+-    if (mini_diseqc(m_tree.GetFD(), pos == 0 ? SEC_MINI_A : SEC_MINI_B))
++    if (set_tone(m_tree.GetFD(), (0 == pos) ? SEC_TONE_OFF : SEC_TONE_ON))
+         return true;
+ #endif // USING_DVB
+ 
+@@ -1368,6 +1426,48 @@
+     return false;
+ }
+ 
++bool DiSEqCDevSwitch::ExecuteVoltage(const DiSEqCDevSettings &settings,
++                                     const DTVMultiplex &tuning, uint pos)
++{
++    (void) settings;
++    (void) tuning;
++
++    VERBOSE(VB_CHANNEL, LOC + "Changing to Voltage Switch port " +
++            QString("%1/2").arg(pos + 1));
++
++#ifdef USING_DVB
++    if (set_voltage(m_tree.GetFD(),
++                    (0 == pos) ? SEC_VOLTAGE_13 : SEC_VOLTAGE_18))
++    {
++        return true;
++    }
++#endif // USING_DVB
++
++    VERBOSE(VB_IMPORTANT, LOC_ERR + "Setting Voltage Switch failed." + ENO);
++
++    return false;
++}
++
++bool DiSEqCDevSwitch::ExecuteMiniDiSEqC(const DiSEqCDevSettings &settings,
++                                        const DTVMultiplex &tuning, uint pos)
++{
++    (void) settings;
++    (void) tuning;
++
++    VERBOSE(VB_CHANNEL, LOC + "Changing to MiniDiSEqC Switch port " +
++            QString("%1/2").arg(pos + 1));
++
++#ifdef USING_DVB
++    if (mini_diseqc(m_tree.GetFD(), (0 == pos) ? SEC_MINI_A : SEC_MINI_B))
++        return true;
++#endif // USING_DVB
++
++    VERBOSE(VB_IMPORTANT, LOC_ERR +
++            "Setting Mini DiSEqC Switch failed." + ENO);
++
++    return false;
++}
++
+ bool DiSEqCDevSwitch::ShouldSwitch(const DiSEqCDevSettings &settings,
+                                    const DTVMultiplex &tuning) const
+ {
+@@ -1404,6 +1504,8 @@
+         if (horizontal != m_last_horizontal)
+             return true;
+     }
++    else if (kTypeTone == m_type)
++        return true;
+ 
+     return m_last_pos != (uint)pos;
+ }
+Index: mythtv/libs/libmythtv/videoout_quartz.h
+===================================================================
+--- mythtv/libs/libmythtv/videoout_quartz.h	(revision 16468)
++++ mythtv/libs/libmythtv/videoout_quartz.h	(working copy)
+@@ -23,6 +23,7 @@
+                       MythCodecID  av_codec_id,
+                       void        *codec_private);
+     void VideoAspectRatioChanged(float aspect);
++    void MoveResize(void);
+     void Zoom(ZoomDirection direction);
+ 
+     void EmbedInWidget(WId wid, int x, int y, int w, int h);
 Index: mythtv/libs/libmythsoundtouch/libmythsoundtouch.pro
 ===================================================================
 --- mythtv/libs/libmythsoundtouch/libmythsoundtouch.pro	(revision 16468)
@@ -30653,6 +32102,48 @@ Index: mythtv/libs/libmythlivemedia/libmythlivemedia.pro
  }
 +
 +include ( ../libs-targetfix.pro )
+Index: mythtv/libs/libmythlivemedia/groupsock/include/GroupsockHelper.hh
+===================================================================
+--- mythtv/libs/libmythlivemedia/groupsock/include/GroupsockHelper.hh	(revision 16468)
++++ mythtv/libs/libmythlivemedia/groupsock/include/GroupsockHelper.hh	(working copy)
+@@ -79,6 +79,7 @@
+ // are INADDR_ANY (i.e., 0), specifying the default interface.)
+ extern netAddressBits SendingInterfaceAddr;
+ extern netAddressBits ReceivingInterfaceAddr;
++extern netAddressBits ReceivingSocketAddr;
+ 
+ // Allocates a randomly-chosen IPv4 SSM (multicast) address:
+ netAddressBits chooseRandomIPv4SSMAddress(UsageEnvironment& env);
+Index: mythtv/libs/libmythlivemedia/groupsock/GroupsockHelper.cpp
+===================================================================
+--- mythtv/libs/libmythlivemedia/groupsock/GroupsockHelper.cpp	(revision 16468)
++++ mythtv/libs/libmythlivemedia/groupsock/GroupsockHelper.cpp	(working copy)
+@@ -34,6 +34,7 @@
+ // By default, use INADDR_ANY for the sending and receiving interfaces:
+ netAddressBits SendingInterfaceAddr = INADDR_ANY;
+ netAddressBits ReceivingInterfaceAddr = INADDR_ANY;
++netAddressBits ReceivingSocketAddr = INADDR_ANY;
+ 
+ static void socketErr(UsageEnvironment& env, char* errorMsg) {
+ 	env.setResultErrMsg(errorMsg);
+@@ -93,7 +94,7 @@
+ #else
+   if (port.num() != 0 || ReceivingInterfaceAddr != INADDR_ANY) {
+ #endif
+-    MAKE_SOCKADDR_IN(name, ReceivingInterfaceAddr, port.num());
++    MAKE_SOCKADDR_IN(name, ReceivingSocketAddr, port.num());
+     if (bind(newSocket, (struct sockaddr*)&name, sizeof name) != 0) {
+       char tmpBuffer[100];
+       sprintf(tmpBuffer, "bind() error (port number: %d): ",
+@@ -560,6 +561,8 @@
+       testAddr.s_addr = our_inet_addr("228.67.43.91"); // arbitrary
+       Port testPort(15947); // ditto
+       
++      ReceivingSocketAddr = INADDR_ANY;
++
+       sock = setupDatagramSocket(env, testPort);
+       if (sock < 0) break;
+       
 Index: mythtv/libs/libavutil/libavutil.pro
 ===================================================================
 --- mythtv/libs/libavutil/libavutil.pro	(revision 16468)
@@ -30695,7 +32186,7 @@ Index: mythtv/libs/libavutil/common.h
 Index: mythtv/libs/libavcodec/rectangle.h
 ===================================================================
 --- mythtv/libs/libavcodec/rectangle.h	(revision 0)
-+++ mythtv/libs/libavcodec/rectangle.h	(revision 18567)
++++ mythtv/libs/libavcodec/rectangle.h	(revision 19169)
 @@ -0,0 +1,121 @@
 +/*
 + * rectangle filling function
@@ -30920,7 +32411,7 @@ Index: mythtv/libs/libavcodec/h264pred.h
 Index: mythtv/libs/libavcodec/i386/h264_i386.h
 ===================================================================
 --- mythtv/libs/libavcodec/i386/h264_i386.h	(revision 0)
-+++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 18567)
++++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 19169)
 @@ -0,0 +1,144 @@
 +/*
 + * H.26L/H.264/AVC/JVT/14496-10/... encoder/decoder
@@ -32507,7 +33998,7 @@ Index: mythtv/libs/libavcodec/h264.c
      }
  }
  
-@@ -2321,9 +2373,25 @@
+@@ -2321,14 +2373,30 @@
      int deblock_left;
      int deblock_top;
      int mb_xy;
@@ -32534,6 +34025,12 @@ Index: mythtv/libs/libavcodec/h264.c
          deblock_left = h->slice_table[mb_xy] == h->slice_table[mb_xy - 1];
          deblock_top  = h->slice_table[mb_xy] == h->slice_table[h->top_mb_xy];
      } else {
+         deblock_left = (s->mb_x > 0);
+-        deblock_top =  (s->mb_y > 0);
++        deblock_top =  (s->mb_y > !!MB_FIELD);
+     }
+ 
+     src_y  -=   linesize + 1;
 @@ -2342,133 +2410,46 @@
  b= t;
  
@@ -35724,7 +37221,28 @@ Index: mythtv/libs/libmyth/mythcdrom.cpp
 ===================================================================
 --- mythtv/libs/libmyth/mythcdrom.cpp	(revision 16468)
 +++ mythtv/libs/libmyth/mythcdrom.cpp	(working copy)
-@@ -119,7 +119,14 @@
+@@ -47,20 +47,6 @@
+ {
+ }
+ 
+-bool MythCDROM::openDevice()
+-{
+-    if (MythMediaDevice::openDevice()) 
+-    {
+-        // If allow eject is on, unlock the door.
+-        if (m_AllowEject)
+-            unlock();
+-        
+-        return true;
+-    }
+-
+-    return false;
+-}
+-
+ void MythCDROM::onDeviceMounted()
+ {
+     if (!QDir(m_MountPath).exists())
+@@ -119,7 +105,14 @@
      if (MEDIATYPE_DATA == m_MediaType)
          MythMediaDevice::onDeviceMounted();
  
@@ -35840,6 +37358,18 @@ Index: mythtv/libs/libmyth/lcddevice.cpp
      QString aString;
      int mask = 0;
      if (0 && GetLEDMask)
+Index: mythtv/libs/libmyth/mythcdrom.h
+===================================================================
+--- mythtv/libs/libmyth/mythcdrom.h	(revision 16468)
++++ mythtv/libs/libmyth/mythcdrom.h	(working copy)
+@@ -14,7 +14,6 @@
+ 
+     virtual bool mediaChanged(void) { return false; }
+     virtual bool checkOK(void)      { return true; }
+-    virtual bool openDevice(void);
+     virtual MediaStatus checkMedia(void)
+     {
+         return setStatus(MEDIASTAT_UNKNOWN, false);
 Index: mythtv/libs/libmyth/util.cpp
 ===================================================================
 --- mythtv/libs/libmyth/util.cpp	(revision 16468)
@@ -35871,16 +37401,29 @@ Index: mythtv/libs/libmyth/compat.h
 ===================================================================
 --- mythtv/libs/libmyth/compat.h	(revision 16468)
 +++ mythtv/libs/libmyth/compat.h	(working copy)
-@@ -278,4 +278,9 @@
-     #define lseek64(f,o,w) lseek(f,o,w)
+@@ -259,6 +259,10 @@
+ #endif // USING_MINGW
+ 
+ 
++#include <sys/param.h>  // Defines BSD on FreeBSD, Mac OS X
++#include <sys/stat.h>   // S_IREAD/WRITE on MinGW, umask() on BSD
++
++
+ // suseconds_t
+ #include <sys/types.h>
+ 
+@@ -271,9 +275,9 @@
+     typedef int32_t suseconds_t;   // 10.3 or earlier don't have this
  #endif
  
-+#ifdef __FreeBSD__
-+    typedef off_t off64_t;
-+#endif
-+
-+
- #endif // __COMPAT_H__
+-// Libdvdnav now uses off64_t lseek64(), which Darwin doesn't have.
++// Libdvdnav now uses off64_t lseek64(), which BSD/Darwin doesn't have.
+ // Luckily, its lseek() is already 64bit compatible
+-#ifdef CONFIG_DARWIN
++#ifdef BSD
+     typedef off_t off64_t;
+     #define lseek64(f,o,w) lseek(f,o,w)
+ #endif
 Index: mythtv/libs/libmyth/storagegroup.cpp
 ===================================================================
 --- mythtv/libs/libmyth/storagegroup.cpp	(revision 16468)
@@ -37061,6 +38604,415 @@ Index: mythtv/libs/libmyth/libmyth.pro
  }
 +
 +include ( ../libs-targetfix.pro )
+Index: mythtv/libs/libmyth/mythcdrom-linux.cpp
+===================================================================
+--- mythtv/libs/libmyth/mythcdrom-linux.cpp	(revision 16468)
++++ mythtv/libs/libmyth/mythcdrom-linux.cpp	(working copy)
+@@ -20,7 +20,7 @@
+ #define ASSUME_WANT_AUDIO 1
+ 
+ // This class is verbose enough, but if you really need more output:
+-//#define EXTRA_VERBOSITY   1
++#define EXTRA_VERBOSITY   1
+ 
+ 
+ // Some features cannot be detected (reliably) using the standard
+@@ -162,7 +162,13 @@
+ {
+     int drive_status = ioctl(m_DeviceHandle, CDROM_DRIVE_STATUS, CDSL_CURRENT);
+ 
+-    if (drive_status == CDS_TRAY_OPEN && getDevicePath().contains("/dev/scd"))
++    if (drive_status == -1)   // Very unlikely, but we should check
++    {
++        VERBOSE(VB_MEDIA, LOC + ":driveStatus() - ioctl() failed: " + ENO);
++        return CDS_NO_INFO;
++    }
++
++    if (drive_status == CDS_TRAY_OPEN && m_DevicePath.contains("/dev/scd"))
+         return SCSIstatus();
+ 
+     return drive_status;
+@@ -193,7 +199,7 @@
+         VERBOSE(VB_MEDIA,
+                 LOC + ":hasWritableMedia() - failed to send packet to "
+                     + m_DevicePath);
+-        return 0;
++        return false;
+     }
+ 
+     di = (CDROMdiscInfo *) buffer;
+@@ -327,7 +333,7 @@
+         {
+ #ifdef EXTRA_VERBOSITY
+             VERBOSE(VB_MEDIA, LOC + ":testMedia - failed to open "
+-                              + getDevicePath() + ENO);
++                              + m_DevicePath + ENO);
+ #endif
+             if (errno == EBUSY)
+                 return isMounted(true) ? MEDIAERR_OK : MEDIAERR_FAILED;
+@@ -350,8 +356,8 @@
+ 
+     if (Stat == -1)
+     {
+-        VERBOSE(VB_MEDIA, LOC + ":testMedia - Failed to get drive status of "
+-                          + getDevicePath() + ENO);
++        VERBOSE(VB_MEDIA, LOC + ":testMedia - Failed to get drive status of '"
++                          + m_DevicePath + "' : " + ENO);
+         return MEDIAERR_FAILED;
+     }
+ 
+@@ -362,198 +368,182 @@
+ {
+     bool OpenedHere = false;
+ 
+-    if (testMedia() != MEDIAERR_OK)
+-    {
+-        m_MediaType = MEDIATYPE_UNKNOWN;
+-        return setStatus(MEDIASTAT_UNKNOWN, OpenedHere);
+-    }
+-
+     // If it's not already open we need to at least
+     // TRY to open it for most of these checks to work.
+     if (!isDeviceOpen())
++    {
+         OpenedHere = openDevice();
+ 
+-    if (isDeviceOpen())
++        if (!OpenedHere)
++        {
++            VERBOSE(VB_MEDIA, LOC + ":checkMedia() - cannot open device '"
++                                  + m_DevicePath + "' : "
++                                  + ENO + "- returning UNKNOWN");
++            m_MediaType = MEDIATYPE_UNKNOWN;
++            return setStatus(MEDIASTAT_UNKNOWN, false);
++        }
++    }
++
++    switch (driveStatus())
+     {
++        case CDS_DISC_OK:
++            VERBOSE(VB_MEDIA, m_DevicePath + " Disk OK, type = "
++                              + MediaTypeString(m_MediaType) );
++            // further checking is required
++            break;
++        case CDS_TRAY_OPEN:
++            VERBOSE(VB_MEDIA, m_DevicePath + " Tray open or no disc");
++            // First, send a message to the
++            // plugins to forget the current media type
++            setStatus(MEDIASTAT_OPEN, OpenedHere);
++            // then reset
++            m_MediaType = MEDIATYPE_UNKNOWN;
++            return MEDIASTAT_OPEN;
++            break;
++        case CDS_NO_DISC:
++            VERBOSE(VB_MEDIA, m_DevicePath + " No disc");
++            m_MediaType = MEDIATYPE_UNKNOWN;
++            return setStatus(MEDIASTAT_NODISK, OpenedHere);
++            break;
++        case CDS_NO_INFO:
++        case CDS_DRIVE_NOT_READY:
++            VERBOSE(VB_MEDIA, m_DevicePath + " No info or drive not ready");
++            m_MediaType = MEDIATYPE_UNKNOWN;
++            return setStatus(MEDIASTAT_UNKNOWN, OpenedHere);
++        default:
++            VERBOSE(VB_IMPORTANT, "Failed to get drive status of "
++                                  + m_DevicePath + " : " + ENO);
++            m_MediaType = MEDIATYPE_UNKNOWN;
++            return setStatus(MEDIASTAT_UNKNOWN, OpenedHere);
++    }
++
++    if (mediaChanged())
++    {
++        VERBOSE(VB_MEDIA, m_DevicePath + " Media changed");
++        // Regardless of the actual status lie here and say
++        // it's open for now, so we can cover the case of a missed open.
++        return setStatus(MEDIASTAT_OPEN, OpenedHere);
++    }
++
++
++    if (isUsable())
++    {
+ #ifdef EXTRA_VERBOSITY
+-        VERBOSE(VB_MEDIA, LOC + ":checkMedia - Device is open...");
++        VERBOSE(VB_MEDIA, "Disc useable, media unchanged. All good!");
+ #endif
+-        switch (driveStatus())
++        if (OpenedHere)
++            closeDevice();
++        return MEDIASTAT_USEABLE;
++    }
++
++    // If we have tried to mount and failed, don't keep trying
++    if (m_Status == MEDIASTAT_ERROR)
++    {
++#ifdef EXTRA_VERBOSITY
++        VERBOSE(VB_MEDIA, "Disc is unmountable?");
++#endif
++        if (OpenedHere)
++            closeDevice();
++        return m_Status;
++    }
++
++    if ((m_Status == MEDIASTAT_OPEN) ||
++        (m_Status == MEDIASTAT_UNKNOWN))
++    {
++        VERBOSE(VB_MEDIA, m_DevicePath + " Current status " +
++                MythMediaDevice::MediaStatusStrings[m_Status]);
++        int type = ioctl(m_DeviceHandle, CDROM_DISC_STATUS, CDSL_CURRENT);
++        switch (type)
+         {
+-            case CDS_DISC_OK:
+-                VERBOSE(VB_MEDIA, getDevicePath() + " Disk OK, type = "
+-                                  + MediaTypeString(m_MediaType) );
+-                // 1. Audio CDs are not mounted
+-                // 2. If we don't know the media type yet,
+-                //    test the disk after this switch exits
+-                if (m_MediaType == MEDIATYPE_AUDIO ||
+-                    m_MediaType == MEDIATYPE_UNKNOWN)
+-                    break;
+-                // If we have tried to mount and failed, don't keep trying:
+-                if (m_Status == MEDIASTAT_ERROR)
+-                    return m_Status;
+-                // If the disc is ok and we already know it's mediatype
+-                // returns MOUNTED.
++            case CDS_DATA_1:
++            case CDS_DATA_2:
++                m_MediaType = MEDIATYPE_DATA;
++                VERBOSE(VB_MEDIA, "Found a data disk");
++                //grab information from iso9660 (& udf)
++                struct iso_primary_descriptor buf;
++                lseek(this->m_DeviceHandle,(off_t) 2048*16,SEEK_SET);
++                read(this->m_DeviceHandle, &buf,2048);
++                this->m_VolumeID = QString(buf.volume_id).stripWhiteSpace();
++                this->m_KeyID = QString("%1%2").arg(this->m_VolumeID)
++                                .arg(QString(buf.creation_date).left(16));
++
++                // the base class's onDeviceMounted will do fine
++                // grained detection of the type of data on this disc
+                 if (isMounted(true))
++                    onDeviceMounted();
++                else
++                    if (mount())
++                        ;    // onDeviceMounted() called as side-effect
++                    else
++                        return setStatus(MEDIASTAT_ERROR, OpenedHere);
++
++                if (isMounted(true))
++                {
++                    // pretend we're NOTMOUNTED so setStatus emits a signal
++                    m_Status = MEDIASTAT_NOTMOUNTED;
+                     return setStatus(MEDIASTAT_MOUNTED, OpenedHere);
++                }
++                else if (m_MediaType == MEDIATYPE_DVD)
++                {
++                    // pretend we're NOTMOUNTED so setStatus emits a signal
++                    m_Status = MEDIASTAT_NOTMOUNTED;
++                    return setStatus(MEDIASTAT_USEABLE, OpenedHere);
++                }
++                else
++                    return setStatus(MEDIASTAT_NOTMOUNTED, OpenedHere);
+                 break;
+-            case CDS_TRAY_OPEN:
+-                VERBOSE(VB_MEDIA, getDevicePath() + " Tray open or no disc");
+-                setStatus(MEDIASTAT_OPEN, OpenedHere);
+-                m_MediaType = MEDIATYPE_UNKNOWN;
+-                return MEDIASTAT_OPEN;
++            case CDS_AUDIO:
++                VERBOSE(VB_MEDIA, "found an audio disk");
++                m_MediaType = MEDIATYPE_AUDIO;
++                return setStatus(MEDIASTAT_USEABLE, OpenedHere);
+                 break;
+-            case CDS_NO_DISC:
+-                VERBOSE(VB_MEDIA, getDevicePath() + " No disc");
+-                m_MediaType = MEDIATYPE_UNKNOWN;
+-                return setStatus(MEDIASTAT_NODISK, OpenedHere);
++            case CDS_MIXED:
++                m_MediaType = MEDIATYPE_MIXED;
++                VERBOSE(VB_MEDIA, "found a mixed CD");
++                // Note: Mixed mode CDs require an explixit mount call
++                //       since we'll usually want the audio portion.
++                // undefine ASSUME_WANT_AUDIO to change this behavior.
++                #ifdef ASSUME_WANT_AUDIO
++                    return setStatus(MEDIASTAT_USEABLE, OpenedHere);
++                #else
++                    mount();
++                    if (isMounted(true))
++                    {
++                        // pretend we're NOTMOUNTED so setStatus
++                        // emits a signal
++                        m_Status = MEDIASTAT_NOTMOUNTED;
++                        return setStatus(MEDIASTAT_MOUNTED, OpenedHere);
++                    }
++                    else
++                    {
++                        return setStatus(MEDIASTAT_USEABLE, OpenedHere);
++                    }
++                #endif
+                 break;
+             case CDS_NO_INFO:
+-            case CDS_DRIVE_NOT_READY:
+-                VERBOSE(VB_MEDIA, getDevicePath()
+-                                  + " No info or drive not ready");
++            case CDS_NO_DISC:
++                if (hasWritableMedia())
++                {
++                    VERBOSE(VB_MEDIA, "found a blank or writable disk");
++                    return setStatus(MEDIASTAT_UNFORMATTED, OpenedHere);
++                }
++
++                VERBOSE(VB_MEDIA, "found no disk");
+                 m_MediaType = MEDIATYPE_UNKNOWN;
+                 return setStatus(MEDIASTAT_UNKNOWN, OpenedHere);
++                break;
+             default:
+-                VERBOSE(VB_IMPORTANT, "Failed to get drive status of "
+-                                      + getDevicePath() + " : " + ENO);
++                VERBOSE(VB_MEDIA, "found unknown disk type: "
++                                  + QString().setNum(type));
+                 m_MediaType = MEDIATYPE_UNKNOWN;
+                 return setStatus(MEDIASTAT_UNKNOWN, OpenedHere);
+         }
++    }
+ 
+-        if (mediaChanged())
+-        {
+-            VERBOSE(VB_MEDIA, getDevicePath() + " Media changed");
+-            // Regardless of the actual status lie here and say
+-            // it's open for now, so we can cover the case of a missed open.
+-            return setStatus(MEDIASTAT_OPEN, OpenedHere);
+-        }
+-        else
+-        {
+-#ifdef EXTRA_VERBOSITY
+-            VERBOSE(VB_MEDIA, getDevicePath() + " Media unchanged...");
+-#endif
+-            if ((m_Status == MEDIASTAT_OPEN) ||
+-                (m_Status == MEDIASTAT_UNKNOWN))
+-            {
+-                VERBOSE(VB_MEDIA, getDevicePath() + " Current status " +
+-                        MythMediaDevice::MediaStatusStrings[m_Status]);
+-                int type = ioctl(m_DeviceHandle,
+-                                 CDROM_DISC_STATUS, CDSL_CURRENT);
+-                switch (type)
+-                {
+-                    case CDS_DATA_1:
+-                    case CDS_DATA_2:
+-                        m_MediaType = MEDIATYPE_DATA;
+-                        VERBOSE(VB_MEDIA, "Found a data disk");
+-                        //grab information from iso9660 (& udf)
+-                        struct iso_primary_descriptor buf;
+-                        lseek(this->m_DeviceHandle,(off_t) 2048*16,SEEK_SET);
+-                        read(this->m_DeviceHandle, &buf,2048);
+-                        this->m_VolumeID = QString(buf.volume_id)
+-                                                       .stripWhiteSpace();
+-                        this->m_KeyID = QString("%1%2")
+-                                      .arg(this->m_VolumeID)
+-                                      .arg(QString(buf.creation_date).left(16));
+-
+-                        // the base class's onDeviceMounted will do fine
+-                        // grained detection of the type of data on this disc
+-                        if (isMounted(true))
+-                            onDeviceMounted();
+-                        else
+-                            if (mount())
+-                                ;    // onDeviceMounted() called as side-effect
+-                            else
+-                                return setStatus(MEDIASTAT_ERROR, OpenedHere);
+-
+-                        if (isMounted(true))
+-                        {
+-                            // pretend we're NOTMOUNTED so setStatus emits
+-                            // a signal
+-                            m_Status = MEDIASTAT_NOTMOUNTED;
+-                            return setStatus(MEDIASTAT_MOUNTED, OpenedHere);
+-                        }
+-                        else if (m_MediaType == MEDIATYPE_DVD)
+-                        {
+-                            // pretend we're NOTMOUNTED so setStatus emits
+-                            // a signal
+-                            m_Status = MEDIASTAT_NOTMOUNTED;
+-                            return setStatus(MEDIASTAT_USEABLE, OpenedHere);
+-                        }
+-                        else
+-                            return setStatus(MEDIASTAT_NOTMOUNTED, OpenedHere);
+-                        break;
+-                    case CDS_AUDIO:
+-                        VERBOSE(VB_MEDIA, "found an audio disk");
+-                        m_MediaType = MEDIATYPE_AUDIO;
+-                        return setStatus(MEDIASTAT_USEABLE, OpenedHere);
+-                        break;
+-                    case CDS_MIXED:
+-                        m_MediaType = MEDIATYPE_MIXED;
+-                        VERBOSE(VB_MEDIA, "found a mixed CD");
+-                        // Note: Mixed mode CDs require an explixit mount call
+-                        //       since we'll usually want the audio portion.
+-                        // undefine ASSUME_WANT_AUDIO to change this behavior.
+-                        #ifdef ASSUME_WANT_AUDIO
+-                            return setStatus(MEDIASTAT_USEABLE, OpenedHere);
+-                        #else
+-                            mount();
+-                            if (isMounted(true))
+-                            {
+-                                // pretend we're NOTMOUNTED so setStatus
+-                                // emits a signal
+-                                m_Status = MEDIASTAT_NOTMOUNTED;
+-                                return setStatus(MEDIASTAT_MOUNTED,
+-                                                 OpenedHere);
+-                            }
+-                            else
+-                            {
+-                                return setStatus(MEDIASTAT_USEABLE,
+-                                                 OpenedHere);
+-                            }
+-                        #endif
+-                        break;
+-                    case CDS_NO_INFO:
+-                    case CDS_NO_DISC:
+-                        if (hasWritableMedia())
+-                        {
+-                            VERBOSE(VB_MEDIA, "found a blank or writable disk");
+-                            return setStatus(MEDIASTAT_UNFORMATTED, OpenedHere);
+-                        }
+-
+-                        VERBOSE(VB_MEDIA, "found no disk");
+-                        m_MediaType = MEDIATYPE_UNKNOWN;
+-                        return setStatus(MEDIASTAT_UNKNOWN, OpenedHere);
+-                        break;
+-                    default:
+-                        VERBOSE(VB_MEDIA, "found unknown disk type: "
+-                                          + QString().setNum(type));
+-                        m_MediaType = MEDIATYPE_UNKNOWN;
+-                        return setStatus(MEDIASTAT_UNKNOWN, OpenedHere);
+-                }
+-            }
+-            else if (m_Status == MEDIASTAT_MOUNTED ||
+-                     m_Status == MEDIASTAT_NOTMOUNTED)
+-            {
+-                VERBOSE(VB_MEDIA, QString("Current status == ") +
+-                        MythMediaDevice::MediaStatusStrings[m_Status]);
+-                VERBOSE(VB_MEDIA, "Setting status to not mounted?");
+-                if (isMounted(true))
+-                    setStatus(MEDIASTAT_MOUNTED, OpenedHere);
+-                else
+-                    setStatus(MEDIASTAT_NOTMOUNTED, OpenedHere);
+-            }
+-
+-            if (m_AllowEject)
+-                ioctl(m_DeviceHandle, CDROM_LOCKDOOR, 0);
+-        }// mediaChanged()
+-    } // isDeviceOpen();
++    if (m_AllowEject)
++        unlock();
+     else
+-    {
+-        VERBOSE(VB_MEDIA, "Device not open - returning UNKNOWN");
+-        m_MediaType = MEDIATYPE_UNKNOWN;
+-        return setStatus(MEDIASTAT_UNKNOWN, OpenedHere);
+-    }
++        lock();
+ 
+     if (OpenedHere)
+         closeDevice();
 Index: mythtv/libs/libmythupnp/ssdp.cpp
 ===================================================================
 --- mythtv/libs/libmythupnp/ssdp.cpp	(revision 16468)
@@ -38327,6 +40279,28 @@ Index: mythtv/programs/mythbackend/upnpmedia.cpp
      for (QFileInfoListIterator it(*List); it; ++it)
      {
          QFileInfo Info(*it.current());
+Index: mythtv/programs/mythbackend/backendutil.cpp
+===================================================================
+--- mythtv/programs/mythbackend/backendutil.cpp	(revision 16468)
++++ mythtv/programs/mythbackend/backendutil.cpp	(working copy)
+@@ -207,7 +207,7 @@
+             // different than when it is locally mounted because of block sizes
+             if (it2->fsID == -1 &&
+                 (!HasfsID(it2->fsID) || it1->dirID == it2->dirID) &&
+-                (absLongLong(it1->totalSpaceKB - it2->totalSpaceKB) <= 16) &&
++                (absLongLong(it1->totalSpaceKB - it2->totalSpaceKB) <= 32) &&
+                 ((size_t)absLongLong(it1->usedSpaceKB - it2->usedSpaceKB)
+                  <= maxWriteFiveSec))
+             {
+@@ -292,7 +292,7 @@
+             // Sometimes the space reported for an NFS mounted dir is slightly
+             // different than when it is locally mounted because of block sizes
+             if (it2->fsID == -1 && !HasfsID(it2->dirID) &&
+-                (absLongLong(it1->totalSpaceKB - it2->totalSpaceKB) <= 16) &&
++                (absLongLong(it1->totalSpaceKB - it2->totalSpaceKB) <= 32) &&
+                 ((size_t)absLongLong(it1->usedSpaceKB - it2->usedSpaceKB)
+                  <= maxWriteFiveSec))
+             {
 Index: mythtv/programs/mythtv-setup/setup.xml
 ===================================================================
 --- mythtv/programs/mythtv-setup/setup.xml	(revision 16468)
@@ -38810,7 +40784,7 @@ Index: mythtv/settings.pro
 Index: mythtv/contrib/Win32/build/mythtvsetup.iss
 ===================================================================
 --- mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 0)
-+++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 18567)
++++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 19169)
 @@ -0,0 +1,493 @@
 +; Script generated by the Inno Setup Script Wizard.
 +; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
@@ -39314,7 +41288,7 @@ Added: svn:executable
 Index: mythtv/contrib/Win32/MythInstaller.bat
 ===================================================================
 --- mythtv/contrib/Win32/MythInstaller.bat	(revision 0)
-+++ mythtv/contrib/Win32/MythInstaller.bat	(revision 18567)
++++ mythtv/contrib/Win32/MythInstaller.bat	(revision 19169)
 @@ -0,0 +1,69 @@
 +@rem = '--*-Perl-*--
 +@rem
@@ -39396,7 +41370,7 @@ Added: svn:keywords
 Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 18567)
++++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 19169)
 @@ -0,0 +1,57 @@
 +@Echo off
 +::
@@ -39458,7 +41432,7 @@ Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 Index: mythtv/contrib/Win32/run/mythbackend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythbackend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 18567)
++++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 19169)
 @@ -0,0 +1,58 @@
 +@Echo off
 +::
@@ -39581,42 +41555,6 @@ Index: mythtv/contrib/Win32/win32-packager.pl
  # make
  [ newer => [$mythtv.'mythtv/libs/libmyth/libmyth-0.21.dll',$mythtv.'mythtv/last_build.txt'], shell => ['rm '.$unixmythtv.'mythtv/libs/libmyth/libmyth-0.21.dll','source '.$unixmythtv.'qt_env.sh','cd '.$unixmythtv.'mythtv','make'], comment => 'libs/libmyth/libmyth-0.21.dll - redo make unless all these files exist, and are newer than the last_build.txt identifier' ],
  [ newer => [$mythtv.'mythtv/libs/libmythtv/libmythtv-0.21.dll',$mythtv.'mythtv/last_build.txt'], shell => ['rm '.$unixmythtv.'mythtv/libs/libmythtv/libmythtv-0.21.dll','source '.$unixmythtv.'qt_env.sh','cd '.$unixmythtv.'mythtv','make'], comment => 'libs/libmythtv/libmythtv-0.21.dll - redo make unless all these files exist, and are newer than the last_build.txt identifier' ],
-Index: mythtv/contrib/OSX/osx-packager.pl
-===================================================================
---- mythtv/contrib/OSX/osx-packager.pl	(revision 16468)
-+++ mythtv/contrib/OSX/osx-packager.pl	(working copy)
-@@ -577,6 +577,7 @@
-   'mythtv'
-   =>  [
-         '--prefix=' . $PREFIX,
-+        '--runtime-prefix=../Resources',
-         # To "cross compile" something for a lesser Mac:
-         #'--tune=G3',
-         #'--disable-altivec',
-@@ -1041,6 +1042,13 @@
- if ( $OPT{'verbose'} )
- {   push @bundler, '--verbose'   }
- 
-+### Framework that has a screwed up link dependency path
-+my $AVCfw = '/Developer/FireWireSDK*/Examples/' .
-+            'Framework/AVCVideoServices.framework';
-+my @AVCfw = split / /, `ls -d $AVCfw`;
-+my $AVCfw = pop @AVCfw;
-+chop $AVCfw;
-+
- ### Create each package.
- ### Note that this is a bit of a waste of disk space,
- ### because there are now multiple copies of each library.
-@@ -1072,6 +1080,9 @@
-   # Remove copy of binary
-   unlink "$SCRIPTDIR/$target" or die;
- 
-+  if ( $AVCfw )
-+  {  &RecursiveCopy($AVCfw, "$finalTarget/Contents/Frameworks")  }
-+
-  if ( $target eq "MythFrontend" or $target =~ m/^MythTV/ )
-  {
-   my $res  = "$finalTarget/Contents/Resources";
 Index: mythtv/contrib/channel_changers/6200ch.c
 ===================================================================
 --- mythtv/contrib/channel_changers/6200ch.c	(revision 16468)

@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r18567
+%define _svnver r19169
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 13%{?dist}
+Release: 14%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -45,7 +45,6 @@ Source401: mythweb.conf
 Patch100: mythtv-0.21-svnfixes.patch
 Patch101: mythtv-0.20-mythstreammenu.diff
 #Patch102: mythtv-0.21-fedora-settings.patch
-Patch103: mythtv-0.21-enable-64bit-fast_cmov.patch
 Patch200: mythplugins-0.21-svnfixes.patch
 #Patch201: mythplugins-0.21-fedora-settings.patch
 #
@@ -493,7 +492,6 @@ cd mythtv-%{version}
 %patch100 -p1 -b .svnfixes
 #patch101 -p0 -b .mythstreammenu
 #patch102 -p1 -b .settings
-%patch103 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
 find contrib/ -type f -exec chmod -x "{}" \;
@@ -549,7 +547,7 @@ cd ..
 
 cd mythvideo
 # Fix /mnt/store -> /var/lib/mythmusic
-perl -pi -e's|/share/Movies/dvd|%{_localstatedir}/lib/mythvideo|' mythvideo/globalsettings.cpp
+perl -pi -e's|/share/Movies/dvd|%{_localstatedir}/lib/mythvideo|' mythvideo/globals.cpp
 cd ..
 
 cd mythweb
@@ -1017,6 +1015,10 @@ fi
 %endif
 
 %changelog
+* Fri Nov 28 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-14
+- Update release-0-21-fixes patches (r19169)
+- Should resolve 720p playback stutter, rpmfusion bz#186
+
 * Tue Oct 14 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-13
 - Enable fast cmov on x86_64
 - Disable mythgame-emulators convenience meta-package, deps not
