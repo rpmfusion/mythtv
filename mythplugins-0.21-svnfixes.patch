@@ -1,3 +1,18 @@
+Index: mythplugins/mythweb/INSTALL
+===================================================================
+--- mythplugins/mythweb/INSTALL	(revision 16468)
++++ mythplugins/mythweb/INSTALL	(working copy)
+@@ -195,6 +195,10 @@
+     mod_deflate
+     mod_headers
+ 
++In Suse 10.3 and above, you'll need to add "rewrite" in the file
++/etc/sysconfig/apache2 on the "APACHE_MODULES" line if it's not already
++there.
++
+ =================
+ 5.1 Apache Config
+ =================
 Index: mythplugins/mythweb/modules/music/stream.php
 ===================================================================
 --- mythplugins/mythweb/modules/music/stream.php	(revision 16468)
@@ -5114,10 +5129,6 @@ Index: mythplugins/mytharchive/i18n/mytharchive_dk.ts
      </message>
  </context>
  </TS>
-Index: mythplugins/mytharchive/i18n/mytharchive_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mytharchive/i18n/mytharchive_nl.ts
 ===================================================================
 --- mythplugins/mytharchive/i18n/mytharchive_nl.ts	(revision 16468)
@@ -6009,14 +6020,6 @@ Index: mythplugins/mytharchive/i18n/mytharchive_nl.ts
          <source>Parental Pin:</source>
          <translation>Pincode:</translation>
      </message>
-Index: mythplugins/mytharchive/i18n/mytharchive_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythplugins/mytharchive/i18n/mytharchive_dk.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mytharchive/mytharchive/archivemenu.xml
 ===================================================================
 --- mythplugins/mytharchive/mytharchive/archivemenu.xml	(revision 16468)
@@ -6549,10 +6552,6 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
              title = title[:32]
  
              #Create the DVD ISO image
-Index: mythplugins/mythbrowser/i18n/mythbrowser_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythbrowser/i18n/mythbrowser_fi.ts
 ===================================================================
 --- mythplugins/mythbrowser/i18n/mythbrowser_fi.ts	(revision 16468)
@@ -6566,10 +6565,6 @@ Index: mythplugins/mythbrowser/i18n/mythbrowser_fi.ts
      </message>
  </context>
  </TS>
-Index: mythplugins/mythbrowser/i18n/mythbrowser_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythbrowser/i18n/mythbrowser_nl.ts
 ===================================================================
 --- mythplugins/mythbrowser/i18n/mythbrowser_nl.ts	(revision 16468)
@@ -7963,14 +7958,6 @@ Index: mythplugins/mythweather/i18n/mythweather_fi.ts
      </message>
  </context>
  </TS>
-Index: mythplugins/mythweather/i18n/mythweather_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythplugins/mythweather/i18n/mythweather_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl
 ===================================================================
 --- mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl	(revision 16468)
@@ -9286,10 +9273,28 @@ Index: mythplugins/mythweather/README
      a multi-location screen you have to set the location of each individual data
      item.  This may not be ideal, but it does allow for very easy screen and
      source development, along with very customizable location setups.  The
-Index: mythplugins/mythgallery/i18n/mythgallery_fi.qm
+Index: mythplugins/mythgallery/i18n/mythgallery_nb.ts
 ===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
+--- mythplugins/mythgallery/i18n/mythgallery_nb.ts	(revision 16468)
++++ mythplugins/mythgallery/i18n/mythgallery_nb.ts	(working copy)
+@@ -35,7 +35,7 @@
+     </message>
+     <message>
+         <source>Import pictures?</source>
+-        <translation>Imporere bilder?</translation>
++        <translation>Importere bilder?</translation>
+     </message>
+     <message>
+         <source>No</source>
+@@ -83,7 +83,7 @@
+     </message>
+     <message>
+         <source>Return</source>
+-        <translation>Enter</translation>
++        <translation>Tilbake</translation>
+     </message>
+     <message>
+         <source>Clear Marked</source>
 Index: mythplugins/mythgallery/i18n/mythgallery_nl.ts
 ===================================================================
 --- mythplugins/mythgallery/i18n/mythgallery_nl.ts	(revision 16468)
@@ -9806,10 +9811,6 @@ Index: mythplugins/mythgallery/i18n/mythgallery_fi.ts
      </message>
  </context>
  <context>
-Index: mythplugins/mythgallery/i18n/mythgallery_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythmovies/ignyte/ignytegrabber.cpp
 ===================================================================
 --- mythplugins/mythmovies/ignyte/ignytegrabber.cpp	(revision 16468)
@@ -10059,10 +10060,6 @@ Index: mythplugins/mythflix/i18n/mythflix_nl.ts
          <source>Minutes</source>
          <translation>Minuten</translation>
      </message>
-Index: mythplugins/mythflix/i18n/mythflix_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythflix/i18n/mythflix_fi.ts
 ===================================================================
 --- mythplugins/mythflix/i18n/mythflix_fi.ts	(revision 16468)
@@ -10149,10 +10146,28 @@ Index: mythplugins/mythflix/i18n/mythflix_fi.ts
      </message>
  </context>
  <context>
-Index: mythplugins/mythflix/i18n/mythflix_nl.qm
+Index: mythplugins/mythflix/mythflix/netflix-ui.xml
 ===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
+--- mythplugins/mythflix/mythflix/netflix-ui.xml	(revision 16468)
++++ mythplugins/mythflix/mythflix/netflix-ui.xml	(working copy)
+@@ -91,7 +91,7 @@
+       </image>
+ 
+       <image name="background" draworder="0" fleximage="no">
+-        <filename>news-info-bg.png</filename>
++        <filename>mythflix_background.png</filename>
+         <position>0,0</position>
+       </image>
+ 
+@@ -178,7 +178,7 @@
+         </image>
+         
+         <image name="background" draworder="0" fleximage="no">
+-          <filename>news-info-bg.png</filename>
++          <filename>mythflix_background.png</filename>
+           <position>0,0</position>
+         </image>
+         
 Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.ts
 ===================================================================
 --- mythplugins/mythcontrols/i18n/mythcontrols_nl.ts	(revision 16468)
@@ -10441,10 +10456,6 @@ Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.ts
          <source>No</source>
          <translation type="obsolete">Nee</translation>
      </message>
-Index: mythplugins/mythcontrols/i18n/mythcontrols_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythcontrols/i18n/mythcontrols_fi.ts
 ===================================================================
 --- mythplugins/mythcontrols/i18n/mythcontrols_fi.ts	(revision 16468)
@@ -10581,14 +10592,6 @@ Index: mythplugins/mythcontrols/i18n/mythcontrols_fi.ts
      </message>
  </context>
  <context>
-Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythplugins/mythvideo/i18n/mythvideo_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythvideo/i18n/mythvideo_nl.ts
 ===================================================================
 --- mythplugins/mythvideo/i18n/mythvideo_nl.ts	(revision 16468)
@@ -12139,10 +12142,6 @@ Index: mythplugins/mythvideo/mythvideo/main.cpp
  
              command_string = "Internal";
              gContext->GetMainWindow()->HandleMedia(command_string, filename);
-Index: mythplugins/mythphone/i18n/mythphone_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythphone/i18n/mythphone_nl.ts
 ===================================================================
 --- mythplugins/mythphone/i18n/mythphone_nl.ts	(revision 16468)
@@ -12920,10 +12919,6 @@ Index: mythplugins/mythphone/i18n/mythphone_nl.ts
      </message>
  </context>
  </TS>
-Index: mythplugins/mythgame/i18n/mythgame_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythgame/i18n/mythgame_nl.ts
 ===================================================================
 --- mythplugins/mythgame/i18n/mythgame_nl.ts	(revision 16468)
@@ -13353,10 +13348,6 @@ Index: mythplugins/mythgame/i18n/mythgame_nl.ts
          <source>Favorite:</source>
          <translation>Favoriet:</translation>
      </message>
-Index: mythplugins/mythgame/i18n/mythgame_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythgame/i18n/mythgame_fi.ts
 ===================================================================
 --- mythplugins/mythgame/i18n/mythgame_fi.ts	(revision 16468)
@@ -14510,14 +14501,6 @@ Index: mythplugins/mythnews/i18n/mythnews_fi.ts
      </message>
  </context>
  <context>
-Index: mythplugins/mythnews/i18n/mythnews_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythplugins/mythnews/i18n/mythnews_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythnews/i18n/mythnews_nl.ts
 ===================================================================
 --- mythplugins/mythnews/i18n/mythnews_nl.ts	(revision 16468)
@@ -14679,3 +14662,131 @@ Index: mythplugins/mythnews/i18n/mythnews_nl.ts
          <source>Minutes</source>
          <translation>Minuten</translation>
      </message>
+Index: mythplugins/mythnews/mythnews/news-sites.xml
+===================================================================
+--- mythplugins/mythnews/mythnews/news-sites.xml	(revision 16468)
++++ mythplugins/mythnews/mythnews/news-sites.xml	(working copy)
+@@ -725,85 +725,75 @@
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Broadcasting</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsbroadcast.xml</url>
++        <title>Digital Spy - News Headlines</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsall.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Cable</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dscable.xml</url>
++        <title>Digital Spy - Entertainment Headlines</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsentertainmentnews.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Cult</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dscult.xml</url>
++        <title>Digital Spy - Media Headlines</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsmedianews.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Entertainment Headlines</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dseznews.xml</url>
++        <title>Digital Spy - Digital TV</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsdigitaltv.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Gaydar</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsgaydar.xml</url>
++        <title>Digital Spy - Broadcasting</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsbroadcasting.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Headlines</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsukstd.xml</url>
++        <title>Digital Spy - Cult</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dscult.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Media Headlines</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsmznews.xml</url>
++        <title>Digital Spy - Gay Spy</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsgayspy.xml</url>
+     </item>
+ 
+     <item>
+         <title>Digital Spy - Movies</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsfilm.xml</url>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsmovies.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Programming</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsprogramming.xml</url>
++        <title>Digital Spy - Music</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsmusic.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Radio</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsradio.xml</url>
++        <title>Digital Spy - Reality</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsrealitytv.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Reality TV</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsreality.xml</url>
++        <title>Digital Spy - Showbiz</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsshowbiz.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Satellite</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dssatellite.xml</url>
++        <title>Digital Spy - Soaps</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dssoaps.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Showbiz</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsshowbiz.xml</url>
+-    </item>
+-
+-    <item>
+         <title>Digital Spy - Television</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dstv.xml</url>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dstv.xml</url>
+     </item>
+ 
+     <item>
+-        <title>Digital Spy - Terrestrial</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsterrestrial.xml</url>
++        <title>Digital Spy - US TV</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsustv.xml</url>
+     </item>
+ 
+-    <item>
+-        <title>Digital Spy - US Television</title>
+-        <url>http://syndication.digitalspy.co.uk/xmlcache/dsustv.xml</url>
+-    </item>
+-
+ </category>
+ 
+ <category name="MythTV">
+@@ -986,6 +976,11 @@
+     </item>
+ 
+     <item>
++        <title>Digital Spy - Odd Section</title>
++        <url>http://syndication.digitalspy.co.uk/rss_news/dsodd.xml</url>
++    </item>
++
++    <item>
+         <title>Fark</title>
+         <url>http://feeds.feedburner.com/fark</url>
+         <ico>http://www.fark.com/favicon.ico</ico>
