@@ -831,6 +831,7 @@ fi
 %{_bindir}/mythwelcome
 %dir %{_libdir}/mythtv
 %dir %{_libdir}/mythtv/filters
+%{_libdir}/mythtv/filters/*
 %dir %{_libdir}/mythtv/plugins
 %{_datadir}/mythtv/*.ttf
 %dir %{_datadir}/mythtv/i18n
