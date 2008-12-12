@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r19169
+%define _svnver r19344
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 14%{?dist}
+Release: 15%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -255,6 +255,8 @@ Summary: Server component of mythtv (a PVR)
 Group: Applications/Multimedia
 Requires: lame
 Requires: mythtv-common = %{version}-%{release}
+# libraw1394 2.0.0-5 for f10+ and 1.3.0-11 for f9 contain a critical fix
+Requires: libraw1394 >= 1.3.0-11
 Conflicts: xmltv-grabbers < 0.5.37
 
 %description backend
@@ -772,6 +774,7 @@ fi
 %files common
 %defattr(-,root,root,-)
 %dir %{_sysconfdir}/mythtv
+%dir %{_datadir}/mythtv
 %config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
 %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 %{_bindir}/mythcommflag
@@ -826,7 +829,8 @@ fi
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
-%{_libdir}/mythtv/filters
+%dir %{_libdir}/mythtv
+%dir %{_libdir}/mythtv/filters
 %dir %{_libdir}/mythtv/plugins
 %{_datadir}/mythtv/*.ttf
 %dir %{_datadir}/mythtv/i18n
@@ -848,6 +852,7 @@ fi
 %{_includedir}/*
 %{_libdir}/*.so
 %exclude %{_libdir}/*.a
+%dir %{_datadir}/mythtv/build
 %{_datadir}/mythtv/build/settings.pro
 
 %files -n mythplugins
@@ -1003,6 +1008,8 @@ fi
 %{perl_vendorlib}/MythTV.pm
 %dir %{perl_vendorlib}/MythTV
 %{perl_vendorlib}/MythTV/*.pm
+%dir %{perl_vendorlib}/IO/Socket
+%dir %{perl_vendorlib}/IO/Socket/INET
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 
@@ -1015,6 +1022,12 @@ fi
 %endif
 
 %changelog
+* Thu Dec 11 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-15
+- Update to release-0-21-fixes patches (r19344)
+- Includes critical fix for supporting use of FireWire cable
+  boxes w/Fedora's native FireWire driver stack (finally!)
+- Fix missing package ownership of some stray dirs (rpmfusion bz#222)
+
 * Fri Nov 28 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-14
 - Update release-0-21-fixes patches (r19169)
 - Should resolve 720p playback stutter, rpmfusion bz#186
