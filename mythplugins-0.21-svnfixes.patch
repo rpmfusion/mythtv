@@ -2,7 +2,24 @@ Index: mythplugins/mythweb/INSTALL
 ===================================================================
 --- mythplugins/mythweb/INSTALL	(revision 16468)
 +++ mythplugins/mythweb/INSTALL	(working copy)
-@@ -195,6 +195,10 @@
+@@ -2,7 +2,7 @@
+ requirements and instructions for MythWeb.  Please see README for other
+ information.
+ 
+-February 16, 2008
++October 26, 2008
+ 
+ ========
+ Contents
+@@ -18,6 +18,7 @@
+ 5.0     Apache
+ 5.1         Apache Config
+ 6.0     Lighttpd
++7.0     PHP
+ 
+ =======
+ Summary
+@@ -195,6 +196,10 @@
      mod_deflate
      mod_headers
  
@@ -13,6 +30,32 @@ Index: mythplugins/mythweb/INSTALL
  =================
  5.1 Apache Config
  =================
+@@ -245,3 +250,25 @@
+ 
+ Sorry, no documentation here yet...
+ 
++=======
++7.0 PHP
++=======
++
++PHP tries to determine the system's local timezone settings automatically
++but may not be successful on every distribution. To ensure that PHP uses
++the correct timezone, edit php.ini and configure the date.timezone variable
++to your local timezone.
++
++For example, to set the PHP timezone to Europe/London:
++
++  vim /etc/php.ini
++
++add/uncomment the date.timezone variable:
++
++  date.timezone = Europe/London
++
++and then restart Apache (exact commands depend on distribution):
++
++  /etc/init.d/apache2 stop
++  /etc/init.d/apache2 start
++
 Index: mythplugins/mythweb/modules/music/stream.php
 ===================================================================
 --- mythplugins/mythweb/modules/music/stream.php	(revision 16468)
@@ -1176,6 +1219,34 @@ Index: mythplugins/mythweb/modules/tv/recorded.php
                  backend_command(array('FORGET_RECORDING', implode(backend_sep, $row), '0'));
              // Delay a second so the scheduler can catch up
                  sleep(1);
+Index: mythplugins/mythweb/README
+===================================================================
+--- mythplugins/mythweb/README	(revision 16468)
++++ mythplugins/mythweb/README	(working copy)
+@@ -135,10 +135,16 @@
+ Q: I get a "500 server error" (or some other number) when trying to view
+     MythWeb.
+ A: Check your apache logs for details about what caused the error.  Usually,
+-    it means that you didn't set up a required module.  Read the 
++    it means that you didn't set up a required module.  Read the
+     mythweb.conf.apache file in more detail to make sure you didn't miss
+     an important setup file.
+ 
++Q: MythWeb complains about "Warning: Unknown Programme" after Daylight Savings
++    Time has started/finished.
++A: PHP may not have determined your local timezone correctly. Read the PHP
++    section of MythWeb's INSTALL file to find out how to correctly configure
++    your timezone in PHP.
++
+ ======================
+ 4.0 Submitting Patches
+ ======================
+@@ -150,5 +156,3 @@
+ other "diff -u" patches, but if there have been any major changes in SVN (there
+ occasionally are), I won't put much effort into trying to make your patch work,
+ so please just use SVN.
+-
+-
 Index: mythplugins/configure
 ===================================================================
 --- mythplugins/configure	(revision 16468)
@@ -10168,6 +10239,7 @@ Index: mythplugins/mythflix/mythflix/netflix-ui.xml
            <position>0,0</position>
          </image>
          
+
 Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.ts
 ===================================================================
 --- mythplugins/mythcontrols/i18n/mythcontrols_nl.ts	(revision 16468)
@@ -12142,6 +12214,19 @@ Index: mythplugins/mythvideo/mythvideo/main.cpp
  
              command_string = "Internal";
              gContext->GetMainWindow()->HandleMedia(command_string, filename);
+Index: mythplugins/mythvideo/mythvideo/videofilter.cpp
+===================================================================
+--- mythplugins/mythvideo/mythvideo/videofilter.cpp	(revision 16468)
++++ mythplugins/mythvideo/mythvideo/videofilter.cpp	(working copy)
+@@ -293,7 +293,7 @@
+     {
+         if (runtime == kRuntimeFilterUnknown)
+         {
+-            matches = mdata.Length() < 0;
++            matches = mdata.Length() == 0;
+         }
+         else
+         {
 Index: mythplugins/mythphone/i18n/mythphone_nl.ts
 ===================================================================
 --- mythplugins/mythphone/i18n/mythphone_nl.ts	(revision 16468)
