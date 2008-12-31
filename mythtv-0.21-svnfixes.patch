@@ -26423,7 +26423,7 @@ Index: mythtv/docs/mythtv-HOWTO-22.html
 Index: mythtv/libs/libs-targetfix.pro
 ===================================================================
 --- mythtv/libs/libs-targetfix.pro	(revision 0)
-+++ mythtv/libs/libs-targetfix.pro	(revision 19344)
++++ mythtv/libs/libs-targetfix.pro	(revision 19505)
 @@ -0,0 +1,20 @@
 +# Common project modifications to change the generated target.
 +
@@ -27168,6 +27168,24 @@ Index: mythtv/libs/libmythtv/jobqueue.cpp
  
      if (!query.exec() || !query.isActive())
      {
+Index: mythtv/libs/libmythtv/playgroup.cpp
+===================================================================
+--- mythtv/libs/libmythtv/playgroup.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/playgroup.cpp	(working copy)
+@@ -114,7 +114,12 @@
+ 
+     virtual void save(void) {
+         if (intValue() < 50 || intValue() > 200)
+-            setValue(0);
++        {
++            // We need to bypass the bounds checking that would
++            // normally occur in order to get the special value of 0
++            // into the database
++            IntegerSetting::setValue(0);
++        }
+         PlayGroupDBStorage::save();
+     }
+ };
 Index: mythtv/libs/libmythtv/DVDRingBuffer.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/DVDRingBuffer.cpp	(revision 16468)
@@ -28089,7 +28107,7 @@ Index: mythtv/libs/libmythtv/channelutil.cpp
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 19344)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 19505)
 @@ -0,0 +1,12 @@
 +#ifndef _FREESAT_HUFFMAN_H_
 +#define _FREESAT_HUFFMAN_H_
@@ -28112,7 +28130,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_tables.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 19344)
++++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 19505)
 @@ -0,0 +1,4370 @@
 +struct fsattab fsat_table[] = {
 +    { 0x00000000,  2, 'T'},
@@ -32493,7 +32511,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 19344)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 19505)
 @@ -0,0 +1,107 @@
 +#include "freesat_huffman.h"
 +
@@ -32612,8 +32630,12 @@ Index: mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp	(revision 16468)
 +++ mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp	(working copy)
-@@ -926,10 +926,11 @@
- int MPEGStreamData::ProcessData(unsigned char *buffer, int len)
+@@ -923,15 +923,16 @@
+ }
+ #undef DONE_WITH_PES_PACKET
+ 
+-int MPEGStreamData::ProcessData(unsigned char *buffer, int len)
++int MPEGStreamData::ProcessData(const unsigned char *buffer, int len)
  {
      int pos = 0;
 +    bool resync = false;
@@ -32623,8 +32645,11 @@ Index: mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
 -        if (buffer[pos] != SYNC_BYTE)
 +        if (buffer[pos] != SYNC_BYTE || resync)
          {
-             int newpos = ResyncStream(buffer, pos, len);
+-            int newpos = ResyncStream(buffer, pos, len);
++            int newpos = ResyncStream(buffer, pos+1, len);
              if (newpos == -1)
+                 return len - pos;
+             if (newpos == -2)
 @@ -942,9 +943,12 @@
  
          const TSPacket *pkt = reinterpret_cast<const TSPacket*>(&buffer[pos]);
@@ -32639,6 +32664,16 @@ Index: mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
      }
  
      return len - pos;
+@@ -995,7 +999,8 @@
+     return true;
+ }
+ 
+-int MPEGStreamData::ResyncStream(unsigned char *buffer, int curr_pos, int len)
++int MPEGStreamData::ResyncStream(const unsigned char *buffer, int curr_pos,
++                                 int len)
+ {
+     // Search for two sync bytes 188 bytes apart, 
+     int pos = curr_pos;
 Index: mythtv/libs/libmythtv/mpeg/pespacket.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/pespacket.cpp	(revision 16468)
@@ -32723,6 +32758,28 @@ Index: mythtv/libs/libmythtv/mpeg/dvbstreamdata.cpp
      }
  
      return add_pids.size() || del_pids.size();
+Index: mythtv/libs/libmythtv/mpeg/mpegstreamdata.h
+===================================================================
+--- mythtv/libs/libmythtv/mpeg/mpegstreamdata.h	(revision 16468)
++++ mythtv/libs/libmythtv/mpeg/mpegstreamdata.h	(working copy)
+@@ -107,7 +107,7 @@
+     virtual bool HandleTables(uint pid, const PSIPTable &psip);
+     virtual void HandleTSTables(const TSPacket* tspacket);
+     virtual bool ProcessTSPacket(const TSPacket& tspacket);
+-    virtual int  ProcessData(unsigned char *buffer, int len);
++    virtual int  ProcessData(const unsigned char *buffer, int len);
+     inline  void HandleAdaptationFieldControl(const TSPacket* tspacket);
+ 
+     // Listening
+@@ -293,7 +293,7 @@
+     void ProcessPMT(const ProgramMapTable *pmt);
+     void ProcessEncryptedPacket(const TSPacket&);
+ 
+-    static int ResyncStream(unsigned char *buffer, int curr_pos, int len);
++    static int ResyncStream(const unsigned char *buffer, int curr_pos, int len);
+ 
+     void UpdateTimeOffset(uint64_t si_utc_time);
+ 
 Index: mythtv/libs/libmythtv/mpeg/dvbdescriptors.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/dvbdescriptors.cpp	(revision 16468)
@@ -33957,7 +34014,7 @@ Index: mythtv/libs/libavutil/common.h
 Index: mythtv/libs/libavcodec/rectangle.h
 ===================================================================
 --- mythtv/libs/libavcodec/rectangle.h	(revision 0)
-+++ mythtv/libs/libavcodec/rectangle.h	(revision 19344)
++++ mythtv/libs/libavcodec/rectangle.h	(revision 19505)
 @@ -0,0 +1,121 @@
 +/*
 + * rectangle filling function
@@ -34182,7 +34239,7 @@ Index: mythtv/libs/libavcodec/h264pred.h
 Index: mythtv/libs/libavcodec/i386/h264_i386.h
 ===================================================================
 --- mythtv/libs/libavcodec/i386/h264_i386.h	(revision 0)
-+++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 19344)
++++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 19505)
 @@ -0,0 +1,144 @@
 +/*
 + * H.26L/H.264/AVC/JVT/14496-10/... encoder/decoder
@@ -43849,7 +43906,7 @@ Index: mythtv/settings.pro
 Index: mythtv/contrib/Win32/build/mythtvsetup.iss
 ===================================================================
 --- mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 0)
-+++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 19344)
++++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 19505)
 @@ -0,0 +1,493 @@
 +; Script generated by the Inno Setup Script Wizard.
 +; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
@@ -44353,7 +44410,7 @@ Added: svn:executable
 Index: mythtv/contrib/Win32/MythInstaller.bat
 ===================================================================
 --- mythtv/contrib/Win32/MythInstaller.bat	(revision 0)
-+++ mythtv/contrib/Win32/MythInstaller.bat	(revision 19344)
++++ mythtv/contrib/Win32/MythInstaller.bat	(revision 19505)
 @@ -0,0 +1,69 @@
 +@rem = '--*-Perl-*--
 +@rem
@@ -44435,7 +44492,7 @@ Added: svn:keywords
 Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 19344)
++++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 19505)
 @@ -0,0 +1,57 @@
 +@Echo off
 +::
@@ -44497,7 +44554,7 @@ Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 Index: mythtv/contrib/Win32/run/mythbackend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythbackend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 19344)
++++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 19505)
 @@ -0,0 +1,58 @@
 +@Echo off
 +::

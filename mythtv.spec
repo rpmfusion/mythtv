@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r19344
+%define _svnver r19505
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 15%{?dist}
+Release: 16%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1023,6 +1023,10 @@ fi
 %endif
 
 %changelog
+* Tue Dec 30 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-16
+- Update release-0-21-fixes patches (r19505)
+- Fixes infinite loop introduced by firewire fix in -15 (rpmfusion bz#286)
+
 * Thu Dec 11 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-15
 - Update to release-0-21-fixes patches (r19344)
 - Includes critical fix for supporting use of FireWire cable
