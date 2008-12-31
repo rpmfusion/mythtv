@@ -66,7 +66,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r19390
+%define _svnrev r19506
 %define branch trunk
 
 #
@@ -689,27 +689,27 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 A game frontend (xmame, nes, snes, pc) for MythTV.
 
 ################################################################################
-%package -n mythgame-emulators
-Summary:   Meta-package requiring emulators for game types mythgame knows about
-Group:     Applications/Multimedia
-Requires:  mythgame = %{version}-%{release}
+#package -n mythgame-emulators
+#Summary:   Meta-package requiring emulators for game types mythgame knows about
+#Group:     Applications/Multimedia
+#Requires:  mythgame = %{version}-%{release}
 # Multi Arcade Machine Emulator, Amiga, Atari 2600
-Requires:  sdlmame
-Requires:  e-uae
-Requires:  stella
+#Requires:  sdlmame
+#Requires:  e-uae
+#Requires:  stella
 # Nintendo, Super Nintendo, Nintendo 64
-Requires:  fceultra
-Requires:  zsnes
-Requires:  mupen64, mupen64-ricevideo
+#Requires:  fceultra
+#Requires:  zsnes
+#Requires:  mupen64, mupen64-ricevideo
 # Sega Genesis, Sega Master System, Game Gear
-Requires:  gens
-Requires:  dega-sdl
-Requires:  osmose
+#Requires:  gens
+#Requires:  dega-sdl
+#Requires:  osmose
 # TurboGraphx 16 (and others)
-Requires:  mednafen
+#Requires:  mednafen
 
-%description -n mythgame-emulators
-Meta-package requiring emulators for game types mythgame knows about.
+#description -n mythgame-emulators
+#Meta-package requiring emulators for game types mythgame knows about.
 
 %endif
 ################################################################################
@@ -1458,11 +1458,11 @@ fi
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
 
-%files -n mythgame-emulators
-%defattr(-,root,root,-)
-%{_datadir}/mythtv/games/xmame
-%{_datadir}/mame/screens
-%{_datadir}/mame/flyers
+#files -n mythgame-emulators
+#defattr(-,root,root,-)
+#{_datadir}/mythtv/games/xmame
+#{_datadir}/mame/screens
+#{_datadir}/mame/flyers
 %endif
 
 %if %{with_mythmovies}
@@ -1560,6 +1560,13 @@ fi
 ################################################################################
 
 %changelog
+* Wed Dec 31 2008 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19506
+- Update to pre-0.22 svn trunk, revision 19506
+- Re-disable mythgame-emulators sub-pgk, was accidentally re-enabled
+
+* Sun Dec 28 2008 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19467
+- Update to pre-0.22 svn trunk, revision 19467
+
 * Mon Dec 15 2008 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19390
 - MythTV svn trunk (pre-0.22), revision 19390
 - Re-enable fast cmov on x86_64 by default
