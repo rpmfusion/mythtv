@@ -66,7 +66,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r19534
+%define _svnrev r19622
 %define branch trunk
 
 #
@@ -1560,6 +1560,9 @@ fi
 ################################################################################
 
 %changelog
+* Fri Jan 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19622
+- Update to pre-0.22 svn trunk, revision 19622
+
 * Fri Jan 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19534
 - Update to pre-0.22 svn trunk, revision 19534
 - Re-disable mythgame-emulators sub-pgk, was accidentally re-enabled
