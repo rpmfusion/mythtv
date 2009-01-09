@@ -66,7 +66,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r19622
+%define _svnrev r19630
 %define branch trunk
 
 #
@@ -1454,15 +1454,11 @@ fi
 %config(noreplace) %{_sysconfdir}/mythgame/gamelist.xml
 %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
-%exclude %{_datadir}/mythtv/games/xmame
+%dir %{_datadir}/mythtv/games/xmame
+%dir %{_datadir}/mame/screens
+%dir %{_datadir}/mame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
-
-#files -n mythgame-emulators
-#defattr(-,root,root,-)
-#{_datadir}/mythtv/games/xmame
-#{_datadir}/mame/screens
-#{_datadir}/mame/flyers
 %endif
 
 %if %{with_mythmovies}
@@ -1560,6 +1556,10 @@ fi
 ################################################################################
 
 %changelog
+* Fri Jan 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19630
+- Update to pre-0.22 svn trunk, revision 19630
+- Fix a %%files list screw-up w/mythgame-emulators nukage
+
 * Fri Jan 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19622
 - Update to pre-0.22 svn trunk, revision 19622
 
