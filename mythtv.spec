@@ -66,7 +66,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r19630
+%define _svnrev r19721
 %define branch trunk
 
 #
@@ -1556,6 +1556,9 @@ fi
 ################################################################################
 
 %changelog
+* Sat Jan 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19721
+- Update to pre-0.22 svn trunk, revision 19721
+
 * Fri Jan 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19630
 - Update to pre-0.22 svn trunk, revision 19630
 - Fix a %%files list screw-up w/mythgame-emulators nukage
