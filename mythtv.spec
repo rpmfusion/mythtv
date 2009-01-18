@@ -46,15 +46,10 @@
 # --without mythmovies
 # --without mythmusic
 # --without mythnews
-# --without mythphone
 # --without mythvideo
 # --without mythweather
 # --without mythzoneminder
 # --without mythweb
-#
-# The following options are disabled by default.  Use these options to enable:
-#
-# --with festival           Enable festival/festvox support in MythPhone
 #
 
 ################################################################################
@@ -66,7 +61,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r19721
+%define _svnrev r19722
 %define branch trunk
 
 #
@@ -119,16 +114,10 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_mythmovies     %{?_without_mythmovies:     0} %{!?_without_mythmovies:      1}
 %define with_mythmusic      %{?_without_mythmusic:      0} %{!?_without_mythmusic:       1}
 %define with_mythnews       %{?_without_mythnews:       0} %{!?_without_mythnews:        1}
-%define with_mythphone      %{?_without_mythphone:      0} %{!?_without_mythphone:       1}
 %define with_mythvideo      %{?_without_mythvideo:      0} %{!?_without_mythvideo:       1}
 %define with_mythweather    %{?_without_mythweather:    0} %{!?_without_mythweather:     1}
 %define with_mythweb        %{?_without_mythweb:        0} %{!?_without_mythweb:         1}
 %define with_mythzoneminder %{?_without_mythzoneminder: 0} %{!?_without_mythzoneminder:  1}
-
-# The following plugin options are disabled by default.  Use --with to enable them
-
-# MythPhone
-%define with_festival       %{?_with_festival:      1} %{!?_with_festival:      0}
 
 ################################################################################
 
@@ -269,15 +258,10 @@ BuildRequires:  SDL-devel
 %if %{with_mythnews}
 %endif
 
-%if %{with_mythphone}
-%endif
 %if 0%{?fedora} >= 9
 BuildRequires: ncurses-devel
 %else
 BuildRequires: libtermcap-devel
-%endif
-%if %{with_festival}
-BuildRequires:  festival-devel
 %endif
 
 %if %{with_mythvideo}
@@ -586,7 +570,6 @@ Requires:  mythgallery    = %{version}-%{release}
 Requires:  mythgame       = %{version}-%{release}
 Requires:  mythnews       = %{version}-%{release}
 Requires:  mythbrowser    = %{version}-%{release}
-Requires:  mythphone      = %{version}-%{release}
 Requires:  mythcontrols   = %{version}-%{release}
 Requires:  mythflix       = %{version}-%{release}
 Requires:  mytharchive    = %{version}-%{release}
@@ -750,21 +733,6 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythnews
 An RSS news feed reader plugin for MythTV.
-
-%endif
-################################################################################
-%if %{with_mythphone}
-
-%package -n mythphone
-Summary:   A video conferencing module for MythTV
-Group:     Applications/Multimedia
-Requires:  mythtv-frontend-api = %{mythfeapiver}
-
-%description -n mythphone
-Mythphone is a phone and videophone capability on MYTH using the
-standard SIP protocol.  It is compatible with Microsoft XP Messenger
-and with SIP Service Providers such as Free World Dialup
-(fwd.pulver.com).
 
 %endif
 ################################################################################
@@ -1086,11 +1054,6 @@ cd mythplugins-%{version}
     %else
         --disable-mythnews \
     %endif
-    %if %{with_mythphone}
-        --enable-mythphone \
-    %else
-        --disable-mythphone \
-    %endif
     %if %{with_mythvideo}
         --enable-mythvideo \
         --enable-transcode \
@@ -1112,11 +1075,6 @@ cd mythplugins-%{version}
         --enable-mythzoneminder \
     %else
         --disable-mythzoneminder \
-    %endif
-    %if %{with_festival}
-        --enable-festival \
-    %else
-        --disable-festival \
     %endif
         --enable-opengl \
         --enable-libvisual \
@@ -1496,17 +1454,6 @@ fi
 %{_datadir}/mythtv/i18n/mythnews_*.qm
 %endif
 
-%if %{with_mythphone}
-%files -n mythphone
-%defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythphone/AUTHORS
-%doc mythplugins-%{version}/mythphone/COPYING
-%doc mythplugins-%{version}/mythphone/README
-%doc mythplugins-%{version}/mythphone/TODO
-%{_libdir}/mythtv/plugins/libmythphone.so
-%{_datadir}/mythtv/i18n/mythphone_*.qm
-%endif
-
 %if %{with_mythvideo}
 %files -n mythvideo
 %defattr(-,root,root,-)
@@ -1556,6 +1503,10 @@ fi
 ################################################################################
 
 %changelog
+* Sat Jan 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19722
+- Update to pre-0.22 svn trunk, revision 19722
+- MythPhone plugin is dead as a doornail (MythTV changeset 19702)
+
 * Sat Jan 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19721
 - Update to pre-0.22 svn trunk, revision 19721
 
