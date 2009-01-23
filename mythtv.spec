@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 16%{?dist}
+Release: 17%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -351,6 +351,8 @@ transcode package.
 Summary: A MythTV module that displays a weather forcast
 Group: Applications/Multimedia
 Requires: mythtv-frontend-api = %{mythfeapiver}
+# For some reason, this perl dep isn't automagically picked up
+Requires: perl-XML-SAX
 
 %description -n mythweather
 A MythTV module that displays a weather forcast.
@@ -1023,6 +1025,10 @@ fi
 %endif
 
 %changelog
+* Thu Jan 22 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-17
+- Update release-0-21-fixes patches (r19788)
+- Add Require: perl-XML-SAX to mythweather (rpmfusion bz#337)
+
 * Tue Dec 30 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-16
 - Update release-0-21-fixes patches (r19505)
 - Fixes infinite loop introduced by firewire fix in -15 (rpmfusion bz#286)

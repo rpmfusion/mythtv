@@ -73,6 +73,28 @@ Index: mythplugins/mythweb/modules/music/stream.php
          default:
              $mime = 'application/octet-stream';
      }
+Index: mythplugins/mythweb/modules/music/mp3act_functions.php
+===================================================================
+--- mythplugins/mythweb/modules/music/mp3act_functions.php	(revision 16468)
++++ mythplugins/mythweb/modules/music/mp3act_functions.php	(working copy)
+@@ -334,13 +334,15 @@
+       $length = $row[1];
+ 
+       // Attempt to find some album art.
+-      $query='SELECT ms.filename, ms.album_id, md.path, ma.artist_name, ma.artist_id, ms.directory_id
++      $query='SELECT ms.filename, ms.album_id, md.path, ma.artist_name, ma.artist_id, ms.directory_id, mal.album_name
+                 FROM music_songs AS ms
+                      LEFT JOIN music_directories AS md
+                             ON ms.directory_id=md.directory_id
+                      LEFT JOIN music_artists AS ma
+                             ON ms.artist_id=ma.artist_id
+-               WHERE album_id='.$sql_itemid.'
++                     LEFT JOIN music_albums AS mal
++                            ON ms.album_id=mal.album_id
++               WHERE ms.album_id='.$sql_itemid.'
+                LIMIT 1';
+       $result = mysql_query($query);
+       if (!$result)
 Index: mythplugins/mythweb/modules/_shared/lang/German.cat
 ===================================================================
 --- mythplugins/mythweb/modules/_shared/lang/German.cat	(revision 16468)
@@ -11690,6 +11712,136 @@ Index: mythplugins/mythvideo/mtd/dvdprobe.cpp
  
  #include "dvdprobe.h"
  
+Index: mythplugins/mythvideo/mythvideo/scripts/allocine.pl
+===================================================================
+--- mythplugins/mythvideo/mythvideo/scripts/allocine.pl	(revision 16468)
++++ mythplugins/mythvideo/mythvideo/scripts/allocine.pl	(working copy)
+@@ -25,7 +25,7 @@
+ use Getopt::Long;
+ 
+ $title = "Allocine Query"; 
+-$version = "v2.00";
++$version = "v2.02";
+ $author = "Xavier Hervy";
+ 
+ binmode(STDOUT, ":utf8");
+@@ -45,6 +45,13 @@
+    exit(-1);
+ }
+ 
++sub trim {
++   my ($str) = @_;
++   $str =~ s/^\s+//;
++   $str =~ s/\s+$//;
++   return $str;
++}
++
+ # display 1-line of info that describes the version of the program
+ sub version {
+    print "$title ($version) by $author\n"
+@@ -139,37 +146,23 @@
+    my $director = parseBetween($response,"<h4>Réalisé par ","</h4>");
+    $director = removeTag($director);
+ 
+-   # parse writer 
+-   # (Note: this takes the 'first' writer, may want to include others)
+-   my $writer = parseBetween($response, ">Writing credits</b>", "</table>");
+-   $writer = parseBetween($writer, "/\">", "</");
+-
+    # parse plot
+    my $plot = parseBetween($response,"<td valign=\"top\" style=\"padding:10 0 0 0\"><div align=\"justify\"><h4>","</h4></div></td>");
+    $plot =~ s/\n//g;
+    $plot = removeTag($plot);
+   
+    # parse user rating
+-   my $userrating;
+-   my $rating = parseBetween($response,"Presse</a> <img ", " border=\"0\" /></h4></td>");
+-   my $nbvote = 0;
+-   my $sommevote = 0;
+-   $rating = parseBetween($rating,"etoile_",".gif");
+-   if (!($rating eq "")){
+-	    $sommevote += $rating - 1;
+-	    $nbvote ++;
+-   }
+-   $rating = parseBetween($response,"Spectateurs</a> <img ", " border=\"0\" /></h4></td>");
+-   $rating = parseBetween($rating,"etoile_",".gif");
+-   if (!($rating eq "")){
+-	$sommevote += $rating - 1;
+-	$nbvote ++;
+-  }
+-   if ($nbvote==0){$userrating=0};
+-   if ($nbvote==1){$userrating=$sommevote*2;};
+-   if ($nbvote==2){$userrating=$sommevote;};
+-	
++   my $userrating=0;
++   my $tmpratings = parseBetween($response,"Critiques&nbsp;:</b></h5>", "</table>");
++   my $rating_pat = qr'class="etoile_(\d+)"';
+ 
++   # ratings are from one to four stars
++   my @ratings = ($tmpratings =~ m/$rating_pat/g);
++   $userrating += $_ foreach @ratings;
++   if (@ratings) { $userrating /= @ratings; }
++
++   if ($userrating) { $userrating = int($userrating * 2.5); }
++
+    # parse rating
+    my $movierating = parseBetween($response,"Interdit aux moins de ","ans");
+    if (!($movierating eq ""))
+@@ -198,26 +191,23 @@
+ 
+    # parse cast 
+ 
+-   my $cast = parseBetween($response, "<h4>Avec ","</h4>");
+-   $cast = removeTag($cast);
++   my $castchunk;
++
++   my $name_link_pat = qr'<a .*?href="/personne/.*?".*?>(.*?)</a>';
+    if (defined $opt_casting){
+       my $responsecasting = get "http://www.allocine.fr/film/casting_gen_cfilm=" . $movieid . ".html";
+-      my $fullcast = parseBetween($responsecasting, "Acteur(s)", "<table");
+-      my $oneactor;
+-      $fullcast = parseBetween($fullcast,"style=\"background-color", "</table>");
+-      my @listactor = split("style=\"background-color", $fullcast);
+-      my @cleanlistactor ;
+-      for $oneactor (@listactor ) { 
+-        $oneactor = parseBetween($oneactor,"<h4>","</h4>");
+-        $oneactor =  removeTag($oneactor );        
+-        push(@cleanlistactor,$oneactor); 
+-	    }
+-	    my $finalcast = join (", ",@cleanlistactor);
+-	    if ($finalcast  ne "") {$cast = $finalcast;};
++      $castchunk = parseBetween($responsecasting, "Acteurs", "</table");
+    }
+-   
+-   
++  
++   if (!$castchunk) {
++      $castchunk = parseBetween($response, "<h4>Avec ","</h4>");
++   }
+ 
++   my $cast = "";
++   if (defined $castchunk) {
++      $cast = trim(join(',', ($castchunk =~ m/$name_link_pat/g)));
++   }
++
+    #genres
+    my $genres = parseBetween($response,"<h4>Genre : ","</h4>");
+    $genres = removeTag($genres);
+@@ -237,8 +227,7 @@
+    print "UserRating:$userrating\n";
+    print "MovieRating:$movierating\n";
+    print "Runtime:$runtime\n";
+-   print "Writers: $writer\n";
+-   print "Cast: $cast\n";
++   print "Cast:$cast\n";
+    print "Genres:$genres\n";
+    print "Countries:$countries\n";
+ }
+@@ -469,3 +458,4 @@
+    }
+    getMovieList($query, $options);
+ }
++# vim: set expandtab ts=3 sw=3 :
 Index: mythplugins/mythvideo/mythvideo/scripts/ofdb.py
 ===================================================================
 --- mythplugins/mythvideo/mythvideo/scripts/ofdb.py	(revision 16468)
@@ -11789,7 +11941,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/ofdb.py
  
  		nodes = xpath.Evaluate("//A[starts-with(@href, 'film/')]",
  				doc.documentElement)
-@@ -154,10 +183,11 @@
+@@ -154,25 +183,15 @@
  	"""Returns the OFDb film page as an XML document."""
  	debug_out("Starting search for %s '%s'" % (context, uid))
  
@@ -11803,7 +11955,65 @@ Index: mythplugins/mythvideo/mythvideo/scripts/ofdb.py
  
  class NoIMDBURL(Exception):
  	pass
-@@ -275,10 +305,10 @@
+ 
+-def extract_imdb_url(doc):
+-	nodes = xpath.Evaluate("//A[contains(@href, 'imdb.com/Title')]",
+-			doc.documentElement)
+-	if len(nodes):
+-		uid_find = re.compile('imdb.com/Title\?(\d+)', re.I)
+-		url = nodes[0].getAttributeNS(EMPTY_NAMESPACE, 'href')
+-		m = uid_find.search(url)
+-		if m:
+-			return (url, m.group(1))
+-	raise NoIMDBURL()
+-
+ def search_data(uid, rating_country):
+ 	def possible_error(path):
+ 		comment_out("Warning: expected to find content at '%s', site format " \
+@@ -224,16 +243,8 @@
+ 
+ 	try:
+ 		doc = get_ofdb_doc(uid, "data")
+-		alturl = None
+-		try:
+-			(url, id) = extract_imdb_url(doc)
+-			alturl = url
+-		except NoIMDBURL:
+-			if VERBOSE:
+-				print_exception(traceback.format_exc())
+-		except:
+-			print_exception(traceback.format_exc())
+ 
++#TODO: Add details from tmdb
+ 		data = {'title' : '',
+ 				'countries' : '',
+ 				'year' : '',
+@@ -241,11 +252,11 @@
+ 				'cast' : '',
+ 				'genre' : '',
+ 				'user_rating' : '',
+-				'movie_rating' : '',
++#				'movie_rating' : '',
+ 				'plot' : '',
+-				'release_date' : '',
+-				'runtime' : '',
+-				'writers' : '',
++#				'release_date' : '',
++#				'runtime' : '',
++#				'writers' : '',
+ 				}
+ 
+ 		data['title'] = single_value(doc.documentElement,
+@@ -263,7 +274,7 @@
+ 		data['genre'] = ",".join(multi_value(doc.documentElement,
+ 				"//A[starts-with(@href, 'view.php?page=genre&Genre=')]"))
+ 		data['user_rating'] = attr_value(doc.documentElement,
+-				"//IMG[@src='images/notenspalte.gif']", "alt")
++				"//IMG[@src='images/design3/notenspalte.png']", "alt")
+ 
+ 		tmp_sid = attr_value(doc.documentElement,
+ 				"//A[starts-with(@href, 'plot/')]", "href")
+@@ -275,60 +286,24 @@
  
  			debug_out("Looking for plot...")
  			(rc, content) = ofdb_url_get(urlparse.urljoin(URL_BASE,
@@ -11816,34 +12026,111 @@ Index: mythplugins/mythvideo/mythvideo/scripts/ofdb.py
  
  			data['plot'] = unicode(all_text_children(doc.documentElement,
  					"//FONT[@class='Blocksatz']"))
-@@ -291,7 +321,7 @@
- 			debug_out("Looking for other info %s..." % (alturl))
- 			(rc, content) = ofdb_url_get(alturl)
- 			reader = HtmlLib.Reader()
+ 
+-		if alturl:
+-			# They now give a "bad" query string, just use the id
+-			(scheme, netloc, path, query, frag) = urlparse.urlsplit(alturl)
+-			path = "title/tt%s/" % (id)
+-			alturl = urlparse.urlunsplit((scheme, netloc, path, None, None))
+-			debug_out("Looking for other info %s..." % (alturl))
+-			(rc, content) = ofdb_url_get(alturl)
+-			reader = HtmlLib.Reader()
 -			doc = reader.fromString(content)
-+			doc = reader.fromString(content, charset='utf8')
+-
+-			data['release_date'] = direct_value(doc.documentElement, "//DIV[@class='info']/H5[starts-with(., 'Premierendatum')]/../child::text()[2]")
+-			data['runtime'] = direct_value(doc.documentElement, u"//DIV[@class='info']/H5[starts-with(., 'L\u00E4nge')]/../child::text()[2]").split()[0]
+-
+-			movie_ratings = multi_value(doc.documentElement, "//DIV[@class='info']/H5[starts-with(., 'Altersfreigabe')]/../A")
+-
+-			if len(movie_ratings):
+-				found = False
+-				if rating_country:
+-					for rc in rating_country.split(','):
+-						for m in movie_ratings:
+-							(country, rating) = m.split(':')
+-							if country.lower().find(rc.lower()) != -1:
+-								data['movie_rating'] = rating
+-								found = True
+-								break
+-
+-						if found:
+-							break
+-
+-				if not found:
+-					data['movie_rating'] = ",".join(movie_ratings)
+-
+-			writers = multi_value(doc.documentElement, "//DIV[@class='info']/H5[starts-with(., 'Drehbuchautoren')]/../A")
+-			if len(writers):
+-				data['writers'] = writers[0]
+-
++#ReleaseDate:%(release_date)s
++#MovieRating:%(movie_rating)s
++#Runtime:%(runtime)s
++#Writers:%(writers)s
+ 		print("""\
+ Title:%(title)s
+ Year:%(year)s
+-ReleaseDate:%(release_date)s
+ Director:%(directors)s
+ Plot:%(plot)s
+ UserRating:%(user_rating)s
+-MovieRating:%(movie_rating)s
+-Runtime:%(runtime)s
+-Writers:%(writers)s
+ Cast:%(cast)s
+ Genres:%(genre)s
+ Countries:%(countries)s
+@@ -343,48 +318,7 @@
+ 		poster_urls = []
+ 		ofdoc = get_ofdb_doc(uid, "poster")
  
- 			data['release_date'] = direct_value(doc.documentElement, "//DIV[@class='info']/H5[starts-with(., 'Premierendatum')]/../child::text()[2]")
- 			data['runtime'] = direct_value(doc.documentElement, u"//DIV[@class='info']/H5[starts-with(., 'L\u00E4nge')]/../child::text()[2]").split()[0]
-@@ -350,7 +380,7 @@
- 				"title/tt%s/posters" % (id)))
- 
- 			reader = HtmlLib.Reader()
+-		try:
+-			(url, id) = extract_imdb_url(ofdoc)
+-
+-			(rc, content) = ofdb_url_get(urlparse.urljoin("http://www.imdb.com",
+-				"title/tt%s/posters" % (id)))
+-
+-			reader = HtmlLib.Reader()
 -			doc = reader.fromString(content)
-+			doc = reader.fromString(content, charset='utf8')
- 
- 			nodes = xpath.Evaluate("//TABLE[starts-with(@background, 'http://posters.imdb.com/posters/')]", doc.documentElement)
- 			for i in nodes:
-@@ -364,7 +394,7 @@
- 					base = nodes[0].getAttributeNS(EMPTY_NAMESPACE, 'href')
- 					(rc, content) = ofdb_url_get(base)
- 					reader = HtmlLib.Reader()
+-
+-			nodes = xpath.Evaluate("//TABLE[starts-with(@background, 'http://posters.imdb.com/posters/')]", doc.documentElement)
+-			for i in nodes:
+-				poster_urls.append(i.getAttributeNS(EMPTY_NAMESPACE,
+-					'background'))
+-
+-			nodes = xpath.Evaluate("//A[contains(@href, 'impawards.com')]",
+-					doc.documentElement)
+-			if len(nodes):
+-				try:
+-					base = nodes[0].getAttributeNS(EMPTY_NAMESPACE, 'href')
+-					(rc, content) = ofdb_url_get(base)
+-					reader = HtmlLib.Reader()
 -					doc = reader.fromString(content)
-+					doc = reader.fromString(content, charset='utf8')
- 					nodes = xpath.Evaluate(
- 							"//IMG[starts-with(@SRC, 'posters/')]",
- 							doc.documentElement)
-@@ -420,11 +450,14 @@
+-					nodes = xpath.Evaluate(
+-							"//IMG[starts-with(@SRC, 'posters/')]",
+-							doc.documentElement)
+-					for i in nodes:
+-						(scheme, netloc, path, query, frag) = \
+-								urlparse.urlsplit(base)
+-						np = path.split('/')[:-1]
+-						np = "/".join(np)
+-						poster_urls.insert(0, urlparse.urljoin(base,
+-							"%s/%s" % (np, i.getAttributeNS(EMPTY_NAMESPACE,
+-								'SRC'))))
+-				except:
+-					print_exception(traceback.format_exc())
+-		except NoIMDBURL:
+-			if VERBOSE:
+-				print_exception(traceback.format_exc())
+-		except:
+-			print_exception(traceback.format_exc())
+-
+-		nodes = xpath.Evaluate("//IMG[starts-with(@src, 'http://www.ofdb.de:81/film/')]",
++		nodes = xpath.Evaluate("//IMG[starts-with(@src, 'http://img.ofdb.de/film/')]",
+ 				ofdoc.documentElement)
+ 		for node in nodes:
+ 			poster_urls.append(node.getAttributeNS(EMPTY_NAMESPACE, 'src'))
+@@ -420,11 +354,14 @@
  	DUMP_RESPONSE = options.dump_response
  
  	if options.title_search:
@@ -12258,6 +12545,24 @@ Index: mythplugins/mythvideo/mythvideo/scripts/imdb.pl
 +# print out info
  if (defined $opt_v) { version(); exit 1; }
  if (defined $opt_i) { info(); exit 1; }
+ 
+Index: mythplugins/mythvideo/mythvideo/metadata.cpp
+===================================================================
+--- mythplugins/mythvideo/mythvideo/metadata.cpp	(revision 16468)
++++ mythplugins/mythvideo/mythvideo/metadata.cpp	(working copy)
+@@ -840,9 +840,10 @@
+     QString filename = item->Filename();
+     QString handler = getPlayer(item);
+ 
+-    QString esc_fname =
+-            QString(item->Filename()).replace(QRegExp("\""), "\\\"");
+-    QString arg = QString("\"%1\"").arg(esc_fname);
++    QString arg = QString("\"%1\"").arg(QString(item->Filename())
++                                        .replace(QRegExp("\""), "\\\"")
++                                        .replace(QRegExp("`"), "\\`")
++                                        .replace(QRegExp("\\$"), "\\$"));
+ 
+     QString command = "";
  
 Index: mythplugins/mythvideo/mythvideo/globalsettings.cpp
 ===================================================================

@@ -25637,10 +25637,131 @@ Index: mythtv/docs/mythtv-HOWTO.html
  
  <H2>Robert Kulagowski, 
 -<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-03-05, v0.21.00pre
-+<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-10-27, v0.21.03
++<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2009-01-20, v0.21.07
  <HR>
  <EM>Initially, installation of MythTV seems like a huge task.  There are lots
  of dependencies, and various distributions seem to do the same thing
+@@ -87,8 +87,9 @@
+ <LI><A NAME="toc8.1">8.1</A> <A HREF="mythtv-HOWTO-8.html#ss8.1">Gentoo</A>
+ <LI><A NAME="toc8.2">8.2</A> <A HREF="mythtv-HOWTO-8.html#ss8.2">Obtaining and compiling lirc</A>
+ <LI><A NAME="toc8.3">8.3</A> <A HREF="mythtv-HOWTO-8.html#ss8.3">Completing the lirc install </A>
+-<LI><A NAME="toc8.4">8.4</A> <A HREF="mythtv-HOWTO-8.html#ss8.4">Additional information for lirc</A>
+-<LI><A NAME="toc8.5">8.5</A> <A HREF="mythtv-HOWTO-8.html#ss8.5">Configuring lirc for use with an IR blaster</A>
++<LI><A NAME="toc8.4">8.4</A> <A HREF="mythtv-HOWTO-8.html#ss8.4">Additional information for lirc - native mode</A>
++<LI><A NAME="toc8.5">8.5</A> <A HREF="mythtv-HOWTO-8.html#ss8.5">Additional information for lirc - irxevent mode</A>
++<LI><A NAME="toc8.6">8.6</A> <A HREF="mythtv-HOWTO-8.html#ss8.6">Configuring lirc for use with an IR blaster</A>
+ </UL>
+ <P>
+ <H2><A NAME="toc9">9.</A> <A HREF="mythtv-HOWTO-9.html">Configuring MythTV. </A></H2>
+@@ -96,7 +97,7 @@
+ <UL>
+ <LI><A NAME="toc9.1">9.1</A> <A HREF="mythtv-HOWTO-9.html#ss9.1">Configuring the Master backend system</A>
+ <LI><A NAME="toc9.2">9.2</A> <A HREF="mythtv-HOWTO-9.html#ss9.2">Post-configuration</A>
+-<LI><A NAME="toc9.3">9.3</A> <A HREF="mythtv-HOWTO-9.html#ss9.3">Configuring a non-master backend </A>
++<LI><A NAME="toc9.3">9.3</A> <A HREF="mythtv-HOWTO-9.html#ss9.3">Configuring a slave backend </A>
+ <LI><A NAME="toc9.4">9.4</A> <A HREF="mythtv-HOWTO-9.html#ss9.4">Configuring and running mythfilldatabase</A>
+ <LI><A NAME="toc9.5">9.5</A> <A HREF="mythtv-HOWTO-9.html#ss9.5">Grabbing channel icons for Schedules Direct users</A>
+ </UL>
+Index: mythtv/docs/mythtv-HOWTO-5.html
+===================================================================
+--- mythtv/docs/mythtv-HOWTO-5.html	(revision 16468)
++++ mythtv/docs/mythtv-HOWTO-5.html	(working copy)
+@@ -200,33 +200,48 @@
+ <H2><A NAME="ss5.4">5.4</A> <A HREF="mythtv-HOWTO.html#toc5.4">Manually building MythTV</A>
+ </H2>
+ 
+-<P>If you are going to use <B>subversion</B>, execute the following
+-instructions to obtain the latest version of MythTV:</P>
+-<P>
++<P><B>NOTE</B>:  Unless you are reading this documentation on the day that a
++new version of MythTV is released, it is highly encouraged that you use the
++"-fixes" version of the software and not the source tarball.</P>
++<P>To download the release version, execute:
+ <BLOCKQUOTE><CODE>
+ <PRE>
+-$ mkdir mythtv
+-$ svn co http://svn.mythtv.org/svn/trunk/ mythtv
+-$ cd mythtv
++$ mkdir mythtv-release-0-21-fixes
++$ svn co http://svn.mythtv.org/svn/branches/release-0-21-fixes/ mythtv-release-0-21-fixes
++$ cd mythtv-release-0-21-fixes
+ </PRE>
+ </CODE></BLOCKQUOTE>
+ </P>
+-<P>To use a release version, you can execute:
++<P>See 
++<A HREF="http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.21.1">http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.21.1</A> for
++release notes for MythTV v0.21.1</P>
++<P>Execute the following instructions to obtain the latest version of MythTV.
++This is known as the "trunk" version and is considered the unstable code
++which is not guaranteed to work.  Use of trunk implies that you are also
++reading the mythtv-dev and mythtv-commits mailing lists; failure to read
++those mailing lists can cause your system to stop working.</P>
++<P>
+ <BLOCKQUOTE><CODE>
+ <PRE>
+-$ mkdir mythtv-release-0.21
+-$ svn co http://svn.mythtv.org/svn/branches/release-0-21-fixes/ mythtv-release-0.21
+-$ cd mythtv-release-0.21
++$ mkdir mythtv
++$ svn co http://svn.mythtv.org/svn/trunk/ mythtv
++$ cd mythtv
+ </PRE>
+ </CODE></BLOCKQUOTE>
+ </P>
++<P>See 
++<A HREF="http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.22">http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.22</A> for
++release notes for MythTV v0.22</P>
+ <P><B>NOTE</B>:  Using a svn version of the code allows you to stay
+ up-to-date with changes.  So, if there's an update to the 0.21 release and
+ you originally obtained it using svn, you could enter the
+-mythtv-release-0.21 directory and type "svn up", which will update your copy
+-with the fixed version from the website.  You would then recompile and
+-install the updated 0.21 code.</P>
+-<P>If you are using the tarball, then unpack it:
++mythtv-release-0-21-fixes directory and type "svn up", which will update
++your copy with the fixed version from the website.  You would then recompile
++and install the updated 0.21 code.</P>
++<P>If you are using the tarball, then unpack it.  Again, use of the tarball is
++only appropriate if a "-fixes" branch hasn't been created for the code that
++you're running.</P>
++<P>
+ <BLOCKQUOTE><CODE>
+ <PRE>
+ $ tar -xjf mythtv-0.21.tar.bz2
+Index: mythtv/docs/mythtv-HOWTO-9.html
+===================================================================
+--- mythtv/docs/mythtv-HOWTO-9.html	(revision 16468)
++++ mythtv/docs/mythtv-HOWTO-9.html	(working copy)
+@@ -529,7 +529,7 @@
+ <A HREF="mythtv-HOWTO-23.html#logrotate">Automatically rotating logs</A> for more
+ information.</P>
+ 
+-<H2><A NAME="nonmaster_backend"></A> <A NAME="ss9.3">9.3</A> <A HREF="mythtv-HOWTO.html#toc9.3">Configuring a non-master backend </A>
++<H2><A NAME="nonmaster_backend"></A> <A NAME="ss9.3">9.3</A> <A HREF="mythtv-HOWTO.html#toc9.3">Configuring a slave backend </A>
+ </H2>
+ 
+ <P>Ensure that you've granted access to the master MySQL database for remote
+@@ -558,16 +558,16 @@
+ <P>Make sure that the IP addresses on the General setup screen are accurate. 
+ If the slave backend can't communicate with the master backend due to IP
+ address misconfiguration then MythTV will not function properly.</P>
+-<P>Configuration of a non-master backend follows the same general procedure
++<P>Configuration of a slave backend follows the same general procedure
+ as that of the master backend, with the exception that you skip over the
+ "Video Sources" step.  All possible video sources need to be defined on the
+ master backend system; only the master backend will query a listings
+-provider to obtain guide data for all the non-master backends.</P>
++provider to obtain guide data for all the slave backends.</P>
+ <P>
+ <FIGURE>
+ <EPS FILE="stop.eps">
+ <IMG SRC="stop.png">
+-<CAPTION><B>NOTE</B>: Do not run <CODE>mythfilldatabase</CODE> on a non-master backend.</CAPTION>
++<CAPTION><B>NOTE</B>: Do not run <CODE>mythfilldatabase</CODE> on a slave backend.</CAPTION>
+ </FIGURE>
+ </P>
+ <H2><A NAME="ss9.4">9.4</A> <A HREF="mythtv-HOWTO.html#toc9.4">Configuring and running mythfilldatabase</A>
 Index: mythtv/docs/mythtv-HOWTO.txt
 ===================================================================
 --- mythtv/docs/mythtv-HOWTO.txt	(revision 16468)
@@ -25650,10 +25771,39 @@ Index: mythtv/docs/mythtv-HOWTO.txt
    Robert Kulagowski, mailto:rkulagow@rocketmail.com
    <mailto:rkulagow@rocketmail.com>
 -  2008-03-05, v0.21.00pre
-+  2008-10-27, v0.21.03
++  2009-01-20, v0.21.07
  
    Initially, installation of MythTV seems like a huge task.  There are
    lots of dependencies, and various distributions seem to do the same
+@@ -110,8 +110,9 @@
+      8.1 Gentoo
+      8.2 Obtaining and compiling lirc
+      8.3 Completing the lirc install
+-     8.4 Additional information for lirc
+-     8.5 Configuring lirc for use with an IR blaster
++     8.4 Additional information for lirc - native mode
++     8.5 Additional information for lirc - irxevent mode
++     8.6 Configuring lirc for use with an IR blaster
+ 
+   9. Configuring MythTV.
+      9.1 Configuring the Master backend system
+@@ -126,7 +127,7 @@
+            9.1.6.3 Migrating to Storage Groups.
+            9.1.6.4 Advanced: Algorithm used by the Storage Group
+      9.2 Post-configuration
+-     9.3 Configuring a non-master backend
++     9.3 Configuring a slave backend
+      9.4 Configuring and running mythfilldatabase
+         9.4.1 Periodically running mythfilldatabase
+      9.5 Grabbing channel icons for Schedules Direct users
+@@ -343,7 +344,6 @@
+      24.4 Caching support for Schedules Direct
+ 
+ 
+-
+   ______________________________________________________________________
+ 
+   [1m1.  First things first.[0m
 @@ -445,15 +445,18 @@
    See http://mysettopbox.tv <http://mysettopbox.tv> if you'd like to
    install a custom version of Knoppix optimized for MythTV.
@@ -25952,43 +26102,110 @@ Index: mythtv/docs/mythtv-HOWTO.txt
  
  
  
-@@ -1838,9 +1844,9 @@
+@@ -1833,36 +1839,55 @@
  
+   [1m5.4.  Manually building MythTV[0m
+ 
+-  If you are going to use [1msubversion[22m, execute the following instructions
+-  to obtain the latest version of MythTV:
++  [1mNOTE[22m:  Unless you are reading this documentation on the day that a new
++  version of MythTV is released, it is highly encouraged that you use
++  the "-fixes" version of the software and not the source tarball.
+ 
++  To download the release version, execute:
  
  
 -  $ mkdir mythtv
 -  $ svn co http://svn.mythtv.org/svn/trunk/ mythtv
 -  $ cd mythtv
++       $ mkdir mythtv-release-0-21-fixes
++       $ svn co http://svn.mythtv.org/svn/branches/release-0-21-fixes/ mythtv-release-0-21-fixes
++       $ cd mythtv-release-0-21-fixes
+ 
+ 
+ 
+-  To use a release version, you can execute:
++  See http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.21.1
++  <http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.21.1> for
++  release notes for MythTV v0.21.1
+ 
++  Execute the following instructions to obtain the latest version of
++  MythTV.  This is known as the "trunk" version and is considered the
++  unstable code which is not guaranteed to work.  Use of trunk implies
++  that you are also reading the mythtv-dev and mythtv-commits mailing
++  lists; failure to read those mailing lists can cause your system to
++  stop working.
+ 
+-       $ mkdir mythtv-release-0.21
+-       $ svn co http://svn.mythtv.org/svn/branches/release-0-21-fixes/ mythtv-release-0.21
+-       $ cd mythtv-release-0.21
+ 
+ 
 +       $ mkdir mythtv
 +       $ svn co http://svn.mythtv.org/svn/trunk/ mythtv
 +       $ cd mythtv
  
++
++
++  See http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.22
++  <http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.22> for
++  release notes for MythTV v0.22
++
+   [1mNOTE[22m:  Using a svn version of the code allows you to stay up-to-date
+   with changes.  So, if there's an update to the 0.21 release and you
+   originally obtained it using svn, you could enter the mythtv-
+-  release-0.21 directory and type "svn up", which will update your copy
+-  with the fixed version from the website.  You would then recompile and
+-  install the updated 0.21 code.
++  release-0-21-fixes directory and type "svn up", which will update your
++  copy with the fixed version from the website.  You would then
++  recompile and install the updated 0.21 code.
  
- 
-@@ -1892,11 +1898,12 @@
-   blue) participating, you would do something like:
- 
- 
--       $ export DISTCC_HOSTS='localhost red blue'
--       $ make -j 6 CXX=distcc
- 
-+  $ export DISTCC_HOSTS='localhost red blue'
-+  $ make -j 6 CXX=distcc
+-  If you are using the tarball, then unpack it:
++  If you are using the tarball, then unpack it.  Again, use of the
++  tarball is only appropriate if a "-fixes" branch hasn't been created
++  for the code that you're running.
  
  
 +
-   The actual speed-up, if any, is dependant on a number of factors, such
-   as number of CPUs / hosts, etc.  The [1mdistcc [22mdocumentation recommends
-   using a -j value of twice the number of CPUs available to keep all of
-@@ -1951,7 +1958,6 @@
-        @audio          -       nice       0
+        $ tar -xjf mythtv-0.21.tar.bz2
+        $ cd mythtv-0.21
+        $ ./configure
+@@ -1875,11 +1900,10 @@
+ 
+   To compile:
+ 
++  $ make -j 2
+ 
+-       $ make -j 2
  
  
 -
-   [1m5.4.1.2.  realtime module[0m
+   The MythTV compile can take advantage of multiple CPUs, SMP and
+   Hyperthreading.  If you want to build MythTV on a multi-CPU machine
+   (or with [1mdistcc[22m), specify "-j numjobs", where "numjobs" is greater
+@@ -1934,7 +1958,6 @@
+   executable. Enabling real-time scheduling is optional, but can make
+   the video display smoother, especially if you are decoding HDTV.
  
-   The second option is to use the Linux realtime kernel module.  This is
-@@ -2055,11 +2061,10 @@
+-
+   [1m5.4.1.1.  rlimits[0m
+ 
+   The rlimits method is the preferred method and is included in Linux
+@@ -1994,10 +2017,11 @@
+   would still like to do this, you just need to run this as root:
+ 
+ 
+-       # chmod a+s /usr/local/bin/mythfrontend /usr/local/bin/mythtv
+ 
++  # chmod a+s /usr/local/bin/mythfrontend /usr/local/bin/mythtv
+ 
+ 
++
+   [1m5.4.2.  Frontend-only configuration[0m
+ 
+   Since MythTV uses a client/server architecture, multiple frontend
+@@ -2055,11 +2079,10 @@
  
    [1m6.  MySQL.[0m
  
@@ -26004,7 +26221,7 @@ Index: mythtv/docs/mythtv-HOWTO.txt
  
    [1m6.1.  Distribution-specific information[0m
  
-@@ -2077,14 +2082,13 @@
+@@ -2077,14 +2100,13 @@
    If this is happening to you, try running the following commands.
  
  
@@ -26023,7 +26240,38 @@ Index: mythtv/docs/mythtv-HOWTO.txt
    [1m6.1.2.  Red Hat Linux and Fedora Core[0m
  
    If this is the system maintaining the database, make sure that MySQL
-@@ -2197,7 +2201,7 @@
+@@ -2114,11 +2136,10 @@
+ 
+   To setup the initial MySQL databases:
+ 
++  $ cd database
+ 
+-       $ cd database
+ 
+ 
+-
+   [1m6.2.1.  Mandriva and Red Hat Linux/Fedora Core[0m
+ 
+ 
+@@ -2169,8 +2190,6 @@
+        mysql> grant all on mythconverg.* to mythtv@"%" identified by "mythtv";
+        mysql> flush privileges;
+ 
+-
+-
+   For a more secure setup, you can restrict which machines or subnets
+   have access. If you have a complete DNS system operational, you could
+   do the following:
+@@ -2190,6 +2209,8 @@
+        mysql> grant all on mythconverg.* to mythtv@"192.168.1.%" identified by "mythtv";
+        mysql> flush privileges;
+ 
++
++
+   You'll also need to check that the "networking" feature of MySQL is
+   turned on. Check that /etc/mysql/my.cnf [4mdoes[24m [4mnot[24m contain skip-
+   networking.  If it does, remove it.  Also verify that bind-address is
+@@ -2197,7 +2218,7 @@
    these items, restart [1mMySQL[22m.
  
    [1mNOTE[22m:  Your distribution may have a customized MySQL configuration
@@ -26032,7 +26280,131 @@ Index: mythtv/docs/mythtv-HOWTO.txt
    configuration.
  
  
-@@ -6929,6 +6933,8 @@
+@@ -2474,7 +2495,6 @@
+ 
+       [1mNOTE to Mandriva 9.1 users[22m: skip to the manual start paragraph
+   below.
+-
+   If the lirc configure program / compile did not mention anything about
+   a kernel module, then you are finished. If it did mention a kernel
+   module, you must edit the /etc/modules.conf file. Add this line as the
+@@ -2499,7 +2519,7 @@
+   9.1 users, type: # /etc/rc.d/init.d/lircd start instead of:
+ 
+ 
+-  # /usr/local/sbin/lircd
++       # /usr/local/sbin/lircd
+ 
+ 
+ 
+@@ -2536,6 +2556,7 @@
+   another may contain a definition for "Chan+".  Your lircrc file must
+   therefore be configured appropriately, or it won't work.
+ 
++
+   If this fails, complaining of a missing lircd.conf file, then you must
+   find or make one. First look for a pre-made configuration file at
+   http://lirc.sourceforge.net/remotes/
+@@ -2622,6 +2643,7 @@
+        $ irw
+ 
+ 
++
+   Start pressing the keys on your remote; [1mirw [22mwill print the name of the
+   button as it is defined in your /etc/lircd.conf. If you don't see any-
+   thing at this point, you need to troubleshoot further by going back to
+@@ -2644,8 +2666,30 @@
+   control unless you're using native lirc support.
+ 
+ 
+-  [1m8.4.  Additional information for lirc[0m
+ 
++  [1m8.4.  Additional information for lirc - native mode[0m
++
++  If you will be using native mode, your lircrc file will need to look
++  something like this:
++
++
++
++  begin
++       remote = mceusb
++       prog = mythtv
++       button = Guide
++       config = S
++       repeat = 0
++       delay = 0
++  end
++
++
++
++  Note that the name of the "prog" is [1mmythtv[22m, not [1mmythtvfrontend[0m
++
++
++  [1m8.5.  Additional information for lirc - irxevent mode[0m
++
+   Take a look at the lircrc.example files in the contrib/configfiles/
+   directory.  In my case, (Pinnacle Studio card) the channel up and down
+   functions weren't working, due to the fact that the button names were
+@@ -2717,7 +2761,7 @@
+   experiment and see which value works best for you.
+ 
+ 
+-  [1m8.5.  Configuring lirc for use with an IR blaster[0m
++  [1m8.6.  Configuring lirc for use with an IR blaster[0m
+ 
+   Lirc has support for various IR transmitters. A popular model is the
+   Actisys IR-200L http://store.snapstreamstore.com/accessories.html
+@@ -3406,7 +3450,7 @@
+   called ``Automatically rotating logs'' for more information.
+ 
+ 
+-  [1m9.3.  Configuring a non-master backend[0m
++  [1m9.3.  Configuring a slave backend[0m
+ 
+   Ensure that you've granted access to the master MySQL database for
+   remote backends as discussed in the section titled ``Modifying access
+@@ -3436,16 +3480,15 @@
+   backend due to IP address misconfiguration then MythTV will not
+   function properly.
+ 
+-  Configuration of a non-master backend follows the same general
+-  procedure as that of the master backend, with the exception that you
+-  skip over the "Video Sources" step.  All possible video sources need
+-  to be defined on the master backend system; only the master backend
+-  will query a listings provider to obtain guide data for all the non-
+-  master backends.
++  Configuration of a slave backend follows the same general procedure as
++  that of the master backend, with the exception that you skip over the
++  "Video Sources" step.  All possible video sources need to be defined
++  on the master backend system; only the master backend will query a
++  listings provider to obtain guide data for all the slave backends.
+ 
+ 
+ 
+-        [1mNOTE[22m: Do not run mythfilldatabase on a non-master backend.
++          [1mNOTE[22m: Do not run mythfilldatabase on a slave backend.
+ 
+   [1m9.4.  Configuring and running mythfilldatabase[0m
+ 
+@@ -3485,7 +3528,6 @@
+   fit.  The [1mmythbackend [22mprogram will now run [1mmythfilldatabase [22mfor you.
+ 
+ 
+-
+   [1m9.5.  Grabbing channel icons for Schedules Direct users[0m
+ 
+   While the Schedules Direct TV listings service has several advantages,
+@@ -3547,6 +3589,9 @@
+         [1mNOTE[22m:  You should go through the various setup screens in
+   mythfrontend before using any other modules to ensure that the the
+   database is correctly initialized.
++
++
++
+   [1m10.1.  General[0m
+ 
+   The General screen has configuration items that don't really fit
+@@ -6929,6 +6974,8 @@
         handle SIG33 nostop noprint
         set logging on
         set pagination off
@@ -26041,7 +26413,15 @@ Index: mythtv/docs/mythtv-HOWTO.txt
         set args -l myth.log -v record,channel,siparser
         run
         thread apply all bt full
-@@ -8616,9 +8622,9 @@
+@@ -8611,24 +8658,29 @@
+ 
+   +o  s/S = SDT   : DVB only
+ 
++  +o  c/C = Crypt : The channel is encrypted.  If you have a CAM you
++     should see a "C" after a few seconds.
++
+   [1m23.23.  What is the difference between the various Hauppauge PVR mod-[0m
+   [1mels?[0m
  
    This is covered in the hardware section, and extensively covered on
    the Hauppauge website.
@@ -26054,11 +26434,31 @@ Index: mythtv/docs/mythtv-HOWTO.txt
  
    A PVR-150 comes in a number of versions:
  
+   +o  The PVR-150 (Model 1045) is the retail kit.  It comes with a remote
+      control and an IR Blaster.  It does not have a radio tuner.
+ 
++
+   +o  The PVR-150 MCE (Model 1042) will usually come in a plain white box
+      and is sold as an OEM device.  It does not come with a remote
+      control, since it's usually used as the second, third, etc capture
+      device.
++
+   +o  The PVR-150 MCE Kit (Model 1062) does not have a radio tuner and
+      comes with a Microsoft Media Center remote control instead of
+      Hauppauge's.
 Index: mythtv/docs/mythtv-HOWTO-23.html
 ===================================================================
 --- mythtv/docs/mythtv-HOWTO-23.html	(revision 16468)
 +++ mythtv/docs/mythtv-HOWTO-23.html	(working copy)
-@@ -1085,7 +1085,7 @@
+@@ -1078,6 +1078,7 @@
+ <LI>v/V = VCT   : ATSC only</LI>
+ <LI>n/N = NIT   : DVB only</LI>
+ <LI>s/S = SDT   : DVB only</LI>
++<LI>c/C = Crypt : The channel is encrypted.  If you have a CAM you should see a "C" after a few seconds.</LI>
+ </UL>
+ </P>
+ <H2><A NAME="ss23.23">23.23</A> <A HREF="mythtv-HOWTO.html#toc23.23">What is the difference between the various Hauppauge PVR models?</A>
+@@ -1085,7 +1086,7 @@
  
  <P>This is covered in the hardware section, and extensively covered on the
  Hauppauge website.  (
@@ -26089,7 +26489,7 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
  <author>Robert Kulagowski, <url url="mailto:rkulagow@rocketmail.com"
  name="mailto:rkulagow@rocketmail.com">
 -<date>2008-03-05, v0.21.00pre
-+<date>2008-10-27, v0.21.03
++<date>2009-01-20, v0.21.07
  <abstract>
  Initially, installation of MythTV seems like a huge task.  There are lots
  of dependencies, and various distributions seem to do the same thing
@@ -26180,7 +26580,69 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
  </caption></figure>
  
  <sect2>Pre-compiled packages <label id="precompiled">
-@@ -1516,7 +1519,7 @@
+@@ -1326,30 +1329,49 @@
+ 
+ <label id="manually_building_mythtv">
+ <sect1>Manually building MythTV
+-<p>If you are going to use <bf>subversion</bf>, execute the following
+-instructions to obtain the latest version of MythTV:
++<p>
++<bf>NOTE</bf>:  Unless you are reading this documentation on the day that a
++new version of MythTV is released, it is highly encouraged that you use the
++"-fixes" version of the software and not the source tarball.
+ 
++To download the release version, execute:
+ <tscreen><verb>
++$ mkdir mythtv-release-0-21-fixes
++$ svn co http://svn.mythtv.org/svn/branches/release-0-21-fixes/ mythtv-release-0-21-fixes
++$ cd mythtv-release-0-21-fixes
++</verb></tscreen>
++
++See <url url="http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.21.1"
++name="http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.21.1"> for
++release notes for MythTV v0.21.1
++
++Execute the following instructions to obtain the latest version of MythTV.
++This is known as the "trunk" version and is considered the unstable code
++which is not guaranteed to work.  Use of trunk implies that you are also
++reading the mythtv-dev and mythtv-commits mailing lists; failure to read
++those mailing lists can cause your system to stop working.
++
++<tscreen><verb>
+ $ mkdir mythtv
+ $ svn co http://svn.mythtv.org/svn/trunk/ mythtv
+ $ cd mythtv
+ </verb></tscreen>
+ 
+-To use a release version, you can execute:
+-<tscreen><verb>
+-$ mkdir mythtv-release-0.21
+-$ svn co http://svn.mythtv.org/svn/branches/release-0-21-fixes/ mythtv-release-0.21
+-$ cd mythtv-release-0.21
+-</verb></tscreen>
++See <url url="http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.22"
++name="http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.22"> for
++release notes for MythTV v0.22
+ 
+ <bf>NOTE</bf>:  Using a svn version of the code allows you to stay
+ up-to-date with changes.  So, if there's an update to the 0.21 release and
+ you originally obtained it using svn, you could enter the
+-mythtv-release-0.21 directory and type "svn up", which will update your copy
+-with the fixed version from the website.  You would then recompile and
+-install the updated 0.21 code.
++mythtv-release-0-21-fixes directory and type "svn up", which will update
++your copy with the fixed version from the website.  You would then recompile
++and install the updated 0.21 code.
+ 
+-If you are using the tarball, then unpack it:
++If you are using the tarball, then unpack it.  Again, use of the tarball is
++only appropriate if a "-fixes" branch hasn't been created for the code that
++you're running.
++
+ <tscreen><verb>
+ $ tar -xjf mythtv-0.21.tar.bz2
+ $ cd mythtv-0.21
+@@ -1516,7 +1538,7 @@
  # emerge mythtv
  </verb></tscreen>
  <sect>MySQL.<label id="mysql">
@@ -26189,7 +26651,7 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
  out "log-bin" in your <tt>my.cnf</tt> configuration file. This option will
  quickly fill your "/var" disk partition with many gigabytes of data,
  unless you are doing database replication and deleting these files regularly.
-@@ -1636,7 +1639,7 @@
+@@ -1636,7 +1658,7 @@
  <bf>MySQL</bf>.
  
  <bf>NOTE</bf>:  Your distribution may have a customized MySQL configuration
@@ -26198,7 +26660,61 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
  configuration.
  
  <sect>Configuring Sound.
-@@ -5913,6 +5916,8 @@
+@@ -2019,7 +2041,23 @@
+ If <bf>irxevent</bf> isn't running, then MythTV will not respond to your remote
+ control unless you're using native lirc support.
+ 
+-<sect1>Additional information for lirc
++
++<sect1>Additional information for lirc - native mode
++<p>If you will be using native mode, your lircrc file will need to look something like this:
++<tscreen><verb>
++begin
++     remote = mceusb
++     prog = mythtv
++     button = Guide
++     config = S
++     repeat = 0
++     delay = 0
++end
++</verb></tscreen>
++
++Note that the name of the "prog" is <bf>mythtv</bf>, not <bf>mythtvfrontend</bf>
++
++<sect1>Additional information for lirc - irxevent mode
+ <p>Take a look at the lircrc.example files in the <tt>contrib/configfiles/</tt>
+ directory.  In my case, (Pinnacle Studio card) the channel up and down functions
+ weren't working, due to the fact that the button names were different than
+@@ -2729,7 +2767,7 @@
+ <ref id="logrotate" name="Automatically rotating logs"> for more
+ information.
+ 
+-<sect1>Configuring a non-master backend <label id="nonmaster_backend">
++<sect1>Configuring a slave backend <label id="nonmaster_backend">
+ <p>Ensure that you've granted access to the master MySQL database for remote
+ backends as discussed in the section titled <ref id="modify_perm_mysql"
+ name="Modifying access to the MySQL database for multiple systems"> and that
+@@ -2760,16 +2798,16 @@
+ If the slave backend can't communicate with the master backend due to IP
+ address misconfiguration then MythTV will not function properly.
+ 
+-Configuration of a non-master backend follows the same general procedure
++Configuration of a slave backend follows the same general procedure
+ as that of the master backend, with the exception that you skip over the
+ "Video Sources" step.  All possible video sources need to be defined on the
+ master backend system; only the master backend will query a listings
+-provider to obtain guide data for all the non-master backends.
++provider to obtain guide data for all the slave backends.
+ 
+ <figure loc="here">
+ <eps file="stop.eps" height="1cm">
+ <img src="stop.png">
+-<caption><bf>NOTE</bf>: Do not run <tt>mythfilldatabase</tt> on a non-master backend.
++<caption><bf>NOTE</bf>: Do not run <tt>mythfilldatabase</tt> on a slave backend.
+ </caption>
+ </figure>
+ <sect1>Configuring and running mythfilldatabase
+@@ -5913,6 +5951,8 @@
  handle SIG33 nostop noprint
  set logging on
  set pagination off
@@ -26207,7 +26723,12 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
  set args -l myth.log -v record,channel,siparser
  run
  thread apply all bt full
-@@ -7380,8 +7385,8 @@
+@@ -7376,12 +7416,13 @@
+ <item>v/V = VCT   : ATSC only
+ <item>n/N = NIT   : DVB only
+ <item>s/S = SDT   : DVB only
++<item>c/C = Crypt : The channel is encrypted.  If you have a CAM you should see a "C" after a few seconds.
+ </itemize>
  <sect1>What is the difference between the various Hauppauge PVR models?
  <p>This is covered in the hardware section, and extensively covered on the
  Hauppauge website.  (<url
@@ -26218,7 +26739,7 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
  Hauppauge website for the most accurate information.
  
  A PVR-150 comes in a number of versions:
-@@ -7931,13 +7936,14 @@
+@@ -7931,13 +7972,19 @@
  You can then press ESC until you return to the main screen.
  </article>
  <!-- Revision History
@@ -26236,6 +26757,11 @@ Index: mythtv/docs/mythtv-HOWTO.sgml
 +v0.21.01, 2008-06-03.  Add mythbuntu.
 +v0.21.02, 2008-06-04.  Update minimyth link.
 +v0.21.03, 2008-10-27.  Update Hauppauge link.
++v0.21.04, 2009-01-01.  "Crypt" description on LAMC table.
++v0.21.05, 2009-01-02.  Expand instructions on how to use -fixes rather than
++the source tarball, put pointer to wiki for Release Notes.
++v0.21.06, 2009-01-11.  Add information for native lirc mode
++v0.21.07, 2009-01-20.  Standardize terminology for slave backends.
  -->
  
  <!--
@@ -26270,11 +26796,32 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  
  <H2>Robert Kulagowski, 
 -<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-03-05, v0.21.00pre
-+<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-10-27, v0.21.03
++<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2009-01-20, v0.21.07
  <HR>
  <EM>Initially, installation of MythTV seems like a huge task.  There are lots
  of dependencies, and various distributions seem to do the same thing
-@@ -322,14 +322,18 @@
+@@ -80,8 +80,9 @@
+ <LI><A NAME="toc8.1">8.1</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss8.1">Gentoo</A>
+ <LI><A NAME="toc8.2">8.2</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss8.2">Obtaining and compiling lirc</A>
+ <LI><A NAME="toc8.3">8.3</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss8.3">Completing the lirc install </A>
+-<LI><A NAME="toc8.4">8.4</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss8.4">Additional information for lirc</A>
+-<LI><A NAME="toc8.5">8.5</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss8.5">Configuring lirc for use with an IR blaster</A>
++<LI><A NAME="toc8.4">8.4</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss8.4">Additional information for lirc - native mode</A>
++<LI><A NAME="toc8.5">8.5</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss8.5">Additional information for lirc - irxevent mode</A>
++<LI><A NAME="toc8.6">8.6</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss8.6">Configuring lirc for use with an IR blaster</A>
+ </UL>
+ <P>
+ <H2><A NAME="toc9">9.</A> <A HREF="mythtv-HOWTO-singlehtml.html#s9">Configuring MythTV. </A></H2>
+@@ -89,7 +90,7 @@
+ <UL>
+ <LI><A NAME="toc9.1">9.1</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss9.1">Configuring the Master backend system</A>
+ <LI><A NAME="toc9.2">9.2</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss9.2">Post-configuration</A>
+-<LI><A NAME="toc9.3">9.3</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss9.3">Configuring a non-master backend </A>
++<LI><A NAME="toc9.3">9.3</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss9.3">Configuring a slave backend </A>
+ <LI><A NAME="toc9.4">9.4</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss9.4">Configuring and running mythfilldatabase</A>
+ <LI><A NAME="toc9.5">9.5</A> <A HREF="mythtv-HOWTO-singlehtml.html#ss9.5">Grabbing channel icons for Schedules Direct users</A>
+ </UL>
+@@ -322,14 +323,18 @@
  <A HREF="http://mysettopbox.tv">http://mysettopbox.tv</A> if you'd
  like to install a custom version of Knoppix optimized for MythTV.</P>
  <P>See 
@@ -26296,7 +26843,7 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  <P>There is a MythTV wiki at 
  <A HREF="http://wiki.mythtv.org">http://wiki.mythtv.org</A>.</P>
  <P>If you are installing this version for Schedules Direct support, please see
-@@ -715,6 +719,9 @@
+@@ -715,6 +720,9 @@
  CPU. (The PVR-350 can simultaneously be used as an output device.) Using the
  on-board MPEG-2 encoder greatly reduces the CPU requirements for
  encoding.</P>
@@ -26306,7 +26853,7 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  <P><B>NOTE</B>:  Motherboards with the Via chipset are notoriously bad with
  DMA and have caused numerous issues with ivtv, including hard locks.  See
  the ivtv website 
-@@ -757,9 +764,10 @@
+@@ -757,9 +765,10 @@
  <P>There are a number of HDTV cards with Linux drivers which are known to
  operate in the United States; a complete list of cards with DVB drivers can
  be found at 
@@ -26320,7 +26867,7 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  <P>Cards that have been reported to work include:
  <UL>
  <LI>pcHDTV HD-2000, Air2PC PCI rev 1-3 (8VSB only)</LI>
-@@ -816,8 +824,8 @@
+@@ -816,8 +825,8 @@
  <A HREF="http://www.plextor.com/english/support/LinuxSDK.htm">http://www.plextor.com/english/support/LinuxSDK.htm</A>. MythTV uses the
  Plextor to capture hardware encoded MPEG-4, so the host CPU requirements are low.</P>
  <P>Hauppauge WinTV-PVR-USB2 (driver available at 
@@ -26331,7 +26878,7 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  
  <H3>IP Recorder (RTSP, RTS, UDP)</H3>
  
-@@ -840,13 +848,6 @@
+@@ -840,13 +849,6 @@
  <LI>Hauppauge WinTV-USB series</LI>
  <LI>Hauppauge WinTV-PVR-usb (model 602), or WinTV-PVR-PCI (model 880) cards (no driver - this is not the PVR-250/350
  series of cards supported by the IvyTV driver)</LI>
@@ -26345,7 +26892,7 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  <LI>ATI All-in-Wonder series</LI>
  </UL>
  </P>
-@@ -1019,7 +1020,7 @@
+@@ -1019,7 +1021,7 @@
  <IMG SRC="warning.png">
  <CAPTION><B>NOTE</B>: you must have the MySQL database software installed on a
  system to store the master database.  This does not necessarily mean that
@@ -26354,7 +26901,70 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  </FIGURE>
  </P>
  
-@@ -1849,7 +1850,7 @@
+@@ -1629,33 +1631,48 @@
+ <H2><A NAME="ss5.4">5.4</A> <A HREF="#toc5.4">Manually building MythTV</A>
+ </H2>
+ 
+-<P>If you are going to use <B>subversion</B>, execute the following
+-instructions to obtain the latest version of MythTV:</P>
+-<P>
++<P><B>NOTE</B>:  Unless you are reading this documentation on the day that a
++new version of MythTV is released, it is highly encouraged that you use the
++"-fixes" version of the software and not the source tarball.</P>
++<P>To download the release version, execute:
+ <BLOCKQUOTE><CODE>
+ <PRE>
+-$ mkdir mythtv
+-$ svn co http://svn.mythtv.org/svn/trunk/ mythtv
+-$ cd mythtv
++$ mkdir mythtv-release-0-21-fixes
++$ svn co http://svn.mythtv.org/svn/branches/release-0-21-fixes/ mythtv-release-0-21-fixes
++$ cd mythtv-release-0-21-fixes
+ </PRE>
+ </CODE></BLOCKQUOTE>
+ </P>
+-<P>To use a release version, you can execute:
++<P>See 
++<A HREF="http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.21.1">http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.21.1</A> for
++release notes for MythTV v0.21.1</P>
++<P>Execute the following instructions to obtain the latest version of MythTV.
++This is known as the "trunk" version and is considered the unstable code
++which is not guaranteed to work.  Use of trunk implies that you are also
++reading the mythtv-dev and mythtv-commits mailing lists; failure to read
++those mailing lists can cause your system to stop working.</P>
++<P>
+ <BLOCKQUOTE><CODE>
+ <PRE>
+-$ mkdir mythtv-release-0.21
+-$ svn co http://svn.mythtv.org/svn/branches/release-0-21-fixes/ mythtv-release-0.21
+-$ cd mythtv-release-0.21
++$ mkdir mythtv
++$ svn co http://svn.mythtv.org/svn/trunk/ mythtv
++$ cd mythtv
+ </PRE>
+ </CODE></BLOCKQUOTE>
+ </P>
++<P>See 
++<A HREF="http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.22">http://www.mythtv.org/wiki/index.php/Release_Notes_-_0.22</A> for
++release notes for MythTV v0.22</P>
+ <P><B>NOTE</B>:  Using a svn version of the code allows you to stay
+ up-to-date with changes.  So, if there's an update to the 0.21 release and
+ you originally obtained it using svn, you could enter the
+-mythtv-release-0.21 directory and type "svn up", which will update your copy
+-with the fixed version from the website.  You would then recompile and
+-install the updated 0.21 code.</P>
+-<P>If you are using the tarball, then unpack it:
++mythtv-release-0-21-fixes directory and type "svn up", which will update
++your copy with the fixed version from the website.  You would then recompile
++and install the updated 0.21 code.</P>
++<P>If you are using the tarball, then unpack it.  Again, use of the tarball is
++only appropriate if a "-fixes" branch hasn't been created for the code that
++you're running.</P>
++<P>
+ <BLOCKQUOTE><CODE>
+ <PRE>
+ $ tar -xjf mythtv-0.21.tar.bz2
+@@ -1849,7 +1866,7 @@
  </P>
  <H2><A NAME="mysql"></A> <A NAME="s6">6.</A> <A HREF="#toc6">MySQL.</A></H2>
  
@@ -26363,7 +26973,7 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  out "log-bin" in your <CODE>my.cnf</CODE> configuration file. This option will
  quickly fill your "/var" disk partition with many gigabytes of data,
  unless you are doing database replication and deleting these files regularly.</P>
-@@ -2000,7 +2001,7 @@
+@@ -2000,7 +2017,7 @@
  <CODE>127.0.0.1</CODE>.  If you change either of these items, restart
  <B>MySQL</B>.</P>
  <P><B>NOTE</B>:  Your distribution may have a customized MySQL configuration
@@ -26372,7 +26982,76 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  configuration.</P>
  
  <H2><A NAME="s7">7.</A> <A HREF="#toc7">Configuring Sound.</A></H2>
-@@ -6432,6 +6433,8 @@
+@@ -2433,9 +2450,29 @@
+ If <B>irxevent</B> isn't running, then MythTV will not respond to your remote
+ control unless you're using native lirc support.</P>
+ 
+-<H2><A NAME="ss8.4">8.4</A> <A HREF="#toc8.4">Additional information for lirc</A>
++
++<H2><A NAME="ss8.4">8.4</A> <A HREF="#toc8.4">Additional information for lirc - native mode</A>
+ </H2>
+ 
++<P>If you will be using native mode, your lircrc file will need to look something like this:
++<BLOCKQUOTE><CODE>
++<PRE>
++begin
++     remote = mceusb
++     prog = mythtv
++     button = Guide
++     config = S
++     repeat = 0
++     delay = 0
++end
++</PRE>
++</CODE></BLOCKQUOTE>
++</P>
++<P>Note that the name of the "prog" is <B>mythtv</B>, not <B>mythtvfrontend</B></P>
++
++<H2><A NAME="ss8.5">8.5</A> <A HREF="#toc8.5">Additional information for lirc - irxevent mode</A>
++</H2>
++
+ <P>Take a look at the lircrc.example files in the <CODE>contrib/configfiles/</CODE>
+ directory.  In my case, (Pinnacle Studio card) the channel up and down functions
+ weren't working, due to the fact that the button names were different than
+@@ -2502,7 +2539,7 @@
+ the key.  The actual <B>repeat =</B> number will vary from system to
+ system, so experiment and see which value works best for you.</P>
+ 
+-<H2><A NAME="ss8.5">8.5</A> <A HREF="#toc8.5">Configuring lirc for use with an IR blaster</A>
++<H2><A NAME="ss8.6">8.6</A> <A HREF="#toc8.6">Configuring lirc for use with an IR blaster</A>
+ </H2>
+ 
+ <P>Lirc has support for various IR transmitters. A popular model is the Actisys
+@@ -3140,7 +3177,7 @@
+ <A HREF="#logrotate">Automatically rotating logs</A> for more
+ information.</P>
+ 
+-<H2><A NAME="nonmaster_backend"></A> <A NAME="ss9.3">9.3</A> <A HREF="#toc9.3">Configuring a non-master backend </A>
++<H2><A NAME="nonmaster_backend"></A> <A NAME="ss9.3">9.3</A> <A HREF="#toc9.3">Configuring a slave backend </A>
+ </H2>
+ 
+ <P>Ensure that you've granted access to the master MySQL database for remote
+@@ -3169,16 +3206,16 @@
+ <P>Make sure that the IP addresses on the General setup screen are accurate. 
+ If the slave backend can't communicate with the master backend due to IP
+ address misconfiguration then MythTV will not function properly.</P>
+-<P>Configuration of a non-master backend follows the same general procedure
++<P>Configuration of a slave backend follows the same general procedure
+ as that of the master backend, with the exception that you skip over the
+ "Video Sources" step.  All possible video sources need to be defined on the
+ master backend system; only the master backend will query a listings
+-provider to obtain guide data for all the non-master backends.</P>
++provider to obtain guide data for all the slave backends.</P>
+ <P>
+ <FIGURE>
+ <EPS FILE="stop.eps">
+ <IMG SRC="stop.png">
+-<CAPTION><B>NOTE</B>: Do not run <CODE>mythfilldatabase</CODE> on a non-master backend.</CAPTION>
++<CAPTION><B>NOTE</B>: Do not run <CODE>mythfilldatabase</CODE> on a slave backend.</CAPTION>
+ </FIGURE>
+ </P>
+ <H2><A NAME="ss9.4">9.4</A> <A HREF="#toc9.4">Configuring and running mythfilldatabase</A>
+@@ -6432,6 +6469,8 @@
  handle SIG33 nostop noprint
  set logging on
  set pagination off
@@ -26381,7 +27060,15 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  set args -l myth.log -v record,channel,siparser
  run
  thread apply all bt full
-@@ -7994,7 +7997,7 @@
+@@ -7987,6 +8026,7 @@
+ <LI>v/V = VCT   : ATSC only</LI>
+ <LI>n/N = NIT   : DVB only</LI>
+ <LI>s/S = SDT   : DVB only</LI>
++<LI>c/C = Crypt : The channel is encrypted.  If you have a CAM you should see a "C" after a few seconds.</LI>
+ </UL>
+ </P>
+ <H2><A NAME="ss23.23">23.23</A> <A HREF="#toc23.23">What is the difference between the various Hauppauge PVR models?</A>
+@@ -7994,7 +8034,7 @@
  
  <P>This is covered in the hardware section, and extensively covered on the
  Hauppauge website.  (
@@ -26390,6 +27077,50 @@ Index: mythtv/docs/mythtv-HOWTO-singlehtml.html
  Hauppauge website for the most accurate information.</P>
  <P>A PVR-150 comes in a number of versions:
  <UL>
+Index: mythtv/docs/mythtv-HOWTO-8.html
+===================================================================
+--- mythtv/docs/mythtv-HOWTO-8.html	(revision 16468)
++++ mythtv/docs/mythtv-HOWTO-8.html	(working copy)
+@@ -332,9 +332,29 @@
+ If <B>irxevent</B> isn't running, then MythTV will not respond to your remote
+ control unless you're using native lirc support.</P>
+ 
+-<H2><A NAME="ss8.4">8.4</A> <A HREF="mythtv-HOWTO.html#toc8.4">Additional information for lirc</A>
++
++<H2><A NAME="ss8.4">8.4</A> <A HREF="mythtv-HOWTO.html#toc8.4">Additional information for lirc - native mode</A>
+ </H2>
+ 
++<P>If you will be using native mode, your lircrc file will need to look something like this:
++<BLOCKQUOTE><CODE>
++<PRE>
++begin
++     remote = mceusb
++     prog = mythtv
++     button = Guide
++     config = S
++     repeat = 0
++     delay = 0
++end
++</PRE>
++</CODE></BLOCKQUOTE>
++</P>
++<P>Note that the name of the "prog" is <B>mythtv</B>, not <B>mythtvfrontend</B></P>
++
++<H2><A NAME="ss8.5">8.5</A> <A HREF="mythtv-HOWTO.html#toc8.5">Additional information for lirc - irxevent mode</A>
++</H2>
++
+ <P>Take a look at the lircrc.example files in the <CODE>contrib/configfiles/</CODE>
+ directory.  In my case, (Pinnacle Studio card) the channel up and down functions
+ weren't working, due to the fact that the button names were different than
+@@ -401,7 +421,7 @@
+ the key.  The actual <B>repeat =</B> number will vary from system to
+ system, so experiment and see which value works best for you.</P>
+ 
+-<H2><A NAME="ss8.5">8.5</A> <A HREF="mythtv-HOWTO.html#toc8.5">Configuring lirc for use with an IR blaster</A>
++<H2><A NAME="ss8.6">8.6</A> <A HREF="mythtv-HOWTO.html#toc8.6">Configuring lirc for use with an IR blaster</A>
+ </H2>
+ 
+ <P>Lirc has support for various IR transmitters. A popular model is the Actisys
 Index: mythtv/docs/mythtv-HOWTO.pdf
 ===================================================================
 Cannot display: file marked as a binary type.
@@ -26403,10 +27134,31 @@ Index: mythtv/docs/index.html
  
  <H2>Robert Kulagowski, 
 -<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-03-05, v0.21.00pre
-+<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2008-10-27, v0.21.03
++<A HREF="mailto:rkulagow@rocketmail.com">mailto:rkulagow@rocketmail.com</A></H2>2009-01-20, v0.21.07
  <HR>
  <EM>Initially, installation of MythTV seems like a huge task.  There are lots
  of dependencies, and various distributions seem to do the same thing
+@@ -87,8 +87,9 @@
+ <LI><A NAME="toc8.1">8.1</A> <A HREF="mythtv-HOWTO-8.html#ss8.1">Gentoo</A>
+ <LI><A NAME="toc8.2">8.2</A> <A HREF="mythtv-HOWTO-8.html#ss8.2">Obtaining and compiling lirc</A>
+ <LI><A NAME="toc8.3">8.3</A> <A HREF="mythtv-HOWTO-8.html#ss8.3">Completing the lirc install </A>
+-<LI><A NAME="toc8.4">8.4</A> <A HREF="mythtv-HOWTO-8.html#ss8.4">Additional information for lirc</A>
+-<LI><A NAME="toc8.5">8.5</A> <A HREF="mythtv-HOWTO-8.html#ss8.5">Configuring lirc for use with an IR blaster</A>
++<LI><A NAME="toc8.4">8.4</A> <A HREF="mythtv-HOWTO-8.html#ss8.4">Additional information for lirc - native mode</A>
++<LI><A NAME="toc8.5">8.5</A> <A HREF="mythtv-HOWTO-8.html#ss8.5">Additional information for lirc - irxevent mode</A>
++<LI><A NAME="toc8.6">8.6</A> <A HREF="mythtv-HOWTO-8.html#ss8.6">Configuring lirc for use with an IR blaster</A>
+ </UL>
+ <P>
+ <H2><A NAME="toc9">9.</A> <A HREF="mythtv-HOWTO-9.html">Configuring MythTV. </A></H2>
+@@ -96,7 +97,7 @@
+ <UL>
+ <LI><A NAME="toc9.1">9.1</A> <A HREF="mythtv-HOWTO-9.html#ss9.1">Configuring the Master backend system</A>
+ <LI><A NAME="toc9.2">9.2</A> <A HREF="mythtv-HOWTO-9.html#ss9.2">Post-configuration</A>
+-<LI><A NAME="toc9.3">9.3</A> <A HREF="mythtv-HOWTO-9.html#ss9.3">Configuring a non-master backend </A>
++<LI><A NAME="toc9.3">9.3</A> <A HREF="mythtv-HOWTO-9.html#ss9.3">Configuring a slave backend </A>
+ <LI><A NAME="toc9.4">9.4</A> <A HREF="mythtv-HOWTO-9.html#ss9.4">Configuring and running mythfilldatabase</A>
+ <LI><A NAME="toc9.5">9.5</A> <A HREF="mythtv-HOWTO-9.html#ss9.5">Grabbing channel icons for Schedules Direct users</A>
+ </UL>
 Index: mythtv/docs/mythtv-HOWTO-22.html
 ===================================================================
 --- mythtv/docs/mythtv-HOWTO-22.html	(revision 16468)
@@ -26423,7 +27175,7 @@ Index: mythtv/docs/mythtv-HOWTO-22.html
 Index: mythtv/libs/libs-targetfix.pro
 ===================================================================
 --- mythtv/libs/libs-targetfix.pro	(revision 0)
-+++ mythtv/libs/libs-targetfix.pro	(revision 19505)
++++ mythtv/libs/libs-targetfix.pro	(revision 19788)
 @@ -0,0 +1,20 @@
 +# Common project modifications to change the generated target.
 +
@@ -26605,7 +27357,37 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
  
      SetDeleteIter();
      SetCommBreakIter();
-@@ -6970,15 +7009,15 @@
+@@ -4529,20 +4568,22 @@
+ {
+     if (hascommbreaktable)
+     {
++
+         commBreakIter = commBreakMap.begin();
+         while (commBreakIter != commBreakMap.end())
+         {
+-            if ((framesPlayed + 2) > commBreakIter.key())
+-            {
+-                commBreakIter++;
+-            }
+-            else
++            if (framesPlayed <= commBreakIter.key())
+                 break;
+-        }
+ 
+-        VERBOSE(VB_COMMFLAG, LOC + QString("new commBreakIter = %1 @ frame %2")
++            commBreakIter++;
++	}
++
++	if (commBreakIter != commBreakMap.end())
++	{
++            VERBOSE(VB_COMMFLAG, LOC + QString("new commBreakIter = %1 @ frame %2")
+                                            .arg(commBreakIter.data())
+                                            .arg(commBreakIter.key()));
++        }
+     }
+ }
+ 
+@@ -6970,15 +7011,15 @@
  
  void NuppelVideoPlayer::DisplayDVDButton(void)
  {
@@ -26624,7 +27406,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
          (osdshown) ||
          (dvd_stillframe_showing && buffer->timecode > 0) ||
          ((!osdshown) && 
-@@ -6990,39 +7029,40 @@
+@@ -6990,39 +7031,40 @@
      }
  
      OSDSet *subtitleOSD = NULL;
@@ -26690,7 +27472,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
              }
          }
  
-@@ -7037,19 +7077,19 @@
+@@ -7037,19 +7079,19 @@
  
          if ((hmult < 0.99) || (hmult > 1.01) || (vmult < 0.99) || (vmult > 1.01)) 
          {
@@ -27889,6 +28671,37 @@ Index: mythtv/libs/libmythtv/dbcheck.cpp
  "ALTER TABLE recorded ADD storagegroup VARCHAR(32) NOT NULL DEFAULT 'Default';",
  "ALTER TABLE record   ADD storagegroup VARCHAR(32) NOT NULL DEFAULT 'Default';",
  "ALTER TABLE inuseprograms ADD rechost VARCHAR(64) NOT NULL;",
+@@ -4247,8 +4252,7 @@
+ "INSERT INTO playgroup VALUES ('Default','',30,5,100);",
+ "INSERT INTO profilegroups VALUES (1,'Software Encoders (v4l based)','V4L',"
+ "                                      1,NULL);",
+-"INSERT INTO profilegroups VALUES (2,'MPEG-2 Encoders (PVR-x50, PVR-500)',"
+-"                                      'MPEG',1,NULL);",
++"INSERT INTO profilegroups VALUES (2,'IVTV MPEG-2 Encoders','MPEG',1,NULL);",
+ "INSERT INTO profilegroups VALUES (3,"
+ " 'Hardware MJPEG Encoders (Matrox G200-TV, Miro DC10, etc)','MJPEG',1,NULL);",
+ "INSERT INTO profilegroups VALUES (4,'Hardware HDTV','HDTV',1,NULL);",
+Index: mythtv/libs/libmythtv/hdhrrecorder.cpp
+===================================================================
+--- mythtv/libs/libmythtv/hdhrrecorder.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/hdhrrecorder.cpp	(working copy)
+@@ -250,9 +250,13 @@
+     if (!pmt)
+         return;
+ 
+-    int next = (pmt->tsheader()->ContinuityCounter()+1)&0xf;
+-    pmt->tsheader()->SetContinuityCounter(next);
+-    BufferedWrite(*(reinterpret_cast<TSPacket*>(pmt->tsheader())));
++    unsigned char buf[8 * 1024];
++    uint next_cc = (pmt->tsheader()->ContinuityCounter()+1)&0xf;
++    pmt->tsheader()->SetContinuityCounter(next_cc);
++    uint size = pmt->WriteAsTSPackets(buf, next_cc);
++
++    for (uint i = 0; i < size ; i += TSPacket::SIZE)
++        DTVRecorder::BufferedWrite(*(reinterpret_cast<TSPacket*>(&buf[i])));
+ }
+ 
+ /** \fn HDHRRecorder::HandleMGT(const MasterGuideTable*)
 Index: mythtv/libs/libmythtv/eithelper.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/eithelper.cpp	(revision 16468)
@@ -27950,7 +28763,16 @@ Index: mythtv/libs/libmythtv/siscan.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/siscan.cpp	(revision 16468)
 +++ mythtv/libs/libmythtv/siscan.cpp	(working copy)
-@@ -1124,6 +1124,12 @@
+@@ -328,8 +328,6 @@
+             .arg((*current).FriendlyName));
+     VERBOSE(VB_SIPARSER, LOC + nit->toString());
+ 
+-    dvbChanNums.clear();
+-
+     if (nit->TransportStreamCount())
+     {
+         emit TransportScanUpdateText(
+@@ -1124,6 +1122,12 @@
      {   // The service is in database, update it
          emit ServiceScanUpdateText(
              tr("Updating %1").arg(common_status_info));
@@ -27963,7 +28785,7 @@ Index: mythtv/libs/libmythtv/siscan.cpp
          ChannelUtil::UpdateChannel(
              db_mplexid, db_source_id, chanid,
              callsign,
-@@ -1131,7 +1137,7 @@
+@@ -1131,7 +1135,7 @@
              chan_num,
              pmt->ProgramNumber(),
              0, 0,
@@ -27972,7 +28794,7 @@ Index: mythtv/libs/libmythtv/siscan.cpp
      }
  }
  
-@@ -1510,8 +1516,17 @@
+@@ -1510,8 +1514,17 @@
          {   // The service is in database & we have good info, update it
              emit ServiceScanUpdateText(tr("Updating %1").arg(service_name));
  
@@ -27990,7 +28812,7 @@ Index: mythtv/libs/libmythtv/siscan.cpp
  
              ChannelUtil::UpdateChannel(
                  db_mplexid,
-@@ -1522,10 +1537,8 @@
+@@ -1522,10 +1535,8 @@
                  chan_num,
                  sdt->ServiceID(i),
                  0, 0, 
@@ -28107,7 +28929,7 @@ Index: mythtv/libs/libmythtv/channelutil.cpp
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 19505)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 19788)
 @@ -0,0 +1,12 @@
 +#ifndef _FREESAT_HUFFMAN_H_
 +#define _FREESAT_HUFFMAN_H_
@@ -28130,7 +28952,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_tables.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 19505)
++++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 19788)
 @@ -0,0 +1,4370 @@
 +struct fsattab fsat_table[] = {
 +    { 0x00000000,  2, 'T'},
@@ -32511,7 +33333,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 19505)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 19788)
 @@ -0,0 +1,107 @@
 +#include "freesat_huffman.h"
 +
@@ -32693,6 +33515,32 @@ Index: mythtv/libs/libmythtv/mpeg/pespacket.cpp
  }
  
  #include <vector>
+@@ -333,21 +333,25 @@
+ 
+ unsigned char *pes_alloc(uint size)
+ {
++#ifndef USING_VALGRIND
+     QMutexLocker locker(&pes_alloc_mutex);
+     if (size <= 188)
+         return get_188_block();
+     else if (size <= 4096)
+         return get_4096_block();
++#endif
+     return (unsigned char*) malloc(size);
+ }
+ 
+ void pes_free(unsigned char *ptr)
+ {
++#ifndef USING_VALGRIND
+     QMutexLocker locker(&pes_alloc_mutex);
+     if (is_188_block(ptr))
+         return_188_block(ptr);
+     else if (is_4096_block(ptr))
+         return_4096_block(ptr);
+     else
++#endif
+         free(ptr);
+ }
 Index: mythtv/libs/libmythtv/mpeg/dvbstreamdata.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/dvbstreamdata.cpp	(revision 16468)
@@ -32758,6 +33606,88 @@ Index: mythtv/libs/libmythtv/mpeg/dvbstreamdata.cpp
      }
  
      return add_pids.size() || del_pids.size();
+@@ -768,6 +781,42 @@
+     sdts.clear();
+ }
+ 
++void DVBStreamData::DeleteCachedTable(PSIPTable *psip) const
++{
++    if (!psip)
++        return;
++
++    uint tid = psip->TableIDExtension();
++
++    QMutexLocker locker(&_cache_lock);
++    if (_cached_ref_cnt[psip] > 0)
++    {
++        _cached_slated_for_deletion[psip] = 1;
++        return;
++    }
++    else if ((TableID::NIT == psip->TableID()) &&
++             _cached_nit[psip->Section()])
++    {
++        _cached_nit[psip->Section()] = NULL;
++        delete psip;
++    }
++    else if ((TableID::SDT == psip->TableID()) &&
++             _cached_sdts[tid << 8 | psip->Section()])
++    {
++        _cached_sdts[tid << 8 | psip->Section()] = NULL;
++        delete psip;
++    }
++    else
++    {
++        MPEGStreamData::DeleteCachedTable(psip);
++        return;
++    }
++    psip_refcnt_map_t::iterator it;
++    it = _cached_slated_for_deletion.find(psip);
++    if (it != _cached_slated_for_deletion.end())
++        _cached_slated_for_deletion.erase(it);
++}
++
+ void DVBStreamData::CacheNIT(NetworkInformationTable *nit)
+ {
+     QMutexLocker locker(&_cache_lock);
+Index: mythtv/libs/libmythtv/mpeg/scanstreamdata.h
+===================================================================
+--- mythtv/libs/libmythtv/mpeg/scanstreamdata.h	(revision 16468)
++++ mythtv/libs/libmythtv/mpeg/scanstreamdata.h	(working copy)
+@@ -27,6 +27,9 @@
+                           uint_vec_t& /*del_pids*/) const { return false; }
+ 
+     QString GetSIStandard(QString guess = "mpeg") const;
++
++  private:
++    virtual void DeleteCachedTable(PSIPTable *psip) const;  
+ };
+ 
+ #endif // SCANSTREAMDATA_H_
+Index: mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
+===================================================================
+--- mythtv/libs/libmythtv/mpeg/dvbdescriptors.h	(revision 16468)
++++ mythtv/libs/libmythtv/mpeg/dvbdescriptors.h	(working copy)
+@@ -1297,7 +1297,8 @@
+         kServiceTypeRCS_Map                  = 0x0E,
+         kServiceTypeRCS_FLS                  = 0x0F,
+         kServiceTypeDVB_MHP                  = 0x10,
+-        kServiceTypeHDTV                     = 0x19,
++        kServiceTypeHDTV                     = 0x11,
++        kServiceTypeHDTV2                    = 0x19,
+         kServiceTypeEchoStarTV1              = 0x91,
+         kServiceTypeEchoStarTV2              = 0x9a,
+         kServiceTypeEchoStarTV3              = 0xa4,
+@@ -1348,7 +1349,9 @@
+     bool IsDigitalAudio(void) const
+         { return ServiceType() ==  kServiceTypeDigitalRadioSound; }
+     bool IsHDTV(void) const
+-        { return ServiceType() ==  kServiceTypeHDTV; }
++        { return
++	    (ServiceType() ==  kServiceTypeHDTV) ||
++	    (ServiceType() ==  kServiceTypeHDTV2); }
+     bool IsTeletext(void) const
+         { return ServiceType() ==  kServiceTypeDataBroadcast; }
+ 
 Index: mythtv/libs/libmythtv/mpeg/mpegstreamdata.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/mpegstreamdata.h	(revision 16468)
@@ -32780,6 +33710,61 @@ Index: mythtv/libs/libmythtv/mpeg/mpegstreamdata.h
  
      void UpdateTimeOffset(uint64_t si_utc_time);
  
+Index: mythtv/libs/libmythtv/mpeg/atscstreamdata.h
+===================================================================
+--- mythtv/libs/libmythtv/mpeg/atscstreamdata.h	(revision 16468)
++++ mythtv/libs/libmythtv/mpeg/atscstreamdata.h	(working copy)
+@@ -113,6 +113,7 @@
+     void CacheMGT(MasterGuideTable*);
+     void CacheTVCT(uint pid, TerrestrialVirtualChannelTable*);
+     void CacheCVCT(uint pid, CableVirtualChannelTable*);
++  protected:
+     virtual void DeleteCachedTable(PSIPTable *psip) const;
+ 
+   private:
+Index: mythtv/libs/libmythtv/mpeg/dvbstreamdata.h
+===================================================================
+--- mythtv/libs/libmythtv/mpeg/dvbstreamdata.h	(revision 16468)
++++ mythtv/libs/libmythtv/mpeg/dvbstreamdata.h	(working copy)
+@@ -182,6 +182,8 @@
+     // Caching
+     void CacheNIT(NetworkInformationTable*);
+     void CacheSDT(ServiceDescriptionTable*);
++  protected:
++    virtual void DeleteCachedTable(PSIPTable *psip) const;
+ 
+   private:
+     /// DVB table monitoring
+@@ -215,8 +217,8 @@
+     sections_map_t            _sdto_section_seen;
+ 
+     // Caching
+-    nit_cache_t               _cached_nit;  // section -> sdt
+-    sdt_cache_t               _cached_sdts; // tsid+section -> sdt
++    mutable nit_cache_t       _cached_nit;  // section -> sdt
++    mutable sdt_cache_t       _cached_sdts; // tsid+section -> sdt
+ };
+ 
+ inline void DVBStreamData::SetDishNetEIT(bool use_dishnet_eit)
+Index: mythtv/libs/libmythtv/mpeg/scanstreamdata.cpp
+===================================================================
+--- mythtv/libs/libmythtv/mpeg/scanstreamdata.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/mpeg/scanstreamdata.cpp	(working copy)
+@@ -79,3 +79,14 @@
+ 
+     return "mpeg";
+ }
++
++
++void ScanStreamData::DeleteCachedTable(PSIPTable *psip) const
++{
++    if (!psip)
++        return;
++
++    ATSCStreamData::DeleteCachedTable(psip);
++    if (psip->pesdata())
++        DVBStreamData::DeleteCachedTable(psip);
++}
 Index: mythtv/libs/libmythtv/mpeg/dvbdescriptors.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/dvbdescriptors.cpp	(revision 16468)
@@ -33072,6 +34057,15 @@ Index: mythtv/libs/libmythtv/videosource.cpp
      command = QString("%1 --config-file '%2' --configure")
          .arg(grabber).arg(filename);
  
+@@ -1635,7 +1637,7 @@
+         QObject::tr("MJPEG capture card (Matrox G200, DC10)"), "MJPEG");
+ # ifdef USING_IVTV
+     setting->addSelection(
+-        QObject::tr("MPEG-2 encoder card (PVR-x50, PVR-500)"), "MPEG");
++        QObject::tr("IVTV MPEG-2 encoder card"), "MPEG");
+ # endif // USING_IVTV
+ #endif // USING_V4L
+ 
 Index: mythtv/libs/libmythtv/diseqcsettings.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/diseqcsettings.cpp	(revision 16468)
@@ -33204,6 +34198,19 @@ Index: mythtv/libs/libmythtv/tv_rec.cpp
          {
              if (curRecording)
                  curRecording->recstatus = rsFailed;
+Index: mythtv/libs/libmythtv/recordingprofile.cpp
+===================================================================
+--- mythtv/libs/libmythtv/recordingprofile.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/recordingprofile.cpp	(working copy)
+@@ -1038,7 +1038,7 @@
+ 
+         QSize defaultsize(768, 576), maxsize(768, 576);
+         bool transcoding = profName.left(11) == "Transcoders";
+-        bool ivtv = profName.left(34) == "MPEG-2 Encoders (PVR-x50, PVR-500)";
++        bool ivtv = profName.left(20) == "IVTV MPEG-2 Encoders";
+ 
+         if (transcoding)
+         {
 Index: mythtv/libs/libmythtv/importicons.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/importicons.cpp	(revision 16468)
@@ -34014,7 +35021,7 @@ Index: mythtv/libs/libavutil/common.h
 Index: mythtv/libs/libavcodec/rectangle.h
 ===================================================================
 --- mythtv/libs/libavcodec/rectangle.h	(revision 0)
-+++ mythtv/libs/libavcodec/rectangle.h	(revision 19505)
++++ mythtv/libs/libavcodec/rectangle.h	(revision 19788)
 @@ -0,0 +1,121 @@
 +/*
 + * rectangle filling function
@@ -34239,7 +35246,7 @@ Index: mythtv/libs/libavcodec/h264pred.h
 Index: mythtv/libs/libavcodec/i386/h264_i386.h
 ===================================================================
 --- mythtv/libs/libavcodec/i386/h264_i386.h	(revision 0)
-+++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 19505)
++++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 19788)
 @@ -0,0 +1,144 @@
 +/*
 + * H.26L/H.264/AVC/JVT/14496-10/... encoder/decoder
@@ -41039,6 +42046,28 @@ Index: mythtv/libs/libmythupnp/upnpcds.h
  
          // ------------------------------------------------------------------
  
+Index: mythtv/libs/libmythupnp/httprequest.cpp
+===================================================================
+--- mythtv/libs/libmythupnp/httprequest.cpp	(revision 16468)
++++ mythtv/libs/libmythupnp/httprequest.cpp	(working copy)
+@@ -180,6 +180,17 @@
+ 
+     sHeader += GetAdditionalHeaders();
+ 
++    // ----------------------------------------------------------------------
++    // Temp Hack to process DLNA header
++                             
++    QString sValue = GetHeaderValue( "getcontentfeatures.dlna.org", "0" );
++
++    if (sValue == "1")
++        sHeader += "contentFeatures.dlna.org: DLNA.ORG_OP=01;DLNA.ORG_CI=0;"
++                   "DLNA.ORG_FLAGS=01500000000000000000000000000000\r\n";
++
++    // ----------------------------------------------------------------------
++
+     sHeader += QString( "Connection: %1\r\n"
+                         "Content-Type: %2\r\n"
+                         "Content-Length: %3\r\n" )
 Index: mythtv/libs/libmythupnp/libmythupnp.pro
 ===================================================================
 --- mythtv/libs/libmythupnp/libmythupnp.pro	(revision 16468)
@@ -43906,7 +44935,7 @@ Index: mythtv/settings.pro
 Index: mythtv/contrib/Win32/build/mythtvsetup.iss
 ===================================================================
 --- mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 0)
-+++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 19505)
++++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 19788)
 @@ -0,0 +1,493 @@
 +; Script generated by the Inno Setup Script Wizard.
 +; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
@@ -44410,7 +45439,7 @@ Added: svn:executable
 Index: mythtv/contrib/Win32/MythInstaller.bat
 ===================================================================
 --- mythtv/contrib/Win32/MythInstaller.bat	(revision 0)
-+++ mythtv/contrib/Win32/MythInstaller.bat	(revision 19505)
++++ mythtv/contrib/Win32/MythInstaller.bat	(revision 19788)
 @@ -0,0 +1,69 @@
 +@rem = '--*-Perl-*--
 +@rem
@@ -44492,7 +45521,7 @@ Added: svn:keywords
 Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 19505)
++++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 19788)
 @@ -0,0 +1,57 @@
 +@Echo off
 +::
@@ -44554,7 +45583,7 @@ Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 Index: mythtv/contrib/Win32/run/mythbackend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythbackend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 19505)
++++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 19788)
 @@ -0,0 +1,58 @@
 +@Echo off
 +::
