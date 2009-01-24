@@ -5236,10 +5236,6 @@ Index: mythplugins/mytharchive/i18n/mytharchive_dk.ts
      </message>
  </context>
  </TS>
-Index: mythplugins/mytharchive/i18n/mytharchive_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mytharchive/i18n/mytharchive_nl.ts
 ===================================================================
 --- mythplugins/mytharchive/i18n/mytharchive_nl.ts	(revision 16468)
@@ -6131,14 +6127,6 @@ Index: mythplugins/mytharchive/i18n/mytharchive_nl.ts
          <source>Parental Pin:</source>
          <translation>Pincode:</translation>
      </message>
-Index: mythplugins/mytharchive/i18n/mytharchive_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythplugins/mytharchive/i18n/mytharchive_dk.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mytharchive/mytharchive/archivemenu.xml
 ===================================================================
 --- mythplugins/mytharchive/mytharchive/archivemenu.xml	(revision 16468)
@@ -6671,10 +6659,6 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
              title = title[:32]
  
              #Create the DVD ISO image
-Index: mythplugins/mythbrowser/i18n/mythbrowser_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythbrowser/i18n/mythbrowser_fi.ts
 ===================================================================
 --- mythplugins/mythbrowser/i18n/mythbrowser_fi.ts	(revision 16468)
@@ -6688,10 +6672,6 @@ Index: mythplugins/mythbrowser/i18n/mythbrowser_fi.ts
      </message>
  </context>
  </TS>
-Index: mythplugins/mythbrowser/i18n/mythbrowser_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythbrowser/i18n/mythbrowser_nl.ts
 ===================================================================
 --- mythplugins/mythbrowser/i18n/mythbrowser_nl.ts	(revision 16468)
@@ -8085,14 +8065,6 @@ Index: mythplugins/mythweather/i18n/mythweather_fi.ts
      </message>
  </context>
  </TS>
-Index: mythplugins/mythweather/i18n/mythweather_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythplugins/mythweather/i18n/mythweather_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl
 ===================================================================
 --- mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl	(revision 16468)
@@ -9408,10 +9380,6 @@ Index: mythplugins/mythweather/README
      a multi-location screen you have to set the location of each individual data
      item.  This may not be ideal, but it does allow for very easy screen and
      source development, along with very customizable location setups.  The
-Index: mythplugins/mythgallery/i18n/mythgallery_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythgallery/i18n/mythgallery_nb.ts
 ===================================================================
 --- mythplugins/mythgallery/i18n/mythgallery_nb.ts	(revision 16468)
@@ -9807,10 +9775,6 @@ Index: mythplugins/mythgallery/i18n/mythgallery_nl.ts
      </message>
  </context>
  </TS>
-Index: mythplugins/mythgallery/i18n/mythgallery_nb.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythgallery/i18n/mythgallery_fi.ts
 ===================================================================
 --- mythplugins/mythgallery/i18n/mythgallery_fi.ts	(revision 16468)
@@ -9954,10 +9918,6 @@ Index: mythplugins/mythgallery/i18n/mythgallery_fi.ts
      </message>
  </context>
  <context>
-Index: mythplugins/mythgallery/i18n/mythgallery_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythmovies/ignyte/ignytegrabber.cpp
 ===================================================================
 --- mythplugins/mythmovies/ignyte/ignytegrabber.cpp	(revision 16468)
@@ -10207,10 +10167,6 @@ Index: mythplugins/mythflix/i18n/mythflix_nl.ts
          <source>Minutes</source>
          <translation>Minuten</translation>
      </message>
-Index: mythplugins/mythflix/i18n/mythflix_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythflix/i18n/mythflix_fi.ts
 ===================================================================
 --- mythplugins/mythflix/i18n/mythflix_fi.ts	(revision 16468)
@@ -10297,10 +10253,6 @@ Index: mythplugins/mythflix/i18n/mythflix_fi.ts
      </message>
  </context>
  <context>
-Index: mythplugins/mythflix/i18n/mythflix_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythflix/mythflix/netflix-ui.xml
 ===================================================================
 --- mythplugins/mythflix/mythflix/netflix-ui.xml	(revision 16468)
@@ -10323,21 +10275,6 @@ Index: mythplugins/mythflix/mythflix/netflix-ui.xml
            <position>0,0</position>
          </image>
          
-Index: mythplugins/mythflix/mythflix/images/mythflix_background.png
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-
-Property changes on: mythplugins/mythflix/mythflix/images/mythflix_background.png
-___________________________________________________________________
-Added: svn:mime-type
-   + application/octet-stream
-Added: svn:mergeinfo
-
-Index: mythplugins/mythflix/mythflix/images/news-info-bg.png
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.ts
 ===================================================================
 --- mythplugins/mythcontrols/i18n/mythcontrols_nl.ts	(revision 16468)
@@ -10626,10 +10563,6 @@ Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.ts
          <source>No</source>
          <translation type="obsolete">Nee</translation>
      </message>
-Index: mythplugins/mythcontrols/i18n/mythcontrols_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythcontrols/i18n/mythcontrols_fi.ts
 ===================================================================
 --- mythplugins/mythcontrols/i18n/mythcontrols_fi.ts	(revision 16468)
@@ -10766,14 +10699,6 @@ Index: mythplugins/mythcontrols/i18n/mythcontrols_fi.ts
      </message>
  </context>
  <context>
-Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythplugins/mythvideo/i18n/mythvideo_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythvideo/i18n/mythvideo_nl.ts
 ===================================================================
 --- mythplugins/mythvideo/i18n/mythvideo_nl.ts	(revision 16468)
@@ -12635,10 +12560,6 @@ Index: mythplugins/mythvideo/mythvideo/videofilter.cpp
          }
          else
          {
-Index: mythplugins/mythphone/i18n/mythphone_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythphone/i18n/mythphone_nl.ts
 ===================================================================
 --- mythplugins/mythphone/i18n/mythphone_nl.ts	(revision 16468)
@@ -13416,10 +13337,6 @@ Index: mythplugins/mythphone/i18n/mythphone_nl.ts
      </message>
  </context>
  </TS>
-Index: mythplugins/mythgame/i18n/mythgame_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythgame/i18n/mythgame_nl.ts
 ===================================================================
 --- mythplugins/mythgame/i18n/mythgame_nl.ts	(revision 16468)
@@ -13849,10 +13766,6 @@ Index: mythplugins/mythgame/i18n/mythgame_nl.ts
          <source>Favorite:</source>
          <translation>Favoriet:</translation>
      </message>
-Index: mythplugins/mythgame/i18n/mythgame_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythgame/i18n/mythgame_fi.ts
 ===================================================================
 --- mythplugins/mythgame/i18n/mythgame_fi.ts	(revision 16468)
@@ -15006,14 +14919,6 @@ Index: mythplugins/mythnews/i18n/mythnews_fi.ts
      </message>
  </context>
  <context>
-Index: mythplugins/mythnews/i18n/mythnews_nl.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: mythplugins/mythnews/i18n/mythnews_fi.qm
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
 Index: mythplugins/mythnews/i18n/mythnews_nl.ts
 ===================================================================
 --- mythplugins/mythnews/i18n/mythnews_nl.ts	(revision 16468)
