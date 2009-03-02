@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r19811
+%define _svnrev r20089
 %define branch trunk
 
 #
@@ -1249,22 +1249,7 @@ fi
 %{_datadir}/mythtv/MSRR_scpd.xml
 %{_datadir}/mythtv/devicemaster.xml
 %{_datadir}/mythtv/deviceslave.xml
-%{_datadir}/mythtv/info_menu.xml
-%{_datadir}/mythtv/info_settings.xml
-%{_datadir}/mythtv/library.xml
-%{_datadir}/mythtv/main_settings.xml
-%{_datadir}/mythtv/mainmenu.xml
-%{_datadir}/mythtv/manage_recordings.xml
-%{_datadir}/mythtv/media_settings.xml
-%{_datadir}/mythtv/optical_menu.xml
-%{_datadir}/mythtv/recpriorities_settings.xml
 %{_datadir}/mythtv/setup.xml
-%{_datadir}/mythtv/tv_lists.xml
-%{_datadir}/mythtv/tv_schedule.xml
-%{_datadir}/mythtv/tv_search.xml
-%{_datadir}/mythtv/tv_settings.xml
-%{_datadir}/mythtv/tvmenu.xml
-%{_datadir}/mythtv/util_menu.xml
 %{_bindir}/mythfrontend
 %{_bindir}/mythtv
 %{_bindir}/mythtvosd
@@ -1474,6 +1459,18 @@ fi
 ################################################################################
 
 %changelog
+* Mon Mar 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20089
+- Update to pre-0.22 svn trunk, revision 20089
+
+* Wed Feb 18 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20019
+- Update to pre-0.22 svn trunk, revision 20019
+
+* Wed Feb 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19980
+- Update to pre-0.22 svn trunk, revision 19980
+
+* Thu Jan 29 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19874
+- Update to pre-0.22 svn trunk, revision 19874
+
 * Sat Jan 24 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19811
 - Update to pre-0.22 svn trunk, revision 19811
 - Drop mythcontrols plugin (functionality merged into mythfrontend)
