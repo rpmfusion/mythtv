@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20089
+%define _svnrev r20107
 %define branch trunk
 
 #
@@ -731,6 +731,7 @@ Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mplayer
 Requires:  transcode >= 0.6.8
+Requires:  python-imdb
 
 Provides:  mythdvd = %{version}-%{release}
 Obsoletes: mythdvd < %{version}-%{release}
@@ -1176,16 +1177,14 @@ rm -rf %{buildroot}
 
 ################################################################################
 
-%pre
-# Add the "mythtv" user
-/usr/sbin/useradd -c "mythtvbackend User" \
-    -s /sbin/nologin -r -d %{_varlibdir}/mythtv mythtv 2> /dev/null || :
-
-%post
-
 %post -n libmyth -p /sbin/ldconfig
 
 %postun -n libmyth -p /sbin/ldconfig
+
+%pre backend
+# Add the "mythtv" user
+/usr/sbin/useradd -c "mythtvbackend User" \
+    -s /sbin/nologin -r -d %{_varlibdir}/mythtv mythtv 2> /dev/null || :
 
 %post backend
 /sbin/chkconfig --add mythbackend
@@ -1319,7 +1318,6 @@ fi
 %doc mythplugins-%{version}/mytharchive/TODO
 %{_bindir}/mytharchivehelper
 %{_libdir}/mythtv/plugins/libmytharchive.so
-#{_datadir}/mythtv/archiveformat.xml
 %{_datadir}/mythtv/archivemenu.xml
 %{_datadir}/mythtv/archiveutils.xml
 %{_datadir}/mythtv/mytharchive
@@ -1373,6 +1371,12 @@ fi
 %dir %{_datadir}/mame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
+
+#files -n mythgame-emulators
+#defattr(-,root,root,-)
+#{_datadir}/mythtv/games/xmame
+#{_datadir}/mame/screens
+#{_datadir}/mame/flyers
 %endif
 
 %if %{with_mythmovies}
@@ -1459,6 +1463,10 @@ fi
 ################################################################################
 
 %changelog
+* Wed Mar 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20107
+- Update to pre-0.22 svn trunk, revision 20107
+- Features misc gcc 4.4 and qt 4.5 build fixage
+
 * Mon Mar 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20089
 - Update to pre-0.22 svn trunk, revision 20089
 
