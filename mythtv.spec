@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20196
+%define _svnrev r20232
 %define branch trunk
 
 #
@@ -1463,6 +1463,9 @@ fi
 ################################################################################
 
 %changelog
+* Fri Mar 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20232
+- Update to pre-0.22 svn trunk, revision 20232
+
 * Thu Mar 12 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20196
 - Update to pre-0.22 svn trunk, revision r20196
 - Carries work-around for qt 4.5 "everthing is a prepared statement now"
