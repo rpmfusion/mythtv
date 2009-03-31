@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20273
+%define _svnrev r20293
 %define branch trunk
 
 #
@@ -152,6 +152,7 @@ BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
 BuildRequires:  qt4-devel
+BuildRequires:  phonon-devel
 
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -165,7 +166,7 @@ BuildRequires:  libXxf86vm-devel
 BuildRequires:  mesa-libGLU-devel
 BuildRequires:  xorg-x11-proto-devel
 %ifarch %{ix86} x86_64
-BuildRequires:  xorg-x11-drv-i810-devel
+BuildRequires:  xorg-x11-drv-intel-devel
 BuildRequires:  xorg-x11-drv-openchrome-devel
 %endif
 
@@ -1463,6 +1464,9 @@ fi
 ################################################################################
 
 %changelog
+* Tue Mar 31 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20293
+- Update to pre-0.22 svn trunk, revision 20293
+
 * Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 0.22-0.2.svn.r20273
 - rebuild for new F11 features
 
