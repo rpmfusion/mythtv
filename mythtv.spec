@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20293
+%define _svnrev r20317
 %define branch trunk
 
 #
@@ -1464,8 +1464,12 @@ fi
 ################################################################################
 
 %changelog
+* Tue Apr 07 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20317
+- Update to pre-0.22 svn trunk, revision 20317
+
 * Tue Mar 31 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20293
 - Update to pre-0.22 svn trunk, revision 20293
+- Add BuildRequires: phonon-devel
 
 * Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 0.22-0.2.svn.r20273
 - rebuild for new F11 features
