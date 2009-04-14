@@ -56,6 +56,13 @@ Index: mythplugins/mythweb/INSTALL
 +  /etc/init.d/apache2 stop
 +  /etc/init.d/apache2 start
 +
+
+Property changes on: mythplugins/mythweb/INSTALL
+___________________________________________________________________
+Modified: svn:keywords
+   - Date Revision Author HeadURL
+   + Id Date Revision Author HeadURL
+
 Index: mythplugins/mythweb/modules/music/stream.php
 ===================================================================
 --- mythplugins/mythweb/modules/music/stream.php	(revision 16468)
@@ -1145,6 +1152,13 @@ Index: mythplugins/mythweb/modules/_shared/lang/German.lang
      Ja
  "Yesterday"
 +    gestern
+
+Property changes on: mythplugins/mythweb/modules/_shared/lang/translations.txt
+___________________________________________________________________
+Modified: svn:keywords
+   - Author Date Id Revision
+   + Id Date Revision Author HeadURL
+
 Index: mythplugins/mythweb/modules/video/imdb.php
 ===================================================================
 --- mythplugins/mythweb/modules/video/imdb.php	(revision 16468)
@@ -1167,6 +1181,20 @@ Index: mythplugins/mythweb/modules/video/imdb.php
                  $return['matches'][] = array('imdbid' => $imdbid,
                                               'title'  => $title);
              }
+
+Property changes on: mythplugins/mythweb/modules/tv/MFPlayer_styles.swf
+___________________________________________________________________
+Modified: svn:mime-type
+   - application/octet-stream
+   + application/x-shockwave-flash
+
+
+Property changes on: mythplugins/mythweb/modules/tv/playerProductInstall.swf
+___________________________________________________________________
+Modified: svn:mime-type
+   - application/octet-stream
+   + application/x-shockwave-flash
+
 Index: mythplugins/mythweb/modules/tv/detail.php
 ===================================================================
 --- mythplugins/mythweb/modules/tv/detail.php	(revision 16468)
@@ -1180,6 +1208,33 @@ Index: mythplugins/mythweb/modules/tv/detail.php
          $program->rec_forget_old();
      // Wait for a second so the backend can catch up
          sleep(1);
+Index: mythplugins/mythweb/modules/tv/tmpl/default/list_cell_program.php
+===================================================================
+--- mythplugins/mythweb/modules/tv/tmpl/default/list_cell_program.php	(revision 16468)
++++ mythplugins/mythweb/modules/tv/tmpl/default/list_cell_program.php	(working copy)
+@@ -12,8 +12,8 @@
+     // Start printing the link to record this show
+         echo '<a id          = "program-'.$program->chanid.'-'.$program->starttime.'"
+                  class       = "program"
+-                 onmouseover = "currently_hovered_id = this.id; load_tool_tip(\'program-'.$program->chanid.'-'.$program->starttime.'\',\''.$program->chanid.'\',\''.$program->starttime.'\');"
+-                 onmouseout  = "currently_hovered_id = null;"
++                 onmouseover = "currently_hovered_id = this.id; details_delay_timer_id = setTimeout(function () {load_tool_tip(\'program-'.$program->chanid.'-'.$program->starttime.'\',\''.$program->chanid.'\',\''.$program->starttime.'\');}, 250);"
++                 onmouseout  = "currently_hovered_id = null; clearTimeout( details_delay_timer_id ); details_delay_timer_id = null;"
+                  href        = "'.root.'tv/detail/'.$program->chanid.'/'.$program->starttime.'">';
+     // Is this program 'Already in Progress'?
+         if ($program->starttime < $GLOBALS['list_starttime'])
+Index: mythplugins/mythweb/modules/tv/tmpl/default/list.php
+===================================================================
+--- mythplugins/mythweb/modules/tv/tmpl/default/list.php	(revision 16468)
++++ mythplugins/mythweb/modules/tv/tmpl/default/list.php	(working copy)
+@@ -70,6 +70,7 @@
+     }
+ 
+     var currently_hovered_id = null;
++    var details_delay_timer_id = null;
+ 
+     function attempt_to_show_tip(element) {
+         if (element == currently_hovered_id)
 Index: mythplugins/mythweb/modules/tv/tmpl/default/recorded.php
 ===================================================================
 --- mythplugins/mythweb/modules/tv/tmpl/default/recorded.php	(revision 16468)
@@ -1241,6 +1296,13 @@ Index: mythplugins/mythweb/modules/tv/recorded.php
                  backend_command(array('FORGET_RECORDING', implode(backend_sep, $row), '0'));
              // Delay a second so the scheduler can catch up
                  sleep(1);
+
+Property changes on: mythplugins/mythweb/modules/tv/MFPlayer.swf
+___________________________________________________________________
+Modified: svn:mime-type
+   - application/octet-stream
+   + application/x-shockwave-flash
+
 Index: mythplugins/mythweb/README
 ===================================================================
 --- mythplugins/mythweb/README	(revision 16468)
@@ -1269,6 +1331,15 @@ Index: mythplugins/mythweb/README
  so please just use SVN.
 -
 -
+
+Property changes on: mythplugins/mythweb/README
+___________________________________________________________________
+Added: svn:mime-type
+   + text/plain
+Modified: svn:keywords
+   - Author Date Id Revision
+   + Id Date Revision Author HeadURL
+
 Index: mythplugins/configure
 ===================================================================
 --- mythplugins/configure	(revision 16468)
@@ -8069,6 +8140,52 @@ Index: mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl
 ===================================================================
 --- mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl	(revision 16468)
 +++ mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl	(working copy)
+@@ -15,7 +15,7 @@
+ use lib dirname($0);
+ use BBCLocation;
+ 
+-our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d); 
++our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d);
+ 
+ my $name = 'BBC-Current-XML';
+ my $version = 0.1;
+@@ -104,7 +104,7 @@
+ # The required elements which aren't provided by this feed
+ printf "appt::NA\n";
+ 
+-printf "copyright::©BBC Weather\n";
++printf "copyright::From bbc.co.uk\n";
+ printf "station_id::" . $locid . "\n";
+ my $location = $xml->{channel}->{title};
+ $location =~ s/.*?Observations for (.*)$/$1/s;
+@@ -148,20 +148,20 @@
+        $weather_string =~ /^thundery showers$/i) {
+     printf "weather_icon::thunshowers.png\n";
+ }
+-elsif ($weather_string =~ /^heavy snow$/i) { 
+-    printf "weather_icon::snowshow.png\n"; 
++elsif ($weather_string =~ /^heavy snow$/i) {
++    printf "weather_icon::snowshow.png\n";
+ }
+ elsif ($weather_string =~ /^light snow$/i ||
+-    $weather_string =~ /^light snow showers$/i) { 
+-    printf "weather_icon::flurries.png\n"; 
++    $weather_string =~ /^light snow showers$/i) {
++    printf "weather_icon::flurries.png\n";
+ }
+ elsif ($weather_string =~ /^sleet$/i ||
+     $weather_string =~ /^sleet showers$/i ||
+     $weather_string =~ /^hail showers$/i) {
+-    printf "weather_icon::rainsnow.png\n"; 
++    printf "weather_icon::rainsnow.png\n";
+ }
+-elsif ($weather_string =~ /^clear$/i) { 
+-    printf "weather_icon::fair.png\n"; 
++elsif ($weather_string =~ /^clear$/i) {
++    printf "weather_icon::fair.png\n";
+ }
+ else {
+     printf "weather_icon::unknown.png\n";
 @@ -178,7 +178,7 @@
              $datavalue =~ s/^.*?\((-?\d{1,2}).*/$1/;
          }
@@ -8078,6 +8195,93 @@ Index: mythplugins/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl
          }
          $datalabel = "temp";
      }
+Index: mythplugins/mythweather/mythweather/scripts/uk_bbc/bbcthreedayxml.pl
+===================================================================
+--- mythplugins/mythweather/mythweather/scripts/uk_bbc/bbcthreedayxml.pl	(revision 16468)
++++ mythplugins/mythweather/mythweather/scripts/uk_bbc/bbcthreedayxml.pl	(working copy)
+@@ -15,7 +15,7 @@
+ use lib dirname($0);
+ use BBCLocation;
+ 
+-our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d); 
++our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d);
+ 
+ my $name = 'BBC-3day-XML';
+ my $version = 0.1;
+@@ -97,7 +97,7 @@
+     die "Not xml";
+ }
+ 
+-printf "copyright::©BBC Weather\n";
++printf "copyright::From bbc.co.uk\n";
+ printf "station_id::" . $locid . "\n";
+ my $location = $xml->{channel}->{title};
+ $location =~ s/.*?Forecast for (.*)$/$1/s;
+Index: mythplugins/mythweather/mythweather/scripts/uk_bbc/BBCLocation.pm
+===================================================================
+--- mythplugins/mythweather/mythweather/scripts/uk_bbc/BBCLocation.pm	(revision 16468)
++++ mythplugins/mythweather/mythweather/scripts/uk_bbc/BBCLocation.pm	(working copy)
+@@ -21,20 +21,18 @@
+     my $isredirect = 0;
+     my $isworld = 0;
+ 
++    my $havename = 0;
++    my $haveid = 0;
++
+     my $resultline = "";
+ 
+     foreach (split("\n", $response)) {
+-        if (/<title>/) {
+-            if (/Search Results\<\/title\>/) {
+-                $isresults = 1;
+-            }
+-            elsif (/5 Day Forecast in Celsius for/) {
+-                $isredirect = 1;
+-                my $locname = $_;
+-                $locname =~ s/.*?Celsius for (.*?)<\/title>.*/$1/;
+-                $resultline = "::" . $locname;
+-            }
++        if (/<title>.*?Search Results.*?<\/title>/) {
++            $isresults = 1;
+         }
++        else {
++            $isredirect = 1;
++        }
+ 
+         my $locname;
+         my $locid;
+@@ -83,18 +81,24 @@
+ 
+         }
+         elsif ($isredirect) {
+-            if (s/.*?<link.*?rss\/5day\/id\/(\d{4})\.xml.*/$1/) {
+-                $resultline = "L" . $_ . $resultline;
+-                push (@searchresults, $resultline);
+-                last;
++            if (/name : \"/) {
++                my $locname = $_;
++                $locname =~ s/^.*name : \"(.*?)\".*$/$1/;
++                $resultline = $resultline . "::" . $locname . ", United Kingdom";
++                $havename = 1;
+             }
+-            if (s/.*?<link.*?rss\/5day\/world\/(\d{4})\.xml.*/$1/) {
++            if (/rssloc :/) {
++                my $id = 0;
++                $id = s/.*rssloc : (\d{4}),.*/$1/;
+                 $resultline = "W" . $_ . $resultline;
+-                push (@searchresults, $resultline);
+-                last;
++                $haveid = 1;
+             }
+         }
+ 
++        if ($havename && $haveid) {
++            push (@searchresults, $resultline);
++            last;
++        }
+     }
+ 
+     return @searchresults;
 Index: mythplugins/mythweather/mythweather/scripts/ca_envcan/ENVCANParser.pm
 ===================================================================
 --- mythplugins/mythweather/mythweather/scripts/ca_envcan/ENVCANParser.pm	(revision 16468)
@@ -10275,6 +10479,21 @@ Index: mythplugins/mythflix/mythflix/netflix-ui.xml
            <position>0,0</position>
          </image>
          
+Index: mythplugins/mythflix/mythflix/images/mythflix_background.png
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+
+Property changes on: mythplugins/mythflix/mythflix/images/mythflix_background.png
+___________________________________________________________________
+Added: svn:mime-type
+   + application/octet-stream
+Added: svn:mergeinfo
+
+Index: mythplugins/mythflix/mythflix/images/news-info-bg.png
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
 Index: mythplugins/mythcontrols/i18n/mythcontrols_nl.ts
 ===================================================================
 --- mythplugins/mythcontrols/i18n/mythcontrols_nl.ts	(revision 16468)
@@ -15196,6 +15415,15 @@ Index: mythplugins/mythnews/mythnews/news-sites.xml
  </category>
  
  <category name="MythTV">
+@@ -840,7 +830,7 @@
+ 
+     <item>
+         <title>MythTV - Wiki Recent Changes</title>
+-        <url>http://www.mythtv.org/wiki/index.php?title=Special:Recentchanges&amp;feed=rss</url>
++        <url>http://www.mythtv.org/wiki?title=Special:RecentChanges&amp;feed=rss</url>
+     </item>
+   
+ </category>
 @@ -986,6 +976,11 @@
      </item>
  

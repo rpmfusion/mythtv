@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r19505
+%define _svnver r20373
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 17%{?dist}
+Release: 18%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -144,7 +144,6 @@ Requires: perl-MythTV, python-MythTV
 Requires: mysql-server, mysql
 # Not yet packaged for rpmfusion
 #Requires: xmltv
-Requires: wget >= 1.9.1
 # faad2-devel.ppc64 no available, so:
 ExcludeArch: ppc64
 
@@ -257,6 +256,7 @@ Requires: lame
 Requires: mythtv-common = %{version}-%{release}
 # libraw1394 2.0.0-5 for f10+ and 1.3.0-11 for f9 contain a critical fix
 Requires: libraw1394 >= 2.0.0-5
+Requires: wget
 Conflicts: xmltv-grabbers < 0.5.37
 
 %description backend
@@ -274,6 +274,7 @@ Group: Applications/Multimedia
 Requires: freetype
 Requires: mythtv-backend = %{version}-%{release}
 Requires: mythtv-base-themes = %{version}
+Requires: wget
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -1025,6 +1026,10 @@ fi
 %endif
 
 %changelog
+* Mon Apr 13 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-18
+- Update release-0-21-fixes patches (r20373)
+- Slide Requires: wget into more appropriate places (rfbz#384)
+
 * Thu Jan 22 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-17
 - Update release-0-21-fixes patches (r19788)
 - Add Require: perl-XML-SAX to mythweather (rpmfusion bz#337)

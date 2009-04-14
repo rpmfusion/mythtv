@@ -12000,7 +12000,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      <message>
          <source>MythTV wants to record &quot;%1&quot; on %2 in %d seconds. Do you want to:</source>
 -        <translation type="unfinished"></translation>
-+        <translation>MythTV wird &quot;%1&quot; auf %2 in %d Sekunden aufnehmen. Was m�chten Sie tun?</translation>
++        <translation>MythTV wird &quot;%1&quot; auf %2 in %d Sekunden aufnehmen. Was möchten Sie tun?</translation>
      </message>
      <message>
          <source>Let them record and go back to the Main Menu</source>
@@ -12174,7 +12174,7 @@ Index: mythtv/i18n/mythfrontend_de.ts
      <message>
          <source>Start Frontend</source>
 -        <translation>Frontend starten</translation>
-+        <translation>Hauptmen� anzeigen</translation>
++        <translation>Hauptmenü anzeigen</translation>
      </message>
      <message>
          <source>Cannot connect to server!</source>
@@ -25447,6 +25447,10 @@ Index: mythtv/themes/default-wide/netflix-ui.xml
          <position>0,0</position>
        </image>
  
+Index: mythtv/docs/warning.png
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = image/png
 Index: mythtv/docs/doxygen-architecture-document.cpp
 ===================================================================
 --- mythtv/docs/doxygen-architecture-document.cpp	(revision 16468)
@@ -27125,6 +27129,10 @@ Index: mythtv/docs/mythtv-HOWTO.pdf
 ===================================================================
 Cannot display: file marked as a binary type.
 svn:mime-type = application/octet-stream
+Index: mythtv/docs/stop.png
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = image/png
 Index: mythtv/docs/index.html
 ===================================================================
 --- mythtv/docs/index.html	(revision 16468)
@@ -27175,7 +27183,7 @@ Index: mythtv/docs/mythtv-HOWTO-22.html
 Index: mythtv/libs/libs-targetfix.pro
 ===================================================================
 --- mythtv/libs/libs-targetfix.pro	(revision 0)
-+++ mythtv/libs/libs-targetfix.pro	(revision 19788)
++++ mythtv/libs/libs-targetfix.pro	(revision 20373)
 @@ -0,0 +1,20 @@
 +# Common project modifications to change the generated target.
 +
@@ -28531,6 +28539,19 @@ Index: mythtv/libs/libmythtv/libmythtv.pro
 +}
 +
 +include ( ../libs-targetfix.pro )
+Index: mythtv/libs/libmythtv/ThreadedFileWriter.cpp
+===================================================================
+--- mythtv/libs/libmythtv/ThreadedFileWriter.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/ThreadedFileWriter.cpp	(working copy)
+@@ -407,7 +407,7 @@
+             ignore_writes = true;
+         }
+ 
+-        if (written < tfw_min_write_size)
++        if (written <= tfw_min_write_size)
+         {
+             written += size;
+         }
 Index: mythtv/libs/libmythtv/scanwizardhelpers.h
 ===================================================================
 --- mythtv/libs/libmythtv/scanwizardhelpers.h	(revision 16468)
@@ -28640,6 +28661,52 @@ Index: mythtv/libs/libmythtv/diseqc.h
  };
  
  class DiSEqCDevRotor : public DiSEqCDevDevice
+Index: mythtv/libs/libmythtv/hdhrrecorder.h
+===================================================================
+--- mythtv/libs/libmythtv/hdhrrecorder.h	(revision 16468)
++++ mythtv/libs/libmythtv/hdhrrecorder.h	(working copy)
+@@ -1,6 +1,6 @@
+ /** -*- Mode: c++ -*-
+  *  HDHRRecorder
+- *  Copyright (c) 2006 by Silicondust Engineering Ltd.
++ *  Copyright (c) 2006-2009 by Silicondust Engineering Ltd.
+  *  Distributed as part of MythTV under GPL v2 and later.
+  */
+ 
+@@ -18,11 +18,11 @@
+ typedef vector<uint>        uint_vec_t;
+ 
+ class HDHRRecorder : public DTVRecorder,
++                     public DVBMainStreamListener,
++                     public ATSCMainStreamListener,
+                      public MPEGStreamListener,
+                      public MPEGSingleProgramStreamListener
+ {
+-    friend class ATSCStreamData;
+-
+   public:
+     HDHRRecorder(TVRec *rec, HDHRChannel *channel);
+     ~HDHRRecorder();
+@@ -52,13 +52,16 @@
+     void HandleSingleProgramPAT(ProgramAssociationTable *pat);
+     void HandleSingleProgramPMT(ProgramMapTable *pmt);
+ 
+-    /*
+     // ATSC
+     void HandleSTT(const SystemTimeTable*) {}
+-    void HandleMGT(const MasterGuideTable *mgt);
++    void HandleMGT(const MasterGuideTable *) {};
+     void HandleVCT(uint, const VirtualChannelTable*) {}
+-    */
+ 
++    // DVB
++    void HandleTDT(const TimeDateTable*) {}
++    void HandleNIT(const NetworkInformationTable*) {}
++    void HandleSDT(uint /*tsid*/, const ServiceDescriptionTable*) {}
++
+   private:
+     bool AdjustFilters(void);
+     bool AdjustEITPIDs(void);
 Index: mythtv/libs/libmythtv/dbcheck.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/dbcheck.cpp	(revision 16468)
@@ -28685,7 +28752,37 @@ Index: mythtv/libs/libmythtv/hdhrrecorder.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/hdhrrecorder.cpp	(revision 16468)
 +++ mythtv/libs/libmythtv/hdhrrecorder.cpp	(working copy)
-@@ -250,9 +250,13 @@
+@@ -1,6 +1,6 @@
+ /** -*- Mode: c++ -*-
+  *  HDHRRecorder
+- *  Copyright (c) 2006 by Silicondust Engineering Ltd, and
++ *  Copyright (c) 2006-2009 by Silicondust Engineering Ltd, and
+  *    Daniel Thor Kristjansson
+  *  Distributed as part of MythTV under GPL v2 and later.
+  */
+@@ -27,6 +27,7 @@
+ #include "hdhrrecorder.h"
+ #include "atsctables.h"
+ #include "atscstreamdata.h"
++#include "dvbstreamdata.h"
+ #include "eithelper.h"
+ #include "tv_rec.h"
+ 
+@@ -176,10 +177,13 @@
+         data->AddMPEGListener(this);
+ 
+         ATSCStreamData *atsc = dynamic_cast<ATSCStreamData*>(data);
++        DVBStreamData  *dvb  = dynamic_cast<DVBStreamData*>(data);
+ 
+         if (atsc && atsc->DesiredMinorChannel())
+             atsc->SetDesiredChannel(atsc->DesiredMajorChannel(),
+                                     atsc->DesiredMinorChannel());
++        else if (dvb)
++            dvb->AddDVBMainListener(this);
+         else if (data->DesiredProgram() >= 0)
+             data->SetDesiredProgram(data->DesiredProgram());
+     }
+@@ -250,9 +254,13 @@
      if (!pmt)
          return;
  
@@ -28759,6 +28856,66 @@ Index: mythtv/libs/libmythtv/eithelper.cpp
          EITFixUp::kEFixForceISO8859_15;
  }
  
+Index: mythtv/libs/libmythtv/hdhrchannel.cpp
+===================================================================
+--- mythtv/libs/libmythtv/hdhrchannel.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/hdhrchannel.cpp	(working copy)
+@@ -1,6 +1,6 @@
+ /**
+- *  DBox2Channel
+- *  Copyright (c) 2006 by Silicondust Engineering Ltd.
++ *  HDHRChannel
++ *  Copyright (c) 2006-2009 by Silicondust Engineering Ltd.
+  *  Distributed as part of MythTV under GPL v2 and later.
+  */
+ 
+@@ -24,7 +24,6 @@
+ #include "hdhrchannel.h"
+ #include "videosource.h"
+ #include "channelutil.h"
+-#include "frequencytables.h"
+ 
+ #define DEBUG_PID_FILTERS
+ 
+@@ -391,22 +390,27 @@
+ bool HDHRChannel::Tune(uint frequency, QString /*input*/,
+                        QString modulation, QString si_std)
+ {
+-    bool ok = false;
++    // Convert dtv_multiplex.modulation strings to something the HDHR can use:
++    modulation.replace("qam_", "qam");  // e.g. qam_256 -> qam256
++#if 0
++    if (modulation == "qamauto")
++        modulation = "qam";             // "auto" works just as well?
++#endif
+ 
+-    VERBOSE(VB_CHANNEL, LOC +
+-            QString("TuneTo(%1,%2)").arg(frequency).arg(modulation));
++    if (modulation.isEmpty())
++        modulation = "auto";
+ 
+-    if (modulation == "8vsb")
+-        ok = TunerSet("channel", QString("8vsb:%1").arg(frequency));
+-    else if (modulation == "qam_64")
+-        ok = TunerSet("channel", QString("qam64:%1").arg(frequency));
+-    else if (modulation == "qam_256")
+-        ok = TunerSet("channel", QString("qam256:%1").arg(frequency));
++    QString chan = modulation + ':' + QString::number(frequency);
+ 
+-    if (ok)
++    VERBOSE(VB_CHANNEL, LOC + "Tune()ing to " + chan);
++
++    if (TunerSet("channel", chan).length())
++    {
+         SetSIStandard(si_std);
++        return true;
++    }
+ 
+-    return ok;
++    return false;
+ }
+ 
+ bool HDHRChannel::AddPID(uint pid, bool do_update)
 Index: mythtv/libs/libmythtv/siscan.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/siscan.cpp	(revision 16468)
@@ -28929,7 +29086,7 @@ Index: mythtv/libs/libmythtv/channelutil.cpp
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 19788)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 20373)
 @@ -0,0 +1,12 @@
 +#ifndef _FREESAT_HUFFMAN_H_
 +#define _FREESAT_HUFFMAN_H_
@@ -28952,7 +29109,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_tables.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 19788)
++++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 20373)
 @@ -0,0 +1,4370 @@
 +struct fsattab fsat_table[] = {
 +    { 0x00000000,  2, 'T'},
@@ -33333,7 +33490,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 19788)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 20373)
 @@ -0,0 +1,107 @@
 +#include "freesat_huffman.h"
 +
@@ -33967,6 +34124,28 @@ Index: mythtv/libs/libmythtv/DVDRingBuffer.h
  
      int get_nibble(const uint8_t *buf, int nibble_offset);
      int decode_rle(uint8_t *bitmap, int linesize, int w, int h,
+Index: mythtv/libs/libmythtv/dvbtypes.h
+===================================================================
+--- mythtv/libs/libmythtv/dvbtypes.h	(revision 16468)
++++ mythtv/libs/libmythtv/dvbtypes.h	(working copy)
+@@ -19,7 +19,7 @@
+ #include <linux/dvb/frontend.h>
+ #include <linux/dvb/dmx.h>
+ 
+-#if (DVB_API_VERSION != 3)
++#if (DVB_API_VERSION != 3 && DVB_API_VERSION != 5)
+ #    error "DVB driver includes with API version 3 not found!"
+ #endif
+ 
+@@ -27,7 +27,7 @@
+ #    define DVB_API_VERSION_MINOR 0
+ #endif
+ 
+-#if (DVB_API_VERSION >= 3 && DVB_API_VERSION_MINOR >= 1)
++#if ((DVB_API_VERSION == 3 && DVB_API_VERSION_MINOR >= 1) || (DVB_API_VERSION > 3))
+ #    define USE_ATSC
+ #else
+ #warning DVB API version < 3.1
 Index: mythtv/libs/libmythtv/inputinfo.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/inputinfo.cpp	(revision 16468)
@@ -34009,6 +34188,39 @@ Index: mythtv/libs/libmythtv/tv_play.cpp
              QMutexLocker locker(&pbinfoLock);
              ScheduledRecording *record = new ScheduledRecording();
              record->loadByProgram(playbackinfo);
+@@ -6291,12 +6295,13 @@
+                 message = message.simplifyWhiteSpace();
+                 QStringList tokens = QStringList::split(" ", message);
+                 int cardnum = tokens[1].toInt();
+-                int filelen = tokens[2].toInt();
++                //int seconds = tokens[2].toInt();
++                long long frames = tokens[3].toLongLong();
+ 
+                 if (recorder && cardnum == recorder->GetRecorderNumber())
+                 {
+                     nvp->SetWatchingRecording(false);
+-                    nvp->SetLength(filelen);
++                    nvp->SetLength(frames / nvp->GetFrameRate());
+                     ChangeState(kState_WatchingPreRecorded);
+                 }
+             }
+@@ -6305,13 +6310,14 @@
+                 message = message.simplifyWhiteSpace();
+                 QStringList tokens = QStringList::split(" ", message);
+                 int cardnum = tokens[1].toInt();
+-                int filelen = tokens[2].toInt();
++                //int seconds = tokens[2].toInt();
++                long long frames = tokens[3].toLongLong();
+ 
+                 if (recorder && cardnum == recorder->GetRecorderNumber() &&
+                     tvchain && tvchain->HasNext())
+                 {
+                     nvp->SetWatchingRecording(false);
+-                    nvp->SetLength(filelen);
++                    nvp->SetLength(frames / nvp->GetFrameRate());
+                 }
+             }
+         }
 Index: mythtv/libs/libmythtv/mhi.h
 ===================================================================
 --- mythtv/libs/libmythtv/mhi.h	(revision 16468)
@@ -34189,7 +34401,30 @@ Index: mythtv/libs/libmythtv/tv_rec.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/tv_rec.cpp	(revision 16468)
 +++ mythtv/libs/libmythtv/tv_rec.cpp	(working copy)
-@@ -3668,7 +3668,7 @@
+@@ -1072,18 +1072,15 @@
+  */
+ void TVRec::TeardownRecorder(bool killFile)
+ {
+-    int filelen = -1;
+     pauseNotify = false;
+     ispip = false;
+ 
+     if (recorder && HasFlags(kFlagRecorderRunning))
+     {
+-        // This is a bad way to calculate this, the framerate
+-        // may not be constant if using a DTV based recorder.
+-        filelen = (int)((float)GetFramesWritten() / GetFramerate());
+-
+-        QString message = QString("DONE_RECORDING %1 %2")
+-            .arg(cardid).arg(filelen);
++        int secsSince = curRecording->recstartts
++            .secsTo(QDateTime::currentDateTime());
++        QString message = QString("DONE_RECORDING %1 %2 %3")
++            .arg(cardid).arg(secsSince).arg(GetFramesWritten());
+         MythEvent me(message);
+         gContext->dispatch(me);
+ 
+@@ -3668,7 +3665,7 @@
  
      if (!ok)
      {
@@ -34198,6 +34433,54 @@ Index: mythtv/libs/libmythtv/tv_rec.cpp
          {
              if (curRecording)
                  curRecording->recstatus = rsFailed;
+Index: mythtv/libs/libmythtv/programinfo.cpp
+===================================================================
+--- mythtv/libs/libmythtv/programinfo.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/programinfo.cpp	(working copy)
+@@ -1530,7 +1530,9 @@
+         if (!query.exec() || !query.isActive())
+             MythContext::DBError("GetRecordBasename", query);
+         else if (query.size() < 1)
+-            VERBOSE(VB_IMPORTANT, QString("GetRecordBasename found no entry"));
++            VERBOSE(VB_IMPORTANT, QString("GetRecordBasename found no entry "
++                    "for %1 @ %2")
++                    .arg(chanid).arg(recstartts.toString(Qt::ISODate)));
+         else
+         {
+             query.next();
+@@ -1551,6 +1553,9 @@
+     QString tmpURL;
+     QString basename = GetRecordBasename(true);
+ 
++    if (basename == "")
++        return "";
++
+     bool alwaysStream = gContext->GetNumSetting("AlwaysStreamFiles", 0);
+ 
+     if ((!alwaysStream) ||
+@@ -1569,8 +1574,9 @@
+         }
+         else if (hostname == gContext->GetHostName())
+         {
+-            VERBOSE(VB_FILE, LOC_ERR + QString("GetPlaybackURL: '%1' should be "
+-                    "local, but it can not be found.").arg(basename));
++            VERBOSE(VB_IMPORTANT, LOC_ERR +
++                    QString("GetPlaybackURL: '%1' should be local, but it can "
++                            "not be found.").arg(basename));
+             return QString("/GetPlaybackURL/UNABLE/TO/FIND/LOCAL/FILE/ON/%1/%2")
+                            .arg(hostname).arg(basename);
+         }
+@@ -4165,9 +4171,8 @@
+     {
+         recDir = "";
+     }
+-    else if (RemoteCheckFile(this))
++    else if (!gContext->IsBackend() && RemoteCheckFile(this))
+     {
+-        // if we hit here we're not recording this file
+         recDir = pathname.section("/", 0, -2);
+     }
+ 
 Index: mythtv/libs/libmythtv/recordingprofile.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/recordingprofile.cpp	(revision 16468)
@@ -34348,7 +34631,69 @@ Index: mythtv/libs/libmythtv/scanwizardhelpers.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/scanwizardhelpers.cpp	(revision 16468)
 +++ mythtv/libs/libmythtv/scanwizardhelpers.cpp	(working copy)
-@@ -439,6 +439,10 @@
+@@ -367,6 +367,8 @@
+     int nCardType   = CardUtil::toCardType(subtype);
+     clearSelections();
+ 
++    bool importConf = false;
++
+     switch (nCardType)
+     {
+     case CardUtil::V4L:
+@@ -379,28 +381,32 @@
+                      QString::number(FullScan_OFDM), true);
+         addSelection(tr("Full Scan (Tuned)"),
+                      QString::number(NITAddScan_OFDM));
+-        addSelection(tr("Import channels.conf"),
+-                     QString::number(DVBUtilsImport));
++        importConf = true;
+         break;
+     case CardUtil::QPSK:
+         addSelection(tr("Full Scan (Tuned)"),
+                      QString::number(NITAddScan_QPSK));
+-        addSelection(tr("Import channels.conf"),
+-                     QString::number(DVBUtilsImport));
++        importConf = true;
+         break;
+     case CardUtil::QAM:
+         addSelection(tr("Full Scan (Tuned)"),
+                      QString::number(NITAddScan_QAM));
+-        addSelection(tr("Import channels.conf"),
+-                     QString::number(DVBUtilsImport));
++        importConf = true;
+         break;
+     case CardUtil::ATSC:
+-    case CardUtil::HDHOMERUN:
+         addSelection(tr("Full Scan"),
+                      QString::number(FullScan_ATSC), true);
+-        addSelection(tr("Import channels.conf"),
+-                     QString::number(DVBUtilsImport));
++        importConf = true;
+         break;
++    case CardUtil::HDHOMERUN:
++        addSelection(tr("Full Scan (ATSC)"),
++                     QString::number(FullScan_ATSC), true);
++        addSelection(tr("Full Scan (DVB)"),
++                     QString::number(FullScan_OFDM), true);
++        addSelection(tr("Full Scan (DVB, tuned)"),
++                     QString::number(NITAddScan_OFDM));
++        importConf = true;
++        break;
+     case CardUtil::FREEBOX:
+         addSelection(tr("M3U Import"),
+                      QString::number(IPTVImport), true);
+@@ -415,6 +421,10 @@
+         return;
+     }
+ 
++    if (importConf)
++        addSelection(tr("Import channels.conf"),
++                     QString::number(DVBUtilsImport));
++
+     addSelection(tr("Full Scan of Existing Transports"),
+                  QString::number(FullTransportScan));
+     addSelection(tr("Existing Transport Scan"),
+@@ -439,6 +449,10 @@
          country = UK;
      else if (qtcountry == QLocale::Spain)
          country = ES;
@@ -34359,7 +34704,7 @@ Index: mythtv/libs/libmythtv/scanwizardhelpers.cpp
  #endif
  
      setLabel(tr("Country"));
-@@ -448,6 +452,8 @@
+@@ -448,6 +462,8 @@
      addSelection(QObject::tr("United Kingdom"), "uk", country == UK);
      addSelection(QObject::tr("Germany"),        "de", country == DE);
      addSelection(QObject::tr("Spain"),          "es", country == ES);
@@ -34368,6 +34713,19 @@ Index: mythtv/libs/libmythtv/scanwizardhelpers.cpp
  }
  
  AnalogPane::AnalogPane() :
+Index: mythtv/libs/libmythtv/progfind.cpp
+===================================================================
+--- mythtv/libs/libmythtv/progfind.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/progfind.cpp	(working copy)
+@@ -1425,6 +1425,8 @@
+ {
+     if (data.right(5) == ", The")
+         data = "The " + data.left(data.length() - 5);
++    if (data.right(4) == ", An")
++        data = "An " + data.left(data.length() - 4);
+     if (data.right(3) == ", A")
+         data = "A " + data.left(data.length() - 3);
+ }
 Index: mythtv/libs/libmythtv/diseqc.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/diseqc.cpp	(revision 16468)
@@ -35021,7 +35379,7 @@ Index: mythtv/libs/libavutil/common.h
 Index: mythtv/libs/libavcodec/rectangle.h
 ===================================================================
 --- mythtv/libs/libavcodec/rectangle.h	(revision 0)
-+++ mythtv/libs/libavcodec/rectangle.h	(revision 19788)
++++ mythtv/libs/libavcodec/rectangle.h	(revision 20373)
 @@ -0,0 +1,121 @@
 +/*
 + * rectangle filling function
@@ -35246,7 +35604,7 @@ Index: mythtv/libs/libavcodec/h264pred.h
 Index: mythtv/libs/libavcodec/i386/h264_i386.h
 ===================================================================
 --- mythtv/libs/libavcodec/i386/h264_i386.h	(revision 0)
-+++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 19788)
++++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 20373)
 @@ -0,0 +1,144 @@
 +/*
 + * H.26L/H.264/AVC/JVT/14496-10/... encoder/decoder
@@ -40077,7 +40435,7 @@ Index: mythtv/libs/libmyth/mythcdrom.cpp
  void MythCDROM::onDeviceMounted()
  {
      if (!QDir(m_MountPath).exists())
-@@ -119,7 +105,14 @@
+@@ -119,7 +105,19 @@
      if (MEDIATYPE_DATA == m_MediaType)
          MythMediaDevice::onDeviceMounted();
  
@@ -40092,6 +40450,11 @@ Index: mythtv/libs/libmyth/mythcdrom.cpp
 +    }
  }
  
++void MythCDROM::setSpeed(const char *devicePath, int speed)
++{
++    VERBOSE(VB_MEDIA, QString("SetSpeed(%1,%2) - not implemented on this OS.")
++                      .arg(devicePath).arg(speed));
++}
 Index: mythtv/libs/libmyth/lcddevice.cpp
 ===================================================================
 --- mythtv/libs/libmyth/lcddevice.cpp	(revision 16468)
@@ -40197,7 +40560,7 @@ Index: mythtv/libs/libmyth/mythcdrom.h
 ===================================================================
 --- mythtv/libs/libmyth/mythcdrom.h	(revision 16468)
 +++ mythtv/libs/libmyth/mythcdrom.h	(working copy)
-@@ -14,7 +14,6 @@
+@@ -14,11 +14,11 @@
  
      virtual bool mediaChanged(void) { return false; }
      virtual bool checkOK(void)      { return true; }
@@ -40205,6 +40568,11 @@ Index: mythtv/libs/libmyth/mythcdrom.h
      virtual MediaStatus checkMedia(void)
      {
          return setStatus(MEDIASTAT_UNKNOWN, false);
+     }
++    virtual void setSpeed(const char *devicePath, int speed);
+ 
+     static MythCDROM* get(QObject* par, const char* devicePath,
+                                   bool SuperMount, bool AllowEject);
 Index: mythtv/libs/libmyth/util.cpp
 ===================================================================
 --- mythtv/libs/libmyth/util.cpp	(revision 16468)
@@ -40773,7 +41141,23 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
  #endif
  
      if (QDir::homeDirPath() == "/" && ! getenv("MYTHCONFDIR"))
-@@ -1610,12 +1624,12 @@
+@@ -1570,6 +1584,15 @@
+ 
+ bool MythContext::ConnectToMasterServer(bool blockingClient)
+ {
++    if (gContext->IsMasterBackend())
++    {
++        // Should never get here unless there is a bug in the code somewhere.
++        // If this happens, it can cause endless event loops.
++        VERBOSE(VB_IMPORTANT, "ERROR: Master backend tried to connect back "
++                "to itself!");
++        return false;
++    }
++
+     QString server = gContext->GetSetting("MasterServerIP", "localhost");
+     int port = gContext->GetNumSetting("MasterServerPort", 6543);
+ 
+@@ -1610,12 +1633,12 @@
          {
              serverSock->DownRef();
              serverSock = NULL;
@@ -40788,7 +41172,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
              if (sleepTime <= 0)
              {
                  VERBOSE(
-@@ -1631,7 +1645,7 @@
+@@ -1631,7 +1654,7 @@
                          manageLock = true;
                          d->serverSockLock.unlock();
                      }
@@ -40797,7 +41181,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                                                "connection failure",
                                                tr("Could not connect to the "
                                                   "master backend server -- is "
-@@ -1687,14 +1701,14 @@
+@@ -1687,14 +1710,14 @@
          serverSock->writeStringList(strlist);
          serverSock->readStringList(strlist, true);
  
@@ -40814,7 +41198,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
              QString str = QString("ANN Monitor %1 %2")
                                   .arg(d->m_localhostname).arg(true);
              QStringList strlist = str;
-@@ -1718,7 +1732,7 @@
+@@ -1718,7 +1741,7 @@
  
      if (d->serverSock == NULL)
          return;
@@ -40823,7 +41207,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      strlist << "BLOCK_SHUTDOWN";
      d->serverSock->writeStringList(strlist);
      d->serverSock->readStringList(strlist);
-@@ -1730,7 +1744,7 @@
+@@ -1730,7 +1753,7 @@
      strlist << "BLOCK_SHUTDOWN";
  
      d->eventSock->Lock();
@@ -40832,7 +41216,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      d->eventSock->writeStringList(strlist);
      d->eventSock->readStringList(strlist);
  
-@@ -1740,14 +1754,14 @@
+@@ -1740,14 +1763,14 @@
  void MythContext::AllowShutdown(void)
  {
      QStringList strlist;
@@ -40851,7 +41235,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      if (d->eventSock == NULL || d->eventSock->state() != MythSocket::Connected)
          return;
  
-@@ -1755,7 +1769,7 @@
+@@ -1755,7 +1778,7 @@
      strlist << "ALLOW_SHUTDOWN";
  
      d->eventSock->Lock();
@@ -40860,7 +41244,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      d->eventSock->writeStringList(strlist);
      d->eventSock->readStringList(strlist);
  
-@@ -1810,7 +1824,7 @@
+@@ -1810,7 +1833,7 @@
  
      if (QString(strlist[0]) == "FALSE")
          backendOnLocalhost = false;
@@ -40869,7 +41253,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
          backendOnLocalhost = true;
  
      return !backendOnLocalhost;
-@@ -1826,7 +1840,7 @@
+@@ -1826,7 +1849,7 @@
          ConnectToMasterServer();
          d->serverSockLock.unlock();
      }
@@ -40878,7 +41262,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      if (d->serverSock)
          ret = QString("myth://%1:%2/")
                       .arg(d->serverSock->peerAddress().toString())
-@@ -1884,9 +1898,9 @@
+@@ -1884,9 +1907,9 @@
      return GetSetting("RecordFilePrefix");
  }
  
@@ -40891,7 +41275,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
  }
  
  QString MythContext::GetConfDir(void)
-@@ -1906,70 +1920,70 @@
+@@ -1906,70 +1929,70 @@
      return dir;
  }
  
@@ -41000,7 +41384,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
  }
  
  
-@@ -2002,7 +2016,7 @@
+@@ -2002,7 +2025,7 @@
      if (style != "")
          qApp->setStyle(style);
  
@@ -41009,7 +41393,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      QString themedir = FindThemeDir(themename);
  
      ThemeInfo *themeinfo = new ThemeInfo(themedir);
-@@ -2022,12 +2036,12 @@
+@@ -2022,12 +2045,12 @@
  
      if (themeinfo)
          delete themeinfo;
@@ -41025,7 +41409,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      themedir += "/qtlook.txt";
      d->m_qtThemeSettings->ReadSettings(themedir);
      d->m_themeloaded = false;
-@@ -2061,8 +2075,8 @@
+@@ -2061,8 +2084,8 @@
  {
      QString cachedirname = MythContext::GetConfDir() + "/themecache/";
  
@@ -41036,7 +41420,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                         QString::number(d->m_screenheight);
  
      QDir dir(cachedirname);
-@@ -2158,7 +2172,7 @@
+@@ -2158,7 +2181,7 @@
  
      dir.rmdir(dirname);
  }
@@ -41045,7 +41429,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
  void MythContext::CacheThemeImages(void)
  {
      if (d->m_screenwidth == d->m_baseWidth &&
-@@ -2175,7 +2189,7 @@
+@@ -2175,7 +2198,7 @@
                                              const QString &subdirname)
  {
      QDir dir(dirname);
@@ -41054,7 +41438,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      if (!dir.exists())
          return;
  
-@@ -2220,7 +2234,7 @@
+@@ -2220,7 +2243,7 @@
          else if (fi->isDir())
              continue;
  
@@ -41063,7 +41447,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
              fi->extension().lower() != "jpg" &&
              fi->extension().lower() != "gif" &&
              fi->extension().lower() != "jpeg")
-@@ -2245,7 +2259,7 @@
+@@ -2245,7 +2268,7 @@
                              QString("Failed to save cached image: %1")
                              .arg(d->themecachedir + filename));
                  }
@@ -41072,7 +41456,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                  delete tmpimage;
              }
          }
-@@ -2254,7 +2268,7 @@
+@@ -2254,7 +2277,7 @@
      if (caching)
      {
          caching->Close();
@@ -41081,7 +41465,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      }
  }
  
-@@ -2263,7 +2277,7 @@
+@@ -2263,7 +2286,7 @@
  {
      xbase  = d->m_xbase;
      ybase  = d->m_ybase;
@@ -41090,7 +41474,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      width  = d->m_width;
      height = d->m_height;
  }
-@@ -2274,7 +2288,7 @@
+@@ -2274,7 +2297,7 @@
      hmult = d->m_hmult;
  }
  
@@ -41099,7 +41483,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                                      int &height, float &hmult)
  {
      height = d->m_screenheight;
-@@ -2284,12 +2298,12 @@
+@@ -2284,12 +2307,12 @@
      hmult = d->m_hmult;
  }
  
@@ -41114,7 +41498,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      height = d->m_screenheight;
      width = d->m_screenwidth;
  
-@@ -2300,7 +2314,7 @@
+@@ -2300,7 +2323,7 @@
  void MythContext::GetResolutionSetting(const QString &type,
                                         int &width, int &height,
                                         double &forced_aspect,
@@ -41123,7 +41507,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                                         int index)
  {
      bool ok = false, ok0 = false, ok1 = false;
-@@ -2461,12 +2475,18 @@
+@@ -2461,12 +2484,18 @@
      QDir dir(testdir);
      if (dir.exists())
          return testdir;
@@ -41142,7 +41526,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      testdir = GetThemesParentDir() + "G.A.N.T";
      dir.setPath(testdir);
      if (dir.exists())
-@@ -2476,6 +2496,8 @@
+@@ -2476,6 +2505,8 @@
          SaveSetting("Theme", "G.A.N.T");
          return testdir;
      }
@@ -41151,7 +41535,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
  
      VERBOSE(VB_IMPORTANT, QString("Could not find theme: %1").arg(themename));
      return "";
-@@ -2556,7 +2578,7 @@
+@@ -2556,7 +2587,7 @@
      return &d->m_dbmanager;
  }
  
@@ -41160,7 +41544,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
  {
      QString str = QString("DB Error (%1):\n").arg(where);
  
-@@ -2710,14 +2732,15 @@
+@@ -2710,14 +2741,15 @@
      }
      else
      {
@@ -41178,7 +41562,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      if (!value.isNull() && d && d->useSettingsCache)
      {
          d->settingsCacheLock.lock();
-@@ -2796,7 +2819,7 @@
+@@ -2796,7 +2828,7 @@
      }
      else
      {
@@ -41187,7 +41571,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
               QString("Database not open while trying to load setting: %1")
                                  .arg(key));
      }
-@@ -2837,7 +2860,7 @@
+@@ -2837,7 +2869,7 @@
      QColorGroup disabled = pal.disabled();
      QColorGroup inactive = pal.inactive();
  
@@ -41196,7 +41580,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                                "Dark", "Mid", "Text", "BrightText", "ButtonText",
                                "Base", "Background", "Shadow", "Highlight",
                                "HighlightedText" };
-@@ -2893,7 +2916,7 @@
+@@ -2893,7 +2925,7 @@
      {
          QString pmapname = d->m_themepathname +
                             d->m_qtThemeSettings->GetSetting("BackgroundPixmap");
@@ -41205,7 +41589,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
          bgpixmap = LoadScalePixmap(pmapname);
          if (bgpixmap)
          {
-@@ -3061,7 +3084,7 @@
+@@ -3061,7 +3093,7 @@
      return ret;
  }
  
@@ -41214,7 +41598,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
  {
      if (filename.left(5) == "myth:")
          return NULL;
-@@ -3143,7 +3166,7 @@
+@@ -3143,7 +3175,7 @@
          QImage tmp2 = tmpimage.smoothScale((int)(tmpimage.width() * wmult),
                                             (int)(tmpimage.height() * hmult));
          ret->convertFromImage(tmp2);
@@ -41223,7 +41607,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      else
      {
          if (!ret->load(filename))
-@@ -3164,7 +3187,7 @@
+@@ -3164,7 +3196,7 @@
      QUrl qurl = url;
      if (qurl.host() == "")
          return NULL;
@@ -41232,7 +41616,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      if ((d->imageCache.contains(url)) && (reCache == false))
          return &(d->imageCache[url]);
  
-@@ -3184,7 +3207,7 @@
+@@ -3184,7 +3216,7 @@
              return &(d->imageCache[url]);
          }
      }
@@ -41241,7 +41625,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      return NULL;
  }
  
-@@ -3200,7 +3223,7 @@
+@@ -3200,7 +3232,7 @@
   * This allows defining settings for the session only, without touching the
   * settings in the data base.
   */
@@ -41250,7 +41634,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                                              const QString &value)
  {
      d->overriddenSettings[key] = value;
-@@ -3210,7 +3233,7 @@
+@@ -3210,7 +3242,7 @@
                                          bool quickTimeout, bool block)
  {
      d->serverSockLock.lock();
@@ -41259,7 +41643,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      if (!d->serverSock)
      {
          ConnectToMasterServer(false);
-@@ -3218,7 +3241,7 @@
+@@ -3218,7 +3250,7 @@
      }
  
      bool ok = false;
@@ -41268,7 +41652,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      if (d->serverSock)
      {
          d->serverSock->writeStringList(strlist);
-@@ -3277,10 +3300,10 @@
+@@ -3277,10 +3309,10 @@
                  d->serverSockLock.lock();
              qApp->unlock();
          }
@@ -41281,7 +41665,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      return ok;
  }
  
-@@ -3331,8 +3354,15 @@
+@@ -3331,8 +3363,15 @@
      socket->writeStringList(strlist);
      socket->readStringList(strlist, true);
  
@@ -41298,7 +41682,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
          VERBOSE(VB_GENERAL, QString("Protocol version mismatch (frontend=%1,"
                                      "backend=%2)\n")
                                      .arg(MYTH_PROTO_VERSION).arg(strlist[1]));
-@@ -3340,7 +3370,7 @@
+@@ -3340,7 +3379,7 @@
          if (d->m_height && d->m_width)
          {
              qApp->lock();
@@ -41307,7 +41691,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                                        "Connection failure",
                                        tr(QString("The server uses network "
                                                   "protocol version %1, "
-@@ -3483,7 +3513,7 @@
+@@ -3483,7 +3522,7 @@
  
  
      // No current DBSchemaVer? Empty database, so upgrade to create tables
@@ -41316,7 +41700,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
      {
          VERBOSE(VB_GENERAL, "No current database version. Auto upgrading");
          return MYTH_SCHEMA_UPGRADE;
-@@ -3690,7 +3720,7 @@
+@@ -3690,7 +3729,7 @@
      return MYTH_SCHEMA_UPGRADE;
  }
  
@@ -41325,7 +41709,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                                     const QString &libversion,
                                     const QString &pluginversion)
  {
-@@ -3704,7 +3734,7 @@
+@@ -3704,7 +3743,7 @@
                    "make distclean.";
  
      if (GetMainWindow() && !d->disablelibrarypopup)
@@ -41334,7 +41718,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
          DialogBox *dlg = new DialogBox(gContext->GetMainWindow(), err);
          dlg->AddButton("OK");
          dlg->exec();
-@@ -3808,7 +3838,7 @@
+@@ -3808,7 +3847,7 @@
              {
                  if (0 < d->lastLogCounts[module])
                  {
@@ -41343,7 +41727,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                               QString("Last message repeated %1 times")
                                      .arg(d->lastLogCounts[module]),
                               d->lastLogStrings[module]);
-@@ -3838,7 +3868,7 @@
+@@ -3838,7 +3877,7 @@
          if (d->m_logmaxcount > 0)
          {
              query.prepare("SELECT logid FROM mythlog WHERE "
@@ -41352,7 +41736,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
              query.bindValue(":MODULE", module);
              if (!query.exec() || !query.isActive())
              {
-@@ -3848,7 +3878,7 @@
+@@ -3848,7 +3887,7 @@
              {
                  howmany = query.size();
                  if (howmany > d->m_logmaxcount)
@@ -41361,7 +41745,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                      MSqlQuery delquery(MSqlQuery::InitCon());
                      while (howmany > d->m_logmaxcount)
                      {
-@@ -3857,7 +3887,7 @@
+@@ -3857,7 +3896,7 @@
                          delquery.prepare("DELETE FROM mythlog WHERE "
                                           "logid= :LOGID ;");
                          delquery.bindValue(":LOGID", logid);
@@ -41370,7 +41754,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                          if (!delquery.exec() || !delquery.isActive())
                          {
                              MythContext::DBError("DelLogEntry#2", delquery);
-@@ -3911,22 +3941,22 @@
+@@ -3911,22 +3950,22 @@
  {
      bool ret = true;
      DatabaseParams cur_params = GetDatabaseParams();
@@ -41408,6 +41792,33 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
            params.wolCommand    != cur_params.wolCommand)))
      {
          ret = d->WriteSettingsFile(params, true);
+Index: mythtv/libs/libmyth/mythmedia.cpp
+===================================================================
+--- mythtv/libs/libmyth/mythmedia.cpp	(revision 16468)
++++ mythtv/libs/libmyth/mythmedia.cpp	(working copy)
+@@ -288,13 +288,20 @@
+ 
+ bool MythMediaDevice::isSameDevice(const QString &path)
+ {
++#ifdef Q_OS_MAC
++    // The caller may be using a raw device instead of the BSD 'leaf' name
++    if (path == "/dev/r" + m_DevicePath)
++        return true;
++#endif
++
+     return (path == m_DevicePath);
+ }
+ 
+ void MythMediaDevice::setSpeed(int speed)
+ {
+-    (void)speed;
+-    return;
++    VERBOSE(VB_MEDIA,
++            QString("Cannot setSpeed(%1) for device %2 - not implemented.")
++            .arg(speed).arg(m_DevicePath));
+ }
+ 
+ MediaError MythMediaDevice::lock() 
 Index: mythtv/libs/libmyth/screensaver-x11.cpp
 ===================================================================
 --- mythtv/libs/libmyth/screensaver-x11.cpp	(revision 16468)
@@ -41483,6 +41894,32 @@ Index: mythtv/libs/libmyth/libmyth.pro
  }
 +
 +include ( ../libs-targetfix.pro )
+Index: mythtv/libs/libmyth/mythmediamonitor.cpp
+===================================================================
+--- mythtv/libs/libmyth/mythmediamonitor.cpp	(revision 16468)
++++ mythtv/libs/libmyth/mythmediamonitor.cpp	(working copy)
+@@ -15,6 +15,7 @@
+ 
+ // MythTV headers
+ #include "mythmediamonitor.h"
++#include "mythcdrom.h"
+ #include "mythcontext.h"
+ #include "mythdialogs.h"
+ #include "mythconfig.h"
+@@ -81,8 +82,13 @@
+         {
+             pMedia->setSpeed(speed);
+             mon->Unlock(pMedia);
++            return;
+         }
+     }
++
++    MythCDROM *cd = MythCDROM::get(NULL, device, false, false);
++    cd->setSpeed(device, speed);
++    delete cd;
+ }
+ 
+ // When ejecting one of multiple devices, present a nice name to the user
 Index: mythtv/libs/libmyth/mythcdrom-linux.cpp
 ===================================================================
 --- mythtv/libs/libmyth/mythcdrom-linux.cpp	(revision 16468)
@@ -41496,7 +41933,15 @@ Index: mythtv/libs/libmyth/mythcdrom-linux.cpp
  
  
  // Some features cannot be detected (reliably) using the standard
-@@ -162,7 +162,13 @@
+@@ -133,6 +133,7 @@
+     virtual MediaStatus checkMedia(void);
+     virtual MediaError eject(bool open_close = true);
+     virtual void setSpeed(int speed);
++    virtual void setSpeed(const char *device, int speed);
+     virtual bool isSameDevice(const QString &path);
+     virtual MediaError lock(void);
+     virtual MediaError unlock(void);
+@@ -162,7 +163,13 @@
  {
      int drive_status = ioctl(m_DeviceHandle, CDROM_DRIVE_STATUS, CDSL_CURRENT);
  
@@ -41511,7 +41956,7 @@ Index: mythtv/libs/libmyth/mythcdrom-linux.cpp
          return SCSIstatus();
  
      return drive_status;
-@@ -193,7 +199,7 @@
+@@ -193,7 +200,7 @@
          VERBOSE(VB_MEDIA,
                  LOC + ":hasWritableMedia() - failed to send packet to "
                      + m_DevicePath);
@@ -41520,7 +41965,7 @@ Index: mythtv/libs/libmyth/mythcdrom-linux.cpp
      }
  
      di = (CDROMdiscInfo *) buffer;
-@@ -327,7 +333,7 @@
+@@ -327,7 +334,7 @@
          {
  #ifdef EXTRA_VERBOSITY
              VERBOSE(VB_MEDIA, LOC + ":testMedia - failed to open "
@@ -41529,7 +41974,7 @@ Index: mythtv/libs/libmyth/mythcdrom-linux.cpp
  #endif
              if (errno == EBUSY)
                  return isMounted(true) ? MEDIAERR_OK : MEDIAERR_FAILED;
-@@ -350,8 +356,8 @@
+@@ -350,8 +357,8 @@
  
      if (Stat == -1)
      {
@@ -41540,7 +41985,7 @@ Index: mythtv/libs/libmyth/mythcdrom-linux.cpp
          return MEDIAERR_FAILED;
      }
  
-@@ -362,198 +368,182 @@
+@@ -362,198 +369,182 @@
  {
      bool OpenedHere = false;
  
@@ -41892,6 +42337,70 @@ Index: mythtv/libs/libmyth/mythcdrom-linux.cpp
  
      if (OpenedHere)
          closeDevice();
+@@ -623,6 +614,11 @@
+  */
+ void MythCDROMLinux::setSpeed(int speed)
+ {
++    MythCDROMLinux::setSpeed(m_DevicePath, speed);
++}
++
++void MythCDROMLinux::setSpeed(const char *device, int speed)
++{
+     int fd;
+     unsigned char buffer[28];
+     unsigned char cmd[16];
+@@ -637,11 +633,11 @@
+     memset(cmd, 0, sizeof(cmd));
+     memset(&st, 0, sizeof(st));
+ 
+-    if (stat(m_DevicePath, &st) == -1)
++    if (stat(device, &st) == -1)
+     {
+         VERBOSE(VB_MEDIA, LOC_ERR +
+                 QString("setSpeed() Failed. device %1 not found")
+-                .arg(m_DevicePath));
++                .arg(device));
+         return;
+     }
+ 
+@@ -651,7 +647,7 @@
+         return;
+     }
+ 
+-    if ((fd = open(m_DevicePath, O_RDWR | O_NONBLOCK)) == -1)
++    if ((fd = open(device, O_RDWR | O_NONBLOCK)) == -1)
+     {
+         VERBOSE(VB_MEDIA, LOC_ERR + "Changing CD/DVD speed needs write access");
+         return;
+@@ -712,17 +708,22 @@
+     buffer[18] = buffer[26] = 0x03;
+     buffer[19] = buffer[27] = 0xe8;
+ 
+-    // On my system (2.6.18 + ide-cd),  SG_IO succeeds without doing anything,
+-    // while CDROM_SELECT_SPEED works...
+-    if (ioctl(fd, CDROM_SELECT_SPEED, speed) < 0)
++    if (ioctl(fd, SG_IO, &sghdr) < 0)
+     {
+-        if (ioctl(fd, SG_IO, &sghdr) < 0)
+-            VERBOSE(VB_MEDIA, LOC_ERR + "Limit CD/DVD Speed Failed");
++        VERBOSE(VB_MEDIA, LOC_ERR + "Limit CD/DVD Speed Failed");
+     }
+     else
++    {
++        // On my system (2.6.18 + ide-cd),  SG_IO succeeds without doing anything,
++        // while CDROM_SELECT_SPEED works...
++        if (ioctl(fd, CDROM_SELECT_SPEED, speed) < 0)
++        {
++            VERBOSE(VB_MEDIA, LOC_ERR +
++                    "Limit CD/DVD CDROM_SELECT_SPEED Failed");
++        }
+         VERBOSE(VB_MEDIA, LOC + ":setSpeed() - CD/DVD Speed Set Successful");
++    }
+ 
+     close(fd);
+ }
+ #endif
+-
 Index: mythtv/libs/libmythupnp/ssdp.cpp
 ===================================================================
 --- mythtv/libs/libmythupnp/ssdp.cpp	(revision 16468)
@@ -44214,7 +44723,51 @@ Index: mythtv/programs/mythbackend/mainserver.cpp
          }
  
          if ((me->Message().left(16) == "DELETE_RECORDING") ||
-@@ -3377,17 +3378,20 @@
+@@ -1296,7 +1297,8 @@
+             if (proginfo->hostname != gContext->GetHostName())
+                 slave = getSlaveByHostname(proginfo->hostname);
+ 
+-            if (proginfo->hostname == gContext->GetHostName())
++            if ((proginfo->hostname == gContext->GetHostName()) ||
++                (!slave && masterBackendOverride))
+             {
+                 proginfo->pathname = QString("myth://") + ip + ":" + port
+                                      + "/" + proginfo->pathname;
+@@ -1984,6 +1986,24 @@
+             (gContext->GetNumSetting("AutoExpireInsteadOfDelete") &&
+             (pginfo->recgroup != "Deleted") && (pginfo->recgroup != "LiveTV"));
+ 
++    QString filename = GetPlaybackURL(pginfo, false);
++    if (filename == "")
++    {
++        VERBOSE(VB_IMPORTANT,
++                QString("ERROR when trying to delete file for %1 @ %2.  Unable "
++                        "to determine filename of recording.")
++                        .arg(pginfo->chanid)
++                        .arg(pginfo->recstartts.toString(Qt::ISODate)));
++
++        if (pbssock)
++        {
++            resultCode = -2;
++            QStringList outputlist = QString::number(resultCode);
++            SendResponse(pbssock, outputlist);
++        }
++        delete pginfo;
++        return;
++    }
+     
+     if (justexpire && !forceMetadataDelete && pginfo->filesize > (1024 * 1024) )
+     {
+@@ -2001,8 +2021,6 @@
+         return;
+     }
+ 
+-    QString filename = GetPlaybackURL(pginfo, false);
+-
+     // If this recording was made by a another recorder, and that
+     // recorder is available, tell it to do the deletion.
+     if (ismaster && pginfo->hostname != gContext->GetHostName())
+@@ -3377,17 +3395,20 @@
      ProgramInfo *pginfo = ProgramInfo::GetProgramFromRecorded(chanid,
                                                                startdt);
  
@@ -44245,7 +44798,7 @@ Index: mythtv/programs/mythbackend/mainserver.cpp
      }
  
      if (rowcnt > 0)
-@@ -3449,11 +3453,12 @@
+@@ -3449,11 +3470,12 @@
      QDateTime startdt;
      startdt.setTime_t((uint)atoi(starttime));
      QStringList retlist;
@@ -44260,7 +44813,7 @@ Index: mythtv/programs/mythbackend/mainserver.cpp
  
      encodeLongLong(retlist,bookmark);
  
-@@ -3491,9 +3496,14 @@
+@@ -3491,9 +3513,14 @@
  
      ProgramInfo *pginfo = ProgramInfo::GetProgramFromRecorded(chanid,
                                                                startdt);
@@ -44277,6 +44830,62 @@ Index: mythtv/programs/mythbackend/mainserver.cpp
      if (pbssock)
          SendResponse(pbssock, retlist);
  
+Index: mythtv/programs/mythbackend/scheduler.cpp
+===================================================================
+--- mythtv/programs/mythbackend/scheduler.cpp	(revision 16468)
++++ mythtv/programs/mythbackend/scheduler.cpp	(working copy)
+@@ -1303,7 +1303,7 @@
+             if (next_record == nextRecMap[recid])
+                 continue;
+ 
+-            if (nextRecMap[recid].isNull() && next_record.isValid())
++            if (nextRecMap[recid].isNull() || !next_record.isValid())
+             {
+                 subquery.prepare("UPDATE record "
+                                  "SET next_record = '0000-00-00T00:00:00' "
+@@ -2030,6 +2030,13 @@
+                                                      "be $time if command "
+                                                      "set.\'");
+ 
++        if (setwakeup_cmd.isEmpty())
++        {
++            VERBOSE(VB_IMPORTANT, "SetWakeuptimeCommand is empty, shutdown aborted");
++            idleSince = QDateTime();
++            m_isShuttingDown = false;
++            return;
++        }
+         if (wakeup_timeformat == "time_t")
+         {
+             QString time_ts;
+@@ -2045,8 +2052,14 @@
+                                     setwakeup_cmd);
+ 
+         // now run the command to set the wakeup time
+-        if (!setwakeup_cmd.isEmpty())
+-            myth_system(setwakeup_cmd.ascii());
++        if (myth_system(setwakeup_cmd.ascii()))
++        {
++            VERBOSE(VB_IMPORTANT, "SetWakeuptimeCommand failed, "
++                    "shutdown aborted");
++            idleSince = QDateTime();
++            m_isShuttingDown = false;
++            return;
++        }
+     }
+ 
+     // tell anyone who is listening the master server is going down now
+@@ -2065,7 +2078,10 @@
+                                     "this computer :-\n\t\t\t\t\t\t") + halt_cmd);
+ 
+         // and now shutdown myself
+-        myth_system(halt_cmd.ascii());
++        if (!myth_system(halt_cmd.ascii()))
++            return;
++        else
++            VERBOSE(VB_IMPORTANT, "ServerHaltCommand failed, shutdown aborted");
+     }
+ 
+     // If we make it here then either the shutdown failed
 Index: mythtv/programs/mythbackend/upnpmedia.cpp
 ===================================================================
 --- mythtv/programs/mythbackend/upnpmedia.cpp	(revision 16468)
@@ -44883,7 +45492,15 @@ Index: mythtv/programs/mythwelcome/welcomedialog.cpp
 ===================================================================
 --- mythtv/programs/mythwelcome/welcomedialog.cpp	(revision 16468)
 +++ mythtv/programs/mythwelcome/welcomedialog.cpp	(working copy)
-@@ -378,8 +378,8 @@
+@@ -80,6 +80,7 @@
+                          m_installDir + "/bin/mythfrontend");
+ 
+     myth_system(startFECmd.ascii());
++    updateAll();
+ }
+ 
+ void WelcomeDialog::startFrontendClick(void)
+@@ -378,8 +379,8 @@
                  status += "\n" + QDeepCopy<QString>(tuner->title);
                  if (!tuner->subtitle.isEmpty()) 
                      status += "\n("+QDeepCopy<QString>(tuner->subtitle)+")";
@@ -44894,7 +45511,7 @@ Index: mythtv/programs/mythwelcome/welcomedialog.cpp
              }
              else
              {
-@@ -414,7 +414,7 @@
+@@ -414,7 +415,7 @@
  
              QString dateFormat = gContext->GetSetting("DateFormat", "ddd dd MMM yyyy");
              status += "\n" + prog->startTime.toString(dateFormat + " (" + m_timeFormat) +
@@ -44935,7 +45552,7 @@ Index: mythtv/settings.pro
 Index: mythtv/contrib/Win32/build/mythtvsetup.iss
 ===================================================================
 --- mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 0)
-+++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 19788)
++++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 20373)
 @@ -0,0 +1,493 @@
 +; Script generated by the Inno Setup Script Wizard.
 +; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
@@ -45439,7 +46056,7 @@ Added: svn:executable
 Index: mythtv/contrib/Win32/MythInstaller.bat
 ===================================================================
 --- mythtv/contrib/Win32/MythInstaller.bat	(revision 0)
-+++ mythtv/contrib/Win32/MythInstaller.bat	(revision 19788)
++++ mythtv/contrib/Win32/MythInstaller.bat	(revision 20373)
 @@ -0,0 +1,69 @@
 +@rem = '--*-Perl-*--
 +@rem
@@ -45521,7 +46138,7 @@ Added: svn:keywords
 Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 19788)
++++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 20373)
 @@ -0,0 +1,57 @@
 +@Echo off
 +::
@@ -45583,7 +46200,7 @@ Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 Index: mythtv/contrib/Win32/run/mythbackend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythbackend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 19788)
++++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 20373)
 @@ -0,0 +1,58 @@
 +@Echo off
 +::
