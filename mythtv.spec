@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20317
+%define _svnrev r20371
 %define branch trunk
 
 #
@@ -174,7 +174,6 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-BuildRequires:  a52dec-devel
 BuildRequires:  faac-devel
 BuildRequires:  faad2-devel
 BuildRequires:  fftw2-devel < 3
@@ -296,7 +295,6 @@ Requires:  mythtv-themes      = %{version}
 Requires:  mysql-server >= 5, mysql >= 5
 # XMLTV is not yet packaged for rpmfusion
 #Requires: xmltv
-Requires:  wget >= 1.9.1
 
 # faad2-devel.ppc64 is not available, so:
 ExcludeArch: ppc64
@@ -384,7 +382,6 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-Requires:  a52dec-devel
 Requires:  faac-devel
 Requires:  faad2-devel
 Requires:  fftw2-devel < 3
@@ -476,6 +473,7 @@ Summary:    Server component of mythtv (a DVR)
 Group:      Applications/Multimedia
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
+Requires:  wget
 Conflicts:  xmltv-grabbers < 0.5.37
 
 %description backend
@@ -495,6 +493,7 @@ Group:     Applications/Multimedia
 Requires:  freetype
 Requires:  mythtv-backend = %{version}-%{release}
 Requires:  mythtv-base-themes = %{version}
+Requires:  wget
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -918,7 +917,6 @@ cd mythtv-%{version}
     --enable-dvb                                \
     --enable-libfaac                            \
     --enable-libfaad --enable-libfaad --enable-libfaadbin \
-    --enable-liba52                             \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
@@ -1464,6 +1462,11 @@ fi
 ################################################################################
 
 %changelog
+* Mon Apr 13 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20371
+- Update to pre-0.22 svn trunk, revision 20371
+- Relocate Requires: wget to the sub-packages where necessary (rfbz#384)
+- Don't use a52dec, mythtv has its own internal support these days
+
 * Tue Apr 07 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20317
 - Update to pre-0.22 svn trunk, revision 20317
 
