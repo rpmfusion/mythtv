@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20371
+%define _svnrev r20448
 %define branch trunk
 
 #
@@ -97,6 +97,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 # The following options are enabled by default.  Use --without to disable them
 %define with_perl          %{?_without_perl:        0} %{!?_without_perl:       1}
 %define with_python        %{?_without_python:      0} %{!?_without_python:     1}
+%define with_pulseaudio    %{?_without_pulseaudio:  0} %{!?_without_pulseaudio: 1}
 
 # The following options are disabled by default.  Use --with to enable them
 %define with_directfb      %{?_with_directfb:       1} %{!?_with_directfb:      0}
@@ -201,6 +202,9 @@ BuildRequires:  xvidcore-devel >= 0.9.1
 BuildRequires:  alsa-lib-devel
 BuildRequires:  arts-devel
 BuildRequires:  jack-audio-connection-kit-devel
+%if %{with_pulseaudio}
+BuildRequires:  pulseaudio-libs-devel
+%endif
 
 # Need dvb headers to build in dvb support
 BuildRequires: kernel-headers
@@ -1462,6 +1466,10 @@ fi
 ################################################################################
 
 %changelog
+* Fri Apr 24 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20448
+- Update to pre-0.22 svn trunk, revision 20448
+- Add BR: pulseaudio-libs-devel to enable proper pulseaudio support (rfbz#567)
+
 * Mon Apr 13 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20371
 - Update to pre-0.22 svn trunk, revision 20371
 - Relocate Requires: wget to the sub-packages where necessary (rfbz#384)
