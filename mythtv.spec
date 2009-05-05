@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20448
+%define _svnrev r20488
 %define branch trunk
 
 #
@@ -1466,6 +1466,12 @@ fi
 ################################################################################
 
 %changelog
+* Mon May 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20488
+- Update to pre-0.22 svn trunk, revision 20488
+
+* Tue Apr 28 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20462
+- Update to pre-0.22 svn trunk, revision 20462
+
 * Fri Apr 24 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20448
 - Update to pre-0.22 svn trunk, revision 20448
 - Add BR: pulseaudio-libs-devel to enable proper pulseaudio support (rfbz#567)
