@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20488
+%define _svnrev r20586
 %define branch trunk
 
 #
@@ -300,9 +300,6 @@ Requires:  mysql-server >= 5, mysql >= 5
 # XMLTV is not yet packaged for rpmfusion
 #Requires: xmltv
 
-# faad2-devel.ppc64 is not available, so:
-ExcludeArch: ppc64
-
 # Generate the required mythtv-frontend-api version string here so we only
 # have to do it once.
 %define mythfeapiver %(echo %{version} | awk -F. '{print $1 "." $2}')
@@ -511,6 +508,9 @@ mythtv backend.
 %package common
 Summary: Common components needed by multiple other MythTV components
 Group: Applications/Multimedia
+# mythphone is now DOA, but we need this for upgrade path preservation.
+Provides: mythphone = %{version}-%{release}
+Obsoletes: mythphone < %{version}-%{release}
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -1466,6 +1466,11 @@ fi
 ################################################################################
 
 %changelog
+* Sun May 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20586
+- Update to pre-0.22 svn trunk revision 20586
+- Fix upgrade path for people that have mythphone installed (rfbz#596)
+- Remove ExcludeArch: ppc64, build deps now present
+
 * Mon May 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20488
 - Update to pre-0.22 svn trunk, revision 20488
 
