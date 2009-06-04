@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r20668
+%define _svnver r20671
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -1027,7 +1027,7 @@ fi
 
 %changelog
 * Wed Jun 03 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-19
-- Update to release-0-21-fixes patches (r20668)
+- Update to release-0-21-fixes patches (r20671)
 
 * Mon Apr 13 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-18
 - Update release-0-21-fixes patches (r20373)

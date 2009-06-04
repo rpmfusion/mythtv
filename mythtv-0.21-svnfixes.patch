@@ -47629,3 +47629,16 @@ Added: svn:ignore
 sa3250ch
 
 
+Index: mythtv/libs/libmythfreemheg/Text.cpp
+===================================================================
+--- mythtv/libs/libmythfreemheg/Text.cpp	(revision 20668)
++++ mythtv/libs/libmythfreemheg/Text.cpp	(working copy)
+@@ -242,7 +242,7 @@
+     }
+     else { // Textual form.
+         const unsigned char *str = attrs.Bytes();
+-        const char *p = (const char *)str;
++        char *p = (char *)str;
+         char *q = strchr(p, '.'); // Find the terminating dot
+         if (q != NULL) { // plain, italic etc.
+             if (q-p == 6 && strncmp(p, "italic", 6) == 0) style = 1;
