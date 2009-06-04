@@ -4120,11 +4120,177 @@ Index: mythplugins/mythmusic/mythmusic/aacdecoder.cpp
  
  #include "aacdecoder.h"
  #include "constants.h"
+Index: mythplugins/mythmusic/mythmusic/globalsettings.cpp
+===================================================================
+--- mythplugins/mythmusic/mythmusic/globalsettings.cpp	(revision 16468)
++++ mythplugins/mythmusic/mythmusic/globalsettings.cpp	(working copy)
+@@ -58,20 +58,11 @@
+     return gc;
+ };
+ 
+-static HostComboBox *CDDevice()
++static HostLineEdit *CDDevice()
+ {
+-    HostComboBox *gc = new HostComboBox("CDDevice", true);
++    HostLineEdit *gc = new HostLineEdit("CDDevice", true);
+     gc->setLabel(QObject::tr("CD device"));
+-    QDir dev("/dev", "cdrom*", QDir::Name, QDir::System);
+-    gc->fillSelectionsFromDir(dev);
+-    dev.setNameFilter("scd*");
+-    gc->fillSelectionsFromDir(dev);
+-    dev.setNameFilter("hd*");
+-    gc->fillSelectionsFromDir(dev);
+-
+-    dev.setNameFilter("cdrom*");
+-    dev.setPath("/dev/cdroms");
+-    gc->fillSelectionsFromDir(dev);
++    gc->setValue("default");
+     gc->setHelpText(QObject::tr("CDRom device used for ripping/playback."));
+     return gc;
+ };
+@@ -472,85 +463,14 @@
+     return gc;
+ };
+ 
+-static HostComboBox *CDWriterDevice()
++static HostLineEdit *CDWriterDevice()
+ {
+-    HostComboBox *gc = new HostComboBox("CDWriterDevice");
+-
+-    QString argadd[3]  = { "", "-dev=ATA", "-dev=ATAPI" };
+-    QString prepend[3] = { "", "ATA:", "ATAPI:" };
+-
+-    for (int i = 0; i < 3; i++)
+-    {
+-        QStringList args;
+-        QStringList result;
+-
+-        args = "cdrecord";
+-        args += "--scanbus";
+-
+-        if (argadd[i].length() > 1)
+-            args += argadd[i];
+-
+-        QString  cmd = args.join(" ");
+-        QProcess proc(args);
+-
+-        MythTimer totaltimer;
+-    
+-        if (proc.start())
+-        {
+-            totaltimer.start();
+-
+-            while (1)
+-            {
+-                while (proc.canReadLineStdout())
+-                    result += proc.readLineStdout();
+-                if (proc.isRunning())
+-                {
+-                    qApp->processEvents();
+-                    usleep(10000);
+-                }
+-                else
+-                {
+-                    if (!proc.normalExit())
+-                        VERBOSE(VB_GENERAL,
+-                                QString("Failed to run '%1'").arg(cmd));
+-                    break;
+-                }
+-
+-                if (totaltimer.elapsed() > 1500)
+-                {
+-                    //VERBOSE(VB_GENERAL, QString("Killed '%1' after %2ms")
+-                    //                    .arg(cmd).arg(totaltimer.elapsed()));
+-                    proc.kill();
+-                }
+-            }
+-        }
+-        else
+-            VERBOSE(VB_GENERAL, QString("Failed to run '%1'").arg(cmd));
+-
+-        while (proc.canReadLineStdout())
+-            result += proc.readLineStdout();
+-
+-        for (QStringList::Iterator it = result.begin(); it != result.end();
+-             ++it)
+-        {
+-            QString line = *it;
+-            if (line.length() > 12)
+-            {
+-                if (line[10] == ')' && line[12] != '*')
+-                {
+-                    QString dev  = prepend[i] + line.mid(1, 5);
+-                    QString name = line.mid(24, 16);
+-
+-                    gc->addSelection(name, dev);
+-                    VERBOSE(VB_GENERAL, "MythMusic adding CD-Writer: "
+-                                        + dev + " -- " + name);
+-                }
+-            }
+-        }
+-    }
+-    
++    HostLineEdit *gc = new HostLineEdit("CDWriterDevice");
++    gc->setValue("default");
+     gc->setLabel(QObject::tr("CD-Writer Device"));
+-    gc->setHelpText(QObject::tr("Select the SCSI or IDE Device for CD Writing."));
++    gc->setHelpText(QObject::tr("Select the SCSI or IDE Device for CD Writing.")
++                    + QObject::tr(" 'default' will let the "
++                                  "MediaMonitor choose a device."));
+     return gc;
+ };
+ 
+Index: mythplugins/mythmusic/mythmusic/playlist.cpp
+===================================================================
+--- mythplugins/mythmusic/mythmusic/playlist.cpp	(revision 16468)
++++ mythplugins/mythmusic/mythmusic/playlist.cpp	(working copy)
+@@ -10,6 +10,7 @@
+ #include "smartplaylist.h"
+ #include <mythtv/mythdbcon.h>
+ #include <mythtv/compat.h>
++#include <mythtv/mythmediamonitor.h>
+ 
+ #include <qfileinfo.h>
+ #include <qprocess.h>
+@@ -1664,7 +1665,7 @@
+         return 1;
+     }
+ 
+-    QString scsidev = gContext->GetSetting("CDWriterDevice");
++    QString scsidev = MediaMonitor::defaultCDWriter();
+     if (scsidev.isEmpty() || scsidev.isNull()) 
+     {
+         VERBOSE(VB_GENERAL, "No CD Writer device defined.");
 Index: mythplugins/mythmusic/mythmusic/databasebox.cpp
 ===================================================================
 --- mythplugins/mythmusic/mythmusic/databasebox.cpp	(revision 16468)
 +++ mythplugins/mythmusic/mythmusic/databasebox.cpp	(working copy)
-@@ -875,9 +875,15 @@
+@@ -17,6 +17,7 @@
+ #include <mythtv/lcddevice.h>
+ #include <mythtv/uitypes.h>
+ #include <mythtv/uilistbtntype.h>
++#include <mythtv/mythmediamonitor.h>
+ 
+ // mythmusic
+ #include "metadata.h"
+@@ -421,12 +422,13 @@
+         return;
+     }
+ 
+-    QString scsidev = gContext->GetSetting("CDWriterDevice");
+-    if (scsidev.length()==0) 
++    QString scsidev = MediaMonitor::defaultCDWriter();
++    if (scsidev.isEmpty() || scsidev.isNull())
+     {
+-        VERBOSE(VB_GENERAL, "We don't have SCSI devices");
++        VERBOSE(VB_GENERAL, "No CD Writer device defined.");
+         return;
+     }
++
+     // Begin Blanking
+     MythProgressDialog *record_progress;
+     record_progress = new MythProgressDialog(tr("CD-RW Blanking Progress"), 10);
+@@ -875,9 +877,15 @@
  
      if (cdwriter)
      {
@@ -4140,7 +4306,7 @@ Index: mythplugins/mythmusic/mythmusic/databasebox.cpp
  
          cdmp3b = active_popup->addButton(tr("Create MP3 CD from Playlist"),
                                           this, SLOT(CreateCDMP3()));
-@@ -920,8 +926,12 @@
+@@ -920,8 +928,12 @@
          active_popup->addLabel(label2);
  
          cdmp3b->setEnabled((ratio_MB <= 100.0));
@@ -6286,7 +6452,54 @@ Index: mythplugins/mytharchive/mytharchivehelper/main.cpp
 ===================================================================
 --- mythplugins/mytharchive/mytharchivehelper/main.cpp	(revision 16468)
 +++ mythplugins/mytharchive/mytharchivehelper/main.cpp	(working copy)
-@@ -2068,6 +2068,7 @@
+@@ -176,23 +176,27 @@
+     QString dvdDrive = gContext->GetSetting("MythArchiveDVDLocation", "/dev/dvd");
+     VERBOSE(VB_JOBQUEUE, "Burning ISO image to " + dvdDrive);
+ 
++    int     driveSpeed    = gContext->GetNumSetting("MythArchiveDriveSpeed");
+     QString tempDirectory = getTempDirectory();
+ 
+     tempDirectory += "work/";
+ 
+-    QString growisofs = gContext->GetSetting("MythArchiveGrowisofsCmd", "growisofs");
+-    QString command;
++    QString command = gContext->GetSetting("MythArchiveGrowisofsCmd",
++                                           "growisofs");
+ 
++    if (driveSpeed)
++        command += " -speed=" + QString::number(driveSpeed);
++
+     if (nativeFormat)
+     {
+         if (mediaType == AD_DVD_RW && bEraseDVDRW == true)
+         {
+-            command = growisofs + " -use-the-force-luke -Z " + dvdDrive;
++            command += " -use-the-force-luke -Z " + dvdDrive;
+             command += " -V 'MythTV Archive' -R -J " + tempDirectory;
+         }
+         else
+         {
+-            command = growisofs + " -Z " + dvdDrive; 
++            command += " -Z " + dvdDrive;
+             command += " -V 'MythTV Archive' -R -J " + tempDirectory;
+         }
+     }
+@@ -200,12 +204,12 @@
+     {
+         if (mediaType == AD_DVD_RW && bEraseDVDRW == true)
+         {
+-            command = growisofs + " -dvd-compat -use-the-force-luke -Z " + dvdDrive;
++            command += " -dvd-compat -use-the-force-luke -Z " + dvdDrive;
+             command += " -dvd-video -V 'MythTV DVD' " + tempDirectory + "/dvd";
+         }
+         else
+         {
+-            command = growisofs + " -dvd-compat -Z " + dvdDrive; 
++            command += " -dvd-compat -Z " + dvdDrive;
+             command += " -dvd-video -V 'MythTV DVD' " + tempDirectory + "/dvd";
+         }
+     }
+@@ -2068,6 +2072,7 @@
      root.appendChild(streams);
      streams.setAttribute("count", inputFC->nb_streams);
      int ffmpegIndex = 0;
@@ -6294,7 +6507,7 @@ Index: mythplugins/mytharchive/mytharchivehelper/main.cpp
  
      for (uint i = 0; i < inputFC->nb_streams; i++)
      {
-@@ -2124,56 +2125,60 @@
+@@ -2124,56 +2129,60 @@
  
                  streams.appendChild(stream);
  
@@ -6396,7 +6609,7 @@ Index: mythplugins/mytharchive/mytharchivehelper/main.cpp
                  break;
              }
  
-@@ -2185,7 +2190,14 @@
+@@ -2185,7 +2194,14 @@
                  QDomElement stream = doc.createElement("audio");
                  stream.setAttribute("streamindex", i);
                  stream.setAttribute("ffmpegindex", ffmpegIndex++);
@@ -6421,7 +6634,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
  
  # version of script - change after each update
 -VERSION="0.1.20080127-1"
-+VERSION="0.1.20080726-1-fixes"
++VERSION="0.1.20090515-1-fixes"
  
  # keep all temporary files for debugging purposes
  # set this to True before a first run through when testing
@@ -6595,7 +6808,17 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
  
      write("Finished creating ISO image")
  
-@@ -2575,7 +2600,7 @@
+@@ -2570,12 +2595,17 @@
+         os.close(f);
+ 
+         if drivestatus == CDROM.CDS_DISC_OK or drivestatus == CDROM.CDS_NO_INFO:
++
++            # If the frontend has a previously burnt DVD+RW mounted,
++            # growisofs will fail to burn it, so try to pumount it first...
++            runCommand("pumount " + dvddrivepath);
++
+             if mediatype == DVD_RW and erasedvdrw == True:
+                 command = path_growisofs[0] + " -dvd-compat "
                  if drivespeed != 0:
                      command += "-speed=%d " % drivespeed
                  command += " -use-the-force-luke -Z " + dvddrivepath 
@@ -6604,7 +6827,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
                  command += os.path.join(getTempPath(),'dvd')
              else:
                  command = path_growisofs[0] + " -dvd-compat "
-@@ -2954,7 +2979,8 @@
+@@ -2954,7 +2984,8 @@
              dvdauthor_element.appendChild(titleset)
  
              #Comment XML file with title of video
@@ -6614,7 +6837,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
  
              menus= dvddom.createElement("menus")
              titleset.appendChild(menus)
-@@ -4585,23 +4611,23 @@
+@@ -4585,23 +4616,23 @@
  # process a single file ready for burning using either
  # mythtranscode/mythreplex or ProjectX as the cutter/demuxer
  
@@ -6643,7 +6866,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
      write( "*************************************************************")
  
      #As part of this routine we need to pre-process the video this MAY mean:
-@@ -4642,7 +4668,7 @@
+@@ -4642,7 +4673,7 @@
                      localfile = file.attributes["localfilename"].value
                  else:
                      localfile = ""
@@ -6652,7 +6875,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
                  chanid = getText(infoDOM.getElementsByTagName("chanid")[0])
                  starttime = getText(infoDOM.getElementsByTagName("starttime")[0])
                  if runMythtranscode(chanid, starttime, os.path.join(folder,'newfile.mpg'), True, localfile):
-@@ -4665,7 +4691,7 @@
+@@ -4665,7 +4696,7 @@
                      if runMythtranscode(chanid, starttime, os.path.join(folder, 'newfile.mpg'), False, localfile):
                          mediafile = os.path.join(folder, 'newfile.mpg')
                      else:
@@ -6661,7 +6884,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
      else:
          #does the user always want to run mpeg2 files through mythtranscode?
          #may help to fix any errors in the file 
-@@ -4685,7 +4711,7 @@
+@@ -4685,7 +4716,7 @@
              if runMythtranscode(chanid, starttime, os.path.join(folder, 'newfile.mpg'), False, localfile):
                  mediafile = os.path.join(folder, 'newfile.mpg')
              else:
@@ -6670,7 +6893,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
  
      #do we need to re-encode the file to make it DVD compliant?
      if not isFileOkayForDVD(file, folder):
-@@ -4801,7 +4827,7 @@
+@@ -4801,7 +4832,7 @@
              extractVideoFrame(os.path.join(folder, "stream.mv2"), titleImage, thumboffset)
  
      write( "*************************************************************")
@@ -6679,7 +6902,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
      write( "*************************************************************")
  
  
-@@ -4809,11 +4835,11 @@
+@@ -4809,11 +4840,11 @@
  # process a single file ready for burning using projectX to
  # cut and demux
  
@@ -6693,7 +6916,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
      write( "*************************************************************")
  
      #As part of this routine we need to pre-process the video this MAY mean:
-@@ -4970,7 +4996,7 @@
+@@ -4970,7 +5001,7 @@
              extractVideoFrame(os.path.join(folder, "stream.mv2"), titleImage, thumboffset)
  
      write( "*************************************************************")
@@ -6702,7 +6925,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
      write( "*************************************************************")
  
  #############################################################
-@@ -5102,7 +5128,7 @@
+@@ -5102,7 +5133,7 @@
                          os.rmdir (folder)
                      os.makedirs(folder)
                  #Do the pre-process work
@@ -6711,7 +6934,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
  
              if debug_secondrunthrough==False:
                  #Loop through all the files again but this time do more serious work!
-@@ -5112,7 +5138,7 @@
+@@ -5112,7 +5143,7 @@
                      folder=getItemTempPath(filecount)
  
                      #Process this file
@@ -6720,7 +6943,7 @@ Index: mythplugins/mytharchive/mythburn/scripts/mythburn.py
  
              #We can only create the menus after the videos have been processed
              #and the commercials cut out so we get the correct run time length
-@@ -5185,6 +5211,9 @@
+@@ -5185,6 +5216,9 @@
              if infoDOM.documentElement.tagName != "fileinfo":
                  fatalError("The info.xml file (%s) doesn't look right" % os.path.join(folder,"info.xml"))
              title = expandItemText(infoDOM,"%title",1,0,0,0,0)
@@ -10122,6 +10345,44 @@ Index: mythplugins/mythgallery/i18n/mythgallery_fi.ts
      </message>
  </context>
  <context>
+Index: mythplugins/mythgallery/mythgallery/iconview.cpp
+===================================================================
+--- mythplugins/mythgallery/mythgallery/iconview.cpp	(revision 16468)
++++ mythplugins/mythgallery/mythgallery/iconview.cpp	(working copy)
+@@ -1215,6 +1215,9 @@
+     item = new UIListBtnTypeItem(m_submenuType, tr("Show Devices"));
+     item->setData(new MenuAction(&IconView::HandleShowDevices));
+ 
++    item = new UIListBtnTypeItem(m_submenuType, tr("Eject"));
++    item->setData(new MenuAction(&IconView::HandleEject));
++
+     item = new UIListBtnTypeItem(m_submenuType, tr("Import"));
+     item->setData(new MenuAction(&IconView::HandleImport));
+ 
+@@ -1327,6 +1330,11 @@
+     }
+ }
+ 
++void IconView::HandleEject(void)
++{
++    myth_eject();
++}
++
+ void IconView::HandleImport(void)
+ {
+     QFileInfo path;
+Index: mythplugins/mythgallery/mythgallery/iconview.h
+===================================================================
+--- mythplugins/mythgallery/mythgallery/iconview.h	(revision 16468)
++++ mythplugins/mythgallery/mythgallery/iconview.h	(working copy)
+@@ -91,6 +91,7 @@
+     void HandleSlideShow(void);
+     void HandleRandomShow(void);
+     void HandleSettings(void);
++    void HandleEject(void);
+     void HandleImport(void);
+     void HandleShowDevices(void);
+     void HandleCopyHere(void);
 Index: mythplugins/mythmovies/ignyte/ignytegrabber.cpp
 ===================================================================
 --- mythplugins/mythmovies/ignyte/ignytegrabber.cpp	(revision 16468)
@@ -12712,15 +12973,39 @@ Index: mythplugins/mythvideo/mythvideo/globalsettings.cpp
 ===================================================================
 --- mythplugins/mythvideo/mythvideo/globalsettings.cpp	(revision 16468)
 +++ mythplugins/mythvideo/mythvideo/globalsettings.cpp	(working copy)
-@@ -322,6 +322,8 @@
+@@ -309,10 +309,12 @@
+ {
+     HostLineEdit *gc = new HostLineEdit("VCDDeviceLocation");
+     gc->setLabel(QObject::tr("Location of VCD device"));
+-    gc->setValue("/dev/cdrom");
++    gc->setValue("default");
+     gc->setHelpText(QObject::tr("This device must exist, and the user "
+                     "running MythDVD needs to have read permission "
+-                    "on the device."));
++                    "on the device.")
++                    + QObject::tr(" 'default' will let the "
++                                  "MediaMonitor choose a device."));
+     return gc;
+ }
+ 
+@@ -320,14 +322,12 @@
+ {
+     HostLineEdit *gc = new HostLineEdit("DVDDeviceLocation");
      gc->setLabel(QObject::tr("Location of DVD device"));
- #ifdef Q_WS_MACX
+-#ifdef Q_WS_MACX
      gc->setValue("default");
-+#elif defined(_WIN32) 
-+    gc->setValue("D:\\");
- #else
-     gc->setValue("/dev/dvd");
- #endif
+-#else
+-    gc->setValue("/dev/dvd");
+-#endif
+     gc->setHelpText(QObject::tr("This device must exist, and the user "
+                     "running MythDVD needs to have read permission "
+-                    "on the device."));
++                    "on the device.")
++                    + QObject::tr(" 'default' will let the "
++                                  "MediaMonitor choose a device."));
+     return gc;
+ }
+ 
 Index: mythplugins/mythvideo/mythvideo/main.cpp
 ===================================================================
 --- mythplugins/mythvideo/mythvideo/main.cpp	(revision 16468)
@@ -15303,90 +15588,197 @@ Index: mythplugins/mythnews/mythnews/news-sites.xml
 ===================================================================
 --- mythplugins/mythnews/mythnews/news-sites.xml	(revision 16468)
 +++ mythplugins/mythnews/mythnews/news-sites.xml	(working copy)
-@@ -725,85 +725,75 @@
+@@ -29,7 +29,7 @@
+ 
+     <item> 
+         <title>Scotsman.com Entertainment News</title> 
+-        <url>http://news.scotsman.com/entertainment.cfm?format=rss</url> 
++        <url>http://news.scotsman.com/getFeed.aspx?Format=rss&amp;sectionid=7010</url> 
+         <ico>http://www.scotsman.com/favicon.ico</ico> 
+     </item> 
+ 
+@@ -456,73 +456,73 @@
+ 
+     <item>
+         <title>G4TV Attack of the Show Daily Video Podcast</title>
+-        <url>http://www.g4tv.com/attackoftheshow/podcasts/5/Attack_of_the_Show_Daily_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/attackoftheshow/podcasts/5/Attack_of_the_Show_Daily_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+ 
+     <item>
+         <title>G4TV Cheat! Video Podcast</title>
+-        <url>http://www.g4tv.com/cheat/podcasts/7/Cheat_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/cheat/podcasts/7/Cheat_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+ 
+     <item>
+         <title>G4TV Cinematech: Nocturnal Emissions Video Podcast</title>
+-        <url>http://www.g4tv.com/cinematechnocturnalemissions/podcasts/9/Cinematech_Nocturnal_Emissions_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/cinematechnocturnalemissions/podcasts/9/Cinematech_Nocturnal_Emissions_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+     <item>
+         <title>G4TV Cinematech Video Podcast</title>
+-        <url>http://www.g4tv.com/cinematech/podcasts/8/Cinematech_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/cinematech/podcasts/8/Cinematech_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+ 
+     <item>
+         <title>G4TV ICONS Video Podcast</title>
+-        <url>http://www.g4tv.com/icons/podcasts/17/ICONS_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/icons/podcasts/17/ICONS_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+ 
+     <item>
+         <title>G4TV Filter Video Podcast</title>
+-        <url>http://www.g4tv.com/filter/podcasts/10/Filter_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/filter/podcasts/10/Filter_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item>
+  
+     <item>
+         <title>G4TV Formula D Video Podcast</title>
+-        <url>http://www.g4tv.com/formulad/podcasts/18/Formula_D_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/formulad/podcasts/18/Formula_D_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+ 
+     <item>
+         <title>G4TV Street Fury Video Podcast</title>
+-        <url>http://www.g4tv.com/streetfury/podcasts/11/Street_Fury_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/streetfury/podcasts/11/Street_Fury_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+ 
+     <item>
+         <title>G4TV The Daily Feed Video Podcast</title>
+-        <url>http://www.g4tv.com/thefeed/podcasts/19/The_Daily_Feed_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/thefeed/podcasts/19/The_Daily_Feed_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+ 
+     <item>
+         <title>G4TV The Daily Nut</title>
+-        <url>http://www.g4tv.com/dailynut/podcasts/15/The_Daily_Nut.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/dailynut/podcasts/15/The_Daily_Nut.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+ 
+     <item>
+         <title>G4TV The Man Show Video Podcast</title>
+-        <url>http://www.g4tv.com/themanshow/podcasts/14/The_Man_Show_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/themanshow/podcasts/14/The_Man_Show_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item> 
+ 
+     <item>
+         <title>G4TV X-Play Daily Video Podcast</title>
+-        <url>http://www.g4tv.com/xplay/podcasts/6/XPlay_Daily_Video_Podcast.xml</url>
+-        <ico>http://www.g4tv.com/favicon.ico</ico>
++        <url>http://g4tv.com/xplay/podcasts/6/XPlay_Daily_Video_Podcast.xml</url>
++        <ico>http://g4tv.com/favicon.ico</ico>
+     </item>
+ 
+ </category>
+@@ -639,7 +639,7 @@
+ 
+     <item>
+         <title>Scotsman.com International News</title>
+-        <url>http://news.scotsman.com/international.cfm?format=rss</url>
++        <url>http://news.scotsman.com/getFeed.aspx?Format=rss&amp;sectionid=7000</url>
+         <ico>http://www.scotsman.com/favicon.ico</ico>
+     </item>
+ 
+@@ -725,85 +725,55 @@
      </item>
  
      <item>
 -        <title>Digital Spy - Broadcasting</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dsbroadcast.xml</url>
-+        <title>Digital Spy - News Headlines</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsall.xml</url>
++        <title>Digital Spy - Media Headlines</title>
++        <url>http://www.digitalspy.co.uk/rss/zones/gb/media.xml</url>
      </item>
  
      <item>
 -        <title>Digital Spy - Cable</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dscable.xml</url>
-+        <title>Digital Spy - Entertainment Headlines</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsentertainmentnews.xml</url>
++        <title>Digital Spy - Big Brother</title>
++        <url>http://www.digitalspy.co.uk/rss/categories/gb/bigbrother.xml</url>
      </item>
  
      <item>
--        <title>Digital Spy - Cult</title>
+         <title>Digital Spy - Cult</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dscult.xml</url>
-+        <title>Digital Spy - Media Headlines</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsmedianews.xml</url>
++        <url>http://www.digitalspy.co.uk/rss/categories/gb/cult.xml</url>
      </item>
  
      <item>
 -        <title>Digital Spy - Entertainment Headlines</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dseznews.xml</url>
-+        <title>Digital Spy - Digital TV</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsdigitaltv.xml</url>
-     </item>
- 
-     <item>
+-    </item>
+-
+-    <item>
 -        <title>Digital Spy - Gaydar</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dsgaydar.xml</url>
-+        <title>Digital Spy - Broadcasting</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsbroadcasting.xml</url>
-     </item>
- 
-     <item>
+-    </item>
+-
+-    <item>
 -        <title>Digital Spy - Headlines</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dsukstd.xml</url>
-+        <title>Digital Spy - Cult</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dscult.xml</url>
-     </item>
- 
-     <item>
+-    </item>
+-
+-    <item>
 -        <title>Digital Spy - Media Headlines</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dsmznews.xml</url>
-+        <title>Digital Spy - Gay Spy</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsgayspy.xml</url>
-     </item>
- 
-     <item>
+-    </item>
+-
+-    <item>
          <title>Digital Spy - Movies</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dsfilm.xml</url>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsmovies.xml</url>
++        <url>http://www.digitalspy.co.uk/rss/categories/gb/movies.xml</url>
      </item>
  
      <item>
 -        <title>Digital Spy - Programming</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dsprogramming.xml</url>
 +        <title>Digital Spy - Music</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsmusic.xml</url>
++        <url>http://www.digitalspy.co.uk/rss/categories/gb/music.xml</url>
      </item>
  
      <item>
 -        <title>Digital Spy - Radio</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dsradio.xml</url>
 +        <title>Digital Spy - Reality</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsrealitytv.xml</url>
++        <url>http://www.digitalspy.co.uk/rss/categories/gb/realitytv.xml</url>
      </item>
  
      <item>
 -        <title>Digital Spy - Reality TV</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dsreality.xml</url>
 +        <title>Digital Spy - Showbiz</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsshowbiz.xml</url>
++        <url>http://www.digitalspy.co.uk/rss/categories/gb/showbiz.xml</url>
      </item>
  
      <item>
 -        <title>Digital Spy - Satellite</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dssatellite.xml</url>
 +        <title>Digital Spy - Soaps</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dssoaps.xml</url>
++        <url>http://www.digitalspy.co.uk/rss/categories/gb/soaps.xml</url>
      </item>
  
      <item>
@@ -15397,14 +15789,14 @@ Index: mythplugins/mythnews/mythnews/news-sites.xml
 -    <item>
          <title>Digital Spy - Television</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dstv.xml</url>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dstv.xml</url>
++        <url>http://www.digitalspy.co.uk/rss/categories/gb/tv.xml</url>
      </item>
  
      <item>
 -        <title>Digital Spy - Terrestrial</title>
 -        <url>http://syndication.digitalspy.co.uk/xmlcache/dsterrestrial.xml</url>
 +        <title>Digital Spy - US TV</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsustv.xml</url>
++        <url>http://www.digitalspy.co.uk/rss/categories/gb/ustv.xml</url>
      </item>
  
 -    <item>
@@ -15415,7 +15807,7 @@ Index: mythplugins/mythnews/mythnews/news-sites.xml
  </category>
  
  <category name="MythTV">
-@@ -840,7 +830,7 @@
+@@ -840,7 +810,7 @@
  
      <item>
          <title>MythTV - Wiki Recent Changes</title>
@@ -15424,15 +15816,41 @@ Index: mythplugins/mythnews/mythnews/news-sites.xml
      </item>
    
  </category>
-@@ -986,6 +976,11 @@
+@@ -1019,7 +989,7 @@
+ 
+     <item>
+         <title>Scotsman.com Opinion</title>
+-        <url>http://news.scotsman.com/opinion.cfm?format=rss</url>
++        <url>http://news.scotsman.com/getFeed.aspx?Format=rss&amp;sectionid=7074</url>
+         <ico>http://www.scotsman.com/favicon.ico</ico>
+     </item>
+     
+@@ -1115,18 +1085,25 @@
+ 
+     <item>
+         <title>Helsingin Sanomat (FI)</title>
+-        <url>http://siirto.helsinginsanomat.fi/aukio/HS-Tuoreet-RSS.xml</url>
++        <url>http://www.hs.fi/uutiset/rss/</url>
++        <ico>http://www.hs.fi/static/hs/img/favicon.ico</ico>
      </item>
  
      <item>
-+        <title>Digital Spy - Odd Section</title>
-+        <url>http://syndication.digitalspy.co.uk/rss_news/dsodd.xml</url>
++        <title>YLE (FI)</title>
++        <url>http://www.yle.fi/uutiset/rss/paauutiset.xml</url>
++        <ico>http://www.yle.fi/favicon.ico</ico>
 +    </item>
-+
++    
 +    <item>
-         <title>Fark</title>
-         <url>http://feeds.feedburner.com/fark</url>
-         <ico>http://www.fark.com/favicon.ico</ico>
+         <title>Scotsman.com Headlines</title>
+-        <url>http://news.scotsman.com/index.cfm?format=rss</url>
++        <url>http://news.scotsman.com/getFeed.aspx?Format=rss&amp;sectionid=4068</url>
+         <ico>http://www.scotsman.com/favicon.ico</ico>
+     </item>
+ 
+     <item>
+         <title>Scotsman.com UK News</title>
+-        <url>http://news.scotsman.com/uk.cfm?format=rss</url>
++        <url>http://news.scotsman.com/getFeed.aspx?Format=rss&amp;sectionid=7071</url>
+         <ico>http://www.scotsman.com/favicon.ico</ico>
+     </item>
+ 

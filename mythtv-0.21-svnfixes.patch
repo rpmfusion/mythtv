@@ -25167,7 +25167,7 @@ Index: mythtv/configure
    echo "  --with-bindings=LIST     install the bindings specified in the"
    echo "                           comma-separated list"
    echo "                           Supported bindings: perl, python"
-@@ -904,6 +907,7 @@
+@@ -904,9 +907,11 @@
      xvmc_vld
      dvdv
      fribidi
@@ -25175,7 +25175,20 @@ Index: mythtv/configure
  '
  
  MYTHTV_LIST='
-@@ -1178,6 +1182,7 @@
++    audio_pulse
+     audio_alsa
+     audio_arts
+     audio_jack
+@@ -1156,6 +1161,8 @@
+ CONFIG_DEFINES=""
+ CONFIG_INCLUDEPATH=""
+ PROFILEFLAGS=""
++audio_pulse="default"
++audio_pulse_libs="-lpulse"
+ audio_alsa="default"
+ audio_alsa_libs="-lasound"
+ audio_arts="default"
+@@ -1178,6 +1185,7 @@
  joystick_menu="default"
  lamemp3="yes"
  lirc="yes"
@@ -25183,7 +25196,7 @@ Index: mythtv/configure
  opengl="yes"
  v4l="yes"
  x11="yes"
-@@ -1186,9 +1191,9 @@
+@@ -1186,9 +1194,9 @@
  xv="yes"
  xvmc="yes"
  xvmc_lib=""
@@ -25194,7 +25207,7 @@ Index: mythtv/configure
  
  # libraries
  enable zlib
-@@ -1353,6 +1358,10 @@
+@@ -1353,6 +1361,10 @@
    ;;
    --xvmc-lib=*) xvmc_lib="$optval"
    ;;
@@ -25205,7 +25218,7 @@ Index: mythtv/configure
    --enable-mac-accel) dvdv="yes"
    ;;
    --disable-mac-accel) dvdv="no"
-@@ -1382,6 +1391,10 @@
+@@ -1382,6 +1394,10 @@
  # disabled due to abuse in Gentoo ebuild
    --disable-backend)
    ;;
@@ -25216,7 +25229,7 @@ Index: mythtv/configure
    --previous|--prev)
        echo "No history of previous configure parameters."
    ;;
-@@ -1475,6 +1488,7 @@
+@@ -1475,6 +1491,7 @@
        fi
      fi
      cmov="yes"
@@ -25224,7 +25237,7 @@ Index: mythtv/configure
    ;;
    # armv4l is a subset of armv[567]*l
    arm|armv[4567]*l)
-@@ -1586,6 +1600,7 @@
+@@ -1586,6 +1603,7 @@
      ;;
    freebsd)
      append CCONFIG "freebsd"
@@ -25232,7 +25245,7 @@ Index: mythtv/configure
      disable need_memalign
      backend="yes"
      ;;
-@@ -1599,10 +1614,13 @@
+@@ -1599,10 +1617,13 @@
      enable  darwin
      disable dvb
      disable ivtv
@@ -25241,7 +25254,7 @@ Index: mythtv/configure
 -    if [ ${osxver} = "9" ]; then 
 -      disable mmx 
 -    fi
-+    if [[ ${ldver%.*} -lt "82" && ${osxver} = "9" && ${arch} = "x86_32" ]]; then
++    if [[ ${ldver%%.*} -lt "82" && ${osxver} = "9" && ${arch} = "x86_32" ]]; then
 +        disable mmx
 +        echo "You have a broken ld. Playback of HD videos may be very poor."
 +        echo "See http://svn.mythtv.org/trac/ticket/4200 for intelleopardmmx.patch"
@@ -25249,7 +25262,7 @@ Index: mythtv/configure
      disable need_memalign
      disable opengl_video
      disable opengl_vsync
-@@ -1619,9 +1637,23 @@
+@@ -1619,9 +1640,23 @@
      FFSERVERLDFLAGS=-Wl,-bind_at_load
      ;;
    mingw32*)
@@ -25275,7 +25288,7 @@ Index: mythtv/configure
      shlibdir="$bindir"
      VHOOKSHFLAGS='-shared -L$(BUILD_ROOT)/libavformat -L$(BUILD_ROOT)/libavcodec -L$(BUILD_ROOT)/libavutil'
      VHOOKLIBS='-lavformat$(BUILDSUF) -lavcodec$(BUILDSUF) -lavutil$(BUILDSUF) $(EXTRALIBS)'
-@@ -1629,17 +1661,7 @@
+@@ -1629,17 +1664,7 @@
          VHOOKSHFLAGS="$VHOOKSHFLAGS -L\$(BUILD_ROOT)/libswscale"
          VHOOKLIBS="$VHOOKLIBS -lswscale\$(BUILDSUF)"
      fi
@@ -25293,7 +25306,7 @@ Index: mythtv/configure
      SLIBPREF="lib"
      SLIBSUF=".dll"
      EXESUF=".exe"
-@@ -2034,6 +2056,8 @@
+@@ -2034,6 +2059,8 @@
  # EM64T era Intel Xeon
     if expr "$processor" : ".*Intel(R) Xeon(R) CPU.*5110" > /dev/null ; then
         ARCHFLAGS="-march=k8" # this would be pentium4 on 32 bit systems
@@ -25302,7 +25315,20 @@ Index: mythtv/configure
  # Various Intel Duo processors (EMT64T capable)
     elif expr "$processor" : ".*Intel(R).*Core(TM)2.*CPU" > /dev/null ; then
         ARCHFLAGS="-march=k8" # this would be pentium4 on 32 bit systems
-@@ -2691,6 +2715,9 @@
+@@ -2528,6 +2555,12 @@
+ check_header sys/soundcard.h
+ check_header soundcard.h
+ 
++# PulseAudio probe
++! disabled audio_pulse &&
++    check_lib pulse/version.h pa_get_library_version $audio_pulse_libs &&
++    enable  audio_pulse ||
++    disable audio_pulse
++
+ # ALSA probe
+ ! disabled audio_alsa &&
+     check_lib alsa/asoundlib.h snd_asoundlib_version $audio_alsa_libs &&
+@@ -2691,6 +2724,9 @@
      fi
  fi
  
@@ -25312,7 +25338,7 @@ Index: mythtv/configure
  enabled x11 && has_library libX11 || disable x11
  enabled xrandr && has_header X11/extensions/Xrandr.h || disable xrandr
  enabled xv && has_library libXv || disable xv
-@@ -2702,38 +2729,38 @@
+@@ -2702,38 +2738,38 @@
  check_header X11/extensions/XvMClib.h
  has_library libXvMCW || disable xvmcw
  check_header X11/extensions/vldXvMC.h
@@ -25368,7 +25394,7 @@ Index: mythtv/configure
  
  
  # Can only do Mac accel on Mac platform
-@@ -2838,6 +2865,9 @@
+@@ -2838,6 +2874,9 @@
      libdir="${PREFIX}/${libdir_name}"
  fi
  
@@ -25378,7 +25404,7 @@ Index: mythtv/configure
  
  echo "# Basic Settings"
  echo "Compile type              $compile_type"
-@@ -2848,6 +2878,7 @@
+@@ -2848,6 +2887,7 @@
  echo "Compiler cache            $ccache$ccache_txt"
  echo "DistCC                    $distcc$distcc_txt"
  echo "install prefix            $PREFIX"
@@ -25386,7 +25412,15 @@ Index: mythtv/configure
  <<BLOCK_QUOTE
  echo "source path               $source_path"
  echo "C compiler                $cc"
-@@ -3032,7 +3063,9 @@
+@@ -2973,6 +3013,7 @@
+ if enabled frontend; then
+   echo
+   echo "# Sound Output Support"
++  echo "PulseAudio support        ${audio_pulse-no}"
+   echo "OSS support               ${audio_oss-no}"
+   echo "ALSA support              ${audio_alsa-no}"
+   echo "aRts support              ${audio_arts-no}"
+@@ -3032,7 +3073,9 @@
  echo "#define FFMPEG_CONFIG_H" >> $TMPH
  echo "#define FFMPEG_CONFIGURATION \"$FFMPEG_CONFIGURATION\"" >> $TMPH
  
@@ -25396,6 +25430,18 @@ Index: mythtv/configure
  echo "LIBDIR=$libdir" >> $MYTH_CONFIG_MAK
  <<BLOCK_QUOTE
  echo "SHLIBDIR=\$(DESTDIR)$shlibdir" >> config.mak
+@@ -3151,6 +3194,11 @@
+   echo "CONFIG_AUDIO_ALSA_LIBS=$audio_alsa_libs" >> $MYTH_CONFIG_MAK
+ fi
+ 
++if enabled audio_pulse; then
++  append CCONFIG "using_pulse"
++  echo "CONFIG_AUDIO_PULSE_LIBS=$audio_pulse_libs" >> $MYTH_CONFIG_MAK
++fi
++
+ if enabled audio_arts; then
+     append CCONFIG "using_arts"
+   echo "CONFIG_AUDIO_ARTS_LIBS=$audio_arts_libs" >> $MYTH_CONFIG_MAK
 Index: mythtv/themes/themes.pro
 ===================================================================
 --- mythtv/themes/themes.pro	(revision 16468)
@@ -27183,7 +27229,7 @@ Index: mythtv/docs/mythtv-HOWTO-22.html
 Index: mythtv/libs/libs-targetfix.pro
 ===================================================================
 --- mythtv/libs/libs-targetfix.pro	(revision 0)
-+++ mythtv/libs/libs-targetfix.pro	(revision 20373)
++++ mythtv/libs/libs-targetfix.pro	(revision 20668)
 @@ -0,0 +1,20 @@
 +# Common project modifications to change the generated target.
 +
@@ -27205,6 +27251,19 @@ Index: mythtv/libs/libs-targetfix.pro
 +        target.path = $${PREFIX}/bin
 +    }
 +}
+Index: mythtv/libs/libmythtv/eit.cpp
+===================================================================
+--- mythtv/libs/libmythtv/eit.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/eit.cpp	(working copy)
+@@ -239,7 +239,7 @@
+     }
+     score /= al.size();
+ 
+-    return max(1000, score);
++    return min(1000, score);
+ }
+ 
+ int DBEvent::GetMatch(const vector<DBEvent> &programs, int &bestmatch) const
 Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(revision 16468)
@@ -27584,15 +27643,84 @@ Index: mythtv/libs/libmythtv/firewiredevice.cpp
  
      if (is_mot && !alt_method)
      {
-@@ -444,6 +447,21 @@
+@@ -235,7 +238,7 @@
+             cmd.push_back(kAVCControlCommand);
+             cmd.push_back(kAVCSubunitTypePanel | m_subunitid);
+             cmd.push_back(kAVCPanelPassThrough);
+-            cmd.push_back(kAVCPanelKey0 + digit[i] | kAVCPanelKeyPress);
++            cmd.push_back((kAVCPanelKey0 + digit[i]) | kAVCPanelKeyPress);
+             cmd.push_back(0x00);
+             cmd.push_back(0x00);
+             cmd.push_back(0x00);
+@@ -399,8 +402,9 @@
+ 
+     const uint64_t sa_vendor_ids[] =
+     {
+-        0x11e6,    0x14f8,    0x1692,    0x1947,    0x0f21,    0x1ac3,
+-        0x0a73,
++        0x0a73,    0x0f21,    0x11e6,    0x14f8,    0x1692,    0x1868,
++        0x1947,    0x1ac3,    0x1bd7,    0x1cea,    0x1e6b,    0x21be,
++        0x223a,    0x22ce,    0x23be,    0x252e,
+     };
+     const uint sa_vendor_id_cnt =
+         sizeof(sa_vendor_ids) / sizeof(uint64_t);
+@@ -415,19 +419,29 @@
+     const uint64_t motorola_vendor_ids[] =
+     {
+         /* DCH-3200 */
+-        0x1c11,
+-        /* 3416 */
++        0x1c11,    0x1cfb,    0x1fc4,    0x23a3,
++        /* DCH-3416 */
++        0x1e46,
++        /* DCT-3416 */
+         0x1bdd,
+-        /* 3412 */
++        /* DCT-3412 */
+         0x159a,
+-        /* 6200, 3416 */
++        /* DCT-6200, DCT-3416 */
+         0x0ce5,    0x0e5c,    0x1225,    0x0f9f,    0x1180,
+         0x12c9,    0x11ae,    0x152f,    0x14e8,    0x16b5,    0x1371,
+-        0x19a6,    0x1aad,    0x0b06,    0x195e,
+-        /* 6212 */
++        0x19a6,    0x1aad,    0x0b06,    0x195e,    0x10dc,
++        /* DCT-6212 */
+         0x0f9f,    0x152f,
+-        /* 6216, 2224 */
++        /* DCT-6216, 2224 */
+         0x17ee,    0x1a66,
++        /* QIP 7100 */
++        0x2374,
++        /* unknown, see http://standards.ieee.org/regauth/oui/oui.txt */
++        0x04db,    0x0406,    0x0ce5,    0x111a,    0x1225,    0x1404,
++        0x1626,    0x18c0,    0x1ade,    0x1cfb,    0x2040,    0x211e,
++        0x2180,    0x2210,    0x230b,    0x2375,    0x2395,    0x23a2,
++        0x23ed,    0x23ee,    0x23a0,    0x23a1,
++
+     };
+     const uint motorola_vendor_id_cnt =
+         sizeof(motorola_vendor_ids) / sizeof(uint64_t);
+@@ -435,6 +449,7 @@
+     for (uint i = 0; i < motorola_vendor_id_cnt; i++)
+     {
+         id_to_model[motorola_vendor_ids[i] << 32 | 0xd330] = "DCH-3200";
++        id_to_model[motorola_vendor_ids[i] << 32 | 0xb630] = "DCH-3416";
+         id_to_model[motorola_vendor_ids[i] << 32 | 0x34cb] = "DCT-3412";
+         id_to_model[motorola_vendor_ids[i] << 32 | 0x346b] = "DCT-3416";
+         id_to_model[motorola_vendor_ids[i] << 32 | 0xb630] = "DCT-3416";
+@@ -443,13 +458,31 @@
+         id_to_model[motorola_vendor_ids[i] << 32 | 0x64ca] = "DCT-6212";
          id_to_model[motorola_vendor_ids[i] << 32 | 0x64cb] = "DCT-6212";
          id_to_model[motorola_vendor_ids[i] << 32 | 0x646b] = "DCT-6216";
++        id_to_model[motorola_vendor_ids[i] << 32 | 0x8100] = "QIP-7100";
++        id_to_model[motorola_vendor_ids[i] << 32 | 0x0001] = "QIP-7100";
      }
 +
 +    const uint64_t pace_vendor_ids[] =
 +    {
 +        /* PACE 550-HD & 779 */
-+        0x5094,
++        0x1cc3, 0x5094,
 +    };
 +
 +    const uint pace_vendor_id_cnt =
@@ -27606,12 +27734,20 @@ Index: mythtv/libs/libmythtv/firewiredevice.cpp
  }
  
  bool FirewireDevice::IsSTBSupported(const QString &panel_model)
-@@ -458,6 +476,8 @@
+ {
+     QString model = panel_model.upper();
+     return ((model == "DCH-3200") ||
++            (model == "DCH-3416") ||
+             (model == "DCT-3412") ||
+             (model == "DCT-3416") ||
+             (model == "DCT-6200") ||
+@@ -458,6 +491,9 @@
              (model == "SA3250HD") ||
              (model == "SA4200HD") ||
              (model == "SA4250HDC") ||
 +            (model == "PACE-550") ||
 +            (model == "PACE-779") ||
++            (model == "QIP-7100") ||
              (model == "GENERIC"));
  }
  
@@ -28619,6 +28755,19 @@ Index: mythtv/libs/libmythtv/scanwizardhelpers.h
      }
  
      QString frequency(void)  const { return pfrequency->getValue();  }
+Index: mythtv/libs/libmythtv/eitfixup.cpp
+===================================================================
+--- mythtv/libs/libmythtv/eitfixup.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/eitfixup.cpp	(working copy)
+@@ -71,7 +71,7 @@
+       m_mcaCC(",?\\s(HI|English) Subtitles\\.?"),
+       m_mcaDD(",?\\sDD\\.?"),
+       m_RTLrepeat("(\\(|\\s)?Wiederholung.+vo[m|n].+((?:\\d{2}\\.\\d{2}\\.\\d{4})|(?:\\d{2}[:\\.]\\d{2}\\sUhr))\\)?"),
+-      m_RTLSubtitle("([^\\.]+)\\.\\s+(.+)"),
++      m_RTLSubtitle("^([^\\.]{3,})\\.\\s+(.+)"),
+       m_RTLSubtitle1("^Folge\\s(\\d{1,4})\\s*:\\s+'(.*)'(?:\\.\\s*|$)"),
+       m_RTLSubtitle2("^Folge\\s(\\d{1,4})\\s+(.{,5}[^\\.]{,120})[\\?!\\.]\\s*"),
+       m_RTLSubtitle3("^(?:Folge\\s)?(\\d{1,4}(?:\\/[IVX]+)?)\\s+(.{,5}[^\\.]{,120})[\\?!\\.]\\s*"),
 Index: mythtv/libs/libmythtv/diseqc.h
 ===================================================================
 --- mythtv/libs/libmythtv/diseqc.h	(revision 16468)
@@ -28803,7 +28952,40 @@ Index: mythtv/libs/libmythtv/eithelper.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/eithelper.cpp	(revision 16468)
 +++ mythtv/libs/libmythtv/eithelper.cpp	(working copy)
-@@ -693,6 +693,20 @@
+@@ -393,7 +393,9 @@
+         }
+ 
+         QDateTime starttime = MythUTCToLocal(eit->StartTimeUTC(i));
+-        EITFixUp::TimeFix(starttime);
++        // fix starttime only if the duration is a multiple of a minute
++        if (!(eit->DurationInSeconds(i) % 60))
++            EITFixUp::TimeFix(starttime);
+         QDateTime endtime   = starttime.addSecs(eit->DurationInSeconds(i));
+ 
+         DBEvent *event = new DBEvent(chanid,
+@@ -495,7 +497,9 @@
+         for (uint k=0; k<transmission.TransmissionCount(); ++k)
+         {
+             QDateTime starttime = transmission.StartTimeUTC(k);
+-            EITFixUp::TimeFix(starttime);
++            // fix starttime only if the duration is a multiple of a minute
++            if (!(cit->DurationInSeconds() % 60))
++                EITFixUp::TimeFix(starttime);
+             QDateTime endtime   = starttime.addSecs(cit->DurationInSeconds());
+ 
+             DBEvent *event = new DBEvent(chanid,
+@@ -551,7 +555,9 @@
+         starttime.setTime_t(tmp - utc_offset, Qt::LocalTime);
+     }
+ 
+-    EITFixUp::TimeFix(starttime);
++    // fix starttime only if the duration is a multiple of a minute
++    if (!(event.length % 60))
++        EITFixUp::TimeFix(starttime);
+     QDateTime endtime = starttime.addSecs(event.length);
+ 
+     desc_list_t list = MPEGDescriptor::Parse(event.desc, event.desc_length);
+@@ -693,6 +699,20 @@
  
      // United Kingdom
      fix[ 9018U << 16] = EITFixUp::kFixUK;
@@ -28824,7 +29006,7 @@ Index: mythtv/libs/libmythtv/eithelper.cpp
  
      // ComHem Sweeden
      fix[40999U << 16       ] = EITFixUp::kFixComHem;
-@@ -814,20 +828,24 @@
+@@ -814,20 +834,24 @@
          EITFixUp::kEFixForceISO8859_15;
      // On transport 10008 only following channels need fixing:
      fix[    10008LL<<32 | 61441U << 16 | 53002] = // Tele 5
@@ -29086,7 +29268,7 @@ Index: mythtv/libs/libmythtv/channelutil.cpp
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 20373)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 20668)
 @@ -0,0 +1,12 @@
 +#ifndef _FREESAT_HUFFMAN_H_
 +#define _FREESAT_HUFFMAN_H_
@@ -29109,7 +29291,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_tables.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 20373)
++++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 20668)
 @@ -0,0 +1,4370 @@
 +struct fsattab fsat_table[] = {
 +    { 0x00000000,  2, 'T'},
@@ -33490,7 +33672,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 20373)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 20668)
 @@ -0,0 +1,107 @@
 +#include "freesat_huffman.h"
 +
@@ -34124,6 +34306,18 @@ Index: mythtv/libs/libmythtv/DVDRingBuffer.h
  
      int get_nibble(const uint8_t *buf, int nibble_offset);
      int decode_rle(uint8_t *bitmap, int linesize, int w, int h,
+Index: mythtv/libs/libmythtv/vsync.cpp
+===================================================================
+--- mythtv/libs/libmythtv/vsync.cpp	(revision 16468)
++++ mythtv/libs/libmythtv/vsync.cpp	(working copy)
+@@ -16,6 +16,7 @@
+  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+  */
+ 
++#include <cstdlib>
+ #include <cstdio>
+ #include <cerrno>
+ #include <cmath>
 Index: mythtv/libs/libmythtv/dvbtypes.h
 ===================================================================
 --- mythtv/libs/libmythtv/dvbtypes.h	(revision 16468)
@@ -34238,7 +34432,12 @@ Index: mythtv/libs/libmythtv/videooutbase.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/videooutbase.cpp	(revision 16468)
 +++ mythtv/libs/libmythtv/videooutbase.cpp	(working copy)
-@@ -510,7 +510,7 @@
+@@ -1,3 +1,4 @@
++#include <cstdlib>
+ #include <cmath>
+ 
+ #include "videooutbase.h"
+@@ -510,7 +511,7 @@
      SetupDeinterlace(true, db_vdisp_profile->GetFallbackDeinterlacer());
  }
  
@@ -34247,7 +34446,7 @@ Index: mythtv/libs/libmythtv/videooutbase.cpp
   *  \brief Change to the best deinterlacing method.
   */
  void VideoOutput::BestDeint(void)
-@@ -611,6 +611,8 @@
+@@ -611,6 +612,8 @@
      db_vdisp_profile->SetInput(video_dim);
  
      SetVideoAspectRatio(aspect);
@@ -34713,6 +34912,29 @@ Index: mythtv/libs/libmythtv/scanwizardhelpers.cpp
  }
  
  AnalogPane::AnalogPane() :
+Index: mythtv/libs/libmythtv/eitfixup.h
+===================================================================
+--- mythtv/libs/libmythtv/eitfixup.h	(revision 16468)
++++ mythtv/libs/libmythtv/eitfixup.h	(working copy)
+@@ -55,12 +55,16 @@
+ 
+     void Fix(DBEvent &event) const;
+ 
++    /** Corrects starttime to the multiple of a minute. 
++     *  Used for providers who fail to handle leap seconds timely. Changes the
++     *  starttime not more than 3 seconds. Sshould only be used if the
++     *  duration is the multiple of a minute. */
+     static void TimeFix(QDateTime &dt)
+     {
+         int secs = dt.time().second();
+-        if (secs < 5)
++        if (secs < 4)
+             dt = dt.addSecs(-secs);
+-        if (secs > 55)
++        if (secs > 56)
+             dt = dt.addSecs(60 - secs);
+     }
+ 
 Index: mythtv/libs/libmythtv/progfind.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/progfind.cpp	(revision 16468)
@@ -35379,7 +35601,7 @@ Index: mythtv/libs/libavutil/common.h
 Index: mythtv/libs/libavcodec/rectangle.h
 ===================================================================
 --- mythtv/libs/libavcodec/rectangle.h	(revision 0)
-+++ mythtv/libs/libavcodec/rectangle.h	(revision 20373)
++++ mythtv/libs/libavcodec/rectangle.h	(revision 20668)
 @@ -0,0 +1,121 @@
 +/*
 + * rectangle filling function
@@ -35604,7 +35826,7 @@ Index: mythtv/libs/libavcodec/h264pred.h
 Index: mythtv/libs/libavcodec/i386/h264_i386.h
 ===================================================================
 --- mythtv/libs/libavcodec/i386/h264_i386.h	(revision 0)
-+++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 20373)
++++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 20668)
 @@ -0,0 +1,144 @@
 +/*
 + * H.26L/H.264/AVC/JVT/14496-10/... encoder/decoder
@@ -40410,6 +40632,405 @@ Index: mythtv/libs/libavformat/libavformat.pro
  mingw:SOURCES -= audio.c
 +
 +include ( ../libs-targetfix.pro )
+Index: mythtv/libs/libmyth/audiopulseutil.h
+===================================================================
+--- mythtv/libs/libmyth/audiopulseutil.h	(revision 0)
++++ mythtv/libs/libmyth/audiopulseutil.h	(revision 20668)
+@@ -0,0 +1,6 @@
++#include "mythexp.h"
++
++MPUBLIC bool pulseaudio_suspend(void);
++MPUBLIC bool pulseaudio_unsuspend(void);
++MPUBLIC int  pulseaudio_handle_startup(void);
++MPUBLIC int  pulseaudio_handle_teardown(void);
+Index: mythtv/libs/libmyth/audiopulseutil.cpp
+===================================================================
+--- mythtv/libs/libmyth/audiopulseutil.cpp	(revision 0)
++++ mythtv/libs/libmyth/audiopulseutil.cpp	(revision 20668)
+@@ -0,0 +1,383 @@
++/***
++ *   This file was part of PulseAudio, the license has been upgraded to GPL v2
++ *   or later as per the LGPL grant this was originally distributed under.
++ *
++ *   Copyright 2004-2006 Lennart Poettering
++ *
++ *   MythTV is free software; you can redistribute it and/or modify
++ *   it under the terms of the GNU General Public License as published by
++ *   the Free Software Foundation; either version 2 of the License, or
++ *   (at your option) any later version.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ *
++ *   You should have received a copy of the GNU General Public License
++ *   along with this program; if not, write to the Free Software
++ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ */
++
++#include "audiopulseutil.h"
++#include "util.h" // for IsPulseAudioRunning()
++#include "exitcodes.h"
++#include "mythcontext.h"
++
++#ifdef USING_PULSE
++
++#include <sys/types.h>
++#include <sys/wait.h>
++
++#include <signal.h>
++#include <string.h>
++#include <errno.h>
++#include <unistd.h>
++#include <assert.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <limits.h>
++#include <getopt.h>
++#include <locale.h>
++
++#ifdef __linux__
++#include <sys/prctl.h>
++#endif
++
++#include <pulse/pulseaudio.h>
++
++#include <qthread.h>
++#include <qmutex.h>
++#include <qwaitcondition.h>
++
++#define BUFSIZE 1024
++
++#define LOC      QString("AudioPulseUtil: ")
++#define LOC_WARN QString("AudioPulseUtil, Warning: ")
++#define LOC_ERR  QString("AudioPulseUtil, Error: ")
++
++enum pa_values {
++    kPA_undefined                   = -1,
++    kPA_suspended                   = +0,
++    kPA_not_suspended_remote_server = +1,
++    kPA_not_suspended_error         = +2,
++    kPA_not_suspended_success       = +3,
++    kPA_unsuspended_error           = +4,
++    kPA_unsuspended_success         = +5,
++};
++
++static pa_context      *pau_context = NULL;
++static pa_mainloop_api *pau_mainloop_api = NULL;
++static QMutex           pau_lock;
++static QWaitCondition   pau_wait;
++static int              pau_value = kPA_undefined;
++
++static void pau_set_value(int new_value)
++{
++    QMutexLocker ml(&pau_lock);
++    pau_value = new_value;
++    pau_wait.wakeAll();
++}
++
++static void pau_quit(int ret)
++{
++    if (pau_mainloop_api)
++        pau_mainloop_api->quit(pau_mainloop_api, ret);
++}
++
++static void pau_context_drain_complete(pa_context *c, void *userdata)
++{
++    if (c)
++        pa_context_disconnect(c);
++}
++
++static void pau_drain(void)
++{
++    if (!pau_context)
++        return;
++
++    pa_operation *operation = pa_context_drain(pau_context, pau_context_drain_complete, NULL);
++    if (!operation)
++        pa_context_disconnect(pau_context);
++    else
++        pa_operation_unref(operation);
++}
++
++static void pau_suspend_complete(pa_context *c, int success, void *userdata)
++{
++    if (!success)
++    {
++        if (!c)
++            return;
++
++        VERBOSE(VB_IMPORTANT, LOC_ERR + QString("Failure to suspend: %1")
++                .arg(pa_strerror(pa_context_errno(c))));
++
++        pau_set_value(kPA_not_suspended_error);
++
++        return;
++    }
++
++    {
++        QMutexLocker ml(&pau_lock);
++        if (kPA_suspended == pau_value)
++            return;
++    }
++
++    VERBOSE(VB_GENERAL, LOC + "Suspend Success");
++
++    pau_set_value(kPA_suspended);
++}
++
++static void pau_resume_complete(pa_context *c, int success, void *userdata)
++{
++    static int n = 0;
++
++    n++;
++
++    if (!success)
++    {
++        if (!c)
++            return;
++
++        VERBOSE(VB_IMPORTANT, LOC_ERR + QString("Failure to resume: %1")
++                .arg(pa_strerror(pa_context_errno(c))));
++
++        pau_set_value(kPA_unsuspended_error);
++
++        return;
++    }
++
++    if (n >= 2)
++        pau_drain(); /* drain and quit */
++
++    {
++        QMutexLocker ml(&pau_lock);
++        if (kPA_unsuspended_success == pau_value)
++            return;
++    }
++
++    VERBOSE(VB_GENERAL, LOC + "Resume Success");
++
++    pau_set_value(kPA_unsuspended_success);
++}
++
++static void pau_context_state_callback(pa_context *c, void *userdata)
++{
++    if (!c)
++        return;
++
++    switch (pa_context_get_state(c))
++    {
++        case PA_CONTEXT_CONNECTING:
++        case PA_CONTEXT_AUTHORIZING:
++        case PA_CONTEXT_SETTING_NAME:
++            break;
++
++        case PA_CONTEXT_READY:
++            if (pa_context_is_local(c))
++            {
++                pa_operation *operation_sink =
++                    pa_context_suspend_sink_by_index(
++                        c, PA_INVALID_INDEX, 1, pau_suspend_complete, NULL);
++                pa_operation_unref(operation_sink);
++
++                pa_operation *operation_source =
++                    pa_context_suspend_source_by_index(
++                        c, PA_INVALID_INDEX, 1, pau_suspend_complete, NULL);
++                pa_operation_unref(operation_source);
++            }
++            else
++            {
++                VERBOSE(VB_IMPORTANT, LOC_ERR +
++                        "Sound server is not local, can not suspend.");
++
++                pau_set_value(kPA_not_suspended_remote_server);
++            }
++
++            break;
++
++        case PA_CONTEXT_TERMINATED:
++            pau_quit(0);
++            break;
++
++        case PA_CONTEXT_FAILED:
++        default:
++            VERBOSE(VB_IMPORTANT, LOC_WARN +
++                    "Can not connect to sound server, can not suspend." +
++                    QString("\n\t\t\t%1")
++                    .arg(pa_strerror(pa_context_errno(c))));
++
++            pau_set_value(kPA_not_suspended_error);
++
++            if (pau_context)
++            {
++                pa_context_unref(pau_context);
++                pau_context = NULL;
++            }
++
++            break;
++    }
++}
++
++void pau_pulseaudio_suspend_internal(void)
++{
++    pa_mainloop* m = NULL;
++    int ret = 1;
++    char *server = NULL;
++    const char *bn = "mythtv";
++
++    if (!(m = pa_mainloop_new()))
++    {
++        VERBOSE(VB_IMPORTANT, LOC_ERR + "pa_mainloop_new() failed.");
++        goto quit;
++    }
++
++    pau_mainloop_api = pa_mainloop_get_api(m);
++    if (!pau_mainloop_api)
++        goto quit;
++
++    if (pa_signal_init(pau_mainloop_api) != 0)
++        goto quit;
++
++    if (!(pau_context = pa_context_new(pau_mainloop_api, bn)))
++    {
++        VERBOSE(VB_IMPORTANT, LOC_ERR + "pa_context_new() failed.");
++        goto quit;
++    }
++
++    pa_context_set_state_callback(pau_context, pau_context_state_callback, NULL);
++    pa_context_connect(pau_context, server, PA_CONTEXT_NOAUTOSPAWN, NULL);
++
++    if (pa_mainloop_run(m, &ret) < 0)
++    {
++        VERBOSE(VB_IMPORTANT, LOC_ERR + "pa_mainloop_run() failed.\n");
++        goto quit;
++    }
++
++quit:
++    if (pau_context)
++        pa_context_unref(pau_context);
++
++    if (m) {
++        pa_signal_done();
++        pa_mainloop_free(m);
++    }
++
++    pa_xfree(server);
++}
++
++class PAThread : public QThread
++{
++  public:
++    void run(void)
++    {
++        pau_pulseaudio_suspend_internal();
++    }
++};
++
++/// \returns true if successful
++bool pulseaudio_suspend(void)
++{
++    QThread *t = new PAThread();
++    t->start();
++
++    QMutexLocker ml(&pau_lock);
++    while (kPA_undefined == pau_value)
++        pau_wait.wait(&pau_lock);
++
++    return kPA_suspended == pau_value;
++}
++
++/// \returns true if successful
++bool pulseaudio_unsuspend(void)
++{
++    if (!pau_context)
++    {
++        pau_quit(0);
++        return false;
++    }
++
++    if (pa_context_is_local(pau_context))
++    {
++        pa_operation *operation_sink =
++            pa_context_suspend_sink_by_index(
++                pau_context, PA_INVALID_INDEX, 0, pau_resume_complete, NULL);
++        pa_operation_unref(operation_sink);
++
++        pa_operation *operation_source =
++            pa_context_suspend_source_by_index(
++                pau_context, PA_INVALID_INDEX, 0, pau_resume_complete, NULL);
++        pa_operation_unref(operation_source);
++
++        QMutexLocker ml(&pau_lock);
++        while ((kPA_unsuspended_error   != pau_value) &&
++               (kPA_unsuspended_success != pau_value))
++        {
++            pau_wait.wait(&pau_lock);
++        }
++
++        return kPA_unsuspended_success == pau_value;
++    }
++    else
++    {
++        pau_drain();
++    }
++
++    return false;
++}
++
++#endif // USING_PULSE
++
++int pulseaudio_handle_startup(void)
++{
++#ifdef USING_PULSE
++    if (getenv("EXPERIMENTALLY_ALLOW_PULSE_AUDIO"))
++    {
++        VERBOSE(VB_IMPORTANT, "WARNING: ");
++        VERBOSE(VB_IMPORTANT, "WARNING: ***Pulse Audio is running!!!!***");
++        VERBOSE(VB_IMPORTANT, "WARNING: ");
++        VERBOSE(VB_IMPORTANT, "WARNING: You have told MythTV to ignore it.");
++        VERBOSE(VB_IMPORTANT, "WARNING: ");
++    }
++    else if (IsPulseAudioRunning() && !pulseaudio_suspend())
++    {
++        VERBOSE(VB_IMPORTANT, "ERROR: ***Pulse Audio is running!!!!***");
++        VERBOSE(VB_IMPORTANT,
++                "ERROR: But MythTV was not able to suspend it. EXITING!");
++
++        return GENERIC_EXIT_NOT_OK;
++    }
++#else
++    if (IsPulseAudioRunning())
++    {
++        VERBOSE(VB_IMPORTANT, "ERROR: ***Pulse Audio is running!!!!***");
++        VERBOSE(VB_IMPORTANT, "ERROR: But MythTV has not been compiled "
++                "with Pulse Audio disabling support. EXITING!");
++        return GENERIC_EXIT_NOT_OK;
++    }
++#endif
++
++    return GENERIC_EXIT_OK;
++}
++
++int pulseaudio_handle_teardown(void)
++{
++#ifdef USING_PULSE
++    if (getenv("EXPERIMENTALLY_ALLOW_PULSE_AUDIO"))
++        return GENERIC_EXIT_OK;
++
++    {
++        QMutexLocker ml(&pau_lock);
++        if (kPA_suspended != pau_value)
++            return GENERIC_EXIT_OK;
++    }
++
++    if (!pulseaudio_unsuspend())
++    {
++        VERBOSE(VB_IMPORTANT, "ERROR: Encountered error re-enabling pulse audio");
++    }
++#endif
++
++    return GENERIC_EXIT_OK;
++}
 Index: mythtv/libs/libmyth/mythcdrom.cpp
 ===================================================================
 --- mythtv/libs/libmyth/mythcdrom.cpp	(revision 16468)
@@ -40556,6 +41177,20 @@ Index: mythtv/libs/libmyth/lcddevice.cpp
      QString aString;
      int mask = 0;
      if (0 && GetLEDMask)
+Index: mythtv/libs/libmyth/mythmediamonitor.h
+===================================================================
+--- mythtv/libs/libmyth/mythmediamonitor.h	(revision 16468)
++++ mythtv/libs/libmyth/mythmediamonitor.h	(working copy)
+@@ -75,7 +75,8 @@
+     static QString defaultCDdevice();
+     static QString defaultVCDdevice();
+     static QString defaultDVDdevice();
+-    static QString defaultWriter();
++    static QString defaultCDWriter();
++    static QString defaultDVDWriter();
+ 
+     virtual QStringList GetCDROMBlockDevices(void) = 0;
+ 
 Index: mythtv/libs/libmyth/mythcdrom.h
 ===================================================================
 --- mythtv/libs/libmyth/mythcdrom.h	(revision 16468)
@@ -40587,7 +41222,16 @@ Index: mythtv/libs/libmyth/util.cpp
  #   ifdef CONFIG_CYGWIN
  #     include <sys/statfs.h>
  #   else // if !CONFIG_CYGWIN
-@@ -293,10 +296,11 @@
+@@ -62,6 +65,8 @@
+ #include "jsmenuevent.h"
+ #endif
+ 
++#include "mythconfig.h" // for CONFIG_DARWIN
++
+ /** \fn mythCurrentDateTime()
+  *  \brief Returns the current QDateTime object, stripped of its msec component
+  */
+@@ -293,10 +298,11 @@
                      return GENERIC_EXIT_NOT_OK;
                  }
  
@@ -40600,6 +41244,25 @@ Index: mythtv/libs/libmyth/util.cpp
                  usleep(100000);
              }
          }
+@@ -955,3 +961,18 @@
+     return approx_size;
+ #endif
+ }
++
++bool IsPulseAudioRunning(void)
++{
++#if defined(CONFIG_DARWIN) || (__FreeBSD__) || defined(__OpenBSD__)
++    const char *command = "ps -ax | grep -i pulseaudio | grep -v grep > /dev/null";
++#else
++    const char *command = "ps -ae | grep pulseaudio > /dev/null";
++#endif
++    bool res = myth_system(command,
++                           MYTH_SYSTEM_DONT_BLOCK_LIRC |
++                           MYTH_SYSTEM_DONT_BLOCK_JOYSTICK_MENU);
++    return !res;
++}
++
++/* vim: set expandtab tabstop=4 shiftwidth=4: */
 Index: mythtv/libs/libmyth/compat.h
 ===================================================================
 --- mythtv/libs/libmyth/compat.h	(revision 16468)
@@ -41819,6 +42482,20 @@ Index: mythtv/libs/libmyth/mythmedia.cpp
  }
  
  MediaError MythMediaDevice::lock() 
+Index: mythtv/libs/libmyth/util.h
+===================================================================
+--- mythtv/libs/libmyth/util.h	(revision 16468)
++++ mythtv/libs/libmyth/util.h	(working copy)
+@@ -84,6 +84,9 @@
+ 
+ MPUBLIC double MythGetPixelAspectRatio(void);
+ 
++/// Is A/V Sync destruction daemon is running on this host?
++MPUBLIC bool IsPulseAudioRunning(void);
++
+ // CPU Tick timing function
+ #ifdef MMX
+ #ifdef _WIN32
 Index: mythtv/libs/libmyth/screensaver-x11.cpp
 ===================================================================
 --- mythtv/libs/libmyth/screensaver-x11.cpp	(revision 16468)
@@ -41867,7 +42544,23 @@ Index: mythtv/libs/libmyth/libmyth.pro
 ===================================================================
 --- mythtv/libs/libmyth/libmyth.pro	(revision 16468)
 +++ mythtv/libs/libmyth/libmyth.pro	(working copy)
-@@ -83,6 +83,10 @@
+@@ -26,6 +26,7 @@
+ HEADERS += volumebase.h volumecontrol.h virtualkeyboard.h visual.h xmlparse.h
+ HEADERS += mythhdd.h mythcdrom.h storagegroup.h dbutil.h
+ HEADERS += compat.h
++HEADERS += audiopulseutil.h
+ 
+ SOURCES += audiooutput.cpp audiooutputbase.cpp audiooutputnull.cpp
+ SOURCES += audiooutputdigitalencoder.cpp
+@@ -42,6 +43,7 @@
+ SOURCES += uilistbtntype.cpp uitypes.cpp util.cpp util-x11.cpp
+ SOURCES += volumebase.cpp volumecontrol.cpp virtualkeyboard.cpp xmlparse.cpp
+ SOURCES += mythhdd.cpp mythcdrom.cpp storagegroup.cpp dbutil.cpp
++SOURCES += audiopulseutil.cpp
+ 
+ INCLUDEPATH += ../libmythsamplerate ../libmythsoundtouch ../libmythfreesurround
+ INCLUDEPATH += ../libavcodec ../libavutil
+@@ -83,12 +85,21 @@
  inc2.files = $${inc.files}
  
  
@@ -41878,7 +42571,18 @@ Index: mythtv/libs/libmyth/libmyth.pro
  using_oss {
      DEFINES += USING_OSS
      SOURCES += audiooutputoss.cpp
-@@ -107,9 +111,6 @@
+     HEADERS += audiooutputoss.h
+ }
+ 
++using_pulse {
++    DEFINES += USING_PULSE
++    LIBS += $$PULSE_LIBS
++}
++
+ unix:!cygwin {
+     SOURCES += mediamonitor-unix.cpp
+     HEADERS += mediamonitor-unix.h
+@@ -107,9 +118,6 @@
  
      LIBS += -lpthread
  
@@ -41888,7 +42592,7 @@ Index: mythtv/libs/libmyth/libmyth.pro
      LIBS -= -lmythui-$$LIBVERSION  -lmythupnp-$$LIBVERSION 
      LIBS += -L. -lmythui-bootstrap -lmythupnp-bootstrap
      POST_TARGETDEPS += libmythui-bootstrap.a libmythupnp-bootstrap.a
-@@ -241,3 +242,5 @@
+@@ -241,3 +249,5 @@
  contains( CONFIG_LIBFFTW3, yes ) {
      LIBS += -lfftw3f
  }
@@ -41906,7 +42610,15 @@ Index: mythtv/libs/libmyth/mythmediamonitor.cpp
  #include "mythcontext.h"
  #include "mythdialogs.h"
  #include "mythconfig.h"
-@@ -81,8 +82,13 @@
+@@ -74,15 +75,26 @@
+ void MediaMonitor::SetCDSpeed(const char *device, int speed)
+ {
+     MediaMonitor *mon = GetMediaMonitor();
+-    if (mon != NULL)
++    if (mon)
+     {
+         MythMediaDevice *pMedia = mon->GetMedia(device);
+         if (pMedia && mon->ValidateAndLock(pMedia))
          {
              pMedia->setSpeed(speed);
              mon->Unlock(pMedia);
@@ -41915,11 +42627,41 @@ Index: mythtv/libs/libmyth/mythmediamonitor.cpp
      }
 +
 +    MythCDROM *cd = MythCDROM::get(NULL, device, false, false);
-+    cd->setSpeed(device, speed);
-+    delete cd;
++    if (cd)
++    {
++        cd->setSpeed(device, speed);
++        delete cd;
++    }
++
++    VERBOSE(VB_MEDIA, QString("MediaMonitor::setSpeed(%1) "
++                              "- Cannot find/create CDROM?") + device);
  }
  
  // When ejecting one of multiple devices, present a nice name to the user
+@@ -690,13 +702,22 @@
+                          tr("Select a DVD drive"), "/dev/dvd");
+ }
+ 
++/** 
++ * \brief CDWriterDeviceLocation, user-selected drive, or /dev/cdrom
++ */
++QString MediaMonitor::defaultCDWriter()
++{
++    return defaultDevice("CDWriterDeviceLocation",
++                         tr("Select a CD writer"), "/dev/cdrom");
++}
++
+ /**
+  * \brief MythArchiveDVDLocation, user-selected drive, or /dev/dvd
+  *
+  * This should also look for drives with blanks or RWs in them,
+  * but Nigel hasn't worked out how to do this tidily (yet).
+  */
+-QString MediaMonitor::defaultWriter()
++QString MediaMonitor::defaultDVDWriter()
+ {
+     QString device = defaultDevice("MythArchiveDVDLocation",
+                                    tr("Select a DVD writer"), "/dev/dvd");
 Index: mythtv/libs/libmyth/mythcdrom-linux.cpp
 ===================================================================
 --- mythtv/libs/libmyth/mythcdrom-linux.cpp	(revision 16468)
@@ -44274,6 +45016,98 @@ Index: mythtv/libs/libmythfreesurround/libmythfreesurround.pro
  }
 +
 +include ( ../libs-targetfix.pro )
+Index: mythtv/programs/mythfrontend/playbackbox.cpp
+===================================================================
+--- mythtv/programs/mythfrontend/playbackbox.cpp	(revision 16468)
++++ mythtv/programs/mythfrontend/playbackbox.cpp	(working copy)
+@@ -1059,14 +1059,14 @@
+ 
+             // Centre preview in the y axis
+             if (temp.height() < blackholeBounds.height())
+-                pixmap_y = blackholeBounds.y() + 
++                pixmap_y = blackholeBounds.y() +
+                                 (blackholeBounds.height() - temp.height()) / 2;
+             else
+                 pixmap_y = blackholeBounds.y();
+ 
+             // Centre preview in the x axis
+             if (temp.width() < blackholeBounds.width())
+-                pixmap_x = blackholeBounds.x() + 
++                pixmap_x = blackholeBounds.x() +
+                                 (blackholeBounds.width() - temp.width()) / 2;
+             else
+                 pixmap_x = blackholeBounds.x();
+@@ -1191,14 +1191,14 @@
+ 
+         // Centre video in the y axis
+         if (img.height() < blackholeBounds.height())
+-            video_y = blackholeBounds.y() + 
++            video_y = blackholeBounds.y() +
+                             (blackholeBounds.height() - img.height()) / 2;
+         else
+             video_y = blackholeBounds.y();
+ 
+         // Centre video in the x axis
+         if (img.width() < blackholeBounds.width())
+-            video_x = blackholeBounds.x() + 
++            video_x = blackholeBounds.x() +
+                             (blackholeBounds.width() - img.width()) / 2;
+         else
+             video_x = blackholeBounds.x();
+@@ -1679,7 +1679,7 @@
+         paintSkipUpdate = false;
+         update(drawTotalBounds);
+     }
+-    else 
++    else
+     {
+         progIndex = 0;
+ 
+@@ -1701,7 +1701,7 @@
+         paintSkipUpdate = false;
+         update(drawTotalBounds);
+     }
+-    else 
++    else
+     {
+         int progCount = progLists[titleList[titleIndex].lower()].count();
+ 
+@@ -1721,7 +1721,7 @@
+ {
+     if (inTitle)
+         pageTop();
+-    else 
++    else
+     {
+         progIndex = progLists[titleList[titleIndex].lower()].count() - 1;
+ 
+@@ -2066,7 +2066,7 @@
+         }
+ 
+         ProgramInfo *p;
+-        p = progLists[watchGroupLabel].first(); 
++        p = progLists[watchGroupLabel].first();
+         while (p)
+         {
+             int recid = p->recordid;
+@@ -2703,7 +2703,7 @@
+         return false;
+     }
+ 
+-    if (rec->filesize == 0)
++    if ((rec->filesize == 0) && (rec->GetFilesize() == 0))
+     {
+         VERBOSE(VB_IMPORTANT,
+             QString("PlaybackBox::play(): Error, %1 is zero-bytes in size")
+@@ -3660,7 +3660,7 @@
+         return;
+ 
+     curitem->ForgetHistory();
+-}    
++}
+ 
+ void PlaybackBox::doJobQueueJob(int jobType, int jobFlags)
+ {
 Index: mythtv/programs/mythfrontend/media_settings.xml
 ===================================================================
 --- mythtv/programs/mythfrontend/media_settings.xml	(revision 16468)
@@ -44355,6 +45189,40 @@ Index: mythtv/programs/mythfrontend/tv_schedule.xml
        <action>TV_CUSTOM_RECORD</action>
     </button>
  
+Index: mythtv/programs/mythfrontend/main.cpp
+===================================================================
+--- mythtv/programs/mythfrontend/main.cpp	(revision 16468)
++++ mythtv/programs/mythfrontend/main.cpp	(working copy)
+@@ -58,6 +58,7 @@
+ #include "mythscreenstack.h"
+ #include "mythmainwindow.h"
+ #include "mythappearance.h"
++#include "audiopulseutil.h"
+ 
+ #define NO_EXIT  0
+ #define QUIT     1
+@@ -1321,6 +1322,10 @@
+         }
+     }
+ 
++    int pa_ret = pulseaudio_handle_startup();
++    if (pa_ret != GENERIC_EXIT_OK)
++        return pa_ret;
++
+     if (logfile != "")
+     {
+         if (log_rotate(1) < 0)
+@@ -1548,6 +1553,10 @@
+     VERBOSE(VB_GENERAL, "Deleting UPnP client...");
+     delete g_pUPnp;
+ 
++    pa_ret = pulseaudio_handle_teardown();
++    if (GENERIC_EXIT_OK != pa_ret)
++        return pa_ret;
++
+     return FRONTEND_EXIT_OK;
+ 
+ }
 Index: mythtv/programs/mythfrontend/mainmenu.xml
 ===================================================================
 --- mythtv/programs/mythfrontend/mainmenu.xml	(revision 16468)
@@ -44428,6 +45296,18 @@ Index: mythtv/programs/mythfrontend/info_menu.xml
        <action>PLUGIN mythzoneminder</action>
        <depends>mythzoneminder</depends>
   </button>
+Index: mythtv/programs/mythfrontend/mythfrontend.pro
+===================================================================
+--- mythtv/programs/mythfrontend/mythfrontend.pro	(revision 16468)
++++ mythtv/programs/mythfrontend/mythfrontend.pro	(working copy)
+@@ -61,6 +61,7 @@
+ using_xrandr:DEFINES += USING_XRANDR
+ using_opengl_vsync:DEFINES += USING_OPENGL_VSYNC
+ 
++using_pulse:DEFINES += USING_PULSE
+ using_alsa:DEFINES += USING_ALSA
+ using_arts:DEFINES += USING_ARTS
+ using_jack:DEFINES += USING_JACK
 Index: mythtv/programs/mythfrontend/recpriorities_settings.xml
 ===================================================================
 --- mythtv/programs/mythfrontend/recpriorities_settings.xml	(revision 16468)
@@ -44557,6 +45437,75 @@ Index: mythtv/programs/mythtranscode/mpeg2fix.h
  }
  
  enum MPFDisplayMask {
+Index: mythtv/programs/mythcommflag/main.cpp
+===================================================================
+--- mythtv/programs/mythcommflag/main.cpp	(revision 16468)
++++ mythtv/programs/mythcommflag/main.cpp	(working copy)
+@@ -59,7 +59,7 @@
+     program_info->recstartts = QDateTime::currentDateTime().addSecs( -180 * 60);
+     program_info->recendts = QDateTime::currentDateTime().addSecs(-1);
+     program_info->isVideo = true;
+-    program_info->pathname = filename;
++    program_info->pathname = QFileInfo(filename).absFilePath();
+ 
+     RingBuffer *tmprbuf = new RingBuffer(filename, false);
+     if (!tmprbuf)
+@@ -681,7 +681,7 @@
+                         "Missing or invalid parameters for --chanid option");
+                 return COMMFLAG_EXIT_INVALID_CHANID;
+             }
+-            
++
+             chanid += a.argv()[++argpos];
+         }
+         else if (!strcmp(a.argv()[argpos],"-s") ||
+@@ -694,7 +694,7 @@
+                         "Missing or invalid parameters for --starttime option");
+                 return COMMFLAG_EXIT_INVALID_STARTTIME;
+             }
+-            
++
+             starttime += a.argv()[++argpos];
+         }
+         else if (!strcmp(a.argv()[argpos],"-f") ||
+@@ -740,7 +740,7 @@
+                 cerr << "Missing or invalid parameter for --allstart\n";
+                 return COMMFLAG_EXIT_INVALID_STARTTIME;
+             }
+-            
++
+             allStart = a.argv()[++argpos];
+         }
+         else if (!strcmp(a.argv()[argpos], "--allend"))
+@@ -751,7 +751,7 @@
+                 cerr << "Missing or invalid parameter for --allend\n";
+                 return COMMFLAG_EXIT_INVALID_STARTTIME;
+             }
+-            
++
+             allEnd = a.argv()[++argpos];
+         }
+         else if (!strcmp(a.argv()[argpos], "--quiet"))
+@@ -849,8 +849,8 @@
+                     cerr << "Invalid or missing argument to "
+                             "-O/--override-setting option\n";
+                     return BACKEND_EXIT_INVALID_CMDLINE;
+-                } 
+- 
++                }
++
+                 QStringList pairs = QStringList::split(",", tmpArg);
+                 for (unsigned int index = 0; index < pairs.size(); ++index)
+                 {
+@@ -863,7 +863,7 @@
+                 }
+             }
+             else
+-            { 
++            {
+                 cerr << "Invalid or missing argument to -O/--override-setting "
+                         "option\n";
+                 return GENERIC_EXIT_INVALID_CMDLINE;
 Index: mythtv/programs/mythbackend/upnpcdsvideo.h
 ===================================================================
 --- mythtv/programs/mythbackend/upnpcdsvideo.h	(revision 16468)
@@ -44834,7 +45783,15 @@ Index: mythtv/programs/mythbackend/scheduler.cpp
 ===================================================================
 --- mythtv/programs/mythbackend/scheduler.cpp	(revision 16468)
 +++ mythtv/programs/mythbackend/scheduler.cpp	(working copy)
-@@ -1303,7 +1303,7 @@
+@@ -1242,6 +1242,7 @@
+         // Restore the old status for some select cases that won't record.
+         if (p->recstatus != rsWillRecord && 
+             p->oldrecstatus != rsUnknown &&
++            p->oldrecstatus != rsNotListed &&
+             !p->reactivate)
+             p->recstatus = p->oldrecstatus;
+ 
+@@ -1303,7 +1304,7 @@
              if (next_record == nextRecMap[recid])
                  continue;
  
@@ -44843,7 +45800,7 @@ Index: mythtv/programs/mythbackend/scheduler.cpp
              {
                  subquery.prepare("UPDATE record "
                                   "SET next_record = '0000-00-00T00:00:00' "
-@@ -2030,6 +2030,13 @@
+@@ -2030,6 +2031,13 @@
                                                       "be $time if command "
                                                       "set.\'");
  
@@ -44857,7 +45814,7 @@ Index: mythtv/programs/mythbackend/scheduler.cpp
          if (wakeup_timeformat == "time_t")
          {
              QString time_ts;
-@@ -2045,8 +2052,14 @@
+@@ -2045,8 +2053,14 @@
                                      setwakeup_cmd);
  
          // now run the command to set the wakeup time
@@ -44874,7 +45831,7 @@ Index: mythtv/programs/mythbackend/scheduler.cpp
      }
  
      // tell anyone who is listening the master server is going down now
-@@ -2065,7 +2078,10 @@
+@@ -2065,7 +2079,10 @@
                                      "this computer :-\n\t\t\t\t\t\t") + halt_cmd);
  
          // and now shutdown myself
@@ -44886,6 +45843,17 @@ Index: mythtv/programs/mythbackend/scheduler.cpp
      }
  
      // If we make it here then either the shutdown failed
+@@ -2795,7 +2812,9 @@
+         ProgramInfo *p = new ProgramInfo;
+         p->reactivate = result.value(38).toInt();
+         p->oldrecstatus = RecStatusType(result.value(37).toInt());
+-        if (p->oldrecstatus == rsAborted || p->reactivate)
++        if (p->oldrecstatus == rsAborted || 
++            p->oldrecstatus == rsNotListed ||
++            p->reactivate)
+             p->recstatus = rsUnknown;
+         else
+             p->recstatus = p->oldrecstatus;
 Index: mythtv/programs/mythbackend/upnpmedia.cpp
 ===================================================================
 --- mythtv/programs/mythbackend/upnpmedia.cpp	(revision 16468)
@@ -44913,6 +45881,47 @@ Index: mythtv/programs/mythbackend/upnpmedia.cpp
      for (QFileInfoListIterator it(*List); it; ++it)
      {
          QFileInfo Info(*it.current());
+Index: mythtv/programs/mythbackend/autoexpire.cpp
+===================================================================
+--- mythtv/programs/mythbackend/autoexpire.cpp	(revision 16468)
++++ mythtv/programs/mythbackend/autoexpire.cpp	(working copy)
+@@ -36,7 +36,8 @@
+ #include "backendutil.h"
+ #include "compat.h"
+ 
+-#define LOC QString("AutoExpire: ")
++#define LOC     QString("AutoExpire: ")
++#define LOC_ERR QString("AutoExpire Error: ")
+ 
+ extern AutoExpire *expirer;
+ 
+@@ -423,6 +424,26 @@
+                 .arg(fsit->usedSpaceKB / 1024.0 / 1024.0, 7, 'f', 1)
+                 .arg(fsit->freeSpaceKB / 1024.0 / 1024.0, 7, 'f', 1));
+ 
++        if ((fsit->totalSpaceKB == -1) || (fsit->usedSpaceKB == -1))
++        {
++            VERBOSE(VB_FILE, LOC_ERR + QString("fsID #%1 has invalid info, "
++                    "AutoExpire can not run for this filesystem.  "
++                    "Continuing on to next...").arg(fsit->fsID));
++            VERBOSE(VB_FILE, QString("Directories on filesystem ID %1:")
++                    .arg(fsit->fsID));
++            vector<FileSystemInfo>::iterator fsit2;
++            for (fsit2 = fsInfos.begin(); fsit2 != fsInfos.end(); fsit2++)
++            {
++                if (fsit2->fsID == fsit->fsID)
++                {
++                    VERBOSE(VB_FILE, QString("    %1:%2")
++                            .arg(fsit2->hostname).arg(fsit2->directory));
++                }
++            }
++
++            continue;
++        }
++
+         if (truncateMap.contains(fsit->fsID))
+         {
+             VERBOSE(VB_FILE, QString(
 Index: mythtv/programs/mythbackend/backendutil.cpp
 ===================================================================
 --- mythtv/programs/mythbackend/backendutil.cpp	(revision 16468)
@@ -45078,7 +46087,26 @@ Index: mythtv/programs/mythtv/main.cpp
 ===================================================================
 --- mythtv/programs/mythtv/main.cpp	(revision 16468)
 +++ mythtv/programs/mythtv/main.cpp	(working copy)
-@@ -287,7 +287,7 @@
+@@ -14,6 +14,7 @@
+ #include "libmyth/mythdbcon.h"
+ #include "libmyth/mythdialogs.h"
+ #include "libmyth/compat.h"
++#include "audiopulseutil.h"
+ 
+ #include <iostream>
+ using namespace std;
+@@ -251,6 +252,10 @@
+     
+     gContext->LoadQtConfig();
+ 
++    int pa_ret = pulseaudio_handle_startup();
++    if (pa_ret != GENERIC_EXIT_OK)
++        return pa_ret;
++
+ #if defined(Q_OS_MACX)
+     // Mac OS X doesn't define the AudioOutputDevice setting
+ #else
+@@ -287,7 +292,7 @@
          pginfo->isVideo = true;
  
          // RingBuffer doesn't like relative pathnames
@@ -45087,6 +46115,40 @@ Index: mythtv/programs/mythtv/main.cpp
              pginfo->pathname.prepend(QDir::currentDirPath() + '/');
      }
  
+@@ -303,6 +308,10 @@
+     }
+     delete gContext;
+ 
++    pa_ret = pulseaudio_handle_teardown();
++    if (GENERIC_EXIT_OK != pa_ret)
++        return pa_ret;
++
+     return TV_EXIT_OK;
+ }
+ 
+Index: mythtv/programs/mythtv/mythtv.pro
+===================================================================
+--- mythtv/programs/mythtv/mythtv.pro	(revision 16468)
++++ mythtv/programs/mythtv/mythtv.pro	(working copy)
+@@ -20,3 +20,18 @@
+ }
+ 
+ using_x11:DEFINES += USING_X11
++using_xv:DEFINES += USING_XV
++using_ivtv:DEFINES += USING_IVTV
++using_xvmc:DEFINES += USING_XVMC
++using_xvmc_vld:DEFINES += USING_XVMC_VLD
++using_xrandr:DEFINES += USING_XRANDR
++using_opengl_vsync:DEFINES += USING_OPENGL_VSYNC
++using_opengl_video:DEFINES += USING_OPENGL_VIDEO
++using_vdpau:DEFINES += USING_VDPAU
++
++using_pulse:DEFINES += USING_PULSE
++using_alsa:DEFINES += USING_ALSA
++using_arts:DEFINES += USING_ARTS
++using_jack:DEFINES += USING_JACK
++using_oss: DEFINES += USING_OSS
++macx:      DEFINES += USING_COREAUDIO
 Index: mythtv/programs/mythfilldatabase/filldata.cpp
 ===================================================================
 --- mythtv/programs/mythfilldatabase/filldata.cpp	(revision 16468)
@@ -45549,10 +46611,25 @@ Index: mythtv/settings.pro
  
  # construct linking path
  LOCAL_LIBDIR_X11 =
+@@ -109,6 +116,7 @@
+ EXTRA_LIBS += $$CONFIG_AUDIO_ALSA_LIBS
+ EXTRA_LIBS += $$CONFIG_AUDIO_ARTS_LIBS
+ EXTRA_LIBS += $$CONFIG_AUDIO_JACK_LIBS
++EXTRA_LIBS += $$CONFIG_AUDIO_PULSE_LIBS
+ EXTRA_LIBS += $$CONFIG_FIREWIRE_LIBS
+ EXTRA_LIBS += $$CONFIG_DIRECTFB_LIBS
+ 
+@@ -119,5 +127,6 @@
+ EXTRA_LIBS += $$CONFIG_XVMC_LIBS
+ EXTRA_LIBS += $$CONFIG_OPENGL_LIBS
+ EXTRA_LIBS += $$FRIBIDI_LIBS
++using_pulse:EXTRA_LIBS += $$PULSE_LIBS
+ 
+ LIRC_LIBS = $$CONFIG_LIRC_LIBS
 Index: mythtv/contrib/Win32/build/mythtvsetup.iss
 ===================================================================
 --- mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 0)
-+++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 20373)
++++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 20668)
 @@ -0,0 +1,493 @@
 +; Script generated by the Inno Setup Script Wizard.
 +; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
@@ -46056,7 +47133,7 @@ Added: svn:executable
 Index: mythtv/contrib/Win32/MythInstaller.bat
 ===================================================================
 --- mythtv/contrib/Win32/MythInstaller.bat	(revision 0)
-+++ mythtv/contrib/Win32/MythInstaller.bat	(revision 20373)
++++ mythtv/contrib/Win32/MythInstaller.bat	(revision 20668)
 @@ -0,0 +1,69 @@
 +@rem = '--*-Perl-*--
 +@rem
@@ -46138,7 +47215,7 @@ Added: svn:keywords
 Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 20373)
++++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 20668)
 @@ -0,0 +1,57 @@
 +@Echo off
 +::
@@ -46200,7 +47277,7 @@ Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 Index: mythtv/contrib/Win32/run/mythbackend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythbackend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 20373)
++++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 20668)
 @@ -0,0 +1,58 @@
 +@Echo off
 +::
@@ -46327,16 +47404,67 @@ Index: mythtv/contrib/channel_changers/6200ch.c
 ===================================================================
 --- mythtv/contrib/channel_changers/6200ch.c	(revision 16468)
 +++ mythtv/contrib/channel_changers/6200ch.c	(working copy)
-@@ -76,13 +76,14 @@
+@@ -34,8 +34,14 @@
+ // WARNING: Please update firewiredevice.cpp when adding to this list.
+ 
+ #define DCH3200_VENDOR_ID1 0x00001c11
++#define DCH3200_VENDOR_ID2 0x00001cfb
++#define DCH3200_VENDOR_ID3 0x00001fc4
++#define DCH3200_VENDOR_ID4 0x000023a3
+ #define DCH3200_MODEL_ID1  0x0000d330
+ 
++#define DCH3416_VENDOR_ID1 0x00001e46
++#define DCH3416_MODEL_ID1  0x0000b630
++
+ #define DCT3412_VENDOR_ID1 0x0000159a
+ #define DCT3412_MODEL_ID1  0x000034cb
+ 
+@@ -62,6 +68,7 @@
+ #define DCT6200_VENDOR_ID13 0x00001aad
+ #define DCT6200_VENDOR_ID14 0x00000b06
+ #define DCT6200_VENDOR_ID15 0x0000195e
++#define DCT6200_VENDOR_ID16 0x000010dc
+ #define DCT6200_SPEC_ID    0x00005068
+ #define DCT6200_SW_VERSION 0x00010101
+ #define DCT6200_MODEL_ID1  0x0000620a
+@@ -76,13 +83,42 @@
  #define DCT6416_VENDOR_ID2 0x00001a66 
  #define DCT6416_MODEL_ID1  0x0000646b
  
 -#define AVC1394_SUBUNIT_TYPE_6200 (9 << 19)  /* uses a reserved subunit type */ 
-+#define PACE_VENDOR_ID1    0x00005094 /* 550 & 779 */
-+#define PACE550_MODEL_ID1  0x00010551
-+#define PACE779_MODEL_ID1  0x00010755
++#define QIP7100_VENDOR_ID1 0x00002374
++#define QIP7100_MODEL_ID1  0x00008100
++#define QIP7100_MODEL_ID2  0x00000001
  
 -#define AVC1394_6200_COMMAND_CHANNEL 0x000007C00   /* 6200 subunit command */
++#define MOT_UNKNOWN_VENDOR_ID1 0x04db
++#define MOT_UNKNOWN_VENDOR_ID2 0x0406
++#define MOT_UNKNOWN_VENDOR_ID3 0x0ce5
++#define MOT_UNKNOWN_VENDOR_ID4 0x111a
++#define MOT_UNKNOWN_VENDOR_ID5 0x1225
++#define MOT_UNKNOWN_VENDOR_ID6 0x1404
++#define MOT_UNKNOWN_VENDOR_ID7 0x1626
++#define MOT_UNKNOWN_VENDOR_ID8 0x18c0
++#define MOT_UNKNOWN_VENDOR_ID9 0x1ade
++#define MOT_UNKNOWN_VENDOR_ID10 0x1cfb
++#define MOT_UNKNOWN_VENDOR_ID11 0x2040
++#define MOT_UNKNOWN_VENDOR_ID12 0x211e
++#define MOT_UNKNOWN_VENDOR_ID13 0x2180
++#define MOT_UNKNOWN_VENDOR_ID14 0x2210
++#define MOT_UNKNOWN_VENDOR_ID15 0x230b
++#define MOT_UNKNOWN_VENDOR_ID16 0x2375
++#define MOT_UNKNOWN_VENDOR_ID17 0x2395
++#define MOT_UNKNOWN_VENDOR_ID18 0x23a2
++#define MOT_UNKNOWN_VENDOR_ID19 0x23ed
++#define MOT_UNKNOWN_VENDOR_ID20 0x23ee
++#define MOT_UNKNOWN_VENDOR_ID21 0x23a0
++#define MOT_UNKNOWN_VENDOR_ID22 0x23a1
++
++#define PACE_VENDOR_ID1    0x00005094 /* 550 & 779 */
++#define PACE_VENDOR_ID2    0x00005094 /* unknown */
++#define PACE550_MODEL_ID1  0x00010551
++#define PACE779_MODEL_ID1  0x00010755
++
  #define AVC1394_6200_OPERAND_SET 0x20      /* 6200 subunit command operand */
  
 -#define CTL_CMD0 AVC1394_CTYPE_CONTROL | AVC1394_SUBUNIT_TYPE_6200 | \
@@ -46346,25 +47474,158 @@ Index: mythtv/contrib/channel_changers/6200ch.c
          AVC1394_6200_OPERAND_SET
  
  #define STARTING_NODE 1  /* skip 1394 nodes to avoid error msgs */
-@@ -240,7 +241,8 @@
+@@ -171,7 +207,7 @@
+ 
+    if (!handle) {
+       if (!errno) {
+-         fprintf(stderr, "Not Compatable!\n");
++         fprintf(stderr, "Not Compatible!\n");
+       } else {
+          perror("Couldn't get 1394 handle");
+          fprintf(stderr, "Is ieee1394, driver, and raw1394 loaded?\n");
+@@ -218,9 +254,13 @@
+ 
+       // WARNING: Please update firewiredevice.cpp when adding to this list.
+       if ( ((dir.vendor_id == DCH3200_VENDOR_ID1) ||
+-            (dir.vendor_id == DCT3412_VENDOR_ID1) || 
+-            (dir.vendor_id == DCT3416_VENDOR_ID1) || 
+-            (dir.vendor_id == DCT3416_VENDOR_ID2) || 
++            (dir.vendor_id == DCH3200_VENDOR_ID2) ||
++            (dir.vendor_id == DCH3200_VENDOR_ID3) ||
++            (dir.vendor_id == DCH3200_VENDOR_ID4) ||
++            (dir.vendor_id == DCH3416_VENDOR_ID1) ||
++            (dir.vendor_id == DCT3412_VENDOR_ID1) ||
++            (dir.vendor_id == DCT3416_VENDOR_ID1) ||
++            (dir.vendor_id == DCT3416_VENDOR_ID2) ||
+             (dir.vendor_id == DCT5100_VENDOR_ID1) ||
+             (dir.vendor_id == DCT6200_VENDOR_ID1) ||
+             (dir.vendor_id == DCT6200_VENDOR_ID2) ||
+@@ -237,11 +277,38 @@
+             (dir.vendor_id == DCT6200_VENDOR_ID13) ||
+             (dir.vendor_id == DCT6200_VENDOR_ID14) ||
+             (dir.vendor_id == DCT6200_VENDOR_ID15) ||
++            (dir.vendor_id == DCT6200_VENDOR_ID16) ||
              (dir.vendor_id == DCT6412_VENDOR_ID1) ||
              (dir.vendor_id == DCT6412_VENDOR_ID2) ||
-             (dir.vendor_id == DCT6416_VENDOR_ID1) || 
+-            (dir.vendor_id == DCT6416_VENDOR_ID1) || 
 -            (dir.vendor_id == DCT6416_VENDOR_ID2)) &&
++            (dir.vendor_id == DCT6416_VENDOR_ID1) ||
 +            (dir.vendor_id == DCT6416_VENDOR_ID2) ||
-+            (dir.vendor_id == PACE_VENDOR_ID1)) &&
++            (dir.vendor_id == QIP7100_VENDOR_ID1) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID1) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID2) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID3) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID4) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID5) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID6) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID7) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID8) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID9) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID10) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID11) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID12) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID13) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID14) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID15) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID16) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID17) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID18) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID19) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID20) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID21) ||
++            (dir.vendor_id == MOT_UNKNOWN_VENDOR_ID22) ||
++            (dir.vendor_id == PACE_VENDOR_ID1) ||
++            (dir.vendor_id == PACE_VENDOR_ID2)) &&
             ((dir.model_id == DCH3200_MODEL_ID1) ||
++            (dir.model_id == DCH3416_MODEL_ID1) ||
              (dir.model_id == DCT3412_MODEL_ID1) ||
              (dir.model_id == DCT3416_MODEL_ID1) ||
-@@ -250,7 +252,10 @@
+             (dir.model_id == DCT3416_MODEL_ID2) ||
+@@ -250,7 +317,12 @@
              (dir.model_id == DCT6200_MODEL_ID2) ||
              (dir.model_id == DCT6412_MODEL_ID1) ||
              (dir.model_id == DCT6412_MODEL_ID2) ||
 -            (dir.model_id == DCT6416_MODEL_ID1)) ) {
 +            (dir.model_id == DCT6416_MODEL_ID1) ||
++            (dir.model_id == QIP7100_MODEL_ID1) ||
++            (dir.model_id == QIP7100_MODEL_ID2) ||
 +            (dir.model_id == PACE550_MODEL_ID1) ||
 +            (dir.model_id == PACE779_MODEL_ID1)) )
 +      {
              if (dir.unit_spec_id != DCT6200_SPEC_ID)
                 fprintf(stderr, "Warning: Unit Spec ID different.\n");
              if (dir.unit_sw_version != DCT6200_SW_VERSION)
+Index: mythtv/contrib/channel_changers/sa3250ch.c
+===================================================================
+--- mythtv/contrib/channel_changers/sa3250ch.c	(revision 16468)
++++ mythtv/contrib/channel_changers/sa3250ch.c	(working copy)
+@@ -32,13 +32,24 @@
+ 
+ /* SA3250HD IDs */
+ /* WARNING: Please update firewiredevice.cpp when adding to this list. */
+-#define SA_VENDOR_ID1           0x000011e6
+-#define SA_VENDOR_ID2           0x000014f8
+-#define SA_VENDOR_ID3           0x00001692
+-#define SA_VENDOR_ID4           0x00001947
+-#define SA_VENDOR_ID5           0x00000f21
+-#define SA_VENDOR_ID6           0x00001ac3
+-#define SA_VENDOR_ID7           0x00000a73
++
++#define SA_VENDOR_ID1           0x00000a73
++#define SA_VENDOR_ID2           0x00000f21
++#define SA_VENDOR_ID3           0x000011e6
++#define SA_VENDOR_ID4           0x000014f8
++#define SA_VENDOR_ID5           0x00001692
++#define SA_VENDOR_ID6           0x00001868
++#define SA_VENDOR_ID7           0x00001947
++#define SA_VENDOR_ID8           0x00001ac3
++#define SA_VENDOR_ID9           0x00001bd7
++#define SA_VENDOR_ID10          0x00001cea
++#define SA_VENDOR_ID11          0x00001e6b
++#define SA_VENDOR_ID12          0x000021be
++#define SA_VENDOR_ID13          0x0000223a
++#define SA_VENDOR_ID14          0x000022ce
++#define SA_VENDOR_ID15          0x000023be
++#define SA_VENDOR_ID16          0x0000252e
++
+ #define SA3250HD_MODEL_ID1      0x00000be0
+ #define SA4200HD_MODEL_ID1      0x00001072
+ #define SA4250HDC_MODEL_ID1     0x000010cc
+@@ -130,13 +141,22 @@
+                  i, dir.vendor_id, dir.model_id); 
+ 		
+       /* WARNING: Please update firewiredevice.cpp when adding to this list. */
+-      if (((dir.vendor_id == SA_VENDOR_ID1) ||
+-           (dir.vendor_id == SA_VENDOR_ID2) ||
+-           (dir.vendor_id == SA_VENDOR_ID3) ||
+-           (dir.vendor_id == SA_VENDOR_ID4) ||
+-           (dir.vendor_id == SA_VENDOR_ID5) ||
+-           (dir.vendor_id == SA_VENDOR_ID6) ||
+-           (dir.vendor_id == SA_VENDOR_ID7)) &&
++      if (((dir.vendor_id == SA_VENDOR_ID1)  ||
++           (dir.vendor_id == SA_VENDOR_ID2)  ||
++           (dir.vendor_id == SA_VENDOR_ID3)  ||
++           (dir.vendor_id == SA_VENDOR_ID4)  ||
++           (dir.vendor_id == SA_VENDOR_ID5)  ||
++           (dir.vendor_id == SA_VENDOR_ID6)  ||
++           (dir.vendor_id == SA_VENDOR_ID7)  ||
++           (dir.vendor_id == SA_VENDOR_ID8)  ||
++           (dir.vendor_id == SA_VENDOR_ID9)  ||
++           (dir.vendor_id == SA_VENDOR_ID10) ||
++           (dir.vendor_id == SA_VENDOR_ID11) ||
++           (dir.vendor_id == SA_VENDOR_ID12) ||
++           (dir.vendor_id == SA_VENDOR_ID13) ||
++           (dir.vendor_id == SA_VENDOR_ID14) ||
++           (dir.vendor_id == SA_VENDOR_ID15) ||
++           (dir.vendor_id == SA_VENDOR_ID16)) &&
+           ((dir.model_id == SA3250HD_MODEL_ID1)  ||
+            (dir.model_id == SA4200HD_MODEL_ID1)  ||
+            (dir.model_id == SA4250HDC_MODEL_ID1)))
+
+Property changes on: mythtv/contrib/channel_changers
+___________________________________________________________________
+Added: svn:ignore
+   + 6200ch
+sa3250ch
+
+

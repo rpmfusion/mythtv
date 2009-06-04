@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r20373
+%define _svnver r20668
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 18%{?dist}
+Release: 19%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1026,6 +1026,9 @@ fi
 %endif
 
 %changelog
+* Wed Jun 03 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-19
+- Update to release-0-21-fixes patches (r20668)
+
 * Mon Apr 13 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-18
 - Update release-0-21-fixes patches (r20373)
 - Slide Requires: wget into more appropriate places (rfbz#384)
