@@ -60,7 +60,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20586
+%define _svnrev r20668
 %define branch trunk
 
 #
@@ -1466,6 +1466,9 @@ fi
 ################################################################################
 
 %changelog
+* Thu Jun 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20668
+- Update to pre-0.22 svn trunk revision 20668
+
 * Sun May 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20586
 - Update to pre-0.22 svn trunk revision 20586
 - Fix upgrade path for people that have mythphone installed (rfbz#596)
