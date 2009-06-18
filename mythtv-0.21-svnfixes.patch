@@ -27229,7 +27229,7 @@ Index: mythtv/docs/mythtv-HOWTO-22.html
 Index: mythtv/libs/libs-targetfix.pro
 ===================================================================
 --- mythtv/libs/libs-targetfix.pro	(revision 0)
-+++ mythtv/libs/libs-targetfix.pro	(revision 20668)
++++ mythtv/libs/libs-targetfix.pro	(revision 20697)
 @@ -0,0 +1,20 @@
 +# Common project modifications to change the generated target.
 +
@@ -27810,7 +27810,24 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      for (uint i = 0; i < ic->nb_streams; i++)
      {
          AVCodecContext *enc = ic->streams[i]->codec;
-@@ -1511,7 +1517,7 @@
+@@ -1479,6 +1485,16 @@
+                 if (novideo)
+                     break;
+ 
++                // HACK -- ignore CODEC_ID_MPEG1VIDEO if the bit_rate
++                // is 0.  CBS/KTVT recordings seem to be screwing up.
++                if (enc->codec_id == CODEC_ID_MPEG1VIDEO &&
++                    enc->bit_rate == 0)
++                {
++                    VERBOSE(VB_IMPORTANT,
++                            LOC + QString("Stream #%1 is MPEG1VIDEO with 0 bit rate, skipping.").arg(i));
++                    continue;
++                }
++
+                 d->DestroyMPEG2();
+                 h264_kf_seq->Reset();
+ 
+@@ -1511,7 +1527,7 @@
                      // HACK -- end
  
                      bool force_xv = false;
@@ -27819,7 +27836,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      {
                          if (dec.left(4) == "xvmc")
                              dvd_xvmc_enabled = true;
-@@ -1536,7 +1542,8 @@
+@@ -1536,7 +1552,8 @@
                      enc->codec_id = (CodecID)
                          myth2av_codecid(mcid, vcd, idct, mc);
  
@@ -27829,7 +27846,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                          dvd_video_codec_changed)
                      {
                          dvd_video_codec_changed = false;
-@@ -1617,9 +1624,9 @@
+@@ -1617,9 +1634,9 @@
  
                  InitVideoCodec(ic->streams[i], enc,
                                 selectedVideoIndex == (int) i);
@@ -27841,7 +27858,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                  VERBOSE(VB_PLAYBACK, LOC + 
                          QString("Using %1 for video decoding")
                          .arg(GetCodecDecoderName()));
-@@ -1798,7 +1805,7 @@
+@@ -1798,7 +1815,7 @@
              ringBuffer->UpdateRawBitrate(bitrate);
      }
  
@@ -27850,7 +27867,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      {
          if (tracks[kTrackTypeAudio].size() > 1)
          {
-@@ -1859,6 +1866,8 @@
+@@ -1859,6 +1876,8 @@
      {
          GetNVP()->SetAudioParams(-1, -1, -1, false /* AC3/DTS pass-through */);
          GetNVP()->ReinitAudio();
@@ -27859,7 +27876,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      }
  
      // if we don't have a video stream we still need to make sure some
-@@ -1980,6 +1989,9 @@
+@@ -1980,6 +1999,9 @@
   */
  void AvFormatDecoder::RemoveAudioStreams()
  {
@@ -27869,7 +27886,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      QMutexLocker locker(&avcodeclock);
      for (uint i = 0; i < ic->nb_streams;)
      {
-@@ -2337,7 +2349,7 @@
+@@ -2337,7 +2359,7 @@
              bool changed = (seqFPS > fps+0.01) || (seqFPS < fps-0.01);
              changed |= (width  != (uint)current_width );
              changed |= (height != (uint)current_height);
@@ -27878,7 +27895,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
  
              if (changed)
              {
-@@ -2414,7 +2426,7 @@
+@@ -2414,7 +2436,7 @@
          bool changed = (seqFPS > fps+0.01) || (seqFPS < fps-0.01);
          changed |= (width  != (uint)current_width );
          changed |= (height != (uint)current_height);
@@ -27887,7 +27904,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
  
          if (changed)
          {
-@@ -3014,14 +3026,15 @@
+@@ -3014,14 +3036,15 @@
              int dvdtitle  = 0;
              int dvdpart = 0;
              ringBuffer->DVD()->GetPartAndTitle(dvdpart, dvdtitle);
@@ -27905,7 +27922,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      storevideoframes = false;
                      dvdTitleChanged = false;
                      ScanStreams(true);
-@@ -3032,45 +3045,23 @@
+@@ -3032,45 +3055,23 @@
              else
              {
                  storevideoframes = false;
@@ -27960,7 +27977,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      VERBOSE(VB_PLAYBACK, LOC + "DVD Title Changed");
                      lastdvdtitle = dvdtitle;
                      if (lastdvdtitle != -1 )
-@@ -3083,26 +3074,37 @@
+@@ -3083,26 +3084,37 @@
                              GetNVP()->getVideoOutput()->SetPrebuffering(true);
                      }
                  }
@@ -28002,7 +28019,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                  allowedquit = true;
                  continue;
              }
-@@ -3221,7 +3223,6 @@
+@@ -3221,7 +3233,6 @@
                      av_free_packet(pkt);
                      CloseCodecs();
                      ScanStreams(false);
@@ -28010,7 +28027,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      allowedquit = true;
                      dvd_video_codec_changed = false;
                      continue;
-@@ -3446,10 +3447,6 @@
+@@ -3446,10 +3457,6 @@
                              .av_substream_index;
                      }
  
@@ -28021,7 +28038,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      if ((onlyvideo > 0) || (pkt->stream_index != audIdx))
                      {
                          ptr += len;
-@@ -3457,6 +3454,10 @@
+@@ -3457,6 +3464,10 @@
                          continue;
                      }
  
@@ -28032,7 +28049,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      if (skipaudio)
                      {
                          if ((lastapts < lastvpts - (10.0 / fps)) || 
-@@ -3749,9 +3750,6 @@
+@@ -3749,9 +3760,6 @@
  
                      picframe->frameNumber = framesPlayed;
                      GetNVP()->ReleaseNextVideoFrame(picframe, temppts);
@@ -28042,7 +28059,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
                      if (d->HasMPEG2Dec() && mpa_pic.data[3])
                          context->release_buffer(context, &mpa_pic);
  
-@@ -3759,15 +3757,8 @@
+@@ -3759,15 +3767,8 @@
                      gotvideo = 1;
                      framesPlayed++;
  
@@ -28059,7 +28076,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
  
                      lastvpts = temppts;
                      break;
-@@ -3780,7 +3771,7 @@
+@@ -3780,7 +3781,7 @@
  
                      if (ringBuffer->isDVD())
                      {
@@ -28228,6 +28245,15 @@ Index: mythtv/libs/libmythtv/DVDRingBuffer.cpp
  
                  if (blockBuf != dvdBlockWriteBuf)
                  {
+@@ -478,7 +494,7 @@
+                 {
+                     
+                     int relativetime = (int)((seektime - currentTime)/ 90000);
+-                    if (relativetime <= 0)
++                    if (relativetime <= 1)
+                     {
+                         seeking = false;
+                         seektime = 0;
 @@ -536,18 +552,13 @@
                          .arg(hl->pts).arg(hl->buttonN));
  
@@ -29268,7 +29294,7 @@ Index: mythtv/libs/libmythtv/channelutil.cpp
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 20668)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.h	(revision 20697)
 @@ -0,0 +1,12 @@
 +#ifndef _FREESAT_HUFFMAN_H_
 +#define _FREESAT_HUFFMAN_H_
@@ -29291,7 +29317,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_tables.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 20668)
++++ mythtv/libs/libmythtv/mpeg/freesat_tables.h	(revision 20697)
 @@ -0,0 +1,4370 @@
 +struct fsattab fsat_table[] = {
 +    { 0x00000000,  2, 'T'},
@@ -33672,7 +33698,7 @@ Added: svn:eol-style
 Index: mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 0)
-+++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 20668)
++++ mythtv/libs/libmythtv/mpeg/freesat_huffman.cpp	(revision 20697)
 @@ -0,0 +1,107 @@
 +#include "freesat_huffman.h"
 +
@@ -35601,7 +35627,7 @@ Index: mythtv/libs/libavutil/common.h
 Index: mythtv/libs/libavcodec/rectangle.h
 ===================================================================
 --- mythtv/libs/libavcodec/rectangle.h	(revision 0)
-+++ mythtv/libs/libavcodec/rectangle.h	(revision 20668)
++++ mythtv/libs/libavcodec/rectangle.h	(revision 20697)
 @@ -0,0 +1,121 @@
 +/*
 + * rectangle filling function
@@ -35826,7 +35852,7 @@ Index: mythtv/libs/libavcodec/h264pred.h
 Index: mythtv/libs/libavcodec/i386/h264_i386.h
 ===================================================================
 --- mythtv/libs/libavcodec/i386/h264_i386.h	(revision 0)
-+++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 20668)
++++ mythtv/libs/libavcodec/i386/h264_i386.h	(revision 20697)
 @@ -0,0 +1,144 @@
 +/*
 + * H.26L/H.264/AVC/JVT/14496-10/... encoder/decoder
@@ -40635,7 +40661,7 @@ Index: mythtv/libs/libavformat/libavformat.pro
 Index: mythtv/libs/libmyth/audiopulseutil.h
 ===================================================================
 --- mythtv/libs/libmyth/audiopulseutil.h	(revision 0)
-+++ mythtv/libs/libmyth/audiopulseutil.h	(revision 20668)
++++ mythtv/libs/libmyth/audiopulseutil.h	(revision 20697)
 @@ -0,0 +1,6 @@
 +#include "mythexp.h"
 +
@@ -40646,7 +40672,7 @@ Index: mythtv/libs/libmyth/audiopulseutil.h
 Index: mythtv/libs/libmyth/audiopulseutil.cpp
 ===================================================================
 --- mythtv/libs/libmyth/audiopulseutil.cpp	(revision 0)
-+++ mythtv/libs/libmyth/audiopulseutil.cpp	(revision 20668)
++++ mythtv/libs/libmyth/audiopulseutil.cpp	(revision 20697)
 @@ -0,0 +1,383 @@
 +/***
 + *   This file was part of PulseAudio, the license has been upgraded to GPL v2
@@ -43941,6 +43967,15 @@ Index: mythtv/libs/libmythfreemheg/Text.cpp
  
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
+@@ -242,7 +242,7 @@
+     }
+     else { // Textual form.
+         const unsigned char *str = attrs.Bytes();
+-        const char *p = (const char *)str;
++        char *p = (char *)str;
+         char *q = strchr(p, '.'); // Find the terminating dot
+         if (q != NULL) { // plain, italic etc.
+             if (q-p == 6 && strncmp(p, "italic", 6) == 0) style = 1;
 @@ -463,6 +463,11 @@
                      pNewLine->m_Items.Append(pNewItem);
                      pNewItem->m_Unicode = pItem->m_Unicode.mid(nNewStart, nNewWidth);
@@ -46083,6 +46118,115 @@ Index: mythtv/programs/mythtv-setup/setup.xml
       <action>STORAGE GROUPS</action>
     </button>
  
+Index: mythtv/programs/mythlcdserver/lcdprocclient.cpp
+===================================================================
+--- mythtv/programs/mythlcdserver/lcdprocclient.cpp	(revision 16468)
++++ mythtv/programs/mythlcdserver/lcdprocclient.cpp	(working copy)
+@@ -221,34 +221,36 @@
+ void LCDProcClient::setPriority(const QString &screen, PRIORITY priority)
+ {
+     QString aString;
+-
++    int err  = 0;
+     aString = "screen_set ";
+     aString += screen;
+     aString += " priority ";
+ 
+     switch (priority) {
+     case TOP: 
+-      aString += QString::number (prioTop);
++      aString += prioTop;
+       break;
+     case URGENT: 
+-      aString += QString::number (prioUrgent);
++      aString += prioUrgent;
+       break;
+     case HIGH:
+-      aString += QString::number (prioHigh);
++      aString += prioHigh;
+       break;
+     case MEDIUM: 
+-      aString += QString::number (prioMedium);
++      aString += prioMedium;
+       break;
+     case LOW:
+-      aString += QString::number (prioLow);
++      aString += prioLow;
+       break;
+     case OFF:
+-      aString += QString::number (prioOff);
++      aString += prioOff;
+       break;
+-
++    default:
++      err = 1;
++      break;
+     }
+-
+-    sendToServer (aString);
++    if (err == 0)
++      sendToServer (aString);
+ }
+ 
+ void LCDProcClient::setHeartbeat (const QString &screen, bool onoff) 
+@@ -662,22 +664,22 @@
+     {
+         // Latest CVS versions of LCDd has priorities switched
+         pVersion = LCD_VERSION_5;
+-        prioTop = 252;
+-        prioUrgent = 248;
+-        prioHigh = 240;
+-        prioMedium = 128;
+-        prioLow = 64;
+-        prioOff = 0;
++        prioTop = "input";
++        prioUrgent = "alert";
++        prioHigh = "foreground";
++        prioMedium = "info";
++        prioLow = "background";
++        prioOff = "hidden";
+     }
+     else
+     {
+         pVersion = LCD_VERSION_4;
+-        prioTop = 64;
+-        prioUrgent = 128;
+-        prioHigh = 240;
+-        prioMedium = 248;
+-        prioLow = 252;
+-        prioOff = 255;
++        prioTop = "64";
++        prioUrgent = "128";
++        prioHigh = "240";
++        prioMedium = "248";
++        prioLow = "252";
++        prioOff = "255";
+     }
+ }
+ 
+Index: mythtv/programs/mythlcdserver/lcdprocclient.h
+===================================================================
+--- mythtv/programs/mythlcdserver/lcdprocclient.h	(revision 16468)
++++ mythtv/programs/mythlcdserver/lcdprocclient.h	(working copy)
+@@ -150,12 +150,12 @@
+     void setVersion(const QString &, const QString &);
+     void describeServer();
+ 
+-    unsigned int prioTop;
+-    unsigned int prioUrgent;
+-    unsigned int prioHigh;
+-    unsigned int prioMedium;
+-    unsigned int prioLow;
+-    unsigned int prioOff;
++    QString  prioTop;
++    QString  prioUrgent;
++    QString  prioHigh;
++    QString  prioMedium;
++    QString  prioLow;
++    QString  prioOff;
+ 
+     unsigned int lcdWidth;
+     unsigned int lcdHeight;
 Index: mythtv/programs/mythtv/main.cpp
 ===================================================================
 --- mythtv/programs/mythtv/main.cpp	(revision 16468)
@@ -46629,7 +46773,7 @@ Index: mythtv/settings.pro
 Index: mythtv/contrib/Win32/build/mythtvsetup.iss
 ===================================================================
 --- mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 0)
-+++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 20668)
++++ mythtv/contrib/Win32/build/mythtvsetup.iss	(revision 20697)
 @@ -0,0 +1,493 @@
 +; Script generated by the Inno Setup Script Wizard.
 +; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
@@ -47133,7 +47277,7 @@ Added: svn:executable
 Index: mythtv/contrib/Win32/MythInstaller.bat
 ===================================================================
 --- mythtv/contrib/Win32/MythInstaller.bat	(revision 0)
-+++ mythtv/contrib/Win32/MythInstaller.bat	(revision 20668)
++++ mythtv/contrib/Win32/MythInstaller.bat	(revision 20697)
 @@ -0,0 +1,69 @@
 +@rem = '--*-Perl-*--
 +@rem
@@ -47215,7 +47359,7 @@ Added: svn:keywords
 Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 20668)
++++ mythtv/contrib/Win32/run/mythfrontend.cmd	(revision 20697)
 @@ -0,0 +1,57 @@
 +@Echo off
 +::
@@ -47277,7 +47421,7 @@ Index: mythtv/contrib/Win32/run/mythfrontend.cmd
 Index: mythtv/contrib/Win32/run/mythbackend.cmd
 ===================================================================
 --- mythtv/contrib/Win32/run/mythbackend.cmd	(revision 0)
-+++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 20668)
++++ mythtv/contrib/Win32/run/mythbackend.cmd	(revision 20697)
 @@ -0,0 +1,58 @@
 +@Echo off
 +::

@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r20668
+%define _svnver r20697
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 19%{?dist}
+Release: 20%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -59,6 +59,7 @@ BuildRequires: mysql-devel >= 5
 # Audio framework support
 BuildRequires: alsa-lib-devel, arts-devel
 BuildRequires: jack-audio-connection-kit-devel
+BuildRequires: pulseaudio-libs-devel
 # Need dvb headers to build in dvb support
 BuildRequires: kernel-headers
 # Remote control support (BR: on lirc-libs works around some mock funkiness on f8)
@@ -214,6 +215,7 @@ Requires: libGL-devel, libGLU-devel
 Requires: libiec61883-devel, libraw1394-devel, libavc1394-devel
 Requires: alsa-lib-devel, arts-devel
 Requires: jack-audio-connection-kit-devel
+Requires: pulseaudio-libs-devel
 %if %with_directfb
 Requires: directfb-devel
 %endif
@@ -1026,6 +1028,12 @@ fi
 %endif
 
 %changelog
+* Sat Jun 13 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-20
+- Update to release-0-21-fixes patches (r20697)
+- Add missing BR: pulseaudio-libs-devel so we work when pulse
+  is running (rfbz#651)
+- Fix compatability with forthcoming lcdproc 0.5.3 release
+
 * Wed Jun 03 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-19
 - Update to release-0-21-fixes patches (r20668)
 
