@@ -28,10 +28,11 @@
 # The following options are disabled by default.  Use these options to enable:
 #
 # --with directfb           Enable directfb support
+# --with xvmcnvidia         Enable NVidia XvMC support
+# --with vdpau              Enable NVidia VDPAU support
 #
 # The following options are enabled by default.  Use these options to disable:
 #
-# --without xvmcnvidia      Disable NVidia XvMC support
 # --without perl            Disable building of the perl bindings
 # --without python          Disable building of the python bindings
 #
@@ -60,7 +61,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r20701
+%define _svnrev r21118
 %define branch trunk
 
 #
@@ -102,6 +103,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 # The following options are disabled by default.  Use --with to enable them
 %define with_directfb      %{?_with_directfb:       1} %{!?_with_directfb:      0}
 %define with_xvmcnvidia    %{?_with_xvmcnvidia:     1} %{?!_with_xvmcnvidia:    0}
+%define with_vdpau         %{?_with_vdpau:          1} %{?!_with_vdpau:         0}
 
 # All plugins get built by default, but you can disable them as you wish
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
@@ -222,6 +224,10 @@ BuildRequires:  directfb-devel
 BuildRequires:  xorg-x11-drv-nvidia-devel
 %endif
 
+%if %{with_vdpau}
+BuildRequires: libvdpau-devel
+%endif
+
 # API Build Requirements
 
 %if %{with_perl}
@@ -236,10 +242,6 @@ BuildRequires:  python-devel
 # Plugin Build Requirements
 
 %if %{with_plugins}
-
-%if %{with_mythbrowser}
-BuildRequires:  kdelibs3-devel
-%endif
 
 %if %{with_mythgallery}
 BuildRequires:  libtiff-devel
@@ -424,6 +426,10 @@ Requires:  directfb-devel
 
 %if %{with_xvmcnvidia}
 Requires:  xorg-x11-drv-nvidia-devel
+%endif
+
+%if %{with_vdpau}
+Requires: libvdpau-devel
 %endif
 
 %description -n libmyth-devel
@@ -773,6 +779,7 @@ Group:     Applications/Multimedia
 Requires:  httpd >= 1.3.26
 Requires:  php >= 5.1
 Requires:  php-mysql
+Requires:  php-process
 
 %description -n mythweb
 The web interface to MythTV.
@@ -814,7 +821,7 @@ and replay recorded events.
 ##### MythTV
 
 cd mythtv-%{version}
-%patch0 -p1
+#patch0 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -919,16 +926,16 @@ cd mythtv-%{version}
     --enable-ivtv                               \
     --enable-firewire                           \
     --enable-dvb                                \
-    --enable-libfaac                            \
+    --enable-libfaac --enable-nonfree           \
     --enable-libfaad --enable-libfaad --enable-libfaadbin \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
 %if %{with_xvmcnvidia}
     --xvmc-lib=XvMCNVIDIA_dynamic               \
-    --enable-xvmc-opengl                        \
-%else
-    --disable-xvmc-opengl                       \
+%endif
+%if %{with_vdpau}
+    --enable-vdpau				\
 %endif
 %if %{with_directfb}
     --enable-directfb                           \
@@ -1333,8 +1340,7 @@ fi
 %doc mythplugins-%{version}/mythbrowser/AUTHORS
 %doc mythplugins-%{version}/mythbrowser/COPYING
 %doc mythplugins-%{version}/mythbrowser/README
-%{_bindir}/mythbrowser
-%{_libdir}/mythtv/plugins/libmythbookmarkmanager.so
+%{_libdir}/mythtv/plugins/libmythbrowser.so
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 %endif
 
@@ -1466,6 +1472,15 @@ fi
 ################################################################################
 
 %changelog
+* Tue Aug 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21118
+- Update to pre-0.22 svn trunk revision 21118
+- Add infra for builds with vdpau support (need libvdpau in either
+  Fedora or RPM Fusion before we can enable by default...)
+
+* Sat Jun 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20728
+- Update to pre-0.22 svn trunk revision 20728
+- Drop BR: kdelibs3-devel, MythBrowser ported to qt4 now (rfbz#626)
+
 * Sun Jun 14 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20701
 - Update to pre-0.22 svn trunk revision 20701
 
