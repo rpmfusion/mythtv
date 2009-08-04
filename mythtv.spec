@@ -134,7 +134,6 @@ Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
 Source110: mysql.txt
 Source401: mythweb.conf
-Patch0:    mythtv-0.22-enable-x86_64-fast_cmov-by-default.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -821,7 +820,6 @@ and replay recorded events.
 ##### MythTV
 
 cd mythtv-%{version}
-#patch0 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
