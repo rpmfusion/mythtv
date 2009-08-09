@@ -61,7 +61,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r21118
+%define _svnrev r21179
 %define branch trunk
 
 #
@@ -103,6 +103,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 # The following options are disabled by default.  Use --with to enable them
 %define with_directfb      %{?_with_directfb:       1} %{!?_with_directfb:      0}
 %define with_xvmcnvidia    %{?_with_xvmcnvidia:     1} %{?!_with_xvmcnvidia:    0}
+# We want this enabled by default once libvdpau is available to BR
 %define with_vdpau         %{?_with_vdpau:          1} %{?!_with_vdpau:         0}
 
 # All plugins get built by default, but you can disable them as you wish
@@ -1470,6 +1471,9 @@ fi
 ################################################################################
 
 %changelog
+* Sat Aug 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21179
+- Update to pre-0.22 svn trunk revision 21179
+
 * Tue Aug 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21118
 - Update to pre-0.22 svn trunk revision 21118
 - Add infra for builds with vdpau support (need libvdpau in either
