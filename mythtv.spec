@@ -1,5 +1,5 @@
 # svn revision number
-%define _svnver r20697
+%define _svnver r21174
 %define branch release-0-21-fixes
 # Nb: base 0.21 svn rev is r16468
 #define branch trunk
@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 20%{?dist}
+Release: 21%{?dist}
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -44,7 +44,8 @@ Source401: mythweb.conf
 # Patches
 Patch100: mythtv-0.21-svnfixes.patch
 Patch101: mythtv-0.20-mythstreammenu.diff
-#Patch102: mythtv-0.21-fedora-settings.patch
+Patch102: mythtv-0.21-fix-version-output.patch
+#Patch103: mythtv-0.21-fedora-settings.patch
 Patch200: mythplugins-0.21-svnfixes.patch
 #Patch201: mythplugins-0.21-fedora-settings.patch
 #
@@ -473,6 +474,7 @@ and replay recorded events.
 Summary: The web interface to MythTV
 Group: Applications/Multimedia
 Requires: httpd >= 1.3.26, php >= 4.2.2, php-mysql >= 4.2.2
+Requires: php-process
 
 %description -n mythweb
 The web interface to MythTV.
@@ -498,7 +500,8 @@ MythTV python bindings.
 cd mythtv-%{version}
 %patch100 -p1 -b .svnfixes
 #patch101 -p0 -b .mythstreammenu
-#patch102 -p1 -b .settings
+%patch102 -p1 -b .version
+#patch103 -p1 -b .settings
 
 # Drop execute permissions on contrib bits, since they'll be %doc
 find contrib/ -type f -exec chmod -x "{}" \;
@@ -1028,6 +1031,12 @@ fi
 %endif
 
 %changelog
+* Sat Aug 08 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-21
+- Update to release-0-21-fixes patches (r21174)
+- Add missing R: php-process to mythweb (rfbz#652)
+- Make binaries properly report being from the release-0-21-fixes
+  branch instead of being from the release tag (rfbz#452)
+
 * Sat Jun 13 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-20
 - Update to release-0-21-fixes patches (r20697)
 - Add missing BR: pulseaudio-libs-devel so we work when pulse
