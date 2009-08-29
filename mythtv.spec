@@ -61,7 +61,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r21179
+%define _svnrev r21585
 %define branch trunk
 
 #
@@ -1471,6 +1471,12 @@ fi
 ################################################################################
 
 %changelog
+* Sat Aug 29 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21585
+- Update to pre-0.22 svn trunk revision 21585
+
+* Mon Aug 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21336
+- Update to pre-0.22 svn trunk revision 21336
+
 * Sat Aug 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21179
 - Update to pre-0.22 svn trunk revision 21179
 
