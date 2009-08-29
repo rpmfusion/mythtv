@@ -22,7 +22,7 @@ Version: 0.21
 %if "%{branch}" == "trunk"
 Release: 0.2.%{_svnver}%{?dist}
 %else
-Release: 21%{?dist}
+Release: 21%{?dist}.1
 %endif
 URL: http://www.mythtv.org/
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -474,7 +474,6 @@ and replay recorded events.
 Summary: The web interface to MythTV
 Group: Applications/Multimedia
 Requires: httpd >= 1.3.26, php >= 4.2.2, php-mysql >= 4.2.2
-Requires: php-process
 
 %description -n mythweb
 The web interface to MythTV.
@@ -1031,6 +1030,9 @@ fi
 %endif
 
 %changelog
+* Sat Aug 29 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-21.fc10.1
+- Drop php-process Requires, that's for F11+ only (rfbz#785)
+
 * Sat Aug 08 2009 Jarod Wilson <jarod@wilsonet.com> - 0.21-21
 - Update to release-0-21-fixes patches (r21174)
 - Add missing R: php-process to mythweb (rfbz#652)
