@@ -61,7 +61,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r21585
+%define _svnrev r21591
 %define branch trunk
 
 #
@@ -83,6 +83,10 @@ Release: 1%{?dist}
 # The primary license is GPLv2+, but bits are borrowed from a number of
 # projects... For a breakdown of the licensing, see PACKAGE-LICENSING.
 License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
+
+# PowerPC builds are failing after a recent ffmpeg rebase, and
+# I simply haven't had time to investigate the fix yet, so temporarily:
+ExcludeArch: ppc ppc64
 
 ################################################################################
 
@@ -1471,6 +1475,12 @@ fi
 ################################################################################
 
 %changelog
+* Sat Aug 29 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21591
+- Update to pre-0.22 svn trunk revision 21591
+- ExcludeArch: ppc/ppc64 for now, since it keeps failing to build
+  and I just don't have the time to investigate the fix at the moment,
+  so both ppc mythtv svn trunk users will just have to deal with it...
+
 * Sat Aug 29 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21585
 - Update to pre-0.22 svn trunk revision 21585
 
