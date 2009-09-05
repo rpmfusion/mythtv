@@ -61,7 +61,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r21591
+%define _svnrev r21667
 %define branch trunk
 
 #
@@ -1475,6 +1475,9 @@ fi
 ################################################################################
 
 %changelog
+* Fri Sep 05 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21667
+- Update to pre-0.22 svn trunk revision 21667
+
 * Sat Aug 29 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21591
 - Update to pre-0.22 svn trunk revision 21591
 - ExcludeArch: ppc/ppc64 for now, since it keeps failing to build
