@@ -61,7 +61,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r21770
+%define _svnrev r21778
 %define branch trunk
 
 #
@@ -83,10 +83,6 @@ Release: 1%{?dist}
 # The primary license is GPLv2+, but bits are borrowed from a number of
 # projects... For a breakdown of the licensing, see PACKAGE-LICENSING.
 License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
-
-# PowerPC builds are failing after a recent ffmpeg rebase, and
-# I simply haven't had time to investigate the fix yet, so temporarily:
-ExcludeArch: ppc ppc64
 
 ################################################################################
 
@@ -1475,6 +1471,10 @@ fi
 ################################################################################
 
 %changelog
+* Fri Sep 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21778
+- Update to pre-0.22 svn trunk revision 21778
+- Build for ppc again, breakage is fixed
+
 * Fri Sep 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21770
 - Update to pre-0.22 svn trunk revision 21770
 
