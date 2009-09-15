@@ -29,12 +29,12 @@
 #
 # --with directfb           Enable directfb support
 # --with xvmcnvidia         Enable NVidia XvMC support
-# --with vdpau              Enable NVidia VDPAU support
 #
 # The following options are enabled by default.  Use these options to disable:
 #
 # --without perl            Disable building of the perl bindings
 # --without python          Disable building of the python bindings
+# --without vdpau           Disable NVidia VDPAU support
 #
 # # All plugins get built by default, but you can disable them as you wish:
 #
@@ -61,7 +61,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r21778
+%define _svnrev r21864
 %define branch trunk
 
 #
@@ -99,12 +99,11 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_perl          %{?_without_perl:        0} %{!?_without_perl:       1}
 %define with_python        %{?_without_python:      0} %{!?_without_python:     1}
 %define with_pulseaudio    %{?_without_pulseaudio:  0} %{!?_without_pulseaudio: 1}
+%define with_vdpau         %{?_without_vdpau:       0} %{?!_without_vdpau:      1}
 
 # The following options are disabled by default.  Use --with to enable them
 %define with_directfb      %{?_with_directfb:       1} %{!?_with_directfb:      0}
 %define with_xvmcnvidia    %{?_with_xvmcnvidia:     1} %{?!_with_xvmcnvidia:    0}
-# We want this enabled by default once libvdpau is available to BR
-%define with_vdpau         %{?_with_vdpau:          1} %{?!_with_vdpau:         0}
 
 # All plugins get built by default, but you can disable them as you wish
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
@@ -1471,6 +1470,10 @@ fi
 ################################################################################
 
 %changelog
+* Mon Sep 14 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21864
+- Update to pre-0.22 svn trunk revision 21864
+- Enable vdpau support, now that libvdpau is packaged in Fedora
+
 * Fri Sep 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21778
 - Update to pre-0.22 svn trunk revision 21778
 - Build for ppc again, breakage is fixed
