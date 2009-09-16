@@ -75,7 +75,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.22
 %if "%{branch}" == "trunk"
-Release: 0.3.svn.%{_svnrev}%{?dist}
+Release: 0.4.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -224,7 +224,9 @@ BuildRequires:  xorg-x11-drv-nvidia-devel
 %endif
 
 %if %{with_vdpau}
+%ifarch %{ix86} x86_64
 BuildRequires: libvdpau-devel
+%endif
 %endif
 
 # API Build Requirements
@@ -428,7 +430,7 @@ Requires:  xorg-x11-drv-nvidia-devel
 %endif
 
 %if %{with_vdpau}
-%ifarch %{ix86}
+%ifarch %{ix86} x86_64
 Requires: libvdpau-devel
 %endif
 %endif
@@ -935,7 +937,7 @@ cd mythtv-%{version}
     --xvmc-lib=XvMCNVIDIA_dynamic               \
 %endif
 %if %{with_vdpau}
-%ifarch %{ix86}
+%ifarch %{ix86} x86_64
     --enable-vdpau				\
 %endif
 %endif
@@ -1474,6 +1476,9 @@ fi
 ################################################################################
 
 %changelog
+* Wed Sep 16 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r21864
+- Fix botched arch-specific handling of vdpau support
+
 * Tue Sep 15 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.3.svn.r21864
 - Oops, no libvdpau for powerpc
 
