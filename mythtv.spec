@@ -75,7 +75,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.22
 %if "%{branch}" == "trunk"
-Release: 0.2.svn.%{_svnrev}%{?dist}
+Release: 0.3.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -428,7 +428,9 @@ Requires:  xorg-x11-drv-nvidia-devel
 %endif
 
 %if %{with_vdpau}
+%ifarch %{ix86}
 Requires: libvdpau-devel
+%endif
 %endif
 
 %description -n libmyth-devel
@@ -933,7 +935,9 @@ cd mythtv-%{version}
     --xvmc-lib=XvMCNVIDIA_dynamic               \
 %endif
 %if %{with_vdpau}
+%ifarch %{ix86}
     --enable-vdpau				\
+%endif
 %endif
 %if %{with_directfb}
     --enable-directfb                           \
@@ -1470,6 +1474,9 @@ fi
 ################################################################################
 
 %changelog
+* Tue Sep 15 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.3.svn.r21864
+- Oops, no libvdpau for powerpc
+
 * Mon Sep 14 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21864
 - Update to pre-0.22 svn trunk revision 21864
 - Enable vdpau support, now that libvdpau is packaged in Fedora
