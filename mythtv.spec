@@ -9,13 +9,17 @@
 #     David Bussenschutt <buzz@oska.com>
 #     and others; see changelog at bottom for details.
 #
-# The latest version of this file can be found at:
+# The latest canonical upstream version of this file can be found at:
 #
-#     http://www.mythtv.org/wiki/index.php/Mythtv-svn-rpmbuild.spec
+#     http://svn.mythtv.org/svn/trunk/packaging/rpm/mythtv.spec
+#
+# The latest RPM Fusion version can be found at:
+#
+#     http://cvs.rpmfusion.org/viewvc/rpms/mythtv/devel/?root=free
 #
 # Note:
 #
-#     This spec relies upon several files included in the RPMFusion mythtv
+#     This spec relies upon several files included in the RPM Fusion mythtv
 #     src.rpm file.  Please install it into your build tree before trying to
 #     build anything with this spec.
 #
@@ -28,13 +32,13 @@
 # The following options are disabled by default.  Use these options to enable:
 #
 # --with directfb           Enable directfb support
-# --with xvmcnvidia         Enable NVidia XvMC support
 #
 # The following options are enabled by default.  Use these options to disable:
 #
+# --without vdpau           Disable VDPAU support
+# --without xvmc            Disable XvMC support
 # --without perl            Disable building of the perl bindings
 # --without python          Disable building of the python bindings
-# --without vdpau           Disable NVidia VDPAU support
 #
 # # All plugins get built by default, but you can disable them as you wish:
 #
@@ -61,14 +65,14 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r21864
+%define _svnrev r22144
 %define branch trunk
 
 #
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Summary:        A digital video recorder (DVR) application.
+Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
@@ -90,20 +94,21 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 # processor-specific optimizations.  It seems to cause compile problems on many
 # systems (particularly x86_64), so it is classified by the MythTV developers
 # as "use at your own risk."
-%define with_proc_opt      %{?_with_proc_opt:       1} %{!?_with_proc_opt:      0}
+%define with_proc_opt      %{?_with_proc_opt:      1} %{!?_with_proc_opt:      0}
 
 # Set "--with debug" to enable MythTV debug compile mode
-%define with_debug         %{?_with_debug:          1} %{?!_with_debug:         0}
+%define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
 
 # The following options are enabled by default.  Use --without to disable them
-%define with_perl          %{?_without_perl:        0} %{!?_without_perl:       1}
-%define with_python        %{?_without_python:      0} %{!?_without_python:     1}
-%define with_pulseaudio    %{?_without_pulseaudio:  0} %{!?_without_pulseaudio: 1}
-%define with_vdpau         %{?_without_vdpau:       0} %{?!_without_vdpau:      1}
+%define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
+%define with_xvmc          %{?_without_xvmc:       0} %{?!_without_xvmc:       1}
+%define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
+%define with_python        %{?_without_python:     0} %{!?_without_python:     1}
+%define with_pulseaudio    %{?_without_pulseaudio: 0} %{!?_without_pulseaudio: 1}
 
 # The following options are disabled by default.  Use --with to enable them
-%define with_directfb      %{?_with_directfb:       1} %{!?_with_directfb:      0}
-%define with_xvmcnvidia    %{?_with_xvmcnvidia:     1} %{?!_with_xvmcnvidia:    0}
+%define with_directfb      %{?_with_directfb:      1} %{!?_with_directfb:      0}
+%define with_xvmcnvidia    %{?_with_xvmcnvidia:    1} %{?!_with_xvmcnvidia:    0}
 
 # All plugins get built by default, but you can disable them as you wish
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
@@ -153,7 +158,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
-BuildRequires:  qt4-devel
+BuildRequires:  qt4-devel >= 4.4
 BuildRequires:  phonon-devel
 
 BuildRequires:  lm_sensors-devel
@@ -184,10 +189,9 @@ BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
-# libdvdcss will be dynamically loaded if installed
-#BuildRequires:  libdvdcss-devel >= 1.2.7
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
+# nb: libdvdcss will be dynamically loaded if installed
 BuildRequires:  libfame-devel >= 0.9.0
 BuildRequires:  libmad-devel
 BuildRequires:  libogg-devel
@@ -224,9 +228,7 @@ BuildRequires:  xorg-x11-drv-nvidia-devel
 %endif
 
 %if %{with_vdpau}
-%ifarch %{ix86} x86_64
 BuildRequires: libvdpau-devel
-%endif
 %endif
 
 # API Build Requirements
@@ -270,6 +272,7 @@ BuildRequires: libtermcap-devel
 %endif
 
 %if %{with_mythvideo}
+Requires:       perl(XML::Simple)
 %endif
 
 %if %{with_mythweather}
@@ -343,12 +346,12 @@ and miscellaneous other bits and pieces.
 ################################################################################
 
 %package -n libmyth
-Summary:   Library providing mythtv support.
+Summary:   Library providing mythtv support
 Group:     System Environment/Libraries
 
 Requires:  freetype >= 2
 Requires:  lame
-Requires:  qt4
+Requires:  qt4 >= 4.4
 Requires:  qt4-MySQL
 
 %description -n libmyth
@@ -359,14 +362,14 @@ television programs.  Refer to the mythtv package for more information.
 ################################################################################
 
 %package -n libmyth-devel
-Summary:   Development files for libmyth.
+Summary:   Development files for libmyth
 Group:     Development/Libraries
 
 Requires:  libmyth = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
 Requires:  mysql-devel >= 5
-Requires:  qt4-devel
+Requires:  qt4-devel >= 4.4
 Requires:  lm_sensors-devel
 Requires:  lirc-devel
 
@@ -394,7 +397,6 @@ Requires:  flac-devel >= 1.0.4
 Requires:  gsm-devel
 Requires:  lame-devel
 Requires:  libdca-devel
-#Requires:  libdvdcss-devel >= 1.2.7
 Requires:  libdvdnav-devel
 Requires:  libdvdread-devel >= 0.9.4
 Requires:  libfame-devel >= 0.9.0
@@ -412,6 +414,9 @@ Requires:  xvidcore-devel >= 0.9.1
 Requires:  alsa-lib-devel
 Requires:  arts-devel
 Requires:  jack-audio-connection-kit-devel
+%if %{with_pulseaudio}
+Requires:  pulseaudio-libs-devel
+%endif
 
 # Need dvb headers for dvb support
 Requires:  kernel-headers
@@ -430,9 +435,7 @@ Requires:  xorg-x11-drv-nvidia-devel
 %endif
 
 %if %{with_vdpau}
-%ifarch %{ix86} x86_64
 Requires: libvdpau-devel
-%endif
 %endif
 
 %description -n libmyth-devel
@@ -483,7 +486,7 @@ Summary:    Server component of mythtv (a DVR)
 Group:      Applications/Multimedia
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
-Requires:  wget
+Requires:   wget
 Conflicts:  xmltv-grabbers < 0.5.37
 
 %description backend
@@ -539,10 +542,8 @@ Group:          Development/Languages
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(DBD::mysql)
-# Disabled because there are no RPM packages for these yet,
-# and RPM doesn't seem to be picking up on CPAN versions
-#Requires:       perl(Net::UPnP)
-#Requires:       perl(Net::UPnP::ControlPoint)
+Requires:       perl(Net::UPnP)
+Requires:       perl(Net::UPnP::ControlPoint)
 
 %description -n perl-MythTV
 Provides a perl-based interface to interacting with MythTV.
@@ -816,8 +817,8 @@ and replay recorded events.
 # Replace static lib paths with %{_lib} so we build properly on x86_64
 # systems, where the libs are actually in lib64.
     if [ "%{_lib}" != "lib" ]; then
-        grep -rlZ /lib/   . | xargs -r0 sed -i -e 's,/lib/,/%{_lib}/,g'
-        grep -rlZ /lib$   . | xargs -r0 sed -i -e 's,/lib$,/%{_lib},'
+        grep -rlZ '/lib/' . | xargs -r0 sed -i -e 's,/lib/,/%{_lib}/,g'
+        grep -rlZ '/lib$' . | xargs -r0 sed -i -e 's,/lib$,/%{_lib},'
         grep -rlZ '/lib ' . | xargs -r0 sed -i -e 's,/lib ,/%{_lib} ,g'
     fi
 
@@ -827,6 +828,8 @@ cd mythtv-%{version}
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
+# And drop execute bit on theme html files
+    chmod -x themes/default/htmls/*.html
 
 # Nuke Windows and Mac OS X build scripts
     rm -rf contrib/Win32 contrib/OSX
@@ -864,7 +867,7 @@ cd mythtv-%{version}
     sed -i -e 's,VENDOR_XVMC_LIBS="-lXvMCNVIDIA",VENDOR_XVMC_LIBS="-lXvMCNVIDIA -lXv",' configure
 
 # On to mythplugins
-    cd ..
+cd ..
 
 ##### MythPlugins
 %if %{with_plugins}
@@ -886,13 +889,13 @@ cd mythplugins-%{version}
     chmod -R g-w ./*
     cd ..
 
-# Prevent all of those nasty installs to ../../../../../bin/whatever
-#    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
-#    echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
-#    chmod 644 settings.pro
+# Add execute bits to mythvideo python helper scripts
+    chmod +x mythvideo/mythvideo/scripts/ttvdb/*.py
+# Remove execute bits from some php mythweb files
+    chmod -x mythweb/classes/*.php
 
 # And back to the compile root
-    cd ..
+cd ..
 
 %endif
 
@@ -911,7 +914,7 @@ cd mythtv-%{version}
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
-    --enable-iptv				\
+    --enable-iptv                               \
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
@@ -937,9 +940,7 @@ cd mythtv-%{version}
     --xvmc-lib=XvMCNVIDIA_dynamic               \
 %endif
 %if %{with_vdpau}
-%ifarch %{ix86} x86_64
     --enable-vdpau				\
-%endif
 %endif
 %if %{with_directfb}
     --enable-directfb                           \
@@ -971,7 +972,6 @@ cd mythtv-%{version}
     --compile-type=release                      \
 %endif
     --enable-debug
-###    --enable-libx264                            \
 
 # Insert rpm version-release for mythbackend --version output
     find . -name version.pro -exec sed -i -e 's,svnversion \$\${SVNTREEDIR},echo "%{version}-%{release}",g' {} \;
@@ -1170,8 +1170,6 @@ cd mythplugins-%{version}
     mkdir -p %{buildroot}%{_datadir}/mythweb
     cp -a * %{buildroot}%{_datadir}/mythweb/
     mkdir -p %{buildroot}%{_datadir}/mythweb/{image_cache,php_sessions}
-# fix up permissions
-    chmod -R g-x %{buildroot}%{_datadir}/mythweb
 
     mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
     cp %{SOURCE401} %{buildroot}%{_sysconfdir}/httpd/conf.d/
@@ -1196,9 +1194,9 @@ rm -rf %{buildroot}
 %postun -n libmyth -p /sbin/ldconfig
 
 %pre backend
-# Add the "mythtv" user
+# Add the "mythtv" user, with membership in the video group
 /usr/sbin/useradd -c "mythtvbackend User" \
-    -s /sbin/nologin -r -d %{_varlibdir}/mythtv mythtv 2> /dev/null || :
+    -s /sbin/nologin -r -d %{_varlibdir}/mythtv -G video mythtv 2> /dev/null || :
 
 %post backend
 /sbin/chkconfig --add mythbackend
@@ -1263,8 +1261,8 @@ fi
 %{_datadir}/mythtv/devicemaster.xml
 %{_datadir}/mythtv/deviceslave.xml
 %{_datadir}/mythtv/setup.xml
+%{_bindir}/mythavtest
 %{_bindir}/mythfrontend
-%{_bindir}/mythtv
 %{_bindir}/mythtvosd
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
@@ -1476,6 +1474,20 @@ fi
 ################################################################################
 
 %changelog
+* Wed Sep 30 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22144
+- Update to pre-0.22 svn trunk revision 22144
+
+* Sat Sep 26 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22076
+- Update to pre-0.22 svn trunk revision 22076
+
+* Fri Sep 18 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r21940
+- Update to pre-0.22 svn trunk revision 21940
+- Include initial cut of semi-experimental advanced imon/lcdproc icon support
+- Assorted spec enhancements from James Twyford (via mythtv trac ticket 7090)
+
+* Wed Sep 16 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r21902
+- Update to pre-0.22 svn trunk revision 21902
+
 * Wed Sep 16 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r21864
 - Fix botched arch-specific handling of vdpau support
 
