@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22144
+%define _svnrev r22179
 %define branch trunk
 
 #
@@ -193,7 +193,6 @@ BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
 # nb: libdvdcss will be dynamically loaded if installed
 BuildRequires:  libfame-devel >= 0.9.0
-BuildRequires:  libmad-devel
 BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
@@ -400,7 +399,6 @@ Requires:  libdca-devel
 Requires:  libdvdnav-devel
 Requires:  libdvdread-devel >= 0.9.4
 Requires:  libfame-devel >= 0.9.0
-Requires:  libmad-devel
 Requires:  libogg-devel
 Requires:  libtheora-devel
 Requires:  libvorbis-devel >= 1.0
@@ -1474,6 +1472,10 @@ fi
 ################################################################################
 
 %changelog
+* Fri Oct 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22179
+- Update to pre-0.22 svn trunk revision 22179
+- Drop BR: libmad-devel, its no longer used
+
 * Wed Sep 30 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22144
 - Update to pre-0.22 svn trunk revision 22144
 
