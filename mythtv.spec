@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22179
+%define _svnrev r22270
 %define branch trunk
 
 #
@@ -183,12 +183,10 @@ BuildRequires:  libGL-devel, libGLU-devel
 # Misc A/V format support
 BuildRequires:  faac-devel
 BuildRequires:  faad2-devel
-BuildRequires:  fftw2-devel < 3
-BuildRequires:  fftw2-devel >= 2.1.3
+BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
-BuildRequires:  libdca-devel
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
 # nb: libdvdcss will be dynamically loaded if installed
@@ -197,7 +195,7 @@ BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
 BuildRequires:  mjpegtools-devel >= 1.6.1
-BuildRequires:  taglib-devel >= 1.4
+BuildRequires:  taglib-devel >= 1.5
 BuildRequires:  transcode >= 0.6.8
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
@@ -246,7 +244,6 @@ BuildRequires:  python-devel
 %if %{with_plugins}
 
 %if %{with_mythgallery}
-BuildRequires:  libtiff-devel
 BuildRequires:  libexif-devel >= 0.6.9
 %endif
 
@@ -390,12 +387,10 @@ Requires:  libGL-devel, libGLU-devel
 # Misc A/V format support
 Requires:  faac-devel
 Requires:  faad2-devel
-Requires:  fftw2-devel < 3
-Requires:  fftw2-devel >= 2.1.3
+Requires:  fftw-devel >= 3
 Requires:  flac-devel >= 1.0.4
 Requires:  gsm-devel
 Requires:  lame-devel
-Requires:  libdca-devel
 Requires:  libdvdnav-devel
 Requires:  libdvdread-devel >= 0.9.4
 Requires:  libfame-devel >= 0.9.0
@@ -403,7 +398,7 @@ Requires:  libogg-devel
 Requires:  libtheora-devel
 Requires:  libvorbis-devel >= 1.0
 Requires:  mjpegtools-devel >= 1.6.1
-Requires:  taglib-devel >= 1.4
+Requires:  taglib-devel >= 1.5
 Requires:  transcode >= 0.6.8
 Requires:  x264-devel
 Requires:  xvidcore-devel >= 0.9.1
@@ -920,6 +915,7 @@ cd mythtv-%{version}
     --enable-audio-alsa                         \
     --enable-audio-oss                          \
     --enable-audio-jack                         \
+    --enable-libfftw3                           \
     --enable-x11 --x11-path=%{_includedir}      \
     --enable-xv                                 \
     --enable-xvmc-vld --enable-xvmc-pro         \
@@ -930,7 +926,7 @@ cd mythtv-%{version}
     --enable-firewire                           \
     --enable-dvb                                \
     --enable-libfaac --enable-nonfree           \
-    --enable-libfaad --enable-libfaad --enable-libfaadbin \
+    --enable-libfaad --enable-libfaadbin        \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
@@ -992,7 +988,7 @@ cd mythplugins-%{version}
     echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
     find . -name \*.pro \
         -exec sed -i -e "s,INCLUDEPATH += .\+/include/mythtv,INCLUDEPATH += $temp%{_includedir}/mythtv," {} \; \
-        -exec sed -i -e "s,TARGETDEPS += \$\${LIBDIR}/libmyth,TARGETDEPS += $temp%{_libdir}/libmyth," {} \; \
+        -exec sed -i -e "s,DEPLIBS = \$\${LIBDIR},DEPLIBS = $temp%{_libdir}," {} \; \
         -exec sed -i -e "s,\$\${PREFIX}/include/mythtv,$temp%{_includedir}/mythtv," {} \;
     echo "INCLUDEPATH -= \$\${PREFIX}/include" >> settings.pro
     echo "INCLUDEPATH -= %{_includedir}"       >> settings.pro
@@ -1397,6 +1393,7 @@ fi
 %{_bindir}/ignyte
 %{_datadir}/mythtv/themes/default/movies-ui.xml
 %{_libdir}/mythtv/plugins/libmythmovies.so
+%{_datadir}/mythtv/i18n/mythmovies_*.qm
 %endif
 
 %if %{with_mythmusic}
@@ -1465,6 +1462,7 @@ fi
 %{_libdir}/mythtv/plugins/libmythzoneminder.so
 %{_datadir}/mythtv/zonemindermenu.xml
 %{_bindir}/mythzmserver
+%{_datadir}/mythtv/i18n/mythzoneminder_*.qm
 %endif
 
 %endif
@@ -1472,6 +1470,15 @@ fi
 ################################################################################
 
 %changelog
+* Tue Oct 06 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22270
+- Update to pre-0.22 svn trunk revision 22270
+- Fix temp include path for building plugins
+- Drop some old shouldn't-be-needed-anymore BR
+- Use fftw v3 instead of v2 now
+
+* Sun Oct 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22228
+- Update to pre-0.22 svn trunk revision 22228
+
 * Fri Oct 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22179
 - Update to pre-0.22 svn trunk revision 22179
 - Drop BR: libmad-devel, its no longer used
