@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22270
+%define _svnrev r22366
 %define branch trunk
 
 #
@@ -109,6 +109,8 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 # The following options are disabled by default.  Use --with to enable them
 %define with_directfb      %{?_with_directfb:      1} %{!?_with_directfb:      0}
 %define with_xvmcnvidia    %{?_with_xvmcnvidia:    1} %{?!_with_xvmcnvidia:    0}
+# FAAC is non-free, so we disable it by default
+%define with_faac          %{?_with_faac:          1} %{?!_with_faac:          0}
 
 # All plugins get built by default, but you can disable them as you wish
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
@@ -181,7 +183,9 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
+%if %{with_faac}
 BuildRequires:  faac-devel
+%endif
 BuildRequires:  faad2-devel
 BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
@@ -385,7 +389,9 @@ Requires:  xorg-x11-drv-openchrome-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
+%if %{with_faac}
 Requires:  faac-devel
+%endif
 Requires:  faad2-devel
 Requires:  fftw-devel >= 3
 Requires:  flac-devel >= 1.0.4
@@ -925,7 +931,9 @@ cd mythtv-%{version}
     --enable-ivtv                               \
     --enable-firewire                           \
     --enable-dvb                                \
+%if %{with_faac}
     --enable-libfaac --enable-nonfree           \
+%endif
     --enable-libfaad --enable-libfaadbin        \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
@@ -1470,6 +1478,13 @@ fi
 ################################################################################
 
 %changelog
+* Sun Oct 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22366
+- Update to pre-0.22 svn trunk revision 22366
+- Disable faac by default, since its been deteremined to be non-free now
+
+* Thu Oct 08 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22304
+- Update to pre-0.22 svn trunk revision 22304
+
 * Tue Oct 06 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22270
 - Update to pre-0.22 svn trunk revision 22270
 - Fix temp include path for building plugins
