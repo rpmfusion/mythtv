@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22366
+%define _svnrev r22427
 %define branch trunk
 
 #
@@ -782,7 +782,10 @@ Group:     Applications/Multimedia
 Requires:  httpd >= 1.3.26
 Requires:  php >= 5.1
 Requires:  php-mysql
+# php-process is broken out from main php package in Fedora 11 and later
+%if 0%{?fedora} >= 11
 Requires:  php-process
+%endif
 
 %description -n mythweb
 The web interface to MythTV.
@@ -1478,6 +1481,11 @@ fi
 ################################################################################
 
 %changelog
+* Tue Oct 13 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22427
+- Update to pre-0.22 svn trunk revision 22427
+- Conditionalize R: php-process on F11+ so we can build and
+  install properly on F10 (builds forthcoming once 0.22 is out)
+
 * Sun Oct 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22366
 - Update to pre-0.22 svn trunk revision 22366
 - Disable faac by default, since its been deteremined to be non-free now
