@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22427
+%define _svnrev r22457
 %define branch trunk
 
 #
@@ -79,7 +79,8 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.22
 %if "%{branch}" == "trunk"
-Release: 0.4.svn.%{_svnrev}%{?dist}
+Release: 0.5.rc1%{?dist}
+#Release: 0.4.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1481,6 +1482,10 @@ fi
 ################################################################################
 
 %changelog
+* Wed Oct 14 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.5.rc1
+- Update to 0.22-rc1
+- Now tracking release-0-22-fixes branch
+
 * Tue Oct 13 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22427
 - Update to pre-0.22 svn trunk revision 22427
 - Conditionalize R: php-process on F11+ so we can build and
