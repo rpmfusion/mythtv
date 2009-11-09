@@ -65,8 +65,8 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22680
-%define branch trunk
+%define _svnrev r22752
+%define branch release
 
 #
 # Basic descriptive tags for this package:
@@ -79,8 +79,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.22
 %if "%{branch}" == "trunk"
-Release: 0.9.rc2%{?dist}
-#Release: 0.4.svn.%{_svnrev}%{?dist}
+Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1482,6 +1481,9 @@ fi
 ################################################################################
 
 %changelog
+* Mon Nov 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-1
+- Update to 0.22 release
+
 * Sat Oct 31 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.9.rc2
 - Update to 0.22-rc2
 
