@@ -65,8 +65,8 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22457
-%define branch trunk
+%define _svnrev r22752
+%define branch release
 
 #
 # Basic descriptive tags for this package:
@@ -79,8 +79,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.22
 %if "%{branch}" == "trunk"
-Release: 0.5.rc1%{?dist}
-#Release: 0.4.svn.%{_svnrev}%{?dist}
+Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -980,7 +979,7 @@ cd mythtv-%{version}
     --enable-debug
 
 # Insert rpm version-release for mythbackend --version output
-    find . -name version.pro -exec sed -i -e 's,svnversion \$\${SVNTREEDIR},echo "%{version}-%{release}",g' {} \;
+    find . -name version.pro -exec sed -i -e 's,myth_binary_version = \$\${BINARY_VERSION},myth_binary_version = %{version}-%{release} (%{_svnrev}),g' {} \;
 
 # Make
     make %{?_smp_mflags}
@@ -1482,6 +1481,21 @@ fi
 ################################################################################
 
 %changelog
+* Mon Nov 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-1
+- Update to 0.22 release
+
+* Sat Oct 31 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.9.rc2
+- Update to 0.22-rc2
+
+* Tue Oct 27 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.8.rc1
+- Update to release-0-22-fixes branch, svn revision 22579
+
+* Tue Oct 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.7.rc1
+- Update to release-0-22-fixes branch, svn revision 22548
+
+* Fri Oct 16 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.6.rc1
+- Update to release-0-22-fixes branch, svn revision 22507
+
 * Wed Oct 14 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.5.rc1
 - Update to 0.22-rc1
 - Now tracking release-0-22-fixes branch
