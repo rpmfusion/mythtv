@@ -1,0 +1,831 @@
+diff -Naurp themes-0.21-release/blootube-osd/osd.xml themes-0.21/blootube-osd/osd.xml
+--- themes-0.21-release/blootube-osd/osd.xml	2007-08-02 12:21:52.000000000 -0400
++++ themes-0.21/blootube-osd/osd.xml	2008-09-22 03:08:35.000000000 -0400
+@@ -51,7 +51,7 @@
+ 	  <shadow>2,2</shadow>
+   </font>
+   
+-  <font name="titlefont" face="Vera">
++  <font name="titlefont" face="Bitstream Vera Sans">
+ 	<color normal="#FFFFFF">255</color>
+ 	<!-- <filename>VeraBd.ttf</filename> --> 
+ 	<size>16</size>
+diff -Naurp themes-0.21-release/blootube-wide/music-ui.xml themes-0.21/blootube-wide/music-ui.xml
+--- themes-0.21-release/blootube-wide/music-ui.xml	2008-02-27 11:12:55.000000000 -0500
++++ themes-0.21/blootube-wide/music-ui.xml	2008-12-27 11:21:12.000000000 -0500
+@@ -138,16 +138,6 @@
+         -->
+ 
+         <container name="background">
+-            <image name="filler" draworder="0" fleximage="no">
+-<!--                <filename>music/mm_box.png</filename> -->
+-                <filename>bgoverlay.png</filename>
+-                <position>0,380</position>
+-            </image>
+-       <!--    <image name="titlelines" draworder="0" fleximage="no">
+-                <filename>music/trans-titles.png</filename>
+-                <position>-1,10</position>
+-            </image>
+-	-->     
+             <image name="track_info_background" draworder="0" fleximage="no">
+                 <filename>music/track_info.png</filename>
+                 <position>35,435</position>
+@@ -219,16 +209,6 @@
+             </managedtreelist>
+ 
+             <!--
+-                An image that go "on top" of the list bins
+-            -->
+-<!--
+-            <image name="showinglines" draworder="1" fleximage="yes">
+-                <context>1</context>
+-                <filename>music/mm_box.png</filename>
+-                <position>30,30</position>
+-            </image>
+--->
+-            <!--
+                 An image for when we're waiting for data
+             -->
+             <!--<image name="music/mm_box" draworder="0" fleximage="no">
+@@ -542,10 +522,10 @@
+   	 
+   	 	    <checkbox name="compilation_check" draworder="0">
+ 	                <position>195,70</position>
+-	                <image function="checked" filename="mm_checked.png"></image>
+-	                <image function="unchecked" filename="mm_unchecked.png"></image>
+-	                <image function="checked_high" filename="mm_checked_high.png"></image>
+-	                <image function="unchecked_high" filename="mm_unchecked_high.png"></image>
++	                <image function="checked" filename="shared/mv_checked.png"></image>
++	                <image function="unchecked" filename="shared/mv_unchecked.png"></image>
++	                <image function="checked_high" filename="shared/mv_checked_high.png"></image>
++	                <image function="unchecked_high" filename="shared/mv_unchecked_high.png"></image>
+ 	            </checkbox> 
+ 	
+ 	            <remoteedit name="compilation_artist_edit" draworder="1" align="left">
+@@ -555,9 +535,9 @@
+ 	
+ 	            <pushbutton name="searchcompilation_artist_button" draworder="2">
+ 	                <position>1025,110</position>
+-	                <image function="on" filename="mm_blankbutton_on.png"></image>
+-	                <image function="off" filename="mm_blankbutton_off.png"></image>
+-	                <image function="pushed" filename="mm_blankbutton_pushed.png"></image>
++	                <image function="on" filename="shared/mv_unchecked_high.png"></image>
++	                <image function="off" filename="shared/mv_unchecked.png"></image>
++	                <image function="pushed" filename="shared/mv_unchecked_high.png"></image>
+ 	            </pushbutton>
+ 	
+ 	
+@@ -568,9 +548,9 @@
+ 	
+ 	            <pushbutton name="searchartist_button" draworder="2">
+ 	                <position>1025,150</position>
+-	                <image function="on" filename="mm_blankbutton_on.png"></image>
+-	                <image function="off" filename="mm_blankbutton_off.png"></image>
+-	                <image function="pushed" filename="mm_blankbutton_pushed.png"></image>
++	                <image function="on" filename="shared/mv_unchecked_high.png"></image>
++	                <image function="off" filename="shared/mv_unchecked.png"></image>
++	                <image function="pushed" filename="shared/mv_unchecked_high.png"></image>
+ 	            </pushbutton>
+ 	
+ 	
+@@ -581,9 +561,9 @@
+ 	
+ 	            <pushbutton name="searchalbum_button" draworder="2">
+ 	                <position>1025,190</position>
+-	                <image function="on" filename="mm_blankbutton_on.png"></image>
+-	                <image function="off" filename="mm_blankbutton_off.png"></image>
+-	                <image function="pushed" filename="mm_blankbutton_pushed.png"></image>
++	                <image function="on" filename="shared/mv_unchecked_high.png"></image>
++	                <image function="off" filename="shared/mv_unchecked.png"></image>
++	                <image function="pushed" filename="shared/mv_unchecked_high.png"></image>
+ 	            </pushbutton>
+ 	
+ 	            <remoteedit name="title_edit" draworder="1" align="left">
+@@ -598,9 +578,9 @@
+ 	
+ 	            <pushbutton name="searchgenre_button" draworder="2">
+ 	                <position>1025,270</position>
+-	                <image function="on" filename="mm_blankbutton_on.png"></image>
+-	                <image function="off" filename="mm_blankbutton_off.png"></image>
+-	                <image function="pushed" filename="mm_blankbutton_pushed.png"></image>
++	                <image function="on" filename="shared/mv_unchecked_high.png"></image>
++	                <image function="off" filename="shared/mv_unchecked.png"></image>
++	                <image function="pushed" filename="shared/mv_unchecked_high.png"></image>
+ 	            </pushbutton>
+ 	
+ 	            <remoteedit name="year_edit" draworder="1" align="left">
+@@ -622,9 +602,9 @@
+ 	            <selector name="rating_button" draworder="0">
+ 	                <area>500,350,30,30</area>
+ 	                <font>display</font>
+-	                <image function="on" filename="mm_leftright_on.png"></image>
+-	                <image function="off" filename="mm_leftright_off.png"></image>
+-	                <image function="pushed" filename="mm_leftright_pushed.png"></image>
++	                <image function="on" filename="shared/mv_leftright_on.png"></image>
++	                <image function="off" filename="shared/mv_leftright_off.png"></image>
++	                <image function="pushed" filename="shared/mv_leftright_pushed.png"></image>
+ 	            </selector>
+ 	
+ 	            <textarea name="playcount_text" draworder="1" align="left">
+diff -Naurp themes-0.21-release/blootube-wide/ui.xml themes-0.21/blootube-wide/ui.xml
+--- themes-0.21-release/blootube-wide/ui.xml	2008-02-27 11:12:55.000000000 -0500
++++ themes-0.21/blootube-wide/ui.xml	2008-09-22 03:18:03.000000000 -0400
+@@ -1148,7 +1148,7 @@
+         <font>info</font>
+         <value>Channel Recording Priorities</value>
+       </textarea>
+-      <image name="filler" draworder="0" fleximage="yes">
++      <image name="filler" draworder="0" fleximage="no">
+         <filename>background.png</filename>
+         <position>0,35</position>
+       </image>
+@@ -1882,7 +1882,7 @@
+       <context>1</context>
+       <area>10,660,1260,50</area>
+       <statusbar name="usedbar" draworder="5">
+-        <container fleximage="yes">container.png</container>
++        <container fleximage="no">container.png</container>
+ 		<fill>progress-filler.png</fill>
+         <position>20,0</position>
+       </statusbar>
+@@ -2029,7 +2029,7 @@
+     </font>
+    
+     <container name="background">
+-      <image name="filler" draworder="0" fleximage="yes">
++      <image name="filler" draworder="0" fleximage="no">
+         <filename>playback-videobg.png</filename>
+         <position>0,0</position>
+       </image>
+@@ -2233,7 +2233,7 @@
+       <context>1</context>
+       <area>10,660,1260,50</area>
+       <statusbar name="usedbar" draworder="5">
+-        <container fleximage="yes">container.png</container>
++        <container fleximage="no">container.png</container>
+                 <fill>progress-filler.png</fill>
+         <position>20,0</position>
+       </statusbar>
+@@ -2616,7 +2616,7 @@
+         <column number="4" width="20" context="-1"></column>
+         <items>11</items>
+ 
+-        <image function="selectionbar" filename="priorities/pr-selectbar.png" location="-8,-4" fleximage="yes"></image>
++        <image function="selectionbar" filename="priorities/pr-selectbar.png" location="-8,-4" fleximage="no"></image>
+         <image function="uparrow" filename="shared/uparrow.png" location="1200,5"></image>
+         <image function="downarrow" filename="shared/downarrow.png" location="1200,390"></image>
+       </listarea>
+diff -Naurp themes-0.21-release/blootube-wide/video-ui.xml themes-0.21/blootube-wide/video-ui.xml
+--- themes-0.21-release/blootube-wide/video-ui.xml	2008-02-27 11:12:55.000000000 -0500
++++ themes-0.21/blootube-wide/video-ui.xml	2008-09-22 03:18:03.000000000 -0400
+@@ -84,11 +84,11 @@
+     </font>
+ 
+     <container name="background">
+-      <image name="filler" draworder="0" fleximage="no">
++   <!--   <image name="filler" draworder="0" fleximage="no">
+         <filename>cr-background.png</filename>
+         <position>0,285</position>
+         <staticsize>1220,405</staticsize>
+-      </image>
++      </image>  -->
+     </container>
+ 
+     <container name="info">
+diff -Naurp themes-0.21-release/neon-wide/music-ui.xml themes-0.21/neon-wide/music-ui.xml
+--- themes-0.21-release/neon-wide/music-ui.xml	2008-02-27 11:12:55.000000000 -0500
++++ themes-0.21/neon-wide/music-ui.xml	2008-09-22 02:03:25.000000000 -0400
+@@ -1100,7 +1100,7 @@
+ 				<value>Rating:</value>
+ 			</textarea>
+ 			<repeatedimage name="rating_image" draworder="1" fleximage="no">
+-				<filename>ui/rating.png</filename>
++				<filename>music/music_rating.png</filename>
+ 				<position>410,298</position>
+ 				<orientation>LeftToRight</orientation>
+ 			</repeatedimage>
+@@ -1472,7 +1472,7 @@
+ 				<value>Rating:</value>
+ 			</textarea>
+ 			<repeatedimage name="rating_image" draworder="1" fleximage="no">
+-				<filename>ui/rating.png</filename>
++				<filename>music/music_rating.png</filename>
+ 				<position>410,190</position>
+ 				<orientation>LeftToRight</orientation>
+ 			</repeatedimage>
+@@ -1497,19 +1497,19 @@
+ 
+ <window name="miniplayer">
+ 
+-    <font name="currenttitle" face="Bitsream Vera Sans">
++    <font name="currenttitle" face="Bitstream Vera Sans">
+         <color>#ffffff</color>
+         <size>16</size>
+         <bold>yes</bold>
+     </font>
+ 
+-    <font name="currentartist" face="Bitsream Vera Sans">
++    <font name="currentartist" face="Bitstream Vera Sans">
+         <color>#ffffff</color>
+         <size>12</size>
+         <bold>yes</bold>
+     </font>
+ 
+-    <font name="infotext" face="Bitsream Vera Sans">
++    <font name="infotext" face="Bitstream Vera Sans">
+         <color>#ffffff</color>
+         <size>10</size>
+         <bold>yes</bold>
+diff -Naurp themes-0.21-release/neon-wide/theme.xml themes-0.21/neon-wide/theme.xml
+--- themes-0.21-release/neon-wide/theme.xml	2008-02-27 11:12:55.000000000 -0500
++++ themes-0.21/neon-wide/theme.xml	2009-05-04 06:33:00.000000000 -0400
+@@ -132,12 +132,24 @@
+     <offset>0,0</offset>
+   </buttondef>
+ 
++  <buttondef name="GAME_SETTINGS_PLAYERS">
++    <image>text-blank.png</image>
++     <watermarkimage>watermark/game.png</watermarkimage>
++    <offset>0,0</offset>
++  </buttondef>
++
+   <buttondef name="GAME_SCAN">
+     <image>text-blank.png</image>
+      <watermarkimage>watermark/game.png</watermarkimage>
+     <offset>0,0</offset>
+   </buttondef>
+ 
++  <buttondef name="GAME_CLEAR_DATA">
++    <image>text-blank.png</image>
++     <watermarkimage>watermark/game.png</watermarkimage>
++    <offset>0,0</offset>
++  </buttondef>
++
+ <!-- ################################-->
+ <!-- ########  mainmenu.xml  ########-->
+ <!-- ################################-->
+diff -Naurp themes-0.21-release/ProjectGrayhem/music-ui.xml themes-0.21/ProjectGrayhem/music-ui.xml
+--- themes-0.21-release/ProjectGrayhem/music-ui.xml	2008-02-27 11:12:55.000000000 -0500
++++ themes-0.21/ProjectGrayhem/music-ui.xml	2008-09-22 03:18:03.000000000 -0400
+@@ -8,12 +8,12 @@
+ <mythuitheme>
+     <!-- music selection screen -->
+     <window name="music_select">
+-      <font name="active" face="Arial">
++      <font name="active" face="Bitstream Vera Sans">
+          <color>#ffffff</color>
+          <size>17</size>
+       </font>
+ 
+-      <font name="inactive" face="Arial">
++      <font name="inactive" face="Bitstream Vera Sans">
+         <color>#9999cc</color>
+         <size>17</size>
+       </font>
+@@ -91,50 +91,50 @@
+         <!--
+             First, define all the fonts we need on this screen
+         -->
+-        <font name="active" face="Arial">
++        <font name="active" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <size>17</size>
+ 	    <bold>yes</bold>
+         </font>
+ 
+-        <font name="inactive" face="Arial">
++        <font name="inactive" face="Bitstream Vera Sans">
+             <color>#9999cc</color>
+             <size>17</size>
+ 	    <bold>yes</bold>
+         </font>
+ 
+-        <font name="selected" face="Arial">
++        <font name="selected" face="Bitstream Vera Sans">
+             <color>#ffff00</color>
+             <size>18</size>
+ 	    <bold>yes</bold>
+         </font>
+ 
+-        <font name="currenttitle" face="Arial">
++        <font name="currenttitle" face="Bitstream Vera Sans">
+             <color>#FFFFFF</color>
+             <size>20</size>
+             <bold>yes</bold>
+ 	    <bold>yes</bold>
+         </font>
+ 
+-        <font name="currentartist" face="Arial">
++        <font name="currentartist" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <size>18</size>
+             <bold>yes</bold>
+         </font>
+ 
+-        <font name="infotext" face="Arial">
++        <font name="infotext" face="Bitstream Vera Sans">
+             <color>#cccccc</color>
+             <size>16</size>
+ 	    <bold>yes</bold>
+         </font>
+ 
+-        <font name="infotext2" face="Arial">
++        <font name="infotext2" face="Bitstream Vera Sans">
+             <color>#cccccc</color>
+             <size>16</size>
+             <bold>yes</bold>
+         </font>
+ 
+-        <font name="buttons" face="Arial">
++        <font name="buttons" face="Bitstream Vera Sans">
+             <color>#FFFFFF</color>
+             <size>12</size>
+             <bold>yes</bold>
+@@ -423,19 +423,19 @@
+   </window>
+   <window name="edit_metadata">
+   	 
+-  	         <font name="title" face="Arial">
++  	         <font name="title" face="Bitstream Vera Sans">
+   	             <color>#ffffff</color>
+   	             <size>24</size>
+   	             <bold>yes</bold>
+   	         </font>
+   	 
+-  	         <font name="labels" face="Arial">
++  	         <font name="labels" face="Bitstream Vera Sans">
+   	             <color>#999999</color>
+   	             <size>18</size>
+   	             <bold>yes</bold>
+   	         </font>
+   	 
+-  	         <font name="display" face="Arial">
++  	         <font name="display" face="Bitstream Vera Sans">
+   	             <color>#ffffff</color>
+   	             <size>18</size>
+   	             <bold>yes</bold>
+diff -Naurp themes-0.21-release/ProjectGrayhem-OSD/osd.xml themes-0.21/ProjectGrayhem-OSD/osd.xml
+--- themes-0.21-release/ProjectGrayhem-OSD/osd.xml	2007-08-02 12:21:52.000000000 -0400
++++ themes-0.21/ProjectGrayhem-OSD/osd.xml	2008-09-22 03:21:41.000000000 -0400
+@@ -50,7 +50,7 @@
+ 	  <size:small>12</size:small>
+   </font>
+   
+-  <font name="titlefont" face="Vera">
++  <font name="titlefont" face="Bitstream Vera Sans">
+ 	<color normal="#FFFFFF">255</color>
+ 	<!-- <filename>VeraBd.ttf</filename> --> 
+ 	<size>16</size>
+diff -Naurp themes-0.21-release/ProjectGrayhem-wide/music-ui.xml themes-0.21/ProjectGrayhem-wide/music-ui.xml
+--- themes-0.21-release/ProjectGrayhem-wide/music-ui.xml	2008-02-27 11:12:55.000000000 -0500
++++ themes-0.21/ProjectGrayhem-wide/music-ui.xml	2008-09-22 02:00:23.000000000 -0400
+@@ -647,19 +647,19 @@
+   	    </window>
+ <window name="miniplayer"> 
+ 
+-    <font name="currenttitle" face="Bitsream Vera Sans"> 
++    <font name="currenttitle" face="Bitstream Vera Sans"> 
+         <color>#ffffff</color> 
+         <size>16</size> 
+         <bold>yes</bold> 
+     </font> 
+ 
+-    <font name="currentartist" face="Bitsream Vera Sans"> 
++    <font name="currentartist" face="Bitstream Vera Sans"> 
+         <color>#ffffff</color> 
+         <size>12</size> 
+         <bold>yes</bold> 
+     </font>
+ 
+-    <font name="infotext" face="Bitsream Vera Sans">
++    <font name="infotext" face="Bitstream Vera Sans">
+         <color>#ffffff</color>
+         <size>10</size>
+         <bold>yes</bold>
+diff -Naurp themes-0.21-release/ProjectGrayhem-wide/video-ui.xml themes-0.21/ProjectGrayhem-wide/video-ui.xml
+--- themes-0.21-release/ProjectGrayhem-wide/video-ui.xml	2008-05-15 05:04:26.000000000 -0400
++++ themes-0.21/ProjectGrayhem-wide/video-ui.xml	2008-10-10 13:21:20.000000000 -0400
+@@ -5,47 +5,47 @@
+ 
+    <!-- This is the video manager window -->
+ 
+-    <font name="active_font" face="Vera">
++    <font name="active_font" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="labels" face="Vera">
++    <font name="labels" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="keysfont" face="Vera">
++    <font name="keysfont" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>12</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="directorfnt" face="Vera">
++    <font name="directorfnt" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>18</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="moviedata" face="Vera">
++    <font name="moviedata" face="Bitstream Vera Sans">
+       <color>#a0a0a0</color>
+       <size>16</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="inactive_font" face="Vera">
++    <font name="inactive_font" face="Bitstream Vera Sans">
+       <color>#9999cc</color>
+       <size>16</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="bigtitle" face="Vera">
++    <font name="bigtitle" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <dropcolor>#000000</dropcolor>
+       <size>50</size>
+@@ -53,7 +53,7 @@
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="titlefnt" face="Vera">
++    <font name="titlefnt" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <dropcolor>#000000</dropcolor>
+       <shadow>1,1</shadow>
+@@ -61,7 +61,7 @@
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="leadfnt" face="Vera">
++    <font name="leadfnt" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <dropcolor>#000000</dropcolor>
+       <shadow>1,1</shadow>
+@@ -69,14 +69,14 @@
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="info" face="Vera">
++    <font name="info" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>17</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="message" face="Vera">
++    <font name="message" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <shadow>1,1</shadow>
+@@ -290,47 +290,47 @@
+ 
+   <window name="browser">
+ 
+-    <font name="active_font" face="Vera">
++    <font name="active_font" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="directorfnt" face="Vera">
++    <font name="directorfnt" face="Bitstream Vera Sans">
+       <color>#a0a0a0</color>
+       <size>16</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="labels" face="Vera">
++    <font name="labels" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="moviedata" face="Vera">
++    <font name="moviedata" face="Bitstream Vera Sans">
+       <color>#a0a0a0</color>
+       <size>15</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="plotfnt" face="Vera">
++    <font name="plotfnt" face="Bitstream Vera Sans">
+       <color>#a0a0a0</color>
+       <size>15</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="inactive_font" face="Vera">
++    <font name="inactive_font" face="Bitstream Vera Sans">
+       <color>#9999cc</color>
+       <size>16</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="bigtitle" face="Vera">
++    <font name="bigtitle" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <dropcolor>#000000</dropcolor>
+       <size>50</size>
+@@ -338,7 +338,7 @@
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="titlefnt" face="Vera">
++    <font name="titlefnt" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <dropcolor>#000000</dropcolor>
+       <shadow>1,1</shadow>
+@@ -346,7 +346,7 @@
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="leadfnt" face="Vera">
++    <font name="leadfnt" face="Bitstream Vera Sans">
+       <color>#F0F0F0</color>
+       <dropcolor>#000000</dropcolor>
+       <shadow>2,2</shadow>
+@@ -354,21 +354,21 @@
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="info" face="Vera">
++    <font name="info" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>17</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="helptext" face="Vera">
++    <font name="helptext" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>15</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="message" face="Vera">
++    <font name="message" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <shadow>1,1</shadow>
+@@ -494,37 +494,37 @@
+ 
+   <window name="gallery">
+ 
+-    <font name="active" face="Vera">
++    <font name="active" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="inactive" face="Vera">
++    <font name="inactive" face="Bitstream Vera Sans">
+       <color>#9999cc</color>
+       <size>16</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="title" face="Vera">
++    <font name="title" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>20</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="menu" face="Vera">
++    <font name="menu" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>20</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="subtitle" face="Vera">
++    <font name="subtitle" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="icontitle" face="Vera">
++    <font name="icontitle" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>20</size>
+       <bold>no</bold>
+@@ -604,40 +604,40 @@
+ 
+   <window name="selected">
+ 
+-    <font name="active_font" face="Vera">
++    <font name="active_font" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="labels" face="Vera">
++    <font name="labels" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="moviedata" face="Vera">
++    <font name="moviedata" face="Bitstream Vera Sans">
+       <color>#a0a0a0</color>
+       <size>15</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="plotfnt" face="Vera">
++    <font name="plotfnt" face="Bitstream Vera Sans">
+       <color>#a0a0a0</color>
+       <size>15</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="inactive_font" face="Vera">
++    <font name="inactive_font" face="Bitstream Vera Sans">
+       <color>#9999cc</color>
+       <size>16</size>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="bigtitle" face="Vera">
++    <font name="bigtitle" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <dropcolor>#000000</dropcolor>
+       <size>50</size>
+@@ -645,7 +645,7 @@
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="titlefnt" face="Vera">
++    <font name="titlefnt" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <dropcolor>#000000</dropcolor>
+       <shadow>1,1</shadow>
+@@ -653,7 +653,7 @@
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="leadfnt" face="Vera">
++    <font name="leadfnt" face="Bitstream Vera Sans">
+       <color>#F0F0F0</color>
+       <dropcolor>#000000</dropcolor>
+       <shadow>2,2</shadow>
+@@ -661,14 +661,14 @@
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="info" face="Vera">
++    <font name="info" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>17</size>
+       <shadow>1,1</shadow>
+       <bold>no</bold>
+     </font>
+ 
+-    <font name="message" face="Vera">
++    <font name="message" face="Bitstream Vera Sans">
+       <color>#ffffff</color>
+       <size>16</size>
+       <shadow>1,1</shadow>
+@@ -754,24 +754,24 @@
+ 
+   <window name="videotree">
+ 
+-        <font name="active" face="Vera">
++        <font name="active" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <size>18</size>
+             <bold>no</bold>
+         </font>
+         
+-        <font name="inactive" face="Vera">
++        <font name="inactive" face="Bitstream Vera Sans">
+             <color>#9999cc</color>
+             <size>18</size>
+             <bold>no</bold>
+         </font>
+         
+-        <font name="selectable" face="Vera">
++        <font name="selectable" face="Bitstream Vera Sans">
+             <color>#8cdeff</color>
+             <size>18</size>
+             <bold>no</bold>
+         </font>
+-        <font name="largetitle" face="Vera">
++        <font name="largetitle" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <dropcolor>#000000</dropcolor>
+             <size>32</size>
+@@ -779,7 +779,7 @@
+             <bold>no</bold>
+         </font>
+         
+-        <font name="labelfont" face="Vera">
++        <font name="labelfont" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <dropcolor>#000000</dropcolor>
+             <size>16</size>
+@@ -787,7 +787,7 @@
+             <bold>no</bold>
+         </font>
+         
+-        <font name="infofont" face="Vera">
++        <font name="infofont" face="Bitstream Vera Sans">
+             <color>#a0a0a0</color>
+             <size>16</size>
+             <bold>no</bold>
+@@ -893,7 +893,7 @@
+ 
+     <window name="file_associations">
+ 
+-        <font name="title" face="Vera">
++        <font name="title" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <dropcolor>#000000</dropcolor>
+             <size>18</size>
+@@ -901,7 +901,7 @@
+             <bold>no</bold>
+         </font>
+         
+-        <font name="display" face="Vera">
++        <font name="display" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <dropcolor>#000000</dropcolor>
+             <size>16</size>
+@@ -1002,7 +1002,7 @@
+ 
+     <window name="edit_metadata">
+ 
+-        <font name="title" face="Vera">
++        <font name="title" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <dropcolor>#000000</dropcolor>
+             <size>18</size>
+@@ -1010,7 +1010,7 @@
+             <bold>no</bold>
+         </font>
+         
+-        <font name="display" face="Vera">
++        <font name="display" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <dropcolor>#000000</dropcolor>
+             <size>16</size>
+@@ -1167,7 +1167,7 @@
+             And there has to be a managedtreelist called file_browser.
+     -->
+     <window name="file_chooser">
+-        <font name="chooser_font" face="Vera">
++        <font name="chooser_font" face="Bitstream Vera Sans">
+             <color>#ffffff</color>
+             <size>18</size>
+             <shadow>1,1</shadow>
+@@ -1216,7 +1216,7 @@
+         
+     <window name="filter">
+ 
+-    <font name="title" face="Vera">
++    <font name="title" face="Bitstream Vera Sans">
+         <color>#ffffff</color>
+         <dropcolor>#000000</dropcolor>
+         <size>18</size>
+@@ -1224,7 +1224,7 @@
+         <bold>no</bold>
+     </font>
+ 
+-	<font name="display" face="Vera">
++	<font name="display" face="Bitstream Vera Sans">
+ 		<color>#ffffff</color>
+ 		<dropcolor>#000000</dropcolor>
+ 		<size>16</size>

@@ -1,0 +1,59 @@
+diff -Naurp myththemes-0.21-release/Iulius/ui.xml myththemes-0.21/Iulius/ui.xml
+--- myththemes-0.21-release/Iulius/ui.xml	2008-03-04 10:32:10.000000000 -0500
++++ myththemes-0.21/Iulius/ui.xml	2008-03-11 06:24:38.000000000 -0400
+@@ -1869,7 +1869,7 @@
+         <fcnfont name="active" function="selected"></fcnfont>
+         <fcnfont name="enabled_state_0_font" function="enabled_state_0"></fcnfont>
+         <columnpadding>1</columnpadding>
+-        <column number="1" width="745" context="-1"></column>
++        <column number="1" width="715" context="-1"></column>
+         <items>8</items>
+         <image function="selectionbar" filename="rk-selectbar.png" location="-8,3"></image>
+         <image function="uparrow" filename="uparrow.png" location="755,15"></image>
+diff -Naurp myththemes-0.21-release/MythCenter/ui.xml myththemes-0.21/MythCenter/ui.xml
+--- myththemes-0.21-release/MythCenter/ui.xml	2008-03-04 10:32:10.000000000 -0500
++++ myththemes-0.21/MythCenter/ui.xml	2008-03-11 06:24:38.000000000 -0400
+@@ -1872,7 +1872,7 @@
+         <fcnfont name="active" function="selected"></fcnfont>
+         <fcnfont name="enabled_state_0_font" function="enabled_state_0"></fcnfont>
+         <columnpadding>1</columnpadding>
+-        <column number="1" width="745" context="-1"></column>
++        <column number="1" width="715" context="-1"></column>
+         <items>8</items>
+         <image function="selectionbar" filename="rk-selectbar.png" location="-8,3"></image>
+         <image function="uparrow" filename="uparrow.png" location="755,15"></image>
+diff -Naurp myththemes-0.21-release/myththemes.pro myththemes-0.21/myththemes.pro
+--- myththemes-0.21-release/myththemes.pro	2006-08-18 11:19:46.000000000 -0400
++++ myththemes-0.21/myththemes.pro	2008-04-23 22:28:43.000000000 -0400
+@@ -8,6 +8,7 @@ TEMPLATE = app
+ CONFIG -= moc qt
+ 
+ !macx:QMAKE_COPY_DIR = sh ./cpsvndir
++win32:QMAKE_INSTALL_DIR = sh ./cpsvndir
+ 
+ themes.path = $${PREFIX}/share/mythtv/themes/
+ themes.files = Iulius Iulius-OSD Minimalist-wide Titivillus Titivillus-OSD isthmus MythCenter MythCenter-wide Gray-OSD Retro Retro-OSD
+diff -Naurp myththemes-0.21-release/Retro/ui.xml myththemes-0.21/Retro/ui.xml
+--- myththemes-0.21-release/Retro/ui.xml	2008-03-04 10:32:10.000000000 -0500
++++ myththemes-0.21/Retro/ui.xml	2008-03-11 06:24:38.000000000 -0400
+@@ -1872,7 +1872,7 @@
+         <fcnfont name="active" function="selected"></fcnfont>
+         <fcnfont name="enabled_state_0_font" function="enabled_state_0"></fcnfont>
+         <columnpadding>1</columnpadding>
+-        <column number="1" width="745" context="-1"></column>
++        <column number="1" width="715" context="-1"></column>
+         <items>8</items>
+         <image function="selectionbar" filename="rk-selectbar.png" location="-8,3"></image>
+         <image function="uparrow" filename="uparrow.png" location="755,15"></image>
+diff -Naurp myththemes-0.21-release/Titivillus/ui.xml myththemes-0.21/Titivillus/ui.xml
+--- myththemes-0.21-release/Titivillus/ui.xml	2008-03-04 10:32:10.000000000 -0500
++++ myththemes-0.21/Titivillus/ui.xml	2008-03-11 06:24:38.000000000 -0400
+@@ -1619,7 +1619,7 @@
+         <fcnfont name="list-selected" function="selected"></fcnfont>
+         <fcnfont name="enabled_state_0_font" function="enabled_state_0"></fcnfont>
+         <columnpadding>1</columnpadding>
+-        <column number="1" width="745" context="-1"></column>
++        <column number="1" width="715" context="-1"></column>
+         <items>8</items>
+         <image function="selectionbar" filename="conflict/tit-cr-selectbar.png" location="-10,-5"></image>
+         <image function="uparrow" filename="shared/up_arrow.png" location="755,15"></image>
