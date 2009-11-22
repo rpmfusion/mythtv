@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22752
+%define _svnrev r22880
 %define branch release
 
 #
@@ -81,7 +81,7 @@ Version: 0.22
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -130,7 +130,9 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 ################################################################################
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
+Patch0:    mythtv-0.22-svnfixes.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
+Patch1:    mythplugins-0.22-svnfixes.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig.in
 Source102: mythbackend.init.in
@@ -141,8 +143,6 @@ Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
 Source110: mysql.txt
 Source401: mythweb.conf
-Patch1:    mythtv-%{version}-svnfixes.patch
-Patch2:    mythplugins-%{version}-svnfixes.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -829,7 +829,7 @@ and replay recorded events.
 ##### MythTV
 
 cd mythtv-%{version}
-%patch1 -p1
+%patch0 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -878,7 +878,7 @@ cd ..
 %if %{with_plugins}
 
 cd mythplugins-%{version}
-%patch2 -p1
+%patch1 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -1485,8 +1485,8 @@ fi
 ################################################################################
 
 %changelog
-* Fri Nov 13 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-2
-- Updates from release-0-22-fixes branch, r22815
+* Sat Nov 21 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-2
+- Update to release-0-22-fixes branch, svn revision 22880
 
 * Mon Nov 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-1
 - Update to 0.22 release
