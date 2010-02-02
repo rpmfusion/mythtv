@@ -65,6 +65,33 @@ Index: mythtv/themes/default/recordings-ui.xml
          </textarea>
  
          <imagetype name="preview">
+Index: mythtv/themes/default/base.xml
+===================================================================
+--- mythtv/themes/default/base.xml	(revision 22751)
++++ mythtv/themes/default/base.xml	(working copy)
+@@ -49,11 +49,11 @@
+     </font>
+ 
+     <font name="basesmallblue" from="basesmall">
+-        <color>#0492A7</color>
++        <color>#54d6e9</color>
+     </font>
+ 
+     <font name="basesmallred" from="basesmall">
+-        <color>#800900</color>
++        <color>#ff6b48</color>
+     </font>
+ 
+     <font name="basemediumgrey" from="basemedium">
+@@ -65,7 +65,7 @@
+     </font>
+ 
+     <font name="basemediumred" from="basemedium">
+-        <color>#800900</color>
++        <color>#ff6b48</color>
+     </font>
+ 
+     <font name="basemediumyellow" from="basemedium">
 Index: mythtv/themes/default-wide/schedule-ui.xml
 ===================================================================
 --- mythtv/themes/default-wide/schedule-ui.xml	(revision 22751)
@@ -950,242 +977,212 @@ Index: mythtv/keys.txt
      delete the selected view.
  
  Program Finder
-Index: mythtv/libs/libmythtv/playercontext.cpp
+Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
 ===================================================================
---- mythtv/libs/libmythtv/playercontext.cpp	(revision 22751)
-+++ mythtv/libs/libmythtv/playercontext.cpp	(working copy)
-@@ -487,47 +487,12 @@
- 
-     if (pipState == kPIPOff || pipState == kPBPLeft)
-     {
--        //int ret = 1;
-         if (nvp->HasAudioOut() ||
-             (nvp->IsIVTVDecoder() &&
-             !gContext->GetNumSetting("PVR350InternalAudioOnly")))
-         {
-             QString errMsg = nvp->ReinitAudio();
--            /*
--            if ((errMsg != QString::null) &&
--                gContext->GetNumSetting("AudioNag", 1))
--            {
--                DialogBox *dlg = new DialogBox(gContext->GetMainWindow(), errMsg);
--
--                QString noaudio  = QObject::tr("Continue WITHOUT AUDIO!");
--                QString dontask  = noaudio + " " +
--                        QObject::tr("And, never ask again.");
--                QString neverask = noaudio + " " +
--                        QObject::tr("And, don't ask again in this session.");
--                QString quit     = QObject::tr("Return to menu.");
--
--                dlg->AddButton(noaudio);
--                dlg->AddButton(dontask);
--                dlg->AddButton(neverask);
--                dlg->AddButton(quit);
--
--                qApp->lock();
--                ret = dlg->exec();
--                dlg->deleteLater();
--                qApp->unlock();
--            }
--
--            if (kDialogCodeButton1 == ret)
--                gContext->SaveSetting("AudioNag", 0);
--            if (kDialogCodeButton2 == ret)
--                gContext->SetSetting("AudioNag", 0);
--            else if ((kDialogCodeButton3 == ret) ||
--                    (kDialogCodeRejected == ret))
--            {
--                return false;
--            } */
-         }
--
-     }
-     else if (pipState == kPBPRight)
-         nvp->SetMuted(true);
-Index: mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
-===================================================================
---- mythtv/libs/libmythtv/mpeg/dvbdescriptors.h	(revision 22751)
-+++ mythtv/libs/libmythtv/mpeg/dvbdescriptors.h	(working copy)
-@@ -1331,7 +1331,7 @@
-         kServiceTypePALCodedSignal           = 0x07,
-         kServiceTypeSECAMCodedSignal         = 0x08,
-         kServiceTypeD_D2_MAC                 = 0x09,
--        kServiceTypeFMRadio                  = 0x0A,
-+        kServiceTypeAdvancedCodecDigitalRadioSound        = 0x0A,
-         kServiceTypeNTSCCodedSignal          = 0x0B,
-         kServiceTypeDataBroadcast            = 0x0C,
-         kServiceTypeCommonInterface          = 0x0D,
-@@ -1339,7 +1339,8 @@
-         kServiceTypeRCS_FLS                  = 0x0F,
-         kServiceTypeDVB_MHP                  = 0x10,
-         kServiceTypeHDTV                     = 0x11,
--        kServiceTypeHDTV2                    = 0x19,
-+        kServiceTypeAdvancedCodecSDDigitalTelevision       = 0x16,
-+        kServiceTypeAdvancedCodecHDDigitalTelevision       = 0x19,
-         kServiceTypeEchoStarTV1              = 0x91,
-         kServiceTypeEchoStarTV2              = 0x9a,
-         kServiceTypeEchoStarTV3              = 0xa4,
-@@ -1358,6 +1359,7 @@
-     uint ServiceType() const { return m_serviceid; }
-     bool IsDTV(void) const
-         { return ((ServiceType() ==  kServiceTypeDigitalTelevision) ||
-+                  (ServiceType() ==  kServiceTypeAdvancedCodecSDDigitalTelevision) ||
-                   IsHDTV() ||
-                   (ServiceType() ==  kServiceTypeEchoStarTV1) ||
-                   (ServiceType() ==  kServiceTypeEchoStarTV2) ||
-@@ -1373,11 +1375,12 @@
-                   (ServiceType() ==  kServiceTypeNimiqTV8) ||
-                   (ServiceType() ==  kServiceTypeNimiqTV9)); }
-     bool IsDigitalAudio(void) const
--        { return ServiceType() ==  kServiceTypeDigitalRadioSound; }
-+        { return ((ServiceType() ==  kServiceTypeDigitalRadioSound) ||
-+                  (ServiceType() ==  kServiceTypeAdvancedCodecDigitalRadioSound)); }
-     bool IsHDTV(void) const
-         { return
-         (ServiceType() ==  kServiceTypeHDTV) ||
--        (ServiceType() ==  kServiceTypeHDTV2); }
-+        (ServiceType() ==  kServiceTypeAdvancedCodecHDDigitalTelevision); }
-     bool IsTeletext(void) const
-         { return ServiceType() ==  kServiceTypeDataBroadcast; }
-     QString toString(void) const;
-Index: mythtv/libs/libmythtv/tv_play.cpp
-===================================================================
---- mythtv/libs/libmythtv/tv_play.cpp	(revision 22751)
-+++ mythtv/libs/libmythtv/tv_play.cpp	(working copy)
-@@ -1084,7 +1084,11 @@
-         delete lastProgram;
- 
-     if (class LCD * lcd = LCD::Get())
-+    {
-+        lcd->setFunctionLEDs(FUNC_TV, false);
-+        lcd->setFunctionLEDs(FUNC_MOVIE, false);
-         lcd->switchToTime();
-+    }
- 
-     if (ddMapLoaderRunning)
-     {
-@@ -1659,8 +1663,13 @@
- 
-     ReturnPlayerLock(mctx);
- 
--    if (class LCD * lcd = LCD::Get())
-+    if (class LCD * lcd = LCD::Get()) {
-         lcd->switchToChannel(rcinfo.chansign, rcinfo.title, rcinfo.subtitle);
-+        if (rcinfo.isVideo)
-+            lcd->setFunctionLEDs(FUNC_MOVIE, true);
-+        else
-+            lcd->setFunctionLEDs(FUNC_TV, true);
-+    }
- 
-     return 1;
- }
-@@ -4615,7 +4624,7 @@
-     {
-         ctx->LockDeleteNVP(__FILE__, __LINE__);
-         if (ctx->nvp)
--            ctx->nvp->GoToDVDMenu("menu");
-+            ctx->nvp->GoToDVDMenu("root");
-         ctx->UnlockDeleteNVP(__FILE__, __LINE__);
-     }
-     else if (has_action("FINDER", actions))
-Index: mythtv/libs/libmythtv/videodisplayprofile.h
-===================================================================
---- mythtv/libs/libmythtv/videodisplayprofile.h	(revision 22751)
-+++ mythtv/libs/libmythtv/videodisplayprofile.h	(working copy)
-@@ -133,6 +133,7 @@
-     static void        CreateProfiles(const QString &hostname);
-     static void        CreateOldProfiles(const QString &hostname);
-     static void        CreateNewProfiles(const QString &hostname);
-+    static void        CreateVDPAUProfiles(const QString &hostname);
- 
-     static QStringList GetVideoRenderers(const QString &decoder);
-     static QString     GetVideoRendererHelp(const QString &renderer);
-Index: mythtv/libs/libmythtv/recordinglist.cpp
-===================================================================
---- mythtv/libs/libmythtv/recordinglist.cpp	(revision 22751)
-+++ mythtv/libs/libmythtv/recordinglist.cpp	(working copy)
-@@ -482,9 +482,9 @@
-         int flags = 0;
- 
-         flags |= (query.value(10).toInt() == 1)           ? FL_COMMFLAG : 0;
--        flags |=  query.value(11).toString().length() > 1 ? FL_CUTLIST  : 0;
-+        flags |= (query.value(11).toInt() == 1)           ? FL_CUTLIST  : 0;
-         flags |=  query.value(12).toInt()                 ? FL_AUTOEXP  : 0;
--        flags |=  query.value(14).toString().length() > 1 ? FL_BOOKMARK : 0;
-+        flags |= (query.value(14).toInt() == 1)           ? FL_BOOKMARK : 0;
-         flags |= (query.value(35).toInt() == 1)           ? FL_WATCHED  : 0;
- 
-         inUseKey = query.value(0).toString() + " " +
-Index: mythtv/libs/libmythtv/tv_rec.cpp
-===================================================================
---- mythtv/libs/libmythtv/tv_rec.cpp	(revision 22751)
-+++ mythtv/libs/libmythtv/tv_rec.cpp	(working copy)
-@@ -546,6 +546,11 @@
-     // Flush out events...
-     WaitForEventThreadSleep();
- 
-+    // Rescan pending recordings since the event loop may have deleted  
-+    // a stale entry.  If this happens the info pointer will not be valid 
-+    // since the HandlePendingRecordings loop will have deleted it. 
-+    it = pendingRecordings.find(cardid); 
-+
-     // If the needed input is in a shared input group, and we are
-     // not canceling the recording anyway, check other recorders
-     if (!cancelNext &&
-Index: mythtv/libs/libmythtv/osd.cpp
-===================================================================
---- mythtv/libs/libmythtv/osd.cpp	(revision 22751)
-+++ mythtv/libs/libmythtv/osd.cpp	(working copy)
-@@ -683,7 +683,7 @@
-     {
-         VERBOSE(VB_IMPORTANT, QString("Couldn't find OSD theme: %1. "
-                 "Switching to default.").arg(gContext->GetSetting("OSDTheme")));
--        gContext->SaveSetting("OSDTheme", "BlackCurves-OSD");
-+        gContext->OverrideSettingForSession("OSDTheme", "BlackCurves-OSD");
-         return testdir;
-     }
- 
-Index: mythtv/libs/libmythtv/videodisplayprofile.cpp
-===================================================================
---- mythtv/libs/libmythtv/videodisplayprofile.cpp	(revision 22751)
-+++ mythtv/libs/libmythtv/videodisplayprofile.cpp	(working copy)
-@@ -1113,6 +1113,33 @@
-                   "linearblend", "linearblend", "");
- }
- 
-+void VideoDisplayProfile::CreateVDPAUProfiles(const QString &hostname)
-+{
-+    (void) QObject::tr("VDPAU High Quality", "Sample: VDPAU high quality");
-+    DeleteProfileGroup("VDPAU High Quality", hostname);
-+    uint groupid = CreateProfileGroup("VDPAU High Quality", hostname);
-+    CreateProfile(groupid, 1, ">", 0, 0, "", 0, 0,
-+                  "vdpau", 1, "vdpau", "vdpau", true,
-+                  "vdpauadvanceddoublerate", "vdpauadvanced", "");
-+
-+    (void) QObject::tr("VDPAU Normal", "Sample: VDPAU average quality");
-+    DeleteProfileGroup("VDPAU Normal", hostname);
-+    groupid = CreateProfileGroup("VDPAU Normal", hostname);
-+    CreateProfile(groupid, 1, ">=", 0, 720, "", 0, 0,
-+                  "vdpau", 1, "vdpau", "vdpau", true,
-+                  "vdpaubasicdoublerate", "vdpaubasic", "");
-+    CreateProfile(groupid, 2, ">", 0, 0, "", 0, 0,
-+                  "vdpau", 1, "vdpau", "vdpau", true,
-+                  "vdpauadvanceddoublerate", "vdpauadvanced", "");
-+
-+    (void) QObject::tr("VDPAU Slim", "Sample: VDPAU low power GPU");
-+    DeleteProfileGroup("VDPAU Slim", hostname);
-+    groupid = CreateProfileGroup("VDPAU Slim", hostname);
-+    CreateProfile(groupid, 1, ">", 0, 0, "", 0, 0,
-+                  "vdpau", 1, "vdpau", "vdpau", false,
-+                  "vdpaubobdeint", "vdpauonefield", "vdpauskipchroma");
-+}
-+
- void VideoDisplayProfile::CreateProfiles(const QString &hostname)
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(working copy)
+@@ -183,7 +183,7 @@
+       video_frame_rate(29.97f), video_aspect(4.0f / 3.0f),
+       forced_video_aspect(-1),
+       m_scan(kScan_Interlaced),     m_scan_locked(false),
+-      m_scan_tracker(0),
++      m_scan_tracker(0),            m_scan_initialized(false),
+       keyframedist(30),
+       // Prebuffering (RingBuffer) control
+       prebuffering(false), prebuffer_tries(0), prebuffer_tries_total(0),
+@@ -244,7 +244,8 @@
+       decoder_lock(QMutex::Recursive),
+       next_play_speed(1.0f),        next_normal_speed(true),
+       play_speed(1.0f),             normal_speed(true),
+-      frame_interval((int)(1000000.0f / 30)), ffrew_skip(1),
++      frame_interval((int)(1000000.0f / 30)), m_frame_interval(0),
++      ffrew_skip(1),
+       // Audio and video synchronization stuff
+       videosync(NULL),              delay(0),
+       vsynctol(30/4),               avsync_delay(0),
+@@ -544,6 +545,7 @@
+     audio_lock.lock();
+     if (audioOutput && unpauseaudio)
+         audio_paused = false;
++    
+     audio_lock.unlock();
+     if (player_ctx->buffer)
+         player_ctx->buffer->Unpause();
+@@ -577,9 +579,11 @@
+ void NuppelVideoPlayer::PauseVideo(bool wait)
  {
-     CreateOldProfiles(hostname);
+     QMutexLocker locker(&pauseUnpauseLock);
+-    video_actually_paused = false;
++    
++    if (wait)
++        video_actually_paused = false;
+     pausevideo = true;
+-
++    
+     for (uint i = 0; wait && !video_actually_paused; i++)
+     {
+         videoThreadPaused.wait(&pauseUnpauseLock, 250);
+@@ -607,6 +611,9 @@
+         if ((i % 10) == 9)
+             VERBOSE(VB_IMPORTANT, "Waited too long for video out to unpause");
+     }
++
++    if (videoOutput)
++        videoOutput->ExposeEvent();
+ }
+ 
+ void NuppelVideoPlayer::SetVideoActuallyPaused(bool val)
+@@ -1071,15 +1078,21 @@
+     if (!videoOutput || !videosync)
+         return; // hopefully this will be called again later...
+ 
++    if (m_scan_initialized &&
++        m_scan == scan &&
++        m_frame_interval == frame_interval)
++        return;
++
+     m_scan_locked = (scan != kScan_Detect);
+ 
+-    if (scan == m_scan)
+-        return;
++    m_scan_initialized = true;
++    m_frame_interval = frame_interval;
+ 
+     bool interlaced = is_interlaced(scan);
+     if (interlaced && !m_deint_possible)
+     {
+         m_scan = scan;
++        videosync->SetFrameInterval(frame_interval, false);
+         return;
+     }
+ 
+@@ -1113,11 +1126,8 @@
+         if (kScan_Progressive == scan)
+         {
+             m_double_process = false;
+-            if (m_double_framerate)
+-            {
+-                m_double_framerate = false;
+-                videosync->SetFrameInterval(frame_interval, false);
+-            }
++            m_double_framerate = false;
++            videosync->SetFrameInterval(frame_interval, false);
+             videoOutput->SetDeinterlacingEnabled(false);
+             VERBOSE(VB_PLAYBACK, "Disabled deinterlacing");
+         }
+@@ -2587,9 +2597,11 @@
+                         "\t\t\tdoubling video frame interval to slow down.").arg(diverge));
+     }
+ 
++    audio_lock.lock();
+     if (audioOutput && normal_speed)
+     {
+         long long currentaudiotime = audioOutput->GetAudiotime();
++        audio_lock.unlock();
+ #if 0
+         VERBOSE(VB_PLAYBACK+VB_TIMESTAMP, QString(
+                     "A/V timecodes audio %1 video %2 frameinterval %3 "
+@@ -2652,7 +2664,9 @@
+             avsync_avg = 0;
+             avsync_oldavg = 0;
+         }
+-    }
++    } 
++    else
++        audio_lock.unlock();
+ }
+ 
+ void NuppelVideoPlayer::ShutdownAVSync(void)
+@@ -3073,7 +3087,7 @@
+                         continue;
+                     }
+ 
+-                    if (!pausevideo && nbframes == 1)
++                    if (!video_actually_paused && nbframes == 1)
+                     {
+                         dvd_stillframe_showing = true;
+                         PauseVideo(false);
+@@ -6848,8 +6862,12 @@
+         QString msg = "";
+ 
+         if (decoder)
++        {
+             msg = decoder->GetTrackDesc(type, GetTrack(type));
+-
++            
++            if (player_ctx->buffer->isDVD())
++                player_ctx->buffer->DVD()->SetTrack(type, trackNo);
++        }
+         if (osd)
+             osd->SetSettingsText(msg, 3);
+     }
+Index: mythtv/libs/libmythtv/util-vdpau.cpp
+===================================================================
+--- mythtv/libs/libmythtv/util-vdpau.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/util-vdpau.cpp	(working copy)
+@@ -28,14 +28,35 @@
+ 
+ #define ARSIZE(x) (sizeof(x) / sizeof((x)[0]))
+ 
++static const QString kVDPAUWarning =
++"WARNING - please read the following carefully:-\n\n"
++"* The VDPAU device has reported that you have run out of video memory.   *\n"
++"* MythTV requires at least 512Mb of video memory for full functionality. *\n"
++"* If you are using an integrated GPU, please ensure you have allocated   *\n"
++"* the maximum amount of shared memory in the BIOS settings.              *\n"
++"* Systems with only 256Mb of video memory are not supported.             *\n\n"
++"* If this message continues to appear and you have at least 512Mb of     *\n"
++"* video memory:-                                                         *\n"
++"*  - reduce the number of VDPAU video buffers by adding                  *\n"
++"*    'vdpaubuffersize=X' to your Playback Profile custom filter entry,   *\n"
++"*    where X is a value between 6 (minimum) and 17 (default). Playback   *\n"
++"*    of certain H.264 streams will fail with a reduced buffer size.      *\n"
++"*  - disable any VDPAU options (e.g. deinterlacing, sharpen and denoise) *\n"
++"*  - ensure the composite extension is disabled in your xorg.conf        *\n"
++"*  - disable the use of OpenGL Vsync (Setup->TV Settings->Playback)      *\n"
++"*  - use the Qt Paint Engine (Setup->Appearance)                         *\n"
++"*  - switch to a 'lightweight' theme such as MythCenter                  *\n"
++"*  - run MythTV at a lower screen resolution                             *\n";
++
+ /* MACRO for error check */
+ #define CHECK_ST \
+   ok &= (vdp_st == VDP_STATUS_OK); \
+-  if (!ok) { \
+-      VERBOSE(VB_PLAYBACK, LOC_ERR + QString("Error at %1:%2 (#%3, %4)") \
++  if (!ok) \
++      VERBOSE(VB_IMPORTANT, LOC_ERR + QString("Error at %1:%2 (#%3, %4)") \
+               .arg(__FILE__).arg( __LINE__).arg(vdp_st) \
+               .arg(vdp_get_error_string(vdp_st))); \
+-  }
++  if (vdp_st == VDP_STATUS_RESOURCES) \
++      VERBOSE(VB_IMPORTANT, LOC + kVDPAUWarning); \
+ 
+ static const VdpChromaType vdp_chroma_type = VDP_CHROMA_TYPE_420;
+ static const VdpOutputSurfaceRenderBlendState osd_blend =
+Index: mythtv/libs/libmythtv/firewiredevice.cpp
+===================================================================
+--- mythtv/libs/libmythtv/firewiredevice.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/firewiredevice.cpp	(working copy)
+@@ -418,7 +418,7 @@
+     const uint64_t motorola_vendor_ids[] =
+     {
+         /* DCH-3200, DCX-3200 */
+-        0x1c11,    0x1cfb,    0x1fc4,    0x23a3,
++        0x1c11,    0x1cfb,    0x1fc4,    0x23a3,    0x23ee,
+         /* DCH-3416 */
+         0x1e46,
+         /* DCT-3416 */
+@@ -450,6 +450,7 @@
+     for (uint i = 0; i < motorola_vendor_id_cnt; i++)
+     {
+         id_to_model[motorola_vendor_ids[i] << 32 | 0xf740] = "DCX-3200";
++        id_to_model[motorola_vendor_ids[i] << 32 | 0xfa07] = "DCX-3200";
+         id_to_model[motorola_vendor_ids[i] << 32 | 0xd330] = "DCH-3200";
+         id_to_model[motorola_vendor_ids[i] << 32 | 0xb630] = "DCH-3416";
+         id_to_model[motorola_vendor_ids[i] << 32 | 0x34cb] = "DCT-3412";
 Index: mythtv/libs/libmythtv/avformatdecoder.cpp
 ===================================================================
---- mythtv/libs/libmythtv/avformatdecoder.cpp	(revision 22880)
+--- mythtv/libs/libmythtv/avformatdecoder.cpp	(revision 22751)
 +++ mythtv/libs/libmythtv/avformatdecoder.cpp	(working copy)
 @@ -29,6 +29,8 @@
  #include "mythuihelper.h"
@@ -1252,7 +1249,68 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      }
  }
  
-@@ -4346,6 +4390,66 @@
+@@ -1936,7 +1980,13 @@
+ 
+         if (enc->codec_type == CODEC_TYPE_AUDIO)
+         {
+-            int lang = get_canonical_lang(ic->streams[i]->language);
++            int lang;
++            if (ringBuffer && ringBuffer->isDVD())
++                lang = ringBuffer->DVD()->GetAudioLanguage(
++                    ringBuffer->DVD()->GetAudioTrackNum(ic->streams[i]->id));
++            else
++                lang = get_canonical_lang(ic->streams[i]->language);
++
+             int lang_indx = lang_aud_cnt[lang];
+             lang_aud_cnt[lang]++;
+ 
+@@ -1949,8 +1999,14 @@
+             }
+             else
+             {
++                int logical_stream_id;
++                if (ringBuffer && ringBuffer->isDVD())
++                    logical_stream_id = ringBuffer->DVD()->GetAudioTrackNum(ic->streams[i]->id);
++                else
++                    logical_stream_id = ic->streams[i]->id;
++
+                 tracks[kTrackTypeAudio].push_back(
+-                    StreamInfo(i, lang, lang_indx, ic->streams[i]->id));
++                    StreamInfo(i, lang, lang_indx, logical_stream_id));
+             }
+ 
+             VERBOSE(VB_AUDIO, LOC + QString(
+@@ -1980,11 +2036,10 @@
+             {
+                 VERBOSE(VB_PLAYBACK, LOC +
+                             QString("DVD Audio Track Map "
+-                                    "Stream id #%1 ")
+-                                    .arg(it->stream_id));
++                                    "Stream id #%1, MPEG stream %2")
++                                    .arg(it->stream_id)
++                                    .arg(ic->streams[it->av_stream_index]->id));
+             }
+-            stable_sort(tracks[kTrackTypeAudio].begin(),
+-                        tracks[kTrackTypeAudio].end());
+             int trackNo = ringBuffer->DVD()->GetTrack(kTrackTypeAudio);
+             if (trackNo >= (int)GetTrackCount(kTrackTypeAudio))
+                 trackNo = GetTrackCount(kTrackTypeAudio) - 1;
+@@ -3146,10 +3201,12 @@
+         for (uint i = 0; i < numStreams; i++)
+         {
+             if (wlang == atracks[i].language)
++            {
+                 selTrack = i;
+ 
+-            if (windx == atracks[i].language_index)
+-                break;
++                if (windx == atracks[i].language_index)
++                    break;
++            }
+         }
+     }
+ 
+@@ -4346,6 +4403,66 @@
      GetNVP()->SetAudioCodec((using_passthru) ? codec_ctx : NULL);
      GetNVP()->ReinitAudio();
  
@@ -1319,6 +1377,624 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      return true;
  }
  
+Index: mythtv/libs/libmythtv/DVDRingBuffer.cpp
+===================================================================
+--- mythtv/libs/libmythtv/DVDRingBuffer.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/DVDRingBuffer.cpp	(working copy)
+@@ -50,13 +50,13 @@
+       m_buttonstreamid(0), m_runningCellStart(false),
+       m_runSeekCellStart(false),
+       m_menupktpts(0), m_curAudioTrack(0),
+-      m_curSubtitleTrack(0), m_autoselectaudio(true),
++      m_curSubtitleTrack(0),
+       m_autoselectsubtitle(true),
+       m_jumptotitle(true),
+       m_seekpos(0), m_seekwhence(0),
+       m_dvdname(NULL), m_serialnumber(NULL),
+       m_seeking(false), m_seektime(0),
+-      m_currentTime(0),
++      m_currentTime(0), m_isInMenu(true),
+       m_parent(0)
+ {
+     memset(&m_dvdMenuButton, 0, sizeof(AVSubtitle));
+@@ -87,11 +87,14 @@
+     }
+ }
+ 
+-bool DVDRingBufferPriv::IsInMenu(void) const
++bool DVDRingBufferPriv::IsInMenu(bool update)
+ {
+     if (m_dvdnav)
+-        return (!dvdnav_is_domain_vts(m_dvdnav));
+-    return true;
++    {
++        if (update)
++            m_isInMenu = !dvdnav_is_domain_vts(m_dvdnav);
++    }
++    return m_isInMenu;
+ }
+ 
+ long long DVDRingBufferPriv::NormalSeek(long long time)
+@@ -136,7 +139,7 @@
+                 QString("Seek() to time %1 failed").arg(time));
+         return -1;
+     }
+-    else if (!IsInMenu() && !m_runningCellStart)
++    else if (!IsInMenu(true) && !m_runningCellStart)
+     {
+         m_gotStop = false;
+         if (time > 0 && ffrewSkip == 1)
+@@ -146,7 +149,7 @@
+     return m_currentpos;
+ }
+ 
+-void DVDRingBufferPriv::GetDescForPos(QString &desc) const
++void DVDRingBufferPriv::GetDescForPos(QString &desc)
+ {
+     if (IsInMenu())
+     {
+@@ -262,7 +265,8 @@
+ 
+         dvdStat = dvdnav_get_next_cache_block(
+             m_dvdnav, &blockBuf, &dvdEvent, &dvdEventSize);
+-
++        
++        bool isInMenu = IsInMenu(true);
+         if (dvdStat == DVDNAV_STATUS_ERR)
+         {
+             VERBOSE(VB_IMPORTANT, QString("Error reading block from DVD: %1")
+@@ -342,11 +346,10 @@
+                 m_menupktpts = 0;
+                 InStillFrame(false);
+ 
+-                if (IsInMenu())
++                if (isInMenu)
+                 {
+                     if (m_parent)
+                         m_parent->HideDVDButton(true);
+-                    m_autoselectaudio = true;
+                     m_autoselectsubtitle = true;
+                     GetMythUI()->RestoreScreensaver();
+                 }
+@@ -375,7 +378,7 @@
+ 
+                 ClearSubtitlesOSD();
+ 
+-                if (IsInMenu())
++                if (isInMenu)
+                 {
+                     m_buttonstreamid = 32;
+                     int aspect = dvdnav_get_video_aspect(m_dvdnav);
+@@ -404,7 +407,6 @@
+             break;
+             case DVDNAV_AUDIO_STREAM_CHANGE:
+             {
+-                if (m_autoselectaudio)
+                     m_curAudioTrack = dvdnav_get_active_audio_stream(m_dvdnav);
+ 
+                 VERBOSE(VB_PLAYBACK,
+@@ -430,7 +432,7 @@
+                     m_vobid  = dsi->dsi_gi.vobu_vob_idn;
+                     m_cellid = dsi->dsi_gi.vobu_c_idn;
+                     if ((m_lastvobid == m_vobid) && (m_lastcellid == m_cellid)
+-                            && IsInMenu())
++                            && isInMenu)
+                     {
+                         m_cellRepeated = true;
+                     }
+@@ -1093,19 +1095,24 @@
+ uint DVDRingBufferPriv::GetAudioLanguage(int id)
+ {
+     uint16_t lang = dvdnav_audio_stream_to_lang(m_dvdnav, id);
+-    //DEBUG
+-    VERBOSE(VB_PLAYBACK, LOC_ERR + QString("StreamID: %1; lang: %2").arg(id).arg(lang));
++    VERBOSE(VB_PLAYBACK, LOC + QString("StreamID: %1; lang: %2").arg(id).arg(lang));
+     return ConvertLangCode(lang);
+ }
+ 
++/** \brief get real dvd track audio number
++  * \param key stream_id
++*/
++int DVDRingBufferPriv::GetAudioTrackNum(uint stream_id)
++{
++    return dvdnav_get_audio_logical_stream(m_dvdnav, stream_id);
++}
+ 
+ /** \brief get the subtitle language from the dvd
+  */
+ uint DVDRingBufferPriv::GetSubtitleLanguage(int id)
+ {
+     uint16_t lang = dvdnav_spu_stream_to_lang(m_dvdnav, id);
+-    //DEBUG
+-    VERBOSE(VB_PLAYBACK, LOC_ERR + QString("StreamID: %1; lang: %2").arg(id).arg(lang));
++    VERBOSE(VB_PLAYBACK, LOC + QString("StreamID: %1; lang: %2").arg(id).arg(lang));
+     return ConvertLangCode(lang);
+ }
+ 
+@@ -1121,8 +1128,7 @@
+     str2[1] = QChar(code & 0xff);
+     QString str3 = iso639_str2_to_str3(QString(str2, 2));
+ 
+-    //DEBUG
+-    VERBOSE(VB_PLAYBACK, LOC_ERR + QString("code: %1; iso639: %2").arg(code).arg(str3));
++    VERBOSE(VB_PLAYBACK, LOC + QString("code: %1; iso639: %2").arg(code).arg(str3));
+ 
+     if (!str3.isEmpty())
+         return iso639_str3_to_key(str3);
+@@ -1165,7 +1171,7 @@
+     else if (type == kTrackTypeAudio)
+     {
+         m_curAudioTrack = trackNo;
+-        m_autoselectaudio = false;
++        dvdnav_set_active_audio_stream(m_dvdnav, trackNo);
+     }
+ }
+ 
+Index: mythtv/libs/libmythtv/hdhrstreamhandler.cpp
+===================================================================
+--- mythtv/libs/libmythtv/hdhrstreamhandler.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/hdhrstreamhandler.cpp	(working copy)
+@@ -692,11 +692,15 @@
+         return QString::null;
+     }
+ 
+-    if (error && name == QString("channel"))
++    // Database modulation strings and HDHR use different syntax.
++    // HACK!! Caller should be doing this. (e.g. auto in HDHRChannel::Tune())
++    //
++    if (error && name == QString("channel") && val.contains("qam_"))
+     {
+         QString newval = val;
+         newval.replace("qam_256", "qam");
+         newval.replace("qam_64", "qam");
++        VERBOSE(VB_CHANNEL, "HDHRSH::TunerSet() Failed. Trying " + newval);
+         return TunerSet(name, newval, report_error_return, print_error);
+     }
+ 
+Index: mythtv/libs/libmythtv/playercontext.cpp
+===================================================================
+--- mythtv/libs/libmythtv/playercontext.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/playercontext.cpp	(working copy)
+@@ -487,47 +487,12 @@
+ 
+     if (pipState == kPIPOff || pipState == kPBPLeft)
+     {
+-        //int ret = 1;
+         if (nvp->HasAudioOut() ||
+             (nvp->IsIVTVDecoder() &&
+             !gContext->GetNumSetting("PVR350InternalAudioOnly")))
+         {
+             QString errMsg = nvp->ReinitAudio();
+-            /*
+-            if ((errMsg != QString::null) &&
+-                gContext->GetNumSetting("AudioNag", 1))
+-            {
+-                DialogBox *dlg = new DialogBox(gContext->GetMainWindow(), errMsg);
+-
+-                QString noaudio  = QObject::tr("Continue WITHOUT AUDIO!");
+-                QString dontask  = noaudio + " " +
+-                        QObject::tr("And, never ask again.");
+-                QString neverask = noaudio + " " +
+-                        QObject::tr("And, don't ask again in this session.");
+-                QString quit     = QObject::tr("Return to menu.");
+-
+-                dlg->AddButton(noaudio);
+-                dlg->AddButton(dontask);
+-                dlg->AddButton(neverask);
+-                dlg->AddButton(quit);
+-
+-                qApp->lock();
+-                ret = dlg->exec();
+-                dlg->deleteLater();
+-                qApp->unlock();
+-            }
+-
+-            if (kDialogCodeButton1 == ret)
+-                gContext->SaveSetting("AudioNag", 0);
+-            if (kDialogCodeButton2 == ret)
+-                gContext->SetSetting("AudioNag", 0);
+-            else if ((kDialogCodeButton3 == ret) ||
+-                    (kDialogCodeRejected == ret))
+-            {
+-                return false;
+-            } */
+         }
+-
+     }
+     else if (pipState == kPBPRight)
+         nvp->SetMuted(true);
+Index: mythtv/libs/libmythtv/NuppelVideoPlayer.h
+===================================================================
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.h	(revision 22751)
++++ mythtv/libs/libmythtv/NuppelVideoPlayer.h	(working copy)
+@@ -637,6 +637,8 @@
+     bool     m_scan_locked;
+     /// Used for tracking of scan type for auto-detection of interlacing
+     int      m_scan_tracker;
++    /// Set when SetScanType runs the first time
++    bool     m_scan_initialized;
+     /// Video (input) Number of frames between key frames (often inaccurate)
+     int keyframedist;
+ 
+@@ -787,6 +789,7 @@
+     float      play_speed;    
+     bool       normal_speed;  
+     int        frame_interval;///< always adjusted for play_speed
++    int        m_frame_interval;///< used to detect changes to frame_interval
+ 
+     int        ffrew_skip;    
+ 
+Index: mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
+===================================================================
+--- mythtv/libs/libmythtv/mpeg/dvbdescriptors.h	(revision 22751)
++++ mythtv/libs/libmythtv/mpeg/dvbdescriptors.h	(working copy)
+@@ -1331,7 +1331,7 @@
+         kServiceTypePALCodedSignal           = 0x07,
+         kServiceTypeSECAMCodedSignal         = 0x08,
+         kServiceTypeD_D2_MAC                 = 0x09,
+-        kServiceTypeFMRadio                  = 0x0A,
++        kServiceTypeAdvancedCodecDigitalRadioSound        = 0x0A,
+         kServiceTypeNTSCCodedSignal          = 0x0B,
+         kServiceTypeDataBroadcast            = 0x0C,
+         kServiceTypeCommonInterface          = 0x0D,
+@@ -1339,7 +1339,8 @@
+         kServiceTypeRCS_FLS                  = 0x0F,
+         kServiceTypeDVB_MHP                  = 0x10,
+         kServiceTypeHDTV                     = 0x11,
+-        kServiceTypeHDTV2                    = 0x19,
++        kServiceTypeAdvancedCodecSDDigitalTelevision       = 0x16,
++        kServiceTypeAdvancedCodecHDDigitalTelevision       = 0x19,
+         kServiceTypeEchoStarTV1              = 0x91,
+         kServiceTypeEchoStarTV2              = 0x9a,
+         kServiceTypeEchoStarTV3              = 0xa4,
+@@ -1358,6 +1359,7 @@
+     uint ServiceType() const { return m_serviceid; }
+     bool IsDTV(void) const
+         { return ((ServiceType() ==  kServiceTypeDigitalTelevision) ||
++                  (ServiceType() ==  kServiceTypeAdvancedCodecSDDigitalTelevision) ||
+                   IsHDTV() ||
+                   (ServiceType() ==  kServiceTypeEchoStarTV1) ||
+                   (ServiceType() ==  kServiceTypeEchoStarTV2) ||
+@@ -1373,11 +1375,12 @@
+                   (ServiceType() ==  kServiceTypeNimiqTV8) ||
+                   (ServiceType() ==  kServiceTypeNimiqTV9)); }
+     bool IsDigitalAudio(void) const
+-        { return ServiceType() ==  kServiceTypeDigitalRadioSound; }
++        { return ((ServiceType() ==  kServiceTypeDigitalRadioSound) ||
++                  (ServiceType() ==  kServiceTypeAdvancedCodecDigitalRadioSound)); }
+     bool IsHDTV(void) const
+         { return
+         (ServiceType() ==  kServiceTypeHDTV) ||
+-        (ServiceType() ==  kServiceTypeHDTV2); }
++        (ServiceType() ==  kServiceTypeAdvancedCodecHDDigitalTelevision); }
+     bool IsTeletext(void) const
+         { return ServiceType() ==  kServiceTypeDataBroadcast; }
+     QString toString(void) const;
+Index: mythtv/libs/libmythtv/DVDRingBuffer.h
+===================================================================
+--- mythtv/libs/libmythtv/DVDRingBuffer.h	(revision 22751)
++++ mythtv/libs/libmythtv/DVDRingBuffer.h	(working copy)
+@@ -33,11 +33,11 @@
+     // gets
+     int  GetTitle(void) const { return m_title;        }
+     int  GetPart(void)  const { return m_part;         }
+-    bool IsInMenu(void) const;
++    bool IsInMenu(bool update = false);
+     bool IsOpen(void)   const { return m_dvdnav;       }
+     long long GetReadPosition(void);
+     long long GetTotalReadPosition(void) { return m_titleLength; }
+-    void GetDescForPos(QString &desc) const;
++    void GetDescForPos(QString &desc);
+     void GetPartAndTitle(int &_part, int &_title) const
+         { _part  = m_part; _title = m_title; }
+     uint GetTotalTimeOfTitle(void);
+@@ -57,6 +57,7 @@
+ 
+     bool IgnoringStillorWait(void) { return m_skipstillorwait; }
+     uint GetAudioLanguage(int id);
++    int  GetAudioTrackNum(uint key);
+     uint GetSubtitleLanguage(int key);
+     void SetMenuPktPts(long long pts) { m_menupktpts = pts; }
+     long long GetMenuPktPts(void) { return m_menupktpts; }
+@@ -157,7 +158,6 @@
+     long long      m_menupktpts;
+     int            m_curAudioTrack;
+     int8_t         m_curSubtitleTrack;
+-    bool           m_autoselectaudio;
+     bool           m_autoselectsubtitle;
+     bool           m_jumptotitle;
+     long long      m_seekpos;
+@@ -168,6 +168,7 @@
+     uint64_t       m_seektime;
+     uint           m_currentTime;
+     QMap<uint, uint> m_seekSpeedMap;
++    bool           m_isInMenu;
+ //    QMap<uint, uint> m_audioTrackMap;
+ //    QMap<uint, uint> m_subTrackMap;
+ 
+Index: mythtv/libs/libmythtv/tv_play.cpp
+===================================================================
+--- mythtv/libs/libmythtv/tv_play.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/tv_play.cpp	(working copy)
+@@ -1084,7 +1084,11 @@
+         delete lastProgram;
+ 
+     if (class LCD * lcd = LCD::Get())
++    {
++        lcd->setFunctionLEDs(FUNC_TV, false);
++        lcd->setFunctionLEDs(FUNC_MOVIE, false);
+         lcd->switchToTime();
++    }
+ 
+     if (ddMapLoaderRunning)
+     {
+@@ -1659,8 +1663,13 @@
+ 
+     ReturnPlayerLock(mctx);
+ 
+-    if (class LCD * lcd = LCD::Get())
++    if (class LCD * lcd = LCD::Get()) {
+         lcd->switchToChannel(rcinfo.chansign, rcinfo.title, rcinfo.subtitle);
++        if (rcinfo.isVideo)
++            lcd->setFunctionLEDs(FUNC_MOVIE, true);
++        else
++            lcd->setFunctionLEDs(FUNC_TV, true);
++    }
+ 
+     return 1;
+ }
+@@ -4567,7 +4576,13 @@
+     }
+     else if (has_action("NEXTFAV", actions) && islivetv)
+         ChangeChannel(ctx, CHANNEL_DIRECTION_FAVORITE);
+-    else if (has_action("SWITCHARDS", actions) && islivetv)
++    else if (has_action("NEXTSOURCE", actions) && islivetv)
++        SwitchSource(kNextSource);
++    else if (has_action("PREVSOURCE", actions) && islivetv)
++        SwitchSource(kPreviousSource);
++    else if (has_action("NEXTINPUT", actions) && islivetv)
++        ToggleInputs(ctx);
++    else if (has_action("NEXTCARD", actions) && islivetv)
+         SwitchCards(ctx);
+     else if (has_action("GUIDE", actions))
+         EditSchedule(ctx, kScheduleProgramGuide);
+@@ -4615,7 +4630,7 @@
+     {
+         ctx->LockDeleteNVP(__FILE__, __LINE__);
+         if (ctx->nvp)
+-            ctx->nvp->GoToDVDMenu("menu");
++            ctx->nvp->GoToDVDMenu("root");
+         ctx->UnlockDeleteNVP(__FILE__, __LINE__);
+     }
+     else if (has_action("FINDER", actions))
+Index: mythtv/libs/libmythtv/videodisplayprofile.h
+===================================================================
+--- mythtv/libs/libmythtv/videodisplayprofile.h	(revision 22751)
++++ mythtv/libs/libmythtv/videodisplayprofile.h	(working copy)
+@@ -133,6 +133,7 @@
+     static void        CreateProfiles(const QString &hostname);
+     static void        CreateOldProfiles(const QString &hostname);
+     static void        CreateNewProfiles(const QString &hostname);
++    static void        CreateVDPAUProfiles(const QString &hostname);
+ 
+     static QStringList GetVideoRenderers(const QString &decoder);
+     static QString     GetVideoRendererHelp(const QString &renderer);
+Index: mythtv/libs/libmythtv/recordinglist.cpp
+===================================================================
+--- mythtv/libs/libmythtv/recordinglist.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/recordinglist.cpp	(working copy)
+@@ -482,9 +482,9 @@
+         int flags = 0;
+ 
+         flags |= (query.value(10).toInt() == 1)           ? FL_COMMFLAG : 0;
+-        flags |=  query.value(11).toString().length() > 1 ? FL_CUTLIST  : 0;
++        flags |= (query.value(11).toInt() == 1)           ? FL_CUTLIST  : 0;
+         flags |=  query.value(12).toInt()                 ? FL_AUTOEXP  : 0;
+-        flags |=  query.value(14).toString().length() > 1 ? FL_BOOKMARK : 0;
++        flags |= (query.value(14).toInt() == 1)           ? FL_BOOKMARK : 0;
+         flags |= (query.value(35).toInt() == 1)           ? FL_WATCHED  : 0;
+ 
+         inUseKey = query.value(0).toString() + " " +
+Index: mythtv/libs/libmythtv/videoout_xv.cpp
+===================================================================
+--- mythtv/libs/libmythtv/videoout_xv.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/videoout_xv.cpp	(working copy)
+@@ -2471,7 +2471,7 @@
+     }
+ 
+     if ((windows[0].IsRepaintNeeded() || xv_need_bobdeint_repaint) &&
+-        (VideoOutputSubType() >= XVideo) && !windows[0].IsEmbedding())
++         VideoOutputSubType() >= XVideo)
+     {
+         DrawUnusedRects(/* don't do a sync*/false);
+     }
+Index: mythtv/libs/libmythtv/tv_rec.cpp
+===================================================================
+--- mythtv/libs/libmythtv/tv_rec.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/tv_rec.cpp	(working copy)
+@@ -546,6 +546,11 @@
+     // Flush out events...
+     WaitForEventThreadSleep();
+ 
++    // Rescan pending recordings since the event loop may have deleted  
++    // a stale entry.  If this happens the info pointer will not be valid 
++    // since the HandlePendingRecordings loop will have deleted it. 
++    it = pendingRecordings.find(cardid); 
++
+     // If the needed input is in a shared input group, and we are
+     // not canceling the recording anyway, check other recorders
+     if (!cancelNext &&
+Index: mythtv/libs/libmythtv/osd.cpp
+===================================================================
+--- mythtv/libs/libmythtv/osd.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/osd.cpp	(working copy)
+@@ -683,7 +683,7 @@
+     {
+         VERBOSE(VB_IMPORTANT, QString("Couldn't find OSD theme: %1. "
+                 "Switching to default.").arg(gContext->GetSetting("OSDTheme")));
+-        gContext->SaveSetting("OSDTheme", "BlackCurves-OSD");
++        gContext->OverrideSettingForSession("OSDTheme", "BlackCurves-OSD");
+         return testdir;
+     }
+ 
+Index: mythtv/libs/libmythtv/recordingrule.cpp
+===================================================================
+--- mythtv/libs/libmythtv/recordingrule.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/recordingrule.cpp	(working copy)
+@@ -26,7 +26,7 @@
+     m_recPriority(0),
+     m_prefInput(0),
+     m_startOffset(gContext->GetNumSetting("DefaultStartOffset", 0)),
+-    m_endOffset(gContext->GetNumSetting("DefaultStartOffset", 0)),
++    m_endOffset(gContext->GetNumSetting("DefaultEndOffset", 0)),
+     m_dupMethod(static_cast<RecordingDupMethodType>(
+                 gContext->GetNumSetting("prefDupMethod", kDupCheckSubDesc))),
+     m_dupIn(kDupsInAll),
+Index: mythtv/libs/libmythtv/videodisplayprofile.cpp
+===================================================================
+--- mythtv/libs/libmythtv/videodisplayprofile.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/videodisplayprofile.cpp	(working copy)
+@@ -1113,6 +1113,33 @@
+                   "linearblend", "linearblend", "");
+ }
+ 
++void VideoDisplayProfile::CreateVDPAUProfiles(const QString &hostname)
++{
++    (void) QObject::tr("VDPAU High Quality", "Sample: VDPAU high quality");
++    DeleteProfileGroup("VDPAU High Quality", hostname);
++    uint groupid = CreateProfileGroup("VDPAU High Quality", hostname);
++    CreateProfile(groupid, 1, ">", 0, 0, "", 0, 0,
++                  "vdpau", 1, "vdpau", "vdpau", true,
++                  "vdpauadvanceddoublerate", "vdpauadvanced", "");
++
++    (void) QObject::tr("VDPAU Normal", "Sample: VDPAU average quality");
++    DeleteProfileGroup("VDPAU Normal", hostname);
++    groupid = CreateProfileGroup("VDPAU Normal", hostname);
++    CreateProfile(groupid, 1, ">=", 0, 720, "", 0, 0,
++                  "vdpau", 1, "vdpau", "vdpau", true,
++                  "vdpaubasicdoublerate", "vdpaubasic", "");
++    CreateProfile(groupid, 2, ">", 0, 0, "", 0, 0,
++                  "vdpau", 1, "vdpau", "vdpau", true,
++                  "vdpauadvanceddoublerate", "vdpauadvanced", "");
++
++    (void) QObject::tr("VDPAU Slim", "Sample: VDPAU low power GPU");
++    DeleteProfileGroup("VDPAU Slim", hostname);
++    groupid = CreateProfileGroup("VDPAU Slim", hostname);
++    CreateProfile(groupid, 1, ">", 0, 0, "", 0, 0,
++                  "vdpau", 1, "vdpau", "vdpau", false,
++                  "vdpaubobdeint", "vdpauonefield", "vdpauskipchroma");
++}
++
+ void VideoDisplayProfile::CreateProfiles(const QString &hostname)
+ {
+     CreateOldProfiles(hostname);
+Index: mythtv/libs/libmythui/mythmainwindow.cpp
+===================================================================
+--- mythtv/libs/libmythui/mythmainwindow.cpp	(revision 22751)
++++ mythtv/libs/libmythui/mythmainwindow.cpp	(working copy)
+@@ -864,6 +864,16 @@
+         VERBOSE(VB_GENERAL, "Using the OpenGL painter");
+         d->painter = new MythOpenGLPainter();
+         d->paintwin = new MythPainterWindowGL(this, d);
++        QGLWidget *qgl = dynamic_cast<QGLWidget *>(d->paintwin);
++        if (qgl && !qgl->isValid())
++        {
++            VERBOSE(VB_IMPORTANT, "Failed to create OpenGL painter. "
++                                  "Check your OpenGL installation.");
++            delete d->painter;
++            d->painter = NULL;
++            delete d->paintwin;
++            d->paintwin = NULL;
++        }
+     }
+     else
+ #endif
+@@ -874,8 +884,9 @@
+         d->painter = new MythVDPAUPainter();
+         d->paintwin = new MythPainterWindowVDPAU(this, d);
+     }
+-    else
+ #endif
++
++    if (!d->painter && !d->paintwin)
+     {
+         VERBOSE(VB_GENERAL, "Using the Qt painter");
+         d->painter = new MythQtPainter();
+@@ -1452,6 +1463,8 @@
+         case QEvent::KeyPress:
+         {
+             QKeyEvent *ke = dynamic_cast<QKeyEvent*>(e);
++            quint32 nscode;
++            quint32 nvkey;
+ 
+             // Work around weird GCC run-time bug. Only manifest on Mac OS X
+             if (!ke)
+@@ -1460,6 +1473,12 @@
+             if (currentWidget())
+             {
+                 ke->accept();
++                nscode = ke->nativeScanCode();
++                nvkey = ke->nativeVirtualKey();
++                VERBOSE(VB_IMPORTANT, QString("MythMainWindow, Note: ") +
++                        QString("got native scan code '%1' and "
++                                "native virtual key of '%2'.")
++                        .arg(nscode).arg(nvkey));
+                 QWidget *current = currentWidget();
+                 if (current && current->isEnabled())
+                     qApp->notify(current, ke);
+Index: mythtv/libs/libmythui/mythuibuttontree.cpp
+===================================================================
+--- mythtv/libs/libmythui/mythuibuttontree.cpp	(revision 22751)
++++ mythtv/libs/libmythui/mythuibuttontree.cpp	(working copy)
+@@ -561,7 +561,7 @@
+     {
+         m_listSpacing = NormX(getFirstText(element).toInt());
+     }
+-    if (element.tagName() == "numlists")
++    else if (element.tagName() == "numlists")
+     {
+         m_numLists = getFirstText(element).toInt();
+     }
+Index: mythtv/libs/libmythui/DisplayResScreen.cpp
+===================================================================
+--- mythtv/libs/libmythui/DisplayResScreen.cpp	(revision 22751)
++++ mythtv/libs/libmythui/DisplayResScreen.cpp	(working copy)
+@@ -124,7 +124,7 @@
+     bool rate2x = false;
+     bool end = false;
+ 
+-    // We will give priority to refresh rates that a twice what is looked for
++    // We will give priority to refresh rates that are twice what is looked for
+     if ((videorate > 24.5) && (videorate < 30.5))
+     {
+         rate2x = true;
+@@ -156,16 +156,19 @@
+                         }
+                     }
+                     // Can't find exact frame rate, so try rounding to the nearest integer, so 23.97Hz will work with 24Hz etc
+-                    for (uint j=0; j < rates.size(); ++j)
++                    for (double precision = 0.01; precision < 2.0; precision *= 10.0)
+                     {
+                         double rounded = (double) ((int) (videorate + 0.5));
+-                        // Multiple of target_rate will do
+-                        if (compare_rates(rounded,rates[j]) ||
+-                            (fabs(rounded - fmod(rates[j],rounded)) <= 0.01) ||
+-                            (fmod(rates[j],rounded) <= 0.01))
++                        for (uint j=0; j < rates.size(); ++j)
+                         {
+-                            target_rate = rates[j];
+-                            return i;
++                            // Multiple of target_rate will do
++                            if (compare_rates(rounded,rates[j], precision) ||
++                                (fabs(rounded - fmod(rates[j],rounded)) <= precision) ||
++                                (fmod(rates[j],rounded) <= precision))
++                            {
++                                target_rate = rates[j];
++                                return i;
++                            }
+                         }
+                     }
+                     if (rate2x)
 Index: mythtv/libs/libmythui/mythuihelper.cpp
 ===================================================================
 --- mythtv/libs/libmythui/mythuihelper.cpp	(revision 22751)
@@ -1332,32 +2008,6 @@ Index: mythtv/libs/libmythui/mythuihelper.cpp
          return testdir;
      }
      else
-Index: mythtv/libs/libmythui/mythmainwindow.cpp
-===================================================================
---- mythtv/libs/libmythui/mythmainwindow.cpp	(revision 22880)
-+++ mythtv/libs/libmythui/mythmainwindow.cpp	(working copy)
-@@ -1452,6 +1452,8 @@
-         case QEvent::KeyPress:
-         {
-             QKeyEvent *ke = dynamic_cast<QKeyEvent*>(e);
-+            quint32 nscode;
-+            quint32 nvkey;
- 
-             // Work around weird GCC run-time bug. Only manifest on Mac OS X
-             if (!ke)
-@@ -1460,6 +1462,12 @@
-             if (currentWidget())
-             {
-                 ke->accept();
-+                nscode = ke->nativeScanCode();
-+                nvkey = ke->nativeVirtualKey();
-+                VERBOSE(VB_IMPORTANT, QString("MythMainWindow, Note: ") +
-+                        QString("got native scan code '%1' and "
-+                                "native virtual key of '%2'.")
-+                        .arg(nscode).arg(nvkey));
-                 QWidget *current = currentWidget();
-                 if (current && current->isEnabled())
-                     qApp->notify(current, ke);
 Index: mythtv/libs/libmyth/programlist.cpp
 ===================================================================
 --- mythtv/libs/libmyth/programlist.cpp	(revision 22751)
@@ -1374,6 +2024,23 @@ Index: mythtv/libs/libmyth/programlist.cpp
          flags |= (query.value(35).toInt() == 1)           ? FL_WATCHED  : 0;
  
          inUseKey = query.value(0).toString() + " " +
+Index: mythtv/libs/libmyth/uilistbtntype.cpp
+===================================================================
+--- mythtv/libs/libmyth/uilistbtntype.cpp	(revision 22751)
++++ mythtv/libs/libmyth/uilistbtntype.cpp	(working copy)
+@@ -1047,11 +1047,10 @@
+     }
+ 
+     m_itemList.removeAll(item);
+-    delete item;
+ 
+     m_itemCount--;
+ 
+-    if (m_topItem != m_itemList.first())
++    if (!m_itemList.isEmpty() && m_topItem != m_itemList.first())
+         m_showUpArrow = true;
+     else
+         m_showUpArrow = false;
 Index: mythtv/libs/libmyth/mythdialogs.h
 ===================================================================
 --- mythtv/libs/libmyth/mythdialogs.h	(revision 22751)
@@ -1422,9 +2089,39 @@ Index: mythtv/libs/libmyth/mythdialogs.h
 +};
  
  #endif
+Index: mythtv/libs/libmyth/mythcontext.cpp
+===================================================================
+--- mythtv/libs/libmyth/mythcontext.cpp	(revision 22751)
++++ mythtv/libs/libmyth/mythcontext.cpp	(working copy)
+@@ -1251,7 +1251,7 @@
+     int timeout_remaining = timeout_in_ms;
+     while (WOLInProgress && (timeout_remaining > 0))
+     {
+-        VERBOSE(VB_GENERAL, LOC + "Wake-On-Lan in progress, waiting...");
++        VERBOSE(VB_GENERAL, LOC + "Wake-On-LAN in progress, waiting...");
+ 
+         int max_wait = min(1000, timeout_remaining);
+         WOLInProgressWaitCondition.wait(
+@@ -1524,7 +1524,7 @@
+             .arg(blockingClient ? "Playback" : "Monitor")
+             .arg(d->m_localhostname).arg(false);
+         d->serverSock = ConnectCommandSocket(
+-            server, port, ann, &proto_mismatch);
++            server, port, ann, &proto_mismatch, d->m_gui);
+     }
+ 
+     if (!d->serverSock)
+@@ -1646,6 +1646,7 @@
+         }
+         else if (!WOLcmd.isEmpty() && (cnt < maxConnTry))
+         {
++            if (!we_attempted_wol)
+             {
+                 QMutexLocker locker(&d->WOLInProgressLock);
+                 if (d->WOLInProgress)
 Index: mythtv/libs/libmyth/audiooutputbase.cpp
 ===================================================================
---- mythtv/libs/libmyth/audiooutputbase.cpp	(revision 22880)
+--- mythtv/libs/libmyth/audiooutputbase.cpp	(revision 23433)
 +++ mythtv/libs/libmyth/audiooutputbase.cpp	(working copy)
 @@ -14,6 +14,7 @@
  #include "audiooutputdigitalencoder.h"
@@ -1446,9 +2143,132 @@ Index: mythtv/libs/libmyth/audiooutputbase.cpp
  }
  
  void AudioOutputBase::Pause(bool paused)
+Index: mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c
+===================================================================
+--- mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c	(revision 22751)
++++ mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c	(working copy)
+@@ -698,22 +698,32 @@
+  */
+ int vm_get_audio_stream(vm_t *vm, int audioN) {
+   int streamN = -1;
++  const uint AC3_OFFSET = 0x80;
++  const uint DTS_OFFSET = 0x88;
++  const uint LPCM_OFFSET = 0xA0;
+ 
++  int stream_id = audioN;
++  if (stream_id >= LPCM_OFFSET) {
++    stream_id -= LPCM_OFFSET;
++  } else if (stream_id >= DTS_OFFSET) {
++    stream_id -= DTS_OFFSET;
++  } else if (stream_id >= AC3_OFFSET) {
++    stream_id -= AC3_OFFSET;
++  }
++   
+   if((vm->state).domain != VTS_DOMAIN)
+-    audioN = 0;
++    stream_id = 0;
+ 
+-  if(audioN < 8) {
++  if(stream_id < 8) {
+     /* Is there any control info for this logical stream */
+-    if((vm->state).pgc->audio_control[audioN] & (1<<15)) {
+-      streamN = ((vm->state).pgc->audio_control[audioN] >> 8) & 0x07;
++    if((vm->state).pgc->audio_control[stream_id] & (1<<15)) {
++      streamN = ((vm->state).pgc->audio_control[stream_id] >> 8) & 0x07;
+     }
+   }
+ 
+   if((vm->state).domain != VTS_DOMAIN && streamN == -1)
+     streamN = 0;
+ 
+-  /* FIXME: Should also check in vtsi/vmgi status what kind of stream
+-   * it is (ac3/lpcm/dts/sdds...) to find the right (sub)stream id */
+   return streamN;
+ }
+ 
+@@ -775,6 +785,19 @@
+   return streamN;
+ }
+ 
++int vm_set_audio_active_stream(vm_t *vm, int audioN) {
++
++    if (audioN >= 8)
++      return -1;
++
++    /* verify that stream exists */
++    if(! (vm->state).pgc->audio_control[audioN] & (1<<15))
++        return -1;
++
++    (vm->state).AST_REG = audioN;
++    return 0;
++}
++
+ int vm_get_subp_active_stream(vm_t *vm, int mode) {
+   int subpN;
+   int streamN;
+Index: mythtv/libs/libmythdvdnav/dvdnav/vm/vm.h
+===================================================================
+--- mythtv/libs/libmythdvdnav/dvdnav/vm/vm.h	(revision 22751)
++++ mythtv/libs/libmythdvdnav/dvdnav/vm/vm.h	(working copy)
+@@ -153,6 +153,7 @@
+ int vm_get_audio_stream(vm_t *vm, int audioN);
+ int vm_get_subp_stream(vm_t *vm, int subpN, int mode);
+ int vm_get_audio_active_stream(vm_t *vm);
++int vm_set_audio_active_stream(vm_t *vm, int audioN);
+ int vm_get_subp_active_stream(vm_t *vm, int mode);
+ void vm_get_angle_info(vm_t *vm, int *current, int *num_avail);
+ #if 0
+Index: mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c
+===================================================================
+--- mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c	(revision 22751)
++++ mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c	(working copy)
+@@ -1061,6 +1061,27 @@
+   return retval;
+ }
+ 
++int8_t dvdnav_set_active_audio_stream(dvdnav_t *this, int8_t stream) {
++  int8_t        retval;
++
++  if(!this->started) {
++    printerr("Virtual DVD machine not started.");
++    return -1;
++  }
++
++  pthread_mutex_lock(&this->vm_lock);
++  if (!this->vm->state.pgc) {
++    printerr("No current PGC.");
++    pthread_mutex_unlock(&this->vm_lock);
++    return -1;
++  }
++
++  retval = vm_set_audio_active_stream(this->vm, stream);
++  pthread_mutex_unlock(&this->vm_lock);
++
++  return retval;
++}
++
+ int8_t dvdnav_get_active_spu_stream(dvdnav_t *this) {
+   int8_t        retval;
+ 
+Index: mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h
+===================================================================
+--- mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h	(revision 22751)
++++ mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h	(working copy)
+@@ -627,6 +627,11 @@
+ int8_t dvdnav_get_active_audio_stream(dvdnav_t *self);
+ 
+ /*
++ * Set active audio stream
++ */
++int8_t dvdnav_set_active_audio_stream(dvdnav_t *self, int8_t stream);
++
++/*
+  * Get active spu stream.
+  */
+ int8_t dvdnav_get_active_spu_stream(dvdnav_t *self);
 Index: mythtv/libs/libmythdb/lcddevice.cpp
 ===================================================================
---- mythtv/libs/libmythdb/lcddevice.cpp	(revision 22880)
+--- mythtv/libs/libmythdb/lcddevice.cpp	(revision 23433)
 +++ mythtv/libs/libmythdb/lcddevice.cpp	(working copy)
 @@ -47,6 +47,11 @@
  #include "mythdirs.h"
@@ -1577,7 +2397,7 @@ Index: mythtv/libs/libmythdb/lcddevice.cpp
  void LCD::switchToTime()
 Index: mythtv/libs/libmythdb/lcddevice.h
 ===================================================================
---- mythtv/libs/libmythdb/lcddevice.h	(revision 22880)
+--- mythtv/libs/libmythdb/lcddevice.h	(revision 23433)
 +++ mythtv/libs/libmythdb/lcddevice.h	(working copy)
 @@ -94,6 +94,81 @@
      bool itemScrollable;
@@ -1780,7 +2600,25 @@ Index: mythtv/programs/mythfrontend/globalsettings.cpp
 ===================================================================
 --- mythtv/programs/mythfrontend/globalsettings.cpp	(revision 22751)
 +++ mythtv/programs/mythfrontend/globalsettings.cpp	(working copy)
-@@ -1344,6 +1344,14 @@
+@@ -368,17 +368,6 @@
+     return gc;
+ }
+ 
+-static HostCheckBox *PBBShowGroupSummary()
+-{
+-    HostCheckBox *gc = new HostCheckBox("ShowGroupInfo");
+-    gc->setLabel(QObject::tr("Show group summary"));
+-    gc->setValue(false);
+-    gc->setHelpText(QObject::tr("While selecting a group, show a group "
+-                    "summary instead of showing info about the first episode "
+-                    "in that group."));
+-    return gc;
+-}
+-
+ static HostCheckBox *SmartForward()
+ {
+     HostCheckBox *gc = new HostCheckBox("SmartForward");
+@@ -1344,6 +1333,14 @@
          profiles = VideoDisplayProfile::GetProfiles(host);
      }
  
@@ -1795,7 +2633,7 @@ Index: mythtv/programs/mythfrontend/globalsettings.cpp
      QString profile = VideoDisplayProfile::GetDefaultProfileName(host);
      if (!profiles.contains(profile))
      {
-@@ -2011,16 +2019,6 @@
+@@ -2011,16 +2008,6 @@
  }
  #endif
  
@@ -1812,7 +2650,7 @@ Index: mythtv/programs/mythfrontend/globalsettings.cpp
  static HostLineEdit *UDPNotifyPort()
  {
      HostLineEdit *ge = new HostLineEdit("UDPNotifyPort");
-@@ -3412,19 +3410,6 @@
+@@ -3412,26 +3399,12 @@
      return ge;
  }
  
@@ -1832,7 +2670,24 @@ Index: mythtv/programs/mythfrontend/globalsettings.cpp
  static HostSpinBox *EPGRecThreshold()
  {
      HostSpinBox *gs = new HostSpinBox("SelChangeRecThreshold", 1, 600, 1);
-@@ -4694,17 +4679,16 @@
+     gs->setLabel(QObject::tr("Record Threshold"));
+     gs->setValue(16);
+-    gs->setHelpText(QObject::tr("If the option to use Select to change the channel "
+-                    "is on, pressing Select on a show that is at least "
++    gs->setHelpText(QObject::tr("Pressing Select on a show that is at least "
+                     "this many minutes into the future will schedule a "
+                     "recording."));
+     return gs;
+@@ -3983,7 +3956,7 @@
+     gc->setValue(false);
+     gc->setHelpText(QObject::tr("This enables the periodic cleanup of the "
+                     "events stored in the Myth database (see \"Log MythTV "
+-                    "events to database\" on the previous page)."));
++                    "events to database\")."));
+     return gc;
+ }
+ 
+@@ -4694,17 +4667,16 @@
          new VerticalConfigurationGroup(false, false, true, true);
      column1->addChild(RealtimePriority());
      column1->addChild(DecodeExtraAudio());
@@ -1852,7 +2707,15 @@ Index: mythtv/programs/mythfrontend/globalsettings.cpp
      columns->addChild(column2);
  
      general1->addChild(columns);
-@@ -4970,7 +4954,6 @@
+@@ -4763,7 +4735,6 @@
+     pbox->addChild(PlaybackPreview());
+     pbox->addChild(HWAccelPlaybackPreview());
+     pbox->addChild(PBBStartInTitle());
+-    pbox->addChild(PBBShowGroupSummary());
+     addChild(pbox);
+ 
+     VerticalConfigurationGroup* pbox2 = new VerticalConfigurationGroup(false);
+@@ -4970,7 +4941,6 @@
      gen->addChild(UnknownTitle());
      gen->addChild(UnknownCategory());
      gen->addChild(DefaultTVChannel());
@@ -1875,6 +2738,59 @@ Index: mythtv/programs/mythfrontend/statusbox.cpp
                  status = tr("is unavailable");
              else
                  status = tr("is asleep");
+Index: mythtv/programs/scripts/database/mythconverg_restore.pl
+===================================================================
+--- mythtv/programs/scripts/database/mythconverg_restore.pl	(revision 22751)
++++ mythtv/programs/scripts/database/mythconverg_restore.pl	(working copy)
+@@ -13,7 +13,7 @@
+ 
+ # Script info
+     $NAME           = 'MythTV Database Restore Script';
+-    $VERSION        = '1.0.8';
++    $VERSION        = '1.0.8.1';
+ 
+ # Some variables we'll use here
+     our ($username, $homedir, $mythconfdir, $database_information_file);
+@@ -887,8 +887,38 @@
+                             { PrintError => 0 });
+         if (!defined($dbh))
+         {
++            verbose($verbose_level_always,
++                    '', 'Unable to connect to database.',
++                    "           database: $mysql_conf{'db_name'}",
++                    "               host: $mysql_conf{'db_host'}",
++                    "           username: $mysql_conf{'db_user'}"
++                   );
++        if ($debug < $verbose_level_debug)
++        {
++            verbose($verbose_level_always,
++                    'To see the password used, please re-run the script with'.
++                    ' the --verbose',
++                    'argument.');
++        }
++        # Connection issues will only occur with improper user configuration
++        # Because they should be rare, output the password with --verbose
+             verbose($verbose_level_debug,
+-                    'Unable to connect to database.');
++                    "           password: $mysql_conf{'db_pass'}");
++            verbose($verbose_level_always,
++                    '', 'Please check your configuration files to verify the'.
++                    ' database connection',
++                    'information is correct.  The files that are used to'.
++                    ' retrieve connection',
++                    'information are prefixed with "parsing" in the "Parsing'.
++                    ' configuration files"',
++                    'section of the --verbose output.');
++            verbose($verbose_level_always,
++                    '', 'Also note that any [client] or [mysql] password'.
++                    ' specified in the MySQL options',
++                    'file (/etc/my.cnf or /etc/mysql/my.cnf or ~/.my.cnf)'.
++                    ' will take precedence over',
++                    'the password specified in the MythTV configuration'.
++                    ' files.');
+             $result = 0;
+         }
+         return $result;
 Index: mythtv/programs/scripts/database/mythconverg_backup.pl
 ===================================================================
 --- mythtv/programs/scripts/database/mythconverg_backup.pl	(revision 22751)
@@ -1897,6 +2813,33 @@ Index: mythtv/programs/scripts/database/mythconverg_backup.pl
                        "'$safe_db_name' 2>&1 1>'$output_file'";
          verbose($verbose_level_debug,
                  '', 'Executing command:', $command);
+Index: mythtv/programs/mythbackend/main.cpp
+===================================================================
+--- mythtv/programs/mythbackend/main.cpp	(revision 22751)
++++ mythtv/programs/mythbackend/main.cpp	(working copy)
+@@ -55,6 +55,13 @@
+ #define LOC_WARN QString("MythBackend, Warning: ")
+ #define LOC_ERR  QString("MythBackend, Error: ")
+ 
++#ifdef Q_OS_MACX 
++    // 10.6 uses handle 3 for its new Grand Central Dispatch thingy 
++    #define UNUSED_FILENO 4  
++#else 
++    #define UNUSED_FILENO 3 
++#endif
++
+ QMap<int, EncoderLink *> tvList;
+ AutoExpire  *expirer      = NULL;
+ Scheduler   *sched        = NULL;
+@@ -510,7 +517,7 @@
+ 
+     bool need_gui = false;
+ #ifndef _WIN32
+-    for (int i = 3; i < sysconf(_SC_OPEN_MAX) - 1; ++i)
++    for (int i = UNUSED_FILENO; i < sysconf(_SC_OPEN_MAX) - 1; ++i)
+         close(i);
+ #else
+     // MINGW application needs a window to receive messages
 Index: mythtv/programs/mythbackend/scheduler.cpp
 ===================================================================
 --- mythtv/programs/mythbackend/scheduler.cpp	(revision 22751)
@@ -1929,10 +2872,117 @@ Index: mythtv/programs/mythbackend/scheduler.cpp
              }
              reschedLock.unlock();
  
+Index: mythtv/programs/mythfilldatabase/main.cpp
+===================================================================
+--- mythtv/programs/mythfilldatabase/main.cpp	(revision 22751)
++++ mythtv/programs/mythfilldatabase/main.cpp	(working copy)
+@@ -733,6 +733,7 @@
+         VERBOSE(VB_GENERAL, "Fudging non-unique programids "
+                 "with multiple parts.");
+ 
++        int found = 0;
+         MSqlQuery sel(MSqlQuery::InitCon());
+         sel.prepare("SELECT DISTINCT programid, partnumber, parttotal "
+                     "FROM program WHERE partnumber > 0 AND parttotal > 0 AND "
+@@ -776,11 +777,12 @@
+                             .arg(orig_programid)
+                             .arg(new_programid));
+                 }
++                else
++                    found += repl.numRowsAffected();
+             }
+         }
+ 
+-        VERBOSE(VB_GENERAL,
+-                QString("    Found %1").arg(sel.numRowsAffected()));
++        VERBOSE(VB_GENERAL, QString("    Found %1").arg(found));
+     }
+ 
+     if (mark_repeats)
 Index: mythtv/bindings/python/MythTV/MythTV.py
 ===================================================================
 --- mythtv/bindings/python/MythTV/MythTV.py	(revision 22751)
 +++ mythtv/bindings/python/MythTV/MythTV.py	(working copy)
+@@ -285,14 +285,14 @@
+ 		"""
+ 		Returns a Program object for the current recorders recording.
+ 		"""
+-		res = self.backendCommand('QUERY_RECORDER '+BACKEND_SEP.join([recorder,'GET_CURRENT_RECORDING']))
++		res = self.backendCommand('QUERY_RECORDER '+BACKEND_SEP.join([str(recorder),'GET_CURRENT_RECORDING']))
+ 		return Program(res.split(BACKEND_SEP))
+ 
+ 	def isRecording(self, recorder):
+ 		"""
+ 		Returns a boolean as to whether the given recorder is recording.
+ 		"""
+-		res = self.backendCommand('QUERY_RECORDER '+BACKEND_SEP.join([recorder,'IS_RECORDING']))
++		res = self.backendCommand('QUERY_RECORDER '+BACKEND_SEP.join([str(recorder),'IS_RECORDING']))
+ 		if res == '1':
+ 			return True
+ 		else:
+@@ -526,7 +526,8 @@
+ 	write = False
+ 
+ 	def __init__(self, file, mode):
+-		regex = re.compile('myth://((?P<group>.*)@)?(?P<host>[0-9\.]*)(:(?P<port>[0-9]*))?/(?P<file>.*)')
++		reuri = re.compile('myth://((?P<group>.*)@)?(?P<host>[a-zA-Z-_0-9\.]+)(:(?P<port>[0-9]+))?/(?P<file>.*)')
++		reip = re.compile('(?:\d{1,3}\.}{3}\d{1,3}')
+ 		self.db = MythDB(sys.argv[1:])
+ 		self.comsock = MythTV()
+ 		self.mode = mode
+@@ -538,9 +539,8 @@
+ 			log.Msg(CRITICAL, 'Invalid FileTransfer mode given')
+ 			sys.exit(1)
+ 		if isinstance(file, Program):
+-			match = regex.match(file.filename)
++			match = reuri.match(file.filename)
+ 			self.host = match.group('host')
+-			self.port = int(match.group('port'))
+ 			self.filename = match.group('file')
+ 			self.sgroup = file.storagegroup
+ 			if self.port is None:
+@@ -551,26 +551,26 @@
+ 				sys.exit(1)
+ 			else:
+ 				self.host = file[0]
+-				self.port = int(self.db.getSetting('BackendServerPort',self.host))
+ 				self.filename = file[1]
+ 				self.sgroup = file[2]
+ 		elif isinstance(file, str):
+-			match = regex.match(file)
++			match = reuri.match(file)
+ 			if match is None:
+ 				log.Msg(CRITICAL, 'Incorrect FileTransfer() input string: %s' % file)
+ 				sys.exit(1)
+ 			self.sgroup = match.group('group')
+ 			self.host = match.group('host')
+-			self.port = int(match.group('port'))
+ 			self.filename = match.group('file')
+ 			if self.sgroup is None:
+-				self.sgroup = ''
+-			if self.port is None:
+-				self.port = 6543
++				self.sgroup = 'Default'
+ 		else:
+ 			log.Msg(CRITICAL, 'Improper input to FileTransfer()')
+ 			sys.exit(1)
+ 
++		if reip.match(self.host):
++			self.host = socket.gethostbyaddr(self.host)
++		self.port = int(self.db.getSetting('BackendServerPort'),self.host)
++
+ 		try:
+ 			self.datsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+ 			self.datsock.settimeout(10)
+@@ -579,7 +579,7 @@
+ 			if res[0] == 'REJECT':
+ 				log.Msg(CRITICAL, 'Backend has version %s and we speak version %s', res[1], PROTO_VERSION)
+ 				sys.exit(1)
+-			res = self.send('ANN FileTransfer %s %d %d %s' % (socket.gethostbyname(),write, False, BACKEND_SEP.join(['-1',self.filename,self.sgroup])))
++			res = self.send('ANN FileTransfer %s %d %d %s' % (socket.gethostname(),write, False, BACKEND_SEP.join(['-1',self.filename,self.sgroup])))
+ 			if res.split(BACKEND_SEP)[0] != 'OK':
+ 				log.Msg(CRITICAL, 'Unexpected answer to ANN command: %s', res)
+ 			else:
 @@ -965,7 +965,7 @@
  		string += BACKEND_SEP + self.seriesid
  		string += BACKEND_SEP + self.programid
@@ -1942,6 +2992,239 @@ Index: mythtv/bindings/python/MythTV/MythTV.py
  		string += BACKEND_SEP + self.airdate
  		string += BACKEND_SEP + str(self.hasairdate)
  		string += BACKEND_SEP + self.playgroup
+Index: mythtv/contrib/channel_changers/6200ch/6200ch.c
+===================================================================
+--- mythtv/contrib/channel_changers/6200ch/6200ch.c	(revision 22751)
++++ mythtv/contrib/channel_changers/6200ch/6200ch.c	(working copy)
+@@ -39,6 +39,7 @@
+ #define DCH3200_VENDOR_ID4 0x000023a3
+ #define DCH3200_MODEL_ID1  0x0000d330
+ #define DCX3200_MODEL_ID1  0x0000f740
++#define DCX3200_MODEL_ID2  0x0000fa07
+ 
+ #define DCH3416_VENDOR_ID1 0x00001e46
+ #define DCH3416_MODEL_ID1  0x0000b630
+@@ -318,6 +319,7 @@
+             (dir.vendor_id == PACE_VENDOR_ID2)) &&
+            ((dir.model_id == DCH3200_MODEL_ID1) ||
+             (dir.model_id == DCX3200_MODEL_ID1) ||
++            (dir.model_id == DCX3200_MODEL_ID2) ||
+             (dir.model_id == DCH3416_MODEL_ID1) ||
+             (dir.model_id == DCT3412_MODEL_ID1) ||
+             (dir.model_id == DCT3416_MODEL_ID1) ||
+Index: mythtv/contrib/imports/mirobridge/mirobridge/mirobridge-example.conf
+===================================================================
+--- mythtv/contrib/imports/mirobridge/mirobridge/mirobridge-example.conf	(revision 22751)
++++ mythtv/contrib/imports/mirobridge/mirobridge/mirobridge-example.conf	(working copy)
+@@ -11,17 +11,34 @@
+ # (http://creativecommons.org/licenses/GPL/2.0/)
+ #----------------------------------------------------------------------------------------------------
+ # This config file contains settings will change the default behavior of mirobridge.py
+-# Copy this example file to the PC on which you will be running mirobridge.py and place into the 
+-# directory "/.../.../.mythtv" and rename it to "mirobridge.conf". Mirobridge will automatically 
++# Copy this example file to the PC on which you will be running mirobridge.py and place into the
++# directory "/.../.../.mythtv" and rename it to "mirobridge.conf". Mirobridge will automatically
+ # use the file if it exists. For most users the directory will be located at "~/.mythtv"
+ #----------------------------------------------------------------------------------------------------
+ #
++# START  variables section ------------------------------------------------------------------------
++[variables]
++# 'filename_char_filter' sanitise file names (video and images) to the POSIX standard which does not allow
++#			"/" or null. When an invalid character is found an underscore "_" is used in its place. People
++#           that use a Windows file system for video and/or images require additional characters to be filtered.
++#           This variable allows a user to add additional file name filter characters ALL of which will be
++#           turned into underscores "_".
++# NOTE: the "%" character is also filtered as it is a string format character in python.
++# NOTE: Invalid MS-Windows file system characters are: \/:*?"<>|
++#       The forward slash '/' is already a default.
++# NOTE: Do not put spaces between the chracters or quotes around the chracters.
++# Default: /%\000		The last \000 is the representation of a null character
++# (Options) characters that will be added to the Default filter characters.
++#filename_char_filter: \:*?"<>|
++
++# END  variables section---------------------------------------------------------------------
++
+ # START  icon_override section ------------------------------------------------------------------------
+ # Normally the Miro Channel icon is used as cover art in MythVideo but sometimes the Miro video's icon
+-# is better. Specifically movie trailers fall into this category as the icons with some feeds items 
+-# are the movie's poster. To override the default and have mirobridge use the item's icon you 
+-# need to have the Miro channel name specified. See the example "Timo's HD Movie Trailers" below. To 
+-# activate the Timo example remove the leading '#' sign. To add more channels the format is always 
++# is better. Specifically movie trailers fall into this category as the icons with some feeds items
++# are the movie's poster. To override the default and have mirobridge use the item's icon you
++# need to have the Miro channel name specified. See the example "Timo's HD Movie Trailers" below. To
++# activate the Timo example remove the leading '#' sign. To add more channels the format is always
+ # channel title as specified in Miro (or what you renamed it to in Miro) ending with a ':'
+ # Each Channel requires its own line, you cannot have multiple Channels per line.
+ # NOTE: It is only rarely that you want to use this feature as in most cases the the Miro video's icon
+@@ -30,8 +47,8 @@
+ #       the channel icon as it's cover art.
+ # NOTE: Do not surround any Channel name with quotes even if it contains spaces.
+ #       e.g. the Channel name "Timo's HD Movie Trailers" is expressed as value: Timo's HD Movie Trailers
+-# 
+-[icon_override] 
++#
++[icon_override]
+ Timo's HD Movie Trailers:
+ Latest Movie Trailers:
+ Linux Journal:
+@@ -49,28 +66,28 @@
+ # physically copied from Miro into the specified MythVideo directory. This includes any icons and
+ # screenshots, with the metadata being added to the MythVideo data base table "videometadata".
+ # Once successfully copied the video it will be removed from Miro and the Miro video directory.
+-# The specific advantage of the "watch-then-copy" method over "mythvideo_only" configuration 
+-# seen in the next section, is that the Watch Recording screen acts as a place you can quickly 
+-# identify any newly downloaded videos. You do not have to manually check "what's new" 
++# The specific advantage of the "watch-then-copy" method over "mythvideo_only" configuration
++# seen in the next section, is that the Watch Recording screen acts as a place you can quickly
++# identify any newly downloaded videos. You do not have to manually check "what's new"
+ # in a MythVideo directory that may have many existing videos.
+ # If you want ALL Miro Channels use the "watch-then-copy" method then use the (-N) command line
+ # option OR the channel name "all miro channels". Any other channel names in this section will be
+ # ignored. With the command line (-N) option all files will be copied into the Miro subdirectory of
+ # MythVideo.
+-# To activate the "Timo's" example remove the leading '#' sign. 
+-# To add more channels the format is always channel title and a ":" then the directory to 
++# To activate the "Timo's" example remove the leading '#' sign.
++# To add more channels the format is always channel title and a ":" then the directory to
+ # copy the file into.
+-# All copied files will be renamed to the format "channel title - item title" 
++# All copied files will be renamed to the format "channel title - item title"
+ # (e.g. "Linux Journal - More on kill and pkill")
+ # Each Channel requires its own line, you cannot have multiple Channels per line.
+ # NOTE: Do not surround any Channel name or directory path with quotes even if it contains spaces.
+-#       e.g. the Channel name "/media/video/Timo trailers" is expressed 
++#       e.g. the Channel name "/media/video/Timo trailers" is expressed
+ #            as value: /media/video/Timo trailers
+-# NOTE: By default a subdirectory with the Channel's name will be created. 
++# NOTE: By default a subdirectory with the Channel's name will be created.
+ #       In the "Timo" example below a video would be copied to the directory path
+ #       "/media/video/trailers/Timo's HD Movie Trailers"
+ #       This behavior can be suppressed with the mirobridge.py command line option "-o".
+-# 
++#
+ [watch_then_copy]
+ #Timo's HD Movie Trailers: /media/video/Miro/Trailers
+ #HD-Trailers.net Blog: /media/video/Miro/Trailers
+@@ -80,30 +97,30 @@
+ 
+ 
+ # START  mythvideo-only section ------------------------------------------------------------------
+-# The default action is that all newly downloaded Miro videos are added to the 
++# The default action is that all newly downloaded Miro videos are added to the
+ # MythTV "Watch Reordings" screen. This section allows the user to have some or all videos copied
+-# directly to MythVideo. Once copied the video will be deleted from Miro. To specify that one or 
+-# more Miro Channels which get copied directly to MythVideo add the channel title and a ":" then the 
+-# directory to copy the file into. The target directory must be within the directory structure 
+-# of MythVideo. Any subdirectories above the MythVideo base path will be created if they do 
+-# not exist. 
++# directly to MythVideo. Once copied the video will be deleted from Miro. To specify that one or
++# more Miro Channels which get copied directly to MythVideo add the channel title and a ":" then the
++# directory to copy the file into. The target directory must be within the directory structure
++# of MythVideo. Any subdirectories above the MythVideo base path will be created if they do
++# not exist.
+ # If you want ALL Miro Channels to go directly to MythVideo then use the (-M) command line
+-# option OR the channel name "all miro channels" and any other channel names will be ignored. 
++# option OR the channel name "all miro channels" and any other channel names will be ignored.
+ # To activate the "Timo" example remove the leading '#' sign. With the command line (-N) option
+ # all files will be copied into the Miro subdirectory of MythVideo.
+-# To add more channels the format is always channel title and a ":" then the directory to 
++# To add more channels the format is always channel title and a ":" then the directory to
+ # copy the file into.
+-# All copied files will be renamed to the format "channel title - item title" 
++# All copied files will be renamed to the format "channel title - item title"
+ # (e.g. "Linux Journal - More on kill and pkill")
+ # Each Channel requires its own line, you cannot have multiple Channels per line.
+ # NOTE: Do not surround any Channel name or directory path with quotes even if it contains spaces.
+-#       e.g. the Channel name "/media/video/Timo trailers" is expressed 
++#       e.g. the Channel name "/media/video/Timo trailers" is expressed
+ #            as value: /media/video/Timo trailers
+-# NOTE: By default a subdirectory with the Channel's name will be created. 
++# NOTE: By default a subdirectory with the Channel's name will be created.
+ #       In the "Timo" example below a video would be copied to the directory path
+ #       "/media/video/trailers/Timo's HD Movie Trailers"
+ #       This behavior can be suppressed with the mirobridge.py command line option "-o".
+-# 
++#
+ [mythvideo_only]
+ #Timo's HD Movie Trailers: /media/video/trailers
+ #The Best of Link TV: /media/video/The Best of Link TV
+@@ -122,16 +139,16 @@
+ # will be marked as "watched" in Miro and be expired (removed) per Miro's own settings. They are not
+ # actually deleted but are made invisible to MythTV.
+ #
+-# If you want ALL Miro Channels to NEVER to go to MythVideo then use the (-W) command line option OR 
++# If you want ALL Miro Channels to NEVER to go to MythVideo then use the (-W) command line option OR
+ # use the channel name "all miro channels" and any other channel names in this section will be ignored.
+-# To activate the "Onion News" example remove the leading '#' sign. 
++# To activate the "Onion News" example remove the leading '#' sign.
+ # To add more channels the format is always channel title then a ":"
+ # Each Channel requires its own line, you cannot have multiple Channels per line.
+ # NOTE: Do not surround any Channel name with quotes even if it contains spaces.
+ #       e.g. the Channel name "Onion News Network" is expressed as value: Onion News Network
+-# NOTE: If you use the options to move all Miro videos directly to MythVideo the "watch_only" is 
++# NOTE: If you use the options to move all Miro videos directly to MythVideo the "watch_only" is
+ #       irrelevant and will not have any effect on mirobridge.py processing.
+-# 
++#
+ [watch_only]
+ #Onion News Network:
+ #NOVA Vodcast PBS:
+@@ -144,20 +161,20 @@
+ 
+ # START  additional graphics  section ---------------------------------------------------------------
+ # !!!!!!!!!!!!!!!!!! CURRENTLY THE FEATURES IN THIS SECTION HAVE NOT BEEN IMPLEMENTED !!!!!!!!!!!!!!!!
+-# By default mirobridge exclusively uses the Miro meta data and graphics (Channel icon or 
+-# video icon and video screenshot), when adding a Miro video to either MythTV and MythVideo. 
++# By default mirobridge exclusively uses the Miro meta data and graphics (Channel icon or
++# video icon and video screenshot), when adding a Miro video to either MythTV and MythVideo.
+ # In a very few instances there may be graphics (Posters, Banners and/or Fan art) that are available
+ # and relevant to a Miro video. These instances consist of Movie Trailers and video casts for TV shows.
+ # In these cases better quality graphica may be available from either themoviedb.com or thetvdb.com
+ # In this section:
+ #     For TV shows you can specify a Channel name and thetvdb.com reference number. The TV series "Nova"
+-#     "Nature" examples have been provided. 
++#     "Nature" examples have been provided.
+ #     For movies just the Channel name is required.
+ #
+ # When a Channel has been specified in either the Movie or TV sections mirobridge will check the
+ # relevant source (themoviedb.com or thetvdb.com) for better graphics. If found they will be downloaded
+-# and used in place of the lower quality Miro graphics. 
+-# To utilize this feature the script Jamu must be installed and functioning independantly of 
++# and used in place of the lower quality Miro graphics.
++# To utilize this feature the script Jamu must be installed and functioning independantly of
+ # mirobridge. All of the mirobridge provided python scripts (*.py) must be installed in the same
+ # directory as Jamu is installed. See this wiki page on Jamu download and installation instructions.
+ # You do not have to use Jamu for the functinality described on the wiki page as mirobridge utilizes
+@@ -166,17 +183,17 @@
+ #
+ # The examples below are already activated. The Channel names MUST be exactly as you have specified in
+ # your Miro configuration. These examples may not match the Channel names in your Miro configuration.
+-# For Movie trailers there will be a maximum of two attempts to find the correct movie. 
+-# The first attempt will assume that the movie is to be released in the current year. If there is no 
+-# match the second attempt will assume the movie will be released in the coming year. 
++# For Movie trailers there will be a maximum of two attempts to find the correct movie.
++# The first attempt will assume that the movie is to be released in the current year. If there is no
++# match the second attempt will assume the movie will be released in the coming year.
+ #
+ # To add more channels the format is always channel title then a ":"
+ # Each Channel requires its own line, you cannot have multiple Channels per line.
+ # NOTE: Do not surround any Channel name with quotes even if it contains spaces.
+ #       e.g. the Channel name "Onion News Network" is expressed as value: Onion News Network
+-# NOTE: If you use the options to move all Miro videos directly to MythVideo the "watch_only" is 
++# NOTE: If you use the options to move all Miro videos directly to MythVideo the "watch_only" is
+ #       irrelevant and will not have any effect on mirobridge.py processing.
+-# 
++#
+ # The TV format is Channel name ":" then thetvdb.com reference number
+ [tv]
+ #NOVA Vodcast PBS: 76119
+@@ -187,5 +204,3 @@
+ #Timo's HD Movie Trailers:
+ #HD-Trailers.net Blog:
+ # END   additional graphics  section ---------------------------------------------------------------
+-
+-
 Index: mythtv/contrib/imports/mirobridge/mirobridge.py
 ===================================================================
 --- mythtv/contrib/imports/mirobridge/mirobridge.py	(revision 22751)
@@ -1974,7 +3257,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  
 -__version__=u"v0.4.9" 
 -# 0.1.0 Initial development 
-+__version__=u"v0.5.0"
++__version__=u"v0.5.1"
 +# 0.1.0 Initial development
  # 0.2.0 Initial Alpha release for internal testing only
  # 0.2.1 Fixes from initial alpha test
@@ -2069,7 +3352,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  #       then post a critical error message and exit.
  #       Do not add the Miro Bridge default banner when a Miro video has no subtitle as it overlaps
  #       the title display on MythVideo information pop-ups.
-@@ -148,13 +148,16 @@
+@@ -148,13 +148,23 @@
  #       Disabled seek table creation as a number of the Miro video types (e.g. mov) do not work in MythTV with
  #       seek tables.
  # 0.4.6 Changed "original air date" and "air date" to be Miro's item release date. This is more appropriate then
@@ -2084,10 +3367,17 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
 +# 0.5.0 Correct the addition of adding hostnames to videometadata records and the use of relative paths when
 +#       there is no Videos Storage Group.
 +#       Added more informative error messages when trying to connect to the MythTV data base
++# 0.5.1 Fixed the config "all" options for command line -N and -M and config file sections [watch_then_copy]
++#		and [mythvideo_only].
++#		Changed return codes from True to 0 and False to 1.
++#		Added display of the directories that will be used by MiroBridge and whether they are storage groups.
++#		Added file name sanitising logic plus a config file variable to add characters to be replaced by '_'.
++#		The config file variable 'file name_char_filter' is required by users who save MiroBridge files on a
++#		file system which only supports MS-Windows file naming conventions.
  
  
  examples_txt=u'''
-@@ -172,6 +175,7 @@
+@@ -172,6 +182,7 @@
  
  # Global variables
  localhostname = gethostname() # Initalize the local hostname
@@ -2095,7 +3385,15 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  dir_dict={u'posterdir': u"VideoArtworkDir", u'bannerdir': u'mythvideo.bannerDir', u'fanartdir': 'mythvideo.fanartDir', u'episodeimagedir': u'mythvideo.screenshotDir', u'mythvideo': u'VideoStartupDir'}
  vid_graphics_dirs={u'default': u'', u'mythvideo': u'', u'posterdir': u'', u'bannerdir': u'', u'fanartdir': u'', u'episodeimagedir': u'',}
  key_trans = {u'filename': u'mythvideo', u'coverfile': u'posterdir', u'banner': u'bannerdir', u'fanart': u'fanartdir', u'screenshot': u'episodeimagedir'}
-@@ -222,25 +226,25 @@
+@@ -202,6 +213,7 @@
+ imagemagick = True
+ mythcommflag_recordings = u'%s -c %%s -s "%%s" --rebuild' # or u'mythcommflag -f "%s" --rebuild'
+ mythcommflag_videos = u'%s --rebuild --video "%%s"'
++filename_char_filter = u"/%\000"
+ 
+ 
+ # Initalize Report Statistics:
+@@ -222,25 +234,25 @@
  
  class OutStreamEncoder(object):
  	"""Wraps a stream with an encoder
@@ -2136,8 +3434,16 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  sys.stdout = OutStreamEncoder(sys.stdout, 'utf8')
  sys.stderr = OutStreamEncoder(sys.stderr, 'utf8')
  
-@@ -269,22 +273,34 @@
- 	sys.exit(False)
+@@ -263,31 +275,43 @@
+ 	import pyparsing
+ 	if pyparsing.__version__ < "1.5.0":
+ 		logger.critical(u"The python library 'pyparsing' must be at version 1.5.0 or higher. Your version is v%s" % pyparsing.__version__)
+-		sys.exit(False)
++		sys.exit(1)
+ except Exception:
+ 	logger.critical(u"The python library 'pyparsing' must be installed and be version 1.5.0 or higher")
+-	sys.exit(False)
++	sys.exit(1)
  logger.info(u"Using python library 'pyparsing' version %s" % pyparsing.__version__)
  
 -# Find out if the MythTV python bindings can be accessed and instances can be created
@@ -2165,16 +3471,31 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
 +			logger.critical(u'A correctly configured (%s) file must exist\n' % filename)
 +		else:
 +			logger.critical(u'Check that (%s) is correctly configured\n' % filename)
-+		sys.exit(False)
++		sys.exit(1)
  	except Exception:
  		logger.critical(u'''Creating an instance caused an error for one of: MythTV, MythVideo or MythDB
  ''')
 -		sys.exit(False)	
-+		sys.exit(False)
++		sys.exit(1)
  except Exception:
  	logger.critical(u"MythTV python bindings could not be imported")
- 	sys.exit(False)
-@@ -320,10 +336,10 @@
+-	sys.exit(False)
++	sys.exit(1)
+ 
+ # Find out if the Miro python bindings can be accessed and instances can be created
+ try:
+@@ -311,23 +335,23 @@
+ 	from miro.frontends.cli.events import EventHandler
+ except Exception:
+ 	logger.critical(u"Importing Miro functions has an issue. Miro must be installed and functional.")
+-	sys.exit(False)
++	sys.exit(1)
+ 
+ logger.info(u"Miro Bridge version %s with Miro version %s" % (__version__, config.get(prefs.APP_VERSION)))
+ if config.get(prefs.APP_VERSION) < u"2.0.3":
+ 	logger.critical(u"Your version of Miro (v%s) is not recent enough. Miro v2.0.3 is the minimum and it is preferred that you upgrade to Miro v2.5.2 or later.")
+-	sys.exit(False)
++	sys.exit(1)
  
  try:
  	if config.get(prefs.APP_VERSION) < u"2.5.2":
@@ -2187,7 +3508,34 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		from mirobridge.mirobridge_interpreter_2_5_2 import MiroInterpreter
  except Exception:
  	logger.critical(u"Importing mirobridge functions has failed. The following mirobridge files must be in the subdirectory 'mirobridge'.\n'mirobridge_interpreter_2_0_3.py' and 'mirobridge_interpreter_2_5_2.py'")
-@@ -400,7 +416,7 @@
+-	sys.exit(False)
++	sys.exit(1)
+ 
+ 
+ def _can_int(x):
+@@ -364,6 +388,21 @@
+ # end getExtention
+ 
+ 
++def sanitiseFileName(name):
++	'''Take a file name and change it so that invalid or problematic characters are substituted with a "_"
++	return a sanitised valid file name
++	'''
++	global filename_char_filter
++	if name == None or name == u'':
++		return u'_'
++	for char in filename_char_filter:
++		name = name.replace(char, u'_')
++	if name[0] == u'.':
++		name = u'_'+name[1:]
++	return name
++# end sanitiseFileName()
++
++
+ def useImageMagick(cmd):
+ 	""" Process graphics files using ImageMagick's utility 'mogrify'.
+ 	>>> useImageMagick('convert screenshot.jpg -resize 50% screenshot.png')
+@@ -400,7 +439,7 @@
  					 version that accomplishes the same task: make sure that
  					 only a single instance of an application is running.
  	'''
@@ -2196,7 +3544,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	def __init__(self, pidPath):
  		'''
  		pidPath - full path/filename where pid for running application is to be
-@@ -512,6 +528,9 @@
+@@ -512,6 +551,9 @@
  	if relpath[0] == u'/':
  		return relpath
  
@@ -2206,7 +3554,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	for directory in storagegroups[filetype]:
  		abpath = u"%s/%s" % (directory, relpath)
  		if os.path.isfile(abpath): # The file must actually exist locally
-@@ -531,7 +550,7 @@
+@@ -531,7 +573,7 @@
  	if filename == None or filename == u'':
  		return None
  
@@ -2215,7 +3563,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	if filename[0].startswith(u'myth://'):
  		return filename
  
-@@ -573,15 +592,23 @@
+@@ -573,15 +615,23 @@
  		record = {}
  		i = 0
  		for elem in data_id:
@@ -2243,7 +3591,13 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		continue
  	cur.close()
  
-@@ -598,33 +625,53 @@
+@@ -593,38 +643,58 @@
+ 				logger.critical(u"The Storage group (%s) directory (%s) does not exist" % (key, storagegroups[key]))
+ 				storagegroup_ok = False
+ 		if not storagegroup_ok:
+-			sys.exit(False)
++			sys.exit(1)
+ # end getStorageGroups
  
  def getMythtvDirectories():
  	"""Get all video and graphics directories found in the MythTV DB and add them to the dictionary.
@@ -2252,7 +3606,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	"""
  	# Stop processing if this local host has any storage groups
 -	global localhostname, vid_graphics_dirs, dir_dict, storagegroups
-+	global localhostname, vid_graphics_dirs, dir_dict, storagegroups, local_only
++	global localhostname, vid_graphics_dirs, dir_dict, storagegroups, local_only, verbose
  
 -	# Pick up storage groups first
 -	for key in storagegroups.keys():
@@ -2316,29 +3670,54 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  
  		if key != u'mythvideo':
  			if graphics_dir and os.path.exists(graphics_dir):
-@@ -637,8 +684,8 @@
+@@ -637,8 +707,8 @@
  	# Make sure there is a directory set for Videos and other graphics directories on this host
  	for key in vid_graphics_dirs.keys():
  		if not vid_graphics_dirs[key]:
 - 			logger.critical(u"There must be a directory for Videos and each graphics type. The (%s) directory is missing." % (key))
 -			sys.exit(False)	
 + 			logger.critical(u"There must be a directory for Videos and each graphics type. At least the (%s) directory is missing." % (key))
-+			sys.exit(False)
++			sys.exit(1)
  
  	# Make sure that there is read/write access to all the directories Miro Bridge uses
  	access_issue = False
-@@ -647,8 +694,8 @@
+@@ -647,15 +717,32 @@
   			logger.critical(u"\nEvery Video and graphics directory must be read/writable for Miro Bridge to function. There is a permissions issue with (%s)." % (vid_graphics_dirs[key], ))
  			access_issue = True
  	if access_issue:
 -		sys.exit(False)	
 -	# end getMythtvDirectories()	
-+		sys.exit(False)
-+	# end getMythtvDirectories()
++		sys.exit(1)
  
++	# Print out the video and image directories that will be used for processing
++	if verbose:
++		dir_types={'posterdir': "Cover art  ", 'bannerdir': 'Banners    ', 'fanartdir': 'Fan art    ', 'episodeimagedir': 'Screenshots', 'mythvideo': 'Video      ', 'default': 'Default    '}
++		sys.stdout.write(u"\n==========================================================================================\n")
++		sys.stdout.write(u"Listed below are the types and base directories that will be use for processing.\nThe list reflects your current configuration for the '%s' back end\nand whether a directory is a 'SG' (storage group) or not.\n" % localhostname)
++		sys.stdout.write(u"Note: All directories are from settings in the MythDB specific to hostname (%s).\n" % localhostname)
++		sys.stdout.write(u"------------------------------------------------------------------------------------------\n")
++		for key in vid_graphics_dirs.keys():
++			sg_flag = 'NO '
++			if storagegroups.has_key(key):
++				if vid_graphics_dirs[key] == storagegroups[key]:
++					sg_flag = 'YES'
++			sys.stdout.write(u"Type: %s - SG-%s - Directory: (%s)\n" % (dir_types[key], sg_flag, vid_graphics_dirs[key]))
++		sys.stdout.write(u"------------------------------------------------------------------------------------------\n")
++		sys.stdout.write(u"If a directory you set from a separate Front end is not displayed it means\nthat the directory is not accessible from this backend OR\nyou must add the missing directories using the Front end on this Back end.\nFront end settings are host machine specific.\n")
++		sys.stdout.write(u"==========================================================================================\n\n")
++	# end getMythtvDirectories()
++
  def setUseroptions():
  	"""	Change variables through a user supplied configuration file
-@@ -668,26 +715,26 @@
+ 	abort the script if there are issues with the configuration file values
+ 	"""
+ 	global simulation, verbose, channel_icon_override, channel_watch_only, channel_mythvideo_only
+-	global vid_graphics_dirs, tv_channels, movie_trailers
++	global vid_graphics_dirs, tv_channels, movie_trailers, filename_char_filter
+ 
+ 	useroptions=u"~/.mythtv/mirobridge.conf"
+ 
+@@ -668,26 +755,32 @@
  
  	cfg = ConfigParser.SafeConfigParser()
  	cfg.read(useroptions)
@@ -2346,6 +3725,12 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
 +	for section in cfg.sections():
  		if section[:5] == u'File ':
  			continue
++		if section == u'variables':
++			for option in cfg.options(section):
++				if option == u'filename_char_filter':
++					for char in cfg.get(section, option):
++						filename_char_filter+=char
++					continue
  		if section == u'icon_override':
  			# Add the Channel names to the array of Channels that are to use their item's icon
 -			for option in cfg.options(section): 
@@ -2371,7 +3756,14 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  				if option == u'all miro channels':
  					channel_mythvideo_only[u'all'] = cfg.get(section, option)
  					break
-@@ -702,7 +749,7 @@
+@@ -696,13 +789,13 @@
+ 			for key in channel_mythvideo_only.keys():
+ 				if not channel_mythvideo_only[key].startswith(vid_graphics_dirs[u'mythvideo']):
+ 		 			logger.critical(u"All Mythvideo only configuration (%s) directories (%s) must be a subrirectory of the MythVideo base directory (%s)." % (key, channel_mythvideo_only[key], vid_graphics_dirs[u'mythvideo']))
+-					sys.exit(False)
++					sys.exit(1)
+ 				if channel_mythvideo_only[key][-1] != u'/':
+ 					channel_mythvideo_only[key]+=u'/'
  			continue
  		if section == u'watch_then_copy':
  			# Add the Channel names to the array of Channels once watched will be copied to MythVideo
@@ -2380,7 +3772,16 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  				if option == u'all miro channels':
  					channel_new_watch_copy[u'all'] = cfg.get(section, option)
  					break
-@@ -848,7 +895,7 @@
+@@ -711,7 +804,7 @@
+ 			for key in channel_new_watch_copy.keys():
+ 				if not channel_new_watch_copy[key].startswith(vid_graphics_dirs[u'mythvideo']):
+ 		 			logger.critical(u"All 'new->watch->copy' channel (%s) directory (%s) must be a subrirectory of the MythVideo base directory (%s)." % (key, channel_new_watch_copy[key], vid_graphics_dirs[u'mythvideo']))
+-					sys.exit(False)
++					sys.exit(1)
+ 				if channel_new_watch_copy[key][-1] != u'/':
+ 					channel_new_watch_copy[key]+=u'/'
+ 			continue
+@@ -848,7 +941,7 @@
  	height = int(ffmpeg_details[u'height'])
  
  	if size_limit:
@@ -2389,7 +3790,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		height = (int(width * ffmpeg_details[u'aspect'])/2)*2 # ((xxxxx)/2) *2
  
  	if just_demensions:
-@@ -859,14 +906,14 @@
+@@ -859,14 +952,14 @@
  	return subprocess.call(u'%s > /dev/null' % cmd2, shell=True)
  # end takeScreenShot()
  
@@ -2407,7 +3808,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		  and entities from a text string.
  	   @param text The HTML (or XML) source text.
  	   @return The plain text, as a Unicode string, if necessary.
-@@ -909,8 +956,8 @@
+@@ -909,8 +1002,8 @@
  	if not description: # Is there anything to massage
  		if extras:
  			details[u'plot'] = description
@@ -2418,7 +3819,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  			return description
  
  	director_text = u'Director: '
-@@ -931,7 +978,7 @@
+@@ -931,7 +1024,7 @@
  	commonHTMLEntity.setParseAction(replaceHTMLEntity)
  
  	# first pass, strip out tags and translate entities
@@ -2427,7 +3828,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		         anyTag | anyClose ).transformString(description)
  
  	# first pass leaves many blank lines, collapse these down
-@@ -961,8 +1008,8 @@
+@@ -961,8 +1054,8 @@
  				try:
  					number = data[:data.index(u'/')]
  					# HD trailers ratings are our of 5 not 10 like MythTV so must be multiplied by two
@@ -2438,16 +3839,18 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  					except ValueError:
  						details[u'userrating'] = 0.0
  				except:
-@@ -993,7 +1040,7 @@
+@@ -992,8 +1085,8 @@
+ 
  	if delete and not channel and not len(data):
  		logger.critical(u"Cannot delete a (%s) record without details" % table)
- 		sys.exit(False)
+-		sys.exit(False)
 -	
++		sys.exit(1)
 +
  	if delete:
  		if simulation:
  			logger.info(u'Simulation: DELETE FROM %s WHERE chanid=%d AND starttime="%s" AND endtime="%s"' % (table, channel, data[u'starttime'], data[u'endtime']))
-@@ -1097,7 +1144,7 @@
+@@ -1097,7 +1190,7 @@
  
  	orphans = []
  	for record in oldrecorded_array:
@@ -2456,7 +3859,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  			if recorded[u'starttime'] == record[u'starttime'] and recorded[u'endtime'] == record[u'endtime']:
  				break
  		else:
-@@ -1119,12 +1166,12 @@
+@@ -1119,12 +1212,12 @@
  			try:
  				dirName = unicode(dirName, u'utf8')
  			except (UnicodeEncodeError, TypeError):
@@ -2472,7 +3875,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  				if name.startswith(fileBaseName):
  					try:
  						if simulation:
-@@ -1139,12 +1186,12 @@
+@@ -1139,12 +1232,12 @@
  			try:
  				dirName = unicode(dirName, u'utf8')
  			except (UnicodeEncodeError, TypeError):
@@ -2488,7 +3891,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  				if name.startswith(fileBaseName):
  					try:
  						if simulation:
-@@ -1161,12 +1208,12 @@
+@@ -1161,12 +1254,12 @@
  				try:
  					dirName = unicode(dirName, u'utf8')
  				except (UnicodeEncodeError, TypeError):
@@ -2504,7 +3907,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  					if name.startswith(fileBaseName):
  						try:
  							if simulation:
-@@ -1176,9 +1223,9 @@
+@@ -1176,9 +1269,9 @@
  						except OSError:
  							pass
  						break
@@ -2516,7 +3919,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# end getOldrecordedOrphans()
  
  
-@@ -1231,7 +1278,7 @@
+@@ -1231,7 +1324,7 @@
  	for oldrecorded in oldrecorded_array:
  		if oldrecorded[u'title'] == title and oldrecorded[u'subtitle'] == subtitle:
  			setRecord(u'oldrecorded', oldrecorded, channel_id, delete=True, id=None)
@@ -2525,7 +3928,16 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# end deleteOldrecordedForMythVideo()
  
  
-@@ -1320,7 +1367,7 @@
+@@ -1299,7 +1392,7 @@
+ 	except MySQLdb.Error, e:
+ 		logger.error(u"SELECT intid FROM videometadata WHERE inetref = 99999999 and category = %d failed: %d: %s" % (category_id, e.args[0], e.args[1]))
+ 		c.close()
+-		sys.exit(False)
++		sys.exit(1)
+ 	intids=[]
+ 	while True:
+ 		row = c.fetchone()
+@@ -1320,7 +1413,7 @@
  		return videometadatarecords
  	else:
  		return None
@@ -2534,7 +3946,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  
  def getStartEndTimes(duration, downloadedTime):
  	'''Calculate a videos start and end times and isotime for the recorded file name.
-@@ -1343,13 +1390,14 @@
+@@ -1343,13 +1436,14 @@
  	# end getStartEndTimes()
  
  def setSymbolic(filename, storagegroupkey, symbolic_name, allow_symlink=False):
@@ -2550,7 +3962,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  
  	if not os.path.isfile(filename):
  		logger.error(u"The file (%s) must exist to create a symbolic link" % filename)
-@@ -1364,9 +1412,12 @@
+@@ -1364,9 +1458,12 @@
  		ext = u'jpg'
  		convert = True
  
@@ -2564,16 +3976,22 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	else:
  		sym_filepath = graphic_path_suffix % (vid_graphics_dirs[storagegroupkey], symbolic_name, graphic_suffix[storagegroupkey], ext)
  		sym_filename = sym_filepath
-@@ -1407,7 +1458,7 @@
+@@ -1403,11 +1500,11 @@
+ 					displayMessage(u"Copied Miro file (%s) to file (%s)" % (filename, sym_filepath))
+ 			except OSError:
+ 				logger.critical(u"Trying to copy the Miro file (%s) to the file (%s).\n         This maybe a permissions error (mirobridge.py does not have permission to write to the directory)." % (filename ,sym_filepath))
+-				sys.exit(False)
++				sys.exit(1)
  	except OSError:
  		logger.critical(u"Trying to create the Miro file (%s) symlink (%s).\n         This maybe a permissions error (mirobridge.py does not have permission to write to the directory)." % sym_filepath)
- 		sys.exit(False)
+-		sys.exit(False)
 -			
++		sys.exit(1)
 +
  	return sym_filename
  	# end setSymbolic()
  
-@@ -1423,7 +1474,7 @@
+@@ -1423,7 +1520,7 @@
  	for key in oldrecorded_initialize_record.keys():
  		tmp_oldrecorded[key] = oldrecorded_initialize_record[key]
  
@@ -2582,7 +4000,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	tmp_oldrecorded[u'chanid'] = channel_id
  	tmp_oldrecorded[u'starttime'] = start
  	tmp_oldrecorded[u'endtime'] = end
-@@ -1454,7 +1505,7 @@
+@@ -1454,7 +1551,7 @@
  	ffmpeg_details = getVideoDetails(item[u'videoFilename'])
  	start_end = getStartEndTimes(ffmpeg_details[u'duration'], item[u'downloadedTime'])
  
@@ -2591,7 +4009,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		item[u'releasedate'] = item[u'downloadedTime']
  	try:
  		dummy = item[u'releasedate'].strftime('%Y-%m-%d')
-@@ -1470,7 +1521,7 @@
+@@ -1470,7 +1567,7 @@
  	try:
  		tmp_recorded[u'description'] = massageDescription(item[u'description'])
  	except TypeError:
@@ -2600,7 +4018,16 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		print u"Channel title(%s) subtitle(%s)" % (item[u'channelTitle'], item[u'title'])
  		print u"The 'massageDescription()' function could not remove HTML and XML tags from:"
  		print u"Description (%s)\n\n" % item[u'description']
-@@ -1523,6 +1574,7 @@
+@@ -1487,7 +1584,7 @@
+ 		tmp_recorded[u'basename'] = basename
+ 	else:
+ 		logger.critical(u"The file (%s) must exist to create a recorded record" % item[u'videoFilename'])
+-		sys.exit(False)
++		sys.exit(1)
+ 
+ 	tmp_recorded[u'progstart'] = start_end[0]
+ 	tmp_recorded[u'progend'] = start_end[1]
+@@ -1523,6 +1620,7 @@
  	'''
  	global localhostname, simulation, verbose, storagegroups, ffmpeg, channel_id, flat, image_extensions
  	global videometadata_initialize_record, vid_graphics_dirs, channel_icon_override
@@ -2608,7 +4035,27 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  
  	ffmpeg_details = getVideoDetails(item[u'videoFilename'])
  	start_end = getStartEndTimes(ffmpeg_details[u'duration'], item[u'downloadedTime'])
-@@ -1550,7 +1602,7 @@
+@@ -1534,23 +1632,23 @@
+ 		sympath+=u"/%s" % item[u'channelTitle']
+ 	banners = u'mirobridge_banner.jpg'
+ 	for ext in image_extensions:
+-		filename = u"%s_banner.%s" % (item[u'channelTitle'], ext)
++		filename = u"%s_banner.%s" % (sanitiseFileName(item[u'channelTitle']), ext)
+ 		if os.path.isfile(vid_graphics_dirs[u'bannerdir']+filename):
+-			banners = setSymbolic(vid_graphics_dirs[u'bannerdir']+filename, u'bannerdir', item[u'channelTitle'])
++			banners = setSymbolic(vid_graphics_dirs[u'bannerdir']+filename, u'bannerdir', sanitiseFileName(item[u'channelTitle']))
+ 			break
+ 	else:
+ 		if not os.path.isfile(vid_graphics_dirs[u'bannerdir']+banners):
+ 			banners = ''
+ 	fanart = u'mirobridge_fanart.jpg'
+ 	for ext in image_extensions:
+-		filename = u"%s_fanart.%s" % (item[u'channelTitle'], ext)
++		filename = u"%s_fanart.%s" % (sanitiseFileName(item[u'channelTitle']), ext)
+ 		if os.path.isfile(vid_graphics_dirs[u'fanartdir']+filename):
+-			fanart = setSymbolic(vid_graphics_dirs[u'fanartdir']+filename, u'fanartdir', item[u'channelTitle'])
++			fanart = setSymbolic(vid_graphics_dirs[u'fanartdir']+filename, u'fanartdir', sanitiseFileName(item[u'channelTitle']))
+ 			break
  	else:
  		if not os.path.isfile(vid_graphics_dirs[u'fanartdir']+fanart):
  			fanart = ''
@@ -2617,7 +4064,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	ffmpeg_details = getVideoDetails(item[u'videoFilename'])
  	start_end = getStartEndTimes(ffmpeg_details[u'duration'], item[u'downloadedTime'])
  	videometadata = {}
-@@ -1563,7 +1615,7 @@
+@@ -1563,7 +1661,7 @@
  	try:
  		details = massageDescription(item[u'description'], extras=True)
  	except TypeError:
@@ -2626,7 +4073,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		print u"MythVideo-Channel title(%s) subtitle(%s)" % (item[u'channelTitle'], item[u'title'])
  		print u"The 'massageDescription()' function could not remove HTML and XML tags from:"
  		print u"Description (%s)\n\n" % item[u'description']
-@@ -1572,7 +1624,7 @@
+@@ -1572,7 +1670,7 @@
  	for key in details.keys():
  		videometadata[key] = details[key]
  
@@ -2635,22 +4082,24 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		item[u'releasedate'] = item[u'downloadedTime']
  	try:
  		dummy = item[u'releasedate'].strftime('%Y-%m-%d')
-@@ -1587,64 +1639,54 @@
+@@ -1587,64 +1685,50 @@
  	videometadata[u'length'] = ffmpeg_details[u'duration']/60
  	videometadata[u'category'] = mythvideo.getGenreId(u'Miro')
  
 -	if storagegroups.has_key(u'mythvideo'):
 -		videometadata[u'host'] = localhostname.lower()
  	if not u'copied' in item.keys():
- 		ext = (item[u'videoFilename'])
- 		videofile = setSymbolic(item[u'videoFilename'], u'mythvideo', "%s/%s - %s" % (sympath, item[u'channelTitle'], item[u'title']), allow_symlink=True)
+-		ext = (item[u'videoFilename'])
+-		videofile = setSymbolic(item[u'videoFilename'], u'mythvideo', "%s/%s - %s" % (sympath, item[u'channelTitle'], item[u'title']), allow_symlink=True)
++		videofile = setSymbolic(item[u'videoFilename'], u'mythvideo', "%s/%s - %s" % (sympath, sanitiseFileName(item[u'channelTitle']), sanitiseFileName(item[u'title'])), allow_symlink=True)
  		if videofile != None:
  			videometadata[u'filename'] = videofile
 +			if not local_only and videometadata[u'filename'][0] != u'/':
 +				videometadata[u'host'] = localhostname.lower()
  		else:
  			logger.critical(u"The file (%s) must exist to create a videometadata record" % item[u'videoFilename'])
- 			sys.exit(False)
+-			sys.exit(False)
++			sys.exit(1)
  	else:
  		videometadata[u'filename'] = item[u'videoFilename']
 +		if not local_only and videometadata[u'filename'][0] != u'/':
@@ -2660,8 +4109,9 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		if item[u'channel_icon'] and not item[u'channelTitle'].lower() in channel_icon_override:
 -			if storagegroups.has_key(u'posterdir'):
 -				videometadata[u'host'] = localhostname.lower()
- 			ext = (item[u'channel_icon'])
- 			filename = setSymbolic(item[u'channel_icon'], u'posterdir', u"%s" % (item[u'channelTitle']))
+-			ext = (item[u'channel_icon'])
+-			filename = setSymbolic(item[u'channel_icon'], u'posterdir', u"%s" % (item[u'channelTitle']))
++			filename = setSymbolic(item[u'channel_icon'], u'posterdir', u"%s" % (sanitiseFileName(item[u'channelTitle'])))
  			if filename != None:
  				videometadata[u'coverfile'] = filename
 -		else: 
@@ -2669,8 +4119,9 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  			if item[u'item_icon']:
 -				if storagegroups.has_key(u'posterdir'):
 -					videometadata[u'host'] = localhostname.lower()
- 				ext = (item[u'item_icon'])
- 				filename = setSymbolic(item[u'item_icon'], u'posterdir', u"%s - %s" % (item[u'channelTitle'], item[u'title']))
+-				ext = (item[u'item_icon'])
+-				filename = setSymbolic(item[u'item_icon'], u'posterdir', u"%s - %s" % (item[u'channelTitle'], item[u'title']))
++				filename = setSymbolic(item[u'item_icon'], u'posterdir', u"%s - %s" % (sanitiseFileName(item[u'channelTitle']), sanitiseFileName(item[u'title'])))
  				if filename != None:
  					videometadata[u'coverfile'] = filename
  	else:
@@ -2682,8 +4133,9 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		if item[u'screenshot']:
 -			if storagegroups.has_key(u'episodeimagedir'):
 -				videometadata[u'host'] = localhostname.lower()
- 			ext = (item[u'screenshot'])
- 			filename = setSymbolic(item[u'screenshot'], u'episodeimagedir', u"%s - %s" % (item[u'channelTitle'], item[u'title']))
+-			ext = (item[u'screenshot'])
+-			filename = setSymbolic(item[u'screenshot'], u'episodeimagedir', u"%s - %s" % (item[u'channelTitle'], item[u'title']))
++			filename = setSymbolic(item[u'screenshot'], u'episodeimagedir', u"%s - %s" % (sanitiseFileName(item[u'channelTitle']), sanitiseFileName(item[u'title'])))
  			if filename != None:
  				videometadata[u'screenshot'] = filename
  	else:
@@ -2705,7 +4157,16 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  			videometadata[u'fanart'] = fanart
  		else:
  			videometadata[u'fanart'] = vid_graphics_dirs[u'fanartdir']+fanart
-@@ -1672,7 +1714,7 @@
+@@ -1664,7 +1748,7 @@
+ 	if icon != u"":
+ 		if not os.path.isfile(icon):
+ 			logger.critical(u'The Miro channel icon file (%s) does not exist.\nThe variable needs to be a fully qualified file name and path.\ne.g. ./mirobridge.py -C "/path to the channel icon/miro_channel_icon.jpg"' % (icon))
+-			sys.exit(False)
++			sys.exit(1)
+ 
+ 	channel_initialize_record[u'chanid'] = channel_id
+ 	channel_initialize_record[u'channum'] = str(channel_num)
+@@ -1672,7 +1756,7 @@
  	if icon != u"":
  		channel_initialize_record[u'icon'] = icon
  	channel_initialize_record[u'atsc_major_chan'] = channel_num
@@ -2714,7 +4175,16 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	if simulation:
  		logger.info(u"Simulation: Create Miro channel record channel_id(%d) and channel_num(%d)" % (channel_id, channel_num))
  		logger.info(u"Simulation: Channel icon file(%s)" % (icon))
-@@ -1690,7 +1732,7 @@
+@@ -1681,7 +1765,7 @@
+ 			setRecord(u'channel', channel_initialize_record, channel_id, delete=False, id=None)
+ 		except:
+ 			logger.critical(u"Failed writing the Miro channel record. Most likely the Channel Id and number already exists.\nUse MythTV set up program (mythtv-setup) to alter or remove the offending channel.\nYou specified Channel ID (%d) and Channel Number (%d)" % (channel_id, channel_num))
+-			sys.exit(False)
++			sys.exit(1)
+ 	return True
+ 	# end createChannelRecord(icon)
+ 
+@@ -1690,7 +1774,7 @@
  	'''Verify that the real path exists for both video and graphics for this MythVideo Miro record.
  	return False if there were no failures
  	return True if a failure was found
@@ -2723,7 +4193,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	global localhostname, verbose, vid_graphics_dirs, key_trans
  
  	for field in key_trans.keys():
-@@ -1704,7 +1746,7 @@
+@@ -1704,7 +1788,7 @@
  		else:
  			if not os.path.isfile(vid_graphics_dirs[key_trans[field]]+record[field]):
  				return True
@@ -2732,7 +4202,38 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
   	# end checkVideometadataFails()
  
  
-@@ -1777,17 +1819,17 @@
+@@ -1743,7 +1827,7 @@
+ 					os.mkdir(miro_path)
+ 				except OSError:
+ 					logger.critical(u"Create Miro Mythvideo directory (%s).\nThis may be due to a permissions error." % (miro_path))
+-					sys.exit(False)
++					sys.exit(1)
+ 			if os.path.isfile(miro_cover):
+ 				if simulation:
+ 					logger.info(u"Simulation: Copy Miro directory cover file link from (%s) to (%s)" % (miro_cover, miro_icon_filename))
+@@ -1753,10 +1837,10 @@
+ 							useImageMagick(u'convert "%s" "%s"' % (miro_cover, miro_icon_filename))
+ 					except OSError:
+ 						logger.critical(u"File (%s) copy to (%s) failed.\nThis may be due to a permissions error." % (miro_cover, miro_icon_filename))
+-						sys.exit(False)
++						sys.exit(1)
+ 		except OSError:
+ 			logger.critical(u"Creation of MythVideo 'Miro' directory (%s) failed.\nThis may be due to a permissions error." % (miro_path))
+-			sys.exit(False)
++			sys.exit(1)
+ 	# end createMiroMythVideoDirectory()
+ 
+ def createMiroChannelSubdirectory(item):
+@@ -1766,7 +1850,7 @@
+ 	global localhostname, vid_graphics_dirs, storagegroups, channel_id, flat, simulation, verbose
+ 
+ 	miro = u'Miro'
+-	path = u"%s%s/%s" % (vid_graphics_dirs[u'mythvideo'], miro, item[u'channelTitle'])
++	path = u"%s%s/%s" % (vid_graphics_dirs[u'mythvideo'], miro, sanitiseFileName(item[u'channelTitle']))
+ 	if item[u'channel_icon']:
+ 		ext = getExtention(item[u'channel_icon'])
+ 		cover_filename = u"folder.jpg"
+@@ -1777,22 +1861,22 @@
  			if os.path.isfile(os.path.realpath(cover_filename_path)) or os.path.isfile(os.path.realpath(cover_filename_path2)):
  				return
  			else:
@@ -2753,7 +4254,22 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  			try:
  				os.mkdir(path)
  			except OSError:
-@@ -1858,7 +1900,7 @@
+ 				logger.critical(u"Creation of MythVideo 'Miro' subdirectory path (%s) failed.\nThis may be due to a permissions error." % (path))
+-				sys.exit(False)
++				sys.exit(1)
+ 	if item[u'channel_icon']:
+ 		if simulation:
+ 			logger.info(u"Simulation: Copying subdirectory cache icon(%s) cover file(%s)" % (item[u'channel_icon'], cover_filename_path))
+@@ -1802,7 +1886,7 @@
+ 					useImageMagick(u'convert "%s" "%s"' % (item[u'channel_icon'], cover_filename_path))
+ 			except OSError:
+ 				logger.critical(u"Copying subdirectory cache icon(%s) cover file(%s) failed.\nThis may be due to a permissions error." % (item[u'channel_icon'], cover_filename_path))
+-				sys.exit(False)
++				sys.exit(1)
+ 
+ 	# end createMiroChannelSubdirectory()
+ 
+@@ -1858,7 +1942,7 @@
  
  def removeMythvideoSeekTable(filename):
  	'''Remove seektable entries for a Mythvideo from the "filemarkup" table. Entries may of may not
@@ -2762,7 +4278,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	"myth://..." file name definition.
  	return nothing
  	'''
-@@ -1937,11 +1979,11 @@
+@@ -1937,11 +2021,11 @@
  				try:
  					dirName = unicode(dirName, u'utf8')
  				except (UnicodeEncodeError, TypeError):
@@ -2776,7 +4292,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  				for name in os.listdir(dirName):
  					if name.startswith(fileBaseName):
  						try:
-@@ -1966,7 +2008,7 @@
+@@ -1966,7 +2050,7 @@
  					break
  
  	# Add new Miro unwatched videos to MythTV'd data base
@@ -2785,7 +4301,30 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		if not os.path.isfile(os.path.realpath(item[u'videoFilename'])):
  			continue # Do not create records for Miro video files that do not exist
  		records = createRecordedRecords(item)
-@@ -2011,7 +2053,7 @@
+@@ -1982,11 +2066,11 @@
+ 				#subprocess.call(u'%s' % cmd, shell=True) # Seek table creation has been disabled
+ 		else:
+ 			logger.critical(u"Creation of recorded and recordedprogram records failed for (%s - %s)" % (item[u'channelTitle'], item[u'title'],))
+-			sys.exit(False)
++			sys.exit(1)
+ 
+ 		if item[u'channel_icon']: # Add Cover art link to channel icon
+ 			ext = getExtention(item[u'channel_icon'])
+-			coverart_filename = u"%s%s%s.%s" % (vid_graphics_dirs[u'posterdir'], item[u'channelTitle'], graphic_suffix[u'posterdir'], ext)
++			coverart_filename = u"%s%s%s.%s" % (vid_graphics_dirs[u'posterdir'], sanitiseFileName(item[u'channelTitle']), graphic_suffix[u'posterdir'], ext)
+ 			if not os.path.isfile(os.path.realpath(coverart_filename)): # Make sure it does not exist
+ 				if simulation:
+ 					logger.info(u"Simulation: Remove symbolic link(%s)" % (coverart_filename,))
+@@ -2003,7 +2087,7 @@
+ 						displayMessage(u"Copied a Miro Channel Icon file (%s) to MythTV as file (%s)." % (item[u'channel_icon'], coverart_filename))
+ 					except OSError:
+ 						logger.critical(u"Copying an icon file(%s) to coverart file(%s) failed.\nThis may be due to a permissions error." (item[u'channel_icon'], coverart_filename))
+-						sys.exit(False)
++						sys.exit(1)
+ 
+ 		if item[u'screenshot'] and imagemagick: # Add Miro screen shot to 'Default' recordings directory
+ 			screenshot_recorded = u"%s%s.png" % (vid_graphics_dirs[u'default'], records[0][u'basename'])
+@@ -2011,7 +2095,7 @@
  				if simulation:
  					logger.info(u"Simulation: Create screenshot file(%s) as(%s)" % (item[u'screenshot'], screenshot_recorded))
  				else:
@@ -2794,7 +4333,16 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  						demensions = u''
  						try:
  							demensions = takeScreenShot(item[u'videoFilename'], screenshot_recorded, size_limit=True, just_demensions=False)
-@@ -2056,10 +2098,10 @@
+@@ -2023,7 +2107,7 @@
+ 						displayMessage(u"Used a Miro Channel screenshot file (%s) to\ncreate using ImageMagick the MythTV Watch Recordings screen shot file\n(%s)." % (item[u'screenshot'], screenshot_recorded))
+ 					except OSError:
+ 						logger.critical(u"Creating screenshot file(%s) as(%s) failed.\nThis may be due to a permissions error." (item[u'screenshot'], screenshot_recorded))
+-						sys.exit(False)
++						sys.exit(1)
+ 		else:
+ 			screenshot_recorded = u"%s%s.png" % (vid_graphics_dirs[u'default'], records[0][u'basename'])
+ 			try:
+@@ -2056,10 +2140,10 @@
  	if records:
  		statistics[u'Total_Miro_MythVideos'] = len(records)
  		for record in records: # Count the Miro-MythVideos that Miro is expiring or has saved
@@ -2807,7 +4355,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  				if os.path.islink(storagegroups[u'mythvideo']+record[u'filename']) and os.path.isfile(storagegroups[u'mythvideo']+record[u'filename']):
  					statistics[u'Total_Miro_expiring']+=1
  		for record in records:
-@@ -2089,7 +2131,7 @@
+@@ -2089,7 +2173,7 @@
  								statistics[u'Miros_MythVideos_video_removed']+=1
  						except OSError:
  							pass
@@ -2816,7 +4364,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  						try:
  							if simulation:
  								logger.info(u"Simulation: Remove video file (%s)" % (storagegroups[u'mythvideo']+record[u'filename']))
-@@ -2106,7 +2148,7 @@
+@@ -2106,7 +2190,7 @@
  								os.remove(record[u'screenshot'])
  						except OSError:
  							pass
@@ -2825,7 +4373,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  						try:
  							if simulation:
  								logger.info(u"Simulation: Remove file (%s)" % (storagegroups[u'episodeimagedir']+record[u'screenshot']))
-@@ -2124,7 +2166,7 @@
+@@ -2124,7 +2208,7 @@
  								os.remove(record[u'coverfile'])
  						except OSError:
  							pass
@@ -2834,7 +4382,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  						try:
  							if simulation:
  								logger.info(u"Simulation: Remove item cover art file (%s)" % (storagegroups[u'posterdir']+record[u'coverfile']))
-@@ -2132,7 +2174,7 @@
+@@ -2132,7 +2216,7 @@
  								os.remove(storagegroups[u'posterdir']+record[u'coverfile'])
  						except OSError:
  							pass
@@ -2843,7 +4391,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	if not items: # There may not be any new items to add to MythVideo
  		return True
  	# Reread Miro Mythvideo videometadata records
-@@ -2158,7 +2200,6 @@
+@@ -2158,14 +2242,13 @@
  				items_copy.remove(item)
  			except ValueError:
  				pass
@@ -2851,7 +4399,24 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# Add Miro videos that remain in the item list
  	# If not a flat directory check if title directory exists and add icon symbolic link as coverfile
  	for item in items_copy:
-@@ -2195,10 +2236,10 @@
+ 		if not flat and not item.has_key(u'copied'):
+ 			createMiroChannelSubdirectory(item)
+ 		if not item[u'screenshot']: # If there is no screen shot then create one
+-			screenshot_mythvideo = u"%s%s - %s%s.jpg" % (vid_graphics_dirs[u'episodeimagedir'], item[u'channelTitle'], item[u'title'], graphic_suffix[u'episodeimagedir'])
++			screenshot_mythvideo = u"%s%s - %s%s.jpg" % (vid_graphics_dirs[u'episodeimagedir'], sanitiseFileName(item[u'channelTitle']), sanitiseFileName(item[u'title']), graphic_suffix[u'episodeimagedir'])
+ 			try:
+ 				result = takeScreenShot(item[u'videoFilename'], screenshot_mythvideo, size_limit=False)
+ 			except:
+@@ -2183,7 +2266,7 @@
+ 				intid = mythvideo.setMetadata(videometadata, id=None)
+ 				if not intid:
+ 					logger.critical(u"Adding Miro video to MythVideo (%s - %s) failed." % (item[u'channelTitle'], item[u'title']))
+-					sys.exit(False)
++					sys.exit(1)
+ 				if not item.has_key(u'copied'):
+ 					setRecord(u'oldrecorded', oldrecorded, channel_id, delete=False, id=None)
+ 				if videometadata[u'filename'][0] == u'/':
+@@ -2195,10 +2278,10 @@
  				statistics[u'Total_Miro_expiring']+=1
  				statistics[u'Total_Miro_MythVideos']+=1
  				displayMessage(u"Added Miro video to MythVideo (%s - %s)" % (videometadata[u'title'], videometadata[u'subtitle']))
@@ -2864,7 +4429,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	return True
  	# end updateMythVideo()
  
-@@ -2213,13 +2254,14 @@
+@@ -2213,13 +2296,14 @@
  # Main script processing starts here
  def main():
  	"""Support mirobridge from the command line
@@ -2881,16 +4446,52 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  
   	parser = OptionParser(usage=u"%prog usage: mirobridge -huevstdociVHSCWM [parameters]\n")
  
-@@ -2284,7 +2326,7 @@
+@@ -2259,12 +2343,12 @@
+ 
+ 	if opts.examples:					# Display example information
+ 		sys.stdout.write(examples_txt+'\n')
+-		sys.exit(True)
++		sys.exit(0)
+ 
+ 	if opts.version:		# Display program information
+ 		sys.stdout.write(u"\nTitle: (%s); Version: description(%s); Author: (%s)\n%s\n" % (
+ 		__title__, __version__, __author__, __purpose__ ))
+-		sys.exit(True)
++		sys.exit(0)
+ 
+ 	if opts.testenv:
+ 		test_environment = True
+@@ -2273,7 +2357,7 @@
+ 
+ 	# Verify that Miro is not currently running
+ 	if isMiroRunning():
+-		sys.exit(False)
++		sys.exit(1)
+ 
+ 	# Verify that only None or one of the mutually exclusive (-W), (-M) and (-N) options is being used
+ 	x = 0
+@@ -2282,9 +2366,9 @@
+ 	if opts.mythvideo_only: x+=1
+ 	if x > 1:
  		logger.critical(u"The (-W), (-M) and (-N) options are mutually exclusive, so only one can be specified at a time.")
- 		sys.exit(False)
+-		sys.exit(False)
++		sys.exit(1)
  
 -	# Set option related global variables 
 +	# Set option related global variables
  	simulation = opts.simulation
  	verbose = opts.verbose
  	if opts.hostname:	# Override localhostname if the user specified an hostname
-@@ -2307,7 +2349,7 @@
+@@ -2297,7 +2381,7 @@
+ 		if test_environment:
+ 			requirements_are_met = False
+ 		else:
+-			sys.exit(False)
++			sys.exit(1)
+ 
+ 	## Video base directory and current version and revision numbers
+ 	base_video_dir = config.get(prefs.MOVIES_DIRECTORY)
+@@ -2307,20 +2391,20 @@
  	displayMessage(u"Base Miro Video Directory (%s)" % (base_video_dir,))
  	logger.info(u'')
  
@@ -2899,7 +4500,63 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	if not os.path.isdir(base_video_dir):
  		logger.critical(u"The Miro Videos directory (%s) does not exist." % str(base_video_dir))
  		if test_environment:
-@@ -2379,7 +2421,7 @@
+ 			requirements_are_met = False
+ 		else:
+-			sys.exit(False)
++			sys.exit(1)
+ 
+ 	if config.get(prefs.APP_VERSION) < u"2.0.3":
+ 		logger.critical(u"The installed version of Miro (%s) is too old. It must be at least v2.0.3 or higher." % config.get(prefs.APP_VERSION))
+ 		if test_environment:
+ 			requirements_are_met = False
+ 		else:
+-			sys.exit(False)
++			sys.exit(1)
+ 
+ 	# Get storage groups
+ 	if getStorageGroups() == False:
+@@ -2328,13 +2412,13 @@
+ 		if test_environment:
+ 			requirements_are_met = False
+ 		else:
+-			sys.exit(False)
++			sys.exit(1)
+ 	elif not u'default' in storagegroups.keys():
+ 		logger.critical(u"There must be a 'Default' storage group")
+ 		if test_environment:
+ 			requirements_are_met = False
+ 		else:
+-			sys.exit(False)
++			sys.exit(1)
+ 
+ 	if opts.channel:
+ 		channel = opts.channel.split(u':')
+@@ -2343,13 +2427,13 @@
+ 			if test_environment:
+ 				requirements_are_met = False
+ 			else:
+-				sys.exit(False)
++				sys.exit(1)
+ 		elif not _can_int(channel[0]) or  not _can_int(channel[1]):
+ 			logger.critical(u"The Channel_id (%s) and Channel_num (%s) must be numeric." % (channel[0], channel[1]))
+ 			if test_environment:
+ 				requirements_are_met = False
+ 			else:
+-				sys.exit(False)
++				sys.exit(1)
+ 		else:
+ 			channel_id = int(channel[0])
+ 			channel_num = int(channel[1])
+@@ -2360,7 +2444,7 @@
+ 			if test_environment:
+ 				requirements_are_met = False
+ 			else:
+-				sys.exit(False)
++				sys.exit(1)
+ 		else:
+ 			download_sleeptime = float(opts.sleeptime)
+ 
+@@ -2379,7 +2463,7 @@
  		channel_mythvideo_only = {u'all': vid_graphics_dirs[u'mythvideo']+u'Miro/'}
  
  	# Once watched ALL Miro videos will be copied to MythVideo and removed from Miro
@@ -2908,22 +4565,47 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		channel_new_watch_copy = {u'all': vid_graphics_dirs[u'mythvideo']+u'Miro/'}
  
  	# Verify that "Mythvideo Only" and "New-Watch-Copy" channels do not clash
-@@ -2417,22 +2459,22 @@
+@@ -2390,7 +2474,7 @@
+ 				if test_environment:
+ 					requirements_are_met = False
+ 				else:
+-					sys.exit(False)
++					sys.exit(1)
+ 
+ 	# Verify that ImageMagick is installed
+ 	ret = useImageMagick(u"convert -version")
+@@ -2399,7 +2483,7 @@
+ 		if test_environment:
+ 			requirements_are_met = False
+ 		else:
+-			sys.exit(False)
++			sys.exit(1)
+ 
+ 	# Verify that mythcommflag is installed
+ 	mythcommflagpath = getlocationMythcommflag()
+@@ -2411,28 +2495,28 @@
+ 		if test_environment:
+ 			requirements_are_met = False
+ 		else:
+-			sys.exit(False)
++			sys.exit(1)
+ 
+ 	if opts.testenv:		# All tests passed
  		getVideoDetails(u"") # Test that ffmpeg is available
  		if ffmpeg and requirements_are_met:
  			logger.info(u"The environment test passed !\n\n")
 -			sys.exit(True) 
-+			sys.exit(True)
++			sys.exit(0)
  		else:
  			logger.critical(u"The environment test FAILED. See previously displayed error messages!")
 -			sys.exit(False) 
-+			sys.exit(False)
++			sys.exit(1)
  
  	if opts.addchannel != u'OFF':	# Add a Miro Channel record - Should only be done once
  		createChannelRecord(opts.addchannel, channel_id, channel_num)
  		logger.info(u"The Miro Channel record has been successfully created !\n\n")
 -		sys.exit(True) 
-+		sys.exit(True)
++		sys.exit(0)
  
  
  	###########################################
@@ -2935,7 +4617,16 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# Start the Miro Front and Backend - This allows mirobridge to execute actions on the Miro backend
  	#
  	displayMessage(u"Starting Miro Frontend and Backend")
-@@ -2460,10 +2502,10 @@
+@@ -2446,7 +2530,7 @@
+ 		print_text(app.cli_events.startup_failure[1])
+ 		app.controller.shutdown()
+ 		time.sleep(5) # Let the shutdown processing complete
+-		sys.exit(False)
++		sys.exit(1)
+ 	app.cli_interpreter = MiroInterpreter()
+ 	if opts.verbose:
+ 		app.cli_interpreter.verbose = True
+@@ -2460,10 +2544,10 @@
  	app.cli_interpreter.statistics = statistics
  	if config.get(prefs.APP_VERSION) < u"2.5.0":
  		app.renderer = app.cli_interpreter
@@ -2948,7 +4639,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# Optionally Update Miro feeds and
  	# download any "autodownloadable" videos which are pending
  	#
-@@ -2493,11 +2535,11 @@
+@@ -2493,11 +2577,11 @@
  			app.cli_interpreter.verbose = False
  		app.cli_interpreter.do_mythtv_getunwatched(u'')
  		after_download = len(app.cli_interpreter.videofiles)
@@ -2962,7 +4653,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# These records indicate that the MythTV user deleted the video from the Watched Recordings screen
  	# or from MythVideo
  	# These video items must also be deleted from Miro
-@@ -2521,7 +2563,7 @@
+@@ -2521,7 +2605,7 @@
  		app.cli_interpreter.do_mythtv_updatewatched(u'')
  
  	#
@@ -2971,7 +4662,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	#
  	app.cli_interpreter.do_mythtv_getunwatched(u'')
  	unwatched = app.cli_interpreter.videofiles
-@@ -2533,7 +2575,7 @@
+@@ -2533,7 +2617,7 @@
  	watched = app.cli_interpreter.videofiles
  
  	#
@@ -2980,7 +4671,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# This means that Miro has duplicates due to a Miro/Channel website issue
  	# These videos should not be added to the MythTV Watch Recordings screen
  	#
-@@ -2546,7 +2588,7 @@
+@@ -2546,7 +2630,7 @@
  				try:
  					unwatched.remove(item)
  					# Completely remove this duplicate video and item information from Miro
@@ -2989,7 +4680,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  					displayMessage(u"Skipped adding a duplicate Miro video to the MythTV Watch Recordings screen (%s - %s) which is already in MythVideo.\nSometimes a Miro channel has the same video downloaded multiple times.\nThis is a Miro/Channel web site issue and often rectifies itself overtime." % (item[u'channelTitle'], item[u'title']))
  				except ValueError:
  					pass
-@@ -2567,7 +2609,7 @@
+@@ -2567,7 +2651,7 @@
  		try:
  			unwatched.remove(duplicate)
  			# Completely remove this duplicate video and item information from Miro
@@ -2998,23 +4689,25 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  			displayMessage(u"Skipped adding a Miro video to the MythTV Watch Recordings screen (%s - %s) as there are duplicate 'new' video items.\nSometimes a Miro channel has the same video downloaded multiple times.\nThis is a Miro/Channel web site issue and often rectifies itself overtime." % (duplicate[u'channelTitle'], duplicate[u'title']))
  		except ValueError:
  			pass
-@@ -2576,7 +2618,7 @@
+@@ -2576,8 +2660,8 @@
  	# Deal with any Channel videos that are to be copied and removed from Miro
  	#
  	copy_items = []
 -	# Copy unwatched and watched Miro videos (all or only selected Channels) 
+-	if u'all' in channel_mythvideo_only:
 +	# Copy unwatched and watched Miro videos (all or only selected Channels)
- 	if u'all' in channel_mythvideo_only:
++	if u'all' in channel_mythvideo_only.keys():
  		for array in [watched, unwatched]:
  			for item in array:
-@@ -2586,11 +2628,11 @@
+ 				copy_items.append(item)
+@@ -2586,11 +2670,11 @@
  			for video in array:
  				if filter(is_not_punct_char, video[u'channelTitle'].lower()) in channel_mythvideo_only.keys():
  					copy_items.append(video)
 -	# Copy ONLY watched Miro videos (all or only selected Channels) 
 -	if u'all' in channel_new_watch_copy: 
 +	# Copy ONLY watched Miro videos (all or only selected Channels)
-+	if u'all' in channel_new_watch_copy:
++	if u'all' in channel_new_watch_copy.keys():
  		for video in watched:
  			copy_items.append(video)
 -	elif len(channel_new_watch_copy): 
@@ -3022,37 +4715,54 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		for video in watched:
  			if filter(is_not_punct_char, video[u'channelTitle'].lower()) in channel_new_watch_copy.keys():
  				copy_items.append(video)
-@@ -2600,7 +2642,7 @@
+@@ -2600,39 +2684,42 @@
  		channels_to_copy[key] = channel_mythvideo_only[key]
  	for key in channel_new_watch_copy.keys():
  		channels_to_copy[key] = channel_new_watch_copy[key]
 -	
 +
  	for video in copy_items:
- 		dir_key = filter(is_not_punct_char, video[u'channelTitle'].lower())
+-		dir_key = filter(is_not_punct_char, video[u'channelTitle'].lower())
++		if channels_to_copy.has_key('all'):
++			copy_dir = u"%s%s/" % (channels_to_copy['all'], sanitiseFileName(video[u'channelTitle']))
++		else:
++			copy_dir = channels_to_copy[filter(is_not_punct_char, video[u'channelTitle'].lower())]
  		# Create the subdirectories to copy the video into
-@@ -2613,11 +2655,11 @@
+ 		directory_coverart = False
+-		if not os.path.isdir(channels_to_copy[dir_key]):
++		if not os.path.isdir(copy_dir):
+ 			if simulation:
+-				logger.info(u"Simulation: Creating the MythVideo directory (%s)." % (channels_to_copy[dir_key]))
++				logger.info(u"Simulation: Creating the MythVideo directory (%s)." % (copy_dir))
+ 			else:
+-				os.makedirs(channels_to_copy[dir_key])
++				os.makedirs(copy_dir)
  			directory_coverart = True	# If the directory was just created it needs coverart
  		else:
  			if video[u'channel_icon']:
 -				ext = getExtention(video[u'channel_icon']) 
+-				if not os.path.isfile(u"%s%s.%s" % (channels_to_copy[dir_key], video[u'channelTitle'].lower(), ext)):
 +				ext = getExtention(video[u'channel_icon'])
- 				if not os.path.isfile(u"%s%s.%s" % (channels_to_copy[dir_key], video[u'channelTitle'].lower(), ext)):
++				if not os.path.isfile(u"%s%s.%s" % (copy_dir, sanitiseFileName(video[u'channelTitle'].lower()), ext)):
  					directory_coverart = True	# If the directory was just created it needs coverart
  			elif video[u'item_icon']:
 -				ext = getExtention(video[u'item_icon']) 
+-				if not os.path.isfile(u"%s%s - %s.%s" % (channels_to_copy[dir_key], video[u'channelTitle'].lower(), video[u'title'].lower(), ext)):
 +				ext = getExtention(video[u'item_icon'])
- 				if not os.path.isfile(u"%s%s - %s.%s" % (channels_to_copy[dir_key], video[u'channelTitle'].lower(), video[u'title'].lower(), ext)):
++				if not os.path.isfile(u"%s%s - %s.%s" % (copy_dir, sanitiseFileName(video[u'channelTitle'].lower()), sanitiseFileName(video[u'title'].lower()), ext)):
  					directory_coverart = True	# If the directory was just created it needs coverart
  
-@@ -2625,14 +2667,14 @@
+ 		# Copy the Channel icon located in the posters/coverart directory
  		if directory_coverart and video[u'channel_icon']:
  			ext = getExtention(video[u'channel_icon'])
- 			tmp_path = channels_to_copy[dir_key][:-1]
+-			tmp_path = channels_to_copy[dir_key][:-1]
 -			foldername = tmp_path[tmp_path.rindex(u'/')+1:] 
+-			dirpath = u"%s%s" % (channels_to_copy[dir_key], u'folder.jpg')
+-			dirpath2 = u"%s%s" % (channels_to_copy[dir_key], u'folder.png')
++			tmp_path = copy_dir[:-1]
 +			foldername = tmp_path[tmp_path.rindex(u'/')+1:]
- 			dirpath = u"%s%s" % (channels_to_copy[dir_key], u'folder.jpg')
- 			dirpath2 = u"%s%s" % (channels_to_copy[dir_key], u'folder.png')
++			dirpath = u"%s%s" % (copy_dir, u'folder.jpg')
++			dirpath2 = u"%s%s" % (copy_dir, u'folder.png')
  			if os.path.isfile(dirpath) or os.path.isfile(dirpath2): # See if a folder cover already exists
  				pass
  			else:
@@ -3062,7 +4772,23 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  				else:
  					try:	# Miro Channel icon copy for the new subdirectory
  						useImageMagick(u'convert "%s" "%s"' % (video[u'channel_icon'], dirpath))
-@@ -2655,7 +2697,7 @@
+@@ -2641,21 +2728,21 @@
+ 						# Gracefully close the Miro database and shutdown the Miro Front and Back ends
+ 						app.controller.shutdown()
+ 						time.sleep(5) # Let the shutdown processing complete
+-						sys.exit(False)
++						sys.exit(1)
+ 
+ 		# Copy the Miro video file
+ 		save_video_filename = video[u'videoFilename'] # This filename is needed later for deleting in Miro
+ 		ext = getExtention(video[u'videoFilename'])
+ 		if ext.lower() == u'm4v':
+ 			ext = u'mpg'
+-		filepath = u"%s%s - %s.%s" % (channels_to_copy[dir_key], video[u'channelTitle'], video[u'title'], ext)
++		filepath = u"%s%s - %s.%s" % (copy_dir, sanitiseFileName(video[u'channelTitle']), sanitiseFileName(video[u'title']), ext)
+ 		if simulation:
+ 			logger.info(u"Simulation: Copying the Miro video (%s) to the MythVideo directory (%s)." % (video[u'videoFilename'], filepath))
+ 		else:
  			try:	# Miro video copied into a MythVideo directory
  				shutil.copy2(video[u'videoFilename'], filepath)
  				statistics[u'Miros_MythVideos_copied']+=1
@@ -3071,7 +4797,13 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  					video[u'videoFilename'] = filepath.replace(storagegroups[u'mythvideo'], u'')
  				else:
  					video[u'videoFilename'] = filepath
-@@ -2669,7 +2711,7 @@
+@@ -2664,51 +2751,51 @@
+ 				# Gracefully close the Miro database and shutdown the Miro Front and Back ends
+ 				app.controller.shutdown()
+ 				time.sleep(5) # Let the shutdown processing complete
+-				sys.exit(False)
++				sys.exit(1)
+ 
  		# Copy the Channel or item's icon
  		if video[u'channel_icon'] and not video[u'channelTitle'].lower() in channel_icon_override:
  			pass
@@ -3080,33 +4812,75 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  			if video[u'item_icon']:
  				video[u'channel_icon'] = video[u'item_icon']
  		if video[u'channel_icon']:
-@@ -2689,7 +2731,7 @@
- 					except OSError:
- 						pass
- 					shutil.copy2(video[u'channel_icon'], filepath)
--					if u'posterdir' in storagegroups.keys():
-+					if u'posterdir' in storagegroups.keys() and not local_only:
- 						video[u'channel_icon'] = filepath.replace(storagegroups[u'posterdir'], u'')
- 					else:
- 						video[u'channel_icon'] = filepath
-@@ -2700,14 +2742,14 @@
- 					time.sleep(5) # Let the shutdown processing complete
- 					sys.exit(False)
- 		else:
--			if u'posterdir' in storagegroups.keys():
-+			if u'posterdir' in storagegroups.keys() and not local_only:
- 				video[u'channel_icon'] = filepath.replace(storagegroups[u'posterdir'], u'')
+ 			ext = getExtention(video[u'channel_icon'])
+ 			if video[u'channelTitle'].lower() in channel_icon_override:
+-				filepath = u"%s%s - %s%s.%s" % (vid_graphics_dirs[u'posterdir'], video[u'channelTitle'], video[u'title'], graphic_suffix[u'posterdir'], ext)
++				filepath = u"%s%s - %s%s.%s" % (vid_graphics_dirs[u'posterdir'], sanitiseFileName(video[u'channelTitle']), sanitiseFileName(video[u'title']), graphic_suffix[u'posterdir'], ext)
  			else:
- 				video[u'channel_icon'] = filepath
+-				filepath = u"%s%s%s.%s" % (vid_graphics_dirs[u'posterdir'], video[u'channelTitle'], graphic_suffix[u'posterdir'], ext)
+-		# There may already be a Channel icon available or it is a symlink which needs to be replaced
+-		if not os.path.isfile(filepath) or os.path.islink(filepath):
+-			if simulation:
+-				logger.info(u"Simulation: Copying the Channel Icon (%s) to the poster directory (%s)." % (video[u'channel_icon'], filepath))
++				filepath = u"%s%s%s.%s" % (vid_graphics_dirs[u'posterdir'], sanitiseFileName(video[u'channelTitle']), graphic_suffix[u'posterdir'], ext)
++			# There may already be a Channel icon available or it is a symlink which needs to be replaced
++			if not os.path.isfile(filepath) or os.path.islink(filepath):
++				if simulation:
++					logger.info(u"Simulation: Copying the Channel Icon (%s) to the poster directory (%s)." % (video[u'channel_icon'], filepath))
++				else:
++					try:	# Miro Channel icon copied into a MythVideo directory
++						try: # Remove any old symlink file
++							os.remove(filepath)
++						except OSError:
++							pass
++						shutil.copy2(video[u'channel_icon'], filepath)
++						if u'posterdir' in storagegroups.keys() and not local_only:
++							video[u'channel_icon'] = filepath.replace(storagegroups[u'posterdir'], u'')
++						else:
++							video[u'channel_icon'] = filepath
++					except:
++						logger.critical(u"Copying the Channel Icon (%s) to the poster directory (%s).\n         This maybe a permissions error (mirobridge.py does not have permission to write to the directory)." % (video[u'channel_icon'], filepath))
++						# Gracefully close the Miro database and shutdown the Miro Front and Back ends
++						app.controller.shutdown()
++						time.sleep(5) # Let the shutdown processing complete
++						sys.exit(1)
+ 			else:
+-				try:	# Miro Channel icon copied into a MythVideo directory
+-					try: # Remove any old symlink file
+-						os.remove(filepath)
+-					except OSError:
+-						pass
+-					shutil.copy2(video[u'channel_icon'], filepath)
+-					if u'posterdir' in storagegroups.keys():
+-						video[u'channel_icon'] = filepath.replace(storagegroups[u'posterdir'], u'')
+-					else:
+-						video[u'channel_icon'] = filepath
+-				except:
+-					logger.critical(u"Copying the Channel Icon (%s) to the poster directory (%s).\n         This maybe a permissions error (mirobridge.py does not have permission to write to the directory)." % (video[u'channel_icon'], filepath))
+-					# Gracefully close the Miro database and shutdown the Miro Front and Back ends
+-					app.controller.shutdown()
+-					time.sleep(5) # Let the shutdown processing complete
+-					sys.exit(False)
+-		else:
+-			if u'posterdir' in storagegroups.keys():
+-				video[u'channel_icon'] = filepath.replace(storagegroups[u'posterdir'], u'')
+-			else:
+-				video[u'channel_icon'] = filepath
++				if u'posterdir' in storagegroups.keys() and not local_only:
++					video[u'channel_icon'] = filepath.replace(storagegroups[u'posterdir'], u'')
++				else:
++					video[u'channel_icon'] = filepath
  
  		# There may already be a Screenshot available or it is a symlink which needs to be replaced
  		if video[u'screenshot']:
 -			ext = getExtention(video[u'screenshot']) 
+-			filepath = u"%s%s - %s%s.%s" % (vid_graphics_dirs[u'episodeimagedir'], video[u'channelTitle'], video[u'title'], graphic_suffix[u'episodeimagedir'], ext)
 +			ext = getExtention(video[u'screenshot'])
- 			filepath = u"%s%s - %s%s.%s" % (vid_graphics_dirs[u'episodeimagedir'], video[u'channelTitle'], video[u'title'], graphic_suffix[u'episodeimagedir'], ext)
++			filepath = u"%s%s - %s%s.%s" % (vid_graphics_dirs[u'episodeimagedir'], sanitiseFileName(video[u'channelTitle']), sanitiseFileName(video[u'title']), graphic_suffix[u'episodeimagedir'], ext)
  		else:
  			filepath = u''
-@@ -2724,7 +2766,7 @@
+ 
+@@ -2724,7 +2811,7 @@
  							pass
  						shutil.copy2(video[u'screenshot'], filepath)
  						displayMessage(u"Copied Miro screenshot file (%s) to MythVideo (%s)" % (video[u'screenshot'], filepath))
@@ -3115,9 +4889,12 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  							video[u'screenshot'] = filepath.replace(storagegroups[u'episodeimagedir'], u'')
  						else:
  							video[u'screenshot'] = filepath
-@@ -2735,17 +2777,16 @@
+@@ -2733,19 +2820,18 @@
+ 						# Gracefully close the Miro database and shutdown the Miro Front and Back ends
+ 						app.controller.shutdown()
  						time.sleep(5) # Let the shutdown processing complete
- 						sys.exit(False)
+-						sys.exit(False)
++						sys.exit(1)
  		elif video[u'screenshot']:
 -			if u'episodeimagedir' in storagegroups.keys():
 +			if u'episodeimagedir' in storagegroups.keys() and not local_only:
@@ -3136,7 +4913,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# Gracefully close the Miro database and shutdown the Miro Front and Back ends
  	app.controller.shutdown()
  	time.sleep(5) # Let the shutdown processing complete
-@@ -2756,7 +2797,7 @@
+@@ -2756,7 +2842,7 @@
  	#
  
  	# Check if the user does not want any channels Added to the "Watch Recordings" screen
@@ -3145,7 +4922,13 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		for video in unwatched:
  			watched.append(video)
  		unwatched = []
-@@ -2780,7 +2821,7 @@
+@@ -2775,12 +2861,12 @@
+ 		displayMessage(u"There are no Miro unwatched video items to add as MythTV Recorded videos.")
+ 	if not updateMythRecorded(unwatched):
+ 		logger.critical(u"Updating MythTV Recording with Miro video files failed." % str(base_video_dir))
+-		sys.exit(False)
++		sys.exit(1)
+ 
  	#
  	# Add and delete MythVideo records for played Miro Videos
  	# Add and delete symbolic links to Miro Videos and subdirectories
@@ -3154,7 +4937,21 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	#
  	if len(channel_watch_only): # If the user does not want any channels moved to MythVideo exit
  		if channel_watch_only[0].lower() == u'all':
-@@ -2808,4 +2849,3 @@
+@@ -2791,7 +2877,7 @@
+ 		displayMessage(u"There are no Miro watched items to add to MythVideo")
+ 	if not updateMythVideo(watched):
+ 		logger.critical(u"Updating MythVideo with Miro video files failed.")
+-		sys.exit(False)
++		sys.exit(1)
+ 
+ 	printStatistics()
+ 	return True
+@@ -2804,8 +2890,7 @@
+ 	#
+ 	if myapp.alreadyrunning():
+ 		print u'\nMiro Bridge is already running only one instance can run at a time\n\n'
+-		sys.exit(False)
++		sys.exit(1)
  
  	main()
  	displayMessage(u"Miro Bridge Processing completed")
