@@ -1205,7 +1205,7 @@ rm -rf %{buildroot}
 %pre backend
 # Add the "mythtv" user, with membership in the video group
 /usr/sbin/useradd -c "mythtvbackend User" \
-    -s /sbin/nologin -r -d %{_varlibdir}/mythtv -G video mythtv 2> /dev/null || :
+    -s /sbin/nologin -r -d %{_localstatedir}/lib/mythtv -G video mythtv 2> /dev/null || :
 
 %post backend
 /sbin/chkconfig --add mythbackend
@@ -1487,6 +1487,7 @@ fi
 %changelog
 * Mon Feb 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.22-5
 - Update to release-0-22-fixes branch, svn revision 23433
+- Fix mythtv user creation (rpm fusion bz#1027)
 
 * Mon Jan 04 2010 Jarod Wilson <jarod@wilsonet.com> 0.22-4
 - Update to release-0-22-fixes branch, svn revision 23074
