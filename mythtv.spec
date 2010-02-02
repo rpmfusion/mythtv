@@ -897,8 +897,6 @@ cd mythplugins-%{version}
     chmod -R g-w ./*
     cd ..
 
-# Add execute bits to mythvideo python helper scripts
-    chmod +x mythvideo/mythvideo/scripts/ttvdb/*.py
 # Remove execute bits from some php mythweb files
     chmod -x mythweb/classes/*.php
 
@@ -1113,7 +1111,7 @@ cd mythtv-%{version}
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
 
 # Fix permissions on executable python bindings
-    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth{DB,TV}.py
+    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
 
 # mysql.txt and other config/init files
     install -m 644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
