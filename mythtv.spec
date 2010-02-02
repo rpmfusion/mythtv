@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23433
+%define _svnrev r23443
 %define branch trunk
 
 #
@@ -130,9 +130,9 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 ################################################################################
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
-Patch0:    mythtv-0.22-svnfixes.patch
+#Patch0:    mythtv-%{version}-svnfixes.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
-Patch1:    mythplugins-0.22-svnfixes.patch
+#Patch1:    mythplugins-%{version}-svnfixes.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig.in
 Source102: mythbackend.init.in
@@ -831,7 +831,7 @@ on demand content.
 ##### MythTV
 
 cd mythtv-%{version}
-%patch0 -p1
+#patch0 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -880,7 +880,7 @@ cd ..
 %if %{with_plugins}
 
 cd mythplugins-%{version}
-%patch1 -p1
+#patch1 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -1479,6 +1479,10 @@ fi
 ################################################################################
 
 %changelog
+* Tue Feb 02 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23443
+- Update to svn trunk, revision 23443
+- Don't try applying 0.22 svn fixes branch patches to 0.23 svn trunk, duh
+
 * Mon Feb 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23433
 - Update to svn trunk, revision 23433
 - Drop dropped mythflix plugin
