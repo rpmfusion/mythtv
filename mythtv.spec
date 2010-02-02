@@ -65,8 +65,8 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22880
-%define branch release
+%define _svnrev r23433
+%define branch trunk
 
 #
 # Basic descriptive tags for this package:
@@ -77,11 +77,11 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.22
+Version: 0.23
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -108,7 +108,6 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 # The following options are disabled by default.  Use --with to enable them
 %define with_directfb      %{?_with_directfb:      1} %{!?_with_directfb:      0}
-%define with_xvmcnvidia    %{?_with_xvmcnvidia:    1} %{?!_with_xvmcnvidia:    0}
 # FAAC is non-free, so we disable it by default
 %define with_faac          %{?_with_faac:          1} %{?!_with_faac:          0}
 
@@ -126,6 +125,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_mythweather    %{?_without_mythweather:    0} %{!?_without_mythweather:     1}
 %define with_mythweb        %{?_without_mythweb:        0} %{!?_without_mythweb:         1}
 %define with_mythzoneminder %{?_without_mythzoneminder: 0} %{!?_without_mythzoneminder:  1}
+%define with_mythnetvision  %{?_without_mythnetvision:  0} %{!?_without_mythnetvision:   1}
 
 ################################################################################
 
@@ -193,6 +193,7 @@ BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
+BuildRequires:  libdca-devel
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
 # nb: libdvdcss will be dynamically loaded if installed
@@ -224,10 +225,6 @@ BuildRequires:  libraw1394-devel
 
 %if %{with_directfb}
 BuildRequires:  directfb-devel
-%endif
-
-%if %{with_xvmcnvidia}
-BuildRequires:  xorg-x11-drv-nvidia-devel
 %endif
 
 %if %{with_vdpau}
@@ -284,6 +281,9 @@ Requires:       perl(LWP::Simple)
 %endif
 
 %if %{with_mythzoneminder}
+%endif
+
+%if %{with_mythnetvision}
 %endif
 
 %endif
@@ -399,6 +399,7 @@ Requires:  fftw-devel >= 3
 Requires:  flac-devel >= 1.0.4
 Requires:  gsm-devel
 Requires:  lame-devel
+Requires:  libdca-devel
 Requires:  libdvdnav-devel
 Requires:  libdvdread-devel >= 0.9.4
 Requires:  libfame-devel >= 0.9.0
@@ -429,10 +430,6 @@ Requires:  libraw1394-devel
 
 %if %{with_directfb}
 Requires:  directfb-devel
-%endif
-
-%if %{with_xvmcnvidia}
-Requires:  xorg-x11-drv-nvidia-devel
 %endif
 
 %if %{with_vdpau}
@@ -524,6 +521,9 @@ Group: Applications/Multimedia
 # mythphone is now DOA, but we need this for upgrade path preservation.
 Provides: mythphone = %{version}-%{release}
 Obsoletes: mythphone < %{version}-%{release}
+# same deal for mythflix
+Provides: mythflix = %{version}-%{release}
+Obsoletes: mythflix < %{version}-%{release}
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -585,11 +585,11 @@ Requires:  mythgallery    = %{version}-%{release}
 Requires:  mythgame       = %{version}-%{release}
 Requires:  mythnews       = %{version}-%{release}
 Requires:  mythbrowser    = %{version}-%{release}
-Requires:  mythflix       = %{version}-%{release}
 Requires:  mytharchive    = %{version}-%{release}
 Requires:  mythzoneminder = %{version}-%{release}
 Requires:  mythmovies     = %{version}-%{release}
 Requires:  mythweb        = %{version}-%{release}
+Requires:  mythnetvision  = %{version}-%{release}
 
 %description -n mythplugins
 This is a consolidation of all the official MythTV plugins that used to be
@@ -636,18 +636,6 @@ navigation (right mouse opens and clos es the popup menu).
 
 MythBrowser also contains a BookmarkManager to manage the website
 links in a simple mythplugin.
-
-%endif
-################################################################################
-%if %{with_mythflix}
-
-%package -n mythflix
-Summary:   A NetFlix module for MythTV
-Group:     Applications/Multimedia
-Requires:  mythtv-frontend-api = %{mythfeapiver}
-
-%description -n mythflix
-MythFlix is a NetFlix queue manager for MythTV.
 
 %endif
 ################################################################################
@@ -809,6 +797,20 @@ and replay recorded events.
 
 %endif
 ################################################################################
+%if %{with_mythnetvision}
+
+%package -n mythnetvision
+Summary:   A MythTV module for Internet video on demand
+Group:     Applications/Multimedia
+Requires:  mythtv-frontend-api = %{mythfeapiver}
+Requires:  mythbrowser = %{version}-%{release}
+
+%description -n mythnetvision
+A MythTV module that supports searching and browsing of Internet video
+on demand content.
+
+%endif
+################################################################################
 
 # End of plugins
 %endif
@@ -924,7 +926,6 @@ cd mythtv-%{version}
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
-    --enable-audio-arts                         \
     --enable-audio-alsa                         \
     --enable-audio-oss                          \
     --enable-audio-jack                         \
@@ -945,9 +946,6 @@ cd mythtv-%{version}
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
-%if %{with_xvmcnvidia}
-    --xvmc-lib=XvMCNVIDIA_dynamic               \
-%endif
 %if %{with_vdpau}
     --enable-vdpau				\
 %endif
@@ -984,6 +982,7 @@ cd mythtv-%{version}
 
 # Insert rpm version-release for mythbackend --version output
     find . -name version.pro -exec sed -i -e 's,myth_binary_version = \$\${BINARY_VERSION},myth_binary_version = %{version}-%{release} (%{_svnrev}),g' {} \;
+    find . -name version.pro -exec sed -i -e 's,svnversion \$\${SVNTREEDIR},echo "%{version}-%{release}",g' {} \;
 
 # Make
     make %{?_smp_mflags}
@@ -1027,11 +1026,6 @@ cd mythplugins-%{version}
         --enable-mythbrowser \
     %else
         --disable-mythbrowser \
-    %endif
-    %if %{with_mythflix}
-        --enable-mythflix \
-    %else
-        --disable-mythflix \
     %endif
     %if %{with_mythgallery}
         --enable-mythgallery \
@@ -1082,7 +1076,11 @@ cd mythplugins-%{version}
     %else
         --disable-mythzoneminder \
     %endif
-        --enable-opengl \
+    %if %{with_mythnetvision}
+        --enable-mythnetvision \
+    %else
+        --disable-mythnetvision \
+    %endif--enable-opengl \
         --enable-libvisual \
         --enable-fftw \
         --enable-sdl \
@@ -1205,7 +1203,7 @@ rm -rf %{buildroot}
 %pre backend
 # Add the "mythtv" user, with membership in the video group
 /usr/sbin/useradd -c "mythtvbackend User" \
-    -s /sbin/nologin -r -d %{_varlibdir}/mythtv -G video mythtv 2> /dev/null || :
+    -s /sbin/nologin -r -d %{_localstatedir}/lib/mythtv -G video mythtv 2> /dev/null || :
 
 %post backend
 /sbin/chkconfig --add mythbackend
@@ -1320,9 +1318,7 @@ fi
 %defattr(-,root,root,-)
 %dir %{python_sitelib}/MythTV/
 %{python_sitelib}/MythTV/*
-%if 0%{?fedora} >= 9
 %{python_sitelib}/MythTV-*.egg-info
-%endif
 %endif
 
 %if %{with_plugins}
@@ -1353,19 +1349,6 @@ fi
 %doc mythplugins-%{version}/mythbrowser/README
 %{_libdir}/mythtv/plugins/libmythbrowser.so
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
-%endif
-
-%if %{with_mythflix}
-%files -n mythflix
-%defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythflix/AUTHORS
-%doc mythplugins-%{version}/mythflix/COPYING
-%doc mythplugins-%{version}/mythflix/README
-%{_libdir}/mythtv/plugins/libmythflix.so
-%{_datadir}/mythtv/mythflix
-%{_datadir}/mythtv/i18n/mythflix_*.qm
-%{_datadir}/mythtv/i18n/mythflix_*.ts
-%{_datadir}/mythtv/netflix_menu.xml
 %endif
 
 %if %{with_mythgallery}
@@ -1480,11 +1463,27 @@ fi
 %{_datadir}/mythtv/i18n/mythzoneminder_*.qm
 %endif
 
+%if %{with_mythnetvision}
+%files -n mythnetvision
+%defattr(-,root,root,-)
+%doc mythplugins-%{version}/mythnetvision/AUTHORS
+%doc mythplugins-%{version}/mythnetvision/ChangeLog
+%doc mythplugins-%{version}/mythnetvision/README
+%{_libdir}/mythtv/plugins/libmythnetvision.so
+%{_datadir}/mythtv/mythnetvision
+%{_datadir}/mythtv/netvisionmenu.xml
+%endif
+
 %endif
 
 ################################################################################
 
 %changelog
+* Mon Feb 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23433
+- Update to svn trunk, revision 23433
+- Drop dropped mythflix plugin
+- Add new mythnetvision plugin
+
 * Sat Nov 21 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-2
 - Update to release-0-22-fixes branch, svn revision 22880
 
