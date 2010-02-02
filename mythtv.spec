@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r22880
+%define _svnrev r23433
 %define branch release
 
 #
@@ -81,7 +81,7 @@ Version: 0.22
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1485,6 +1485,16 @@ fi
 ################################################################################
 
 %changelog
+* Mon Feb 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.22-5
+- Update to release-0-22-fixes branch, svn revision 23433
+
+* Mon Jan 04 2010 Jarod Wilson <jarod@wilsonet.com> 0.22-4
+- Update to release-0-22-fixes branch, svn revision 23074
+
+* Fri Dec 18 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-3
+- Update to release-0-22-fixes branch, svn revision 22981
+- Contains targeted fixes for DVD playback, among other things
+
 * Sat Nov 21 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-2
 - Update to release-0-22-fixes branch, svn revision 22880
 
