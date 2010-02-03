@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23443
+%define _svnrev r23456
 %define branch trunk
 
 #
@@ -1477,6 +1477,9 @@ fi
 ################################################################################
 
 %changelog
+* Wed Feb 03 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23456
+- Update to svn trunk, revision 23456
+
 * Tue Feb 02 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23443
 - Update to svn trunk, revision 23443
 - Don't try applying 0.22 svn fixes branch patches to 0.23 svn trunk, duh
