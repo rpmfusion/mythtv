@@ -1481,7 +1481,7 @@ fi
 ################################################################################
 
 %changelog
-* Fri Feb 05 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23535
+* Thu Feb 11 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23535
 - Update to svn trunk, revision 23535
 
 * Fri Feb 05 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23479
