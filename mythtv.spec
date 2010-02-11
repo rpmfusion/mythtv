@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23456
+%define _svnrev r23535
 %define branch trunk
 
 #
@@ -291,7 +291,7 @@ Requires:       perl(LWP::Simple)
 ################################################################################
 # Requirements for the mythtv meta package
 
-Requires:  libmyth            = %{version}-%{release}
+Requires:  mythtv-libs        = %{version}-%{release}
 Requires:  mythtv-backend     = %{version}-%{release}
 Requires:  mythtv-base-themes = %{version}-%{release}
 Requires:  mythtv-common      = %{version}-%{release}
@@ -347,27 +347,31 @@ and miscellaneous other bits and pieces.
 
 ################################################################################
 
-%package -n libmyth
+%package libs
 Summary:   Library providing mythtv support
 Group:     System Environment/Libraries
+Provides:  libmyth = %{version}-%{release}
+Obsoletes: libmyth < %{version}-%{release}
 
 Requires:  freetype >= 2
 Requires:  lame
 Requires:  qt4 >= 4.4
 Requires:  qt4-MySQL
 
-%description -n libmyth
+%description libs
 Common library code for MythTV and add-on modules (development)
 MythTV provides a unified graphical interface for recording and viewing
 television programs.  Refer to the mythtv package for more information.
 
 ################################################################################
 
-%package -n libmyth-devel
-Summary:   Development files for libmyth
+%package devel
+Summary:   Development files for mythtv
 Group:     Development/Libraries
+Provides:  libmyth-devel = %{version}-%{release}
+Obsoletes: libmyth-devel < %{version}-%{release}
 
-Requires:  libmyth = %{version}-%{release}
+Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
 Requires:  mysql-devel >= 5
@@ -436,7 +440,7 @@ Requires:  directfb-devel
 Requires: libvdpau-devel
 %endif
 
-%description -n libmyth-devel
+%description devel
 This package contains the header files and libraries for developing
 add-ons for mythtv.
 
@@ -996,7 +1000,7 @@ cd mythtv-%{version}
 %if %{with_plugins}
 cd mythplugins-%{version}
 
-# Fix things up so they can find our "temp" install location for libmyth
+# Fix things up so they can find our "temp" install location for mythtv-libs
     echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
     find . -name \*.pro \
         -exec sed -i -e "s,INCLUDEPATH += .\+/include/mythtv,INCLUDEPATH += $temp%{_includedir}/mythtv," {} \; \
@@ -1194,9 +1198,9 @@ rm -rf %{buildroot}
 
 ################################################################################
 
-%post -n libmyth -p /sbin/ldconfig
+%post libs -p /sbin/ldconfig
 
-%postun -n libmyth -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %pre backend
 # Add the "mythtv" user, with membership in the video group
@@ -1287,11 +1291,11 @@ fi
 %dir %{_datadir}/mythtv/themes
 %{_datadir}/mythtv/themes/*
 
-%files -n libmyth
+%files libs
 %defattr(-,root,root,-)
 %{_libdir}/*.so.*
 
-%files -n libmyth-devel
+%files devel
 %defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/*.so
@@ -1477,6 +1481,13 @@ fi
 ################################################################################
 
 %changelog
+* Fri Feb 05 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23535
+- Update to svn trunk, revision 23535
+
+* Fri Feb 05 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23479
+- Update to svn trunk, revision 23479
+- Rename libmyth to mythtv-libs, libmyth-devel to mythtv-devel
+
 * Wed Feb 03 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23456
 - Update to svn trunk, revision 23456
 
