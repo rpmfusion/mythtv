@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23535
+%define _svnrev r23586
 %define branch trunk
 
 #
@@ -1481,6 +1481,10 @@ fi
 ################################################################################
 
 %changelog
+* Mon Feb 22 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23586
+- Update to svn trunk, revision 23586
+- Attempt to fix implicit link issue w/XvMCW
+
 * Thu Feb 11 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23535
 - Update to svn trunk, revision 23535
 
