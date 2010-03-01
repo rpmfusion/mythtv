@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23586
+%define _svnrev r23630
 %define branch trunk
 
 #
@@ -133,6 +133,7 @@ Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 #Patch0:    mythtv-%{version}-svnfixes.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 #Patch1:    mythplugins-%{version}-svnfixes.patch
+Patch2:    mythtv-version.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig.in
 Source102: mythbackend.init.in
@@ -836,6 +837,7 @@ on demand content.
 
 cd mythtv-%{version}
 #patch0 -p1
+%patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -983,8 +985,7 @@ cd mythtv-%{version}
     --enable-debug
 
 # Insert rpm version-release for mythbackend --version output
-    find . -name version.pro -exec sed -i -e 's,myth_binary_version = \$\${BINARY_VERSION},myth_binary_version = %{version}-%{release} (%{_svnrev}),g' {} \;
-    find . -name version.pro -exec sed -i -e 's,svnversion \$\${SVNTREEDIR},echo "%{version}-%{release}",g' {} \;
+    sed -i -e 's,###SOURCE_VERSION###,%{version}-%{release} (%_svnrev),' version.sh
 
 # Make
     make %{?_smp_mflags}
@@ -1481,6 +1482,10 @@ fi
 ################################################################################
 
 %changelog
+* Mon Mar 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23630
+- Update to svn trunk, revision 23630
+- Make mythbackend --version actually print useful stuff now (like pkg ver)
+
 * Mon Feb 22 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23586
 - Update to svn trunk, revision 23586
 - Attempt to fix implicit link issue w/XvMCW
