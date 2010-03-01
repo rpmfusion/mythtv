@@ -985,7 +985,7 @@ cd mythtv-%{version}
     --enable-debug
 
 # Insert rpm version-release for mythbackend --version output
-    find . -name version.pro -exec sed -i -e 's,myth_binary_version = \$\${BINARY_VERSION},myth_binary_version = %{version}-%{release} (%{_svnrev}),g' {} \;
+    sed -i -e 's,###SOURCE_VERSION###,%{version}-%{release} (%_svnrev),' version.sh
 
 # Make
     make %{?_smp_mflags}
