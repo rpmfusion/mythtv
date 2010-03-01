@@ -73,7 +73,7 @@ Index: mythplugins/mythweather/mythweather/scripts/uk_bbc/BBCLocation.pm
      return @searchresults;
 Index: mythplugins/mythweather/mythweather/main.cpp
 ===================================================================
---- mythplugins/mythweather/mythweather/main.cpp	(revision 23433)
+--- mythplugins/mythweather/mythweather/main.cpp	(revision 23632)
 +++ mythplugins/mythweather/mythweather/main.cpp	(working copy)
 @@ -142,8 +142,10 @@
      menu->setKillable();
@@ -3317,7 +3317,7 @@ Index: mythplugins/mythvideo/mythvideo/scripts/jamu.py
 +						continue
 +					posterdirs = self.config['localpaths']['posters']
 +				else:
-+					posterdirs = self.config['posters']
++					posterdirs = self.config['posterdir']
 +
 +				# There must be an Internet reference number. Get one for new records.
  				if _can_int(meta_dict['inetref']) and not meta_dict['inetref'] == u'00000000' and not meta_dict['inetref'] == u'':
@@ -4137,7 +4137,7 @@ Index: mythplugins/mythvideo/mythvideo/videolist.cpp
      meta_dir_node *video_root = &m_metadata_tree;
 Index: mythplugins/mythvideo/mythvideo/main.cpp
 ===================================================================
---- mythplugins/mythvideo/mythvideo/main.cpp	(revision 23433)
+--- mythplugins/mythvideo/mythvideo/main.cpp	(revision 23632)
 +++ mythplugins/mythvideo/mythvideo/main.cpp	(working copy)
 @@ -517,6 +517,7 @@
          {
@@ -4149,7 +4149,7 @@ Index: mythplugins/mythvideo/mythvideo/main.cpp
              GetMythMainWindow()->GetMainStack()->AddScreen(diag);
 Index: mythplugins/mythvideo/mythvideo/playercommand.cpp
 ===================================================================
---- mythplugins/mythvideo/mythvideo/playercommand.cpp	(revision 23433)
+--- mythplugins/mythvideo/mythvideo/playercommand.cpp	(revision 23632)
 +++ mythplugins/mythvideo/mythvideo/playercommand.cpp	(working copy)
 @@ -5,6 +5,7 @@
  #include <mythtv/libmythui/mythmainwindow.h>
@@ -4357,7 +4357,7 @@ Index: mythplugins/mythnews/mythnews/mythnews.cpp
              usleep(100000);
 Index: mythplugins/mythmusic/mythmusic/main.cpp
 ===================================================================
---- mythplugins/mythmusic/mythmusic/main.cpp	(revision 23433)
+--- mythplugins/mythmusic/mythmusic/main.cpp	(revision 23632)
 +++ mythplugins/mythmusic/mythmusic/main.cpp	(working copy)
 @@ -21,6 +21,7 @@
  #include <mythtv/compat.h>
@@ -4393,7 +4393,7 @@ Index: mythplugins/mythmusic/mythmusic/main.cpp
  int mythplugin_run(void)
 Index: mythplugins/mythgallery/mythgallery/imageview.cpp
 ===================================================================
---- mythplugins/mythgallery/mythgallery/imageview.cpp	(revision 23433)
+--- mythplugins/mythgallery/mythgallery/imageview.cpp	(revision 23632)
 +++ mythplugins/mythgallery/mythgallery/imageview.cpp	(working copy)
 @@ -152,9 +152,11 @@
  

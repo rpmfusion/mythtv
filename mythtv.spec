@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23433
+%define _svnrev r23632
 %define branch release
 
 #
@@ -81,7 +81,7 @@ Version: 0.22
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 5%{?dist}
+Release: 6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -131,6 +131,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Patch0:    mythtv-0.22-svnfixes.patch
+Patch2:    mythtv-version.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 Patch1:    mythplugins-0.22-svnfixes.patch
 Source10:  PACKAGE-LICENSING
@@ -830,6 +831,7 @@ and replay recorded events.
 
 cd mythtv-%{version}
 %patch0 -p1
+%patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -1485,6 +1487,10 @@ fi
 ################################################################################
 
 %changelog
+* Mon Mar 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.22-6
+- Update to release-0-22-fixes branch, svn revision 23632
+- Make mythbackend --version output more useful, for real this time
+
 * Mon Feb 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.22-5
 - Update to release-0-22-fixes branch, svn revision 23433
 - Fix mythtv user creation (rpm fusion bz#1027)

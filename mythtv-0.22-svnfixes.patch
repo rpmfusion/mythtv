@@ -1000,7 +1000,23 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
        // Audio and video synchronization stuff
        videosync(NULL),              delay(0),
        vsynctol(30/4),               avsync_delay(0),
-@@ -544,6 +545,7 @@
+@@ -253,13 +254,14 @@
+       lastsync(false),              m_playing_slower(false),
+       m_stored_audio_stretchfactor(1.0),
+       audio_paused(false),
++      repeat_delay(0),
+       // Audio warping stuff
+       usevideotimebase(false),
+       warpfactor(1.0f),             warpfactor_avg(1.0f),
+       warplbuff(NULL),              warprbuff(NULL),
+       warpbuffsize(0),
+       // Time Code stuff
+-      prevtc(0),
++      prevtc(0),                    prevrp(0),
+       tc_avcheck_framecounter(0),   tc_diff_estimate(0),
+       savedAudioTimecodeOffset(0),
+       // LiveTVChain stuff
+@@ -544,6 +546,7 @@
      audio_lock.lock();
      if (audioOutput && unpauseaudio)
          audio_paused = false;
@@ -1008,7 +1024,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
      audio_lock.unlock();
      if (player_ctx->buffer)
          player_ctx->buffer->Unpause();
-@@ -577,9 +579,11 @@
+@@ -577,9 +580,11 @@
  void NuppelVideoPlayer::PauseVideo(bool wait)
  {
      QMutexLocker locker(&pauseUnpauseLock);
@@ -1022,7 +1038,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
      for (uint i = 0; wait && !video_actually_paused; i++)
      {
          videoThreadPaused.wait(&pauseUnpauseLock, 250);
-@@ -607,6 +611,9 @@
+@@ -607,6 +612,9 @@
          if ((i % 10) == 9)
              VERBOSE(VB_IMPORTANT, "Waited too long for video out to unpause");
      }
@@ -1032,7 +1048,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
  }
  
  void NuppelVideoPlayer::SetVideoActuallyPaused(bool val)
-@@ -1071,15 +1078,21 @@
+@@ -1071,15 +1079,21 @@
      if (!videoOutput || !videosync)
          return; // hopefully this will be called again later...
  
@@ -1056,7 +1072,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
          return;
      }
  
-@@ -1113,11 +1126,8 @@
+@@ -1113,11 +1127,8 @@
          if (kScan_Progressive == scan)
          {
              m_double_process = false;
@@ -1070,7 +1086,59 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
              videoOutput->SetDeinterlacingEnabled(false);
              VERBOSE(VB_PLAYBACK, "Disabled deinterlacing");
          }
-@@ -2587,9 +2597,11 @@
+@@ -2385,6 +2396,8 @@
+ 
+     avsync_adjustment = 0;
+ 
++    repeat_delay = 0;
++
+     if (usevideotimebase)
+     {
+         warpfactor_avg = gContext->GetNumSetting("WarpFactor", 0);
+@@ -2467,8 +2480,10 @@
+     if (kScan_Detect == m_scan || kScan_Ignore == m_scan)
+         ps = kScan_Progressive;
+ 
++    bool dropframe = false;
+     if (diverge < -MAXDIVERGE)
+     {
++        dropframe = true;
+         // If video is way behind of audio, adjust for it...
+         QString dbg = QString("Video is %1 frames behind audio (too slow), ")
+             .arg(-diverge);
+@@ -2502,7 +2517,7 @@
+ 
+         VERBOSE(VB_PLAYBACK|VB_TIMESTAMP, QString("AVSync waitforframe %1 %2")
+                 .arg(avsync_adjustment).arg(m_double_framerate));
+-        videosync->WaitForFrame(avsync_adjustment);
++        videosync->WaitForFrame(avsync_adjustment + repeat_delay);
+         VERBOSE(VB_PLAYBACK|VB_TIMESTAMP, "AVSync show");
+         if (!resetvideo)
+             videoOutput->Show(ps);
+@@ -2554,6 +2569,12 @@
+                 videoOutput->Show(ps);
+             }
+         }
++
++        repeat_delay = frame_interval * buffer->repeat_pict * 0.5;
++
++        if (repeat_delay)
++            VERBOSE(VB_TIMESTAMP, QString("A/V repeat_pict, adding %1 repeat "
++                    "delay").arg(repeat_delay));
+     }
+     else
+     {
+@@ -2568,7 +2589,8 @@
+                 .arg(warpfactor).arg(warpfactor_avg));
+     }
+ 
+-    videosync->AdvanceTrigger();
++    if (!dropframe)
++        videosync->AdvanceTrigger();
+     avsync_adjustment = 0;
+ 
+     if (diverge > MAXDIVERGE)
+@@ -2587,9 +2609,11 @@
                          "\t\t\tdoubling video frame interval to slow down.").arg(diverge));
      }
  
@@ -1082,7 +1150,24 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
  #if 0
          VERBOSE(VB_PLAYBACK+VB_TIMESTAMP, QString(
                      "A/V timecodes audio %1 video %2 frameinterval %3 "
-@@ -2652,7 +2664,9 @@
+@@ -2612,13 +2636,15 @@
+ 
+             // If the timecode is off by a frame (dropped frame) wait to sync
+             if (delta > (int) frame_interval / 1200 &&
+-                delta < (int) frame_interval / 1000 * 3)
++                delta < (int) frame_interval / 1000 * 3 &&
++                prevrp == 0)
+             {
+                 //cerr << "+ ";
+                 videosync->AdvanceTrigger();
+                 if (m_double_framerate)
+                     videosync->AdvanceTrigger();
+             }
++            prevrp = buffer->repeat_pict;
+ 
+             avsync_delay = (buffer->timecode - currentaudiotime) * 1000;//usec
+             // prevents major jitter when pts resets during dvd title
+@@ -2652,7 +2678,9 @@
              avsync_avg = 0;
              avsync_oldavg = 0;
          }
@@ -1093,7 +1178,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
  }
  
  void NuppelVideoPlayer::ShutdownAVSync(void)
-@@ -3073,7 +3087,7 @@
+@@ -3073,7 +3101,7 @@
                          continue;
                      }
  
@@ -1102,7 +1187,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
                      {
                          dvd_stillframe_showing = true;
                          PauseVideo(false);
-@@ -6848,8 +6862,12 @@
+@@ -6848,8 +6876,12 @@
          QString msg = "";
  
          if (decoder)
@@ -1208,7 +1293,38 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
  }
  
  void AvFormatDecoder::CloseCodecs()
-@@ -1290,6 +1300,40 @@
+@@ -621,14 +631,6 @@
+         return false;
+     }
+ 
+-    // If seeking to start of stream force a DTS and start_time of zero as
+-    // libav sometimes returns the end of the stream instead.
+-    if (desiredFrame <= 1)
+-    {
+-        av_update_cur_dts(ic, st, 0);
+-        ic->start_time = 0;
+-    }
+-
+     int normalframes = 0;
+ 
+     if (st->cur_dts != (int64_t)AV_NOPTS_VALUE)
+@@ -641,8 +643,13 @@
+             int64_t st1 = av_rescale(ic->start_time,
+                                     st->time_base.den,
+                                     AV_TIME_BASE * (int64_t)st->time_base.num);
+-            adj_cur_dts = lsb3full(adj_cur_dts, st1, st->pts_wrap_bits);
+-
++            // If seeking near the start of stream sometimes the adjusted current dts time 
++            // is less than the start time (possibly due to the AVSEEK_FLAG_BACKWARD flag ?).
++            // If so, set adjusted current dts to zero.
++            if (adj_cur_dts < st1)
++                adj_cur_dts = 0;
++            else
++                adj_cur_dts = lsb3full(adj_cur_dts, st1, st->pts_wrap_bits);
+         }
+ 
+         long long newts = av_rescale(adj_cur_dts,
+@@ -1290,6 +1297,40 @@
          GetNVP()->SetVideoParams(width, height, fps,
                                   keyframedist, aspect_ratio, kScan_Detect,
                                   dvd_video_codec_changed);
@@ -1249,7 +1365,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
      }
  }
  
-@@ -1936,7 +1980,13 @@
+@@ -1936,7 +1977,13 @@
  
          if (enc->codec_type == CODEC_TYPE_AUDIO)
          {
@@ -1264,7 +1380,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
              int lang_indx = lang_aud_cnt[lang];
              lang_aud_cnt[lang]++;
  
-@@ -1949,8 +1999,14 @@
+@@ -1949,8 +1996,14 @@
              }
              else
              {
@@ -1280,7 +1396,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
              }
  
              VERBOSE(VB_AUDIO, LOC + QString(
-@@ -1980,11 +2036,10 @@
+@@ -1980,11 +2033,10 @@
              {
                  VERBOSE(VB_PLAYBACK, LOC +
                              QString("DVD Audio Track Map "
@@ -1295,7 +1411,7 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
              int trackNo = ringBuffer->DVD()->GetTrack(kTrackTypeAudio);
              if (trackNo >= (int)GetTrackCount(kTrackTypeAudio))
                  trackNo = GetTrackCount(kTrackTypeAudio) - 1;
-@@ -3146,10 +3201,12 @@
+@@ -3146,10 +3198,12 @@
          for (uint i = 0; i < numStreams; i++)
          {
              if (wlang == atracks[i].language)
@@ -1310,7 +1426,38 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
          }
      }
  
-@@ -4346,6 +4403,66 @@
+@@ -3660,6 +3714,7 @@
+         while (!have_err && len > 0)
+         {
+             int ret = 0;
++            bool dts = false;
+             switch (ctype)
+             {
+                 case CODEC_TYPE_AUDIO:
+@@ -3771,7 +3826,7 @@
+                     if (audioOut.do_passthru)
+                     {
+                         data_size = pkt->size;
+-                        bool dts = CODEC_ID_DTS == curstream->codec->codec_id;
++                        dts = CODEC_ID_DTS == curstream->codec->codec_id;
+                         ret = encode_frame(dts, ptr, len,
+                                            audioSamples, data_size);
+                     }
+@@ -3812,8 +3867,11 @@
+ 
+                     if (ret < 0)
+                     {
+-                        VERBOSE(VB_IMPORTANT, LOC_ERR +
+-                                "Unknown audio decoding error");
++                        if (!dts)
++                        {
++                            VERBOSE(VB_IMPORTANT, LOC_ERR +
++                                    "Unknown audio decoding error");
++                        }
+                         have_err = true;
+                         continue;
+                     }
+@@ -4346,6 +4404,66 @@
      GetNVP()->SetAudioCodec((using_passthru) ? codec_ctx : NULL);
      GetNVP()->ReinitAudio();
  
@@ -1376,6 +1523,54 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
 +    }
      return true;
  }
+ 
+@@ -4368,6 +4486,8 @@
+     if (dts)
+     {
+         enc_len = dts_syncinfo(data, &flags, &sample_rate, &bit_rate);
++        if (enc_len < 0)
++            return enc_len;
+         int rate, sfreq, nblks;
+         dts_decode_header(data, &rate, &nblks, &sfreq);
+         nr_samples = nblks * 32;
+@@ -4477,14 +4597,36 @@
+     return fsize;
+ }
+ 
++// defines from libavcodec/dca.h
++#define DCA_MARKER_RAW_BE 0x7FFE8001
++#define DCA_MARKER_RAW_LE 0xFE7F0180
++#define DCA_MARKER_14B_BE 0x1FFFE800
++#define DCA_MARKER_14B_LE 0xFF1F00E8
++#define DCA_HD_MARKER     0x64582025
++
+ static int dts_decode_header(uint8_t *indata_ptr, int *rate,
+                              int *nblks, int *sfreq)
+ {
+     uint id = ((indata_ptr[0] << 24) | (indata_ptr[1] << 16) |
+                (indata_ptr[2] << 8)  | (indata_ptr[3]));
+ 
+-    if (id != 0x7ffe8001)
+-        return -1;
++    switch (id)
++    {
++        case DCA_MARKER_RAW_BE:
++            break;
++        case DCA_MARKER_RAW_LE:
++        case DCA_MARKER_14B_BE:
++        case DCA_MARKER_14B_LE:
++        case DCA_HD_MARKER:
++            VERBOSE(VB_AUDIO+VB_EXTRA, LOC +
++                    QString("DTS: Unsupported frame (id 0x%1)").arg(id, 8, 16));
++            return -1;
++            break;
++        default:
++            VERBOSE(VB_IMPORTANT, LOC_ERR +
++                    QString("DTS: Unknown frame (id 0x%1)").arg(id, 8, 16));
++            return -1;
++    }
+ 
+     int ftype = indata_ptr[4] >> 7;
  
 Index: mythtv/libs/libmythtv/DVDRingBuffer.cpp
 ===================================================================
@@ -1624,6 +1819,116 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.h
  
      int        ffrew_skip;    
  
+@@ -804,6 +807,7 @@
+     bool       decode_extra_audio;
+     float      m_stored_audio_stretchfactor;
+     bool       audio_paused;
++    int        repeat_delay;
+ 
+     // Audio warping stuff
+     bool       usevideotimebase;
+@@ -815,6 +819,7 @@
+  
+     // Time Code stuff
+     int        prevtc;        ///< 32 bit timecode if last VideoFrame shown
++    int        prevrp;        ///< repeat_pict of last frame
+     int        tc_avcheck_framecounter;
+     long long  tc_wrap[TCTYPESMAX];
+     long long  tc_lastval[TCTYPESMAX];
+Index: mythtv/libs/libmythtv/mpeg/H264Parser.h
+===================================================================
+--- mythtv/libs/libmythtv/mpeg/H264Parser.h	(revision 22751)
++++ mythtv/libs/libmythtv/mpeg/H264Parser.h	(working copy)
+@@ -155,7 +155,7 @@
+     bool decode_Header(GetBitContext *gb);
+     void decode_SPS(GetBitContext *gb);
+     void decode_PPS(GetBitContext * gb);
+-    void decode_SEI(GetBitContext * gb, int len);
++    void decode_SEI(GetBitContext * gb);
+     void vui_parameters(GetBitContext * gb);
+ 
+     bool       AU_pending;
+Index: mythtv/libs/libmythtv/mpeg/H264Parser.cpp
+===================================================================
+--- mythtv/libs/libmythtv/mpeg/H264Parser.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/mpeg/H264Parser.cpp	(working copy)
+@@ -264,7 +264,6 @@
+ {
+     const uint8_t *byteP = bytes;
+     const uint8_t *endP = bytes + byte_count;
+-    const uint8_t *nalP;
+     uint8_t        first_byte;
+ 
+     state_changed = is_keyframe = false;
+@@ -312,10 +311,7 @@
+ 
+                     if (nal_unit_type == SEI)
+                     {
+-                        nalP = ff_find_start_code(byteP+1, endP,
+-                                                  &sync_accumulator) - 8;
+-                        // Subtract 4, so we don't consume the next start code
+-                        decode_SEI(&gb, (nalP - byteP - 4) * 8);
++                        decode_SEI(&gb);
+                         set_AU_pending(stream_offset);
+                     }
+                     else if (nal_unit_type == SPS)
+@@ -828,28 +824,26 @@
+ #endif
+ }
+ 
+-void H264Parser::decode_SEI(GetBitContext * gb, int bitlen)
++void H264Parser::decode_SEI(GetBitContext *gb)
+ {
+     int   recovery_frame_cnt = -1;
+     bool  exact_match_flag = false;
+     bool  broken_link_flag = false;
+     int   changing_group_slice_idc = -1;
+ 
+-    while (get_bits_count(gb) < bitlen)
+-    {
+-        int type = 0, size = 0;
++    int type = 0, size = 0;
+ 
+-        do {
+-            type += show_bits(gb, 8);
+-        } while (get_bits(gb, 8) == 255);
++    do {
++        type += show_bits(gb, 8);
++    } while (get_bits(gb, 8) == 255);
+ 
+-        do {
+-            size += show_bits(gb, 8);
+-        } while (get_bits(gb, 8) == 255);
++    do {
++        size += show_bits(gb, 8);
++    } while (get_bits(gb, 8) == 255);
+ 
+-        switch (type)
+-        {
+-          case SEI_TYPE_RECOVERY_POINT:
++    switch (type)
++    {
++        case SEI_TYPE_RECOVERY_POINT:
+             recovery_frame_cnt = get_ue_golomb(gb);
+             exact_match_flag = get_bits1(gb);
+             broken_link_flag = get_bits1(gb);
+@@ -857,13 +851,12 @@
+             is_keyframe |= (recovery_frame_cnt >= 0);
+             return;
+ 
+-          default:
++        default:
+             skip_bits(gb, size * 8);
+             break;
+-        }
+-
+-        align_get_bits(gb);
+     }
++
++    align_get_bits(gb);
+ }
+ 
+ void H264Parser::vui_parameters(GetBitContext * gb)
 Index: mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
 ===================================================================
 --- mythtv/libs/libmythtv/mpeg/dvbdescriptors.h	(revision 22751)
@@ -1712,6 +2017,66 @@ Index: mythtv/libs/libmythtv/DVDRingBuffer.h
  //    QMap<uint, uint> m_audioTrackMap;
  //    QMap<uint, uint> m_subTrackMap;
  
+Index: mythtv/libs/libmythtv/vsync.cpp
+===================================================================
+--- mythtv/libs/libmythtv/vsync.cpp	(revision 22751)
++++ mythtv/libs/libmythtv/vsync.cpp	(working copy)
+@@ -187,11 +187,13 @@
+ /** \fn VideoSync::CalcDelay()
+  *  \brief Calculates the delay to the next frame.
+  *
+- *   Regardless of the timing method, if delay is greater than two full
++ *   Regardless of the timing method, if delay is greater than four full
+  *   frames (could be greater than 20 or greater than 200), we don't want
+  *   to freeze while waiting for a huge delay. Instead, contine playing 
+  *   video at half speed and continue to read new audio and video frames
+  *   from the file until the sync is 'in the ballpark'.
++ *   Also prevent the nexttrigger from falling too far in the past in case
++ *   we are trying to speed up video output faster than possible.
+  */
+ int VideoSync::CalcDelay()
+ {
+@@ -205,12 +207,12 @@
+ 
+     //cout << "delay " << ret_val << endl;
+ 
+-    if (ret_val > m_frame_interval * 2)
++    if (ret_val > m_frame_interval * 4)
+     {
+         if (m_interlaced)
+-            ret_val = m_frame_interval; // same as / 2 * 2.
++            ret_val = (m_frame_interval / 2) * 4;
+         else
+-            ret_val = m_frame_interval * 2;
++            ret_val = m_frame_interval * 4;
+ 
+         // set nexttrigger to our new target time
+         m_nexttrigger.tv_sec = now.tv_sec;
+@@ -218,6 +220,16 @@
+         OffsetTimeval(m_nexttrigger, ret_val);
+     }
+ 
++    if (ret_val < -m_frame_interval)
++    {
++        ret_val = -m_frame_interval;
++
++        // set nexttrigger to our new target time
++        m_nexttrigger.tv_sec = now.tv_sec;
++        m_nexttrigger.tv_usec = now.tv_usec;
++        OffsetTimeval(m_nexttrigger, ret_val);
++    }
++
+     return ret_val;
+ }
+ 
+@@ -681,6 +693,7 @@
+         // If late, draw the frame ASAP.  If early, hold the CPU until
+         // half as late as the previous frame (fudge).
+         m_delay = CalcDelay();
++        m_fudge = min(m_fudge, m_frame_interval);
+         while (m_delay + m_fudge > 0)
+         {
+             m_delay = CalcDelay();
 Index: mythtv/libs/libmythtv/tv_play.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/tv_play.cpp	(revision 22751)
@@ -1888,6 +2253,109 @@ Index: mythtv/libs/libmythtv/videodisplayprofile.cpp
  void VideoDisplayProfile::CreateProfiles(const QString &hostname)
  {
      CreateOldProfiles(hostname);
+Index: mythtv/libs/libavcodec/h264.c
+===================================================================
+--- mythtv/libs/libavcodec/h264.c	(revision 22751)
++++ mythtv/libs/libavcodec/h264.c	(working copy)
+@@ -7791,7 +7791,7 @@
+     if(!(s->flags2 & CODEC_FLAG2_CHUNKS) || (s->mb_y >= s->mb_height && s->mb_height)){
+         Picture *out = s->current_picture_ptr;
+         Picture *cur = s->current_picture_ptr;
+-        int i, pics, cross_idr, out_of_order, out_idx;
++        int i, pics, out_of_order, out_idx;
+ 
+         field_end(h);
+ 
+@@ -7895,15 +7895,15 @@
+                     out = h->delayed_pic[i];
+                     out_idx = i;
+                 }
+-            cross_idr = !!h->delayed_pic[i] || h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset;
++            if(s->avctx->has_b_frames == 0 && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset))
++                h->outputed_poc= INT_MIN;
++            out_of_order = out->poc < h->outputed_poc;
+ 
+-            out_of_order = !cross_idr && out->poc < h->outputed_poc;
+-
+             if(h->sps.bitstream_restriction_flag && s->avctx->has_b_frames >= h->sps.num_reorder_frames)
+                 { }
+             else if((out_of_order && pics-1 == s->avctx->has_b_frames && s->avctx->has_b_frames < MAX_DELAYED_PIC_COUNT)
+                || (s->low_delay &&
+-                ((!cross_idr && out->poc > h->outputed_poc + 2)
++                ((h->outputed_poc != INT_MIN && out->poc > h->outputed_poc + 2)
+                  || cur->pict_type == FF_B_TYPE)))
+             {
+                 s->low_delay = 0;
+@@ -7918,7 +7918,10 @@
+             if(!out_of_order && pics > s->avctx->has_b_frames){
+                 *data_size = sizeof(AVFrame);
+ 
+-                h->outputed_poc = out->poc;
++                if(out_idx==0 && h->delayed_pic[0] && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset)) {
++                    h->outputed_poc = INT_MIN;
++                } else
++                    h->outputed_poc = out->poc;
+                 *pict= *(AVFrame*)out;
+             }else{
+                 av_log(avctx, AV_LOG_DEBUG, "no picture\n");
+Index: mythtv/libs/libavformat/matroskadec.c
+===================================================================
+--- mythtv/libs/libavformat/matroskadec.c	(revision 22751)
++++ mythtv/libs/libavformat/matroskadec.c	(working copy)
+@@ -241,6 +241,7 @@
+ typedef struct {
+     uint64_t duration;
+     int64_t  reference;
++    uint64_t  non_simple;
+     EbmlBin  bin;
+ } MatroskaBlock;
+ 
+@@ -479,6 +480,7 @@
+     { MATROSKA_ID_SIMPLEBLOCK,    EBML_BIN,  0, offsetof(MatroskaBlock,bin) },
+     { MATROSKA_ID_BLOCKDURATION,  EBML_UINT, 0, offsetof(MatroskaBlock,duration), {.u=AV_NOPTS_VALUE} },
+     { MATROSKA_ID_BLOCKREFERENCE, EBML_UINT, 0, offsetof(MatroskaBlock,reference) },
++    { 1,                          EBML_UINT, 0, offsetof(MatroskaBlock,non_simple), {.u=1} },
+     { 0 }
+ };
+ 
+@@ -1374,6 +1376,7 @@
+                       st->codec->height * track->video.display_width,
+                       st->codec-> width * track->video.display_height,
+                       255);
++            if (st->codec->codec_id != CODEC_ID_H264)
+             st->need_parsing = AVSTREAM_PARSE_HEADERS;
+         } else if (track->type == MATROSKA_TRACK_TYPE_AUDIO) {
+             st->codec->codec_type = CODEC_TYPE_AUDIO;
+@@ -1744,12 +1747,14 @@
+     blocks_list = &cluster.blocks;
+     blocks = blocks_list->elem;
+     for (i=0; i<blocks_list->nb_elem; i++)
+-        if (blocks[i].bin.size > 0)
++        if (blocks[i].bin.size > 0) {
++            int is_keyframe = blocks[i].non_simple ? !blocks[i].reference : -1;
+             res=matroska_parse_block(matroska,
+                                      blocks[i].bin.data, blocks[i].bin.size,
+                                      blocks[i].bin.pos,  cluster.timecode,
+-                                     blocks[i].duration, !blocks[i].reference,
++                                     blocks[i].duration, is_keyframe,
+                                      pos);
++        }
+     ebml_free(matroska_cluster, &cluster);
+     if (res < 0)  matroska->done = 1;
+     return res;
+Index: mythtv/libs/libavformat/utils.c
+===================================================================
+--- mythtv/libs/libavformat/utils.c	(revision 22751)
++++ mythtv/libs/libavformat/utils.c	(working copy)
+@@ -800,7 +800,7 @@
+     int num, den, presentation_delayed, delay, i;
+     int64_t offset;
+ 
+-    if (pc && pc->pict_type == FF_B_TYPE)
++    if (st->codec->codec_id != CODEC_ID_H264 && pc && pc->pict_type == FF_B_TYPE)
+         st->codec->has_b_frames = 1;
+ 
+     /* do we have a video B-frame ? */
 Index: mythtv/libs/libmythui/mythmainwindow.cpp
 ===================================================================
 --- mythtv/libs/libmythui/mythmainwindow.cpp	(revision 22751)
@@ -2121,7 +2589,7 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
                  if (d->WOLInProgress)
 Index: mythtv/libs/libmyth/audiooutputbase.cpp
 ===================================================================
---- mythtv/libs/libmyth/audiooutputbase.cpp	(revision 23433)
+--- mythtv/libs/libmyth/audiooutputbase.cpp	(revision 23632)
 +++ mythtv/libs/libmyth/audiooutputbase.cpp	(working copy)
 @@ -14,6 +14,7 @@
  #include "audiooutputdigitalencoder.h"
@@ -2268,7 +2736,7 @@ Index: mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h
  int8_t dvdnav_get_active_spu_stream(dvdnav_t *self);
 Index: mythtv/libs/libmythdb/lcddevice.cpp
 ===================================================================
---- mythtv/libs/libmythdb/lcddevice.cpp	(revision 23433)
+--- mythtv/libs/libmythdb/lcddevice.cpp	(revision 23632)
 +++ mythtv/libs/libmythdb/lcddevice.cpp	(working copy)
 @@ -47,6 +47,11 @@
  #include "mythdirs.h"
@@ -2397,7 +2865,7 @@ Index: mythtv/libs/libmythdb/lcddevice.cpp
  void LCD::switchToTime()
 Index: mythtv/libs/libmythdb/lcddevice.h
 ===================================================================
---- mythtv/libs/libmythdb/lcddevice.h	(revision 23433)
+--- mythtv/libs/libmythdb/lcddevice.h	(revision 23632)
 +++ mythtv/libs/libmythdb/lcddevice.h	(working copy)
 @@ -94,6 +94,81 @@
      bool itemScrollable;
@@ -2840,6 +3308,76 @@ Index: mythtv/programs/mythbackend/main.cpp
          close(i);
  #else
      // MINGW application needs a window to receive messages
+Index: mythtv/programs/mythbackend/mainserver.cpp
+===================================================================
+--- mythtv/programs/mythbackend/mainserver.cpp	(revision 22751)
++++ mythtv/programs/mythbackend/mainserver.cpp	(working copy)
+@@ -1671,7 +1671,7 @@
+     sleep(3);
+     usleep(rand()%2000);
+ 
+-    QMutexLocker dl(&deletelock);
++    deletelock.lock();
+ 
+     QString logInfo = QString("chanid %1 at %2")
+                               .arg(ds->chanid).arg(ds->recstartts.toString());
+@@ -1691,6 +1691,7 @@
+                                    "Program will NOT be deleted.")
+                                    .arg(logInfo));
+ 
++        deletelock.unlock();
+         return;
+     }
+ 
+@@ -1708,6 +1709,7 @@
+                                    "Program will NOT be deleted.")
+                                    .arg(logInfo));
+ 
++        deletelock.unlock();
+         return;
+     }
+ 
+@@ -1729,6 +1731,7 @@
+         MythEvent me("RECORDING_LIST_CHANGE");
+         gContext->dispatch(me);
+ 
++        deletelock.unlock();
+         return;
+     }
+ 
+@@ -1778,6 +1781,7 @@
+         MythEvent me("RECORDING_LIST_CHANGE");
+         gContext->dispatch(me);
+ 
++        deletelock.unlock();
+         return;
+     }
+ 
+@@ -1807,6 +1811,8 @@
+     if (pginfo->recgroup != "LiveTV")
+         ScheduledRecording::signalChange(0);
+ 
++    deletelock.unlock();
++
+     if (slowDeletes && fd >= 0)
+         TruncateAndClose(pginfo.get(), fd, ds->filename, size);
+ }
+@@ -3920,12 +3926,13 @@
+ 
+ void MainServer::DoTruncateThread(const DeleteStruct *ds)
+ {
+-    QMutexLocker dl(&deletelock);
+-
+     if (gContext->GetNumSetting("TruncateDeletesSlowly", 0))
+         TruncateAndClose(NULL, ds->fd, ds->filename, ds->size);
+     else
++    {
++        QMutexLocker dl(&deletelock);
+         close(ds->fd);
++    }
+ }
+ 
+ bool MainServer::HandleDeleteFile(QStringList &slist, PlaybackSock *pbs)
 Index: mythtv/programs/mythbackend/scheduler.cpp
 ===================================================================
 --- mythtv/programs/mythbackend/scheduler.cpp	(revision 22751)
@@ -4617,8 +5155,13 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# Start the Miro Front and Backend - This allows mirobridge to execute actions on the Miro backend
  	#
  	displayMessage(u"Starting Miro Frontend and Backend")
-@@ -2446,7 +2530,7 @@
- 		print_text(app.cli_events.startup_failure[1])
+@@ -2442,11 +2526,10 @@
+ 	startup.startup()
+ 	app.cli_events.startup_event.wait()
+ 	if app.cli_events.startup_failure:
+-		logger.critical(u"Starting Miro Frontend and Backend failed: (%s)" % app.cli_events.startup_failure[0])
+-		print_text(app.cli_events.startup_failure[1])
++		logger.critical(u"Starting Miro Frontend and Backend failed: (%s)\n(%s)" % (app.cli_events.startup_failure[0], app.cli_events.startup_failure[1]))
  		app.controller.shutdown()
  		time.sleep(5) # Let the shutdown processing complete
 -		sys.exit(False)
@@ -4626,7 +5169,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	app.cli_interpreter = MiroInterpreter()
  	if opts.verbose:
  		app.cli_interpreter.verbose = True
-@@ -2460,10 +2544,10 @@
+@@ -2460,10 +2543,10 @@
  	app.cli_interpreter.statistics = statistics
  	if config.get(prefs.APP_VERSION) < u"2.5.0":
  		app.renderer = app.cli_interpreter
@@ -4639,7 +5182,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# Optionally Update Miro feeds and
  	# download any "autodownloadable" videos which are pending
  	#
-@@ -2493,11 +2577,11 @@
+@@ -2493,11 +2576,11 @@
  			app.cli_interpreter.verbose = False
  		app.cli_interpreter.do_mythtv_getunwatched(u'')
  		after_download = len(app.cli_interpreter.videofiles)
@@ -4653,7 +5196,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# These records indicate that the MythTV user deleted the video from the Watched Recordings screen
  	# or from MythVideo
  	# These video items must also be deleted from Miro
-@@ -2521,7 +2605,7 @@
+@@ -2521,7 +2604,7 @@
  		app.cli_interpreter.do_mythtv_updatewatched(u'')
  
  	#
@@ -4662,7 +5205,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	#
  	app.cli_interpreter.do_mythtv_getunwatched(u'')
  	unwatched = app.cli_interpreter.videofiles
-@@ -2533,7 +2617,7 @@
+@@ -2533,7 +2616,7 @@
  	watched = app.cli_interpreter.videofiles
  
  	#
@@ -4671,7 +5214,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# This means that Miro has duplicates due to a Miro/Channel website issue
  	# These videos should not be added to the MythTV Watch Recordings screen
  	#
-@@ -2546,7 +2630,7 @@
+@@ -2546,7 +2629,7 @@
  				try:
  					unwatched.remove(item)
  					# Completely remove this duplicate video and item information from Miro
@@ -4680,7 +5223,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  					displayMessage(u"Skipped adding a duplicate Miro video to the MythTV Watch Recordings screen (%s - %s) which is already in MythVideo.\nSometimes a Miro channel has the same video downloaded multiple times.\nThis is a Miro/Channel web site issue and often rectifies itself overtime." % (item[u'channelTitle'], item[u'title']))
  				except ValueError:
  					pass
-@@ -2567,7 +2651,7 @@
+@@ -2567,7 +2650,7 @@
  		try:
  			unwatched.remove(duplicate)
  			# Completely remove this duplicate video and item information from Miro
@@ -4689,7 +5232,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  			displayMessage(u"Skipped adding a Miro video to the MythTV Watch Recordings screen (%s - %s) as there are duplicate 'new' video items.\nSometimes a Miro channel has the same video downloaded multiple times.\nThis is a Miro/Channel web site issue and often rectifies itself overtime." % (duplicate[u'channelTitle'], duplicate[u'title']))
  		except ValueError:
  			pass
-@@ -2576,8 +2660,8 @@
+@@ -2576,8 +2659,8 @@
  	# Deal with any Channel videos that are to be copied and removed from Miro
  	#
  	copy_items = []
@@ -4700,7 +5243,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		for array in [watched, unwatched]:
  			for item in array:
  				copy_items.append(item)
-@@ -2586,11 +2670,11 @@
+@@ -2586,11 +2669,11 @@
  			for video in array:
  				if filter(is_not_punct_char, video[u'channelTitle'].lower()) in channel_mythvideo_only.keys():
  					copy_items.append(video)
@@ -4715,7 +5258,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		for video in watched:
  			if filter(is_not_punct_char, video[u'channelTitle'].lower()) in channel_new_watch_copy.keys():
  				copy_items.append(video)
-@@ -2600,39 +2684,42 @@
+@@ -2600,39 +2683,42 @@
  		channels_to_copy[key] = channel_mythvideo_only[key]
  	for key in channel_new_watch_copy.keys():
  		channels_to_copy[key] = channel_new_watch_copy[key]
@@ -4772,7 +5315,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  				else:
  					try:	# Miro Channel icon copy for the new subdirectory
  						useImageMagick(u'convert "%s" "%s"' % (video[u'channel_icon'], dirpath))
-@@ -2641,21 +2728,21 @@
+@@ -2641,21 +2727,21 @@
  						# Gracefully close the Miro database and shutdown the Miro Front and Back ends
  						app.controller.shutdown()
  						time.sleep(5) # Let the shutdown processing complete
@@ -4797,7 +5340,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  					video[u'videoFilename'] = filepath.replace(storagegroups[u'mythvideo'], u'')
  				else:
  					video[u'videoFilename'] = filepath
-@@ -2664,51 +2751,51 @@
+@@ -2664,51 +2750,51 @@
  				# Gracefully close the Miro database and shutdown the Miro Front and Back ends
  				app.controller.shutdown()
  				time.sleep(5) # Let the shutdown processing complete
@@ -4880,7 +5423,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		else:
  			filepath = u''
  
-@@ -2724,7 +2811,7 @@
+@@ -2724,7 +2810,7 @@
  							pass
  						shutil.copy2(video[u'screenshot'], filepath)
  						displayMessage(u"Copied Miro screenshot file (%s) to MythVideo (%s)" % (video[u'screenshot'], filepath))
@@ -4889,7 +5432,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  							video[u'screenshot'] = filepath.replace(storagegroups[u'episodeimagedir'], u'')
  						else:
  							video[u'screenshot'] = filepath
-@@ -2733,19 +2820,18 @@
+@@ -2733,19 +2819,18 @@
  						# Gracefully close the Miro database and shutdown the Miro Front and Back ends
  						app.controller.shutdown()
  						time.sleep(5) # Let the shutdown processing complete
@@ -4913,7 +5456,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	# Gracefully close the Miro database and shutdown the Miro Front and Back ends
  	app.controller.shutdown()
  	time.sleep(5) # Let the shutdown processing complete
-@@ -2756,7 +2842,7 @@
+@@ -2756,7 +2841,7 @@
  	#
  
  	# Check if the user does not want any channels Added to the "Watch Recordings" screen
@@ -4922,7 +5465,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  		for video in unwatched:
  			watched.append(video)
  		unwatched = []
-@@ -2775,12 +2861,12 @@
+@@ -2775,12 +2860,12 @@
  		displayMessage(u"There are no Miro unwatched video items to add as MythTV Recorded videos.")
  	if not updateMythRecorded(unwatched):
  		logger.critical(u"Updating MythTV Recording with Miro video files failed." % str(base_video_dir))
@@ -4937,7 +5480,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  	#
  	if len(channel_watch_only): # If the user does not want any channels moved to MythVideo exit
  		if channel_watch_only[0].lower() == u'all':
-@@ -2791,7 +2877,7 @@
+@@ -2791,7 +2876,7 @@
  		displayMessage(u"There are no Miro watched items to add to MythVideo")
  	if not updateMythVideo(watched):
  		logger.critical(u"Updating MythVideo with Miro video files failed.")
@@ -4946,7 +5489,7 @@ Index: mythtv/contrib/imports/mirobridge/mirobridge.py
  
  	printStatistics()
  	return True
-@@ -2804,8 +2890,7 @@
+@@ -2804,8 +2889,7 @@
  	#
  	if myapp.alreadyrunning():
  		print u'\nMiro Bridge is already running only one instance can run at a time\n\n'
