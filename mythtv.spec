@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23630
+%define _svnrev r23702
 %define branch trunk
 
 #
@@ -740,6 +740,7 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mplayer
 Requires:  transcode >= 0.6.8
 Requires:  python-imdb
+Requires:  python-MythTV = %{version}-%{release}
 
 Provides:  mythdvd = %{version}-%{release}
 Obsoletes: mythdvd < %{version}-%{release}
@@ -809,6 +810,7 @@ Summary:   A MythTV module for Internet video on demand
 Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mythbrowser = %{version}-%{release}
+Requires:  python-MythTV = %{version}-%{release}
 
 %description -n mythnetvision
 A MythTV module that supports searching and browsing of Internet video
@@ -1482,6 +1484,13 @@ fi
 ################################################################################
 
 %changelog
+* Tue Mar 09 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23702
+- Update to svn trunk, revision 23702
+- Add missing Requires: python-MythTV to mythvideo and mythnetvision plugins
+
+* Thu Mar 04 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23662
+- Update to svn trunk, revision 23662
+
 * Mon Mar 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23630
 - Update to svn trunk, revision 23630
 - Make mythbackend --version actually print useful stuff now (like pkg ver)
