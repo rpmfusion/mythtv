@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23781
+%define _svnrev r23894
 %define branch trunk
 
 #
@@ -80,7 +80,7 @@ Group:          Applications/Multimedia
 Version: 0.23
 %if "%{branch}" == "trunk"
 #Release: 0.1.svn.%{_svnrev}%{?dist}
-Release: 0.2.rc1%{?dist}
+Release: 0.3.rc1%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1478,6 +1478,7 @@ fi
 %{_libdir}/mythtv/plugins/libmythnetvision.so
 %{_datadir}/mythtv/mythnetvision
 %{_datadir}/mythtv/netvisionmenu.xml
+%{_datadir}/mythtv/i18n/mythnetvision_*.qm
 %endif
 
 %endif
@@ -1485,6 +1486,10 @@ fi
 ################################################################################
 
 %changelog
+* Thu Apr 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.3.rc1
+- Start tracking release-0-23-fixes branch
+- Update to post-rc1 svn snapshot, revision 23894
+
 * Tue Mar 23 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.2.rc1
 - Update to svn trunk, revision 23781, aka MythTV 0.23 RC1 (more or less)
 
