@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23894
+%define _svnrev r24014
 %define branch trunk
 
 #
@@ -80,7 +80,7 @@ Group:          Applications/Multimedia
 Version: 0.23
 %if "%{branch}" == "trunk"
 #Release: 0.1.svn.%{_svnrev}%{?dist}
-Release: 0.3.rc1%{?dist}
+Release: 0.4.rc2%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1486,6 +1486,9 @@ fi
 ################################################################################
 
 %changelog
+* Tue Apr 06 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.4.rc2
+- Update to post-rc2 svn snapshot, revision 24014
+
 * Thu Apr 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.3.rc1
 - Start tracking release-0-23-fixes branch
 - Update to post-rc1 svn snapshot, revision 23894
