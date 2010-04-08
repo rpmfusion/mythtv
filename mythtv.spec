@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r24014
+%define _svnrev r24030
 %define branch trunk
 
 #
@@ -80,7 +80,7 @@ Group:          Applications/Multimedia
 Version: 0.23
 %if "%{branch}" == "trunk"
 #Release: 0.1.svn.%{_svnrev}%{?dist}
-Release: 0.4.rc2%{?dist}
+Release: 0.5.rc2%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1486,6 +1486,11 @@ fi
 ################################################################################
 
 %changelog
+* Thu Apr 08 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.5.rc2
+- Update to post-rc2 svn snapshot, revision 24030
+- Should fix some recording issues when using both inputs
+  on an hdhomerun
+
 * Tue Apr 06 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.4.rc2
 - Update to post-rc2 svn snapshot, revision 24014
 
