@@ -44,11 +44,11 @@
 #
 # --without mytharchive
 # --without mythbrowser
-# --without mythflix
 # --without mythgallery
 # --without mythgame
 # --without mythmovies
 # --without mythmusic
+# --without mythnetvision
 # --without mythnews
 # --without mythvideo
 # --without mythweather
@@ -116,7 +116,6 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
 %define with_mytharchive    %{?_without_mytharchive:    0} %{!?_without_mytharchive:     1}
 %define with_mythbrowser    %{?_without_mythbrowser:    0} %{!?_without_mythbrowser:     1}
-%define with_mythflix       %{?_without_mythflix:       0} %{!?_without_mythflix:        1}
 %define with_mythgallery    %{?_without_mythgallery:    0} %{!?_without_mythgallery:     1}
 %define with_mythgame       %{?_without_mythgame:       0} %{!?_without_mythgame:        1}
 %define with_mythmovies     %{?_without_mythmovies:     0} %{!?_without_mythmovies:      1}
@@ -761,13 +760,13 @@ transcode package.
 %if %{with_mythweather}
 
 %package -n mythweather
-Summary:   A MythTV module that displays a weather forcast
+Summary:   A MythTV module that displays a weather forecast
 Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  perl(XML::SAX::Base)
 
 %description -n mythweather
-A MythTV module that displays a weather forcast.
+A MythTV module that displays a weather forecast.
 
 %endif
 ################################################################################
@@ -812,6 +811,10 @@ Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mythbrowser = %{version}-%{release}
 Requires:  python-MythTV = %{version}-%{release}
+Requires:  python-pycurl
+Requires:  python >= 2.5
+# This is packaged in adobe's yum repo
+#Requires:  flash-plugin
 
 %description -n mythnetvision
 A MythTV module that supports searching and browsing of Internet video
@@ -956,6 +959,9 @@ cd mythtv-%{version}
 %if %{with_vdpau}
     --enable-vdpau				\
 %endif
+%if !%{with_xvmc}
+    --disable-xvmcw                             \
+%endif
 %if %{with_directfb}
     --enable-directfb                           \
 %else
@@ -1086,7 +1092,8 @@ cd mythplugins-%{version}
         --enable-mythnetvision \
     %else
         --disable-mythnetvision \
-    %endif--enable-opengl \
+    %endif
+        --enable-opengl \
         --enable-libvisual \
         --enable-fftw \
         --enable-sdl \
