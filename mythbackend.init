@@ -5,35 +5,35 @@
 # chkconfig: - 86 14
 # description: mythbackend.
 # processname: mythbackend
-# pidfile: @rundir@/mythbackend.pid
+# pidfile: /var/run/mythbackend.pid
 # config:
 
 # Source function library.
-. @initdir@/functions
+. /etc/init.d/functions
 
-if [ -f @sysconfigdir@/mythbackend ]; then
-        . @sysconfigdir@/mythbackend
+if [ -f /etc/sysconfig/mythbackend ]; then
+        . /etc/sysconfig/mythbackend
 fi
 
-## Defaults, override them in @sysconfigdir@/mythbackend
-: ${MYTHTV_HOME=@sysconfdir@/mythtv}
+## Defaults, override them in /etc/sysconfig/mythbackend
+: ${MYTHTV_HOME=/etc/mythtv}
 
-binary=@bindir@/mythbackend
+binary=/usr/bin/mythbackend
 prog=mythbackend
 RETVAL=0
-OPTIONS="$OPTIONS --daemon --logfile @logdir@/mythtv/$prog.log --pidfile @rundir@/$prog.pid"
+OPTIONS="$OPTIONS --daemon --logfile /var/log/mythtv/$prog.log --pidfile /var/run/$prog.pid"
 # Would be nice to run as non-root, but it doesn't work -- dvb/v4l devices owned by root become unusable
-#OPTIONS="$OPTIONS --daemon --user mythtv --logfile @logdir@/mythtv/$prog.log --pidfile @rundir@/$prog.pid"
+#OPTIONS="$OPTIONS --daemon --user mythtv --logfile /var/log/mythtv/$prog.log --pidfile /var/run/$prog.pid"
 
 start() {
   echo -n $"Starting $prog: "
-  touch @rundir@/mythbackend.pid; chown mythtv:mythtv @rundir@/mythbackend.pid
+  touch /var/run/mythbackend.pid; chown mythtv:mythtv /var/run/mythbackend.pid
   export MYTHCONFDIR="$MYTHTV_HOME"
   export HOME="$MYTHTV_HOME"
   daemon $binary $OPTIONS
   RETVAL=$?
   echo
-  [ $RETVAL = 0 ] && touch @subsysdir@/$prog
+  [ $RETVAL = 0 ] && touch /var/lock/subsys/$prog
   return $RETVAL
 }
 
@@ -42,7 +42,7 @@ stop() {
   killproc $binary
   RETVAL=$?
   echo
-  [ $RETVAL = 0 ] && rm -f @subsysdir@/$prog @rundir@/$prog.pid
+  [ $RETVAL = 0 ] && rm -f /var/lock/subsys/$prog /var/run/$prog.pid
 }
 
 # See how we were called.

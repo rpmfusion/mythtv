@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r24030
+%define _svnrev r24129
 %define branch trunk
 
 #
@@ -80,7 +80,7 @@ Group:          Applications/Multimedia
 Version: 0.23
 %if "%{branch}" == "trunk"
 #Release: 0.1.svn.%{_svnrev}%{?dist}
-Release: 0.5.rc2%{?dist}
+Release: 0.6.rc2%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -135,9 +135,9 @@ Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 #Patch1:    mythplugins-%{version}-svnfixes.patch
 Patch2:    mythtv-version.patch
 Source10:  PACKAGE-LICENSING
-Source101: mythbackend.sysconfig.in
-Source102: mythbackend.init.in
-Source103: mythbackend.logrotate.in
+Source101: mythbackend.sysconfig
+Source102: mythbackend.init
+Source103: mythbackend.logrotate
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
@@ -857,25 +857,9 @@ cd mythtv-%{version}
     sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
         bindings/perl/perl.pro
 
-# Install other source files, and fix pathnames
+# Install other source files
     cp -a %{SOURCE10} %{SOURCE101} %{SOURCE102} %{SOURCE103} .
     cp -a %{SOURCE106} %{SOURCE107} %{SOURCE108} %{SOURCE109} .
-    for file in mythbackend.init \
-                mythbackend.sysconfig \
-                mythbackend.logrotate; do
-        sed -e's|@logdir@|%{_localstatedir}/log|g' \
-            -e's|@rundir@|%{_localstatedir}/run|g' \
-            -e's|@sysconfdir@|%{_sysconfdir}|g' \
-            -e's|@sysconfigdir@|%{_sysconfdir}/sysconfig|g' \
-            -e's|@initdir@|%{_sysconfdir}/init.d|g' \
-            -e's|@bindir@|%{_bindir}|g' \
-            -e's|@sbindir@|%{_sbindir}|g' \
-            -e's|@subsysdir@|%{_localstatedir}/lock/subsys|g' \
-            -e's|@varlibdir@|%{_localstatedir}/lib|g' \
-            -e's|@varcachedir@|%{_localstatedir}/cache|g' \
-            -e's|@logrotatedir@|%{_sysconfdir}/logrotate.d|g' \
-            < $file.in > $file
-    done
 
 # Prevent all of those nasty installs to ../../../../../bin/whatever
 #    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
@@ -957,7 +941,10 @@ cd mythtv-%{version}
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
 %if %{with_vdpau}
-    --enable-vdpau				\
+    --enable-vdpau                              \
+%endif
+%if !%{with_xvmc}
+    --disable-xvmcw                             \
 %endif
 %if !%{with_xvmc}
     --disable-xvmcw                             \
@@ -1493,6 +1480,10 @@ fi
 ################################################################################
 
 %changelog
+* Tue Apr 13 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.6.rc2
+- Update to post-rc2 svn snapshot, revision 24129
+- Assorted spec file resyncs w/mythtv svn spec
+
 * Thu Apr 08 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.5.rc2
 - Update to post-rc2 svn snapshot, revision 24030
 - Should fix some recording issues when using both inputs
