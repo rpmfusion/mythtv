@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r24414
+%define _svnrev r24443
 %define branch trunk
 
 #
@@ -80,7 +80,7 @@ Group:          Applications/Multimedia
 Version: 0.23
 %if "%{branch}" == "trunk"
 #Release: 0.1.svn.%{_svnrev}%{?dist}
-Release: 0.10.rc3%{?dist}
+Release: 0.11.rc3%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1480,6 +1480,10 @@ fi
 ################################################################################
 
 %changelog
+* Wed May 05 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.11.rc3
+- Update to post-rc3 svn snapshot, revision 24443
+- Fixes ppc64 build missing -maltivec
+
 * Tue May 04 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.10.rc3
 - Update to post-rc3 svn snapshot, revision 24414
 
