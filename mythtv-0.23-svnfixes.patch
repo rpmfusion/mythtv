@@ -1,0 +1,1088 @@
+diff -Naurp mythtv-0.23-release/bindings/perl/IO/Socket/INET/MythTV.pm mythtv-0.23/bindings/perl/IO/Socket/INET/MythTV.pm
+--- mythtv-0.23-release/bindings/perl/IO/Socket/INET/MythTV.pm	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/bindings/perl/IO/Socket/INET/MythTV.pm	2009-04-10 20:04:30.069718000 -0400
+@@ -3,8 +3,8 @@
+ # A MythTV Socket class that extends IO::Socket::INET to include some
+ # MythTV-specific data queries
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/bindings/perl/IO/Socket/INET/MythTV.pm $
+-# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/IO/Socket/INET/MythTV.pm $
++# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ # @version   $Revision: 20349 $
+ # @author    $Author: xris $
+ # @copyright Silicon Mechanics
+diff -Naurp mythtv-0.23-release/bindings/perl/MythTV/Channel.pm mythtv-0.23/bindings/perl/MythTV/Channel.pm
+--- mythtv-0.23-release/bindings/perl/MythTV/Channel.pm	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/bindings/perl/MythTV/Channel.pm	2010-05-23 12:42:23.678567000 -0400
+@@ -3,10 +3,10 @@
+ #
+ # Object containing info about a particular MythTV channel.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/bindings/perl/MythTV/Channel.pm $
+-# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
+-# @version   $Revision: 20349 $
+-# @author    $Author: xris $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/Channel.pm $
++# @date      $Date: 2010-05-23 12:42:23 -0400 (Sun, 23 May 2010) $
++# @version   $Revision: 24810 $
++# @author    $Author: mdean $
+ #
+ 
+ # Make sure that the main MythTV package is loaded
+@@ -24,36 +24,38 @@ package MythTV::Channel;
+         my $data = shift;
+ 
+     # Fields from the channel table
+-        $self->{'atsc_major_chan'}  = $data->{'atsc_major_chan'};
+-        $self->{'atsc_minor_chan'}  = $data->{'atsc_minor_chan'};
+-        $self->{'atscsrcid'}        = $data->{'atscsrcid'};
+-        $self->{'brightness'}       = $data->{'brightness'};
+-        $self->{'callsign'}         = $data->{'callsign'};
+-        $self->{'chanid'}           = $data->{'chanid'};
+-        $self->{'channum'}          = $data->{'channum'};
+-        $self->{'colour'}           = $data->{'colour'};
+-        $self->{'commfree'}         = $data->{'commfree'};
+-        $self->{'contrast'}         = $data->{'contrast'};
+-        $self->{'finetune'}         = $data->{'finetune'};
+-        $self->{'freqid'}           = $data->{'freqid'};
+-        $self->{'hue'}              = $data->{'hue'};
+-        $self->{'icon'}             = $data->{'icon'};
+-        $self->{'mplexid'}          = $data->{'mplexid'};
+-        $self->{'name'}             = $data->{'name'};
+-        $self->{'outputfilters'}    = $data->{'outputfilters'};
+-        $self->{'recpriority'}      = $data->{'recpriority'};
+-        $self->{'serviceid'}        = $data->{'serviceid'};
+-        $self->{'sourceid'}         = $data->{'sourceid'};
+-        $self->{'tmoffset'}         = $data->{'tmoffset'};
+-        $self->{'tvformat'}         = $data->{'tvformat'};
+-        $self->{'useonairguide'}    = $data->{'useonairguide'};
+-        $self->{'videofilters'}     = $data->{'videofilters'};
+-        $self->{'visible'}          = $data->{'visible'};
+-        $self->{'xmltvid'}          = $data->{'xmltvid'};
++        $self->{'atsc_major_chan'}   = $data->{'atsc_major_chan'};
++        $self->{'atsc_minor_chan'}   = $data->{'atsc_minor_chan'};
++        $self->{'brightness'}        = $data->{'brightness'};
++        $self->{'callsign'}          = $data->{'callsign'};
++        $self->{'chanid'}            = $data->{'chanid'};
++        $self->{'channum'}           = $data->{'channum'};
++        $self->{'colour'}            = $data->{'colour'};
++        $self->{'commmethod'}        = $data->{'commmethod'};
++        $self->{'contrast'}          = $data->{'contrast'};
++        $self->{'default_authority'} = $data->{'default_authority'};
++        $self->{'finetune'}          = $data->{'finetune'};
++        $self->{'freqid'}            = $data->{'freqid'};
++        $self->{'hue'}               = $data->{'hue'};
++        $self->{'icon'}              = $data->{'icon'};
++        $self->{'last_record'}       = $data->{'last_record'};
++        $self->{'mplexid'}           = $data->{'mplexid'};
++        $self->{'name'}              = $data->{'name'};
++        $self->{'outputfilters'}     = $data->{'outputfilters'};
++        $self->{'recpriority'}       = $data->{'recpriority'};
++        $self->{'serviceid'}         = $data->{'serviceid'};
++        $self->{'sourceid'}          = $data->{'sourceid'};
++        $self->{'tmoffset'}          = $data->{'tmoffset'};
++        $self->{'tvformat'}          = $data->{'tvformat'};
++        $self->{'useonairguide'}     = $data->{'useonairguide'};
++        $self->{'videofilters'}      = $data->{'videofilters'};
++        $self->{'visible'}           = $data->{'visible'};
++        $self->{'xmltvid'}           = $data->{'xmltvid'};
+ 
+     # DVB fields, from the dtv_multiplex table
+         $self->{'dtv_bandwidth'}            = $data->{'dtv_bandwidth'};
+         $self->{'dtv_constellation'}        = $data->{'dtv_constellation'};
++        $self->{'dtv_default_authority'}    = $data->{'dtv_default_authority'};
+         $self->{'dtv_fec'}                  = $data->{'dtv_fec'};
+         $self->{'dtv_frequency'}            = $data->{'dtv_frequency'};
+         $self->{'dtv_guard_interval'}       = $data->{'dtv_guard_interval'};
+@@ -62,8 +64,10 @@ package MythTV::Channel;
+         $self->{'dtv_inversion'}            = $data->{'dtv_inversion'};
+         $self->{'dtv_lp_code_rate'}         = $data->{'dtv_lp_code_rate'};
+         $self->{'dtv_modulation'}           = $data->{'dtv_modulation'};
++        $self->{'dtv_mod_sys'}              = $data->{'dtv_mod_sys'};
+         $self->{'dtv_networkid'}            = $data->{'dtv_networkid'};
+         $self->{'dtv_polarity'}             = $data->{'dtv_polarity'};
++        $self->{'dtv_rolloff'}              = $data->{'dtv_rolloff'};
+         $self->{'dtv_serviceversion'}       = $data->{'dtv_serviceversion'};
+         $self->{'dtv_sistandard'}           = $data->{'dtv_sistandard'};
+         $self->{'dtv_sourceid'}             = $data->{'dtv_sourceid'};
+diff -Naurp mythtv-0.23-release/bindings/perl/MythTV/Program.pm mythtv-0.23/bindings/perl/MythTV/Program.pm
+--- mythtv-0.23-release/bindings/perl/MythTV/Program.pm	2009-07-06 13:01:48.000000000 -0400
++++ mythtv-0.23/bindings/perl/MythTV/Program.pm	2009-07-06 13:01:48.827558000 -0400
+@@ -3,8 +3,8 @@
+ #
+ # Object containing info about a particular MythTV program.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/bindings/perl/MythTV/Program.pm $
+-# @date      $Date: 2009-07-06 10:01:48 -0700 (Mon, 06 Jul 2009) $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/Program.pm $
++# @date      $Date: 2009-07-06 13:01:48 -0400 (Mon, 06 Jul 2009) $
+ # @version   $Revision: 20795 $
+ # @author    $Author: stuartm $
+ #
+diff -Naurp mythtv-0.23-release/bindings/perl/MythTV/Recording.pm mythtv-0.23/bindings/perl/MythTV/Recording.pm
+--- mythtv-0.23-release/bindings/perl/MythTV/Recording.pm	2010-03-21 19:16:27.000000000 -0400
++++ mythtv-0.23/bindings/perl/MythTV/Recording.pm	2010-03-21 19:16:27.821969000 -0400
+@@ -3,8 +3,8 @@
+ #
+ # Object containing info about a particular MythTV recording.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/bindings/perl/MythTV/Recording.pm $
+-# @date      $Date: 2010-03-21 16:16:27 -0700 (Sun, 21 Mar 2010) $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/Recording.pm $
++# @date      $Date: 2010-03-21 19:16:27 -0400 (Sun, 21 Mar 2010) $
+ # @version   $Revision: 23772 $
+ # @author    $Author: beirdo $
+ #
+diff -Naurp mythtv-0.23-release/bindings/perl/MythTV/StorageGroup.pm mythtv-0.23/bindings/perl/MythTV/StorageGroup.pm
+--- mythtv-0.23-release/bindings/perl/MythTV/StorageGroup.pm	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/bindings/perl/MythTV/StorageGroup.pm	2009-04-10 20:04:30.069718000 -0400
+@@ -3,8 +3,8 @@
+ #
+ # Object containing info about a particular MythTV Storage Group.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/bindings/perl/MythTV/StorageGroup.pm $
+-# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/StorageGroup.pm $
++# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ # @version   $Revision: 20349 $
+ # @author    $Author: xris $
+ #
+diff -Naurp mythtv-0.23-release/bindings/perl/MythTV.pm mythtv-0.23/bindings/perl/MythTV.pm
+--- mythtv-0.23-release/bindings/perl/MythTV.pm	2010-03-01 17:17:19.000000000 -0500
++++ mythtv-0.23/bindings/perl/MythTV.pm	2010-05-23 12:42:23.678567000 -0400
+@@ -1,10 +1,10 @@
+ #
+ # MythTV bindings for perl.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/bindings/perl/MythTV.pm $
+-# @date      $Date: 2010-03-01 14:17:19 -0800 (Mon, 01 Mar 2010) $
+-# @version   $Revision: 23636 $
+-# @author    $Author: cpinkham $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV.pm $
++# @date      $Date: 2010-05-23 12:42:23 -0400 (Sun, 23 May 2010) $
++# @version   $Revision: 24810 $
++# @author    $Author: mdean $
+ #
+ 
+ # Version
+@@ -710,6 +710,7 @@ EOF
+         my $sh = $self->{'dbh'}->prepare('SELECT channel.*,
+                                                  dtv_multiplex.bandwidth         AS dtv_bandwidth,
+                                                  dtv_multiplex.constellation     AS dtv_constellation,
++                                                 dtv_multiplex.default_authority AS dtv_default_authority,
+                                                  dtv_multiplex.fec               AS dtv_fec,
+                                                  dtv_multiplex.frequency         AS dtv_frequency,
+                                                  dtv_multiplex.guard_interval    AS dtv_guard_interval,
+@@ -718,8 +719,10 @@ EOF
+                                                  dtv_multiplex.inversion         AS dtv_inversion,
+                                                  dtv_multiplex.lp_code_rate      AS dtv_lp_code_rate,
+                                                  dtv_multiplex.modulation        AS dtv_modulation,
++                                                 dtv_multiplex.mod_sys           AS dtv_mod_sys,
+                                                  dtv_multiplex.networkid         AS dtv_networkid,
+                                                  dtv_multiplex.polarity          AS dtv_polarity,
++                                                 dtv_multiplex.rolloff           AS dtv_rolloff,
+                                                  dtv_multiplex.serviceversion    AS dtv_serviceversion,
+                                                  dtv_multiplex.sistandard        AS dtv_sistandard,
+                                                  dtv_multiplex.sourceid          AS dtv_sourceid,
+diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythData.py mythtv-0.23/bindings/python/MythTV/MythData.py
+--- mythtv-0.23-release/bindings/python/MythTV/MythData.py	2010-04-21 00:46:55.000000000 -0400
++++ mythtv-0.23/bindings/python/MythTV/MythData.py	2010-05-19 23:43:41.152467000 -0400
+@@ -175,7 +175,7 @@ class FileTransfer( MythBEConn ):
+         if not self.open:
+             return
+         self.control.backendCommand('QUERY_FILETRANSFER '\
+-                    +BACKEND_SEP.join([str(self.sockno), 'JOIN']))
++                    +BACKEND_SEP.join([str(self.sockno), 'DONE']))
+         self.socket.shutdown(1)
+         self.socket.close()
+         self.open = False
+diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythFunc.py mythtv-0.23/bindings/python/MythTV/MythFunc.py
+--- mythtv-0.23-release/bindings/python/MythTV/MythFunc.py	2010-03-31 15:07:44.000000000 -0400
++++ mythtv-0.23/bindings/python/MythTV/MythFunc.py	2010-05-23 15:52:40.992320000 -0400
+@@ -392,13 +392,16 @@ class MythBE( FileOps ):
+         'filenames' is a dictionary, where the values are the file sizes.
+         """
+         def walk(self, host, sg, root, path):
+-            dn, fn, fs = self.getSGList(host, sg, root+path+'/')
+-            res = [list(dn), dict(zip(fn, fs))]
++            res = self.getSGList(host, sg, root+path+'/')
++            if res < 0:
++                return {}
++            dlist = list(res[0])
++            res = [dlist, dict(zip(res[1],res[2]))]
+             if path == '':
+                 res = {'/':res}
+             else:
+                 res = {path:res}
+-            for d in dn:
++            for d in dlist:
+                 res.update(walk(self, host, sg, root, path+'/'+d))
+             return res
+ 
+@@ -820,7 +823,7 @@ class MythDB( MythDBBase ):
+ 
+     def getGuideData(self, chanid, date):
+         return self.searchGuide(chanid=chanid, 
+-                                custom=('DATE(starttime)=%s',date))
++                                custom=(('DATE(starttime)=%s',date),))
+ 
+     def getSetting(self, value, hostname=None):
+         if not hostname:
+@@ -996,7 +999,7 @@ class MythVideo( MythDBBase ):
+                         tpath = sgfold[0][1:]+'/'+sgfile
+ 
+                     # filter by extension
+-                    if tpath.rsplit('.',1)[1].lower() not in extensions:
++                    if tpath.rsplit('.',1)[-1].lower() not in extensions:
+                         #print 'skipping: '+tpath
+                         continue
+ 
+diff -Naurp mythtv-0.23-release/configure mythtv-0.23/configure
+--- mythtv-0.23-release/configure	2010-05-05 11:59:55.000000000 -0400
++++ mythtv-0.23/configure	2010-05-24 17:37:07.476293000 -0400
+@@ -1561,7 +1561,7 @@ libdirac_encoder_deps="libdirac"
+ libfaac_encoder_deps="libfaac"
+ libfaad_decoder_deps="libfaad"
+ libfaad_latm_decoder_deps="libfaad"
+-libfaadbin_decoder_extralibs='$ldl'
++libfaadbin_extralibs='$ldl'
+ libgsm_decoder_deps="libgsm"
+ libgsm_encoder_deps="libgsm"
+ libgsm_ms_decoder_deps="libgsm"
+@@ -3763,12 +3763,13 @@ enabled freetype2 ||
+ enabled lamemp3 && check_lib2 lame/lame.h lame_init -lmp3lame -lm ||
+     die "ERROR! You must have the Lame MP3 encoding library installed to compile MythTV."
+ 
++# Qt dependency checks
++qt_inc="-I${sysroot}/$(${qmake} -query QT_INSTALL_HEADERS)"
++qt_libs="-L${sysroot}/$(${qmake} -query QT_INSTALL_LIBS)"
++
+ if $(pkg-config --atleast-version 4.4.0 QtWebKit) ; then
+     enable qtwebkit
+ else
+-    # For environments that don't have pkg-config, we do a compile test.
+-    qt_inc="-I${sysroot}/$(${qmake} -query QT_INSTALL_HEADERS)"
+-
+     check_cxx ${qt_inc} ${qt_inc}/QtCore <<EOF && enable qtwebkit
+ #include <QtWebKit/QtWebKit>
+ #if QT_VERSION < 0x040400
+@@ -3780,9 +3781,11 @@ fi
+ enabled qtwebkit || die "Error! QtWebkit headers not found"
+ 
+ # Check if Qt was built with DBus support:
+-qt_inc="-I${sysroot}/$(${qmake} -query QT_INSTALL_HEADERS)"
+-check_cxx ${qt_inc} ${qt_inc}/QtDBus <<EOF && enable qtdbus
++check_ld_cxx ${qt_inc} ${qt_inc}/QtDBus ${qt_libs} -lQtDBus <<EOF && enable qtdbus
+ #include <QtDBus>
++int main(void){
++    return (long) QDBusConnection::disconnectFromBus;
++}
+ EOF
+ 
+ if enabled firewire; then
+@@ -3844,7 +3847,7 @@ if test x"$xvmc_lib" != x""; then
+     VENDOR_XVMC_LIBS="-l"$xvmc_lib
+     disable xvmcw
+ elif enabled xvmcw; then
+-    VENDOR_XVMC_LIBS="-lXvMCW $ldl"
++    VENDOR_XVMC_LIBS="-lXvMCW"
+ elif enabled xvmc_pro; then
+     if has_library libviaXvMCPro ; then
+         VENDOR_XVMC_LIBS="-lviaXvMCPro"
+@@ -4312,6 +4315,7 @@ SDL_LIBS=$sdl_libs
+ SDL_CFLAGS=$sdl_cflags
+ LIB_INSTALL_EXTRA_CMD=$LIB_INSTALL_EXTRA_CMD
+ EXTRALIBS=$extralibs
++EXTRA_LIBS=$ldl
+ EOF
+ 
+ get_version(){
+diff -Naurp mythtv-0.23-release/contrib/config_files/lirc/lircrc.native.example.mceusb2 mythtv-0.23/contrib/config_files/lirc/lircrc.native.example.mceusb2
+--- mythtv-0.23-release/contrib/config_files/lirc/lircrc.native.example.mceusb2	2008-03-08 23:30:22.000000000 -0500
++++ mythtv-0.23/contrib/config_files/lirc/lircrc.native.example.mceusb2	2008-03-08 23:30:22.515246000 -0500
+@@ -2,7 +2,7 @@
+ # lircrc config file for the Microsoft Media Center Edition Remote, model 1039
+ #
+ # @url       $URL$
+-# @date      $Date: 2008-03-08 20:30:22 -0800 (Sat, 08 Mar 2008) $
++# @date      $Date: 2008-03-08 23:30:22 -0500 (Sat, 08 Mar 2008) $
+ # @version   $Revision: 16474 $
+ # @author    $Author: kormoc $
+ #
+diff -Naurp mythtv-0.23-release/contrib/icons/master_iconmap/channel_icons.pl mythtv-0.23/contrib/icons/master_iconmap/channel_icons.pl
+--- mythtv-0.23-release/contrib/icons/master_iconmap/channel_icons.pl	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/contrib/icons/master_iconmap/channel_icons.pl	2009-04-10 20:04:30.069718000 -0400
+@@ -5,8 +5,8 @@
+ # Also does searches for artwork URLs based on callsign or xmltvid, or displays
+ # the master iconmap xml file from services.mythtv.org.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/contrib/icons/master_iconmap/channel_icons.pl $
+-# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/icons/master_iconmap/channel_icons.pl $
++# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ # @version   $Revision: 20349 $
+ # @author    $Author: xris $
+ # @copyright MythTV
+diff -Naurp mythtv-0.23-release/contrib/maintenance/flush_deleted_recgroup.pl mythtv-0.23/contrib/maintenance/flush_deleted_recgroup.pl
+--- mythtv-0.23-release/contrib/maintenance/flush_deleted_recgroup.pl	2009-10-05 18:36:40.000000000 -0400
++++ mythtv-0.23/contrib/maintenance/flush_deleted_recgroup.pl	2009-10-05 18:36:40.691937000 -0400
+@@ -2,8 +2,8 @@
+ #
+ # Tell MythTV to truly delete all recordings in the "Deleted" recgroup
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/contrib/maintenance/flush_deleted_recgroup.pl $
+-# @date      $Date: 2009-10-05 15:36:40 -0700 (Mon, 05 Oct 2009) $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/maintenance/flush_deleted_recgroup.pl $
++# @date      $Date: 2009-10-05 18:36:40 -0400 (Mon, 05 Oct 2009) $
+ # @version   $Revision: 22260 $
+ # @author    $Author: mdean $
+ #
+diff -Naurp mythtv-0.23-release/contrib/maintenance/optimize_mythdb.pl mythtv-0.23/contrib/maintenance/optimize_mythdb.pl
+--- mythtv-0.23-release/contrib/maintenance/optimize_mythdb.pl	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/contrib/maintenance/optimize_mythdb.pl	2009-04-10 20:04:30.069718000 -0400
+@@ -3,8 +3,8 @@
+ # Connects to the mythtv database and repairs/optimizes the tables that it
+ # finds.  Suggested use is to cron it to run once per day.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/contrib/maintenance/optimize_mythdb.pl $
+-# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/maintenance/optimize_mythdb.pl $
++# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ # @version   $Revision: 20349 $
+ # @author    $Author: xris $
+ # @license   GPL
+diff -Naurp mythtv-0.23-release/contrib/user_jobs/firewire_primer.pl mythtv-0.23/contrib/user_jobs/firewire_primer.pl
+--- mythtv-0.23-release/contrib/user_jobs/firewire_primer.pl	2009-10-22 12:46:34.000000000 -0400
++++ mythtv-0.23/contrib/user_jobs/firewire_primer.pl	2009-10-22 12:46:34.011528000 -0400
+@@ -9,8 +9,8 @@
+ # hardware, failed marriages due to MythTV not recording your wife's favorite
+ # show, etc.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/contrib/user_jobs/firewire_primer.pl $
+-# @date      $Date: 2009-10-22 09:46:34 -0700 (Thu, 22 Oct 2009) $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/user_jobs/firewire_primer.pl $
++# @date      $Date: 2009-10-22 12:46:34 -0400 (Thu, 22 Oct 2009) $
+ # @version   $Revision: 22568 $
+ # @author    $Author: robertm $
+ # @license   GPL
+diff -Naurp mythtv-0.23-release/contrib/user_jobs/mythlink.pl mythtv-0.23/contrib/user_jobs/mythlink.pl
+--- mythtv-0.23-release/contrib/user_jobs/mythlink.pl	2010-02-04 22:11:23.000000000 -0500
++++ mythtv-0.23/contrib/user_jobs/mythlink.pl	2010-02-04 22:11:23.536986000 -0500
+@@ -6,8 +6,8 @@
+ # Automatically detects database settings from mysql.txt, and loads
+ # the mythtv recording directory from the database (code from nuvexport).
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/contrib/user_jobs/mythlink.pl $
+-# @date      $Date: 2010-02-04 19:11:23 -0800 (Thu, 04 Feb 2010) $
++# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/user_jobs/mythlink.pl $
++# @date      $Date: 2010-02-04 22:11:23 -0500 (Thu, 04 Feb 2010) $
+ # @version   $Revision: 23479 $
+ # @author    $Author: mdean $
+ # @license   GPL
+diff -Naurp mythtv-0.23-release/libs/libavcodec/libavcodec.pro mythtv-0.23/libs/libavcodec/libavcodec.pro
+--- mythtv-0.23-release/libs/libavcodec/libavcodec.pro	2010-03-12 03:55:46.000000000 -0500
++++ mythtv-0.23/libs/libavcodec/libavcodec.pro	2010-05-13 17:57:24.166134000 -0400
+@@ -21,11 +21,10 @@ DEFINES += HAVE_AV_CONFIG_H _LARGEFILE_S
+ # -fomit-frame-pointer frees it. gcc-4 enables "location lists"
+ # which allows debugging without frame pointer
+ debug:contains(ARCH_X86_32, yes) {
+-        QMAKE_CFLAGS_SHLIB =
+         QMAKE_CFLAGS_DEBUG += -fomit-frame-pointer
+ }
+-# "-Os" can not compiled with PIC
+-contains(CONFIG_SMALL, yes):contains(ARCH_X86_32, yes) {
++# gcc-4.2 and newer can not compile with PIC on x86
++contains(ARCH_X86_32, yes) {
+ 	QMAKE_CFLAGS_SHLIB =
+ }
+ 
+diff -Naurp mythtv-0.23-release/libs/libmyth/mythcontext.cpp mythtv-0.23/libs/libmyth/mythcontext.cpp
+--- mythtv-0.23-release/libs/libmyth/mythcontext.cpp	2010-03-23 20:43:43.000000000 -0400
++++ mythtv-0.23/libs/libmyth/mythcontext.cpp	2010-05-14 18:39:42.189261000 -0400
+@@ -1426,7 +1426,12 @@ bool MythContext::Init(const bool gui, U
+     }
+ #endif
+ 
+-    if (QDir::homePath() == "/" && ! getenv("MYTHCONFDIR"))
++    // If HOME isn't defined, we won't be able to use default confdir of
++    // $HOME/.mythtv nor can we rely on a MYTHCONFDIR that references $HOME
++    QString homedir = QDir::homePath();
++    QString confdir = getenv("MYTHCONFDIR");
++    if ((homedir.isEmpty() || homedir == "/") &&
++        (confdir.isEmpty() || confdir.contains("$HOME")))
+     {
+         QString warning = "Cannot locate your home directory."
+                           " Please set the environment variable HOME";
+@@ -1435,7 +1440,7 @@ bool MythContext::Init(const bool gui, U
+             d->TempMainWindow(false);
+             MythPopupBox::showOkPopup(d->mainWindow, "HOME error", warning);
+         }
+-        VERBOSE(VB_IMPORTANT, warning + " or MYTHCONFDIR");
++        VERBOSE(VB_IMPORTANT, warning);
+ 
+         return false;
+     }
+diff -Naurp mythtv-0.23-release/libs/libmyth/schemawizard.cpp mythtv-0.23/libs/libmyth/schemawizard.cpp
+--- mythtv-0.23-release/libs/libmyth/schemawizard.cpp	2010-01-22 12:12:23.000000000 -0500
++++ mythtv-0.23/libs/libmyth/schemawizard.cpp	2010-05-23 19:30:49.920201000 -0400
+@@ -261,6 +261,11 @@ SchemaUpgradeWizard::PromptForUpgrade(co
+         return MYTH_SCHEMA_USE_EXISTING;
+ #endif
+ 
++    // Only back up the database if it's old/about to be upgraded
++    // (not if it's too new)
++    // or if a user is doing something they probably shouldn't ("expert mode")
++    if ((upgradeAllowed && (versionsBehind > 0)) || m_expertMode)
++        BackupDB();
+ 
+     connections = CountClients() > 1;
+     gui         = GetMythUI()->IsScreenSetup() && gContext->GetMainWindow();
+@@ -314,6 +319,14 @@ SchemaUpgradeWizard::PromptForUpgrade(co
+             return MYTH_SCHEMA_EXIT;
+         }
+ 
++        if (versionsBehind < 0)
++        {
++            VERBOSE(VB_IMPORTANT, QString("Error: MythTV database has newer "
++                    "%1 schema (%2) than expected (%3).")
++                    .arg(name).arg(DBver).arg(m_newSchemaVer));
++            return MYTH_SCHEMA_ERROR;
++        }
++
+         if (upgradeIfNoUI && validDBMS)
+         {
+             VERBOSE(VB_IMPORTANT, "Upgrading.");
+diff -Naurp mythtv-0.23-release/libs/libmythdb/mythdirs.cpp mythtv-0.23/libs/libmythdb/mythdirs.cpp
+--- mythtv-0.23-release/libs/libmythdb/mythdirs.cpp	2009-11-28 10:55:09.000000000 -0500
++++ mythtv-0.23/libs/libmythdb/mythdirs.cpp	2010-05-14 18:39:42.189261000 -0400
+@@ -37,8 +37,7 @@ void InitializeMythDirs(void)
+     if (QDir(installprefix).isRelative())
+     {
+         // If the PREFIX is relative, evaluate it relative to our
+-        // executable directory. This can be fragile on Unix, so#include <QMutex>
+-
++        // executable directory. This can be fragile on Unix, so
+         // use relative PREFIX values with care.
+ 
+         VERBOSE(VB_IMPORTANT+VB_EXTRA,
+@@ -54,7 +53,7 @@ void InitializeMythDirs(void)
+     if (tmp_confdir)
+     {
+         confdir = QString(tmp_confdir);
+-        //VERBOSE(VB_IMPORTANT, QString("Read conf dir = %1").arg(dir));
++        VERBOSE(VB_IMPORTANT, QString("Read conf dir = %1").arg(confdir));
+         confdir.replace("$HOME", QDir::homePath());
+     }
+     else
+diff -Naurp mythtv-0.23-release/libs/libmythdvdnav/libmythdvdnav.pro mythtv-0.23/libs/libmythdvdnav/libmythdvdnav.pro
+--- mythtv-0.23-release/libs/libmythdvdnav/libmythdvdnav.pro	2009-10-15 11:47:54.000000000 -0400
++++ mythtv-0.23/libs/libmythdvdnav/libmythdvdnav.pro	2010-05-11 11:07:54.320600000 -0400
+@@ -13,6 +13,9 @@ INCLUDEPATH += ../libmythdb
+ #build position independent code since the library is linked into a shared library
+ QMAKE_CFLAGS += -fPIC -DPIC
+ 
++# for -ldl
++LIBS += $$EXTRA_LIBS
++
+ DEFINES += HAVE_AV_CONFIG_H _LARGEFILE_SOURCE
+ 
+ # DEFINES += LOG_DEBUG TRACE
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/AAFilter.cpp mythtv-0.23/libs/libmythsoundtouch/AAFilter.cpp
+--- mythtv-0.23-release/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -12,7 +12,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: AAFilter.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/AAFilter.h mythtv-0.23/libs/libmythsoundtouch/AAFilter.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/AAFilter.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/AAFilter.h	2009-04-10 20:04:30.069718000 -0400
+@@ -13,7 +13,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: AAFilter.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/BPMDetect.h mythtv-0.23/libs/libmythsoundtouch/BPMDetect.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/BPMDetect.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/BPMDetect.h	2009-04-10 20:04:30.069718000 -0400
+@@ -26,7 +26,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: BPMDetect.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/cpu_detect.h mythtv-0.23/libs/libmythsoundtouch/cpu_detect.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/cpu_detect.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/cpu_detect.h	2009-04-10 20:04:30.069718000 -0400
+@@ -12,7 +12,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: cpu_detect.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp mythtv-0.23/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp
+--- mythtv-0.23-release/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp	2009-07-06 16:42:28.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp	2009-07-06 16:42:28.950839000 -0400
+@@ -12,7 +12,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-07-06 13:42:28 -0700 (Mon, 06 Jul 2009) $
++// Last changed  : $Date: 2009-07-06 16:42:28 -0400 (Mon, 06 Jul 2009) $
+ // File revision : $Revision: 20797 $
+ //
+ // $Id: cpu_detect_x86_gcc.cpp 20797 2009-07-06 20:42:28Z janne $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/FIFOSampleBuffer.cpp mythtv-0.23/libs/libmythsoundtouch/FIFOSampleBuffer.cpp
+--- mythtv-0.23-release/libs/libmythsoundtouch/FIFOSampleBuffer.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/FIFOSampleBuffer.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -15,7 +15,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: FIFOSampleBuffer.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/FIFOSampleBuffer.h mythtv-0.23/libs/libmythsoundtouch/FIFOSampleBuffer.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/FIFOSampleBuffer.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/FIFOSampleBuffer.h	2009-04-10 20:04:30.069718000 -0400
+@@ -15,7 +15,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: FIFOSampleBuffer.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/FIFOSamplePipe.h mythtv-0.23/libs/libmythsoundtouch/FIFOSamplePipe.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/FIFOSamplePipe.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/FIFOSamplePipe.h	2009-04-10 20:04:30.069718000 -0400
+@@ -17,7 +17,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: FIFOSamplePipe.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/FIRFilter.cpp mythtv-0.23/libs/libmythsoundtouch/FIRFilter.cpp
+--- mythtv-0.23-release/libs/libmythsoundtouch/FIRFilter.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/FIRFilter.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -11,7 +11,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: FIRFilter.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/FIRFilter.h mythtv-0.23/libs/libmythsoundtouch/FIRFilter.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/FIRFilter.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/FIRFilter.h	2009-04-10 20:04:30.069718000 -0400
+@@ -11,7 +11,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: FIRFilter.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/mmx_gcc.cpp mythtv-0.23/libs/libmythsoundtouch/mmx_gcc.cpp
+--- mythtv-0.23-release/libs/libmythsoundtouch/mmx_gcc.cpp	2009-07-06 16:42:28.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/mmx_gcc.cpp	2009-07-06 16:42:28.950839000 -0400
+@@ -15,7 +15,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-07-06 13:42:28 -0700 (Mon, 06 Jul 2009) $
++// Last changed  : $Date: 2009-07-06 16:42:28 -0400 (Mon, 06 Jul 2009) $
+ // File revision : $Revision: 20797 $
+ //
+ // $Id: mmx_gcc.cpp 20797 2009-07-06 20:42:28Z janne $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/RateTransposer.cpp mythtv-0.23/libs/libmythsoundtouch/RateTransposer.cpp
+--- mythtv-0.23-release/libs/libmythsoundtouch/RateTransposer.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/RateTransposer.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -10,7 +10,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: RateTransposer.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/RateTransposer.h mythtv-0.23/libs/libmythsoundtouch/RateTransposer.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/RateTransposer.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/RateTransposer.h	2009-04-10 20:04:30.069718000 -0400
+@@ -14,7 +14,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: RateTransposer.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/SoundTouch.cpp mythtv-0.23/libs/libmythsoundtouch/SoundTouch.cpp
+--- mythtv-0.23-release/libs/libmythsoundtouch/SoundTouch.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/SoundTouch.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -41,7 +41,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: SoundTouch.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/SoundTouch.h mythtv-0.23/libs/libmythsoundtouch/SoundTouch.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/SoundTouch.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/SoundTouch.h	2009-04-10 20:04:30.069718000 -0400
+@@ -41,7 +41,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: SoundTouch.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/STTypes.h mythtv-0.23/libs/libmythsoundtouch/STTypes.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/STTypes.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/STTypes.h	2009-04-10 20:04:30.069718000 -0400
+@@ -8,7 +8,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: STTypes.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/TDStretch.cpp mythtv-0.23/libs/libmythsoundtouch/TDStretch.cpp
+--- mythtv-0.23-release/libs/libmythsoundtouch/TDStretch.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/TDStretch.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -13,7 +13,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: TDStretch.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/TDStretch.h mythtv-0.23/libs/libmythsoundtouch/TDStretch.h
+--- mythtv-0.23-release/libs/libmythsoundtouch/TDStretch.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythsoundtouch/TDStretch.h	2009-04-10 20:04:30.069718000 -0400
+@@ -13,7 +13,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: TDStretch.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp mythtv-0.23/libs/libmythtv/avformatdecoder.cpp
+--- mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp	2010-04-29 20:08:03.000000000 -0400
++++ mythtv-0.23/libs/libmythtv/avformatdecoder.cpp	2010-05-12 10:45:47.290448000 -0400
+@@ -1418,6 +1418,8 @@ void AvFormatDecoder::InitVideoCodec(AVS
+     enc->rate_emu = 0;
+     enc->error_rate = 0;
+ 
++    directrendering = false;
++
+     AVCodec *codec = avcodec_find_decoder(enc->codec_id);
+     // look for a vdpau capable codec
+     if (codec_is_vdpau(video_codec_id) && !CODEC_IS_VDPAU(codec))
+@@ -1465,7 +1467,7 @@ void AvFormatDecoder::InitVideoCodec(AVS
+     else if (codec && codec->capabilities & CODEC_CAP_DR1 &&
+              (IS_DR1_PIX_FMT(enc->pix_fmt) /* HACK -- begin */
+              /*   allow unknown pixel format to avoid regressions*/
+-             || (enc->pix_fmt == PIX_FMT_NONE && ringBuffer->isDVD()))
++             ||  enc->pix_fmt == PIX_FMT_NONE)
+ 	     /* HACK -- end*/)
+     {
+         enc->flags          |= CODEC_FLAG_EMU_EDGE;
+@@ -2402,6 +2404,13 @@ int get_avf_buffer(struct AVCodecContext
+ {
+     AvFormatDecoder *nd = (AvFormatDecoder *)(c->opaque);
+ 
++    if (!IS_DR1_PIX_FMT(c->pix_fmt))
++    {
++        nd->directrendering = false;
++        return avcodec_default_get_buffer(c, pic);
++    }
++    nd->directrendering = true;
++
+     VideoFrame *frame = nd->GetNVP()->GetNextVideoFrame(true);
+ 
+     for (int i = 0; i < 3; i++)
+@@ -4361,6 +4370,12 @@ bool AvFormatDecoder::GetFrame(DecodeTyp
+                             GetNVP()->DiscardVideoFrame(xf);
+                         }
+                     }
++                    else if (!picframe)
++                    {
++                        VERBOSE(VB_IMPORTANT, LOC_ERR + "NULL videoframe - "
++                                "direct rendering not correctly initialized.");
++                        return false;
++                    }
+ 
+                     long long temppts = pts;
+ 
+diff -Naurp mythtv-0.23-release/libs/libmythtv/dbcheck.cpp mythtv-0.23/libs/libmythtv/dbcheck.cpp
+--- mythtv-0.23-release/libs/libmythtv/dbcheck.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/dbcheck.cpp	2010-05-23 19:30:49.920201000 -0400
+@@ -476,13 +476,8 @@ bool UpgradeTVDatabaseSchema(const bool 
+         return true;
+     }
+ 
+-    // An upgrade is likely. We do the backup first so that
+-    // the UI can tell the user where the backup is located.
+-    if (upgradeAllowed)
+-        DBup->BackupDB();
+-    else
+-        VERBOSE(VB_IMPORTANT, "Not allowed to upgrade the database. "
+-                              "Skipping backup.");
++    if (!upgradeAllowed)
++        VERBOSE(VB_IMPORTANT, "Not allowed to upgrade the database.");
+ 
+     // Pop up messages, questions, warnings, et c.
+     switch (DBup->PromptForUpgrade("TV", upgradeAllowed,
+diff -Naurp mythtv-0.23-release/libs/libmythtv/tv_play.cpp mythtv-0.23/libs/libmythtv/tv_play.cpp
+--- mythtv-0.23-release/libs/libmythtv/tv_play.cpp	2010-04-27 22:54:52.000000000 -0400
++++ mythtv-0.23/libs/libmythtv/tv_play.cpp	2010-05-17 21:42:52.462765000 -0400
+@@ -4617,9 +4617,9 @@ bool TV::ActivePostQHandleAction(PlayerC
+     else if (has_action("NEXTFAV", actions) && islivetv)
+         ChangeChannel(ctx, CHANNEL_DIRECTION_FAVORITE);
+     else if (has_action("NEXTSOURCE", actions) && islivetv)
+-        SwitchSource(kNextSource);
++        SwitchSource(ctx, kNextSource);
+     else if (has_action("PREVSOURCE", actions) && islivetv)
+-        SwitchSource(kPreviousSource);
++        SwitchSource(ctx, kPreviousSource);
+     else if (has_action("NEXTINPUT", actions) && islivetv)
+         ToggleInputs(ctx);
+     else if (has_action("NEXTCARD", actions) && islivetv)
+@@ -6315,17 +6315,11 @@ void TV::DoSkipCommercials(PlayerContext
+         SetMuteTimer(ctx, kMuteTimeout);
+ }
+ 
+-void TV::SwitchSource(uint source_direction)
++void TV::SwitchSource(PlayerContext *ctx, uint source_direction)
+ {
+-    PlayerContext *actx = GetPlayerReadLock(-1, __FILE__, __LINE__);
+-    if (!actx->recorder)
+-    {
+-        ReturnPlayerLock(actx);
+-        return;
+-    }
+     QMap<uint,InputInfo> sources;
+     vector<uint> cardids = RemoteRequestFreeRecorderList();
+-    uint         cardid  = actx->GetCardID();
++    uint         cardid  = ctx->GetCardID();
+     cardids.push_back(cardid);
+     stable_sort(cardids.begin(), cardids.end());
+ 
+@@ -6333,7 +6327,7 @@ void TV::SwitchSource(uint source_direct
+     excluded_cardids.push_back(cardid);
+ 
+     InfoMap info;
+-    actx->recorder->GetChannelInfo(info);
++    ctx->recorder->GetChannelInfo(info);
+     uint sourceid = info["sourceid"].toUInt();
+ 
+     vector<uint>::const_iterator it = cardids.begin();
+@@ -6363,7 +6357,6 @@ void TV::SwitchSource(uint source_direct
+ 
+     if (sit == sources.end())
+     {
+-        ReturnPlayerLock(actx);
+         return;
+     }
+ 
+@@ -6391,12 +6384,10 @@ void TV::SwitchSource(uint source_direct
+ 
+     if (sit == beg)
+     {
+-        ReturnPlayerLock(actx);
+         return;
+     }
+ 
+     switchToInputId = (*sit).inputid;
+-    ReturnPlayerLock(actx);
+ 
+     QMutexLocker locker(&timerIdLock);
+     if (!switchToInputTimerId)
+diff -Naurp mythtv-0.23-release/libs/libmythtv/tv_play.h mythtv-0.23/libs/libmythtv/tv_play.h
+--- mythtv-0.23-release/libs/libmythtv/tv_play.h	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/tv_play.h	2010-05-17 21:42:52.462765000 -0400
+@@ -402,7 +402,7 @@ class MPUBLIC TV : public QThread
+     QString GetQueuedChanNum(void) const;
+     uint    GetQueuedChanID(void)  const { return queuedChanID; }
+ 
+-    void SwitchSource(uint source_direction);
++    void SwitchSource(PlayerContext*, uint source_direction);
+     void SwitchInputs(PlayerContext*, uint inputid);
+     void ToggleInputs(PlayerContext*, uint inputid = 0);
+     void SwitchCards(PlayerContext*,
+diff -Naurp mythtv-0.23-release/libs/libmythui/mythmainwindow.cpp mythtv-0.23/libs/libmythui/mythmainwindow.cpp
+--- mythtv-0.23-release/libs/libmythui/mythmainwindow.cpp	2010-04-29 20:59:58.000000000 -0400
++++ mythtv-0.23/libs/libmythui/mythmainwindow.cpp	2010-05-13 14:40:15.407856000 -0400
+@@ -888,12 +888,6 @@ void MythMainWindow::Init(void)
+         flags |= Qt::FramelessWindowHint;
+     }
+ 
+-    if (d->does_fill_screen && !GetMythUI()->IsGeometryOverridden())
+-    {
+-        VERBOSE(VB_GENERAL, "Using Full Screen Window");
+-        setWindowState(Qt::WindowFullScreen);
+-    }
+-
+     // Workarounds for Qt/Mac bugs
+ #ifdef Q_WS_MACX
+     if (d->does_fill_screen)
+@@ -908,6 +902,12 @@ void MythMainWindow::Init(void)
+ 
+     setWindowFlags(flags);
+ 
++    if (d->does_fill_screen && !GetMythUI()->IsGeometryOverridden())
++    {
++        VERBOSE(VB_GENERAL, "Using Full Screen Window");
++        setWindowState(Qt::WindowFullScreen);
++    }
++
+     d->screenRect = QRect(d->xbase, d->ybase, d->screenwidth, d->screenheight);
+     d->uiScreenRect = QRect(0, 0, d->screenwidth, d->screenheight);
+ 
+diff -Naurp mythtv-0.23-release/libs/libmythui/mythsystem.cpp mythtv-0.23/libs/libmythui/mythsystem.cpp
+--- mythtv-0.23-release/libs/libmythui/mythsystem.cpp	2010-04-29 20:59:58.000000000 -0400
++++ mythtv-0.23/libs/libmythui/mythsystem.cpp	2010-05-13 14:41:34.441878000 -0400
+@@ -189,7 +189,7 @@ uint myth_system(const QString &command,
+     {
+         VERBOSE(VB_IMPORTANT, (LOC_ERR + "CreateProcess() failed because %1")
+                 .arg(::GetLastError()));
+-        return MYTHSYSTEM__EXIT__EXECL_ERROR;
++        result = MYTHSYSTEM__EXIT__EXECL_ERROR;
+     }
+     else
+     {
+@@ -204,7 +204,7 @@ uint myth_system(const QString &command,
+                     .arg(::GetLastError()));
+         CloseHandle(pi.hProcess);
+         CloseHandle(pi.hThread);
+-        return exitcode;
++        result = exitcode;
+     }
+ #endif
+ 
+diff -Naurp mythtv-0.23-release/libs/libmythui/xmlparsebase.cpp mythtv-0.23/libs/libmythui/xmlparsebase.cpp
+--- mythtv-0.23-release/libs/libmythui/xmlparsebase.cpp	2010-03-02 12:36:30.000000000 -0500
++++ mythtv-0.23/libs/libmythui/xmlparsebase.cpp	2010-05-15 09:04:12.458568000 -0400
+@@ -219,7 +219,7 @@ void XMLParseBase::ParseChildren(const Q
+             if (parent->ParseElement(filename, info, showWarnings))
+             {
+             }
+-            else if (type == "font")
++            else if (type == "font" || type == "fontdef")
+             {
+                 bool global = (GetGlobalObjectStore() == parent);
+                 MythFontProperties *font = MythFontProperties::ParseFromXml(
+@@ -405,7 +405,7 @@ MythUIType *XMLParseBase::ParseUIType(
+             if (uitype->ParseElement(filename, info, showWarnings))
+             {
+             }
+-            else if (info.tagName() == "font")
++            else if (info.tagName() == "font" || info.tagName() == "fontdef")
+             {
+                 bool global = (GetGlobalObjectStore() == parent);
+                 MythFontProperties *font = MythFontProperties::ParseFromXml(
+@@ -590,7 +590,7 @@ bool XMLParseBase::doLoad(const QString 
+             if (!onlywindows)
+             {
+                 QString type = e.tagName();
+-                if (type == "font")
++                if (type == "font" || type == "fontdef")
+                 {
+                     bool global = (GetGlobalObjectStore() == parent);
+                     MythFontProperties *font = MythFontProperties::ParseFromXml(
+diff -Naurp mythtv-0.23-release/libs/libswscale/libswscale.pro mythtv-0.23/libs/libswscale/libswscale.pro
+--- mythtv-0.23-release/libs/libswscale/libswscale.pro	2010-02-10 17:58:08.000000000 -0500
++++ mythtv-0.23/libs/libswscale/libswscale.pro	2010-05-13 17:57:24.166134000 -0400
+@@ -10,9 +10,13 @@ INSTALLS = target
+ QMAKE_LFLAGS += $$LDFLAGS
+ 
+ debug:contains(ARCH_X86_32, yes) {
+-        QMAKE_CFLAGS_SHLIB =
+         QMAKE_CFLAGS_DEBUG += -fomit-frame-pointer
+ }
++# gcc-4.2 and newer can not compile with PIC on x86
++contains(ARCH_X86_32, yes) {
++        QMAKE_CFLAGS_SHLIB =
++}
++
+ 
+ !profile:QMAKE_CFLAGS_DEBUG += -O
+ 
+diff -Naurp mythtv-0.23-release/programs/mythbackend/main.cpp mythtv-0.23/programs/mythbackend/main.cpp
+--- mythtv-0.23-release/programs/mythbackend/main.cpp	2010-04-09 07:29:00.000000000 -0400
++++ mythtv-0.23/programs/mythbackend/main.cpp	2010-05-13 14:45:33.347492000 -0400
+@@ -6,8 +6,10 @@
+ #include <fcntl.h>
+ #include <libgen.h>
+ #include <signal.h>
++#ifndef _WIN32
+ #include <pwd.h>
+ #include <grp.h>
++#endif
+ 
+ #include "mythconfig.h"
+ #if CONFIG_DARWIN
+@@ -870,6 +872,10 @@ int main(int argc, char **argv)
+ 
+     if (!username.isEmpty())
+     {
++#ifdef _WIN32
++        VERBOSE(VB_IMPORTANT, "--user option is not supported on Windows");
++        return BACKEND_EXIT_INVALID_CMDLINE;
++#else // ! _WIN32
+         struct passwd *user_info = getpwnam(username.toLocal8Bit().constData());
+         const uid_t user_id = geteuid();
+ 
+@@ -914,6 +920,7 @@ int main(int argc, char **argv)
+                     .arg(username));
+             return BACKEND_EXIT_PERMISSIONS_ERROR;
+         }
++#endif // ! _WIN32
+     }
+ 
+     if (pidfs)
+diff -Naurp mythtv-0.23-release/programs/mythcommflag/main.cpp mythtv-0.23/programs/mythcommflag/main.cpp
+--- mythtv-0.23-release/programs/mythcommflag/main.cpp	2010-02-10 12:02:19.000000000 -0500
++++ mythtv-0.23/programs/mythcommflag/main.cpp	2010-05-13 20:49:59.310980000 -0400
+@@ -47,6 +47,34 @@ using namespace std;
+ #define LOC_WARN QString("MythCommFlag, Warning: ")
+ #define LOC_ERR  QString("MythCommFlag, Error: ")
+ 
++namespace
++{
++    void cleanup()
++    {
++        delete gContext;
++        gContext = NULL;
++
++    }
++
++    class CleanupGuard
++    {
++      public:
++        typedef void (*CleanupFunc)();
++
++      public:
++        CleanupGuard(CleanupFunc cleanFunction) :
++            m_cleanFunction(cleanFunction) {}
++
++        ~CleanupGuard()
++        {
++            m_cleanFunction();
++        }
++
++      private:
++        CleanupFunc m_cleanFunction;
++    };
++}
++
+ bool quiet = false;
+ bool force = false;
+ 
+@@ -1196,7 +1224,8 @@ int main(int argc, char *argv[])
+         ++argpos;
+     }
+ 
+-    gContext = NULL;
++    CleanupGuard callCleanup(cleanup);
++
+     gContext = new MythContext(MYTH_BINARY_VERSION);
+     if (!gContext->Init(
+             false/*use gui*/, NULL/*upnp*/, false/*prompt for backend*/,
+@@ -1297,8 +1326,6 @@ int main(int argc, char *argv[])
+         int breaksFound = FlagCommercials(
+             chanid, starttime, outputfilename, useDB);
+ 
+-        delete gContext;
+-
+         return breaksFound; // exit(breaksFound);
+     }
+ 
+@@ -1512,8 +1539,6 @@ int main(int argc, char *argv[])
+         }
+     }
+ 
+-    delete gContext;
+-
+     time_now = time(NULL);
+ 
+     if (!quiet)
+diff -Naurp mythtv-0.23-release/programs/mythtv-setup/main.cpp mythtv-0.23/programs/mythtv-setup/main.cpp
+--- mythtv-0.23-release/programs/mythtv-setup/main.cpp	2010-03-11 22:54:16.000000000 -0500
++++ mythtv-0.23/programs/mythtv-setup/main.cpp	2010-05-12 11:25:27.228749000 -0400
+@@ -511,7 +511,7 @@ int main(int argc, char *argv[])
+             firstBreak+1, secondBreak-firstBreak-1).toLower();
+         QString tbl      = scanTableName.mid(secondBreak+1).toLower();
+         uint    inputid  = CardUtil::GetInputID(scanCardId, scanInputName);
+-        uint    sourceid = ChannelUtil::GetSourceID(inputid);
++        uint    sourceid = CardUtil::GetSourceID(inputid);
+         QMap<QString,QString> startChan;
+         {
+             ChannelScannerCLI scanner(doScanSaveOnly, scanInteractive);
+diff -Naurp mythtv-0.23-release/settings.pro mythtv-0.23/settings.pro
+--- mythtv-0.23-release/settings.pro	2010-03-26 09:36:07.000000000 -0400
++++ mythtv-0.23/settings.pro	2010-05-11 10:29:50.223949000 -0400
+@@ -123,7 +123,7 @@ ALSA_LIBS = $$CONFIG_AUDIO_ALSA_LIBS
+ JACK_LIBS = $$CONFIG_AUDIO_JACK_LIBS
+ PULSE_LIBS = $$CONFIG_AUDIO_PULSE_LIBS
+ 
+-EXTRA_LIBS = $$FREETYPE_LIBS
++EXTRA_LIBS += $$FREETYPE_LIBS
+ EXTRA_LIBS += $$CONFIG_FIREWIRE_LIBS
+ EXTRA_LIBS += $$CONFIG_DIRECTFB_LIBS
+ 
+diff -Naurp mythtv-0.23-release/VERSION mythtv-0.23/VERSION
+--- mythtv-0.23-release/VERSION	2010-05-09 20:07:58.000000000 -0400
++++ mythtv-0.23/VERSION	1969-12-31 19:00:00.000000000 -0500
+@@ -1 +0,0 @@
+-SOURCE_VERSION="0.23"
+diff -Naurp mythtv-0.23-release/version.pro mythtv-0.23/version.pro
+--- mythtv-0.23-release/version.pro	2009-10-04 12:38:03.000000000 -0400
++++ mythtv-0.23/version.pro	2009-10-04 12:38:03.692900000 -0400
+@@ -6,7 +6,7 @@
+ ############################################################
+ 
+ SVNTREEDIR = $$system(pwd)
+-SVNREPOPATH = "$$URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/version.pro $$"
++SVNREPOPATH = "$$URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/version.pro $$"
+ 
+ 
+ SOURCES += version.cpp

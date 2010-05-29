@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r24509
+%define _svnrev r24896
 %define branch release-0-23-fixes
 
 #
@@ -81,7 +81,7 @@ Version: 0.23
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -129,9 +129,9 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 ################################################################################
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
-#Patch0:    mythtv-%{version}-svnfixes.patch
+Patch0:    mythtv-%{version}-svnfixes.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
-#Patch1:    mythplugins-%{version}-svnfixes.patch
+Patch1:    mythplugins-%{version}-svnfixes.patch
 Patch2:    mythtv-version.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
@@ -841,7 +841,7 @@ on demand content.
 ##### MythTV
 
 cd mythtv-%{version}
-#patch0 -p1
+%patch0 -p1
 %patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
@@ -875,7 +875,7 @@ cd ..
 %if %{with_plugins}
 
 cd mythplugins-%{version}
-#patch1 -p1
+%patch1 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -1479,6 +1479,9 @@ fi
 ################################################################################
 
 %changelog
+* Sat May 29 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-2
+- Update to release-0-23-fixes branch, svn revision 24896
+
 * Mon May 10 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-1
 - Update to 0.23 release (svn rev 24509)
 
