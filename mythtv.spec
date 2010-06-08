@@ -132,7 +132,6 @@ Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Patch0:    mythtv-%{version}-svnfixes.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 Patch1:    mythplugins-%{version}-svnfixes.patch
-Patch2:    mythtv-version.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -842,7 +841,6 @@ on demand content.
 
 cd mythtv-%{version}
 %patch0 -p1
-#patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -981,7 +979,6 @@ cd mythtv-%{version}
 
 # Insert rpm version-release for mythbackend --version output
     echo 'SOURCE_VERSION="%{version}-%{release} (%_svnrev)"' > VERSION
-    #sed -i -e 's,###SOURCE_VERSION###,%{version}-%{release} (%_svnrev),' version.sh
 
 # Make
     make %{?_smp_mflags}
