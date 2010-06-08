@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r24896
+%define _svnrev r25048
 %define branch release-0-23-fixes
 
 #
@@ -81,7 +81,7 @@ Version: 0.23
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -132,7 +132,6 @@ Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Patch0:    mythtv-%{version}-svnfixes.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 Patch1:    mythplugins-%{version}-svnfixes.patch
-Patch2:    mythtv-version.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -842,7 +841,6 @@ on demand content.
 
 cd mythtv-%{version}
 %patch0 -p1
-%patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -980,7 +978,7 @@ cd mythtv-%{version}
     --enable-debug
 
 # Insert rpm version-release for mythbackend --version output
-    sed -i -e 's,###SOURCE_VERSION###,%{version}-%{release} (%_svnrev),' version.sh
+    echo 'SOURCE_VERSION="%{version}-%{release} (%_svnrev)"' > VERSION
 
 # Make
     make %{?_smp_mflags}
@@ -1479,6 +1477,12 @@ fi
 ################################################################################
 
 %changelog
+* Tue Jun 08 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-3
+- Update to release-0-23-fixes branch, svn revision 25048
+- Includes pulseaudio white noise and seeking fixes (rpmfusion bz#1260)
+- Wire up improved support for running the backend as a non-root user,
+  must be enabled by the user, see caveats in /etc/sysconfig/mythbackend
+
 * Sat May 29 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-2
 - Update to release-0-23-fixes branch, svn revision 24896
 
