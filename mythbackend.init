@@ -16,18 +16,22 @@ if [ -f /etc/sysconfig/mythbackend ]; then
 fi
 
 ## Defaults, override them in /etc/sysconfig/mythbackend
-: ${MYTHTV_HOME=/etc/mythtv}
+MYTHTV_HOME=${MYTHTV_HOME:-/etc/mythtv}
+MYTHBACKEND_USER=${MYTHBACKEND_USER:-root}
 
 binary=/usr/bin/mythbackend
 prog=mythbackend
 RETVAL=0
-OPTIONS="$OPTIONS --daemon --logfile /var/log/mythtv/$prog.log --pidfile /var/run/$prog.pid"
-# Would be nice to run as non-root, but it doesn't work -- dvb/v4l devices owned by root become unusable
-#OPTIONS="$OPTIONS --daemon --user mythtv --logfile /var/log/mythtv/$prog.log --pidfile /var/run/$prog.pid"
+OPTIONS="$OPTIONS --daemon --logfile --user ${MYTHBACKEND_USER} /var/log/mythtv/$prog.log --pidfile /var/run/$prog.pid"
 
 start() {
   echo -n $"Starting $prog: "
-  touch /var/run/mythbackend.pid; chown mythtv:mythtv /var/run/mythbackend.pid
+  touch /var/run/mythbackend.pid
+  if [ "${MYTHBACKEND_USER}" != root ]; then
+    chown ${MYTHBACKEND_USER}:${MYTHBACKEND_USER} /var/run/mythbackend.pid
+    /usr/bin/setfacl -m u:${MYTHBACKEND_USER}:rw- -R /dev/dvb/
+    /usr/bin/setfacl -m u:${MYTHBACKEND_USER}:rw- /dev/video*
+  fi
   export MYTHCONFDIR="$MYTHTV_HOME"
   export HOME="$MYTHTV_HOME"
   daemon $binary $OPTIONS
@@ -41,6 +45,10 @@ stop() {
   echo -n $"Stopping $prog: "
   killproc $binary
   RETVAL=$?
+  if [ "${MYTHBACKEND_USER}" != root ]; then
+    /usr/bin/setfacl -x u:${MYTHBACKEND_USER} -R /dev/dvb/
+    /usr/bin/setfacl -x u:${MYTHBACKEND_USER} /dev/video*
+  fi
   echo
   [ $RETVAL = 0 ] && rm -f /var/lock/subsys/$prog /var/run/$prog.pid
 }

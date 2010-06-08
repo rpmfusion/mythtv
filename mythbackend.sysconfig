@@ -1,2 +1,10 @@
 #MYTHTV_HOME=/etc/mythtv
+# mythbackend runs as root by default, but support for running as a non-root
+# user should be functional. However, switching to a non-root user on an
+# existing setup will require fixing up permissions on files mythbackend
+# needs access to -- particularly, your recordings, which are owned by the
+# user mythbackend runs as. If you switch from running as root to running as
+# user mythtv, deleting existing recordings won't work until their file
+# ownership has been changed from root to mythtv as well.
+#MYTHBACKEND_USER=mythtv
 #OPTIONS=
