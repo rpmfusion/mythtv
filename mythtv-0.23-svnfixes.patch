@@ -187,7 +187,7 @@ diff -Naurp mythtv-0.23-release/bindings/perl/MythTV.pm mythtv-0.23/bindings/per
                                                   dtv_multiplex.sourceid          AS dtv_sourceid,
 diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythData.py mythtv-0.23/bindings/python/MythTV/MythData.py
 --- mythtv-0.23-release/bindings/python/MythTV/MythData.py	2010-04-21 00:46:55.000000000 -0400
-+++ mythtv-0.23/bindings/python/MythTV/MythData.py	2010-05-19 23:43:41.152467000 -0400
++++ mythtv-0.23/bindings/python/MythTV/MythData.py	2010-06-06 20:03:02.104550000 -0400
 @@ -175,7 +175,7 @@ class FileTransfer( MythBEConn ):
          if not self.open:
              return
@@ -197,6 +197,15 @@ diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythData.py mythtv-0.23/b
          self.socket.shutdown(1)
          self.socket.close()
          self.open = False
+@@ -526,6 +526,8 @@ class Program( DictData ):
+         if type != 'r':
+             raise MythFileError(MythError.FILE_FAILED_WRITE, self.filename, 
+                             'Program () objects cannot be opened for writing')
++        if not self.filename.startswith('myth://'):
++            self.filename = 'myth://%s/%s' % (self.hostname, self.filename)
+         return ftopen(self.filename, 'r')
+ 
+ class Record( DBDataWrite ):
 diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythFunc.py mythtv-0.23/bindings/python/MythTV/MythFunc.py
 --- mythtv-0.23-release/bindings/python/MythTV/MythFunc.py	2010-03-31 15:07:44.000000000 -0400
 +++ mythtv-0.23/bindings/python/MythTV/MythFunc.py	2010-05-23 15:52:40.992320000 -0400
@@ -397,6 +406,29 @@ diff -Naurp mythtv-0.23-release/libs/libavcodec/libavcodec.pro mythtv-0.23/libs/
  	QMAKE_CFLAGS_SHLIB =
  }
  
+diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputpulse.cpp mythtv-0.23/libs/libmyth/audiooutputpulse.cpp
+--- mythtv-0.23-release/libs/libmyth/audiooutputpulse.cpp	2009-11-16 11:18:35.000000000 -0500
++++ mythtv-0.23/libs/libmyth/audiooutputpulse.cpp	2010-06-07 23:31:50.923907000 -0400
+@@ -554,9 +554,16 @@ bool AudioOutputPulseAudio::ConnectPlayb
+     else
+         pa_cvolume_reset(&volume_control, audio_channels);
+ 
+-    // set myth sizes and pa buffer metrics
+-    fragment_size = (float)sample_rate * 0.020f * // 20msec
+-        (float)(audio_bits / 8 * audio_channels);
++    // set myth sizes and pa buffer metrics (20 ms)
++    // Note: The 20 is an unsigned long (at least 32 bits).
++    // sample_rate, audio_bits and audio_channels are at least
++    // that size, so the math will be done with a range of at
++    // least 2 billion. If we assume a max audio_bits of 32,
++    // audio_channels of 16 and sample_rate of <= 448000, then
++    // the largest number will be 230 million, well within range.
++    fragment_size = 20UL * sample_rate * audio_bits * audio_channels
++        / 8 /* 8 bits per byte */ / 1000 /* 1000 ms per second */;
++
+     soundcard_buffer_size = 16 * fragment_size;
+     buffer_settings.maxlength = soundcard_buffer_size;
+     buffer_settings.tlength = fragment_size * 4;
 diff -Naurp mythtv-0.23-release/libs/libmyth/mythcontext.cpp mythtv-0.23/libs/libmyth/mythcontext.cpp
 --- mythtv-0.23-release/libs/libmyth/mythcontext.cpp	2010-03-23 20:43:43.000000000 -0400
 +++ mythtv-0.23/libs/libmyth/mythcontext.cpp	2010-05-14 18:39:42.189261000 -0400
@@ -425,20 +457,24 @@ diff -Naurp mythtv-0.23-release/libs/libmyth/mythcontext.cpp mythtv-0.23/libs/li
      }
 diff -Naurp mythtv-0.23-release/libs/libmyth/schemawizard.cpp mythtv-0.23/libs/libmyth/schemawizard.cpp
 --- mythtv-0.23-release/libs/libmyth/schemawizard.cpp	2010-01-22 12:12:23.000000000 -0500
-+++ mythtv-0.23/libs/libmyth/schemawizard.cpp	2010-05-23 19:30:49.920201000 -0400
-@@ -261,6 +261,11 @@ SchemaUpgradeWizard::PromptForUpgrade(co
++++ mythtv-0.23/libs/libmyth/schemawizard.cpp	2010-06-06 00:54:24.555359000 -0400
+@@ -261,6 +261,15 @@ SchemaUpgradeWizard::PromptForUpgrade(co
          return MYTH_SCHEMA_USE_EXISTING;
  #endif
  
-+    // Only back up the database if it's old/about to be upgraded
-+    // (not if it's too new)
-+    // or if a user is doing something they probably shouldn't ("expert mode")
-+    if ((upgradeAllowed && (versionsBehind > 0)) || m_expertMode)
++    // Only back up the database if we haven't already successfully made a
++    // backup and the database is old/about to be upgraded (not if it's too
++    // new) or if a user is doing something they probably shouldn't ("expert
++    // mode")
++    if (((backupStatus == kDB_Backup_Unknown) ||
++         (backupStatus == kDB_Backup_Failed)) &&
++        ((upgradeAllowed && (versionsBehind > 0)) ||
++         m_expertMode))
 +        BackupDB();
  
      connections = CountClients() > 1;
      gui         = GetMythUI()->IsScreenSetup() && gContext->GetMainWindow();
-@@ -314,6 +319,14 @@ SchemaUpgradeWizard::PromptForUpgrade(co
+@@ -314,6 +323,14 @@ SchemaUpgradeWizard::PromptForUpgrade(co
              return MYTH_SCHEMA_EXIT;
          }
  

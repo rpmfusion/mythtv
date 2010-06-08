@@ -242,6 +242,36 @@ diff -Naurp mythplugins-0.23-release/mythgallery/mythgallery/glsingleview.cpp my
      m_view = new GLSingleView(itemList, pos, slideShow, sortOrder, this);
      l->addWidget(m_view);
  
+diff -Naurp mythplugins-0.23-release/mythmusic/mythmusic/dbcheck.cpp mythplugins-0.23/mythmusic/mythmusic/dbcheck.cpp
+--- mythplugins-0.23-release/mythmusic/mythmusic/dbcheck.cpp	2009-10-12 02:28:43.000000000 -0400
++++ mythplugins-0.23/mythmusic/mythmusic/dbcheck.cpp	2010-06-06 00:54:24.555359000 -0400
+@@ -84,11 +84,6 @@ bool UpgradeMusicDatabaseSchema(void)
+     if (DBup->DBver.isEmpty())
+         return doUpgradeMusicDatabaseSchema(DBup->DBver);
+ 
+-    // An upgrade is likely. Ensure we have a backup first:
+-    if ((DBup->backupStatus == kDB_Backup_Unknown) ||
+-        (DBup->backupStatus == kDB_Backup_Failed))
+-        DBup->BackupDB();
+-
+     // Pop up messages, questions, warnings, et c.
+     switch (DBup->PromptForUpgrade("Music", true, false))
+     {
+diff -Naurp mythplugins-0.23-release/mythvideo/mythvideo/dbcheck.cpp mythplugins-0.23/mythvideo/mythvideo/dbcheck.cpp
+--- mythplugins-0.23-release/mythvideo/mythvideo/dbcheck.cpp	2010-01-18 21:10:45.000000000 -0500
++++ mythplugins-0.23/mythvideo/mythvideo/dbcheck.cpp	2010-06-06 00:54:24.555359000 -0400
+@@ -721,11 +721,6 @@ namespace
+         if (DBup->versionsBehind == 0)  // same schema 
+             return true;
+ 
+-        // An upgrade is likely. Ensure we have a backup first:
+-        if ((DBup->backupStatus == kDB_Backup_Unknown) ||
+-            (DBup->backupStatus == kDB_Backup_Failed))
+-            DBup->BackupDB();
+-
+         // Pop up messages, questions, warnings, et c. 
+         switch (DBup->PromptForUpgrade("Video", true, false)) 
+         { 
 diff -Naurp mythplugins-0.23-release/mythweb/classes/Database/mysqlicompat.php mythplugins-0.23/mythweb/classes/Database/mysqlicompat.php
 --- mythplugins-0.23-release/mythweb/classes/Database/mysqlicompat.php	2008-11-08 21:42:14.000000000 -0500
 +++ mythplugins-0.23/mythweb/classes/Database/mysqlicompat.php	2008-11-08 21:42:14.216654000 -0500
