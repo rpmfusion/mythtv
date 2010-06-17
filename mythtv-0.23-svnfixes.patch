@@ -742,8 +742,38 @@ diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/TDStretch.h mythtv-0.23/l
  // $Id: TDStretch.h 20349 2009-04-11 00:04:30Z xris $
 diff -Naurp mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp mythtv-0.23/libs/libmythtv/avformatdecoder.cpp
 --- mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp	2010-04-29 20:08:03.000000000 -0400
-+++ mythtv-0.23/libs/libmythtv/avformatdecoder.cpp	2010-05-12 10:45:47.290448000 -0400
-@@ -1418,6 +1418,8 @@ void AvFormatDecoder::InitVideoCodec(AVS
++++ mythtv-0.23/libs/libmythtv/avformatdecoder.cpp	2010-06-10 00:02:51.816777000 -0400
+@@ -1291,6 +1291,14 @@ static float normalized_fps(AVStream *st
+             fps = tmpfps;
+     }
+ 
++    // and finally try the ffmpeg estimated rate
++    if (fps > 121.0f || fps < 3.0f)
++    {
++        float tmpfps = av_q2d(stream->r_frame_rate);
++        if (tmpfps > 20 && tmpfps < 70)
++            fps = tmpfps;
++    }
++
+     // If it is still out of range, just assume NTSC...
+     fps = (fps > 121.0f) ? (30000.0f / 1001.0f) : fps;
+     return fps;
+@@ -1386,11 +1394,10 @@ void AvFormatDecoder::InitVideoCodec(AVS
+     {
+         fps = normalized_fps(stream, enc);
+ 
+-
+-        if (stream->sample_aspect_ratio.num)
+-            aspect_ratio = av_q2d(stream->sample_aspect_ratio);
+-        else if (enc->sample_aspect_ratio.num)
++        if (enc->sample_aspect_ratio.num)
+             aspect_ratio = av_q2d(enc->sample_aspect_ratio);
++        else if (stream->sample_aspect_ratio.num)
++            aspect_ratio = av_q2d(stream->sample_aspect_ratio);
+         else
+             aspect_ratio = 1.0f;
+ 
+@@ -1418,6 +1425,8 @@ void AvFormatDecoder::InitVideoCodec(AVS
      enc->rate_emu = 0;
      enc->error_rate = 0;
  
@@ -752,7 +782,7 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp mythtv-0.23/l
      AVCodec *codec = avcodec_find_decoder(enc->codec_id);
      // look for a vdpau capable codec
      if (codec_is_vdpau(video_codec_id) && !CODEC_IS_VDPAU(codec))
-@@ -1465,7 +1467,7 @@ void AvFormatDecoder::InitVideoCodec(AVS
+@@ -1465,7 +1474,7 @@ void AvFormatDecoder::InitVideoCodec(AVS
      else if (codec && codec->capabilities & CODEC_CAP_DR1 &&
               (IS_DR1_PIX_FMT(enc->pix_fmt) /* HACK -- begin */
               /*   allow unknown pixel format to avoid regressions*/
@@ -761,7 +791,7 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp mythtv-0.23/l
  	     /* HACK -- end*/)
      {
          enc->flags          |= CODEC_FLAG_EMU_EDGE;
-@@ -2402,6 +2404,13 @@ int get_avf_buffer(struct AVCodecContext
+@@ -2402,6 +2411,13 @@ int get_avf_buffer(struct AVCodecContext
  {
      AvFormatDecoder *nd = (AvFormatDecoder *)(c->opaque);
  
@@ -775,7 +805,7 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp mythtv-0.23/l
      VideoFrame *frame = nd->GetNVP()->GetNextVideoFrame(true);
  
      for (int i = 0; i < 3; i++)
-@@ -4361,6 +4370,12 @@ bool AvFormatDecoder::GetFrame(DecodeTyp
+@@ -4361,6 +4377,12 @@ bool AvFormatDecoder::GetFrame(DecodeTyp
                              GetNVP()->DiscardVideoFrame(xf);
                          }
                      }
@@ -884,6 +914,36 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/tv_play.h mythtv-0.23/libs/libmyt
      void SwitchInputs(PlayerContext*, uint inputid);
      void ToggleInputs(PlayerContext*, uint inputid = 0);
      void SwitchCards(PlayerContext*,
+diff -Naurp mythtv-0.23-release/libs/libmythui/mythfontmanager.cpp mythtv-0.23/libs/libmythui/mythfontmanager.cpp
+--- mythtv-0.23-release/libs/libmythui/mythfontmanager.cpp	2010-02-24 02:41:32.000000000 -0500
++++ mythtv-0.23/libs/libmythui/mythfontmanager.cpp	2010-06-08 18:21:22.370095000 -0400
+@@ -23,7 +23,7 @@ static MythFontManager *gFontManager = N
+ void MythFontManager::LoadFonts(const QString &directory,
+                                 const QString &registeredFor)
+ {
+-    if (directory.isEmpty() || registeredFor.isEmpty())
++    if (directory.isEmpty() || directory == "/" || registeredFor.isEmpty())
+         return;
+ 
+     // Load the font files from this directory
+@@ -100,7 +100,7 @@ void MythFontManager::ReleaseFonts(const
+ void MythFontManager::LoadFontsFromDirectory(const QString &directory,
+                                              const QString &registeredFor)
+ {
+-    if (directory.isEmpty() || registeredFor.isEmpty())
++    if (directory.isEmpty() || directory == "/" || registeredFor.isEmpty())
+         return;
+ 
+     VERBOSE(VB_FILE + VB_EXTRA, QString("Scanning directory '%1' "
+@@ -124,7 +124,7 @@ void MythFontManager::LoadFontsFromDirec
+ void MythFontManager::LoadFontFile(const QString &fontPath,
+                                    const QString &registeredFor)
+ {
+-    if (fontPath.isEmpty() || registeredFor.isEmpty())
++    if (fontPath.isEmpty() || fontPath == "/" || registeredFor.isEmpty())
+         return;
+ 
+     QMutexLocker locker(&m_lock);
 diff -Naurp mythtv-0.23-release/libs/libmythui/mythmainwindow.cpp mythtv-0.23/libs/libmythui/mythmainwindow.cpp
 --- mythtv-0.23-release/libs/libmythui/mythmainwindow.cpp	2010-04-29 20:59:58.000000000 -0400
 +++ mythtv-0.23/libs/libmythui/mythmainwindow.cpp	2010-05-13 14:40:15.407856000 -0400
