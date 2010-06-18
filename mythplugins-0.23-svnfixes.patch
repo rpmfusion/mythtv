@@ -3463,6 +3463,114 @@ diff -Naurp mythplugins-0.23-release/mythweb/mythweb.pl mythplugins-0.23/mythweb
  # @version   $Revision: 19007 $
  # @author    $Author: kormoc $
  #
+diff -Naurp mythplugins-0.23-release/mythzoneminder/mythzoneminder/zmclient.cpp mythplugins-0.23/mythzoneminder/mythzoneminder/zmclient.cpp
+--- mythplugins-0.23-release/mythzoneminder/mythzoneminder/zmclient.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythplugins-0.23/mythzoneminder/mythzoneminder/zmclient.cpp	2010-06-09 15:36:20.626015000 -0400
+@@ -521,6 +521,7 @@ void ZMClient::getEventFrame(int monitor
+     if (!readData(data, imageSize))
+     {
+         VERBOSE(VB_GENERAL, "ZMClient::getEventFrame(): Failed to get image data");
++        delete [] data;
+         return;
+     }
+ 
+@@ -532,8 +533,9 @@ void ZMClient::getEventFrame(int monitor
+     if (!(*image)->loadFromData(data, imageSize, "JPEG"))
+     {
+         VERBOSE(VB_GENERAL, "ZMClient::getEventFrame(): Failed to load image from data");
+-        return;
+     }
++
++    delete [] data;
+ }
+ 
+ void ZMClient::getAnalyseFrame(int monitorID, int eventID, int frameNo, QImage &image)
+@@ -558,13 +560,17 @@ void ZMClient::getAnalyseFrame(int monit
+         VERBOSE(VB_GENERAL, "ZMClient::getAnalyseFrame(): Failed to get image data");
+         image = QImage();
+     }
+-
+-    // extract the image data and create a QImage from it
+-    if (!image.loadFromData(data, imageSize, "JPEG"))
++    else
+     {
+-        VERBOSE(VB_GENERAL, "ZMClient::getAnalyseFrame(): Failed to load image from data");
+-        image = QImage();
++        // extract the image data and create a QImage from it
++        if (!image.loadFromData(data, imageSize, "JPEG"))
++        {
++            VERBOSE(VB_GENERAL, "ZMClient::getAnalyseFrame(): Failed to load image from data");
++            image = QImage();
++        }
+     }
++
++    delete [] data;
+ }
+ 
+ int ZMClient::getLiveFrame(int monitorID, QString &status, unsigned char* buffer, int bufferSize)
+@@ -659,9 +665,21 @@ void ZMClient::getMonitorList(vector<Mon
+         item->zmaStatus = "";
+         item->events = 0;
+         item->status = "";
++        item->isV4L2 = (item->palette > 255);
+         monitorList->push_back(item);
+-        VERBOSE(VB_IMPORTANT, QString("Monitor: %1 (%2) is using palette: %3")
+-                .arg(item->name).arg(item->id).arg(item->palette));
++        if (item->isV4L2)
++        {
++            QString pallete;
++            pallete  = (char) (item->palette & 0xff);
++            pallete += (char) ((item->palette >> 8) & 0xff);
++            pallete += (char) ((item->palette >> 16) & 0xff);
++            pallete += (char) ((item->palette >> 24) & 0xff);
++            VERBOSE(VB_IMPORTANT, QString("Monitor: %1 (%2) is using palette: %3 (%4)")
++                    .arg(item->name).arg(item->id).arg(item->palette).arg(pallete));
++        }
++        else
++            VERBOSE(VB_IMPORTANT, QString("Monitor: %1 (%2) is using palette: %3")
++                    .arg(item->name).arg(item->id).arg(item->palette));
+     }
+ }
+ 
+diff -Naurp mythplugins-0.23-release/mythzoneminder/mythzoneminder/zmdefines.h mythplugins-0.23/mythzoneminder/mythzoneminder/zmdefines.h
+--- mythplugins-0.23-release/mythzoneminder/mythzoneminder/zmdefines.h	2009-05-15 22:26:03.000000000 -0400
++++ mythplugins-0.23/mythzoneminder/mythzoneminder/zmdefines.h	2010-06-09 15:36:20.626015000 -0400
+@@ -61,6 +61,7 @@ typedef struct
+     int width;
+     int height;
+     int palette;
++    bool isV4L2;
+ } Monitor;
+ 
+ #endif
+diff -Naurp mythplugins-0.23-release/mythzoneminder/mythzoneminder/zmliveplayer.cpp mythplugins-0.23/mythzoneminder/mythzoneminder/zmliveplayer.cpp
+--- mythplugins-0.23-release/mythzoneminder/mythzoneminder/zmliveplayer.cpp	2009-11-28 13:50:27.000000000 -0500
++++ mythplugins-0.23/mythzoneminder/mythzoneminder/zmliveplayer.cpp	2010-06-09 15:36:20.626015000 -0400
+@@ -450,10 +450,20 @@ void Player::updateFrame(const unsigned 
+             r = buffer[pos_data++];
+             g = buffer[pos_data++];
+             b = buffer[pos_data++];
+-            m_rgba[pos_rgba++] = b;
+-            m_rgba[pos_rgba++] = g;
+-            m_rgba[pos_rgba++] = r;
+-            m_rgba[pos_rgba++] = 0xff;
++            if (m_monitor.isV4L2)
++            {
++                m_rgba[pos_rgba++] = g;
++                m_rgba[pos_rgba++] = r;
++                m_rgba[pos_rgba++] = b;
++                m_rgba[pos_rgba++] = 0xff;
++            }
++            else
++            {
++                m_rgba[pos_rgba++] = b;
++                m_rgba[pos_rgba++] = g;
++                m_rgba[pos_rgba++] = r;
++                m_rgba[pos_rgba++] = 0xff;
++            }
+         }
+     }
+ 
 diff -Naurp mythplugins-0.23-release/settings.pro mythplugins-0.23/settings.pro
 --- mythplugins-0.23-release/settings.pro	2010-02-16 17:59:56.000000000 -0500
 +++ mythplugins-0.23/settings.pro	2010-05-11 11:29:36.773259000 -0400

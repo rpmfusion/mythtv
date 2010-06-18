@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25048
+%define _svnrev r25124
 %define branch release-0-23-fixes
 
 #
@@ -81,7 +81,7 @@ Version: 0.23
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 3%{?dist}
+Release: 4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -132,6 +132,7 @@ Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Patch0:    mythtv-%{version}-svnfixes.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 Patch1:    mythplugins-%{version}-svnfixes.patch
+Patch2:    mythtv-0.23-shutup-vuvuzela.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -841,6 +842,7 @@ on demand content.
 
 cd mythtv-%{version}
 %patch0 -p1
+%patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -965,7 +967,7 @@ cd mythtv-%{version}
     --extra-cxxflags="%{optflags} -fomit-frame-pointer" \
 %endif
 %ifarch %{ix86}
-    --cpu=i686 --tune=i686 --enable-mmx \
+    --cpu=%{_target_cpu} --tune=%{_target_cpu} --enable-mmx \
 %endif
 %if %{with_proc_opt}
     --enable-proc-opt \
@@ -1477,6 +1479,13 @@ fi
 ################################################################################
 
 %changelog
+* Wed Jun 16 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-4
+- Update to release-0-23-fixes branch, svn revision 25124
+- Add anti-vuvuzela-filter patch from mythtv ticket #8568, because
+  I likes me some World Cup w/o the headache
+- Fix 32-bit x86 build on F11 i586 target
+- Fix a flub in the initscript from the prior build
+
 * Tue Jun 08 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-3
 - Update to release-0-23-fixes branch, svn revision 25048
 - Includes pulseaudio white noise and seeking fixes (rpmfusion bz#1260)
