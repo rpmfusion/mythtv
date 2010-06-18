@@ -1,0 +1,644 @@
+Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
+===================================================================
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(revision 25121)
++++ mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(working copy)
+@@ -5134,6 +5134,21 @@
+     return false;
+ }
+ 
++bool NuppelVideoPlayer::ToggleVuvuzela()
++{
++    bool ret = false;
++    if (audioOutput)
++        ret = audioOutput->ToggleVuvuzela();
++    if (decoder)
++        decoder->SetDisablePassThrough(ret);
++    return ret;
++}
++
++bool NuppelVideoPlayer::IsVuvuzela()
++{
++    return audioOutput ? audioOutput->IsVuvuzela() : false;
++}
++
+ void NuppelVideoPlayer::Zoom(ZoomDirection direction)
+ {
+     if (videoOutput)
+Index: mythtv/libs/libmythtv/avformatdecoder.cpp
+===================================================================
+--- mythtv/libs/libmythtv/avformatdecoder.cpp	(revision 25121)
++++ mythtv/libs/libmythtv/avformatdecoder.cpp	(working copy)
+@@ -4639,6 +4639,7 @@
+     else if (ctx->codec_id == CODEC_ID_DTS)
+         passthru = allow_dts_passthru && !internal_vol;
+ 
++    passthru &= !GetNVP()->IsVuvuzela();
+     passthru &= !transcoding && !disable_passthru;
+     // Don't know any cards that support spdif clocked at < 44100
+     // Some US cable transmissions have 2ch 32k AC-3 streams
+Index: mythtv/libs/libmythtv/tv_play.h
+===================================================================
+--- mythtv/libs/libmythtv/tv_play.h	(revision 25121)
++++ mythtv/libs/libmythtv/tv_play.h	(working copy)
+@@ -436,6 +436,7 @@
+                                  const QStringList &actions);
+ 
+     void ToggleUpmix(PlayerContext*);
++    void ToggleVuvuzela(PlayerContext*);
+     void ChangeAudioSync(PlayerContext*, int dir, bool allowEdit = true);
+     bool AudioSyncHandleAction(PlayerContext*, const QStringList &actions);
+ 
+Index: mythtv/libs/libmythtv/NuppelVideoPlayer.h
+===================================================================
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.h	(revision 25121)
++++ mythtv/libs/libmythtv/NuppelVideoPlayer.h	(working copy)
+@@ -165,6 +165,8 @@
+     void ToggleAspectOverride(AspectOverrideMode aspectMode = kAspect_Toggle);
+     void ToggleAdjustFill(AdjustFillMode adjustfillMode = kAdjustFill_Toggle);
+     bool ToggleUpmix(void);
++    bool ToggleVuvuzela(void);
++    bool IsVuvuzela(void);
+ 
+     // Gets
+     QSize   GetVideoBufferSize(void) const    { return video_dim; }
+Index: mythtv/libs/libmythtv/tv_play.cpp
+===================================================================
+--- mythtv/libs/libmythtv/tv_play.cpp	(revision 25121)
++++ mythtv/libs/libmythtv/tv_play.cpp	(working copy)
+@@ -4516,6 +4516,8 @@
+         ToggleTimeStretch(ctx);
+     else if (has_action("TOGGLEUPMIX", actions))
+         ToggleUpmix(ctx);
++    else if (has_action("TOGGLEVUVUZELA", actions))
++        ToggleVuvuzela(ctx);
+     else if (has_action("TOGGLESLEEP", actions))
+         ToggleSleepTimer(ctx);
+     else if (has_action("TOGGLERECORD", actions) && islivetv)
+@@ -8286,6 +8288,20 @@
+         ctx->nvp->GetOSD()->SetSettingsText(text, 5);
+ }
+ 
++void TV::ToggleVuvuzela(PlayerContext *ctx)
++{
++    if (!ctx->nvp || !ctx->nvp->HasAudioOut())
++        return;
++    QString text;
++    if (ctx->nvp->ToggleVuvuzela())
++        text = tr("Vuvuzela Filter On");
++    else
++        text = tr("Vuvuzela Filter Off");
++
++    if (ctx->nvp->GetOSD() && !browsemode)
++        ctx->nvp->GetOSD()->SetSettingsText(text, 5);
++}
++
+ // dir in 10ms jumps
+ void TV::ChangeAudioSync(PlayerContext *ctx, int dir, bool allowEdit)
+ {
+@@ -9949,6 +9965,8 @@
+         ToggleTimeStretch(actx);
+     else if (action == "TOGGLEUPMIX")
+         ToggleUpmix(actx);
++    else if (action == "TOGGLEVUVUZELA")
++        ToggleVuvuzela(actx);
+     else if (action.left(13) == "ADJUSTSTRETCH")
+     {
+         bool floatRead;
+@@ -10323,6 +10341,8 @@
+         new OSDGenericTree(treeMenu, tr("Adjust Audio Sync"), "TOGGLEAUDIOSYNC");
+     else if (category == "TOGGLEUPMIX")
+         new OSDGenericTree(treeMenu, tr("Toggle Audio Upmixer"), "TOGGLEUPMIX");
++    else if (category == "TOGGLEVUVUZELA")
++        new OSDGenericTree(treeMenu, tr("Toggle Vuvuzela Filter"), "TOGGLEVUVUZELA");
+     else if (category == "TIMESTRETCH")
+         FillMenuTimeStretch(ctx, treeMenu);
+     else if (category == "VIDEOSCAN")
+Index: mythtv/libs/libmythtv/tvosdmenuentry.cpp
+===================================================================
+--- mythtv/libs/libmythtv/tvosdmenuentry.cpp	(revision 25121)
++++ mythtv/libs/libmythtv/tvosdmenuentry.cpp	(working copy)
+@@ -236,6 +236,12 @@
+         "AUDIOSYNC",          1,  1,  1,  1, "Audio Sync"));
+     curMenuEntries.append(new TVOSDMenuEntry(
+         "TOGGLEUPMIX",        1,  1,  1,  1, "Toggle Upmixer"));
++    if (gContext->GetNumSetting("AdvancedAudioSettings", false) &&
++        gContext->GetNumSetting("VuvuzelaFilter", false))
++    {
++        curMenuEntries.append(new TVOSDMenuEntry(
++            "TOGGLEVUVUZELA", 1,  1,  1,  1, "Toggle Vuvuzela Filter"));
++    }
+     curMenuEntries.append(new TVOSDMenuEntry(
+         "TIMESTRETCH",        1,  1,  1,  1, "Time Stretch"));
+     curMenuEntries.append(new TVOSDMenuEntry(
+Index: mythtv/libs/libmyth/audiooutputbase.h
+===================================================================
+--- mythtv/libs/libmyth/audiooutputbase.h	(revision 25121)
++++ mythtv/libs/libmyth/audiooutputbase.h	(working copy)
+@@ -16,6 +16,7 @@
+ 
+ // MythTV headers
+ #include "audiooutput.h"
++#include "audiooutpututil.h"
+ #include "samplerate.h"
+ #include "mythverbose.h"
+ 
+@@ -44,6 +45,8 @@
+     virtual void SetStretchFactor(float factor);
+     virtual float GetStretchFactor(void) const;
+     virtual bool ToggleUpmix(void);
++    virtual bool ToggleVuvuzela(void);
++    virtual bool IsVuvuzela(void) { return vuvuzela; }
+ 
+     virtual void Reset(void);
+ 
+@@ -230,6 +233,10 @@
+     /** main audio buffer */
+     unsigned char audiobuffer[kAudioRingBufferSize];
+     uint memory_corruption_test4;
++
++    //Vuvuzela filter
++    bool vuvuzela, last_vuvuzela;
++    AudioOutputUtil::Notch *notch_instance;
+ };
+ 
+ #endif
+Index: mythtv/libs/libmyth/audiooutpututil.h
+===================================================================
+--- mythtv/libs/libmyth/audiooutpututil.h	(revision 0)
++++ mythtv/libs/libmyth/audiooutpututil.h	(revision 0)
+@@ -0,0 +1,71 @@
++#ifndef AUDIOOUTPUTUTIL
++#define AUDIOOUTPUTUTIL
++
++using namespace std;
++
++#define IIR_NUM_COEFFICIENTS				(3)	// Assumed biquads
++
++class AudioOutputUtil
++{
++ public:
++    
++    //Notch Filter / IRR transformation
++    // Parameters
++    typedef struct
++    {
++        uint N;
++        uint num_biquads;
++        float b[IIR_NUM_COEFFICIENTS];
++        float a[IIR_NUM_COEFFICIENTS];
++    } IIR_Parameters;
++    
++    // State information
++    typedef struct
++    {
++        float a[IIR_NUM_COEFFICIENTS];
++        float b[IIR_NUM_COEFFICIENTS];
++        float x_mem[IIR_NUM_COEFFICIENTS];
++        float y_mem[IIR_NUM_COEFFICIENTS];
++    } IIR_State;
++    
++    // Instance
++    typedef struct
++    {
++        IIR_Parameters parameters;
++        IIR_State state;
++    } IIR;
++    
++    // Parameters
++    typedef struct
++    {
++        uint N;
++        float frequency;			// Notch frequency
++        float attenuation_dB;		// Notch attenuation
++    } Notch_Parameters;
++
++    // State information
++
++    typedef struct
++    {
++        float pole_position;
++        float frequency_offset;
++        float a1s;
++        float a2;
++        float depth_factor;
++        float w0;		// Input weight
++        float w1;		// Output weight
++    } Notch_State;
++
++    // Instance
++    typedef struct
++    {
++        Notch_Parameters parameters;
++        Notch_State state;
++        IIR iir;
++    } Notch;
++
++    static void notch_update(Notch &instance, float fs);
++    static void notch_execute(Notch &instance, float *in, float *out);
++};
++
++#endif
+Index: mythtv/libs/libmyth/audiooutputbase.cpp
+===================================================================
+--- mythtv/libs/libmyth/audiooutputbase.cpp	(revision 25121)
++++ mythtv/libs/libmyth/audiooutputbase.cpp	(working copy)
+@@ -13,6 +13,7 @@
+ #include "compat.h"
+ #include "audiooutputbase.h"
+ #include "audiooutputdigitalencoder.h"
++#include "audiooutpututil.h"
+ #include "SoundTouch.h"
+ #include "freesurround.h"
+ 
+@@ -73,7 +74,9 @@
+     memory_corruption_test1(0xdeadbeef),
+     memory_corruption_test2(0xdeadbeef),
+     memory_corruption_test3(0xdeadbeef),
+-    memory_corruption_test4(0xdeadbeef)
++    memory_corruption_test4(0xdeadbeef),
++    vuvuzela(false),            last_vuvuzela(false),
++    notch_instance(NULL)
+ {
+     // The following are not bzero() because MS Windows doesn't like it.
+     memset(&src_data,          0, sizeof(SRC_DATA));
+@@ -197,7 +200,17 @@
+     return (configured_audio_channels == 6);
+ }
+ 
++bool AudioOutputBase::ToggleVuvuzela(void)
++{
++    vuvuzela = !vuvuzela;
++    const AudioSettings settings(audio_bits, source_audio_channels,
++                                 audio_codec, source_audio_samplerate,
++                                 audio_passthru);
++    Reconfigure(settings);
+ 
++    return vuvuzela;
++}
++
+ void AudioOutputBase::Reconfigure(const AudioSettings &orig_settings)
+ {
+     AudioSettings settings = orig_settings;
+@@ -229,6 +242,7 @@
+         settings.samplerate == audio_samplerate && !need_resampler &&
+         settings.use_passthru == audio_passthru &&
+         lneeds_upmix == needs_upmix &&
++        last_vuvuzela == vuvuzela &&
+         laudio_reenc == audio_reenc);
+     bool upmix_deps =
+         (lsource_audio_channels == source_audio_channels);
+@@ -247,6 +261,8 @@
+         return;
+     }
+ 
++    last_vuvuzela          = vuvuzela;
++
+     KillAudio();
+ 
+     QMutexLocker lock1(&audio_buflock);
+@@ -264,6 +280,7 @@
+     audio_codec = settings.codec;
+     audio_passthru = settings.use_passthru;
+     needs_upmix = lneeds_upmix;
++    vuvuzela = last_vuvuzela;
+ 
+     if (audio_bits != 8 && audio_bits != 16)
+     {
+@@ -341,6 +358,13 @@
+         need_resampler = true;
+     }
+ 
++    if (vuvuzela)
++    {
++        VERBOSE(VB_AUDIO, LOC + "Vuvuzela filter enabled. Go Socceroos Go!");
++        if (!notch_instance)
++            notch_instance = new AudioOutputUtil::Notch;
++    }
++
+     if (audio_enc)
+     {
+         VERBOSE(VB_AUDIO, LOC + "Creating AC-3 Encoder");
+@@ -497,6 +521,13 @@
+     needs_upmix = false;
+     audio_enc = false;
+ 
++    if (notch_instance)
++    {
++        delete notch_instance;
++        notch_instance = NULL;
++    }
++    vuvuzela = false;
++
+     CloseDevice();
+ 
+     killAudioLock.unlock();
+@@ -790,7 +821,6 @@
+             VERBOSE(VB_IMPORTANT, LOC_ERR +
+                     QString("Error occurred while resampling audio: %1")
+                     .arg(src_strerror(error)));
+-
+         src_float_to_short_array(src_data.data_out, (short int*)tmp_buff,
+                                  src_data.output_frames_gen*audio_channels);
+ 
+@@ -844,7 +874,7 @@
+     QMutexLocker lock1(&audio_buflock);
+ 
+     // resample input if necessary
+-    if (need_resampler && src_ctx)
++    if ((need_resampler && src_ctx) || (vuvuzela && notch_instance))
+     {
+         // Convert to floats
+         short *buf_ptr = (short*)buffer;
+@@ -853,17 +883,47 @@
+             src_in[sample] = (float)buf_ptr[sample] / (1.0 * 0x8000);
+         }
+  
+-        src_data.input_frames = samples;
+-        src_data.end_of_input = 0;
+-        int error = src_process(src_ctx, &src_data);
+-        if (error)
+-            VERBOSE(VB_IMPORTANT, LOC_ERR +
+-                    QString("Error occurred while resampling audio: %1")
+-                    .arg(src_strerror(error)));
+-        src_float_to_short_array(src_data.data_out, (short int*)tmp_buff,
+-                                 src_data.output_frames_gen*audio_channels);
++        if (vuvuzela)
++        {
++            notch_instance->parameters.N = samples * audio_channels;
++            // Notch attenuation
++            notch_instance->parameters.attenuation_dB = 35.0f;
++            
++            // Notch frequency
++            notch_instance->parameters.frequency = 233.0f;
++            AudioOutputUtil::notch_update (*notch_instance, (float)source_audio_samplerate);
++            AudioOutputUtil::notch_execute (*notch_instance, src_in, src_out);
++            notch_instance->parameters.frequency = 466.0f;  // 1st harmonic
++            AudioOutputUtil::notch_update (*notch_instance, (float)source_audio_samplerate);
++            AudioOutputUtil::notch_execute (*notch_instance, src_out, src_in);
++            notch_instance->parameters.frequency = 932.0f;  // 2nd harmonic
++            AudioOutputUtil::notch_update (*notch_instance, (float)source_audio_samplerate);
++            AudioOutputUtil::notch_execute (*notch_instance, src_in, src_out);
++            notch_instance->parameters.frequency = 1864.0f;  // 3rd harmonic
++            AudioOutputUtil::notch_update (*notch_instance, (float)source_audio_samplerate);
++            AudioOutputUtil::notch_execute (*notch_instance, src_out, src_in);
++        }
+ 
+-        _AddSamples(tmp_buff, true, src_data.output_frames_gen, timecode);
++        if (need_resampler)
++        {
++            src_data.input_frames = samples;
++            src_data.end_of_input = 0;
++            int error = src_process(src_ctx, &src_data);
++            if (error)
++                VERBOSE(VB_IMPORTANT, LOC_ERR +
++                        QString("Error occurred while resampling audio: %1")
++                        .arg(src_strerror(error)));
++            src_float_to_short_array(src_data.data_out, (short int*)tmp_buff,
++                                     src_data.output_frames_gen*audio_channels);
++
++            _AddSamples(tmp_buff, true, src_data.output_frames_gen, timecode);
++        }
++        else
++        {
++            src_float_to_short_array(src_in, (short int*)tmp_buff,
++                                     samples * audio_channels);
++            _AddSamples(tmp_buff, true, samples, timecode);
++        }
+     }
+     else
+     {
+Index: mythtv/libs/libmyth/libmyth.pro
+===================================================================
+--- mythtv/libs/libmyth/libmyth.pro	(revision 25121)
++++ mythtv/libs/libmyth/libmyth.pro	(working copy)
+@@ -30,7 +30,7 @@
+ HEADERS += audiopulseutil.h
+ HEADERS += programinfo.h programlist.h programinfoupdater.h
+ HEADERS += recordingtypes.h remoteutil.h
+-HEADERS += rawsettingseditor.h
++HEADERS += rawsettingseditor.h audiooutpututil.h
+ 
+ # remove when everything is switched to mythui
+ HEADERS += virtualkeyboard_qt.h
+@@ -54,7 +54,7 @@
+ SOURCES += audiopulseutil.cpp
+ SOURCES += programinfo.cpp programlist.cpp programinfoupdater.cpp
+ SOURCES += recordingtypes.cpp remoteutil.cpp
+-SOURCES += rawsettingseditor.cpp
++SOURCES += rawsettingseditor.cpp audiooutpututil.cpp
+ 
+ # remove when everything is switched to mythui
+ SOURCES += virtualkeyboard_qt.cpp
+Index: mythtv/libs/libmyth/audiooutput.h
+===================================================================
+--- mythtv/libs/libmyth/audiooutput.h	(revision 25121)
++++ mythtv/libs/libmyth/audiooutput.h	(working copy)
+@@ -71,6 +71,8 @@
+     virtual void bufferOutputData(bool y) = 0;
+     virtual int readOutputData(unsigned char *read_buffer, int max_length) = 0;
+     virtual bool ToggleUpmix(void) = 0;
++    virtual bool ToggleVuvuzela(void) = 0;
++    virtual bool IsVuvuzela(void) = 0;
+ 
+   protected:
+     void Error(const QString &msg);
+Index: mythtv/libs/libmyth/audiooutpututil.cpp
+===================================================================
+--- mythtv/libs/libmyth/audiooutpututil.cpp	(revision 0)
++++ mythtv/libs/libmyth/audiooutpututil.cpp	(revision 0)
+@@ -0,0 +1,143 @@
++#include "dsputil.h"
++#include "mythconfig.h"
++#include "audiooutpututil.h"
++
++#define IIR_NUM_COEFFICIENTS				(3)	// Assumed biquads
++
++static void iir_update (AudioOutputUtil::IIR &instance)
++{
++	// Clear the filter state
++    bzero(&instance.state.x_mem[0], IIR_NUM_COEFFICIENTS * sizeof(float));
++    bzero(&instance.state.y_mem[0], IIR_NUM_COEFFICIENTS * sizeof(float));
++    
++    memcpy(&instance.state.b[0], &instance.parameters.b[0],
++           IIR_NUM_COEFFICIENTS * sizeof(float));
++    memcpy(&instance.state.a[0], &instance.parameters.a[0],
++           IIR_NUM_COEFFICIENTS * sizeof(float));
++}
++
++/* Notch filter (c) 2010 Hydrix & Jean-Yves Avenard */
++/* www.hydrix.com */
++
++// Processes a single block of samples with a single IIR biquad stage
++//    N                   M
++//   SUM a(k+1) y(n-k) = SUM b(k+1) x(n-k)      for 1<=n<=length(x)
++//   k=0                 k=0
++// where N=length(a)-1 and M=length(b)-1.
++// Vector s is the initial state of the system. The final state is also returned
++// The state vector is a column vector whose length is equal to the
++// 	length of the longest coefficient vector minus one.
++static void iir_biquad (float* x, float* y,
++                        float* a, float* b,
++                        float* x_mem, float* y_mem,
++                        unsigned int N)
++{
++	// Direct Form I
++	//               N+1               N+1
++	//		y(n) = - SUM a(k) y(n-k) + SUM b(k) x(n-k)  for 0 <= n <length(x)
++	//               k=1               k=0
++	unsigned int n = 0;
++	unsigned int k = 0;
++	float y_n_minus_k = 0.0f;
++	float x_n_minus_k = 0.0f;
++	for (n = 0; n < N; n++)
++	{
++		y[n] = x[n] * b[0];
++        
++		for (k = 1; k < IIR_NUM_COEFFICIENTS; k++)
++		{
++			signed int n_minus_k = n - k;
++			if (n_minus_k >= 0)
++			{
++				x_n_minus_k = x[n_minus_k];
++				y_n_minus_k = y[n_minus_k];
++			}
++			else
++			{
++				x_n_minus_k = x_mem[-n_minus_k-1];
++				y_n_minus_k = y_mem[-n_minus_k-1];
++			}
++            
++			y[n] -= a[k] * y_n_minus_k;
++			y[n] += b[k] * x_n_minus_k;
++		}
++	}
++    
++	// Save input and output state, latest first
++	unsigned int state_offset = N - 1;
++	for (n=0; n < (IIR_NUM_COEFFICIENTS-1); n++)
++	{
++		x_mem[n] = x[state_offset];
++		y_mem[n] = y[state_offset];
++		state_offset--;
++	}
++}
++
++static void iir_execute(AudioOutputUtil::IIR &instance, float* x, float* y)
++{
++    iir_biquad(x, y,
++               &instance.state.a[0], &instance.state.b[0],
++               &instance.state.x_mem[0], &instance.state.y_mem[0],
++               instance.parameters.N);
++}
++
++// Notch filter
++#define PI_FLOAT                    (3.14159265358979f)
++
++void AudioOutputUtil::notch_update (Notch &instance, float fs)
++{
++	instance.state.pole_position = 0.99f;
++	instance.state.frequency_offset = 0.0f; // in normalised frequency (1.0 = fs)
++	instance.state.a1s = -instance.state.pole_position;
++	instance.state.a2 = -(instance.state.pole_position * instance.state.pole_position);
++	instance.state.depth_factor = 0.999f;
++
++	// Calculate filter coefficients
++	// Direct-form IIR
++	// Ref: http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt and others
++	float normalised_notch_frequency = (2.0f * instance.parameters.frequency / fs);
++	normalised_notch_frequency += instance.state.frequency_offset;
++	float frequency_factor = -2.0f * cosf(PI_FLOAT * normalised_notch_frequency);
++	float a1 = frequency_factor * instance.state.a1s;
++	float a2 = instance.state.a2;
++	float b1 = frequency_factor * instance.state.depth_factor;
++	float b2 = instance.state.depth_factor * instance.state.depth_factor;
++	instance.iir.parameters.N = instance.parameters.N;
++	instance.iir.parameters.a[0] = 1.0f;
++	instance.iir.parameters.a[1] = -a1;
++	instance.iir.parameters.a[2] = -a2;
++	instance.iir.parameters.b[0] = 1.0f;
++	instance.iir.parameters.b[1] = b1;
++	instance.iir.parameters.b[2] = b2;
++
++	// Initialise the IIR stage
++	iir_update(instance.iir);
++
++	// The notch filter strongly attenuates at the notch frequency.
++	// The output is the weighted sum of the input and the
++	// 	notch-filtered input.  The weights are calculated from the
++	// 	attenuation parameters
++	// instance.state.w0 = pow(10.0, (-instance.parameters.attenuation_dB / 20.0));
++	// instance.state.w1 = 1.0 - instance.state.w0;
++	float w0 = powf(10.0f, (-instance.parameters.attenuation_dB / 20.0f));
++	float w1 = 1.0f - w0;
++	instance.state.w0 = w0;
++	instance.state.w1 = w1;
++
++	return;
++}
++
++// Processes a single block of samples
++void AudioOutputUtil::notch_execute (Notch &instance, float *in, float *out)
++{
++    // Apply the rejection filter
++    iir_execute(instance.iir, in, out);
++
++    // The output is the weighted sum of the input and the
++    //	notch-filtered input
++    for (uint i=0; i < instance.parameters.N; i++)
++    {
++        out[i] *= instance.state.w1;
++        out[i] += instance.state.w0 * in[i];
++    }
++}
+Index: mythtv/programs/mythfrontend/globalsettings.cpp
+===================================================================
+--- mythtv/programs/mythfrontend/globalsettings.cpp	(revision 25121)
++++ mythtv/programs/mythfrontend/globalsettings.cpp	(working copy)
+@@ -181,6 +181,17 @@
+     return gc;
+ }
+ 
++static HostCheckBox *VuvuzelaFilter()
++{
++    HostCheckBox *gc = new HostCheckBox("VuvuzelaFilter");
++    gc->setLabel(QObject::tr("Enable vuvuzela filter"));
++    gc->setValue(false);
++    gc->setHelpText(QObject::tr("With this option enabled, a dedicated vuvuzela "
++                                "filter option will be accessible in the playback "
++                                "menu"));
++    return gc;
++}
++
+ static HostCheckBox *MythControlsVolume()
+ {
+     HostCheckBox *gc = new HostCheckBox("MythControlsVolume");
+@@ -3485,6 +3496,7 @@
+     settings2->addChild(srcqualityoverride);
+     settings2->addChild(sub3);
+     
++    group2->addChild(VuvuzelaFilter());
+     group2->addChild(settings2);
+     group2->addChild(AggressiveBuffer());
+ 
+Index: mythtv/programs/mythtranscode/transcode.cpp
+===================================================================
+--- mythtv/programs/mythtranscode/transcode.cpp	(revision 25121)
++++ mythtv/programs/mythtranscode/transcode.cpp	(working copy)
+@@ -217,7 +217,16 @@
+         // Do nothing
+         return false;
+     }
+-
++    virtual bool ToggleVuvuzela(void)
++    {
++        // Do nothing
++        return false;
++    }
++    virtual bool IsVuvuzela(void)
++    {
++        // Do nothing
++        return false;
++    }
+     virtual void SetSWVolume(int new_volume, bool save)
+     {
+         // Do nothing
