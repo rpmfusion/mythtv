@@ -966,8 +966,11 @@ cd mythtv-%{version}
     --extra-cflags="%{optflags} -fomit-frame-pointer" \
     --extra-cxxflags="%{optflags} -fomit-frame-pointer" \
 %endif
-%ifarch %{ix86}
-    --cpu=%{_target_cpu} --tune=%{_target_cpu} --enable-mmx \
+%ifarch i586
+    --cpu=pentium-mmx --tune=i586 --enable-mmx \
+%endif
+%ifarch i686
+    --cpu=i686 --tune=i686 --enable-mmx \
 %endif
 %if %{with_proc_opt}
     --enable-proc-opt \
@@ -1479,6 +1482,9 @@ fi
 ################################################################################
 
 %changelog
+* Sat Jun 19 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-5
+- One more try at a 32-bit x86 F11 i586 build w/both mmx and no cmov
+
 * Wed Jun 16 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-4
 - Update to release-0-23-fixes branch, svn revision 25124
 - Add anti-vuvuzela-filter patch from mythtv ticket #8568, because
