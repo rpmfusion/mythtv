@@ -81,7 +81,7 @@ Version: 0.23
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 4%{?dist}
+Release: 5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
