@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25124
+%define _svnrev r25150
 %define branch release-0-23-fixes
 
 #
@@ -81,7 +81,7 @@ Version: 0.23
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 4%{?dist}
+Release: 5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -966,8 +966,12 @@ cd mythtv-%{version}
     --extra-cflags="%{optflags} -fomit-frame-pointer" \
     --extra-cxxflags="%{optflags} -fomit-frame-pointer" \
 %endif
-%ifarch %{ix86}
-    --cpu=%{_target_cpu} --tune=%{_target_cpu} --enable-mmx \
+%ifarch i586
+    # --cpu=i586 will result in mmx being disabled
+    --cpu=pentium-mmx --tune=i586 --enable-mmx \
+%endif
+%ifarch i686
+    --cpu=i686 --tune=i686 --enable-mmx \
 %endif
 %if %{with_proc_opt}
     --enable-proc-opt \
@@ -1479,6 +1483,11 @@ fi
 ################################################################################
 
 %changelog
+* Mon Jun 21 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-5
+- Update to release-0-23-fixes branch, svn revision 25150
+- Further improvements to run as non-root (rpmfusion bz#1295)
+- One more try at a 32-bit x86 F11 i586 build w/both mmx and no cmov
+
 * Wed Jun 16 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-4
 - Update to release-0-23-fixes branch, svn revision 25124
 - Add anti-vuvuzela-filter patch from mythtv ticket #8568, because

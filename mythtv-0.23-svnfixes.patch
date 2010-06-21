@@ -406,6 +406,50 @@ diff -Naurp mythtv-0.23-release/libs/libavcodec/libavcodec.pro mythtv-0.23/libs/
  	QMAKE_CFLAGS_SHLIB =
  }
  
+diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputbase.cpp mythtv-0.23/libs/libmyth/audiooutputbase.cpp
+--- mythtv-0.23-release/libs/libmyth/audiooutputbase.cpp	2010-04-14 06:36:02.000000000 -0400
++++ mythtv-0.23/libs/libmyth/audiooutputbase.cpp	2010-06-18 06:50:18.720005000 -0400
+@@ -848,7 +848,8 @@ bool AudioOutputBase::AddSamples(char *b
+     {
+         // Convert to floats
+         short *buf_ptr = (short*)buffer;
+-        for (int sample = 0; sample < samples * audio_channels; sample++)
++        int numSamples = (samples * abps) / sizeof(short);
++        for (int sample = 0; sample < numSamples; sample++)
+         {
+             src_in[sample] = (float)buf_ptr[sample] / (1.0 * 0x8000);
+         }
+@@ -861,7 +862,7 @@ bool AudioOutputBase::AddSamples(char *b
+                     QString("Error occurred while resampling audio: %1")
+                     .arg(src_strerror(error)));
+         src_float_to_short_array(src_data.data_out, (short int*)tmp_buff,
+-                                 src_data.output_frames_gen*audio_channels);
++                            (src_data.output_frames_gen*abps)/sizeof(short));
+ 
+         _AddSamples(tmp_buff, true, src_data.output_frames_gen, timecode);
+     }
+diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputbase.h mythtv-0.23/libs/libmyth/audiooutputbase.h
+--- mythtv-0.23-release/libs/libmyth/audiooutputbase.h	2009-11-14 04:49:04.000000000 -0500
++++ mythtv-0.23/libs/libmyth/audiooutputbase.h	2010-06-18 06:50:18.720005000 -0400
+@@ -57,6 +57,7 @@ class AudioOutputBase : public AudioOutp
+     virtual void SetTimecode(long long timecode);
+     virtual bool IsPaused(void) const { return audio_actually_paused; }
+     virtual void Pause(bool paused);
++    virtual bool CanPassthrough(void) const { return !need_resampler; }
+ 
+     // Wait for all data to finish playing
+     virtual void Drain(void);
+diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutput.h mythtv-0.23/libs/libmyth/audiooutput.h
+--- mythtv-0.23-release/libs/libmyth/audiooutput.h	2009-10-13 22:57:05.000000000 -0400
++++ mythtv-0.23/libs/libmyth/audiooutput.h	2010-06-18 06:50:18.720005000 -0400
+@@ -49,6 +49,7 @@ class MPUBLIC AudioOutput : public Volum
+     virtual void SetTimecode(long long timecode) = 0;
+     virtual bool IsPaused(void) const = 0;
+     virtual void Pause(bool paused) = 0;
++    virtual bool CanPassthrough(void) const = 0;
+  
+     // Wait for all data to finish playing
+     virtual void Drain(void) = 0;
 diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputpulse.cpp mythtv-0.23/libs/libmyth/audiooutputpulse.cpp
 --- mythtv-0.23-release/libs/libmyth/audiooutputpulse.cpp	2009-11-16 11:18:35.000000000 -0500
 +++ mythtv-0.23/libs/libmyth/audiooutputpulse.cpp	2010-06-07 23:31:50.923907000 -0400
@@ -429,6 +473,75 @@ diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputpulse.cpp mythtv-0.23/li
      soundcard_buffer_size = 16 * fragment_size;
      buffer_settings.maxlength = soundcard_buffer_size;
      buffer_settings.tlength = fragment_size * 4;
+diff -Naurp mythtv-0.23-release/libs/libmyth/mediamonitor-darwin.cpp mythtv-0.23/libs/libmyth/mediamonitor-darwin.cpp
+--- mythtv-0.23-release/libs/libmyth/mediamonitor-darwin.cpp	2009-11-28 10:55:09.000000000 -0500
++++ mythtv-0.23/libs/libmyth/mediamonitor-darwin.cpp	2010-06-17 23:48:36.374058000 -0400
+@@ -1,7 +1,7 @@
+ /**
+  * \file     mediamonitor-darwin.cpp
+  * \brief    MythMediaMonitor for Darwin/Mac OS X.
+- * \version  $Id: mediamonitor-darwin.cpp 22911 2009-11-28 15:55:09Z danielk $
++ * \version  $Id: mediamonitor-darwin.cpp 25132 2010-06-18 03:48:36Z nigel $
+  * \author   Andrew Kimpton, Nigel Pearson
+  */
+ 
+@@ -178,11 +178,11 @@ static char * getVolName(CFDictionaryRef
+ 
+     name = (CFStringRef)
+            CFDictionaryGetValue(diskDetails, kDADiskDescriptionVolumeNameKey);
+-    if (name)
+-        size = CFStringGetLength(name) + 1;
+-    else
+-        size = 9;  // 'Untitled\0'
+ 
++    if (!name)
++        return NULL;
++
++    size = CFStringGetLength(name) + 1;
+     volName = (char *) malloc(size);
+     if (!volName)
+     {
+@@ -191,9 +191,11 @@ static char * getVolName(CFDictionaryRef
+         return NULL;
+     }
+ 
+-    if (!name || !CFStringGetCString(name, volName, size,
+-                                     kCFStringEncodingUTF8))
+-        strcpy(volName, "Untitled");
++    if (!CFStringGetCString(name, volName, size, kCFStringEncodingUTF8))
++    {
++        free(volName);
++        return NULL;
++    }
+ 
+     return volName;
+ }
+@@ -291,8 +293,14 @@ void diskAppearedCallback(DADiskRef disk
+ 
+     // Get the volume and model name for more user-friendly interaction
+     volName = getVolName(details);
+-    model   = getModel(details);
++    if (!volName)
++    {
++        VERBOSE(VB_MEDIA, msg + "No volume name for dev " + BSDname);
++        CFRelease(details);
++        return;
++    }
+ 
++    model     = getModel(details);
+     mediaType = MediaTypeForBSDName(BSDname);
+     isCDorDVD = (mediaType == MEDIATYPE_DVD) || (mediaType == MEDIATYPE_AUDIO);
+ 
+@@ -326,6 +334,9 @@ void diskChangedCallback(DADiskRef disk,
+         CFDictionaryRef details = DADiskCopyDescription(disk);
+         char           *volName = getVolName(details);
+ 
++        VERBOSE(VB_MEDIA, QString("Disk %1 - changed name to '%2'.")
++                          .arg(BSDname).arg(volName));
++
+         reinterpret_cast<MonitorThreadDarwin *>(context)
+             ->diskRename(BSDname, volName);
+         CFRelease(details);
 diff -Naurp mythtv-0.23-release/libs/libmyth/mythcontext.cpp mythtv-0.23/libs/libmyth/mythcontext.cpp
 --- mythtv-0.23-release/libs/libmyth/mythcontext.cpp	2010-03-23 20:43:43.000000000 -0400
 +++ mythtv-0.23/libs/libmyth/mythcontext.cpp	2010-05-14 18:39:42.189261000 -0400
@@ -511,6 +624,104 @@ diff -Naurp mythtv-0.23-release/libs/libmythdb/mythdirs.cpp mythtv-0.23/libs/lib
          confdir.replace("$HOME", QDir::homePath());
      }
      else
+diff -Naurp mythtv-0.23-release/libs/libmythdb/mythsocket.cpp mythtv-0.23/libs/libmythdb/mythsocket.cpp
+--- mythtv-0.23-release/libs/libmythdb/mythsocket.cpp	2010-02-10 12:02:19.000000000 -0500
++++ mythtv-0.23/libs/libmythdb/mythsocket.cpp	2010-06-17 09:23:59.559532000 -0400
+@@ -34,6 +34,7 @@ MythSocketThread *MythSocket::s_readyrea
+ 
+ MythSocket::MythSocket(int socket, MythSocketCBs *cb)
+     : MSocketDevice(MSocketDevice::Stream),            m_cb(cb),
++      m_useReadyReadCallback(true),
+       m_state(Idle),         m_addr(),                 m_port(0),
+       m_ref_count(0),        m_notifyread(false)
+ {
+@@ -200,6 +201,24 @@ void MythSocket::close(void)
+     }
+ }
+ 
++bool MythSocket::closedByRemote(void)
++{
++    fd_set rfds;
++    FD_ZERO(&rfds);
++    FD_SET(socket(), &rfds);
++
++    struct timeval to;
++    to.tv_sec = 0;
++    to.tv_usec = 1000;
++
++    int rval = select(socket() + 1, &rfds, NULL, NULL, &to);
++
++    if (rval > 0 && FD_ISSET(socket(), &rfds) && !bytesAvailable())
++        return true;
++
++    return false;
++}
++
+ qint64 MythSocket::readBlock(char *data, quint64 len)
+ {
+     VERBOSE(VB_SOCKET|VB_EXTRA, LOC + QString("readBlock(0x%1, %2) called")
+diff -Naurp mythtv-0.23-release/libs/libmythdb/mythsocket.h mythtv-0.23/libs/libmythdb/mythsocket.h
+--- mythtv-0.23-release/libs/libmythdb/mythsocket.h	2009-11-16 11:18:35.000000000 -0500
++++ mythtv-0.23/libs/libmythdb/mythsocket.h	2010-06-17 09:23:59.559532000 -0400
+@@ -29,6 +29,7 @@ class MPUBLIC MythSocket : public MSocke
+     };
+ 
+     void close(void);
++    bool closedByRemote(void);
+     void deleteLater(void);
+ 
+     void UpRef(void);
+@@ -43,6 +44,8 @@ class MPUBLIC MythSocket : public MSocke
+ 
+     void setSocket(int socket, Type type = MSocketDevice::Stream);
+     void setCallbacks(MythSocketCBs *cb);
++    void useReadyReadCallback(bool useReadyReadCallback = true)
++        { m_useReadyReadCallback = useReadyReadCallback; }
+ 
+     qint64 readBlock(char *data, quint64 len);
+     qint64 writeBlock(const char *data, quint64 len);
+@@ -73,6 +76,7 @@ class MPUBLIC MythSocket : public MSocke
+     void  setState(const State state);
+ 
+     MythSocketCBs  *m_cb;
++    bool            m_useReadyReadCallback;
+     State           m_state;
+     QHostAddress    m_addr;
+     quint16         m_port;
+diff -Naurp mythtv-0.23-release/libs/libmythdb/mythsocketthread.cpp mythtv-0.23/libs/libmythdb/mythsocketthread.cpp
+--- mythtv-0.23-release/libs/libmythdb/mythsocketthread.cpp	2010-02-10 12:02:19.000000000 -0500
++++ mythtv-0.23/libs/libmythdb/mythsocketthread.cpp	2010-06-17 09:23:59.559532000 -0400
+@@ -153,12 +153,12 @@ void MythSocketThread::ReadyToBeRead(Myt
+     VERBOSE(VB_SOCKET, SLOC(sock) + "socket is readable");
+     int bytesAvail = sock->bytesAvailable();
+     
+-    if (bytesAvail == 0)
++    if (bytesAvail == 0 && sock->closedByRemote())
+     {
+         VERBOSE(VB_SOCKET, SLOC(sock) + "socket closed");
+         sock->close();
+     }
+-    else if (sock->m_cb)
++    else if (bytesAvail > 0 && sock->m_cb && sock->m_useReadyReadCallback)
+     {
+         sock->m_notifyread = true;
+         VERBOSE(VB_SOCKET, SLOC(sock) + "calling m_cb->readyRead()");
+diff -Naurp mythtv-0.23-release/libs/libmythdb/mythversion.h mythtv-0.23/libs/libmythdb/mythversion.h
+--- mythtv-0.23-release/libs/libmythdb/mythversion.h	2010-04-29 20:59:58.000000000 -0400
++++ mythtv-0.23/libs/libmythdb/mythversion.h	2010-06-17 09:23:59.559532000 -0400
+@@ -9,9 +9,9 @@
+ #endif
+ 
+ /// Update this whenever the plug-in API changes.
+-/// Including changes in the libmythdb, libmyth and libmythui class methods
+-/// used by plug-ins.
+-#define MYTH_BINARY_VERSION "0.23.20100429-1"
++/// Including changes in the libmythdb, libmyth, libmythtv, libmythav* and
++/// libmythui class methods used by plug-ins.
++#define MYTH_BINARY_VERSION "0.23.201000617-1"
+ 
+ /** \brief Increment this whenever the MythTV network protocol changes.
+  *
 diff -Naurp mythtv-0.23-release/libs/libmythdvdnav/libmythdvdnav.pro mythtv-0.23/libs/libmythdvdnav/libmythdvdnav.pro
 --- mythtv-0.23-release/libs/libmythdvdnav/libmythdvdnav.pro	2009-10-15 11:47:54.000000000 -0400
 +++ mythtv-0.23/libs/libmythdvdnav/libmythdvdnav.pro	2010-05-11 11:07:54.320600000 -0400
@@ -742,7 +953,7 @@ diff -Naurp mythtv-0.23-release/libs/libmythsoundtouch/TDStretch.h mythtv-0.23/l
  // $Id: TDStretch.h 20349 2009-04-11 00:04:30Z xris $
 diff -Naurp mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp mythtv-0.23/libs/libmythtv/avformatdecoder.cpp
 --- mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp	2010-04-29 20:08:03.000000000 -0400
-+++ mythtv-0.23/libs/libmythtv/avformatdecoder.cpp	2010-06-10 00:02:51.816777000 -0400
++++ mythtv-0.23/libs/libmythtv/avformatdecoder.cpp	2010-06-18 06:50:18.720005000 -0400
 @@ -1291,6 +1291,14 @@ static float normalized_fps(AVStream *st
              fps = tmpfps;
      }
@@ -818,6 +1029,14 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/avformatdecoder.cpp mythtv-0.23/l
  
                      long long temppts = pts;
  
+@@ -4617,6 +4639,7 @@ bool AvFormatDecoder::DoPassThrough(cons
+     else if (ctx->codec_id == CODEC_ID_DTS)
+         passthru = allow_dts_passthru && !internal_vol;
+ 
++    passthru &= GetNVP()->CanPassthrough();
+     passthru &= !transcoding && !disable_passthru;
+     // Don't know any cards that support spdif clocked at < 44100
+     // Some US cable transmissions have 2ch 32k AC-3 streams
 diff -Naurp mythtv-0.23-release/libs/libmythtv/dbcheck.cpp mythtv-0.23/libs/libmythtv/dbcheck.cpp
 --- mythtv-0.23-release/libs/libmythtv/dbcheck.cpp	2010-03-06 22:11:52.000000000 -0500
 +++ mythtv-0.23/libs/libmythtv/dbcheck.cpp	2010-05-23 19:30:49.920201000 -0400
@@ -837,6 +1056,45 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/dbcheck.cpp mythtv-0.23/libs/libm
  
      // Pop up messages, questions, warnings, et c.
      switch (DBup->PromptForUpgrade("TV", upgradeAllowed,
+diff -Naurp mythtv-0.23-release/libs/libmythtv/jobqueue.h mythtv-0.23/libs/libmythtv/jobqueue.h
+--- mythtv-0.23-release/libs/libmythtv/jobqueue.h	2010-01-31 22:49:37.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/jobqueue.h	2010-06-17 12:33:12.060417000 -0400
+@@ -2,6 +2,7 @@
+ #define JOBQUEUE_H_
+ 
+ #include <pthread.h>
++#include <sys/types.h>
+ 
+ #include <QWaitCondition>
+ #include <QObject>
+diff -Naurp mythtv-0.23-release/libs/libmythtv/NuppelVideoPlayer.cpp mythtv-0.23/libs/libmythtv/NuppelVideoPlayer.cpp
+--- mythtv-0.23-release/libs/libmythtv/NuppelVideoPlayer.cpp	2010-04-27 22:54:52.000000000 -0400
++++ mythtv-0.23/libs/libmythtv/NuppelVideoPlayer.cpp	2010-06-18 06:50:18.720005000 -0400
+@@ -5134,6 +5134,13 @@ bool NuppelVideoPlayer::ToggleUpmix()
+     return false;
+ }
+ 
++bool NuppelVideoPlayer::CanPassthrough()
++{
++    if (audioOutput)
++        return audioOutput->CanPassthrough();
++    return false;
++}
++
+ void NuppelVideoPlayer::Zoom(ZoomDirection direction)
+ {
+     if (videoOutput)
+diff -Naurp mythtv-0.23-release/libs/libmythtv/NuppelVideoPlayer.h mythtv-0.23/libs/libmythtv/NuppelVideoPlayer.h
+--- mythtv-0.23-release/libs/libmythtv/NuppelVideoPlayer.h	2010-03-08 19:33:51.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/NuppelVideoPlayer.h	2010-06-18 06:50:18.720005000 -0400
+@@ -165,6 +165,7 @@ class MPUBLIC NuppelVideoPlayer : public
+     void ToggleAspectOverride(AspectOverrideMode aspectMode = kAspect_Toggle);
+     void ToggleAdjustFill(AdjustFillMode adjustfillMode = kAdjustFill_Toggle);
+     bool ToggleUpmix(void);
++    bool CanPassthrough(void);
+ 
+     // Gets
+     QSize   GetVideoBufferSize(void) const    { return video_dim; }
 diff -Naurp mythtv-0.23-release/libs/libmythtv/tv_play.cpp mythtv-0.23/libs/libmythtv/tv_play.cpp
 --- mythtv-0.23-release/libs/libmythtv/tv_play.cpp	2010-04-27 22:54:52.000000000 -0400
 +++ mythtv-0.23/libs/libmythtv/tv_play.cpp	2010-05-17 21:42:52.462765000 -0400
@@ -914,6 +1172,76 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/tv_play.h mythtv-0.23/libs/libmyt
      void SwitchInputs(PlayerContext*, uint inputid);
      void ToggleInputs(PlayerContext*, uint inputid = 0);
      void SwitchCards(PlayerContext*,
+diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_d3d.cpp mythtv-0.23/libs/libmythtv/videoout_d3d.cpp
+--- mythtv-0.23-release/libs/libmythtv/videoout_d3d.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/videoout_d3d.cpp	2010-06-19 01:57:23.850116000 -0400
+@@ -1252,13 +1252,13 @@ void VideoOutputD3D::Show(FrameScanType 
+     SetThreadExecutionState(ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
+ }
+ 
+-void VideoOutputD3D::EmbedInWidget(WId wid, int x, int y, int w, int h)
++void VideoOutputD3D::EmbedInWidget(int x, int y, int w, int h)
+ {
+     if (windows[0].IsEmbedding())
+         return;
+ 
+     VideoOutput::EmbedInWidget(x, y, w, h);
+-    m_hEmbedWnd = wid;
++    // TODO: Initialise m_hEmbedWnd?
+ }
+ 
+ void VideoOutputD3D::StopEmbedding(void)
+diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_d3d.h mythtv-0.23/libs/libmythtv/videoout_d3d.h
+--- mythtv-0.23-release/libs/libmythtv/videoout_d3d.h	2010-02-03 10:39:11.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/videoout_d3d.h	2010-06-18 03:11:40.067331000 -0400
+@@ -115,7 +115,7 @@ class VideoOutputD3D : public VideoOutpu
+     void UpdatePauseFrame(void);
+     void DrawUnusedRects(bool) {;}
+     void Zoom(ZoomDirection direction);
+-    void EmbedInWidget(WId wid, int x, int y, int w, int h);
++    void EmbedInWidget(int x, int y, int w, int h);
+     void StopEmbedding(void);
+     bool hasFullScreenOSD(void) const { return m_d3d_osd; }
+     static QStringList GetAllowedRenderers(MythCodecID myth_codec_id,
+diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_quartz.cpp mythtv-0.23/libs/libmythtv/videoout_quartz.cpp
+--- mythtv-0.23-release/libs/libmythtv/videoout_quartz.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/videoout_quartz.cpp	2010-06-18 03:11:40.067331000 -0400
+@@ -18,7 +18,7 @@
+  *   on any screen except, you guessed it, the main screen.
+  *
+  * = REVISION
+- * $Id: videoout_quartz.cpp 23669 2010-03-07 03:11:52Z jpoet $
++ * $Id: videoout_quartz.cpp 25134 2010-06-18 07:11:40Z nigel $
+  *
+  * = AUTHORS
+  * Nigel Pearson, Jeremiah Morris
+@@ -1598,11 +1598,10 @@ void VideoOutputQuartz::DeleteQuartzBuff
+     vbuffers.DeleteBuffers();
+ }
+ 
+-void VideoOutputQuartz::EmbedInWidget(WId wid, int x, int y, int w, int h)
++void VideoOutputQuartz::EmbedInWidget(int x, int y, int w, int h)
+ {
+-    VERBOSE(VB_PLAYBACK,
+-            (LOC + "EmbedInWidget(wid=%1, x=%2, y=%3, w=%4, h=%5)")
+-            .arg(wid).arg(x).arg(y).arg(w).arg(h));
++    VERBOSE(VB_PLAYBACK, (LOC + "EmbedInWidget(x=%1, y=%2, w=%3, h=%4)")
++                         .arg(x).arg(y).arg(w).arg(h));
+ 
+     if (windows[0].IsEmbedding())
+         return;
+diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_quartz.h mythtv-0.23/libs/libmythtv/videoout_quartz.h
+--- mythtv-0.23-release/libs/libmythtv/videoout_quartz.h	2010-02-03 10:39:11.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/videoout_quartz.h	2010-06-18 03:11:40.067331000 -0400
+@@ -34,7 +34,7 @@ class VideoOutputQuartz : public VideoOu
+     void Zoom(ZoomDirection direction);
+     void ToggleAdjustFill(AdjustFillMode adjustFill);
+ 
+-    void EmbedInWidget(WId wid, int x, int y, int w, int h);
++    void EmbedInWidget(int x, int y, int w, int h);
+     void StopEmbedding(void);
+ 
+     DisplayInfo GetDisplayInfo(void);
 diff -Naurp mythtv-0.23-release/libs/libmythui/mythfontmanager.cpp mythtv-0.23/libs/libmythui/mythfontmanager.cpp
 --- mythtv-0.23-release/libs/libmythui/mythfontmanager.cpp	2010-02-24 02:41:32.000000000 -0500
 +++ mythtv-0.23/libs/libmythui/mythfontmanager.cpp	2010-06-08 18:21:22.370095000 -0400
@@ -994,6 +1322,38 @@ diff -Naurp mythtv-0.23-release/libs/libmythui/mythsystem.cpp mythtv-0.23/libs/l
      }
  #endif
  
+diff -Naurp mythtv-0.23-release/libs/libmythui/mythuitext.cpp mythtv-0.23/libs/libmythui/mythuitext.cpp
+--- mythtv-0.23-release/libs/libmythui/mythuitext.cpp	2010-03-28 16:39:26.000000000 -0400
++++ mythtv-0.23/libs/libmythui/mythuitext.cpp	2010-06-20 13:40:58.513407000 -0400
+@@ -347,13 +347,14 @@ void MythUIText::FillCutMessage()
+         if (isNumber && m_TemplateText.contains("%n"))
+         {
+             m_CutMessage = qApp->translate("ThemeUI",
+-                                        qPrintable(m_TemplateText), "",
+-                                        QCoreApplication::CodecForTr,
+-                                        qAbs(value));
++                                           m_TemplateText.toUtf8(), NULL,
++                                           QCoreApplication::UnicodeUTF8,
++                                           qAbs(value));
+         }
+         else if (m_TemplateText.contains("%1"))
+         {
+-            QString tmp = qApp->translate("ThemeUI", qPrintable(m_TemplateText));
++            QString tmp = qApp->translate("ThemeUI", m_TemplateText.toUtf8(),
++                                          NULL, QCoreApplication::UnicodeUTF8);
+             m_CutMessage = tmp.arg(m_Message);
+         }
+     }
+@@ -577,7 +578,8 @@ bool MythUIText::ParseElement(
+         if (element.attribute("lang","").isEmpty())
+         {
+             m_Message = qApp->translate("ThemeUI",
+-                                        qPrintable(getFirstText(element)));
++                                        getFirstText(element).toUtf8(), NULL,
++                                        QCoreApplication::UnicodeUTF8);
+         }
+         else if (element.attribute("lang","").toLower() ==
+                  GetMythUI()->GetLanguageAndVariant())
 diff -Naurp mythtv-0.23-release/libs/libmythui/xmlparsebase.cpp mythtv-0.23/libs/libmythui/xmlparsebase.cpp
 --- mythtv-0.23-release/libs/libmythui/xmlparsebase.cpp	2010-03-02 12:36:30.000000000 -0500
 +++ mythtv-0.23/libs/libmythui/xmlparsebase.cpp	2010-05-15 09:04:12.458568000 -0400
@@ -1042,6 +1402,19 @@ diff -Naurp mythtv-0.23-release/libs/libswscale/libswscale.pro mythtv-0.23/libs/
  
  !profile:QMAKE_CFLAGS_DEBUG += -O
  
+diff -Naurp mythtv-0.23-release/programs/mythbackend/filetransfer.cpp mythtv-0.23/programs/mythbackend/filetransfer.cpp
+--- mythtv-0.23-release/programs/mythbackend/filetransfer.cpp	2010-03-10 10:37:33.000000000 -0500
++++ mythtv-0.23/programs/mythbackend/filetransfer.cpp	2010-06-17 09:23:59.559532000 -0400
+@@ -41,6 +41,9 @@ FileTransfer::FileTransfer(QString &file
+         pginfo->pathname = pginfo->GetPlaybackURL();
+         pginfo->MarkAsInUse(true, kFileTransferInUseID);
+     }
++
++    if (write)
++        remote->useReadyReadCallback(false);
+ }
+ 
+ FileTransfer::~FileTransfer()
 diff -Naurp mythtv-0.23-release/programs/mythbackend/main.cpp mythtv-0.23/programs/mythbackend/main.cpp
 --- mythtv-0.23-release/programs/mythbackend/main.cpp	2010-04-09 07:29:00.000000000 -0400
 +++ mythtv-0.23/programs/mythbackend/main.cpp	2010-05-13 14:45:33.347492000 -0400
@@ -1075,6 +1448,28 @@ diff -Naurp mythtv-0.23-release/programs/mythbackend/main.cpp mythtv-0.23/progra
      }
  
      if (pidfs)
+diff -Naurp mythtv-0.23-release/programs/mythbackend/mainserver.cpp mythtv-0.23/programs/mythbackend/mainserver.cpp
+--- mythtv-0.23-release/programs/mythbackend/mainserver.cpp	2010-04-10 17:19:56.000000000 -0400
++++ mythtv-0.23/programs/mythbackend/mainserver.cpp	2010-06-17 09:23:59.559532000 -0400
+@@ -1270,15 +1270,10 @@ void MainServer::HandleAnnounce(QStringL
+         else
+             filename = LocalFilePath(qurl, wantgroup);
+ 
+-        if (writemode)
+-        {
+-            socket->setCallbacks(NULL);
+-            ft = new FileTransfer(filename, socket, true);
+-        }
+-        else if (retries >= 0)
+-            ft = new FileTransfer(filename, socket, usereadahead, retries);
++        if (retries < 0)
++            ft = new FileTransfer(filename, socket, writemode);
+         else
+-            ft = new FileTransfer(filename, socket, false);
++            ft = new FileTransfer(filename, socket, usereadahead, retries);
+ 
+         sockListLock.lockForWrite();
+         fileTransferList.push_back(ft);
 diff -Naurp mythtv-0.23-release/programs/mythcommflag/main.cpp mythtv-0.23/programs/mythcommflag/main.cpp
 --- mythtv-0.23-release/programs/mythcommflag/main.cpp	2010-02-10 12:02:19.000000000 -0500
 +++ mythtv-0.23/programs/mythcommflag/main.cpp	2010-05-13 20:49:59.310980000 -0400
@@ -1141,6 +1536,21 @@ diff -Naurp mythtv-0.23-release/programs/mythcommflag/main.cpp mythtv-0.23/progr
      time_now = time(NULL);
  
      if (!quiet)
+diff -Naurp mythtv-0.23-release/programs/mythtranscode/transcode.cpp mythtv-0.23/programs/mythtranscode/transcode.cpp
+--- mythtv-0.23-release/programs/mythtranscode/transcode.cpp	2010-04-03 13:16:58.000000000 -0400
++++ mythtv-0.23/programs/mythtranscode/transcode.cpp	2010-06-18 06:50:18.720005000 -0400
+@@ -217,6 +217,11 @@ class AudioReencodeBuffer : public Audio
+         // Do nothing
+         return false;
+     }
++    virtual bool CanPassthrough(void) const
++    {
++        // Do nothing
++        return false;
++    }
+ 
+     virtual void SetSWVolume(int new_volume, bool save)
+     {
 diff -Naurp mythtv-0.23-release/programs/mythtv-setup/main.cpp mythtv-0.23/programs/mythtv-setup/main.cpp
 --- mythtv-0.23-release/programs/mythtv-setup/main.cpp	2010-03-11 22:54:16.000000000 -0500
 +++ mythtv-0.23/programs/mythtv-setup/main.cpp	2010-05-12 11:25:27.228749000 -0400
