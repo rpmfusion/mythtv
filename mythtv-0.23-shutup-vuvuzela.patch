@@ -1,8 +1,8 @@
 Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
 ===================================================================
---- mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(revision 25121)
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(revision 25135)
 +++ mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(working copy)
-@@ -5134,6 +5134,21 @@
+@@ -5141,6 +5141,16 @@
      return false;
  }
  
@@ -16,29 +16,12 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
 +    return ret;
 +}
 +
-+bool NuppelVideoPlayer::IsVuvuzela()
-+{
-+    return audioOutput ? audioOutput->IsVuvuzela() : false;
-+}
-+
  void NuppelVideoPlayer::Zoom(ZoomDirection direction)
  {
      if (videoOutput)
-Index: mythtv/libs/libmythtv/avformatdecoder.cpp
-===================================================================
---- mythtv/libs/libmythtv/avformatdecoder.cpp	(revision 25121)
-+++ mythtv/libs/libmythtv/avformatdecoder.cpp	(working copy)
-@@ -4639,6 +4639,7 @@
-     else if (ctx->codec_id == CODEC_ID_DTS)
-         passthru = allow_dts_passthru && !internal_vol;
- 
-+    passthru &= !GetNVP()->IsVuvuzela();
-     passthru &= !transcoding && !disable_passthru;
-     // Don't know any cards that support spdif clocked at < 44100
-     // Some US cable transmissions have 2ch 32k AC-3 streams
 Index: mythtv/libs/libmythtv/tv_play.h
 ===================================================================
---- mythtv/libs/libmythtv/tv_play.h	(revision 25121)
+--- mythtv/libs/libmythtv/tv_play.h	(revision 25135)
 +++ mythtv/libs/libmythtv/tv_play.h	(working copy)
 @@ -436,6 +436,7 @@
                                   const QStringList &actions);
@@ -50,20 +33,19 @@ Index: mythtv/libs/libmythtv/tv_play.h
  
 Index: mythtv/libs/libmythtv/NuppelVideoPlayer.h
 ===================================================================
---- mythtv/libs/libmythtv/NuppelVideoPlayer.h	(revision 25121)
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.h	(revision 25135)
 +++ mythtv/libs/libmythtv/NuppelVideoPlayer.h	(working copy)
-@@ -165,6 +165,8 @@
-     void ToggleAspectOverride(AspectOverrideMode aspectMode = kAspect_Toggle);
+@@ -166,6 +166,7 @@
      void ToggleAdjustFill(AdjustFillMode adjustfillMode = kAdjustFill_Toggle);
      bool ToggleUpmix(void);
+     bool CanPassthrough(void);
 +    bool ToggleVuvuzela(void);
-+    bool IsVuvuzela(void);
  
      // Gets
      QSize   GetVideoBufferSize(void) const    { return video_dim; }
 Index: mythtv/libs/libmythtv/tv_play.cpp
 ===================================================================
---- mythtv/libs/libmythtv/tv_play.cpp	(revision 25121)
+--- mythtv/libs/libmythtv/tv_play.cpp	(revision 25135)
 +++ mythtv/libs/libmythtv/tv_play.cpp	(working copy)
 @@ -4516,6 +4516,8 @@
          ToggleTimeStretch(ctx);
@@ -115,7 +97,7 @@ Index: mythtv/libs/libmythtv/tv_play.cpp
      else if (category == "VIDEOSCAN")
 Index: mythtv/libs/libmythtv/tvosdmenuentry.cpp
 ===================================================================
---- mythtv/libs/libmythtv/tvosdmenuentry.cpp	(revision 25121)
+--- mythtv/libs/libmythtv/tvosdmenuentry.cpp	(revision 25135)
 +++ mythtv/libs/libmythtv/tvosdmenuentry.cpp	(working copy)
 @@ -236,6 +236,12 @@
          "AUDIOSYNC",          1,  1,  1,  1, "Audio Sync"));
@@ -132,7 +114,7 @@ Index: mythtv/libs/libmythtv/tvosdmenuentry.cpp
      curMenuEntries.append(new TVOSDMenuEntry(
 Index: mythtv/libs/libmyth/audiooutputbase.h
 ===================================================================
---- mythtv/libs/libmyth/audiooutputbase.h	(revision 25121)
+--- mythtv/libs/libmyth/audiooutputbase.h	(revision 25135)
 +++ mythtv/libs/libmyth/audiooutputbase.h	(working copy)
 @@ -16,6 +16,7 @@
  
@@ -142,16 +124,24 @@ Index: mythtv/libs/libmyth/audiooutputbase.h
  #include "samplerate.h"
  #include "mythverbose.h"
  
-@@ -44,6 +45,8 @@
+@@ -44,6 +45,7 @@
      virtual void SetStretchFactor(float factor);
      virtual float GetStretchFactor(void) const;
      virtual bool ToggleUpmix(void);
 +    virtual bool ToggleVuvuzela(void);
-+    virtual bool IsVuvuzela(void) { return vuvuzela; }
  
      virtual void Reset(void);
  
-@@ -230,6 +233,10 @@
+@@ -57,7 +59,7 @@
+     virtual void SetTimecode(long long timecode);
+     virtual bool IsPaused(void) const { return audio_actually_paused; }
+     virtual void Pause(bool paused);
+-    virtual bool CanPassthrough(void) const { return !need_resampler; }
++    virtual bool CanPassthrough(void) const { return !(need_resampler || vuvuzela); }
+ 
+     // Wait for all data to finish playing
+     virtual void Drain(void);
+@@ -231,6 +233,10 @@
      /** main audio buffer */
      unsigned char audiobuffer[kAudioRingBufferSize];
      uint memory_corruption_test4;
@@ -166,13 +156,13 @@ Index: mythtv/libs/libmyth/audiooutpututil.h
 ===================================================================
 --- mythtv/libs/libmyth/audiooutpututil.h	(revision 0)
 +++ mythtv/libs/libmyth/audiooutpututil.h	(revision 0)
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,272 @@
 +#ifndef AUDIOOUTPUTUTIL
 +#define AUDIOOUTPUTUTIL
 +
 +using namespace std;
 +
-+#define IIR_NUM_COEFFICIENTS				(3)	// Assumed biquads
++#define IIR_NUM_COEFFICIENTS    (3)     // Assumed biquads
 +
 +class AudioOutputUtil
 +{
@@ -196,20 +186,19 @@ Index: mythtv/libs/libmyth/audiooutpututil.h
 +        float x_mem[IIR_NUM_COEFFICIENTS];
 +        float y_mem[IIR_NUM_COEFFICIENTS];
 +    } IIR_State;
-+    
++
 +    // Instance
 +    typedef struct
 +    {
 +        IIR_Parameters parameters;
 +        IIR_State state;
 +    } IIR;
-+    
++
 +    // Parameters
 +    typedef struct
 +    {
 +        uint N;
-+        float frequency;			// Notch frequency
-+        float attenuation_dB;		// Notch attenuation
++        float frequency;        // Notch frequency
 +    } Notch_Parameters;
 +
 +    // State information
@@ -221,8 +210,6 @@ Index: mythtv/libs/libmyth/audiooutpututil.h
 +        float a1s;
 +        float a2;
 +        float depth_factor;
-+        float w0;		// Input weight
-+        float w1;		// Output weight
 +    } Notch_State;
 +
 +    // Instance
@@ -238,9 +225,219 @@ Index: mythtv/libs/libmyth/audiooutpututil.h
 +};
 +
 +#endif
++#ifndef AUDIOOUTPUTUTIL
++#define AUDIOOUTPUTUTIL
++
++using namespace std;
++
++#define IIR_NUM_COEFFICIENTS    (3)     // Assumed biquads
++
++class AudioOutputUtil
++{
++ public:
++    
++    //Notch Filter / IRR transformation
++    // Parameters
++    typedef struct
++    {
++        uint N;
++        uint num_biquads;
++        float b[IIR_NUM_COEFFICIENTS];
++        float a[IIR_NUM_COEFFICIENTS];
++    } IIR_Parameters;
++    
++    // State information
++    typedef struct
++    {
++        float a[IIR_NUM_COEFFICIENTS];
++        float b[IIR_NUM_COEFFICIENTS];
++        float x_mem[IIR_NUM_COEFFICIENTS];
++        float y_mem[IIR_NUM_COEFFICIENTS];
++    } IIR_State;
++
++    // Instance
++    typedef struct
++    {
++        IIR_Parameters parameters;
++        IIR_State state;
++    } IIR;
++
++    // Parameters
++    typedef struct
++    {
++        uint N;
++        float frequency;        // Notch frequency
++    } Notch_Parameters;
++
++    // State information
++
++    typedef struct
++    {
++        float pole_position;
++        float frequency_offset;
++        float a1s;
++        float a2;
++        float depth_factor;
++    } Notch_State;
++
++    // Instance
++    typedef struct
++    {
++        Notch_Parameters parameters;
++        Notch_State state;
++        IIR iir;
++    } Notch;
++
++    static void notch_update(Notch &instance, float fs);
++    static void notch_execute(Notch &instance, float *in, float *out);
++};
++
++#endif
++#ifndef AUDIOOUTPUTUTIL
++#define AUDIOOUTPUTUTIL
++
++using namespace std;
++
++#define IIR_NUM_COEFFICIENTS    (3)     // Assumed biquads
++
++class AudioOutputUtil
++{
++ public:
++    
++    //Notch Filter / IRR transformation
++    // Parameters
++    typedef struct
++    {
++        uint N;
++        uint num_biquads;
++        float b[IIR_NUM_COEFFICIENTS];
++        float a[IIR_NUM_COEFFICIENTS];
++    } IIR_Parameters;
++    
++    // State information
++    typedef struct
++    {
++        float a[IIR_NUM_COEFFICIENTS];
++        float b[IIR_NUM_COEFFICIENTS];
++        float x_mem[IIR_NUM_COEFFICIENTS];
++        float y_mem[IIR_NUM_COEFFICIENTS];
++    } IIR_State;
++
++    // Instance
++    typedef struct
++    {
++        IIR_Parameters parameters;
++        IIR_State state;
++    } IIR;
++
++    // Parameters
++    typedef struct
++    {
++        uint N;
++        float frequency;        // Notch frequency
++    } Notch_Parameters;
++
++    // State information
++
++    typedef struct
++    {
++        float pole_position;
++        float frequency_offset;
++        float a1s;
++        float a2;
++        float depth_factor;
++    } Notch_State;
++
++    // Instance
++    typedef struct
++    {
++        Notch_Parameters parameters;
++        Notch_State state;
++        IIR iir;
++    } Notch;
++
++    static void notch_update(Notch &instance, float fs);
++    static void notch_execute(Notch &instance, float *in, float *out);
++};
++
++#endif
++#ifndef AUDIOOUTPUTUTIL
++#define AUDIOOUTPUTUTIL
++
++using namespace std;
++
++#define IIR_NUM_COEFFICIENTS    (3)     // Assumed biquads
++
++class AudioOutputUtil
++{
++ public:
++ 
++    //Notch Filter / IRR transformation
++    // Parameters
++    typedef struct
++    {
++        uint N;
++        uint num_biquads;
++        float b[IIR_NUM_COEFFICIENTS];
++        float a[IIR_NUM_COEFFICIENTS];
++    } IIR_Parameters;
++    
++    // State information
++    typedef struct
++    {
++        float a[IIR_NUM_COEFFICIENTS];
++        float b[IIR_NUM_COEFFICIENTS];
++        float x_mem[IIR_NUM_COEFFICIENTS];
++        float y_mem[IIR_NUM_COEFFICIENTS];
++    } IIR_State;
++
++    // Instance
++    typedef struct
++    {
++        IIR_Parameters parameters;
++        IIR_State state;
++    } IIR;
++
++    // Parameters
++    typedef struct
++    {
++        uint N;
++        float frequency;        // Notch frequency
++    } Notch_Parameters;
++
++    // State information
++
++    typedef struct
++    {
++        float pole_position;
++        float frequency_offset;
++        float a1s;
++        float a2;
++        float depth_factor;
++    } Notch_State;
++
++    // Instance
++    typedef struct
++    {
++        Notch_Parameters parameters;
++        Notch_State state;
++        IIR iir;
++    } Notch;
++
++    static void notch_update(Notch &instance, float fs);
++    static void notch_execute(Notch &instance, float *in, float *out);
++};
++
++#endif
+
+Property changes on: mythtv/libs/libmyth/audiooutpututil.h
+___________________________________________________________________
+Added: svn:executable
+   + *
+
 Index: mythtv/libs/libmyth/audiooutputbase.cpp
 ===================================================================
---- mythtv/libs/libmyth/audiooutputbase.cpp	(revision 25121)
+--- mythtv/libs/libmyth/audiooutputbase.cpp	(revision 25135)
 +++ mythtv/libs/libmyth/audiooutputbase.cpp	(working copy)
 @@ -13,6 +13,7 @@
  #include "compat.h"
@@ -332,15 +529,7 @@ Index: mythtv/libs/libmyth/audiooutputbase.cpp
      CloseDevice();
  
      killAudioLock.unlock();
-@@ -790,7 +821,6 @@
-             VERBOSE(VB_IMPORTANT, LOC_ERR +
-                     QString("Error occurred while resampling audio: %1")
-                     .arg(src_strerror(error)));
--
-         src_float_to_short_array(src_data.data_out, (short int*)tmp_buff,
-                                  src_data.output_frames_gen*audio_channels);
- 
-@@ -844,7 +874,7 @@
+@@ -844,7 +875,7 @@
      QMutexLocker lock1(&audio_buflock);
  
      // resample input if necessary
@@ -349,7 +538,7 @@ Index: mythtv/libs/libmyth/audiooutputbase.cpp
      {
          // Convert to floats
          short *buf_ptr = (short*)buffer;
-@@ -853,17 +883,47 @@
+@@ -854,17 +885,37 @@
              src_in[sample] = (float)buf_ptr[sample] / (1.0 * 0x8000);
          }
   
@@ -361,29 +550,20 @@ Index: mythtv/libs/libmyth/audiooutputbase.cpp
 -                    QString("Error occurred while resampling audio: %1")
 -                    .arg(src_strerror(error)));
 -        src_float_to_short_array(src_data.data_out, (short int*)tmp_buff,
--                                 src_data.output_frames_gen*audio_channels);
-+        if (vuvuzela)
+-                            (src_data.output_frames_gen*abps)/sizeof(short));
++        if (vuvuzela && notch_instance)
 +        {
-+            notch_instance->parameters.N = samples * audio_channels;
-+            // Notch attenuation
-+            notch_instance->parameters.attenuation_dB = 35.0f;
-+            
++            notch_instance->parameters.N = numSamples;
+ 
+-        _AddSamples(tmp_buff, true, src_data.output_frames_gen, timecode);
 +            // Notch frequency
-+            notch_instance->parameters.frequency = 233.0f;
++            notch_instance->parameters.frequency = 235.0f;
 +            AudioOutputUtil::notch_update (*notch_instance, (float)source_audio_samplerate);
 +            AudioOutputUtil::notch_execute (*notch_instance, src_in, src_out);
-+            notch_instance->parameters.frequency = 466.0f;  // 1st harmonic
-+            AudioOutputUtil::notch_update (*notch_instance, (float)source_audio_samplerate);
-+            AudioOutputUtil::notch_execute (*notch_instance, src_out, src_in);
-+            notch_instance->parameters.frequency = 932.0f;  // 2nd harmonic
-+            AudioOutputUtil::notch_update (*notch_instance, (float)source_audio_samplerate);
-+            AudioOutputUtil::notch_execute (*notch_instance, src_in, src_out);
-+            notch_instance->parameters.frequency = 1864.0f;  // 3rd harmonic
++            notch_instance->parameters.frequency = 465.0f;  // 1st harmonic
 +            AudioOutputUtil::notch_update (*notch_instance, (float)source_audio_samplerate);
 +            AudioOutputUtil::notch_execute (*notch_instance, src_out, src_in);
 +        }
- 
--        _AddSamples(tmp_buff, true, src_data.output_frames_gen, timecode);
 +        if (need_resampler)
 +        {
 +            src_data.input_frames = samples;
@@ -394,14 +574,13 @@ Index: mythtv/libs/libmyth/audiooutputbase.cpp
 +                        QString("Error occurred while resampling audio: %1")
 +                        .arg(src_strerror(error)));
 +            src_float_to_short_array(src_data.data_out, (short int*)tmp_buff,
-+                                     src_data.output_frames_gen*audio_channels);
++                                (src_data.output_frames_gen*abps)/sizeof(short));
 +
 +            _AddSamples(tmp_buff, true, src_data.output_frames_gen, timecode);
 +        }
 +        else
 +        {
-+            src_float_to_short_array(src_in, (short int*)tmp_buff,
-+                                     samples * audio_channels);
++            src_float_to_short_array(src_in, (short int*)tmp_buff, numSamples);
 +            _AddSamples(tmp_buff, true, samples, timecode);
 +        }
      }
@@ -409,7 +588,7 @@ Index: mythtv/libs/libmyth/audiooutputbase.cpp
      {
 Index: mythtv/libs/libmyth/libmyth.pro
 ===================================================================
---- mythtv/libs/libmyth/libmyth.pro	(revision 25121)
+--- mythtv/libs/libmyth/libmyth.pro	(revision 25135)
 +++ mythtv/libs/libmyth/libmyth.pro	(working copy)
 @@ -30,7 +30,7 @@
  HEADERS += audiopulseutil.h
@@ -431,14 +610,13 @@ Index: mythtv/libs/libmyth/libmyth.pro
  SOURCES += virtualkeyboard_qt.cpp
 Index: mythtv/libs/libmyth/audiooutput.h
 ===================================================================
---- mythtv/libs/libmyth/audiooutput.h	(revision 25121)
+--- mythtv/libs/libmyth/audiooutput.h	(revision 25135)
 +++ mythtv/libs/libmyth/audiooutput.h	(working copy)
-@@ -71,6 +71,8 @@
+@@ -72,6 +72,7 @@
      virtual void bufferOutputData(bool y) = 0;
      virtual int readOutputData(unsigned char *read_buffer, int max_length) = 0;
      virtual bool ToggleUpmix(void) = 0;
 +    virtual bool ToggleVuvuzela(void) = 0;
-+    virtual bool IsVuvuzela(void) = 0;
  
    protected:
      void Error(const QString &msg);
@@ -446,12 +624,12 @@ Index: mythtv/libs/libmyth/audiooutpututil.cpp
 ===================================================================
 --- mythtv/libs/libmyth/audiooutpututil.cpp	(revision 0)
 +++ mythtv/libs/libmyth/audiooutpututil.cpp	(revision 0)
-@@ -0,0 +1,143 @@
+@@ -0,0 +1,122 @@
 +#include "dsputil.h"
 +#include "mythconfig.h"
 +#include "audiooutpututil.h"
 +
-+#define IIR_NUM_COEFFICIENTS				(3)	// Assumed biquads
++#define IIR_NUM_COEFFICIENTS    (3)	// Assumed biquads
 +
 +static void iir_update (AudioOutputUtil::IIR &instance)
 +{
@@ -481,45 +659,45 @@ Index: mythtv/libs/libmyth/audiooutpututil.cpp
 +                        float* x_mem, float* y_mem,
 +                        unsigned int N)
 +{
-+	// Direct Form I
-+	//               N+1               N+1
-+	//		y(n) = - SUM a(k) y(n-k) + SUM b(k) x(n-k)  for 0 <= n <length(x)
-+	//               k=1               k=0
-+	unsigned int n = 0;
-+	unsigned int k = 0;
-+	float y_n_minus_k = 0.0f;
-+	float x_n_minus_k = 0.0f;
-+	for (n = 0; n < N; n++)
-+	{
-+		y[n] = x[n] * b[0];
-+        
-+		for (k = 1; k < IIR_NUM_COEFFICIENTS; k++)
-+		{
-+			signed int n_minus_k = n - k;
-+			if (n_minus_k >= 0)
-+			{
-+				x_n_minus_k = x[n_minus_k];
-+				y_n_minus_k = y[n_minus_k];
-+			}
-+			else
-+			{
-+				x_n_minus_k = x_mem[-n_minus_k-1];
-+				y_n_minus_k = y_mem[-n_minus_k-1];
-+			}
-+            
-+			y[n] -= a[k] * y_n_minus_k;
-+			y[n] += b[k] * x_n_minus_k;
-+		}
-+	}
-+    
++   // Direct Form I
++   //               N+1               N+1
++   //		y(n) = - SUM a(k) y(n-k) + SUM b(k) x(n-k)  for 0 <= n <length(x)
++   //               k=1               k=0
++    unsigned int n = 0;
++    unsigned int k = 0;
++    float y_n_minus_k = 0.0f;
++    float x_n_minus_k = 0.0f;
++    for (n = 0; n < N; n++)
++    {
++        y[n] = x[n] * b[0];
++
++        for (k = 1; k < IIR_NUM_COEFFICIENTS; k++)
++        {
++            signed int n_minus_k = n - k;
++            if (n_minus_k >= 0)
++            {
++                x_n_minus_k = x[n_minus_k];
++                y_n_minus_k = y[n_minus_k];
++            }
++            else
++            {
++                x_n_minus_k = x_mem[-n_minus_k-1];
++                y_n_minus_k = y_mem[-n_minus_k-1];
++            }
++
++            y[n] -= a[k] * y_n_minus_k;
++            y[n] += b[k] * x_n_minus_k;
++        }
++    }
++
 +	// Save input and output state, latest first
-+	unsigned int state_offset = N - 1;
-+	for (n=0; n < (IIR_NUM_COEFFICIENTS-1); n++)
-+	{
-+		x_mem[n] = x[state_offset];
-+		y_mem[n] = y[state_offset];
-+		state_offset--;
-+	}
++    unsigned int state_offset = N - 1;
++    for (n=0; n < (IIR_NUM_COEFFICIENTS-1); n++)
++    {
++        x_mem[n] = x[state_offset];
++        y_mem[n] = y[state_offset];
++        state_offset--;
++    }
 +}
 +
 +static void iir_execute(AudioOutputUtil::IIR &instance, float* x, float* y)
@@ -535,45 +713,32 @@ Index: mythtv/libs/libmyth/audiooutpututil.cpp
 +
 +void AudioOutputUtil::notch_update (Notch &instance, float fs)
 +{
-+	instance.state.pole_position = 0.99f;
-+	instance.state.frequency_offset = 0.0f; // in normalised frequency (1.0 = fs)
-+	instance.state.a1s = -instance.state.pole_position;
-+	instance.state.a2 = -(instance.state.pole_position * instance.state.pole_position);
-+	instance.state.depth_factor = 0.999f;
++    instance.state.pole_position = 0.99f;
++    instance.state.frequency_offset = 0.0f; // in normalised frequency (1.0 = fs)
++    instance.state.a1s = -instance.state.pole_position;
++    instance.state.a2 = -(instance.state.pole_position * instance.state.pole_position);
++    instance.state.depth_factor = 1.0f;
 +
 +	// Calculate filter coefficients
 +	// Direct-form IIR
 +	// Ref: http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt and others
-+	float normalised_notch_frequency = (2.0f * instance.parameters.frequency / fs);
-+	normalised_notch_frequency += instance.state.frequency_offset;
-+	float frequency_factor = -2.0f * cosf(PI_FLOAT * normalised_notch_frequency);
-+	float a1 = frequency_factor * instance.state.a1s;
-+	float a2 = instance.state.a2;
-+	float b1 = frequency_factor * instance.state.depth_factor;
-+	float b2 = instance.state.depth_factor * instance.state.depth_factor;
-+	instance.iir.parameters.N = instance.parameters.N;
-+	instance.iir.parameters.a[0] = 1.0f;
-+	instance.iir.parameters.a[1] = -a1;
-+	instance.iir.parameters.a[2] = -a2;
-+	instance.iir.parameters.b[0] = 1.0f;
-+	instance.iir.parameters.b[1] = b1;
-+	instance.iir.parameters.b[2] = b2;
++    float normalised_notch_frequency = (2.0f * instance.parameters.frequency / fs);
++    normalised_notch_frequency += instance.state.frequency_offset;
++    float frequency_factor = -2.0f * cosf(PI_FLOAT * normalised_notch_frequency);
++    float a1 = frequency_factor * instance.state.a1s;
++    float a2 = instance.state.a2;
++    float b1 = frequency_factor * instance.state.depth_factor;
++    float b2 = instance.state.depth_factor * instance.state.depth_factor;
++    instance.iir.parameters.N = instance.parameters.N;
++    instance.iir.parameters.a[0] = 1.0f;
++    instance.iir.parameters.a[1] = -a1;
++    instance.iir.parameters.a[2] = -a2;
++    instance.iir.parameters.b[0] = 1.0f;
++    instance.iir.parameters.b[1] = b1;
++    instance.iir.parameters.b[2] = b2;
 +
 +	// Initialise the IIR stage
-+	iir_update(instance.iir);
-+
-+	// The notch filter strongly attenuates at the notch frequency.
-+	// The output is the weighted sum of the input and the
-+	// 	notch-filtered input.  The weights are calculated from the
-+	// 	attenuation parameters
-+	// instance.state.w0 = pow(10.0, (-instance.parameters.attenuation_dB / 20.0));
-+	// instance.state.w1 = 1.0 - instance.state.w0;
-+	float w0 = powf(10.0f, (-instance.parameters.attenuation_dB / 20.0f));
-+	float w1 = 1.0f - w0;
-+	instance.state.w0 = w0;
-+	instance.state.w1 = w1;
-+
-+	return;
++    iir_update(instance.iir);
 +}
 +
 +// Processes a single block of samples
@@ -581,18 +746,16 @@ Index: mythtv/libs/libmyth/audiooutpututil.cpp
 +{
 +    // Apply the rejection filter
 +    iir_execute(instance.iir, in, out);
-+
-+    // The output is the weighted sum of the input and the
-+    //	notch-filtered input
-+    for (uint i=0; i < instance.parameters.N; i++)
-+    {
-+        out[i] *= instance.state.w1;
-+        out[i] += instance.state.w0 * in[i];
-+    }
 +}
+
+Property changes on: mythtv/libs/libmyth/audiooutpututil.cpp
+___________________________________________________________________
+Added: svn:executable
+   + *
+
 Index: mythtv/programs/mythfrontend/globalsettings.cpp
 ===================================================================
---- mythtv/programs/mythfrontend/globalsettings.cpp	(revision 25121)
+--- mythtv/programs/mythfrontend/globalsettings.cpp	(revision 25135)
 +++ mythtv/programs/mythfrontend/globalsettings.cpp	(working copy)
 @@ -181,6 +181,17 @@
      return gc;
@@ -622,23 +785,17 @@ Index: mythtv/programs/mythfrontend/globalsettings.cpp
  
 Index: mythtv/programs/mythtranscode/transcode.cpp
 ===================================================================
---- mythtv/programs/mythtranscode/transcode.cpp	(revision 25121)
+--- mythtv/programs/mythtranscode/transcode.cpp	(revision 25135)
 +++ mythtv/programs/mythtranscode/transcode.cpp	(working copy)
-@@ -217,7 +217,16 @@
+@@ -222,6 +222,11 @@
          // Do nothing
          return false;
      }
--
 +    virtual bool ToggleVuvuzela(void)
 +    {
 +        // Do nothing
 +        return false;
 +    }
-+    virtual bool IsVuvuzela(void)
-+    {
-+        // Do nothing
-+        return false;
-+    }
+ 
      virtual void SetSWVolume(int new_volume, bool save)
      {
-         // Do nothing
