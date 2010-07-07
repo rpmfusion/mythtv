@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25150
+%define _svnrev r25277
 %define branch release-0-23-fixes
 
 #
@@ -81,7 +81,7 @@ Version: 0.23
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 5%{?dist}
+Release: 6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1483,6 +1483,10 @@ fi
 ################################################################################
 
 %changelog
+* Wed Jul 07 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-6
+- Update to release-0-23-fixes branch, svn revision 25277
+- Even more run-as-non-root initscript tweaks (rpmfusion bz#1295)
+
 * Mon Jun 21 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-5
 - Update to release-0-23-fixes branch, svn revision 25150
 - Further improvements to run as non-root (rpmfusion bz#1295)

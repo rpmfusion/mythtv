@@ -185,6 +185,19 @@ diff -Naurp mythtv-0.23-release/bindings/perl/MythTV.pm mythtv-0.23/bindings/per
                                                   dtv_multiplex.serviceversion    AS dtv_serviceversion,
                                                   dtv_multiplex.sistandard        AS dtv_sistandard,
                                                   dtv_multiplex.sourceid          AS dtv_sourceid,
+diff -Naurp mythtv-0.23-release/bindings/python/MythTV/__init__.py mythtv-0.23/bindings/python/MythTV/__init__.py
+--- mythtv-0.23-release/bindings/python/MythTV/__init__.py	2010-05-03 01:03:57.000000000 -0400
++++ mythtv-0.23/bindings/python/MythTV/__init__.py	2010-06-21 23:35:41.632640000 -0400
+@@ -36,6 +36,9 @@ if version_info >= (2, 6): # 2.6 or newe
+ else:
+     exec(import25)
+ 
++__version__ = OWN_VERSION
++MythStatic.mysqldb = MySQLdb.__version__
++
+ if __name__ == '__main__':
+     banner = 'MythTV Python interactive shell.'
+     import code
 diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythData.py mythtv-0.23/bindings/python/MythTV/MythData.py
 --- mythtv-0.23-release/bindings/python/MythTV/MythData.py	2010-04-21 00:46:55.000000000 -0400
 +++ mythtv-0.23/bindings/python/MythTV/MythData.py	2010-06-06 20:03:02.104550000 -0400
@@ -247,9 +260,81 @@ diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythFunc.py mythtv-0.23/b
                          #print 'skipping: '+tpath
                          continue
  
+diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythStatic.py mythtv-0.23/bindings/python/MythTV/MythStatic.py
+--- mythtv-0.23-release/bindings/python/MythTV/MythStatic.py	2010-01-29 20:25:12.000000000 -0500
++++ mythtv-0.23/bindings/python/MythTV/MythStatic.py	2010-06-21 23:35:41.632640000 -0400
+@@ -4,6 +4,7 @@
+ Contains any static and global variables for MythTV Python Bindings
+ """
+ 
++OWN_VERSION = (0,23,0,0)
+ SCHEMA_VERSION = 1254
+ MVSCHEMA_VERSION = 1032
+ NVSCHEMA_VERSION = 1004
+diff -Naurp mythtv-0.23-release/bindings/python/scripts/mythpython mythtv-0.23/bindings/python/scripts/mythpython
+--- mythtv-0.23-release/bindings/python/scripts/mythpython	1969-12-31 19:00:00.000000000 -0500
++++ mythtv-0.23/bindings/python/scripts/mythpython	2010-06-21 23:35:41.632640000 -0400
+@@ -0,0 +1,34 @@
++#!/usr/local/bin/python
++
++from MythTV import *
++import sys
++
++if __name__ == '__main__':
++    if '--version' in sys.argv:
++        print 'MythTV Python Bindings'
++        print '  local versions'
++        print '    bindings version:  ', '.'.join([str(i) for i in MythStatic.OWN_VERSION])
++        import MythTV.ttvdb.tvdb_api
++        print '    ttvdb version:     ', str(MythTV.ttvdb.tvdb_api.__version__)
++        import MythTV.tmdb.tmdb_api
++        print '    tmdb version:      ', str(MythTV.tmdb.tmdb_api.__version__)
++        print '  external versions'
++        try:
++            import lxml.etree
++            print '    lxml version:      ', str(lxml.etree.__version__)
++        except:
++            print '    lxml version:      ', 'NOT FOUND'
++        print '    MySQLdb version:   ', '.'.join([str(i) for i in MythStatic.mysqldb])
++        sys.exit(0)
++    banner = 'MythTV Python interactive shell.'
++    import code
++    try:
++        import readline, rlcompleter
++    except:
++        pass
++    else:
++        readline.parse_and_bind("tab: complete")
++        banner += ' TAB completion available.'
++    namespace = globals().copy()
++    namespace.update(locals())
++    code.InteractiveConsole(namespace).interact(banner)
+diff -Naurp mythtv-0.23-release/bindings/python/setup.py mythtv-0.23/bindings/python/setup.py
+--- mythtv-0.23-release/bindings/python/setup.py	2010-01-28 20:39:37.000000000 -0500
++++ mythtv-0.23/bindings/python/setup.py	2010-06-21 23:35:41.632640000 -0400
+@@ -8,4 +8,5 @@ setup(
+         description='MythTV Python bindings.',
+         packages=['MythTV', 'MythTV/tmdb', 'MythTV/ttvdb'],
+         url=['http://www.mythtv.org/'],
++        scripts=['scripts/mythpython'],
+         )
 diff -Naurp mythtv-0.23-release/configure mythtv-0.23/configure
 --- mythtv-0.23-release/configure	2010-05-05 11:59:55.000000000 -0400
-+++ mythtv-0.23/configure	2010-05-24 17:37:07.476293000 -0400
++++ mythtv-0.23/configure	2010-06-28 02:48:30.735925000 -0400
+@@ -730,12 +730,12 @@ EOF
+ 
+ check_ld_cxx(){
+     log check_ld_cxx "$@"
+-    check_cxx || return
+     flags=''
+     libs=''
+     for f; do
+         test "${f}" = "${f#-l}" && flags="$flags $f" || libs="$libs $f"
+     done
++    check_cxx $($filter_cflags $flags) || return
+     check_cmd $cxx $LDFLAGS $flags -o $TMPE $TMPO $extralibs $libs
+ }
+ 
 @@ -1561,7 +1561,7 @@ libdirac_encoder_deps="libdirac"
  libfaac_encoder_deps="libfaac"
  libfaad_decoder_deps="libfaad"
@@ -259,7 +344,16 @@ diff -Naurp mythtv-0.23-release/configure mythtv-0.23/configure
  libgsm_decoder_deps="libgsm"
  libgsm_encoder_deps="libgsm"
  libgsm_ms_decoder_deps="libgsm"
-@@ -3763,12 +3763,13 @@ enabled freetype2 ||
+@@ -2473,6 +2473,8 @@ if ! enabled_any cpu_override cross_comp
+        cpu="athlon"
+        enable small
+ # Athlon 64
++   elif expr "$processor" : ".*AMD Athlon(tm) II" > /dev/null ; then
++       cpu="k8"
+    elif expr "$processor" : ".*AMD Athlon(tm) 64" > /dev/null ; then
+        cpu="k8"
+    elif expr "$processor" : ".*AMD Athlon(tm) Dual Core" > /dev/null ; then
+@@ -3763,12 +3765,13 @@ enabled freetype2 ||
  enabled lamemp3 && check_lib2 lame/lame.h lame_init -lmp3lame -lm ||
      die "ERROR! You must have the Lame MP3 encoding library installed to compile MythTV."
  
@@ -276,7 +370,7 @@ diff -Naurp mythtv-0.23-release/configure mythtv-0.23/configure
      check_cxx ${qt_inc} ${qt_inc}/QtCore <<EOF && enable qtwebkit
  #include <QtWebKit/QtWebKit>
  #if QT_VERSION < 0x040400
-@@ -3780,9 +3781,11 @@ fi
+@@ -3780,9 +3783,11 @@ fi
  enabled qtwebkit || die "Error! QtWebkit headers not found"
  
  # Check if Qt was built with DBus support:
@@ -290,7 +384,7 @@ diff -Naurp mythtv-0.23-release/configure mythtv-0.23/configure
  EOF
  
  if enabled firewire; then
-@@ -3844,7 +3847,7 @@ if test x"$xvmc_lib" != x""; then
+@@ -3844,7 +3849,7 @@ if test x"$xvmc_lib" != x""; then
      VENDOR_XVMC_LIBS="-l"$xvmc_lib
      disable xvmcw
  elif enabled xvmcw; then
@@ -299,7 +393,7 @@ diff -Naurp mythtv-0.23-release/configure mythtv-0.23/configure
  elif enabled xvmc_pro; then
      if has_library libviaXvMCPro ; then
          VENDOR_XVMC_LIBS="-lviaXvMCPro"
-@@ -4312,6 +4315,7 @@ SDL_LIBS=$sdl_libs
+@@ -4312,6 +4317,7 @@ SDL_LIBS=$sdl_libs
  SDL_CFLAGS=$sdl_cflags
  LIB_INSTALL_EXTRA_CMD=$LIB_INSTALL_EXTRA_CMD
  EXTRALIBS=$extralibs
@@ -406,6 +500,25 @@ diff -Naurp mythtv-0.23-release/libs/libavcodec/libavcodec.pro mythtv-0.23/libs/
  	QMAKE_CFLAGS_SHLIB =
  }
  
+diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputalsa.cpp mythtv-0.23/libs/libmyth/audiooutputalsa.cpp
+--- mythtv-0.23-release/libs/libmyth/audiooutputalsa.cpp	2009-11-16 18:00:20.000000000 -0500
++++ mythtv-0.23/libs/libmyth/audiooutputalsa.cpp	2010-06-28 03:29:58.793477000 -0400
+@@ -221,13 +221,13 @@ bool AudioOutputALSA::OpenDevice()
+     else if (audio_bits == 16)
+         // is the sound data coming in really little-endian or is it
+         // CPU-endian?
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+         format = SND_PCM_FORMAT_S16;
+ #else
+         format = SND_PCM_FORMAT_S16_LE;
+ #endif
+     else if (audio_bits == 24)
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+         format = SND_PCM_FORMAT_S24;
+ #else
+         format = SND_PCM_FORMAT_S24_LE;
 diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputbase.cpp mythtv-0.23/libs/libmyth/audiooutputbase.cpp
 --- mythtv-0.23-release/libs/libmyth/audiooutputbase.cpp	2010-04-14 06:36:02.000000000 -0400
 +++ mythtv-0.23/libs/libmyth/audiooutputbase.cpp	2010-06-18 06:50:18.720005000 -0400
@@ -439,6 +552,27 @@ diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputbase.h mythtv-0.23/libs/
  
      // Wait for all data to finish playing
      virtual void Drain(void);
+diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputca.cpp mythtv-0.23/libs/libmyth/audiooutputca.cpp
+--- mythtv-0.23-release/libs/libmyth/audiooutputca.cpp	2009-09-25 14:08:46.000000000 -0400
++++ mythtv-0.23/libs/libmyth/audiooutputca.cpp	2010-06-28 03:29:58.793477000 -0400
+@@ -14,7 +14,7 @@
+  * fails and passthru was set.
+  *
+  * = REVISION
+- * $Id: audiooutputca.cpp 22041 2009-09-25 18:08:46Z rkulagow $
++ * $Id: audiooutputca.cpp 25186 2010-06-28 07:29:58Z jyavenard $
+  *
+  * = AUTHORS
+  * Jeremiah Morris, Andrew Kimpton, Nigel Pearson
+@@ -176,7 +176,7 @@ bool CoreAudioData::OpenAnalog()
+     conv_in_desc.mSampleRate       = mCA->audio_samplerate;
+     conv_in_desc.mFormatID         = kAudioFormatLinearPCM;
+     conv_in_desc.mFormatFlags      = kLinearPCMFormatFlagIsSignedInteger;
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     conv_in_desc.mFormatFlags     |= kLinearPCMFormatFlagIsBigEndian;
+ #endif
+     conv_in_desc.mBytesPerPacket   = mCA->audio_bytes_per_sample;
 diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutput.h mythtv-0.23/libs/libmyth/audiooutput.h
 --- mythtv-0.23-release/libs/libmyth/audiooutput.h	2009-10-13 22:57:05.000000000 -0400
 +++ mythtv-0.23/libs/libmyth/audiooutput.h	2010-06-18 06:50:18.720005000 -0400
@@ -450,6 +584,18 @@ diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutput.h mythtv-0.23/libs/libm
   
      // Wait for all data to finish playing
      virtual void Drain(void) = 0;
+diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputoss.cpp mythtv-0.23/libs/libmyth/audiooutputoss.cpp
+--- mythtv-0.23-release/libs/libmyth/audiooutputoss.cpp	2009-10-13 22:57:05.000000000 -0400
++++ mythtv-0.23/libs/libmyth/audiooutputoss.cpp	2010-06-28 03:29:58.793477000 -0400
+@@ -123,7 +123,7 @@ bool AudioOutputOSS::OpenDevice()
+             format = AFMT_S8;
+             break;
+         case 16:
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+             format = AFMT_S16_BE;
+ #else
+             format = AFMT_S16_LE;
 diff -Naurp mythtv-0.23-release/libs/libmyth/audiooutputpulse.cpp mythtv-0.23/libs/libmyth/audiooutputpulse.cpp
 --- mythtv-0.23-release/libs/libmyth/audiooutputpulse.cpp	2009-11-16 11:18:35.000000000 -0500
 +++ mythtv-0.23/libs/libmyth/audiooutputpulse.cpp	2010-06-07 23:31:50.923907000 -0400
@@ -542,6 +688,54 @@ diff -Naurp mythtv-0.23-release/libs/libmyth/mediamonitor-darwin.cpp mythtv-0.23
          reinterpret_cast<MonitorThreadDarwin *>(context)
              ->diskRename(BSDname, volName);
          CFRelease(details);
+diff -Naurp mythtv-0.23-release/libs/libmyth/mythcdrom-linux.cpp mythtv-0.23/libs/libmyth/mythcdrom-linux.cpp
+--- mythtv-0.23-release/libs/libmyth/mythcdrom-linux.cpp	2010-02-03 16:02:18.000000000 -0500
++++ mythtv-0.23/libs/libmyth/mythcdrom-linux.cpp	2010-06-28 03:29:58.793477000 -0400
+@@ -12,7 +12,7 @@
+ 
+ #include "mythcdrom.h"
+ #include "mythcdrom-linux.h"
+-#include "mythconfig.h"      // for WORDS_BIGENDIAN
++#include "mythconfig.h"      // for HAVE_BIGENDIAN
+ #include "mythcontext.h"
+ #include "mythverbose.h"
+ 
+@@ -35,7 +35,7 @@ typedef struct cdrom_generic_command CDR
+ typedef struct
+ {
+     uint16_t data_len[2];
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     uint8_t  nea                : 1;
+     uint8_t  reserved1          : 4;
+     uint8_t  notification_class : 3;
+@@ -45,7 +45,7 @@ typedef struct
+     uint8_t  nea                : 1;
+ #endif
+     uint8_t  supp_event_class;
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     uint8_t  reserved2          : 4;
+     uint8_t  media_event_code   : 4;
+     uint8_t  reserved3          : 6;
+@@ -65,7 +65,7 @@ typedef struct
+ // and this is returned by GPCMD_READ_DISC_INFO
+ typedef struct {
+     uint16_t disc_information_length;
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     uint8_t  reserved1          : 3;
+     uint8_t  erasable           : 1;
+     uint8_t  border_status      : 2;
+@@ -80,7 +80,7 @@ typedef struct {
+     uint8_t  n_sessions_lsb;
+     uint8_t  first_track_lsb;
+     uint8_t  last_track_lsb;
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     uint8_t  did_v              : 1;
+     uint8_t  dbc_v              : 1;
+     uint8_t  uru                : 1;
 diff -Naurp mythtv-0.23-release/libs/libmyth/mythcontext.cpp mythtv-0.23/libs/libmyth/mythcontext.cpp
 --- mythtv-0.23-release/libs/libmyth/mythcontext.cpp	2010-03-23 20:43:43.000000000 -0400
 +++ mythtv-0.23/libs/libmyth/mythcontext.cpp	2010-05-14 18:39:42.189261000 -0400
@@ -722,6 +916,47 @@ diff -Naurp mythtv-0.23-release/libs/libmythdb/mythversion.h mythtv-0.23/libs/li
  
  /** \brief Increment this whenever the MythTV network protocol changes.
   *
+diff -Naurp mythtv-0.23-release/libs/libmythdvdnav/dvdnav/dvdnav_internal.h mythtv-0.23/libs/libmythdvdnav/dvdnav/dvdnav_internal.h
+--- mythtv-0.23-release/libs/libmythdvdnav/dvdnav/dvdnav_internal.h	2009-07-06 16:42:28.000000000 -0400
++++ mythtv-0.23/libs/libmythdvdnav/dvdnav/dvdnav_internal.h	2010-06-28 03:29:58.793477000 -0400
+@@ -85,7 +85,7 @@ typedef struct read_cache_s read_cache_t
+ 
+ #ifndef audio_status_t
+ typedef struct {
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+   unsigned int available     : 1;
+   unsigned int zero1         : 4;
+   unsigned int stream_number : 3;
+@@ -101,7 +101,7 @@ typedef struct {
+ 
+ #ifndef spu_status_t
+ typedef struct {
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+   unsigned int available               : 1;
+   unsigned int zero1                   : 2;
+   unsigned int stream_number_4_3       : 5;
+diff -Naurp mythtv-0.23-release/libs/libmythdvdnav/dvdread/bswap.h mythtv-0.23/libs/libmythdvdnav/dvdread/bswap.h
+--- mythtv-0.23-release/libs/libmythdvdnav/dvdread/bswap.h	2009-07-06 16:42:28.000000000 -0400
++++ mythtv-0.23/libs/libmythdvdnav/dvdread/bswap.h	2010-06-28 03:29:58.793477000 -0400
+@@ -24,7 +24,7 @@
+ 
+ #include <config.h>
+ 
+-#if defined(WORDS_BIGENDIAN)
++#if HAVE_BIGENDIAN
+ /* All bigendian systems are fine, just ignore the swaps. */
+ #define B2N_16(x) (void)(x)
+ #define B2N_32(x) (void)(x)
+@@ -101,6 +101,6 @@
+ 
+ #endif
+ 
+-#endif /* WORDS_BIGENDIAN */
++#endif /* HAVE_BIGENDIAN */
+ 
+ #endif /* LIBDVDREAD_BSWAP_H */
 diff -Naurp mythtv-0.23-release/libs/libmythdvdnav/libmythdvdnav.pro mythtv-0.23/libs/libmythdvdnav/libmythdvdnav.pro
 --- mythtv-0.23-release/libs/libmythdvdnav/libmythdvdnav.pro	2009-10-15 11:47:54.000000000 -0400
 +++ mythtv-0.23/libs/libmythdvdnav/libmythdvdnav.pro	2010-05-11 11:07:54.320600000 -0400
@@ -1067,6 +1302,120 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/jobqueue.h mythtv-0.23/libs/libmy
  
  #include <QWaitCondition>
  #include <QObject>
+diff -Naurp mythtv-0.23-release/libs/libmythtv/nuppeldecoder.cpp mythtv-0.23/libs/libmythtv/nuppeldecoder.cpp
+--- mythtv-0.23-release/libs/libmythtv/nuppeldecoder.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/nuppeldecoder.cpp	2010-06-28 03:29:58.793477000 -0400
+@@ -27,7 +27,7 @@ using namespace std;
+ 
+ #include "minilzo.h"
+ 
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+ extern "C" {
+ #include "bswap.h"
+ }
+@@ -41,7 +41,7 @@ NuppelDecoder::NuppelDecoder(NuppelVideo
+     : DecoderBase(parent, pginfo),
+       rtjd(0), video_width(0), video_height(0), video_size(0),
+       video_frame_rate(0.0f), audio_samplerate(44100),
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+       audio_bits_per_sample(0),
+ #endif
+       ffmpeg_extradatasize(0), ffmpeg_extradata(0), usingextradata(false),
+@@ -139,7 +139,7 @@ bool NuppelDecoder::ReadFileheader(struc
+     if (ringBuffer->Read(fh, FILEHEADERSIZE) != FILEHEADERSIZE)
+         return false;
+ 
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     fh->width         = bswap_32(fh->width);
+     fh->height        = bswap_32(fh->height);
+     fh->desiredwidth  = bswap_32(fh->desiredwidth);
+@@ -160,7 +160,7 @@ bool NuppelDecoder::ReadFrameheader(stru
+     if (ringBuffer->Read(fh, FRAMEHEADERSIZE) != FRAMEHEADERSIZE)
+         return false;
+ 
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     fh->timecode     = bswap_32(fh->timecode);
+     fh->packetlength = bswap_32(fh->packetlength);
+ #endif
+@@ -287,7 +287,7 @@ int NuppelDecoder::OpenFile(RingBuffer *
+         else
+         {
+             ringBuffer->Read(&extradata, frameheader.packetlength);
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+             struct extendeddata *ed = &extradata;
+             ed->version                 = bswap_32(ed->version);
+             ed->video_fourcc            = bswap_32(ed->video_fourcc);
+@@ -353,7 +353,7 @@ int NuppelDecoder::OpenFile(RingBuffer *
+                 {
+                     memcpy(&ste, seekbuf + offset,
+                            sizeof(struct seektable_entry));
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+                     ste.file_offset     = bswap_64(ste.file_offset);
+                     ste.keyframe_number = bswap_32(ste.keyframe_number);
+ #endif
+@@ -422,7 +422,7 @@ int NuppelDecoder::OpenFile(RingBuffer *
+                 {
+                     memcpy(&kfate, kfa_buf + offset,
+                            sizeof(struct kfatable_entry));
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+                     kfate.adjust          = bswap_32(kfate.adjust);
+                     kfate.keyframe_number = bswap_32(kfate.keyframe_number);
+ #endif
+@@ -495,7 +495,7 @@ int NuppelDecoder::OpenFile(RingBuffer *
+         effdsp = extradata.audio_sample_rate * 100;
+         GetNVP()->SetEffDsp(effdsp);
+         audio_samplerate = extradata.audio_sample_rate;
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+         // Why only if using extradata?
+         audio_bits_per_sample = extradata.audio_bits_per_sample;
+ #endif
+@@ -1242,7 +1242,7 @@ bool NuppelDecoder::GetFrame(DecodeType 
+             else
+             {
+                 getrawframes = 0;
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+                 // Why endian correct the audio buffer here?
+                 // Don't big-endian clients have to do it in audiooutBlah.cpp?
+                 if (audio_bits_per_sample == 16) {
+@@ -1290,7 +1290,7 @@ bool NuppelDecoder::GetFrame(DecodeType 
+ 
+             if (QString(fh->finfo) == "MythTVVideo")
+             {
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+                 fh->width         = bswap_32(fh->width);
+                 fh->height        = bswap_32(fh->height);
+                 fh->desiredwidth  = bswap_32(fh->desiredwidth);
+diff -Naurp mythtv-0.23-release/libs/libmythtv/nuppeldecoder.h mythtv-0.23/libs/libmythtv/nuppeldecoder.h
+--- mythtv-0.23-release/libs/libmythtv/nuppeldecoder.h	2010-01-18 13:15:35.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/nuppeldecoder.h	2010-06-28 03:29:58.793477000 -0400
+@@ -1,6 +1,8 @@
+ #ifndef NUPPELDECODER_H_
+ #define NUPPELDECODER_H_
+ 
++#include "config.h"
++
+ #include <list>
+ using namespace std;
+ 
+@@ -81,7 +83,7 @@ class NuppelDecoder : public DecoderBase
+     int video_width, video_height, video_size;
+     double video_frame_rate;
+     int audio_samplerate;
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     int audio_bits_per_sample;
+ #endif
+ 
 diff -Naurp mythtv-0.23-release/libs/libmythtv/NuppelVideoPlayer.cpp mythtv-0.23/libs/libmythtv/NuppelVideoPlayer.cpp
 --- mythtv-0.23-release/libs/libmythtv/NuppelVideoPlayer.cpp	2010-04-27 22:54:52.000000000 -0400
 +++ mythtv-0.23/libs/libmythtv/NuppelVideoPlayer.cpp	2010-06-18 06:50:18.720005000 -0400
@@ -1095,6 +1444,75 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/NuppelVideoPlayer.h mythtv-0.23/l
  
      // Gets
      QSize   GetVideoBufferSize(void) const    { return video_dim; }
+diff -Naurp mythtv-0.23-release/libs/libmythtv/NuppelVideoRecorder.cpp mythtv-0.23/libs/libmythtv/NuppelVideoRecorder.cpp
+--- mythtv-0.23-release/libs/libmythtv/NuppelVideoRecorder.cpp	2010-04-14 18:00:50.000000000 -0400
++++ mythtv-0.23/libs/libmythtv/NuppelVideoRecorder.cpp	2010-06-28 03:29:58.793477000 -0400
+@@ -33,7 +33,7 @@ using namespace std;
+ #include "audioinput.h"
+ #include "myth_imgconvert.h"
+ 
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+ extern "C" {
+ #include "bswap.h"
+ }
+@@ -1873,7 +1873,7 @@ void NuppelVideoRecorder::BufferIt(unsig
+ 
+ inline void NuppelVideoRecorder::WriteFrameheader(rtframeheader *fh)
+ {
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     fh->timecode     = bswap_32(fh->timecode);
+     fh->packetlength = bswap_32(fh->packetlength);
+ #endif
+@@ -1921,7 +1921,7 @@ void NuppelVideoRecorder::WriteFileHeade
+     fileheader.textsblocks = -1; // TODO: make only -1 if VBI support active?
+     fileheader.keyframedist = KEYFRAMEDIST;
+ 
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     fileheader.width         = bswap_32(fileheader.width);
+     fileheader.height        = bswap_32(fileheader.height);
+     fileheader.desiredwidth  = bswap_32(fileheader.desiredwidth);
+@@ -2030,7 +2030,7 @@ void NuppelVideoRecorder::WriteHeader(vo
+ 
+     extendeddataOffset = ringBuffer->GetWritePosition();
+ 
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+     moredata.version                 = bswap_32(moredata.version);
+     moredata.video_fourcc            = bswap_32(moredata.video_fourcc);
+     moredata.audio_fourcc            = bswap_32(moredata.audio_fourcc);
+@@ -3147,7 +3147,7 @@ void NuppelVideoRecorder::WriteVideo(Vid
+     lf = fnum;
+ }
+ 
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+ static void bswap_16_buf(short int *buf, int buf_cnt, int audio_channels)
+     __attribute__ ((unused)); /* <- suppress compiler warning */
+ 
+@@ -3214,7 +3214,7 @@ void NuppelVideoRecorder::WriteAudio(uns
+ 
+         int sample_cnt = audio_buffer_size / audio_bytes_per_sample;
+ 
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+         bswap_16_buf((short int*) buf, sample_cnt, audio_channels);
+ #endif
+ 
+diff -Naurp mythtv-0.23-release/libs/libmythtv/RTjpegN.h mythtv-0.23/libs/libmythtv/RTjpegN.h
+--- mythtv-0.23-release/libs/libmythtv/RTjpegN.h	2009-07-06 16:42:28.000000000 -0400
++++ mythtv-0.23/libs/libmythtv/RTjpegN.h	2010-06-28 03:29:58.793477000 -0400
+@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite
+ #define RTJPEG_FILE_VERSION 0
+ #define RTJPEG_HEADER_SIZE 12
+ 
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+ #define RTJPEG_SWAP_WORD(a) ( ((a) << 24) | \
+ 			(((a) << 8) & 0x00ff0000) | \
+ 			(((a) >> 8) & 0x0000ff00) | \
 diff -Naurp mythtv-0.23-release/libs/libmythtv/tv_play.cpp mythtv-0.23/libs/libmythtv/tv_play.cpp
 --- mythtv-0.23-release/libs/libmythtv/tv_play.cpp	2010-04-27 22:54:52.000000000 -0400
 +++ mythtv-0.23/libs/libmythtv/tv_play.cpp	2010-05-17 21:42:52.462765000 -0400
@@ -1242,6 +1660,27 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_quartz.h mythtv-0.23/lib
      void StopEmbedding(void);
  
      DisplayInfo GetDisplayInfo(void);
+diff -Naurp mythtv-0.23-release/libs/libmythtv/yuv2rgb.cpp mythtv-0.23/libs/libmythtv/yuv2rgb.cpp
+--- mythtv-0.23-release/libs/libmythtv/yuv2rgb.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/yuv2rgb.cpp	2010-06-28 03:29:58.793477000 -0400
+@@ -417,7 +417,7 @@ static void yuv420_argb32_non_mmx(unsign
+     int dstwidth;
+ 
+ // byte indices
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+ #define R_OI  1
+ #define G_OI  2
+ #define B_OI  3
+@@ -490,7 +490,7 @@ void rgb32_to_yuv420p(unsigned char *lum
+     unsigned char *p;
+ 
+ // byte indices
+-#ifdef WORDS_BIGENDIAN
++#if HAVE_BIGENDIAN
+ #define R_II  3
+ #define G_II  2
+ #define B_II  1
 diff -Naurp mythtv-0.23-release/libs/libmythui/mythfontmanager.cpp mythtv-0.23/libs/libmythui/mythfontmanager.cpp
 --- mythtv-0.23-release/libs/libmythui/mythfontmanager.cpp	2010-02-24 02:41:32.000000000 -0500
 +++ mythtv-0.23/libs/libmythui/mythfontmanager.cpp	2010-06-08 18:21:22.370095000 -0400
@@ -1354,6 +1793,58 @@ diff -Naurp mythtv-0.23-release/libs/libmythui/mythuitext.cpp mythtv-0.23/libs/l
          }
          else if (element.attribute("lang","").toLower() ==
                   GetMythUI()->GetLanguageAndVariant())
+diff -Naurp mythtv-0.23-release/libs/libmythui/util-nvctrl.cpp mythtv-0.23/libs/libmythui/util-nvctrl.cpp
+--- mythtv-0.23-release/libs/libmythui/util-nvctrl.cpp	2010-03-28 13:16:06.000000000 -0400
++++ mythtv-0.23/libs/libmythui/util-nvctrl.cpp	2010-06-28 04:34:55.227588000 -0400
+@@ -107,9 +107,15 @@ int GetNvidiaRates(t_screenrate& screenm
+ 
+     /* first, we query the MetaModes on this X screen */
+ 
+-    XNVCTRLQueryBinaryData(dpy, screen, 0, // n/a
++    ret = XNVCTRLQueryBinaryData(dpy, screen, 0, // n/a
+                            NV_CTRL_BINARY_DATA_METAMODES,
+                            (unsigned char **)&pMetaModes, &MetaModeLen);
++    if (!ret)
++    {
++        VERBOSE(VB_PLAYBACK, QString("Unknown error. Failed to query the enabled Display Devices."));
++        delete d;
++        return -1;
++    }
+ 
+     /*
+      * then, we query the ModeLines for each display device on
+@@ -122,9 +128,21 @@ int GetNvidiaRates(t_screenrate& screenm
+     {
+         if (!(display_devices & mask)) continue;
+ 
+-        XNVCTRLQueryBinaryData(dpy, screen, mask,
++        ret = XNVCTRLQueryBinaryData(dpy, screen, mask,
+                                NV_CTRL_BINARY_DATA_MODELINES,
+                                (unsigned char **)&str, &len);
++        if (!ret)
++        {
++            VERBOSE(VB_PLAYBACK, QString("Unknown error. Failed to query the enabled Display Devices."));
++            // Free Memory currently allocated
++            for (j=0; j < nDisplayDevice; ++j)
++            {
++                free(pModeLines[j]);
++            }
++            delete d;
++            return -1;
++        }
++		
+         pModeLines[nDisplayDevice] = str;
+         ModeLineLen[nDisplayDevice] = len;
+ 
+@@ -329,6 +347,8 @@ static void parse_mode_string(char *mode
+      * find the modename; stop at the last ' @' (would be easier with regex)
+      */
+ 
++    s_end = strchr(modeString, '\0');
++
+     for (char *s = modeString; *s; s++)
+     {
+         if (*s == ' ' && *(s+1) == '@')
 diff -Naurp mythtv-0.23-release/libs/libmythui/xmlparsebase.cpp mythtv-0.23/libs/libmythui/xmlparsebase.cpp
 --- mythtv-0.23-release/libs/libmythui/xmlparsebase.cpp	2010-03-02 12:36:30.000000000 -0500
 +++ mythtv-0.23/libs/libmythui/xmlparsebase.cpp	2010-05-15 09:04:12.458568000 -0400
@@ -1575,6 +2066,34 @@ diff -Naurp mythtv-0.23-release/settings.pro mythtv-0.23/settings.pro
  EXTRA_LIBS += $$CONFIG_FIREWIRE_LIBS
  EXTRA_LIBS += $$CONFIG_DIRECTFB_LIBS
  
+diff -Naurp mythtv-0.23-release/themes/MythCenter/base.xml mythtv-0.23/themes/MythCenter/base.xml
+--- mythtv-0.23-release/themes/MythCenter/base.xml	2010-05-09 10:40:52.000000000 -0400
++++ mythtv-0.23/themes/MythCenter/base.xml	2010-06-28 03:09:44.900378000 -0400
+@@ -8,6 +8,10 @@
+         <bold>yes</bold>
+     </font>
+   
++    <font name="basesmaller" from="basesmall">
++        <pixelsize>18</pixelsize>
++    </font>
++  
+     <font name="basesmallbold" from="basesmall">
+         <bold>yes</bold>
+     </font>
+diff -Naurp mythtv-0.23-release/themes/MythCenter-wide/base.xml mythtv-0.23/themes/MythCenter-wide/base.xml
+--- mythtv-0.23-release/themes/MythCenter-wide/base.xml	2010-04-03 12:52:26.000000000 -0400
++++ mythtv-0.23/themes/MythCenter-wide/base.xml	2010-06-28 03:09:44.900378000 -0400
+@@ -8,6 +8,10 @@
+         <bold>yes</bold>
+     </font>
+   
++    <font name="basesmaller" from="basesmall">
++        <pixelsize>18</pixelsize>
++    </font>
++  
+     <font name="basesmallbold" from="basesmall">
+         <bold>yes</bold>
+     </font>
 diff -Naurp mythtv-0.23-release/VERSION mythtv-0.23/VERSION
 --- mythtv-0.23-release/VERSION	2010-05-09 20:07:58.000000000 -0400
 +++ mythtv-0.23/VERSION	1969-12-31 19:00:00.000000000 -0500
