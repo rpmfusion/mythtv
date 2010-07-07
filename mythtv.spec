@@ -665,29 +665,6 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
 
-################################################################################
-#package -n mythgame-emulators
-#Summary:   Meta-package requiring emulators for game types mythgame knows about
-#Group:     Applications/Multimedia
-#Requires:  mythgame = %{version}-%{release}
-# Multi Arcade Machine Emulator, Amiga, Atari 2600
-#Requires:  sdlmame
-#Requires:  e-uae
-#Requires:  stella
-# Nintendo, Super Nintendo, Nintendo 64
-#Requires:  fceultra
-#Requires:  zsnes
-#Requires:  mupen64, mupen64-ricevideo
-# Sega Genesis, Sega Master System, Game Gear
-#Requires:  gens
-#Requires:  dega-sdl
-#Requires:  osmose
-# TurboGraphx 16 (and others)
-#Requires:  mednafen
-
-#description -n mythgame-emulators
-#Meta-package requiring emulators for game types mythgame knows about.
-
 %endif
 ################################################################################
 %if %{with_mythmovies}
@@ -1322,6 +1299,7 @@ fi
 %dir %{python_sitelib}/MythTV/
 %{python_sitelib}/MythTV/*
 %{python_sitelib}/MythTV-*.egg-info
+%{_bindir}/mythpython
 %endif
 
 %if %{with_plugins}
@@ -1377,12 +1355,6 @@ fi
 %dir %{_datadir}/mame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
-
-#files -n mythgame-emulators
-#defattr(-,root,root,-)
-#{_datadir}/mythtv/games/xmame
-#{_datadir}/mame/screens
-#{_datadir}/mame/flyers
 %endif
 
 %if %{with_mythmovies}
@@ -1441,10 +1413,6 @@ fi
 %doc mythplugins-%{version}/mythweather/AUTHORS
 %doc mythplugins-%{version}/mythweather/COPYING
 %doc mythplugins-%{version}/mythweather/README
-%{_libdir}/mythtv/plugins/libmythweather.so
-%{_datadir}/mythtv/i18n/mythweather_*.qm
-%{_datadir}/mythtv/weather_settings.xml
-%{_datadir}/mythtv/mythweather
 %endif
 
 %if %{with_mythweb}
