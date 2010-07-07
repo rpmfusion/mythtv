@@ -32,6 +32,7 @@ start() {
     /usr/bin/setfacl -m u:${MYTHBACKEND_USER}:rwx -R /dev/dvb/
     /usr/bin/setfacl -m u:${MYTHBACKEND_USER}:rwx -R /dev/snd/
     /usr/bin/setfacl -m u:${MYTHBACKEND_USER}:rw- /dev/video*
+    /usr/bin/setfacl -m u:${MYTHBACKEND_USER}:rw- /dev/vbi*
   fi
   export MYTHCONFDIR="$MYTHTV_HOME"
   export HOME="$MYTHTV_HOME"
@@ -50,6 +51,7 @@ stop() {
     /usr/bin/setfacl -x u:${MYTHBACKEND_USER} -R /dev/dvb/
     /usr/bin/setfacl -x u:${MYTHBACKEND_USER} -R /dev/snd/
     /usr/bin/setfacl -x u:${MYTHBACKEND_USER} /dev/video*
+    /usr/bin/setfacl -x u:${MYTHBACKEND_USER} /dev/vbi*
   fi
   echo
   [ $RETVAL = 0 ] && rm -f /var/lock/subsys/$prog /var/run/$prog.pid
