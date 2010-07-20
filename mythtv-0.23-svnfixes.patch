@@ -150,22 +150,29 @@ diff -Naurp mythtv-0.23-release/bindings/perl/MythTV/StorageGroup.pm mythtv-0.23
  #
 diff -Naurp mythtv-0.23-release/bindings/perl/MythTV.pm mythtv-0.23/bindings/perl/MythTV.pm
 --- mythtv-0.23-release/bindings/perl/MythTV.pm	2010-03-01 17:17:19.000000000 -0500
-+++ mythtv-0.23/bindings/perl/MythTV.pm	2010-05-23 12:42:23.678567000 -0400
-@@ -1,10 +1,10 @@
++++ mythtv-0.23/bindings/perl/MythTV.pm	2010-07-16 23:32:13.745324000 -0400
+@@ -1,9 +1,9 @@
  #
  # MythTV bindings for perl.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/bindings/perl/MythTV.pm $
 -# @date      $Date: 2010-03-01 14:17:19 -0800 (Mon, 01 Mar 2010) $
 -# @version   $Revision: 23636 $
--# @author    $Author: cpinkham $
 +# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV.pm $
-+# @date      $Date: 2010-05-23 12:42:23 -0400 (Sun, 23 May 2010) $
-+# @version   $Revision: 24810 $
-+# @author    $Author: mdean $
++# @date      $Date: 2010-07-16 23:32:13 -0400 (Fri, 16 Jul 2010) $
++# @version   $Revision: 25366 $
+ # @author    $Author: cpinkham $
  #
  
- # Version
+@@ -101,7 +101,7 @@ package MythTV;
+ 
+ # MYTH_PROTO_VERSION is defined in libmyth in mythtv/libs/libmyth/mythcontext.h
+ # and should be the current MythTV protocol version.
+-    our $PROTO_VERSION = 56;
++    our $PROTO_VERSION = 23056;
+ 
+ # NUMPROGRAMLINES is defined in mythtv/libs/libmythtv/programinfo.h and is
+ # the number of items in a ProgramInfo QStringList group used by
 @@ -710,6 +710,7 @@ EOF
          my $sh = $self->{'dbh'}->prepare('SELECT channel.*,
                                                   dtv_multiplex.bandwidth         AS dtv_bandwidth,
@@ -262,8 +269,8 @@ diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythFunc.py mythtv-0.23/b
  
 diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythStatic.py mythtv-0.23/bindings/python/MythTV/MythStatic.py
 --- mythtv-0.23-release/bindings/python/MythTV/MythStatic.py	2010-01-29 20:25:12.000000000 -0500
-+++ mythtv-0.23/bindings/python/MythTV/MythStatic.py	2010-06-21 23:35:41.632640000 -0400
-@@ -4,6 +4,7 @@
++++ mythtv-0.23/bindings/python/MythTV/MythStatic.py	2010-07-16 23:32:13.745324000 -0400
+@@ -4,9 +4,10 @@
  Contains any static and global variables for MythTV Python Bindings
  """
  
@@ -271,11 +278,15 @@ diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythStatic.py mythtv-0.23
  SCHEMA_VERSION = 1254
  MVSCHEMA_VERSION = 1032
  NVSCHEMA_VERSION = 1004
+-PROTO_VERSION = 56
++PROTO_VERSION = 23056
+ PROGRAM_FIELDS = 47
+ BACKEND_SEP = '[]:[]'
 diff -Naurp mythtv-0.23-release/bindings/python/scripts/mythpython mythtv-0.23/bindings/python/scripts/mythpython
 --- mythtv-0.23-release/bindings/python/scripts/mythpython	1969-12-31 19:00:00.000000000 -0500
-+++ mythtv-0.23/bindings/python/scripts/mythpython	2010-06-21 23:35:41.632640000 -0400
++++ mythtv-0.23/bindings/python/scripts/mythpython	2010-07-17 03:13:11.297668000 -0400
 @@ -0,0 +1,34 @@
-+#!/usr/local/bin/python
++#!/usr/bin/env python
 +
 +from MythTV import *
 +import sys
@@ -762,6 +773,62 @@ diff -Naurp mythtv-0.23-release/libs/libmyth/mythcontext.cpp mythtv-0.23/libs/li
  
          return false;
      }
+diff -Naurp mythtv-0.23-release/libs/libmyth/programinfo.cpp mythtv-0.23/libs/libmyth/programinfo.cpp
+--- mythtv-0.23-release/libs/libmyth/programinfo.cpp	2010-04-29 10:36:10.000000000 -0400
++++ mythtv-0.23/libs/libmyth/programinfo.cpp	2010-07-16 22:09:27.287638000 -0400
+@@ -1377,7 +1377,7 @@ bool ProgramInfo::LoadProgramFromRecorde
+         "       r.editing,          r.bookmark,    r.watched,         "//31-33
+         "       r.preserve,         r.transcoded,  r.deletepending,   "//34-36
+         "       p.audioprop+0,      p.videoprop+0, p.subtitletypes+0, "//37-39
+-        "       p.airdate                                             "//40
++        "       p.airdate,          r.findid                          "//40-41
+         "FROM recorded AS r "
+         "LEFT JOIN (channel AS c, recordedprogram AS p) "
+         "ON (r.chanid    = c.chanid AND "
+@@ -1474,6 +1474,7 @@ bool ProgramInfo::LoadProgramFromRecorde
+     storagegroup = query.value(27).toString();
+     playgroup    = query.value(21).toString();
+     recpriority  = query.value(22).toInt();
++    findid       = query.value(41).toInt();
+ 
+     QString old_basename = pathname.section('/', -1);
+     QString new_basename = query.value(25).toString();
+diff -Naurp mythtv-0.23-release/libs/libmyth/remoteutil.cpp mythtv-0.23/libs/libmyth/remoteutil.cpp
+--- mythtv-0.23-release/libs/libmyth/remoteutil.cpp	2009-12-29 12:03:57.000000000 -0500
++++ mythtv-0.23/libs/libmyth/remoteutil.cpp	2010-07-16 22:09:27.287638000 -0400
+@@ -133,14 +133,16 @@ bool RemoteCheckFile(const ProgramInfo *
+ }
+ 
+ bool RemoteDeleteRecording(
+-    uint chanid, const QDateTime &recstartts, bool forceMetadataDelete)
++    uint chanid, const QDateTime &recstartts, bool forceMetadataDelete,
++    bool forgetHistory)
+ {
+     bool result = true;
+     QString cmd =
+-        QString("DELETE_RECORDING %1 %2 %3")
++        QString("DELETE_RECORDING %1 %2 %3 %4")
+         .arg(chanid)
+         .arg(recstartts.toString(Qt::ISODate))
+-        .arg(forceMetadataDelete ? "FORCE" : "NO_FORCE");
++        .arg(forceMetadataDelete ? "FORCE" : "NO_FORCE")
++        .arg(forgetHistory ? "FORGET" : "NO_FORGET");
+     QStringList strlist(cmd);
+ 
+     if (!gContext->SendReceiveStringList(strlist) || strlist.empty())
+diff -Naurp mythtv-0.23-release/libs/libmyth/remoteutil.h mythtv-0.23/libs/libmyth/remoteutil.h
+--- mythtv-0.23-release/libs/libmyth/remoteutil.h	2009-12-29 12:03:57.000000000 -0500
++++ mythtv-0.23/libs/libmyth/remoteutil.h	2010-07-16 22:09:27.287638000 -0400
+@@ -39,7 +39,8 @@ bool RemoteGetMemStats(int &totalMB, int
+ MPUBLIC bool RemoteCheckFile(
+     const ProgramInfo *pginfo, bool checkSlaves = true);
+ MPUBLIC bool RemoteDeleteRecording(
+-    uint chanid, const QDateTime &recstartts, bool forceMetadataDelete);
++    uint chanid, const QDateTime &recstartts, bool forceMetadataDelete,
++    bool forgetHistory);
+ MPUBLIC
+ bool RemoteUndeleteRecording(uint chanid, const QDateTime &recstartts);
+ MPUBLIC
 diff -Naurp mythtv-0.23-release/libs/libmyth/schemawizard.cpp mythtv-0.23/libs/libmyth/schemawizard.cpp
 --- mythtv-0.23-release/libs/libmyth/schemawizard.cpp	2010-01-22 12:12:23.000000000 -0500
 +++ mythtv-0.23/libs/libmyth/schemawizard.cpp	2010-06-06 00:54:24.555359000 -0400
@@ -902,7 +969,7 @@ diff -Naurp mythtv-0.23-release/libs/libmythdb/mythsocketthread.cpp mythtv-0.23/
          VERBOSE(VB_SOCKET, SLOC(sock) + "calling m_cb->readyRead()");
 diff -Naurp mythtv-0.23-release/libs/libmythdb/mythversion.h mythtv-0.23/libs/libmythdb/mythversion.h
 --- mythtv-0.23-release/libs/libmythdb/mythversion.h	2010-04-29 20:59:58.000000000 -0400
-+++ mythtv-0.23/libs/libmythdb/mythversion.h	2010-06-17 09:23:59.559532000 -0400
++++ mythtv-0.23/libs/libmythdb/mythversion.h	2010-07-16 23:32:13.745324000 -0400
 @@ -9,9 +9,9 @@
  #endif
  
@@ -912,10 +979,24 @@ diff -Naurp mythtv-0.23-release/libs/libmythdb/mythversion.h mythtv-0.23/libs/li
 -#define MYTH_BINARY_VERSION "0.23.20100429-1"
 +/// Including changes in the libmythdb, libmyth, libmythtv, libmythav* and
 +/// libmythui class methods used by plug-ins.
-+#define MYTH_BINARY_VERSION "0.23.201000617-1"
++#define MYTH_BINARY_VERSION "0.23.201000710-1"
  
  /** \brief Increment this whenever the MythTV network protocol changes.
   *
+@@ -27,10 +27,10 @@
+  *       mythtv/bindings/perl/MythTV/Program.pm (layout)
+  *
+  *   MythTV Python Bindings
+- *       mythtv/bindings/python/MythTV/MythTV.py (version number)
+- *       mythtv/bindings/python/MythTV/MythTV.py (layout)
++ *       mythtv/bindings/python/MythTV/MythStatic.py (version number)
++ *       mythtv/bindings/python/MythTV/MythData.py (layout)
+  */
+-#define MYTH_PROTO_VERSION "56"
++#define MYTH_PROTO_VERSION "23056"
+ 
+ MPUBLIC const char *GetMythSourceVersion();
+ 
 diff -Naurp mythtv-0.23-release/libs/libmythdvdnav/dvdnav/dvdnav_internal.h mythtv-0.23/libs/libmythdvdnav/dvdnav/dvdnav_internal.h
 --- mythtv-0.23-release/libs/libmythdvdnav/dvdnav/dvdnav_internal.h	2009-07-06 16:42:28.000000000 -0400
 +++ mythtv-0.23/libs/libmythdvdnav/dvdnav/dvdnav_internal.h	2010-06-28 03:29:58.793477000 -0400
@@ -1291,6 +1372,42 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/dbcheck.cpp mythtv-0.23/libs/libm
  
      // Pop up messages, questions, warnings, et c.
      switch (DBup->PromptForUpgrade("TV", upgradeAllowed,
+diff -Naurp mythtv-0.23-release/libs/libmythtv/firewiredevice.cpp mythtv-0.23/libs/libmythtv/firewiredevice.cpp
+--- mythtv-0.23-release/libs/libmythtv/firewiredevice.cpp	2010-03-02 16:07:25.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/firewiredevice.cpp	2010-07-09 16:15:15.198128000 -0400
+@@ -329,7 +329,7 @@ void FirewireDevice::SetLastChannel(cons
+ 
+ void FirewireDevice::ProcessPATPacket(const TSPacket &tspacket)
+ {
+-    if (!tspacket.TransportError() && !tspacket.ScramplingControl() &&
++    if (!tspacket.TransportError() && !tspacket.Scrambled() &&
+         tspacket.HasPayload() && tspacket.PayloadStart() && !tspacket.PID())
+     {
+         PESPacket pes = PESPacket::View(tspacket);
+diff -Naurp mythtv-0.23-release/libs/libmythtv/firewirerecorder.cpp mythtv-0.23/libs/libmythtv/firewirerecorder.cpp
+--- mythtv-0.23-release/libs/libmythtv/firewirerecorder.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythtv/firewirerecorder.cpp	2010-07-09 16:15:15.198128000 -0400
+@@ -128,7 +128,7 @@ void FirewireRecorder::ProcessTSPacket(c
+     if (tspacket.TransportError())
+         return;
+ 
+-    if (tspacket.ScramplingControl())
++    if (tspacket.Scrambled())
+         return;
+ 
+     if (tspacket.HasAdaptationField())
+diff -Naurp mythtv-0.23-release/libs/libmythtv/iptvrecorder.cpp mythtv-0.23/libs/libmythtv/iptvrecorder.cpp
+--- mythtv-0.23-release/libs/libmythtv/iptvrecorder.cpp	2010-04-05 10:44:05.000000000 -0400
++++ mythtv-0.23/libs/libmythtv/iptvrecorder.cpp	2010-07-09 16:15:15.198128000 -0400
+@@ -211,7 +211,7 @@ void IPTVRecorder::ProcessTSPacket(const
+     if (!_stream_data)
+         return;
+ 
+-    if (tspacket.TransportError() || tspacket.ScramplingControl())
++    if (tspacket.TransportError() || tspacket.Scrambled())
+         return;
+ 
+     if (tspacket.HasAdaptationField())
 diff -Naurp mythtv-0.23-release/libs/libmythtv/jobqueue.h mythtv-0.23/libs/libmythtv/jobqueue.h
 --- mythtv-0.23-release/libs/libmythtv/jobqueue.h	2010-01-31 22:49:37.000000000 -0500
 +++ mythtv-0.23/libs/libmythtv/jobqueue.h	2010-06-17 12:33:12.060417000 -0400
@@ -1302,6 +1419,78 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/jobqueue.h mythtv-0.23/libs/libmy
  
  #include <QWaitCondition>
  #include <QObject>
+diff -Naurp mythtv-0.23-release/libs/libmythtv/mpeg/mpegstreamdata.cpp mythtv-0.23/libs/libmythtv/mpeg/mpegstreamdata.cpp
+--- mythtv-0.23-release/libs/libmythtv/mpeg/mpegstreamdata.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/mpeg/mpegstreamdata.cpp	2010-07-09 16:15:15.198128000 -0400
+@@ -891,7 +891,7 @@ void MPEGStreamData::HandleTSTables(cons
+     if (!psip->IsCurrent()) // we don't cache the next table, for now
+         DONE_WITH_PES_PACKET();
+ 
+-    if (tspacket->ScramplingControl())
++    if (tspacket->Scrambled())
+     { // scrambled! ATSC, DVB require tables not to be scrambled
+         VERBOSE(VB_RECORD,
+                 "PSIP packet is scrambled, not ATSC/DVB compiant");
+@@ -975,7 +975,7 @@ bool MPEGStreamData::ProcessTSPacket(con
+     if (!ok)
+         return false;
+ 
+-    if (!tspacket.ScramplingControl() && tspacket.HasPayload())
++    if (!tspacket.Scrambled() && tspacket.HasPayload())
+     {
+         if (IsVideoPID(tspacket.PID()))
+         {
+@@ -1004,7 +1004,7 @@ bool MPEGStreamData::ProcessTSPacket(con
+             HandleTSTables(&tspacket);
+         }
+     }
+-    else if (!tspacket.ScramplingControl() && IsWritingPID(tspacket.PID()))
++    else if (!tspacket.Scrambled() && IsWritingPID(tspacket.PID()))
+     {
+         // PCRPID and other streams we're writing may not have payload...
+         for (uint j = 0; j < _ts_writing_listeners.size(); j++)
+@@ -1728,7 +1728,7 @@ void MPEGStreamData::ProcessEncryptedPac
+ 
+     CryptStatus status = kEncUnknown;
+ 
+-    if (tspacket.ScramplingControl())
++    if (tspacket.Scrambled())
+     {
+         info.decrypted_packets = 0;
+ 
+diff -Naurp mythtv-0.23-release/libs/libmythtv/mpeg/tspacket.cpp mythtv-0.23/libs/libmythtv/mpeg/tspacket.cpp
+--- mythtv-0.23-release/libs/libmythtv/mpeg/tspacket.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23/libs/libmythtv/mpeg/tspacket.cpp	2010-07-09 16:15:15.198128000 -0400
+@@ -39,7 +39,7 @@ QString TSPacket::toString() const {
+     str.append("           payloadStart: %1\n").arg( PayloadStart() );
+     str.append("               priority: %1\n").arg( Priority() );
+     str.append("                    pid: %1\n").arg( PID() );
+-    str.append("              scrampled: %1\n").arg( ScramplingControl() );
++    str.append("       scrambled (if>1): %1\n").arg( ScramblingControl() );
+     str.append(" adaptationFieldControl: %1\n").arg( AdaptationFieldControl() );
+     str.append("      continuityCounter: %1\n").arg( ContinuityCounter() );
+     return str;
+diff -Naurp mythtv-0.23-release/libs/libmythtv/mpeg/tspacket.h mythtv-0.23/libs/libmythtv/mpeg/tspacket.h
+--- mythtv-0.23-release/libs/libmythtv/mpeg/tspacket.h	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/mpeg/tspacket.h	2010-07-09 16:15:15.198128000 -0400
+@@ -67,7 +67,7 @@ class TSHeader {
+         return ((_tsdata[1] << 8) + _tsdata[2]) & 0x1fff;
+     }
+     //3.0  2 bit transport_scrambling_control (00,01 OK; 10,11 scrambled)
+-    unsigned int ScramplingControl() const { return (_tsdata[3] >> 6) & 0x3; }
++    unsigned int ScramblingControl() const { return (_tsdata[3] >> 6) & 0x3; }
+     //3.2  2 bit adaptation_field_control
+     //       (01-no adaptation field,payload only
+     //        10-adaptation field only,no payload
+@@ -82,7 +82,7 @@ class TSHeader {
+     unsigned int ContinuityCounter() const { return _tsdata[3] & 0xf; }
+ 
+     // shortcuts
+-    bool Scrampled() const { return bool(_tsdata[3]&0x80); }
++    bool Scrambled() const { return bool(_tsdata[3]&0x80); }
+     bool HasAdaptationField() const { return bool(_tsdata[3] & 0x20); }
+     bool HasPayload() const { return bool(_tsdata[3] & 0x10); }
+ 
 diff -Naurp mythtv-0.23-release/libs/libmythtv/nuppeldecoder.cpp mythtv-0.23/libs/libmythtv/nuppeldecoder.cpp
 --- mythtv-0.23-release/libs/libmythtv/nuppeldecoder.cpp	2010-03-06 22:11:52.000000000 -0500
 +++ mythtv-0.23/libs/libmythtv/nuppeldecoder.cpp	2010-06-28 03:29:58.793477000 -0400
@@ -1418,8 +1607,58 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/nuppeldecoder.h mythtv-0.23/libs/
  
 diff -Naurp mythtv-0.23-release/libs/libmythtv/NuppelVideoPlayer.cpp mythtv-0.23/libs/libmythtv/NuppelVideoPlayer.cpp
 --- mythtv-0.23-release/libs/libmythtv/NuppelVideoPlayer.cpp	2010-04-27 22:54:52.000000000 -0400
-+++ mythtv-0.23/libs/libmythtv/NuppelVideoPlayer.cpp	2010-06-18 06:50:18.720005000 -0400
-@@ -5134,6 +5134,13 @@ bool NuppelVideoPlayer::ToggleUpmix()
++++ mythtv-0.23/libs/libmythtv/NuppelVideoPlayer.cpp	2010-07-08 08:40:46.381707000 -0400
+@@ -1182,7 +1182,7 @@ int NuppelVideoPlayer::OpenFile(bool ski
+     }
+ 
+     player_ctx->buffer->Start();
+-    char testbuf[kDecoderProbeBufferSize];
++    char *testbuf = new char[kDecoderProbeBufferSize];
+     player_ctx->buffer->Unpause(); // so we can read testbuf if we were paused
+ 
+     // delete any pre-existing recorder
+@@ -1196,6 +1196,7 @@ int NuppelVideoPlayer::OpenFile(bool ski
+             VERBOSE(VB_IMPORTANT,
+                     QString("NVP::OpenFile(): Error, couldn't read file: %1")
+                     .arg(player_ctx->buffer->GetFilename()));
++            delete [] testbuf;
+             return -1;
+         }
+ 
+@@ -1222,13 +1223,14 @@ int NuppelVideoPlayer::OpenFile(bool ski
+         VERBOSE(VB_IMPORTANT, LOC_ERR +
+                 QString("Couldn't find an A/V decoder for: '%1'")
+                 .arg(player_ctx->buffer->GetFilename()));
+-
++        delete [] testbuf;
+         return -1;
+     }
+     else if (GetDecoder()->IsErrored())
+     {
+         VERBOSE(VB_IMPORTANT, LOC_ERR + "Could not initialize A/V decoder.");
+         SetDecoder(NULL);
++        delete [] testbuf;
+         return -1;
+     }
+ 
+@@ -1252,6 +1254,7 @@ int NuppelVideoPlayer::OpenFile(bool ski
+     {
+         VERBOSE(VB_IMPORTANT, QString("Couldn't open decoder for: %1")
+                 .arg(player_ctx->buffer->GetFilename()));
++        delete [] testbuf;
+         return -1;
+     }
+ 
+@@ -1276,6 +1279,8 @@ int NuppelVideoPlayer::OpenFile(bool ski
+ 
+     bookmarkseek = GetBookmark();
+ 
++    delete [] testbuf;
++
+     return IsErrored() ? -1 : 0;
+ }
+ 
+@@ -5134,6 +5139,13 @@ bool NuppelVideoPlayer::ToggleUpmix()
      return false;
  }
  
@@ -1590,6 +1829,29 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/tv_play.h mythtv-0.23/libs/libmyt
      void SwitchInputs(PlayerContext*, uint inputid);
      void ToggleInputs(PlayerContext*, uint inputid = 0);
      void SwitchCards(PlayerContext*,
+diff -Naurp mythtv-0.23-release/libs/libmythtv/videooutbase.h mythtv-0.23/libs/libmythtv/videooutbase.h
+--- mythtv-0.23-release/libs/libmythtv/videooutbase.h	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/videooutbase.h	2010-07-08 23:39:18.186345000 -0400
+@@ -84,8 +84,8 @@ class VideoOutput
+     virtual void ResizeDisplayWindow(const QRect&, bool);
+     virtual void EmbedInWidget(int x, int y, int w, int h);
+     virtual void StopEmbedding(void);
+-    void         ResizeForGui(void);
+-    void         ResizeForVideo(uint width = 0, uint height = 0);
++    virtual void ResizeForGui(void);
++    virtual void ResizeForVideo(uint width = 0, uint height = 0);
+     virtual void MoveResizeWindow(QRect new_rect) = 0;
+ 
+     virtual void MoveResize(void);
+@@ -110,7 +110,7 @@ class VideoOutput
+     /// \brief Returns current aspect override mode
+     /// \sa ToggleAspectOverride(AspectOverrideMode)
+     AspectOverrideMode GetAspectOverride(void) const;
+-    void ToggleAspectOverride(
++    virtual void ToggleAspectOverride(
+         AspectOverrideMode aspectOverrideMode = kAspect_Toggle);
+ 
+     /// \brief Returns current adjust fill mode
 diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_d3d.cpp mythtv-0.23/libs/libmythtv/videoout_d3d.cpp
 --- mythtv-0.23-release/libs/libmythtv/videoout_d3d.cpp	2010-03-06 22:11:52.000000000 -0500
 +++ mythtv-0.23/libs/libmythtv/videoout_d3d.cpp	2010-06-19 01:57:23.850116000 -0400
@@ -1623,17 +1885,250 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_d3d.h mythtv-0.23/libs/l
      static QStringList GetAllowedRenderers(MythCodecID myth_codec_id,
 diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_quartz.cpp mythtv-0.23/libs/libmythtv/videoout_quartz.cpp
 --- mythtv-0.23-release/libs/libmythtv/videoout_quartz.cpp	2010-03-06 22:11:52.000000000 -0500
-+++ mythtv-0.23/libs/libmythtv/videoout_quartz.cpp	2010-06-18 03:11:40.067331000 -0400
++++ mythtv-0.23/libs/libmythtv/videoout_quartz.cpp	2010-07-13 15:02:05.716954000 -0400
 @@ -18,7 +18,7 @@
   *   on any screen except, you guessed it, the main screen.
   *
   * = REVISION
 - * $Id: videoout_quartz.cpp 23669 2010-03-07 03:11:52Z jpoet $
-+ * $Id: videoout_quartz.cpp 25134 2010-06-18 07:11:40Z nigel $
++ * $Id: videoout_quartz.cpp 25333 2010-07-13 19:02:05Z nigel $
   *
   * = AUTHORS
   * Nigel Pearson, Jeremiah Morris
-@@ -1598,11 +1598,10 @@ void VideoOutputQuartz::DeleteQuartzBuff
+@@ -89,7 +89,8 @@ class VideoOutputQuartzView
+                               MythCodecID av_codec_id);
+     virtual void MoveResize(QRect newRect);
+ 
+-    virtual void EmbedChanged(bool embedded);
++    virtual void HideForGUI(void);
++    virtual void ShowAfterGUI(QRect size);
+ 
+   protected:
+     virtual bool Begin(void);
+@@ -478,12 +479,18 @@ void VideoOutputQuartzView::MoveResize(Q
+         Transform(newRect);
+ }
+ 
+-/// Subclasses that block the main window should suspend
+-/// playback, hide windows, etc by overriding this method.
+-void VideoOutputQuartzView::EmbedChanged(bool embedded)
++/// Subclasses that block the main window should hide
++/// their output so that the GUI behind is fully visible.
++void VideoOutputQuartzView::HideForGUI(void)
++{
++    // do nothing in default version
++}
++
++/// Subclasses that block the main window should re-enable their
++/// output after the user has finished interacing with the GUI.
++void VideoOutputQuartzView::ShowAfterGUI(QRect size)
+ {
+     // do nothing in default version
+-    (void)embedded;
+ }
+ 
+ /**
+@@ -497,7 +504,7 @@ class VoqvMainWindow : public VideoOutpu
+     {
+         alpha = fminf(1.0, fmaxf(0.0, alphaBlend));
+         applyMoveResize = true;
+-        name = "Main window: ";
++        name = (char *) "Main window: ";
+     };
+ 
+    ~VoqvMainWindow()
+@@ -551,20 +558,18 @@ class VoqvMainWindow : public VideoOutpu
+         viewLock.unlock();
+     };
+ 
+-    // On embedding, we stop video playback.
+-    void EmbedChanged(bool embedded)
++    void HideForGUI(void)
+     {
+-        if (embedded)
+-        {
+-            End();
+-            EndPort();
+-        }
+-        else
+-        {
+-            BeginPort();
+-            Begin();
+-        }
+-    };
++        VERBOSE(VB_PLAYBACK, "VOQV::HideForGUI() main window");
++        End();
++    }
++
++    void ShowAfterGUI(QRect size)
++    {
++        VERBOSE(VB_PLAYBACK, "VOQV::ShowAfterGUI() main window");
++        Begin();
++        Transform(size);
++    }
+ };
+ 
+ /**
+@@ -577,7 +582,7 @@ class VoqvEmbedded : public VideoOutputQ
+     : VideoOutputQuartzView(pData)
+     {
+         m_desired = QRect(x, y, w, h);
+-        name = "Embedded window: ";
++        name = (char *) "Embedded window: ";
+     };
+ 
+    ~VoqvEmbedded()
+@@ -604,11 +609,42 @@ class VoqvEmbedded : public VideoOutputQ
+         GetPortBounds(thePort, &portBounds);
+         InvalWindowRect(parentData->window, &portBounds);
+ 
+-        // The main class handles masking and resizing, since we set m_desired
+         viewLock.unlock();
+         return true;
+     };
+ 
++    // Simple scaler setup that just uses m_desired to fill embed area:
++    bool Begin(void)
++    {
++        viewLock.lock();
++        if (DecompressSequenceBeginS(&theCodec, parentData->imgDesc,
++                                     NULL, 0, thePort, NULL, NULL, NULL,
++                                     srcCopy, theMask, 0,
++                                     codecNormalQuality, bestSpeedCodec))
++        {
++            VERBOSE(VB_IMPORTANT,
++                    QString("VOQV::Begin(%1) - DecompressSequenceBeginS failed")
++                    .arg(name));
++            viewLock.unlock();
++            return false;
++        }
++
++        // Turn off gamma correction unless requested
++        if (!parentData->correctGamma)
++            QTSetPixMapHandleRequestedGammaLevel(GetPortPixMap(thePort),
++                                                 kQTUseSourceGammaLevel);
++
++        SetDSequenceFlags(theCodec,
++                          codecDSequenceFlushInsteadOfDirtying,
++                          codecDSequenceFlushInsteadOfDirtying);
++        viewLock.unlock();
++
++        // set transformation matrix
++        Transform(m_desired);
++
++        return true;
++    }
++
+     void EndPort(void)
+     {
+         viewLock.lock();
+@@ -627,7 +663,7 @@ class VoqvFullscreen : public VideoOutpu
+     : VideoOutputQuartzView(pData)
+     {
+         applyMoveResize = true;
+-        name = "Full screen: ";
++        name = (char *) "Full screen: ";
+     };
+ 
+    ~VoqvFullscreen()
+@@ -696,21 +732,20 @@ class VoqvFullscreen : public VideoOutpu
+         viewLock.unlock();
+     };
+ 
+-    // On embedding, we release the display, and
+-    // restore everything when we're through.
+-    void EmbedChanged(bool embedded)
++    void HideForGUI(void)
+     {
+-        if (embedded)
+-        {
+-            End();
+-            EndPort();
+-        }
+-        else
+-        {
+-            BeginPort();
+-            Begin();
+-        }
+-    };
++        VERBOSE(VB_PLAYBACK, "VOQV::HideForGUI() full screen");
++        End();
++        EndPort();
++    }
++
++    void ShowAfterGUI(QRect size)
++    {
++        VERBOSE(VB_PLAYBACK, "VOQV::ShowAfterGUI() full screen");
++        BeginPort();
++        Begin();
++        Transform(size);
++    }
+ };
+ 
+ /**
+@@ -722,7 +757,7 @@ class VoqvDock : public VideoOutputQuart
+     VoqvDock(QuartzData *pData)
+     : VideoOutputQuartzView(pData)
+     {
+-        name = "Dock icon: ";
++        name = (char *) "Dock icon: ";
+     };
+ 
+    ~VoqvDock()
+@@ -766,7 +801,7 @@ class VoqvFloater : public VideoOutputQu
+     {
+         alpha = fminf(1.0, fmaxf(0.0, alphaBlend));
+         resizing = false;
+-        name = "Floating window: ";
++        name = (char *) "Floating window: ";
+     };
+ 
+    ~VoqvFloater()
+@@ -904,21 +939,6 @@ class VoqvFloater : public VideoOutputQu
+         UnregisterToolboxObjectClass(myClass);
+         viewLock.unlock();
+     };
+-
+-    // We hide the window during embedding.
+-    void EmbedChanged(bool embedded)
+-    {
+-        if (embedded)
+-        {
+-            End();
+-            HideWindow(window);
+-        }
+-        else
+-        {
+-            ShowWindow(window);
+-            Begin();
+-        }
+-    };
+ };
+ 
+ // The event callback for the floating window above
+@@ -1004,7 +1024,7 @@ class VoqvDesktop : public VideoOutputQu
+     VoqvDesktop(QuartzData *pData)
+     : VideoOutputQuartzView(pData)
+     {
+-        name = "Desktop: ";
++        name = (char *) "Desktop: ";
+     };
+ 
+    ~VoqvDesktop()
+@@ -1173,6 +1193,12 @@ void VideoOutputQuartz::MoveResize(void)
+     }
+ }
+ 
++void VideoOutputQuartz::ToggleAspectOverride(AspectOverrideMode aspectMode)
++{
++    VideoOutput::ToggleAspectOverride(aspectMode);
++    MoveResize();
++}
++
+ bool VideoOutputQuartz::InputChanged(const QSize &input_size,
+                                      float        aspect,
+                                      MythCodecID  av_codec_id,
+@@ -1598,25 +1624,27 @@ void VideoOutputQuartz::DeleteQuartzBuff
      vbuffers.DeleteBuffers();
  }
  
@@ -1648,10 +2143,88 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_quartz.cpp mythtv-0.23/l
  
      if (windows[0].IsEmbedding())
          return;
+ 
+     VideoOutput::EmbedInWidget(x, y, w, h);
++    // Base class has now calculated Aspect/Fill,
++    // so copy for precision sizing of new widget:
++    QRect newArea = windows[0].GetDisplayVideoRect();
+ 
+-    data->pixelLock.lock();
++    x = newArea.left(), y = newArea.top(),
++    w = newArea.width(), h = newArea.height();
+ 
+-    // warn other views that embedding is starting
+-    vector<VideoOutputQuartzView*>::iterator it = data->views.begin();
+-    for (; it != data->views.end(); ++it)
+-    {
+-        (*it)->EmbedChanged(true);
+-    }
++    VERBOSE(VB_PLAYBACK, (LOC + "EmbedInWidget() - now x=%1, y=%2, w=%3, h=%4")
++                         .arg(x).arg(y).arg(w).arg(h));
++
++
++    data->pixelLock.lock();
+ 
+     // create embedded widget
+     data->embeddedView = new VoqvEmbedded(data, x, y, w, h);
+@@ -1653,11 +1681,6 @@ void VideoOutputQuartz::StopEmbedding(vo
+         data->embeddedView = NULL;
+     }
+ 
+-    // tell other views to return to normal
+-    vector<VideoOutputQuartzView*>::iterator it = data->views.begin();
+-    for (; it != data->views.end(); ++it)
+-        (*it)->EmbedChanged(false);
+-
+     data->pixelLock.unlock();
+ }
+ 
+@@ -1793,6 +1816,33 @@ void VideoOutputQuartz::ProcessFrame(Vid
+         frame->width, frame->height);
+ }
+ 
++/// Subclassed so we can hide the QuickTime drawn layer and show the GUI
++void VideoOutputQuartz::ResizeForGui(void)
++{
++    data->pixelLock.lock();
++    vector<VideoOutputQuartzView*>::iterator it = data->views.begin();
++    for (; it != data->views.end(); ++it)
++        (*it)->HideForGUI();
++    data->pixelLock.unlock();
++
++    VideoOutput::ResizeForGui();
++}
++
++/// Subclassed so we can redisplay the QuickTime layer after ResizeForGui()
++void VideoOutputQuartz::ResizeForVideo(uint width, uint height)
++{
++    VideoOutput::ResizeForVideo(width, height);
++
++    // Base class gives us the correct dimensions for main window/screen:
++    QRect size = windows[0].GetDisplayVideoRect();
++
++    data->pixelLock.lock();
++    vector<VideoOutputQuartzView*>::iterator it = data->views.begin();
++    for (; it != data->views.end(); ++it)
++        (*it)->ShowAfterGUI(size);
++    data->pixelLock.unlock();
++}
++
+ QStringList VideoOutputQuartz::GetAllowedRenderers(
+     MythCodecID myth_codec_id, const QSize &video_dim)
+ {
 diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_quartz.h mythtv-0.23/libs/libmythtv/videoout_quartz.h
 --- mythtv-0.23-release/libs/libmythtv/videoout_quartz.h	2010-02-03 10:39:11.000000000 -0500
-+++ mythtv-0.23/libs/libmythtv/videoout_quartz.h	2010-06-18 03:11:40.067331000 -0400
-@@ -34,7 +34,7 @@ class VideoOutputQuartz : public VideoOu
++++ mythtv-0.23/libs/libmythtv/videoout_quartz.h	2010-07-08 05:12:55.950440000 -0400
+@@ -24,6 +24,7 @@ class VideoOutputQuartz : public VideoOu
+     void Show(FrameScanType);
+ 
+     void SetVideoFrameRate(float playback_fps);
++    void ToggleAspectOverride(AspectOverrideMode aspectMode);
+     bool InputChanged(const QSize &input_size,
+                       float        aspect,
+                       MythCodecID  av_codec_id,
+@@ -34,7 +35,7 @@ class VideoOutputQuartz : public VideoOu
      void Zoom(ZoomDirection direction);
      void ToggleAdjustFill(AdjustFillMode adjustFill);
  
@@ -1660,6 +2233,16 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/videoout_quartz.h mythtv-0.23/lib
      void StopEmbedding(void);
  
      DisplayInfo GetDisplayInfo(void);
+@@ -45,6 +46,9 @@ class VideoOutputQuartz : public VideoOu
+ 
+     void SetDVDVDecoder(DVDV *dvdvdec);
+ 
++    void ResizeForGui(void);
++    void ResizeForVideo(uint width = 0, uint height = 0);
++
+     static QStringList GetAllowedRenderers(MythCodecID myth_codec_id,
+                                            const QSize &video_dim);
+ 
 diff -Naurp mythtv-0.23-release/libs/libmythtv/yuv2rgb.cpp mythtv-0.23/libs/libmythtv/yuv2rgb.cpp
 --- mythtv-0.23-release/libs/libmythtv/yuv2rgb.cpp	2010-03-06 22:11:52.000000000 -0500
 +++ mythtv-0.23/libs/libmythtv/yuv2rgb.cpp	2010-06-28 03:29:58.793477000 -0400
@@ -1941,8 +2524,43 @@ diff -Naurp mythtv-0.23-release/programs/mythbackend/main.cpp mythtv-0.23/progra
      if (pidfs)
 diff -Naurp mythtv-0.23-release/programs/mythbackend/mainserver.cpp mythtv-0.23/programs/mythbackend/mainserver.cpp
 --- mythtv-0.23-release/programs/mythbackend/mainserver.cpp	2010-04-10 17:19:56.000000000 -0400
-+++ mythtv-0.23/programs/mythbackend/mainserver.cpp	2010-06-17 09:23:59.559532000 -0400
-@@ -1270,15 +1270,10 @@ void MainServer::HandleAnnounce(QStringL
++++ mythtv-0.23/programs/mythbackend/mainserver.cpp	2010-07-16 22:09:27.287638000 -0400
+@@ -427,10 +427,11 @@ void MainServer::ProcessRequestWork(Myth
+     }
+     else if (command == "DELETE_RECORDING")
+     {
+-        if (3 <= tokens.size() && tokens.size() <= 4)
++        if (3 <= tokens.size() && tokens.size() <= 5)
+         {
+             bool force = (tokens.size() >= 4) && (tokens[3] == "FORCE");
+-            HandleDeleteRecording(tokens[1], tokens[2], pbs, force);
++            bool forget = (tokens.size() >= 5) && (tokens[4] == "FORGET");
++            HandleDeleteRecording(tokens[1], tokens[2], pbs, force, forget);
+         }
+         else
+             HandleDeleteRecording(listline, pbs, false);
+@@ -749,7 +750,7 @@ void MainServer::customEvent(QEvent *e)
+                 {
+                     recInfo.ForgetHistory();
+                 }
+-                DoHandleDeleteRecording(recInfo, NULL, false, true);
++                DoHandleDeleteRecording(recInfo, NULL, false, true, false);
+             }
+             else
+             {
+@@ -797,9 +798,9 @@ void MainServer::customEvent(QEvent *e)
+                 RecordingInfo recInfo(*pinfo);
+                 delete pinfo;
+                 if (tokens[0] == "FORCE_DELETE_RECORDING")
+-                    DoHandleDeleteRecording(recInfo, NULL, true);
++                    DoHandleDeleteRecording(recInfo, NULL, true, false, false);
+                 else
+-                    DoHandleDeleteRecording(recInfo, NULL, false);
++                    DoHandleDeleteRecording(recInfo, NULL, false, false, false);
+             }
+             else
+             {
+@@ -1270,15 +1271,10 @@ void MainServer::HandleAnnounce(QStringL
          else
              filename = LocalFilePath(qurl, wantgroup);
  
@@ -1961,6 +2579,79 @@ diff -Naurp mythtv-0.23-release/programs/mythbackend/mainserver.cpp mythtv-0.23/
  
          sockListLock.lockForWrite();
          fileTransferList.push_back(ft);
+@@ -2131,7 +2127,8 @@ void MainServer::DoHandleStopRecording(
+ 
+ void MainServer::HandleDeleteRecording(QString &chanid, QString &starttime,
+                                        PlaybackSock *pbs,
+-                                       bool forceMetadataDelete)
++                                       bool forceMetadataDelete, 
++                                       bool forgetHistory)
+ {
+     ProgramInfo *pginfo =
+         ProgramInfo::GetProgramFromRecorded(chanid, starttime);
+@@ -2151,7 +2148,7 @@ void MainServer::HandleDeleteRecording(Q
+     RecordingInfo ri(*pginfo);
+     delete pginfo;
+ 
+-    DoHandleDeleteRecording(ri, pbs, forceMetadataDelete);
++    DoHandleDeleteRecording(ri, pbs, forceMetadataDelete, false, forgetHistory);
+ }
+ 
+ void MainServer::HandleDeleteRecording(QStringList &slist, PlaybackSock *pbs,
+@@ -2159,12 +2156,12 @@ void MainServer::HandleDeleteRecording(Q
+ {
+     RecordingInfo recinfo;
+     if (recinfo.FromStringList(slist, 1))
+-        DoHandleDeleteRecording(recinfo, pbs, forceMetadataDelete);
++        DoHandleDeleteRecording(recinfo, pbs, forceMetadataDelete, false, false);
+ }
+ 
+ void MainServer::DoHandleDeleteRecording(
+     RecordingInfo &recinfo, PlaybackSock *pbs,
+-    bool forceMetadataDelete, bool expirer)
++    bool forceMetadataDelete, bool expirer, bool forgetHistory)
+ {
+     int resultCode = -1;
+     MythSocket *pbssock = NULL;
+@@ -2226,6 +2223,9 @@ void MainServer::DoHandleDeleteRecording
+                     m_sched->UpdateRecStatus(&recinfo);
+             }
+ 
++            if (forgetHistory)
++                recinfo.ForgetHistory();
++
+             if (pbssock)
+             {
+                 QStringList outputlist( QString::number(num) );
+@@ -2266,6 +2266,9 @@ void MainServer::DoHandleDeleteRecording
+         }
+     }
+ 
++    if (forgetHistory)
++        recinfo.ForgetHistory();
++
+     QFile checkFile(filename);
+     bool fileExists = checkFile.exists();
+     if (!fileExists)
+diff -Naurp mythtv-0.23-release/programs/mythbackend/mainserver.h mythtv-0.23/programs/mythbackend/mainserver.h
+--- mythtv-0.23-release/programs/mythbackend/mainserver.h	2010-02-14 00:36:07.000000000 -0500
++++ mythtv-0.23/programs/mythbackend/mainserver.h	2010-07-16 22:09:27.287638000 -0400
+@@ -91,11 +91,13 @@ class MainServer : public QObject, publi
+     void HandleStopRecording(QStringList &slist, PlaybackSock *pbs);
+     void DoHandleStopRecording(RecordingInfo &recinfo, PlaybackSock *pbs);
+     void HandleDeleteRecording(QString &chanid, QString &starttime,
+-                               PlaybackSock *pbs, bool forceMetadataDelete);
++                               PlaybackSock *pbs, bool forceMetadataDelete,
++                               bool forgetHistory);
+     void HandleDeleteRecording(QStringList &slist, PlaybackSock *pbs,
+                                bool forceMetadataDelete);
+     void DoHandleDeleteRecording(RecordingInfo &recinfo, PlaybackSock *pbs,
+-                                 bool forceMetadataDelete, bool expirer=false);
++                                 bool forceMetadataDelete, bool expirer=false,
++                                 bool forgetHistory=false);
+     void HandleUndeleteRecording(QStringList &slist, PlaybackSock *pbs);
+     void DoHandleUndeleteRecording(RecordingInfo &recinfo, PlaybackSock *pbs);
+     void HandleForgetRecording(QStringList &slist, PlaybackSock *pbs);
 diff -Naurp mythtv-0.23-release/programs/mythcommflag/main.cpp mythtv-0.23/programs/mythcommflag/main.cpp
 --- mythtv-0.23-release/programs/mythcommflag/main.cpp	2010-02-10 12:02:19.000000000 -0500
 +++ mythtv-0.23/programs/mythcommflag/main.cpp	2010-05-13 20:49:59.310980000 -0400
@@ -2027,6 +2718,185 @@ diff -Naurp mythtv-0.23-release/programs/mythcommflag/main.cpp mythtv-0.23/progr
      time_now = time(NULL);
  
      if (!quiet)
+diff -Naurp mythtv-0.23-release/programs/mythfrontend/playbackbox.cpp mythtv-0.23/programs/mythfrontend/playbackbox.cpp
+--- mythtv-0.23-release/programs/mythfrontend/playbackbox.cpp	2010-05-07 12:37:15.000000000 -0400
++++ mythtv-0.23/programs/mythfrontend/playbackbox.cpp	2010-07-16 22:09:27.287638000 -0400
+@@ -295,12 +295,13 @@ static void push_onto_del(QStringList &l
+     list.push_back(pginfo.chanid);
+     list.push_back(pginfo.recstartts.toString(Qt::ISODate));
+     list.push_back(false /* force Delete */);
++    list.push_back(false); /* forget history */
+ }
+ 
+ static bool extract_one_del(
+     QStringList &list, uint &chanid, QDateTime &recstartts)
+ {
+-    if (list.size() < 3)
++    if (list.size() < 4)
+     {
+         list.clear();
+         return false;
+@@ -312,6 +313,7 @@ static bool extract_one_del(
+     list.pop_front();
+     list.pop_front();
+     list.pop_front();
++    list.pop_front();
+ 
+     if (!chanid || !recstartts.isValid())
+         VERBOSE(VB_IMPORTANT, LOC_ERR + "extract_one_del() invalid entry");
+@@ -2178,19 +2180,14 @@ void PlaybackBox::RemoveProgram(
+ 
+     delItem->availableStatus = asPendingDelete;
+     m_helper.DeleteRecording(
+-        delItem->chanid.toUInt(), delItem->recstartts, forceMetadataDelete);
++        delItem->chanid.toUInt(), delItem->recstartts, 
++        forceMetadataDelete, forgetHistory);
+ 
+     // if the item is in the current recording list UI then delete it.
+     MythUIButtonListItem *uiItem =
+         m_recordingList->GetItemByData(qVariantFromValue(delItem));
+     if (uiItem)
+         m_recordingList->RemoveItem(uiItem);
+-
+-    if (forgetHistory)
+-    {
+-        RecordingInfo recInfo(*delItem);
+-        recInfo.ForgetHistory();
+-    }
+ }
+ 
+ void PlaybackBox::fanartLoad(void)
+@@ -2407,7 +2404,7 @@ void PlaybackBox::ShowDeletePopup(Delete
+     {
+         push_onto_del(m_delList, *delItem);
+     }
+-    else if (m_delList.size() >= 3)
++    else if (m_delList.size() >= 4)
+     {
+         delItem = FindProgramInUILists(
+             m_delList[0].toUInt(),
+@@ -2417,7 +2414,7 @@ void PlaybackBox::ShowDeletePopup(Delete
+     if (!delItem)
+         return;
+ 
+-    uint other_delete_cnt = (m_delList.size() / 3) - 1;
++    uint other_delete_cnt = (m_delList.size() / 4) - 1;
+ 
+     label += CreateProgramInfoString(*delItem);
+ 
+@@ -3241,11 +3238,7 @@ void PlaybackBox::PlaylistDelete(bool fo
+             list.push_back(tmpItem->chanid);
+             list.push_back(tmpItem->recstartts.toString(Qt::ISODate));
+             list.push_back(forceDeleteStr);
+-            if (forgetHistory)
+-            {
+-                RecordingInfo recInfo(*tmpItem);
+-                recInfo.ForgetHistory();
+-            }
++            list.push_back(forgetHistory ? "1" : "0");
+ 
+             // if the item is in the current recording list UI then delete it.
+             MythUIButtonListItem *uiItem =
+@@ -3865,17 +3858,13 @@ void PlaybackBox::customEvent(QEvent *ev
+                     continue;
+ 
+                 QString forceDeleteStr = me->ExtraDataList()[i+2];
+-                bool    forgetHistory  = me->ExtraDataList()[i+3].toInt();
++                QString forgetHistoryStr  = me->ExtraDataList()[i+3];
+ 
+                 list.push_back(pginfo->chanid);
+                 list.push_back(pginfo->recstartts.toString(Qt::ISODate));
+                 list.push_back(forceDeleteStr);
++                list.push_back(forgetHistoryStr);
+                 pginfo->availableStatus = asPendingDelete;
+-                if (forgetHistory)
+-                {
+-                    RecordingInfo recInfo(*pginfo);
+-                    recInfo.ForgetHistory();
+-                }
+ 
+                 // if the item is in the current recording list UI
+                 // then delete it.
+@@ -3893,10 +3882,10 @@ void PlaybackBox::customEvent(QEvent *ev
+         }
+         else if (message == "DELETE_FAILURES")
+         {
+-            if (me->ExtraDataList().size() < 3)
++            if (me->ExtraDataList().size() < 4)
+                 return;
+ 
+-            for (uint i = 0; i+2 < (uint)me->ExtraDataList().size(); i+=3)
++            for (uint i = 0; i+3 < (uint)me->ExtraDataList().size(); i += 4)
+             {
+                 ProgramInfo *pginfo = m_programInfoCache.GetProgramInfo(
+                         me->ExtraDataList()[i+0].toUInt(),
+diff -Naurp mythtv-0.23-release/programs/mythfrontend/playbackboxhelper.cpp mythtv-0.23/programs/mythfrontend/playbackboxhelper.cpp
+--- mythtv-0.23-release/programs/mythfrontend/playbackboxhelper.cpp	2010-02-25 16:16:03.000000000 -0500
++++ mythtv-0.23/programs/mythfrontend/playbackboxhelper.cpp	2010-07-16 22:09:27.287638000 -0400
+@@ -62,18 +62,19 @@ bool PBHEventHandler::event(QEvent *e)
+             QStringList successes;
+             QStringList failures;
+             QStringList list = me->ExtraDataList();
+-            while (list.size() >= 3)
++            while (list.size() >= 4)
+             {
+                 uint      chanid        = list[0].toUInt();
+                 QDateTime recstartts    = QDateTime::fromString(
+                     list[1], Qt::ISODate);
+                 bool      forceDelete   = list[2].toUInt();
++                bool      forgetHistory = list[3].toUInt();
+ 
+                 bool ok = RemoteDeleteRecording(
+-                    chanid, recstartts, forceDelete);
++                    chanid, recstartts, forceDelete, forgetHistory);
+ 
+                 QStringList &res = (ok) ? successes : failures;
+-                for (uint i = 0; i < 3; i++)
++                for (uint i = 0; i < 4; i++)
+                 {
+                     res.push_back(list.front());
+                     list.pop_front();
+@@ -273,12 +274,14 @@ void PlaybackBoxHelper::StopRecording(co
+ }
+ 
+ void PlaybackBoxHelper::DeleteRecording(
+-    uint chanid, const QDateTime &recstartts, bool forceDelete)
++    uint chanid, const QDateTime &recstartts, bool forceDelete, 
++    bool forgetHistory)
+ {
+     QStringList list;
+     list.push_back(QString::number(chanid));
+     list.push_back(recstartts.toString(Qt::ISODate));
+     list.push_back((forceDelete)    ? "1" : "0");
++    list.push_back((forgetHistory)  ? "1" : "0");
+     DeleteRecordings(list);
+ }
+ 
+diff -Naurp mythtv-0.23-release/programs/mythfrontend/playbackboxhelper.h mythtv-0.23/programs/mythfrontend/playbackboxhelper.h
+--- mythtv-0.23-release/programs/mythfrontend/playbackboxhelper.h	2010-02-10 10:31:15.000000000 -0500
++++ mythtv-0.23/programs/mythfrontend/playbackboxhelper.h	2010-07-16 22:09:27.287638000 -0400
+@@ -55,7 +55,8 @@ class PlaybackBoxHelper : public QThread
+     void ForceFreeSpaceUpdate(void);
+     void StopRecording(const ProgramInfo&);
+     void DeleteRecording(
+-        uint chanid, const QDateTime &recstartts, bool forceDelete);
++        uint chanid, const QDateTime &recstartts, 
++        bool forceDelete, bool forgetHistory);
+     void DeleteRecordings(const QStringList&);
+     void UndeleteRecording(uint chanid, const QDateTime &recstartts);
+     void CheckAvailability(const ProgramInfo&,
+diff -Naurp mythtv-0.23-release/programs/mythfrontend/statusbox.cpp mythtv-0.23/programs/mythfrontend/statusbox.cpp
+--- mythtv-0.23-release/programs/mythfrontend/statusbox.cpp	2010-01-19 20:34:48.000000000 -0500
++++ mythtv-0.23/programs/mythfrontend/statusbox.cpp	2010-07-16 22:09:27.287638000 -0400
+@@ -442,7 +442,7 @@ void StatusBox::customEvent(QEvent *even
+             if ((buttonnum == 0) && REC_CAN_BE_DELETED(rec))
+             {
+                 RemoteDeleteRecording(
+-                    rec->chanid.toUInt(), rec->recstartts, false);
++                    rec->chanid.toUInt(), rec->recstartts, false, false);
+             }
+             else if (buttonnum == 1)
+             {
 diff -Naurp mythtv-0.23-release/programs/mythtranscode/transcode.cpp mythtv-0.23/programs/mythtranscode/transcode.cpp
 --- mythtv-0.23-release/programs/mythtranscode/transcode.cpp	2010-04-03 13:16:58.000000000 -0400
 +++ mythtv-0.23/programs/mythtranscode/transcode.cpp	2010-06-18 06:50:18.720005000 -0400

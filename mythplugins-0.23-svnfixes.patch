@@ -427,6 +427,51 @@ diff -Naurp mythplugins-0.23-release/mythvideo/mythvideo/dbcheck.cpp mythplugins
          // Pop up messages, questions, warnings, et c. 
          switch (DBup->PromptForUpgrade("Video", true, false)) 
          { 
+diff -Naurp mythplugins-0.23-release/mythvideo/mythvideo/videodlg.cpp mythplugins-0.23/mythvideo/mythvideo/videodlg.cpp
+--- mythplugins-0.23-release/mythvideo/mythvideo/videodlg.cpp	2010-01-24 09:22:44.000000000 -0500
++++ mythplugins-0.23/mythvideo/mythvideo/videodlg.cpp	2010-07-16 11:58:51.521184000 -0400
+@@ -120,8 +120,14 @@ namespace
+       public:
+         void StartCopy()
+         {
+-            m_id = m_http.get(m_url.toEncoded(), &m_data_buffer);
+-
++            m_http.setHost(m_url.host(), m_url.port(80));
++            QByteArray path = m_url.encodedPath();
++            if (m_url.hasQuery())
++            {
++                path.append("?");
++                path.append(m_url.encodedQuery());
++            }
++            m_id = m_http.get(path, &m_data_buffer);
+             m_timer.start(gContext->GetNumSetting("PosterDownloadTimeout", 60)
+                           * 1000);
+         }
+@@ -137,9 +143,10 @@ namespace
+       public slots:
+         void InspectHeader(const QHttpResponseHeader &header)
+         {
+-            if (header.statusCode() == 302)
++            if (header.statusCode() == 302 || header.statusCode() == 301 ||
++                header.statusCode() == 307)
+             {
+-                QString m_redirectUrl = header.value("Location");
++                m_redirectUrl = header.value("Location");
+                 m_redirectCount++;
+             }
+             else if (header.statusCode() == 404)
+@@ -165,9 +172,9 @@ namespace
+                     SLOT(OnFinished(int, bool)));
+ 
+             connect(&m_timer, SIGNAL(timeout()), SLOT(OnDownloadTimeout()));
+-            
++
+             m_timer.setSingleShot(true);
+-            m_http.setHost(m_url.host());
++            m_http.setHost(m_url.host(), m_url.port(80));
+         }
+ 
+         ~ImageDownloadProxy() {}
 diff -Naurp mythplugins-0.23-release/mythweather/mythweather/scripts/ca_envcan/envcan_animaps.pl mythplugins-0.23/mythweather/mythweather/scripts/ca_envcan/envcan_animaps.pl
 --- mythplugins-0.23-release/mythweather/mythweather/scripts/ca_envcan/envcan_animaps.pl	2009-04-10 20:04:30.000000000 -0400
 +++ mythplugins-0.23/mythweather/mythweather/scripts/ca_envcan/envcan_animaps.pl	2010-06-28 05:32:49.842135000 -0400
@@ -6387,18 +6432,29 @@ diff -Naurp mythplugins-0.23-release/mythweb/classes/Modules.php mythplugins-0.2
   * @license     GPL
 diff -Naurp mythplugins-0.23-release/mythweb/classes/MythBackend.php mythplugins-0.23/mythweb/classes/MythBackend.php
 --- mythplugins-0.23-release/mythweb/classes/MythBackend.php	2010-03-01 17:20:56.000000000 -0500
-+++ mythplugins-0.23/mythweb/classes/MythBackend.php	2010-03-01 17:20:56.492319000 -0500
-@@ -1,8 +1,8 @@
++++ mythplugins-0.23/mythweb/classes/MythBackend.php	2010-07-16 23:33:19.783309000 -0400
+@@ -1,9 +1,9 @@
  <?php
  /**
   *
 - * @url         $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythplugins/mythweb/classes/MythBackend.php $
 - * @date        $Date: 2010-03-01 14:20:56 -0800 (Mon, 01 Mar 2010) $
+- * @version     $Revision: 23637 $
 + * @url         $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythplugins/mythweb/classes/MythBackend.php $
-+ * @date        $Date: 2010-03-01 17:20:56 -0500 (Mon, 01 Mar 2010) $
-  * @version     $Revision: 23637 $
++ * @date        $Date: 2010-07-16 23:33:19 -0400 (Fri, 16 Jul 2010) $
++ * @version     $Revision: 25367 $
   * @author      $Author: cpinkham $
   * @license     GPL
+  *
+@@ -15,7 +15,7 @@ class MythBackend {
+ 
+ // MYTH_PROTO_VERSION is defined in libmyth in mythtv/libs/libmyth/mythcontext.h
+ // and should be the current MythTV protocol version.
+-    static $protocol_version        = 56;
++    static $protocol_version        = 23056;
+ 
+ // The character string used by the backend to separate records
+     static $backend_separator       = '[]:[]';
 diff -Naurp mythplugins-0.23-release/mythweb/classes/MythFrontend.php mythplugins-0.23/mythweb/classes/MythFrontend.php
 --- mythplugins-0.23-release/mythweb/classes/MythFrontend.php	2009-01-22 02:01:06.000000000 -0500
 +++ mythplugins-0.23/mythweb/classes/MythFrontend.php	2009-01-22 02:01:06.462493000 -0500

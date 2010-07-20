@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25277
+%define _svnrev r25380
 %define branch release-0-23-fixes
 
 #
@@ -81,7 +81,7 @@ Version: 0.23
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 6%{?dist}
+Release: 7%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -132,7 +132,6 @@ Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Patch0:    mythtv-%{version}-svnfixes.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 Patch1:    mythplugins-%{version}-svnfixes.patch
-Patch2:    mythtv-0.23-shutup-vuvuzela.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -819,7 +818,6 @@ on demand content.
 
 cd mythtv-%{version}
 %patch0 -p1
-%patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -1451,6 +1449,10 @@ fi
 ################################################################################
 
 %changelog
+* Mon Jul 19 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-7
+- Update to release-0-23-fixes branch, svn revision 25380
+- Drop vuvuzela filter patch, the World Cup is over
+
 * Wed Jul 07 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-6
 - Update to release-0-23-fixes branch, svn revision 25277
 - Even more run-as-non-root initscript tweaks (rpmfusion bz#1295)
