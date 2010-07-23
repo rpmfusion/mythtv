@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25380
+%define _svnrev r25413
 %define branch release-0-23-fixes
 
 #
@@ -81,7 +81,7 @@ Version: 0.23
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 7%{?dist}
+Release: 8%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1449,6 +1449,9 @@ fi
 ################################################################################
 
 %changelog
+* Fri Jul 23 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-8
+- Update to release-0-23-fixes branch, svn revision 25413
+
 * Mon Jul 19 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-7
 - Update to release-0-23-fixes branch, svn revision 25380
 - Drop vuvuzela filter patch, the World Cup is over

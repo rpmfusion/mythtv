@@ -150,20 +150,27 @@ diff -Naurp mythtv-0.23-release/bindings/perl/MythTV/StorageGroup.pm mythtv-0.23
  #
 diff -Naurp mythtv-0.23-release/bindings/perl/MythTV.pm mythtv-0.23/bindings/perl/MythTV.pm
 --- mythtv-0.23-release/bindings/perl/MythTV.pm	2010-03-01 17:17:19.000000000 -0500
-+++ mythtv-0.23/bindings/perl/MythTV.pm	2010-07-16 23:32:13.745324000 -0400
-@@ -1,9 +1,9 @@
++++ mythtv-0.23/bindings/perl/MythTV.pm	2010-07-21 22:21:00.112292000 -0400
+@@ -1,14 +1,14 @@
  #
  # MythTV bindings for perl.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23/mythtv/bindings/perl/MythTV.pm $
 -# @date      $Date: 2010-03-01 14:17:19 -0800 (Mon, 01 Mar 2010) $
 -# @version   $Revision: 23636 $
+-# @author    $Author: cpinkham $
 +# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV.pm $
-+# @date      $Date: 2010-07-16 23:32:13 -0400 (Fri, 16 Jul 2010) $
-+# @version   $Revision: 25366 $
- # @author    $Author: cpinkham $
++# @date      $Date: 2010-07-21 22:21:00 -0400 (Wed, 21 Jul 2010) $
++# @version   $Revision: 25396 $
++# @author    $Author: gigem $
  #
  
+ # Version
+-    $VERSION = '.21svn';
++    $VERSION = '.23.1svn';
+ 
+ # Load sub libraries
+     use IO::Socket::INET::MythTV;
 @@ -101,7 +101,7 @@ package MythTV;
  
  # MYTH_PROTO_VERSION is defined in libmyth in mythtv/libs/libmyth/mythcontext.h
@@ -269,12 +276,12 @@ diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythFunc.py mythtv-0.23/b
  
 diff -Naurp mythtv-0.23-release/bindings/python/MythTV/MythStatic.py mythtv-0.23/bindings/python/MythTV/MythStatic.py
 --- mythtv-0.23-release/bindings/python/MythTV/MythStatic.py	2010-01-29 20:25:12.000000000 -0500
-+++ mythtv-0.23/bindings/python/MythTV/MythStatic.py	2010-07-16 23:32:13.745324000 -0400
++++ mythtv-0.23/bindings/python/MythTV/MythStatic.py	2010-07-21 22:21:00.112292000 -0400
 @@ -4,9 +4,10 @@
  Contains any static and global variables for MythTV Python Bindings
  """
  
-+OWN_VERSION = (0,23,0,0)
++OWN_VERSION = (0,23,1,0)
  SCHEMA_VERSION = 1254
  MVSCHEMA_VERSION = 1032
  NVSCHEMA_VERSION = 1004
@@ -322,8 +329,13 @@ diff -Naurp mythtv-0.23-release/bindings/python/scripts/mythpython mythtv-0.23/b
 +    code.InteractiveConsole(namespace).interact(banner)
 diff -Naurp mythtv-0.23-release/bindings/python/setup.py mythtv-0.23/bindings/python/setup.py
 --- mythtv-0.23-release/bindings/python/setup.py	2010-01-28 20:39:37.000000000 -0500
-+++ mythtv-0.23/bindings/python/setup.py	2010-06-21 23:35:41.632640000 -0400
-@@ -8,4 +8,5 @@ setup(
++++ mythtv-0.23/bindings/python/setup.py	2010-07-21 22:21:00.112292000 -0400
+@@ -4,8 +4,9 @@ from distutils.core import setup
+ 
+ setup(
+         name='MythTV',
+-        version='0.23.0',
++        version='0.23.1',
          description='MythTV Python bindings.',
          packages=['MythTV', 'MythTV/tmdb', 'MythTV/ttvdb'],
          url=['http://www.mythtv.org/'],
@@ -969,7 +981,7 @@ diff -Naurp mythtv-0.23-release/libs/libmythdb/mythsocketthread.cpp mythtv-0.23/
          VERBOSE(VB_SOCKET, SLOC(sock) + "calling m_cb->readyRead()");
 diff -Naurp mythtv-0.23-release/libs/libmythdb/mythversion.h mythtv-0.23/libs/libmythdb/mythversion.h
 --- mythtv-0.23-release/libs/libmythdb/mythversion.h	2010-04-29 20:59:58.000000000 -0400
-+++ mythtv-0.23/libs/libmythdb/mythversion.h	2010-07-16 23:32:13.745324000 -0400
++++ mythtv-0.23/libs/libmythdb/mythversion.h	2010-07-21 22:21:00.112292000 -0400
 @@ -9,9 +9,9 @@
  #endif
  
@@ -979,7 +991,7 @@ diff -Naurp mythtv-0.23-release/libs/libmythdb/mythversion.h mythtv-0.23/libs/li
 -#define MYTH_BINARY_VERSION "0.23.20100429-1"
 +/// Including changes in the libmythdb, libmyth, libmythtv, libmythav* and
 +/// libmythui class methods used by plug-ins.
-+#define MYTH_BINARY_VERSION "0.23.201000710-1"
++#define MYTH_BINARY_VERSION "0.23.1.201000710-1"
  
  /** \brief Increment this whenever the MythTV network protocol changes.
   *
@@ -1740,6 +1752,24 @@ diff -Naurp mythtv-0.23-release/libs/libmythtv/NuppelVideoRecorder.cpp mythtv-0.
          bswap_16_buf((short int*) buf, sample_cnt, audio_channels);
  #endif
  
+diff -Naurp mythtv-0.23-release/libs/libmythtv/recordinginfo.cpp mythtv-0.23/libs/libmythtv/recordinginfo.cpp
+--- mythtv-0.23-release/libs/libmythtv/recordinginfo.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23/libs/libmythtv/recordinginfo.cpp	2010-07-20 17:13:11.577995000 -0400
+@@ -688,12 +688,13 @@ void RecordingInfo::FinishedRecording(bo
+ {
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.prepare("UPDATE recorded SET endtime = :ENDTIME, "
+-                  "       duplicate = 1 "
++                  "       duplicate = :DUPLICATE "
+                   "WHERE chanid = :CHANID AND "
+                   "    starttime = :STARTTIME ");
+     query.bindValue(":ENDTIME", recendts);
+     query.bindValue(":CHANID", chanid);
+     query.bindValue(":STARTTIME", recstartts);
++    query.bindValue(":DUPLICATE", !prematurestop);
+ 
+     if (!query.exec())
+         MythDB::DBError("FinishedRecording update", query);
 diff -Naurp mythtv-0.23-release/libs/libmythtv/RTjpegN.h mythtv-0.23/libs/libmythtv/RTjpegN.h
 --- mythtv-0.23-release/libs/libmythtv/RTjpegN.h	2009-07-06 16:42:28.000000000 -0400
 +++ mythtv-0.23/libs/libmythtv/RTjpegN.h	2010-06-28 03:29:58.793477000 -0400
@@ -2926,7 +2956,18 @@ diff -Naurp mythtv-0.23-release/programs/mythtv-setup/main.cpp mythtv-0.23/progr
              ChannelScannerCLI scanner(doScanSaveOnly, scanInteractive);
 diff -Naurp mythtv-0.23-release/settings.pro mythtv-0.23/settings.pro
 --- mythtv-0.23-release/settings.pro	2010-03-26 09:36:07.000000000 -0400
-+++ mythtv-0.23/settings.pro	2010-05-11 10:29:50.223949000 -0400
++++ mythtv-0.23/settings.pro	2010-07-21 22:21:00.112292000 -0400
+@@ -24,8 +24,8 @@ isEmpty( LIBDIR ) {
+     LIBDIR = $${RUNPREFIX}/$${LIBDIRNAME}
+ }
+ 
+-LIBVERSION = 0.23
+-VERSION = 0.23.0
++LIBVERSION = 0.23.1
++VERSION = 0.23.1
+ 
+ isEmpty(TARGET_OS) : win32 {
+     CONFIG += mingw
 @@ -123,7 +123,7 @@ ALSA_LIBS = $$CONFIG_AUDIO_ALSA_LIBS
  JACK_LIBS = $$CONFIG_AUDIO_JACK_LIBS
  PULSE_LIBS = $$CONFIG_AUDIO_PULSE_LIBS
