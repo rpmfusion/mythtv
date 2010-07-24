@@ -9630,7 +9630,15 @@ diff -Naurp mythplugins-0.23-release/mythzoneminder/mythzoneminder/zmliveplayer.
  
 diff -Naurp mythplugins-0.23-release/settings.pro mythplugins-0.23/settings.pro
 --- mythplugins-0.23-release/settings.pro	2010-02-16 17:59:56.000000000 -0500
-+++ mythplugins-0.23/settings.pro	2010-05-11 11:29:36.773259000 -0400
++++ mythplugins-0.23/settings.pro	2010-07-21 22:21:00.112292000 -0400
+@@ -1,6 +1,6 @@
+ CONFIG += $$CCONFIG
+ 
+-LIBVERSION = 0.23
++LIBVERSION = 0.23.1
+ 
+ INCLUDEPATH += $${SYSROOT}$${PREFIX}/include
+ #INCLUDEPATH += /usr/include/cdda
 @@ -60,7 +60,7 @@ LOCAL_LIBDIR_X11 =
  }
  QMAKE_LIBDIR_X11 = 
