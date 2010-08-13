@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25413
+%define _svnrev r25638
 %define branch release-0-23-fixes
 
 #
@@ -77,11 +77,11 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.23
+Version: 0.23.1
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 8%{?dist}
+Release: 1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1449,6 +1449,9 @@ fi
 ################################################################################
 
 %changelog
+* Fri Aug 13 2010 Jarod Wilson <jarod@wilsonet.com> 0.23.1-1
+- Update to 0.23.1 release (plus a few minor svn fixes)
+
 * Fri Jul 23 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-8
 - Update to release-0-23-fixes branch, svn revision 25413
 
