@@ -44,11 +44,10 @@
 #
 # --without mytharchive
 # --without mythbrowser
-# --without mythflix
 # --without mythgallery
 # --without mythgame
-# --without mythmovies
 # --without mythmusic
+# --without mythnetvision
 # --without mythnews
 # --without mythvideo
 # --without mythweather
@@ -65,7 +64,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r23781
+%define _svnrev r25638
 %define branch trunk
 
 #
@@ -77,10 +76,10 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.23
+Version: 0.24
 %if "%{branch}" == "trunk"
-#Release: 0.1.svn.%{_svnrev}%{?dist}
-Release: 0.2.rc1%{?dist}
+Release: 0.1.svn.%{_svnrev}%{?dist}
+#Release: 0.2.rc1%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -116,10 +115,8 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 %define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
 %define with_mytharchive    %{?_without_mytharchive:    0} %{!?_without_mytharchive:     1}
 %define with_mythbrowser    %{?_without_mythbrowser:    0} %{!?_without_mythbrowser:     1}
-%define with_mythflix       %{?_without_mythflix:       0} %{!?_without_mythflix:        1}
 %define with_mythgallery    %{?_without_mythgallery:    0} %{!?_without_mythgallery:     1}
 %define with_mythgame       %{?_without_mythgame:       0} %{!?_without_mythgame:        1}
-%define with_mythmovies     %{?_without_mythmovies:     0} %{!?_without_mythmovies:      1}
 %define with_mythmusic      %{?_without_mythmusic:      0} %{!?_without_mythmusic:       1}
 %define with_mythnews       %{?_without_mythnews:       0} %{!?_without_mythnews:        1}
 %define with_mythvideo      %{?_without_mythvideo:      0} %{!?_without_mythvideo:       1}
@@ -238,10 +235,20 @@ BuildRequires: libvdpau-devel
 %if %{with_perl}
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Fcntl)
+BuildRequires:  perl(File::Copy)
+BuildRequires:  perl(Sys::Hostname)
+BuildRequires:  perl(DBI)
+BuildRequires:  perl(HTTP::Request)
+BuildRequires:  perl(Net::UPnP::QueryResponse)
+BuildRequires:  perl(Net::UPnP::ControlPoint)
 %endif
 
 %if %{with_python}
 BuildRequires:  python-devel
+BuildRequires:  MySQL-python
 %endif
 
 # Plugin Build Requirements
@@ -266,11 +273,7 @@ BuildRequires:  SDL-devel
 %if %{with_mythnews}
 %endif
 
-%if 0%{?fedora} >= 9
 BuildRequires: ncurses-devel
-%else
-BuildRequires: libtermcap-devel
-%endif
 
 %if %{with_mythvideo}
 Requires:       perl(XML::Simple)
@@ -278,14 +281,28 @@ Requires:       perl(XML::Simple)
 
 %if %{with_mythweather}
 Requires:       mythweather      >= %{version}
+BuildRequires:  perl(XML::Simple)
 Requires:       perl(XML::Simple)
 Requires:       perl(LWP::Simple)
+BuildRequires:  perl(DateTime::Format::ISO8601)
+Requires:       perl(DateTime::Format::ISO8601)
+BuildRequires:  perl(XML::XPath)
+Requires:       perl(XML::XPath)
+BuildRequires:  perl(Date::Manip)
+Requires:       perl(Date::Manip)
+BuildRequires:  perl(Image::Size)
+Requires:       perl(Image::Size)
+BuildRequires:  perl(SOAP::Lite)
+Requires:       perl(SOAP::Lite)
 %endif
 
 %if %{with_mythzoneminder}
 %endif
 
 %if %{with_mythnetvision}
+BuildRequires:  python-pycurl
+BuildRequires:  python-lxml
+BuildRequires:  python-oauth
 %endif
 
 %endif
@@ -593,7 +610,6 @@ Requires:  mythnews       = %{version}-%{release}
 Requires:  mythbrowser    = %{version}-%{release}
 Requires:  mytharchive    = %{version}-%{release}
 Requires:  mythzoneminder = %{version}-%{release}
-Requires:  mythmovies     = %{version}-%{release}
 Requires:  mythweb        = %{version}-%{release}
 Requires:  mythnetvision  = %{version}-%{release}
 
@@ -692,22 +708,6 @@ A game frontend (xmame, nes, snes, pc) for MythTV.
 
 %endif
 ################################################################################
-%if %{with_mythmovies}
-
-%package -n mythmovies
-Summary:   A module for MythTV for providing local show times and cinema listings
-Group:     Applications/Multimedia
-Requires:  mythtv-frontend-api = %{mythfeapiver}
-
-%description -n mythmovies
-MythZoneMinder is a plugin to provide show times and cinema listings
-based on Zip/Post code and a given radius. It uses external scripts to
-grab times and so can be used in any country so long as a script is
-written for a local data source. It ships with a grabber for the USA
-which uses the ignyte website.
-
-%endif
-################################################################################
 %if %{with_mythmusic}
 
 %package -n mythmusic
@@ -761,13 +761,13 @@ transcode package.
 %if %{with_mythweather}
 
 %package -n mythweather
-Summary:   A MythTV module that displays a weather forcast
+Summary:   A MythTV module that displays a weather forecast
 Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  perl(XML::SAX::Base)
 
 %description -n mythweather
-A MythTV module that displays a weather forcast.
+A MythTV module that displays a weather forecast.
 
 %endif
 ################################################################################
@@ -812,6 +812,10 @@ Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mythbrowser = %{version}-%{release}
 Requires:  python-MythTV = %{version}-%{release}
+Requires:  python-pycurl
+Requires:  python >= 2.5
+# Technically, it *does* require this... But its not in the RPM Fusion repos.
+#Requires:  flash-plugin
 
 %description -n mythnetvision
 A MythTV module that supports searching and browsing of Internet video
@@ -939,7 +943,7 @@ cd mythtv-%{version}
     --enable-libfftw3                           \
     --enable-x11 --x11-path=%{_includedir}      \
     --enable-xv                                 \
-    --enable-xvmc-vld --enable-xvmc-pro         \
+    --enable-xvmc-vld                           \
     --enable-opengl-video --enable-opengl-vsync \
     --enable-xrandr                             \
     --enable-lirc                               \
@@ -955,6 +959,9 @@ cd mythtv-%{version}
     --enable-libxvid                            \
 %if %{with_vdpau}
     --enable-vdpau				\
+%endif
+%if !%{with_xvmc}
+    --disable-xvmcw				\
 %endif
 %if %{with_directfb}
     --enable-directfb                           \
@@ -1023,8 +1030,6 @@ cd mythplugins-%{version}
         --libdir-name=%{_lib} \
     %if %{with_mytharchive}
         --enable-mytharchive \
-        --enable-create-dvd \
-        --enable-create-archive \
     %else
         --disable-mytharchive \
     %endif
@@ -1045,11 +1050,6 @@ cd mythplugins-%{version}
     %else
         --disable-mythgame \
     %endif
-    %if %{with_mythmovies}
-        --enable-mythmovies \
-    %else
-        --disable-mythmovies \
-    %endif
     %if %{with_mythmusic}
         --enable-mythmusic \
     %else
@@ -1062,8 +1062,6 @@ cd mythplugins-%{version}
     %endif
     %if %{with_mythvideo}
         --enable-mythvideo \
-        --enable-transcode \
-        --enable-vcd \
     %else
         --disable-mythvideo \
     %endif
@@ -1071,11 +1069,6 @@ cd mythplugins-%{version}
         --enable-mythweather \
     %else
         --disable-mythweather \
-    %endif
-    %if %{with_mythweb}
-        --enable-mythweb \
-    %else
-        --disable-mythweb \
     %endif
     %if %{with_mythzoneminder}
         --enable-mythzoneminder \
@@ -1086,11 +1079,11 @@ cd mythplugins-%{version}
         --enable-mythnetvision \
     %else
         --disable-mythnetvision \
-    %endif--enable-opengl \
+    %endif
+        --enable-opengl \
         --enable-libvisual \
         --enable-fftw \
-        --enable-sdl \
-        --enable-aac
+        --enable-sdl
 
     make %{?_smp_mflags}
 
@@ -1119,7 +1112,7 @@ cd mythtv-%{version}
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
 
 # Fix permissions on executable python bindings
-    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
+#    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
 
 # mysql.txt and other config/init files
     install -m 644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
@@ -1241,8 +1234,12 @@ fi
 %config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
 %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 %{_bindir}/mythcommflag
+%{_bindir}/mythpreviewgen
 %{_bindir}/mythtranscode
+%{_bindir}/mythwikiscripts
 %{_datadir}/mythtv/mythconverg*.pl
+%dir %{_datadir}/mythtv/locales
+%{_datadir}/mythtv/locales/*
 
 %files backend
 %defattr(-,root,root,-)
@@ -1257,6 +1254,8 @@ fi
 %config(noreplace) %{_sysconfdir}/sysconfig/mythbackend
 %config(noreplace) %{_sysconfdir}/logrotate.d/mythbackend
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
+%dir %{_datadir}/mythtv/internetcontent
+%{_datadir}/mythtv/internetcontent/*
 
 %files setup
 %defattr(-,root,root,-)
@@ -1284,11 +1283,14 @@ fi
 %dir %{_libdir}/mythtv/filters
 %{_libdir}/mythtv/filters/*
 %dir %{_libdir}/mythtv/plugins
-%{_datadir}/mythtv/*.ttf
 %dir %{_datadir}/mythtv/i18n
+%dir %{_datadir}/mythtv/fonts
+%{_datadir}/mythtv/fonts/*.ttf
 %{_datadir}/mythtv/i18n/mythfrontend_*.qm
 %{_datadir}/applications/*mythfrontend.desktop
 %{_datadir}/pixmaps/myth*.png
+%dir %{_datadir}/mythtv/metadata
+%{_datadir}/mythtv/metadata/*
 
 %files base-themes
 %defattr(-,root,root,-)
@@ -1323,6 +1325,7 @@ fi
 %files -n python-MythTV
 %defattr(-,root,root,-)
 %dir %{python_sitelib}/MythTV/
+%{_bindir}/mythpython
 %{python_sitelib}/MythTV/*
 %{python_sitelib}/MythTV-*.egg-info
 %endif
@@ -1374,8 +1377,8 @@ fi
 %dir %{_sysconfdir}/mythgame
 %config(noreplace) %{_sysconfdir}/mythgame/gamelist.xml
 %{_libdir}/mythtv/plugins/libmythgame.so
-%{_datadir}/mythtv/games
-%dir %{_datadir}/mythtv/games/xmame
+%dir %{_datadir}/mythtv/games
+%{_datadir}/mythtv/games/*
 %dir %{_datadir}/mame/screens
 %dir %{_datadir}/mame/flyers
 %{_datadir}/mythtv/game_settings.xml
@@ -1386,18 +1389,6 @@ fi
 #{_datadir}/mythtv/games/xmame
 #{_datadir}/mame/screens
 #{_datadir}/mame/flyers
-%endif
-
-%if %{with_mythmovies}
-%files -n mythmovies
-%defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythmovies/COPYING
-%doc mythplugins-%{version}/mythmovies/README
-%doc mythplugins-%{version}/mythmovies/TODO
-%{_bindir}/ignyte
-%{_datadir}/mythtv/themes/default/movies-ui.xml
-%{_libdir}/mythtv/plugins/libmythmovies.so
-%{_datadir}/mythtv/i18n/mythmovies_*.qm
 %endif
 
 %if %{with_mythmusic}
@@ -1475,9 +1466,11 @@ fi
 %doc mythplugins-%{version}/mythnetvision/AUTHORS
 %doc mythplugins-%{version}/mythnetvision/ChangeLog
 %doc mythplugins-%{version}/mythnetvision/README
+%{_bindir}/mythfillnetvision
 %{_libdir}/mythtv/plugins/libmythnetvision.so
 %{_datadir}/mythtv/mythnetvision
 %{_datadir}/mythtv/netvisionmenu.xml
+%{_datadir}/mythtv/i18n/mythnetvision_*.qm
 %endif
 
 %endif
@@ -1485,6 +1478,15 @@ fi
 ################################################################################
 
 %changelog
+* Fri Aug 13 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r25638
+- Update to svn trunk, revision 25638
+- Big resync with mythtv scm rpm spec, fixes a lot of build issues
+  that have cropped up from recent code churn
+
+* Thu Apr 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r23902
+- Update to svn trunk, revision 23902
+- Starts tracking 0.24-bound svn trunk, now that 0.23 has branched
+
 * Tue Mar 23 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.2.rc1
 - Update to svn trunk, revision 23781, aka MythTV 0.23 RC1 (more or less)
 
