@@ -64,7 +64,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25638
+%define _svnrev r25695
 %define branch trunk
 
 #
@@ -161,7 +161,12 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
+%if 0%{?fedora} >= 14
+BuildRequires:  qt-webkit-devel
+BuildRequires:  qt-devel >= 4.4
+%else
 BuildRequires:  qt4-devel >= 4.4
+%endif
 BuildRequires:  phonon-devel
 
 BuildRequires:  lm_sensors-devel
@@ -1478,6 +1483,10 @@ fi
 ################################################################################
 
 %changelog
+* Sun Aug 15 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r25695
+- Update to svn trunk, revision 25695
+- Account for qt/qt-webkit split on F14
+
 * Fri Aug 13 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r25638
 - Update to svn trunk, revision 25638
 - Big resync with mythtv scm rpm spec, fixes a lot of build issues
