@@ -1,90 +1,90 @@
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/perl/IO/Socket/INET/MythTV.pm mythtv-0.23.1/bindings/perl/IO/Socket/INET/MythTV.pm
---- mythtv-0.23.1-release/bindings/perl/IO/Socket/INET/MythTV.pm	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/bindings/perl/IO/Socket/INET/MythTV.pm	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/perl/IO/Socket/INET/MythTV.pm mythtv-0.23.1.new/bindings/perl/IO/Socket/INET/MythTV.pm
+--- mythtv-0.23.1.orig/bindings/perl/IO/Socket/INET/MythTV.pm	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/bindings/perl/IO/Socket/INET/MythTV.pm	2009-04-10 20:04:30.069718000 -0400
 @@ -3,8 +3,8 @@
  # A MythTV Socket class that extends IO::Socket::INET to include some
  # MythTV-specific data queries
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/bindings/perl/IO/Socket/INET/MythTV.pm $
 -# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/IO/Socket/INET/MythTV.pm $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/bindings/perl/IO/Socket/INET/MythTV.pm $
 +# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
  # @version   $Revision: 20349 $
  # @author    $Author: xris $
  # @copyright Silicon Mechanics
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/perl/MythTV/Channel.pm mythtv-0.23.1/bindings/perl/MythTV/Channel.pm
---- mythtv-0.23.1-release/bindings/perl/MythTV/Channel.pm	2010-05-23 12:42:23.000000000 -0400
-+++ mythtv-0.23.1/bindings/perl/MythTV/Channel.pm	2010-05-23 12:42:23.678567000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/perl/MythTV/Channel.pm mythtv-0.23.1.new/bindings/perl/MythTV/Channel.pm
+--- mythtv-0.23.1.orig/bindings/perl/MythTV/Channel.pm	2010-05-23 12:42:23.000000000 -0400
++++ mythtv-0.23.1.new/bindings/perl/MythTV/Channel.pm	2010-05-23 12:42:23.678567000 -0400
 @@ -3,8 +3,8 @@
  #
  # Object containing info about a particular MythTV channel.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/bindings/perl/MythTV/Channel.pm $
 -# @date      $Date: 2010-05-23 09:42:23 -0700 (Sun, 23 May 2010) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/Channel.pm $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/Channel.pm $
 +# @date      $Date: 2010-05-23 12:42:23 -0400 (Sun, 23 May 2010) $
  # @version   $Revision: 24810 $
  # @author    $Author: mdean $
  #
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/perl/MythTV/Program.pm mythtv-0.23.1/bindings/perl/MythTV/Program.pm
---- mythtv-0.23.1-release/bindings/perl/MythTV/Program.pm	2009-07-06 13:01:48.000000000 -0400
-+++ mythtv-0.23.1/bindings/perl/MythTV/Program.pm	2009-07-06 13:01:48.827558000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/perl/MythTV/Program.pm mythtv-0.23.1.new/bindings/perl/MythTV/Program.pm
+--- mythtv-0.23.1.orig/bindings/perl/MythTV/Program.pm	2009-07-06 13:01:48.000000000 -0400
++++ mythtv-0.23.1.new/bindings/perl/MythTV/Program.pm	2009-07-06 13:01:48.827558000 -0400
 @@ -3,8 +3,8 @@
  #
  # Object containing info about a particular MythTV program.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/bindings/perl/MythTV/Program.pm $
 -# @date      $Date: 2009-07-06 10:01:48 -0700 (Mon, 06 Jul 2009) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/Program.pm $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/Program.pm $
 +# @date      $Date: 2009-07-06 13:01:48 -0400 (Mon, 06 Jul 2009) $
  # @version   $Revision: 20795 $
  # @author    $Author: stuartm $
  #
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/perl/MythTV/Recording.pm mythtv-0.23.1/bindings/perl/MythTV/Recording.pm
---- mythtv-0.23.1-release/bindings/perl/MythTV/Recording.pm	2010-03-21 19:16:27.000000000 -0400
-+++ mythtv-0.23.1/bindings/perl/MythTV/Recording.pm	2010-03-21 19:16:27.821969000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/perl/MythTV/Recording.pm mythtv-0.23.1.new/bindings/perl/MythTV/Recording.pm
+--- mythtv-0.23.1.orig/bindings/perl/MythTV/Recording.pm	2010-03-21 19:16:27.000000000 -0400
++++ mythtv-0.23.1.new/bindings/perl/MythTV/Recording.pm	2010-03-21 19:16:27.821969000 -0400
 @@ -3,8 +3,8 @@
  #
  # Object containing info about a particular MythTV recording.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/bindings/perl/MythTV/Recording.pm $
 -# @date      $Date: 2010-03-21 16:16:27 -0700 (Sun, 21 Mar 2010) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/Recording.pm $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/Recording.pm $
 +# @date      $Date: 2010-03-21 19:16:27 -0400 (Sun, 21 Mar 2010) $
  # @version   $Revision: 23772 $
  # @author    $Author: beirdo $
  #
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/perl/MythTV/StorageGroup.pm mythtv-0.23.1/bindings/perl/MythTV/StorageGroup.pm
---- mythtv-0.23.1-release/bindings/perl/MythTV/StorageGroup.pm	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/bindings/perl/MythTV/StorageGroup.pm	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/perl/MythTV/StorageGroup.pm mythtv-0.23.1.new/bindings/perl/MythTV/StorageGroup.pm
+--- mythtv-0.23.1.orig/bindings/perl/MythTV/StorageGroup.pm	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/bindings/perl/MythTV/StorageGroup.pm	2009-04-10 20:04:30.069718000 -0400
 @@ -3,8 +3,8 @@
  #
  # Object containing info about a particular MythTV Storage Group.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/bindings/perl/MythTV/StorageGroup.pm $
 -# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/StorageGroup.pm $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV/StorageGroup.pm $
 +# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
  # @version   $Revision: 20349 $
  # @author    $Author: xris $
  #
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/perl/MythTV.pm mythtv-0.23.1/bindings/perl/MythTV.pm
---- mythtv-0.23.1-release/bindings/perl/MythTV.pm	2010-07-21 22:21:00.000000000 -0400
-+++ mythtv-0.23.1/bindings/perl/MythTV.pm	2010-07-21 22:21:00.112292000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/perl/MythTV.pm mythtv-0.23.1.new/bindings/perl/MythTV.pm
+--- mythtv-0.23.1.orig/bindings/perl/MythTV.pm	2010-07-21 22:21:00.000000000 -0400
++++ mythtv-0.23.1.new/bindings/perl/MythTV.pm	2010-07-21 22:21:00.112292000 -0400
 @@ -1,8 +1,8 @@
  #
  # MythTV bindings for perl.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/bindings/perl/MythTV.pm $
 -# @date      $Date: 2010-07-21 19:21:00 -0700 (Wed, 21 Jul 2010) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV.pm $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/bindings/perl/MythTV.pm $
 +# @date      $Date: 2010-07-21 22:21:00 -0400 (Wed, 21 Jul 2010) $
  # @version   $Revision: 25396 $
  # @author    $Author: gigem $
  #
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/MythTV/MythBase.py mythtv-0.23.1/bindings/python/MythTV/MythBase.py
---- mythtv-0.23.1-release/bindings/python/MythTV/MythBase.py	2010-05-04 20:45:58.000000000 -0400
-+++ mythtv-0.23.1/bindings/python/MythTV/MythBase.py	2010-07-30 01:30:44.653168000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/python/MythTV/MythBase.py mythtv-0.23.1.new/bindings/python/MythTV/MythBase.py
+--- mythtv-0.23.1.orig/bindings/python/MythTV/MythBase.py	2010-05-04 20:45:58.000000000 -0400
++++ mythtv-0.23.1.new/bindings/python/MythTV/MythBase.py	2010-07-30 01:30:44.653168000 -0400
 @@ -979,7 +979,7 @@ class MythDBBase( object ):
              for config_file in config_files:
                  dbconn.update({ 'DBHostName':None,  'DBName':None,
@@ -156,9 +156,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/MythTV/MythBase.
              self.path = self.settings[host][setting]
              if self.path is None:
                  raise MythDBError(MythError.DB_SETTING, setting, host)
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/MythTV/MythData.py mythtv-0.23.1/bindings/python/MythTV/MythData.py
---- mythtv-0.23.1-release/bindings/python/MythTV/MythData.py	2010-06-06 20:03:02.000000000 -0400
-+++ mythtv-0.23.1/bindings/python/MythTV/MythData.py	2010-07-30 01:30:44.653168000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/python/MythTV/MythData.py mythtv-0.23.1.new/bindings/python/MythTV/MythData.py
+--- mythtv-0.23.1.orig/bindings/python/MythTV/MythData.py	2010-06-06 20:03:02.000000000 -0400
++++ mythtv-0.23.1.new/bindings/python/MythTV/MythData.py	2010-08-27 00:25:02.776963000 -0400
 @@ -7,11 +7,11 @@ Provides data access classes for accessi
  from MythStatic import *
  from MythBase import *
@@ -182,7 +182,23 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/MythTV/MythData.
                          BACKEND_SEP.join(['-1',self.filename,self.sgroup])))
          if res.split(BACKEND_SEP)[0] != 'OK':
              raise MythError(MythError.PROTO_ANNOUNCE, self.host, self.port, res)
-@@ -1454,7 +1454,7 @@ class NetVisionGrabber( Grabber ):
+@@ -697,10 +697,13 @@ class Recorded( DBDataWrite ):
+                                   ('h','%I'),('H','%H'),('i','%M'),('s','%S'),
+                                   ('a','%p'),('A','%p') ):
+                 path = path.replace(pre+tag, self[data].strftime(format))
++        if self.originalairdate is None:
++            airdate = date(1,1,1)
++        else:
++            airdate = self.originalairdate
+         for (tag, format) in (('y','%y'),('Y','%Y'),('n','%m'),('m','%m'),
+                               ('j','%d'),('d','%d')):
+-            path = path.replace('%o'+tag,
+-                    self['originalairdate'].strftime(format))
++            path = path.replace('%o'+tag, airdate.strftime(format))
+         path = path.replace('%-','-')
+         path = path.replace('%%','%')
+         path += '.'+self['basename'].split('.')[-1]
+@@ -1454,7 +1457,7 @@ class NetVisionGrabber( Grabber ):
                                  NVSCHEMA_VERSION, 'NetVision')
          c = db.cursor(self.log)
          log = MythLog('Python MythNetVision Grabber', db=db)
@@ -191,7 +207,7 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/MythTV/MythData.
          glist = []
          for t in types.split(','):
              c.execute("""SELECT name,commandline
-@@ -1478,7 +1478,7 @@ class NetVisionGrabber( Grabber ):
+@@ -1478,7 +1481,7 @@ class NetVisionGrabber( Grabber ):
              if c.execute("""SELECT commandline
                              FROM netvision%sgrabbers
                              WHERE name=%%s AND host=%%s""" % type,
@@ -200,7 +216,7 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/MythTV/MythData.
                  Grabber.__init__(path=c.fetchone()[0], db=db)
                  c.close()
              else:
-@@ -1495,10 +1495,10 @@ class NetVisionGrabber( Grabber ):
+@@ -1495,10 +1498,10 @@ class NetVisionGrabber( Grabber ):
      def setUpdated(self):
          if self.type is not 'tree':
              raise MythError('Can only update tree-type grabbers')
@@ -213,9 +229,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/MythTV/MythData.
          c.close()
  
  
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/MythTV/MythFunc.py mythtv-0.23.1/bindings/python/MythTV/MythFunc.py
---- mythtv-0.23.1-release/bindings/python/MythTV/MythFunc.py	2010-05-23 15:52:40.000000000 -0400
-+++ mythtv-0.23.1/bindings/python/MythTV/MythFunc.py	2010-07-30 01:30:44.653168000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/python/MythTV/MythFunc.py mythtv-0.23.1.new/bindings/python/MythTV/MythFunc.py
+--- mythtv-0.23.1.orig/bindings/python/MythTV/MythFunc.py	2010-05-23 15:52:40.000000000 -0400
++++ mythtv-0.23.1.new/bindings/python/MythTV/MythFunc.py	2010-07-30 01:30:44.653168000 -0400
 @@ -231,7 +231,7 @@ class MythBE( FileOps ):
          if id is not None:
              cmd += ' %d' % id
@@ -234,9 +250,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/MythTV/MythFunc.
                  self.backendCommand('FREE_TUNER %d' % id)
              else:
                  myth = MythTV(res)
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/scripts/mythpython mythtv-0.23.1/bindings/python/scripts/mythpython
---- mythtv-0.23.1-release/bindings/python/scripts/mythpython	2010-07-17 03:13:11.000000000 -0400
-+++ mythtv-0.23.1/bindings/python/scripts/mythpython	2010-07-25 12:06:11.328833000 -0400
+diff -Naurp mythtv-0.23.1.orig/bindings/python/scripts/mythpython mythtv-0.23.1.new/bindings/python/scripts/mythpython
+--- mythtv-0.23.1.orig/bindings/python/scripts/mythpython	2010-07-17 03:13:11.000000000 -0400
++++ mythtv-0.23.1.new/bindings/python/scripts/mythpython	2010-07-25 12:06:11.328833000 -0400
 @@ -5,12 +5,12 @@ import sys
  
  if __name__ == '__main__':
@@ -266,9 +282,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/bindings/python/scripts/mythpyth
      banner = 'MythTV Python interactive shell.'
      import code
      try:
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/configure mythtv-0.23.1/configure
---- mythtv-0.23.1-release/configure	2010-06-28 02:48:30.000000000 -0400
-+++ mythtv-0.23.1/configure	2010-08-08 12:15:02.453308000 -0400
+diff -Naurp mythtv-0.23.1.orig/configure mythtv-0.23.1.new/configure
+--- mythtv-0.23.1.orig/configure	2010-06-28 02:48:30.000000000 -0400
++++ mythtv-0.23.1.new/configure	2010-08-28 09:59:15.261983000 -0400
 @@ -1664,6 +1664,7 @@ opengl_deps_any="agl_h GL_gl_h darwin wi
  opengl_video_deps="opengl"
  opengl_vsync_deps="opengl"
@@ -277,9 +293,17 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/configure mythtv-0.23.1/configur
  xrandr_deps="x11"
  xv_deps="x11"
  xvmc_deps="xv X11_extensions_XvMClib_h"
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/contrib/config_files/lirc/lircrc.native.example.mceusb2 mythtv-0.23.1/contrib/config_files/lirc/lircrc.native.example.mceusb2
---- mythtv-0.23.1-release/contrib/config_files/lirc/lircrc.native.example.mceusb2	2008-03-08 23:30:22.000000000 -0500
-+++ mythtv-0.23.1/contrib/config_files/lirc/lircrc.native.example.mceusb2	2008-03-08 23:30:22.515246000 -0500
+@@ -4640,6 +4641,7 @@ fi
+ cat - > config/Makefile <<END
+ 
+ all:
++check:
+ qmake_all:
+ 	\$(NONE)
+ 
+diff -Naurp mythtv-0.23.1.orig/contrib/config_files/lirc/lircrc.native.example.mceusb2 mythtv-0.23.1.new/contrib/config_files/lirc/lircrc.native.example.mceusb2
+--- mythtv-0.23.1.orig/contrib/config_files/lirc/lircrc.native.example.mceusb2	2008-03-08 23:30:22.000000000 -0500
++++ mythtv-0.23.1.new/contrib/config_files/lirc/lircrc.native.example.mceusb2	2008-03-08 23:30:22.515246000 -0500
 @@ -2,7 +2,7 @@
  # lircrc config file for the Microsoft Media Center Edition Remote, model 1039
  #
@@ -289,23 +313,23 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/contrib/config_files/lirc/lircrc
  # @version   $Revision: 16474 $
  # @author    $Author: kormoc $
  #
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/contrib/icons/master_iconmap/channel_icons.pl mythtv-0.23.1/contrib/icons/master_iconmap/channel_icons.pl
---- mythtv-0.23.1-release/contrib/icons/master_iconmap/channel_icons.pl	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/contrib/icons/master_iconmap/channel_icons.pl	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/contrib/icons/master_iconmap/channel_icons.pl mythtv-0.23.1.new/contrib/icons/master_iconmap/channel_icons.pl
+--- mythtv-0.23.1.orig/contrib/icons/master_iconmap/channel_icons.pl	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/contrib/icons/master_iconmap/channel_icons.pl	2009-04-10 20:04:30.069718000 -0400
 @@ -5,8 +5,8 @@
  # Also does searches for artwork URLs based on callsign or xmltvid, or displays
  # the master iconmap xml file from services.mythtv.org.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/contrib/icons/master_iconmap/channel_icons.pl $
 -# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/icons/master_iconmap/channel_icons.pl $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/contrib/icons/master_iconmap/channel_icons.pl $
 +# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
  # @version   $Revision: 20349 $
  # @author    $Author: xris $
  # @copyright MythTV
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/contrib/imports/mirobridge/mirobridge.py mythtv-0.23.1/contrib/imports/mirobridge/mirobridge.py
---- mythtv-0.23.1-release/contrib/imports/mirobridge/mirobridge.py	2010-05-06 13:00:03.000000000 -0400
-+++ mythtv-0.23.1/contrib/imports/mirobridge/mirobridge.py	2010-07-30 01:30:44.653168000 -0400
+diff -Naurp mythtv-0.23.1.orig/contrib/imports/mirobridge/mirobridge.py mythtv-0.23.1.new/contrib/imports/mirobridge/mirobridge.py
+--- mythtv-0.23.1.orig/contrib/imports/mirobridge/mirobridge.py	2010-05-06 13:00:03.000000000 -0400
++++ mythtv-0.23.1.new/contrib/imports/mirobridge/mirobridge.py	2010-07-30 01:30:44.653168000 -0400
 @@ -297,7 +297,6 @@ try:
      mythdb = None
      mythvideo = None
@@ -325,65 +349,65 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/contrib/imports/mirobridge/mirob
          mythbeconn = MythBE(backend=localhostname, db=mythdb)
      except MythError, e:
          logger.critical(u'MiroBridge must be run on a MythTV backend, error(%s)' % e.args[0])
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/contrib/maintenance/flush_deleted_recgroup.pl mythtv-0.23.1/contrib/maintenance/flush_deleted_recgroup.pl
---- mythtv-0.23.1-release/contrib/maintenance/flush_deleted_recgroup.pl	2009-10-05 18:36:40.000000000 -0400
-+++ mythtv-0.23.1/contrib/maintenance/flush_deleted_recgroup.pl	2009-10-05 18:36:40.691937000 -0400
+diff -Naurp mythtv-0.23.1.orig/contrib/maintenance/flush_deleted_recgroup.pl mythtv-0.23.1.new/contrib/maintenance/flush_deleted_recgroup.pl
+--- mythtv-0.23.1.orig/contrib/maintenance/flush_deleted_recgroup.pl	2009-10-05 18:36:40.000000000 -0400
++++ mythtv-0.23.1.new/contrib/maintenance/flush_deleted_recgroup.pl	2009-10-05 18:36:40.691937000 -0400
 @@ -2,8 +2,8 @@
  #
  # Tell MythTV to truly delete all recordings in the "Deleted" recgroup
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/contrib/maintenance/flush_deleted_recgroup.pl $
 -# @date      $Date: 2009-10-05 15:36:40 -0700 (Mon, 05 Oct 2009) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/maintenance/flush_deleted_recgroup.pl $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/contrib/maintenance/flush_deleted_recgroup.pl $
 +# @date      $Date: 2009-10-05 18:36:40 -0400 (Mon, 05 Oct 2009) $
  # @version   $Revision: 22260 $
  # @author    $Author: mdean $
  #
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/contrib/maintenance/optimize_mythdb.pl mythtv-0.23.1/contrib/maintenance/optimize_mythdb.pl
---- mythtv-0.23.1-release/contrib/maintenance/optimize_mythdb.pl	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/contrib/maintenance/optimize_mythdb.pl	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/contrib/maintenance/optimize_mythdb.pl mythtv-0.23.1.new/contrib/maintenance/optimize_mythdb.pl
+--- mythtv-0.23.1.orig/contrib/maintenance/optimize_mythdb.pl	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/contrib/maintenance/optimize_mythdb.pl	2009-04-10 20:04:30.069718000 -0400
 @@ -3,8 +3,8 @@
  # Connects to the mythtv database and repairs/optimizes the tables that it
  # finds.  Suggested use is to cron it to run once per day.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/contrib/maintenance/optimize_mythdb.pl $
 -# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/maintenance/optimize_mythdb.pl $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/contrib/maintenance/optimize_mythdb.pl $
 +# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
  # @version   $Revision: 20349 $
  # @author    $Author: xris $
  # @license   GPL
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/contrib/user_jobs/firewire_primer.pl mythtv-0.23.1/contrib/user_jobs/firewire_primer.pl
---- mythtv-0.23.1-release/contrib/user_jobs/firewire_primer.pl	2009-10-22 12:46:34.000000000 -0400
-+++ mythtv-0.23.1/contrib/user_jobs/firewire_primer.pl	2009-10-22 12:46:34.011528000 -0400
+diff -Naurp mythtv-0.23.1.orig/contrib/user_jobs/firewire_primer.pl mythtv-0.23.1.new/contrib/user_jobs/firewire_primer.pl
+--- mythtv-0.23.1.orig/contrib/user_jobs/firewire_primer.pl	2009-10-22 12:46:34.000000000 -0400
++++ mythtv-0.23.1.new/contrib/user_jobs/firewire_primer.pl	2009-10-22 12:46:34.011528000 -0400
 @@ -9,8 +9,8 @@
  # hardware, failed marriages due to MythTV not recording your wife's favorite
  # show, etc.
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/contrib/user_jobs/firewire_primer.pl $
 -# @date      $Date: 2009-10-22 09:46:34 -0700 (Thu, 22 Oct 2009) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/user_jobs/firewire_primer.pl $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/contrib/user_jobs/firewire_primer.pl $
 +# @date      $Date: 2009-10-22 12:46:34 -0400 (Thu, 22 Oct 2009) $
  # @version   $Revision: 22568 $
  # @author    $Author: robertm $
  # @license   GPL
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/contrib/user_jobs/mythlink.pl mythtv-0.23.1/contrib/user_jobs/mythlink.pl
---- mythtv-0.23.1-release/contrib/user_jobs/mythlink.pl	2010-02-04 22:11:23.000000000 -0500
-+++ mythtv-0.23.1/contrib/user_jobs/mythlink.pl	2010-02-04 22:11:23.536986000 -0500
+diff -Naurp mythtv-0.23.1.orig/contrib/user_jobs/mythlink.pl mythtv-0.23.1.new/contrib/user_jobs/mythlink.pl
+--- mythtv-0.23.1.orig/contrib/user_jobs/mythlink.pl	2010-02-04 22:11:23.000000000 -0500
++++ mythtv-0.23.1.new/contrib/user_jobs/mythlink.pl	2010-02-04 22:11:23.536986000 -0500
 @@ -6,8 +6,8 @@
  # Automatically detects database settings from mysql.txt, and loads
  # the mythtv recording directory from the database (code from nuvexport).
  #
 -# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/contrib/user_jobs/mythlink.pl $
 -# @date      $Date: 2010-02-04 19:11:23 -0800 (Thu, 04 Feb 2010) $
-+# @url       $URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/contrib/user_jobs/mythlink.pl $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/contrib/user_jobs/mythlink.pl $
 +# @date      $Date: 2010-02-04 22:11:23 -0500 (Thu, 04 Feb 2010) $
  # @version   $Revision: 23479 $
  # @author    $Author: mdean $
  # @license   GPL
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/index.html mythtv-0.23.1/docs/index.html
---- mythtv-0.23.1-release/docs/index.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/index.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/index.html mythtv-0.23.1.new/docs/index.html
+--- mythtv-0.23.1.orig/docs/index.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/index.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -420,9 +444,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/index.html mythtv-0.23.1/do
  </UL>
  <P>
  <H2><A NAME="toc24">24.</A> <A HREF="mythtv-HOWTO-24.html">Example Configurations.</A></H2>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-10.html mythtv-0.23.1/docs/mythtv-HOWTO-10.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-10.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-10.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-10.html mythtv-0.23.1.new/docs/mythtv-HOWTO-10.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-10.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-10.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -432,9 +456,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-10.html mythtv
   <TITLE>Installing and using MythTV: Configuring mythfrontend.</TITLE>
   <LINK HREF="mythtv-HOWTO-11.html" REL=next>
   <LINK HREF="mythtv-HOWTO-9.html" REL=previous>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-11.html mythtv-0.23.1/docs/mythtv-HOWTO-11.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-11.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-11.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-11.html mythtv-0.23.1.new/docs/mythtv-HOWTO-11.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-11.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-11.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -539,9 +563,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-11.html mythtv
  $ qmake myththemes.pro
  $ su -
  # make install
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-12.html mythtv-0.23.1/docs/mythtv-HOWTO-12.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-12.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-12.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-12.html mythtv-0.23.1.new/docs/mythtv-HOWTO-12.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-12.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-12.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -568,9 +592,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-12.html mythtv
  <P>For example, the 'program.closecaptioned' flag can be used in a
  similar way as the 'program.hdtv' flag.</P>
  <P>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-13.html mythtv-0.23.1/docs/mythtv-HOWTO-13.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-13.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-13.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-13.html mythtv-0.23.1.new/docs/mythtv-HOWTO-13.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-13.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-13.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -609,9 +633,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-13.html mythtv
  $ ./configure --disable-all --enable-opengl --enable-mythgallery --enable-exif --enable-mythmusic --enable-fft
  $ qmake mythplugins.pro
  $ make
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-14.html mythtv-0.23.1/docs/mythtv-HOWTO-14.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-14.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-14.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-14.html mythtv-0.23.1.new/docs/mythtv-HOWTO-14.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-14.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-14.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -630,9 +654,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-14.html mythtv
  $ su
  # mkdir /var/www/html/mythweb
  # cp -r . /var/www/html/mythweb
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-15.html mythtv-0.23.1/docs/mythtv-HOWTO-15.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-15.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-15.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-15.html mythtv-0.23.1.new/docs/mythtv-HOWTO-15.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-15.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-15.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -651,9 +675,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-15.html mythtv
  $ ./configure --disable-all --enable-opengl --enable-mythgallery
  $ qmake mythplugins.pro
  $ make
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-16.html mythtv-0.23.1/docs/mythtv-HOWTO-16.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-16.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-16.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-16.html mythtv-0.23.1.new/docs/mythtv-HOWTO-16.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-16.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-16.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -746,9 +770,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-16.html mythtv
  </PRE>
  </CODE></BLOCKQUOTE>
  </P>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-17.html mythtv-0.23.1/docs/mythtv-HOWTO-17.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-17.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-17.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-17.html mythtv-0.23.1.new/docs/mythtv-HOWTO-17.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-17.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-17.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -781,9 +805,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-17.html mythtv
  $ ./configure --disable-all --enable-mythmusic --enable-fftw --enable-sdl --enable-aac
  $ qmake mythplugins.pro
  $ make
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-18.html mythtv-0.23.1/docs/mythtv-HOWTO-18.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-18.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-18.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-18.html mythtv-0.23.1.new/docs/mythtv-HOWTO-18.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-18.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-18.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -802,9 +826,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-18.html mythtv
  $ ./configure --disable-all --enable-mythweather
  $ qmake mythplugins.pro
  $ make
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-19.html mythtv-0.23.1/docs/mythtv-HOWTO-19.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-19.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-19.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-19.html mythtv-0.23.1.new/docs/mythtv-HOWTO-19.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-19.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-19.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -823,9 +847,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-19.html mythtv
  $ ./configure --disable-all --enable-mythvideo
  $ qmake mythplugins.pro
  $ make
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-1.html mythtv-0.23.1/docs/mythtv-HOWTO-1.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-1.html	2009-10-12 22:02:50.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-1.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-1.html mythtv-0.23.1.new/docs/mythtv-HOWTO-1.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-1.html	2009-10-12 22:02:50.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-1.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -856,9 +880,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-1.html mythtv-
  guarantee that anything on the wishlist will ever get code written to
  implement it.</P>
  <P>If a developer closes out your bug, it's likely you didn't provide enough
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-20.html mythtv-0.23.1/docs/mythtv-HOWTO-20.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-20.html	2009-10-12 22:02:50.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-20.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-20.html mythtv-0.23.1.new/docs/mythtv-HOWTO-20.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-20.html	2009-10-12 22:02:50.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-20.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -868,9 +892,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-20.html mythtv
   <TITLE>Installing and using MythTV: MythDVD.</TITLE>
   <LINK HREF="mythtv-HOWTO-21.html" REL=next>
   <LINK HREF="mythtv-HOWTO-19.html" REL=previous>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-21.html mythtv-0.23.1/docs/mythtv-HOWTO-21.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-21.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-21.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-21.html mythtv-0.23.1.new/docs/mythtv-HOWTO-21.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-21.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-21.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -889,9 +913,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-21.html mythtv
  $ ./configure --disable-all --enable-mythnews
  $ qmake mythplugins.pro
  $ make
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-22.html mythtv-0.23.1/docs/mythtv-HOWTO-22.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-22.html	2009-10-12 22:02:50.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-22.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-22.html mythtv-0.23.1.new/docs/mythtv-HOWTO-22.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-22.html	2009-10-12 22:02:50.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-22.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -919,9 +943,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-22.html mythtv
  more information.</P>
  
  <H3>Mythweb is showing a db_open error when I connect to it</H3>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-23.html mythtv-0.23.1/docs/mythtv-HOWTO-23.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-23.html	2009-10-12 22:02:50.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-23.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-23.html mythtv-0.23.1.new/docs/mythtv-HOWTO-23.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-23.html	2009-10-12 22:02:50.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-23.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1033,9 +1057,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-23.html mythtv
  </H2>
  
  <P>Commercial flagging can be CPU intensive.  By default, the backend that
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-24.html mythtv-0.23.1/docs/mythtv-HOWTO-24.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-24.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-24.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-24.html mythtv-0.23.1.new/docs/mythtv-HOWTO-24.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-24.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-24.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1070,9 +1094,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-24.html mythtv
  higher I/O rates than JFS, albeit at a higher CPU loading.  This may cause
  issues if you do not have the spare CPU capacity to handle XFS, potentially
  leading to dropped frames.</P>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-2.html mythtv-0.23.1/docs/mythtv-HOWTO-2.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-2.html	2009-10-12 22:02:50.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-2.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-2.html mythtv-0.23.1.new/docs/mythtv-HOWTO-2.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-2.html	2009-10-12 22:02:50.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-2.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1082,9 +1106,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-2.html mythtv-
   <TITLE>Installing and using MythTV: Introduction.</TITLE>
   <LINK HREF="mythtv-HOWTO-3.html" REL=next>
   <LINK HREF="mythtv-HOWTO-1.html" REL=previous>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-3.html mythtv-0.23.1/docs/mythtv-HOWTO-3.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-3.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-3.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-3.html mythtv-0.23.1.new/docs/mythtv-HOWTO-3.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-3.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-3.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1150,9 +1174,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-3.html mythtv-
  
  <H3>External Adapters</H3>
  
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-4.html mythtv-0.23.1/docs/mythtv-HOWTO-4.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-4.html	2009-10-12 22:02:50.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-4.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-4.html mythtv-0.23.1.new/docs/mythtv-HOWTO-4.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-4.html	2009-10-12 22:02:50.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-4.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1162,9 +1186,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-4.html mythtv-
   <TITLE>Installing and using MythTV: System Configuration Requirements for Compiling MythTV. </TITLE>
   <LINK HREF="mythtv-HOWTO-5.html" REL=next>
   <LINK HREF="mythtv-HOWTO-3.html" REL=previous>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-5.html mythtv-0.23.1/docs/mythtv-HOWTO-5.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-5.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-5.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-5.html mythtv-0.23.1.new/docs/mythtv-HOWTO-5.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-5.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-5.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1215,9 +1239,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-5.html mythtv-
  $ ./configure
  </PRE>
  </CODE></BLOCKQUOTE>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-6.html mythtv-0.23.1/docs/mythtv-HOWTO-6.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-6.html	2009-10-12 22:02:50.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-6.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-6.html mythtv-0.23.1.new/docs/mythtv-HOWTO-6.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-6.html	2009-10-12 22:02:50.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-6.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1236,9 +1260,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-6.html mythtv-
  </FIGURE>
  </P>
  <H3><A NAME="modify_perm_mysql"></A> Modifying access to the MySQL database for multiple systems </H3>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-7.html mythtv-0.23.1/docs/mythtv-HOWTO-7.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-7.html	2009-10-12 22:02:50.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-7.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-7.html mythtv-0.23.1.new/docs/mythtv-HOWTO-7.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-7.html	2009-10-12 22:02:50.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-7.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1248,9 +1272,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-7.html mythtv-
   <TITLE>Installing and using MythTV: Configuring Sound.</TITLE>
   <LINK HREF="mythtv-HOWTO-8.html" REL=next>
   <LINK HREF="mythtv-HOWTO-6.html" REL=previous>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-8.html mythtv-0.23.1/docs/mythtv-HOWTO-8.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-8.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-8.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-8.html mythtv-0.23.1.new/docs/mythtv-HOWTO-8.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-8.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-8.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1269,9 +1293,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-8.html mythtv-
  $ cp lircrc.example ~/.lircrc
  </PRE>
  </CODE></BLOCKQUOTE>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-9.html mythtv-0.23.1/docs/mythtv-HOWTO-9.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-9.html	2010-03-09 10:02:26.000000000 -0500
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-9.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-9.html mythtv-0.23.1.new/docs/mythtv-HOWTO-9.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-9.html	2010-03-09 10:02:26.000000000 -0500
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-9.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1308,9 +1332,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-9.html mythtv-
  <BLOCKQUOTE><CODE>
  <PRE>
  $ mythbackend --help
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO.html mythtv-0.23.1/docs/mythtv-HOWTO.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO.html mythtv-0.23.1.new/docs/mythtv-HOWTO.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,7 +1,7 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -1347,9 +1371,10 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO.html mythtv-0.
  </UL>
  <P>
  <H2><A NAME="toc24">24.</A> <A HREF="mythtv-HOWTO-24.html">Example Configurations.</A></H2>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO.sgml mythtv-0.23.1/docs/mythtv-HOWTO.sgml
---- mythtv-0.23.1-release/docs/mythtv-HOWTO.sgml	2010-04-05 22:34:54.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO.sgml	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO.pdf mythtv-0.23.1.new/docs/mythtv-HOWTO.pdf
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO.sgml mythtv-0.23.1.new/docs/mythtv-HOWTO.sgml
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO.sgml	2010-04-05 22:34:54.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO.sgml	2010-08-10 13:58:22.484713000 -0400
 @@ -3,7 +3,7 @@
  <title>Installing and using MythTV
  <author>Robert Kulagowski, <url url="mailto:rkulagow@rocketmail.com"
@@ -1834,9 +1859,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO.sgml mythtv-0.
  -->
  
  <!--
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-singlehtml.html mythtv-0.23.1/docs/mythtv-HOWTO-singlehtml.html
---- mythtv-0.23.1-release/docs/mythtv-HOWTO-singlehtml.html	2009-10-12 22:20:40.000000000 -0400
-+++ mythtv-0.23.1/docs/mythtv-HOWTO-singlehtml.html	2010-08-10 13:58:22.484713000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-singlehtml.html mythtv-0.23.1.new/docs/mythtv-HOWTO-singlehtml.html
+--- mythtv-0.23.1.orig/docs/mythtv-HOWTO-singlehtml.html	2009-10-12 22:20:40.000000000 -0400
++++ mythtv-0.23.1.new/docs/mythtv-HOWTO-singlehtml.html	2010-08-10 13:58:22.484713000 -0400
 @@ -1,14 +1,14 @@
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
  <HTML>
@@ -2454,9 +2479,10 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/docs/mythtv-HOWTO-singlehtml.htm
  higher I/O rates than JFS, albeit at a higher CPU loading.  This may cause
  issues if you do not have the spare CPU capacity to handle XFS, potentially
  leading to dropped frames.</P>
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/AAFilter.cpp mythtv-0.23.1/libs/libmythsoundtouch/AAFilter.cpp
---- mythtv-0.23.1-release/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO.txt mythtv-0.23.1.new/docs/mythtv-HOWTO.txt
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/AAFilter.cpp mythtv-0.23.1.new/libs/libmythsoundtouch/AAFilter.cpp
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.069718000 -0400
 @@ -12,7 +12,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2466,9 +2492,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/AAFilter.
  // File revision : $Revision: 20349 $
  //
  // $Id: AAFilter.cpp 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/AAFilter.h mythtv-0.23.1/libs/libmythsoundtouch/AAFilter.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/AAFilter.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/AAFilter.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/AAFilter.h mythtv-0.23.1.new/libs/libmythsoundtouch/AAFilter.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/AAFilter.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/AAFilter.h	2009-04-10 20:04:30.069718000 -0400
 @@ -13,7 +13,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2478,9 +2504,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/AAFilter.
  // File revision : $Revision: 20349 $
  //
  // $Id: AAFilter.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/BPMDetect.h mythtv-0.23.1/libs/libmythsoundtouch/BPMDetect.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/BPMDetect.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/BPMDetect.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/BPMDetect.h mythtv-0.23.1.new/libs/libmythsoundtouch/BPMDetect.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/BPMDetect.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/BPMDetect.h	2009-04-10 20:04:30.069718000 -0400
 @@ -26,7 +26,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2490,9 +2516,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/BPMDetect
  // File revision : $Revision: 20349 $
  //
  // $Id: BPMDetect.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/cpu_detect.h mythtv-0.23.1/libs/libmythsoundtouch/cpu_detect.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/cpu_detect.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/cpu_detect.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/cpu_detect.h mythtv-0.23.1.new/libs/libmythsoundtouch/cpu_detect.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/cpu_detect.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/cpu_detect.h	2009-04-10 20:04:30.069718000 -0400
 @@ -12,7 +12,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2502,9 +2528,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/cpu_detec
  // File revision : $Revision: 20349 $
  //
  // $Id: cpu_detect.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp mythtv-0.23.1/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp
---- mythtv-0.23.1-release/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp	2009-07-06 16:42:28.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp	2009-07-06 16:42:28.950839000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp mythtv-0.23.1.new/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp	2009-07-06 16:42:28.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp	2009-07-06 16:42:28.950839000 -0400
 @@ -12,7 +12,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2514,9 +2540,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/cpu_detec
  // File revision : $Revision: 20797 $
  //
  // $Id: cpu_detect_x86_gcc.cpp 20797 2009-07-06 20:42:28Z janne $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIFOSampleBuffer.cpp mythtv-0.23.1/libs/libmythsoundtouch/FIFOSampleBuffer.cpp
---- mythtv-0.23.1-release/libs/libmythsoundtouch/FIFOSampleBuffer.cpp	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/FIFOSampleBuffer.cpp	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/FIFOSampleBuffer.cpp mythtv-0.23.1.new/libs/libmythsoundtouch/FIFOSampleBuffer.cpp
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/FIFOSampleBuffer.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/FIFOSampleBuffer.cpp	2009-04-10 20:04:30.069718000 -0400
 @@ -15,7 +15,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2526,9 +2552,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIFOSampl
  // File revision : $Revision: 20349 $
  //
  // $Id: FIFOSampleBuffer.cpp 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIFOSampleBuffer.h mythtv-0.23.1/libs/libmythsoundtouch/FIFOSampleBuffer.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/FIFOSampleBuffer.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/FIFOSampleBuffer.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/FIFOSampleBuffer.h mythtv-0.23.1.new/libs/libmythsoundtouch/FIFOSampleBuffer.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/FIFOSampleBuffer.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/FIFOSampleBuffer.h	2009-04-10 20:04:30.069718000 -0400
 @@ -15,7 +15,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2538,9 +2564,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIFOSampl
  // File revision : $Revision: 20349 $
  //
  // $Id: FIFOSampleBuffer.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIFOSamplePipe.h mythtv-0.23.1/libs/libmythsoundtouch/FIFOSamplePipe.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/FIFOSamplePipe.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/FIFOSamplePipe.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/FIFOSamplePipe.h mythtv-0.23.1.new/libs/libmythsoundtouch/FIFOSamplePipe.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/FIFOSamplePipe.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/FIFOSamplePipe.h	2009-04-10 20:04:30.069718000 -0400
 @@ -17,7 +17,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2550,9 +2576,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIFOSampl
  // File revision : $Revision: 20349 $
  //
  // $Id: FIFOSamplePipe.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIRFilter.cpp mythtv-0.23.1/libs/libmythsoundtouch/FIRFilter.cpp
---- mythtv-0.23.1-release/libs/libmythsoundtouch/FIRFilter.cpp	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/FIRFilter.cpp	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/FIRFilter.cpp mythtv-0.23.1.new/libs/libmythsoundtouch/FIRFilter.cpp
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/FIRFilter.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/FIRFilter.cpp	2009-04-10 20:04:30.069718000 -0400
 @@ -11,7 +11,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2562,9 +2588,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIRFilter
  // File revision : $Revision: 20349 $
  //
  // $Id: FIRFilter.cpp 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIRFilter.h mythtv-0.23.1/libs/libmythsoundtouch/FIRFilter.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/FIRFilter.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/FIRFilter.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/FIRFilter.h mythtv-0.23.1.new/libs/libmythsoundtouch/FIRFilter.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/FIRFilter.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/FIRFilter.h	2009-04-10 20:04:30.069718000 -0400
 @@ -11,7 +11,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2574,9 +2600,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/FIRFilter
  // File revision : $Revision: 20349 $
  //
  // $Id: FIRFilter.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/mmx_gcc.cpp mythtv-0.23.1/libs/libmythsoundtouch/mmx_gcc.cpp
---- mythtv-0.23.1-release/libs/libmythsoundtouch/mmx_gcc.cpp	2009-07-06 16:42:28.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/mmx_gcc.cpp	2009-07-06 16:42:28.950839000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/mmx_gcc.cpp mythtv-0.23.1.new/libs/libmythsoundtouch/mmx_gcc.cpp
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/mmx_gcc.cpp	2009-07-06 16:42:28.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/mmx_gcc.cpp	2009-07-06 16:42:28.950839000 -0400
 @@ -15,7 +15,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2586,9 +2612,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/mmx_gcc.c
  // File revision : $Revision: 20797 $
  //
  // $Id: mmx_gcc.cpp 20797 2009-07-06 20:42:28Z janne $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/RateTransposer.cpp mythtv-0.23.1/libs/libmythsoundtouch/RateTransposer.cpp
---- mythtv-0.23.1-release/libs/libmythsoundtouch/RateTransposer.cpp	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/RateTransposer.cpp	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/RateTransposer.cpp mythtv-0.23.1.new/libs/libmythsoundtouch/RateTransposer.cpp
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/RateTransposer.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/RateTransposer.cpp	2009-04-10 20:04:30.069718000 -0400
 @@ -10,7 +10,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2598,9 +2624,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/RateTrans
  // File revision : $Revision: 20349 $
  //
  // $Id: RateTransposer.cpp 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/RateTransposer.h mythtv-0.23.1/libs/libmythsoundtouch/RateTransposer.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/RateTransposer.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/RateTransposer.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/RateTransposer.h mythtv-0.23.1.new/libs/libmythsoundtouch/RateTransposer.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/RateTransposer.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/RateTransposer.h	2009-04-10 20:04:30.069718000 -0400
 @@ -14,7 +14,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2610,9 +2636,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/RateTrans
  // File revision : $Revision: 20349 $
  //
  // $Id: RateTransposer.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/SoundTouch.cpp mythtv-0.23.1/libs/libmythsoundtouch/SoundTouch.cpp
---- mythtv-0.23.1-release/libs/libmythsoundtouch/SoundTouch.cpp	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/SoundTouch.cpp	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/SoundTouch.cpp mythtv-0.23.1.new/libs/libmythsoundtouch/SoundTouch.cpp
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/SoundTouch.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/SoundTouch.cpp	2009-04-10 20:04:30.069718000 -0400
 @@ -41,7 +41,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2622,9 +2648,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/SoundTouc
  // File revision : $Revision: 20349 $
  //
  // $Id: SoundTouch.cpp 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/SoundTouch.h mythtv-0.23.1/libs/libmythsoundtouch/SoundTouch.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/SoundTouch.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/SoundTouch.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/SoundTouch.h mythtv-0.23.1.new/libs/libmythsoundtouch/SoundTouch.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/SoundTouch.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/SoundTouch.h	2009-04-10 20:04:30.069718000 -0400
 @@ -41,7 +41,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2634,9 +2660,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/SoundTouc
  // File revision : $Revision: 20349 $
  //
  // $Id: SoundTouch.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/STTypes.h mythtv-0.23.1/libs/libmythsoundtouch/STTypes.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/STTypes.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/STTypes.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/STTypes.h mythtv-0.23.1.new/libs/libmythsoundtouch/STTypes.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/STTypes.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/STTypes.h	2009-04-10 20:04:30.069718000 -0400
 @@ -8,7 +8,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2646,9 +2672,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/STTypes.h
  // File revision : $Revision: 20349 $
  //
  // $Id: STTypes.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/TDStretch.cpp mythtv-0.23.1/libs/libmythsoundtouch/TDStretch.cpp
---- mythtv-0.23.1-release/libs/libmythsoundtouch/TDStretch.cpp	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/TDStretch.cpp	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/TDStretch.cpp mythtv-0.23.1.new/libs/libmythsoundtouch/TDStretch.cpp
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/TDStretch.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/TDStretch.cpp	2009-04-10 20:04:30.069718000 -0400
 @@ -13,7 +13,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2658,9 +2684,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/TDStretch
  // File revision : $Revision: 20349 $
  //
  // $Id: TDStretch.cpp 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/TDStretch.h mythtv-0.23.1/libs/libmythsoundtouch/TDStretch.h
---- mythtv-0.23.1-release/libs/libmythsoundtouch/TDStretch.h	2009-04-10 20:04:30.000000000 -0400
-+++ mythtv-0.23.1/libs/libmythsoundtouch/TDStretch.h	2009-04-10 20:04:30.069718000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/TDStretch.h mythtv-0.23.1.new/libs/libmythsoundtouch/TDStretch.h
+--- mythtv-0.23.1.orig/libs/libmythsoundtouch/TDStretch.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythsoundtouch/TDStretch.h	2009-04-10 20:04:30.069718000 -0400
 @@ -13,7 +13,7 @@
  ///
  ////////////////////////////////////////////////////////////////////////////////
@@ -2670,9 +2696,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythsoundtouch/TDStretch
  // File revision : $Revision: 20349 $
  //
  // $Id: TDStretch.h 20349 2009-04-11 00:04:30Z xris $
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythui/lirc.cpp mythtv-0.23.1/libs/libmythui/lirc.cpp
---- mythtv-0.23.1-release/libs/libmythui/lirc.cpp	2009-11-28 10:55:09.000000000 -0500
-+++ mythtv-0.23.1/libs/libmythui/lirc.cpp	2010-07-23 21:29:36.107491000 -0400
+diff -Naurp mythtv-0.23.1.orig/libs/libmythui/lirc.cpp mythtv-0.23.1.new/libs/libmythui/lirc.cpp
+--- mythtv-0.23.1.orig/libs/libmythui/lirc.cpp	2009-11-28 10:55:09.000000000 -0500
++++ mythtv-0.23.1.new/libs/libmythui/lirc.cpp	2010-07-23 21:29:36.107491000 -0400
 @@ -383,6 +383,8 @@ void LIRC::Process(const QByteArray &dat
              mod |= (Qt::CTRL  & keycode) ? Qt::ControlModifier: Qt::NoModifier;
              mod |= (Qt::ALT   & keycode) ? Qt::AltModifier   : Qt::NoModifier;
@@ -2682,9 +2708,9 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/libs/libmythui/lirc.cpp mythtv-0
              QString text = "";
              if (!mod)
                  text = QString(QChar(keycode));
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/programs/mythfrontend/proglist.cpp mythtv-0.23.1/programs/mythfrontend/proglist.cpp
---- mythtv-0.23.1-release/programs/mythfrontend/proglist.cpp	2010-01-24 09:23:40.000000000 -0500
-+++ mythtv-0.23.1/programs/mythfrontend/proglist.cpp	2010-07-25 23:07:19.192973000 -0400
+diff -Naurp mythtv-0.23.1.orig/programs/mythfrontend/proglist.cpp mythtv-0.23.1.new/programs/mythfrontend/proglist.cpp
+--- mythtv-0.23.1.orig/programs/mythfrontend/proglist.cpp	2010-01-24 09:23:40.000000000 -0500
++++ mythtv-0.23.1.new/programs/mythfrontend/proglist.cpp	2010-07-25 23:07:19.192973000 -0400
 @@ -912,10 +912,14 @@ void ProgLister::fillViewList(const QStr
          {
              while (query.next())
@@ -2702,20 +2728,20 @@ diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/programs/mythfrontend/proglist.c
                  m_viewList << phrase;
                  m_viewTextList << phrase;
              }
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/VERSION mythtv-0.23.1/VERSION
---- mythtv-0.23.1-release/VERSION	2010-07-22 02:40:45.000000000 -0400
-+++ mythtv-0.23.1/VERSION	1969-12-31 19:00:00.000000000 -0500
+diff -Naurp mythtv-0.23.1.orig/VERSION mythtv-0.23.1.new/VERSION
+--- mythtv-0.23.1.orig/VERSION	2010-07-22 02:40:45.000000000 -0400
++++ mythtv-0.23.1.new/VERSION	1969-12-31 19:00:00.000000000 -0500
 @@ -1 +0,0 @@
 -SOURCE_VERSION="0.23.1"
-diff -Naurp -x '*/docs/*' mythtv-0.23.1-release/version.pro mythtv-0.23.1/version.pro
---- mythtv-0.23.1-release/version.pro	2009-10-04 12:38:03.000000000 -0400
-+++ mythtv-0.23.1/version.pro	2009-10-04 12:38:03.692900000 -0400
+diff -Naurp mythtv-0.23.1.orig/version.pro mythtv-0.23.1.new/version.pro
+--- mythtv-0.23.1.orig/version.pro	2009-10-04 12:38:03.000000000 -0400
++++ mythtv-0.23.1.new/version.pro	2009-10-04 12:38:03.692900000 -0400
 @@ -6,7 +6,7 @@
  ############################################################
  
  SVNTREEDIR = $$system(pwd)
 -SVNREPOPATH = "$$URL: http://svn.mythtv.org/svn/tags/release-0-23-1/mythtv/version.pro $$"
-+SVNREPOPATH = "$$URL: svn+ssh://svn.mythtv.org/var/lib/svn/branches/release-0-23-fixes/mythtv/version.pro $$"
++SVNREPOPATH = "$$URL: http://svn.mythtv.org/svn/branches/release-0-23-fixes/mythtv/version.pro $$"
  
  
  SOURCES += version.cpp
