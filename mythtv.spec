@@ -36,6 +36,7 @@
 # The following options are enabled by default.  Use these options to disable:
 #
 # --without vdpau           Disable VDPAU support
+# --without crystalhd       Disable Crystal HD support
 # --without xvmc            Disable XvMC support
 # --without perl            Disable building of the perl bindings
 # --without python          Disable building of the python bindings
@@ -64,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25695
+%define _svnrev r25946
 %define branch trunk
 
 #
@@ -101,6 +102,7 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 # The following options are enabled by default.  Use --without to disable them
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
+%define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
 %define with_xvmc          %{?_without_xvmc:       0} %{?!_without_xvmc:       1}
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
 %define with_python        %{?_without_python:     0} %{!?_without_python:     1}
@@ -192,7 +194,6 @@ BuildRequires:  libGL-devel, libGLU-devel
 %if %{with_faac}
 BuildRequires:  faac-devel
 %endif
-BuildRequires:  faad2-devel
 BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
@@ -233,6 +234,10 @@ BuildRequires:  directfb-devel
 
 %if %{with_vdpau}
 BuildRequires: libvdpau-devel
+%endif
+
+%if %{with_crystalhd}
+BuildRequires: libcrystalhd-devel
 %endif
 
 # API Build Requirements
@@ -422,7 +427,6 @@ Requires:  libGL-devel, libGLU-devel
 %if %{with_faac}
 Requires:  faac-devel
 %endif
-Requires:  faad2-devel
 Requires:  fftw-devel >= 3
 Requires:  flac-devel >= 1.0.4
 Requires:  gsm-devel
@@ -462,6 +466,10 @@ Requires:  directfb-devel
 
 %if %{with_vdpau}
 Requires: libvdpau-devel
+%endif
+
+%if %{with_crystalhd}
+Requires: libcrystalhd-devel
 %endif
 
 %description devel
@@ -861,7 +869,7 @@ cd mythtv-%{version}
 
 # Put perl bits in the right place and set opt flags
     sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
-        bindings/perl/perl.pro
+        bindings/perl/Makefile
 
 # Install other source files, and fix pathnames
     cp -a %{SOURCE10} %{SOURCE101} %{SOURCE102} %{SOURCE103} .
@@ -958,12 +966,14 @@ cd mythtv-%{version}
 %if %{with_faac}
     --enable-libfaac --enable-nonfree           \
 %endif
-    --enable-libfaad --enable-libfaadbin        \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
 %if %{with_vdpau}
     --enable-vdpau				\
+%endif
+%if %{with_crystalhd}
+    --enable-crystalhd				\
 %endif
 %if !%{with_xvmc}
     --disable-xvmcw				\
@@ -1431,7 +1441,6 @@ fi
 %{_datadir}/mythtv/video_settings.xml
 %{_datadir}/mythtv/videomenu.xml
 %{_localstatedir}/lib/mythvideo
-%{_bindir}/mtd
 %endif
 
 %if %{with_mythweather}
@@ -1443,7 +1452,8 @@ fi
 %{_libdir}/mythtv/plugins/libmythweather.so
 %{_datadir}/mythtv/i18n/mythweather_*.qm
 %{_datadir}/mythtv/weather_settings.xml
-%{_datadir}/mythtv/mythweather
+%dir %{_datadir}/mythtv/mythweather
+%{_datadir}/mythtv/mythweather/*
 %endif
 
 %if %{with_mythweb}
@@ -1483,6 +1493,10 @@ fi
 ################################################################################
 
 %changelog
+* Sun Aug 29 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r25946
+- Update to svn trunk, revision 25946
+- Add new crystalhd dependency
+
 * Sun Aug 15 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r25695
 - Update to svn trunk, revision 25695
 - Account for qt/qt-webkit split on F14
