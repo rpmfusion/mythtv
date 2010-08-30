@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25638
+%define _svnrev r25902
 %define branch release-0-23-fixes
 
 #
@@ -81,7 +81,7 @@ Version: 0.23.1
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -275,8 +275,19 @@ Requires:       perl(XML::Simple)
 
 %if %{with_mythweather}
 Requires:       mythweather      >= %{version}
+BuildRequires:  perl(XML::Simple)
 Requires:       perl(XML::Simple)
 Requires:       perl(LWP::Simple)
+BuildRequires:  perl(DateTime::Format::ISO8601)
+Requires:       perl(DateTime::Format::ISO8601)
+BuildRequires:  perl(XML::XPath)
+Requires:       perl(XML::XPath)
+BuildRequires:  perl(Date::Manip)
+Requires:       perl(Date::Manip)
+BuildRequires:  perl(Image::Size)
+Requires:       perl(Image::Size)
+BuildRequires:  perl(SOAP::Lite)
+Requires:       perl(SOAP::Lite)
 %endif
 
 %if %{with_mythzoneminder}
@@ -1411,6 +1422,11 @@ fi
 %doc mythplugins-%{version}/mythweather/AUTHORS
 %doc mythplugins-%{version}/mythweather/COPYING
 %doc mythplugins-%{version}/mythweather/README
+%{_libdir}/mythtv/plugins/libmythweather.so
+%{_datadir}/mythtv/i18n/mythweather_*.qm
+%{_datadir}/mythtv/weather_settings.xml
+%dir %{_datadir}/mythtv/mythweather
+%{_datadir}/mythtv/mythweather/*
 %endif
 
 %if %{with_mythweb}
@@ -1449,6 +1465,10 @@ fi
 ################################################################################
 
 %changelog
+* Sat Aug 28 2010 Jarod Wilson <jarod@wilsonet.com> 0.23.1-2
+- Update to release-0-23-fixes branch, svn revision 25902
+- Fix mythweather build
+
 * Fri Aug 13 2010 Jarod Wilson <jarod@wilsonet.com> 0.23.1-1
 - Update to 0.23.1 release (plus a few minor svn fixes)
 
