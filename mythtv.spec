@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25946
+%define _svnrev r25985
 %define branch trunk
 
 #
@@ -130,9 +130,12 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 ################################################################################
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
-#Patch0:    mythtv-%{version}-svnfixes.patch
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
+#Patch0:    mythtv-%{version}-svnfixes.patch
 #Patch1:    mythplugins-%{version}-svnfixes.patch
+# http://svn.mythtv.org/trac/ticket/8572
+Patch2:    mythtv-compile_fixes_for_qt_4_7.patch
+Patch3:    mythplugins-compile_fixes_for_qt_4_7.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig.in
 Source102: mythbackend.init.in
@@ -856,6 +859,7 @@ on demand content.
 
 cd mythtv-%{version}
 #patch0 -p1
+%patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -905,6 +909,7 @@ cd ..
 
 cd mythplugins-%{version}
 #patch1 -p1
+%patch3 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -1491,6 +1496,10 @@ fi
 ################################################################################
 
 %changelog
+* Sun Aug 29 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r25946
+- Update to svn trunk, revision 25985
+- Patch in Qt 4.7 build fix patches from mythtv trac ticket #8572
+
 * Sun Aug 29 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r25946
 - Update to svn trunk, revision 25946
 - Add new crystalhd dependency
