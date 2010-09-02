@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25985
+%define _svnrev r26065
 %define branch trunk
 
 #
@@ -1496,6 +1496,9 @@ fi
 ################################################################################
 
 %changelog
+* Wed Sep 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r26065
+- Update to svn trunk, revision 26065
+
 * Sun Aug 29 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r25946
 - Update to svn trunk, revision 25985
 - Patch in Qt 4.7 build fix patches from mythtv trac ticket #8572
