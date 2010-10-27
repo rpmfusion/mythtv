@@ -133,9 +133,6 @@ Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 #Patch0:    mythtv-%{version}-svnfixes.patch
 #Patch1:    mythplugins-%{version}-svnfixes.patch
-# http://svn.mythtv.org/trac/ticket/8572
-#Patch2:    mythtv-compile_fixes_for_qt_4_7.patch
-#Patch3:    mythplugins-compile_fixes_for_qt_4_7.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig.in
 Source102: mythbackend.init.in
@@ -858,8 +855,6 @@ on demand content.
 ##### MythTV
 
 cd mythtv-%{version}
-#patch0 -p1
-#patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
