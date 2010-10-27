@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r26065
+%define _svnrev r26998
 %define branch trunk
 
 #
@@ -79,8 +79,8 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.24
 %if "%{branch}" == "trunk"
-Release: 0.1.svn.%{_svnrev}%{?dist}
-#Release: 0.2.rc1%{?dist}
+#Release: 0.1.svn.%{_svnrev}%{?dist}
+Release: 0.2.rc1%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -134,8 +134,8 @@ Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 #Patch0:    mythtv-%{version}-svnfixes.patch
 #Patch1:    mythplugins-%{version}-svnfixes.patch
 # http://svn.mythtv.org/trac/ticket/8572
-Patch2:    mythtv-compile_fixes_for_qt_4_7.patch
-Patch3:    mythplugins-compile_fixes_for_qt_4_7.patch
+#Patch2:    mythtv-compile_fixes_for_qt_4_7.patch
+#Patch3:    mythplugins-compile_fixes_for_qt_4_7.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig.in
 Source102: mythbackend.init.in
@@ -859,7 +859,7 @@ on demand content.
 
 cd mythtv-%{version}
 #patch0 -p1
-%patch2 -p1
+#patch2 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -909,7 +909,7 @@ cd ..
 
 cd mythplugins-%{version}
 #patch1 -p1
-%patch3 -p1
+#patch3 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -1304,6 +1304,7 @@ fi
 %dir %{_datadir}/mythtv/i18n
 %dir %{_datadir}/mythtv/fonts
 %{_datadir}/mythtv/fonts/*.ttf
+%{_datadir}/mythtv/fonts/*.txt
 %{_datadir}/mythtv/i18n/mythfrontend_*.qm
 %{_datadir}/applications/*mythfrontend.desktop
 %{_datadir}/pixmaps/myth*.png
@@ -1496,6 +1497,12 @@ fi
 ################################################################################
 
 %changelog
+* Tue Oct 26 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.2.rc1
+- Update to svn trunk, revision 26998 (which is actually post-0.24-rc1)
+
+* Thu Sep 23 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r26482
+- Update to svn trunk, revision 26482
+
 * Wed Sep 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r26065
 - Update to svn trunk, revision 26065
 
