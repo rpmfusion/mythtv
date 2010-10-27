@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r25902
+%define _svnrev r26998
 %define branch release-0-23-fixes
 
 #
@@ -81,7 +81,7 @@ Version: 0.23.1
 %if "%{branch}" == "trunk"
 Release: 0.1.svn.%{_svnrev}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1465,6 +1465,9 @@ fi
 ################################################################################
 
 %changelog
+* Tue Oct 26 2010 Jarod Wilson <jarod@wilsonet.com> 0.23.1-3
+- Update to release-0-23-fixes branch, svn revision 26998
+
 * Sat Aug 28 2010 Jarod Wilson <jarod@wilsonet.com> 0.23.1-2
 - Update to release-0-23-fixes branch, svn revision 25902
 - Fix mythweather build

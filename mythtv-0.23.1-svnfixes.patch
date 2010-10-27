@@ -84,7 +84,16 @@ diff -Naurp mythtv-0.23.1.orig/bindings/perl/MythTV.pm mythtv-0.23.1.new/binding
  #
 diff -Naurp mythtv-0.23.1.orig/bindings/python/MythTV/MythBase.py mythtv-0.23.1.new/bindings/python/MythTV/MythBase.py
 --- mythtv-0.23.1.orig/bindings/python/MythTV/MythBase.py	2010-05-04 20:45:58.000000000 -0400
-+++ mythtv-0.23.1.new/bindings/python/MythTV/MythBase.py	2010-07-30 01:30:44.653168000 -0400
++++ mythtv-0.23.1.new/bindings/python/MythTV/MythBase.py	2010-09-21 20:56:10.381307000 -0400
+@@ -735,7 +735,7 @@ class DBDataCRef( object ):
+                                 % (self.table, self.t_ref), dat.cross)
+         c.close()
+ 
+-        index = self.hash.index[dat]
++        index = self.hash.index(dat)
+         del self.hash[index]
+         del self.data[index]
+ 
 @@ -979,7 +979,7 @@ class MythDBBase( object ):
              for config_file in config_files:
                  dbconn.update({ 'DBHostName':None,  'DBName':None,
@@ -2480,6 +2489,75 @@ diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO-singlehtml.html mythtv-0.23.1.n
  issues if you do not have the spare CPU capacity to handle XFS, potentially
  leading to dropped frames.</P>
 diff -Naurp mythtv-0.23.1.orig/docs/mythtv-HOWTO.txt mythtv-0.23.1.new/docs/mythtv-HOWTO.txt
+diff -Naurp mythtv-0.23.1.orig/libs/libavformat/utils.c mythtv-0.23.1.new/libs/libavformat/utils.c
+--- mythtv-0.23.1.orig/libs/libavformat/utils.c	2010-02-10 17:58:08.000000000 -0500
++++ mythtv-0.23.1.new/libs/libavformat/utils.c	2010-10-08 23:07:49.494181000 -0400
+@@ -875,7 +875,7 @@ static void compute_pkt_fields(AVFormatC
+     // Note, if this is misbehaving for a H.264 file then possibly presentation_delayed is not set correctly.
+     if(delay==1 && pkt->dts == pkt->pts && pkt->dts != AV_NOPTS_VALUE && presentation_delayed){
+         av_log(s, AV_LOG_WARNING, "invalid dts/pts combination\n");
+-        pkt->dts= pkt->pts= AV_NOPTS_VALUE;
++        pkt->pts= AV_NOPTS_VALUE;
+     }
+ 
+     if (pkt->duration == 0) {
+diff -Naurp mythtv-0.23.1.orig/libs/libmyth/mythdeque.h mythtv-0.23.1.new/libs/libmyth/mythdeque.h
+--- mythtv-0.23.1.orig/libs/libmyth/mythdeque.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmyth/mythdeque.h	2010-09-21 15:48:24.528714000 -0400
+@@ -3,9 +3,15 @@
+ #ifndef __MYTH_DEQUE_H__
+ #define __MYTH_DEQUE_H__
+ 
++#include <QString>
+ #include <deque>
+ using namespace std;
+ 
++template<typename T>
++inline T myth_deque_init(const T*) { return (T)(0); }
++template<>
++inline QString myth_deque_init(const QString*) { return QString(); }
++
+ /** \class MythDeque
+  *  \brief MythDeque is similar to QPtrQueue, while being based off
+  *         deque, this allows that items that are not at the head of
+@@ -18,8 +24,9 @@ class MythDeque : public deque<T>
+     /// \brief Removes item from front of list and returns a copy. O(1).
+     T dequeue()
+     {
++        T *dummy = NULL;
+         if (deque<T>::empty())
+-            return (T)(0);
++            return myth_deque_init(dummy);
+         T item = deque<T>::front();
+         deque<T>::pop_front();
+         return item;
+@@ -65,16 +72,22 @@ class MythDeque : public deque<T>
+     size_type count() const { return deque<T>::size(); }
+ 
+     /// \brief Returns item at head of list. O(1).
+-    T head() { return (deque<T>::size()) ? deque<T>::front() : (T)(NULL); }
++    T head()
++        { if (!deque<T>::empty()) return deque<T>::front();
++          T *dummy = NULL; return myth_deque_init(dummy); }
+     /// \brief Returns item at head of list. O(1).
+     const T head() const
+-        { return (deque<T>::size()) ? deque<T>::front() : (T)(NULL); }
++        { if (!deque<T>::empty()) return deque<T>::front();
++          T *dummy = NULL; return myth_deque_init(dummy); }
+ 
+     /// \brief Returns item at tail of list. O(1).
+-    T tail() { return (deque<T>::size()) ? deque<T>::back() : (T)(NULL); }
++    T tail()
++        { if (!deque<T>::empty()) return deque<T>::back();
++          T *dummy = NULL; return myth_deque_init(dummy); }
+     /// \brief Returns item at tail of list. O(1).
+     const T tail() const
+-        { return (deque<T>::size()) ? deque<T>::back() : (T)(NULL); }
++        { if (!deque<T>::empty()) return deque<T>::back();
++          T *dummy = NULL; return myth_deque_init(dummy); }
+ };
+ 
+ #endif // __MYTH_DEQUE_H__
 diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/AAFilter.cpp mythtv-0.23.1.new/libs/libmythsoundtouch/AAFilter.cpp
 --- mythtv-0.23.1.orig/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.000000000 -0400
 +++ mythtv-0.23.1.new/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.069718000 -0400
@@ -2696,6 +2774,367 @@ diff -Naurp mythtv-0.23.1.orig/libs/libmythsoundtouch/TDStretch.h mythtv-0.23.1.
  // File revision : $Revision: 20349 $
  //
  // $Id: TDStretch.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/channelbase.cpp mythtv-0.23.1.new/libs/libmythtv/channelbase.cpp
+--- mythtv-0.23.1.orig/libs/libmythtv/channelbase.cpp	2010-04-01 12:59:13.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythtv/channelbase.cpp	2010-09-09 14:00:53.902939000 -0400
+@@ -492,6 +492,9 @@ bool ChannelBase::IsInputAvailable(
+     if (inputid < 0)
+         return false;
+ 
++    if (!pParent)
++        return false;
++
+     // Check each input to make sure it doesn't belong to an
+     // input group which is attached to a busy recorder.
+     QMap<uint,bool>           busygrp;
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/channelgroup.cpp mythtv-0.23.1.new/libs/libmythtv/channelgroup.cpp
+--- mythtv-0.23.1.orig/libs/libmythtv/channelgroup.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23.1.new/libs/libmythtv/channelgroup.cpp	2010-08-30 15:41:18.335754000 -0400
+@@ -228,10 +228,9 @@ int ChannelGroup::GetChannelGroupId(QStr
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+ 
+-    QString qstr = QString("SELECT grpid FROM channelgroupnames where name='%1'")
+-                   .arg(changroupname);
+-
+-    query.prepare(qstr);
++    query.prepare("SELECT grpid FROM channelgroupnames "
++                  "WHERE name = :GROUPNAME");
++    query.bindValue(":GROUPNAME", changroupname);
+ 
+     if (!query.exec() || !query.isActive())
+         MythDB::DBError("ChannelGroup::GetChannelGroups", query);
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/channelscan/channelimporter.cpp mythtv-0.23.1.new/libs/libmythtv/channelscan/channelimporter.cpp
+--- mythtv-0.23.1.orig/libs/libmythtv/channelscan/channelimporter.cpp	2010-04-13 10:39:54.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythtv/channelscan/channelimporter.cpp	2010-09-08 20:42:17.278093000 -0400
+@@ -432,9 +432,16 @@ ScanDTVTransportList ChannelImporter::In
+                             .arg(chan.atsc_major_channel)
+                             .arg(chan.atsc_minor_channel);
+                     }
++                    else if (chan.si_standard == "dvb")
++                    {
++                        chan.chan_num = QString("%1")
++                                            .arg(chan.service_id);
++                    }
+                     else
+                     {
+-                        chan.chan_num = QString("%1").arg(chan.service_id);
++                        chan.chan_num = QString("%1-%2")
++                                            .arg(chan.freqid)
++                                            .arg(chan.service_id);
+                     }
+ 
+                     conflicting = ChannelUtil::IsConflicting(
+@@ -582,7 +589,7 @@ ScanDTVTransportList ChannelImporter::Up
+ 
+                 if (chan.chan_num.isEmpty() || renameChannels ||
+                     ChannelUtil::IsConflicting(
+-                        chan.chan_num, chan.service_id, chan.channel_id))
++                        chan.chan_num, chan.source_id, chan.channel_id))
+                 {
+                     if (kATSCNonConflicting == type)
+                     {
+@@ -590,13 +597,20 @@ ScanDTVTransportList ChannelImporter::Up
+                             .arg(chan.atsc_major_channel)
+                             .arg(chan.atsc_minor_channel);
+                     }
++                    else if (chan.si_standard == "dvb")
++                    {
++                        chan.chan_num = QString("%1")
++                                            .arg(chan.service_id);
++                    }
+                     else
+                     {
+-                        chan.chan_num = QString("%1").arg(chan.service_id);
++                        chan.chan_num = QString("%1-%2")
++                                            .arg(chan.freqid)
++                                            .arg(chan.service_id);
+                     }
+ 
+                     conflicting = ChannelUtil::IsConflicting(
+-                        chan.chan_num, chan.service_id, chan.channel_id);
++                        chan.chan_num, chan.source_id, chan.channel_id);
+                 }
+ 
+                 if (conflicting)
+@@ -1017,6 +1031,43 @@ QString ChannelImporter::FormatChannel(
+     return msg;
+ }
+ 
++QString ChannelImporter::SimpleFormatChannel(
++    const ScanDTVTransport          &transport,
++    const ChannelInsertInfo         &chan)
++{
++    QString msg;
++    QTextStream ssMsg(&msg);
++
++    QString si_standard = (chan.si_standard=="opencable") ?
++        QString("scte") : chan.si_standard;
++
++    if (si_standard == "atsc" || si_standard == "scte")
++    {
++
++        if (si_standard == "atsc")
++            ssMsg << (QString("%1-%2")
++                  .arg(chan.atsc_major_channel)
++                  .arg(chan.atsc_minor_channel)).toAscii().constData();
++        else
++            ssMsg << (QString("%1-%2")
++                  .arg(chan.freqid)
++                  .arg(chan.service_id)).toAscii().constData();
++
++        if (!chan.callsign.isEmpty())
++            ssMsg << (QString(" (%1)")
++                  .arg(chan.callsign)).toAscii().constData();
++    }
++    else if (si_standard == "dvb")
++        ssMsg << (QString("%1 (%2 %3)")
++                  .arg(chan.service_name).arg(chan.service_id)
++                  .arg(chan.netid)).toAscii().constData();
++    else
++        ssMsg << (QString("%1-%2")
++                  .arg(chan.freqid).arg(chan.service_id))
++                  .toAscii().constData();
++
++    return msg;
++}
+ 
+ QString ChannelImporter::FormatChannels(
+     const ScanDTVTransportList      &transports,
+@@ -1079,12 +1130,12 @@ bool ChannelImporter::IsType(
+ 
+         case kMPEGNonConflicting:
+             return ((chan.si_standard == "mpeg") &&
+-                    (info.prognum_cnt[chan.service_id] == 1));
++                    (info.channum_cnt[map_str(chan.chan_num)] == 1));
+ 
+         case kSCTENonConflicting:
+             return (((chan.si_standard == "scte") ||
+-                     (chan.si_standard == "opencable")) &&
+-                    (info.prognum_cnt[chan.service_id] == 1));
++                    (chan.si_standard == "opencable")) &&
++                    (info.channum_cnt[map_str(chan.chan_num)] == 1));
+ 
+         case kNTSCNonConflicting:
+             return ((chan.si_standard == "ntsc") &&
+@@ -1102,12 +1153,12 @@ bool ChannelImporter::IsType(
+ 
+         case kMPEGConflicting:
+             return ((chan.si_standard == "mpeg") &&
+-                    (info.prognum_cnt[chan.service_id] != 1));
++                    (info.channum_cnt[map_str(chan.chan_num)] != 1));
+ 
+         case kSCTEConflicting:
+             return (((chan.si_standard == "scte") ||
+-                     (chan.si_standard == "opencable")) &&
+-                    (info.prognum_cnt[chan.service_id] != 1));
++                    (chan.si_standard == "opencable")) &&
++                    (info.channum_cnt[map_str(chan.chan_num)] != 1));
+ 
+         case kNTSCConflicting:
+             return ((chan.si_standard == "ntsc") &&
+@@ -1153,7 +1204,17 @@ QString ChannelImporter::ComputeSuggeste
+         .arg(chan.atsc_minor_channel);
+ 
+     if (!chan.atsc_minor_channel)
+-        chan_num = QString("%1").arg(chan.service_id);
++    {
++        if (chan.si_standard == "dvb")
++        {
++            chan_num = QString("%1")
++                          .arg(chan.service_id);
++        }
++        else
++            chan_num = QString("%1-%2")
++                          .arg(chan.freqid)
++                          .arg(chan.service_id);
++    }
+ 
+     if (!ChannelUtil::IsConflicting(chan_num, chan.source_id))
+         return chan_num;
+@@ -1415,8 +1476,8 @@ OkCancelType ChannelImporter::QueryUserR
+     ChannelInsertInfo               &chan)
+ {
+     QString msg = QObject::tr(
+-        "This channel '%1' was found to be in conflict with other channels. ")
+-        .arg(FormatChannel(transport, chan));
++        "Channel %1 was found to be in conflict with other channels. ")
++        .arg(SimpleFormatChannel(transport, chan));
+ 
+     OkCancelType ret = kOCTCancel;
+ 
+@@ -1496,8 +1557,8 @@ OkCancelType ChannelImporter::QueryUserI
+     ChannelInsertInfo               &chan)
+ {
+     QString msg = QObject::tr(
+-        "You chose to manually insert this channel '%1'.")
+-        .arg(FormatChannel(transport, chan));
++        "You chose to manually insert channel %1.")
++        .arg(SimpleFormatChannel(transport, chan));
+ 
+     OkCancelType ret = kOCTCancel;
+ 
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/channelscan/channelimporter.h mythtv-0.23.1.new/libs/libmythtv/channelscan/channelimporter.h
+--- mythtv-0.23.1.orig/libs/libmythtv/channelscan/channelimporter.h	2009-09-06 09:16:50.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythtv/channelscan/channelimporter.h	2010-09-08 20:42:17.278093000 -0400
+@@ -201,6 +201,10 @@ class MPUBLIC ChannelImporter
+         const ChannelInsertInfo         &chan,
+         const ChannelImporterBasicStats *info = NULL);
+ 
++    static QString SimpleFormatChannel(
++        const ScanDTVTransport          &transport,
++        const ChannelInsertInfo         &chan);
++
+     static QString GetSummary(
+         uint                                  transport_count,
+         const ChannelImporterBasicStats      &info,
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/channelscan/channelscan_sm.cpp mythtv-0.23.1.new/libs/libmythtv/channelscan/channelscan_sm.cpp
+--- mythtv-0.23.1.orig/libs/libmythtv/channelscan/channelscan_sm.cpp	2010-03-11 22:11:01.000000000 -0500
++++ mythtv-0.23.1.new/libs/libmythtv/channelscan/channelscan_sm.cpp	2010-09-08 20:42:17.278093000 -0400
+@@ -1272,6 +1272,23 @@ ChannelScanSM::GetChannelList(transport_
+             info.chan_num = QString::number(*it);
+     }
+ 
++    // Get QAM/SCTE/MPEG channel numbers
++    for (dbchan_it = pnum_to_dbchan.begin();
++         dbchan_it != pnum_to_dbchan.end(); ++dbchan_it)
++    {
++        ChannelInsertInfo &info = *dbchan_it;
++
++        if (!info.chan_num.isEmpty())
++            continue;
++
++        if ((info.si_standard == "mpeg") ||
++            (info.si_standard == "scte") ||
++            (info.si_standard == "opencable"))
++            info.chan_num = QString("%1-%2")
++                              .arg(info.freqid)
++                              .arg(info.service_id);
++    }
++
+     // Check for decryption success
+     for (dbchan_it = pnum_to_dbchan.begin();
+          dbchan_it != pnum_to_dbchan.end(); ++dbchan_it)
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/diseqc.cpp mythtv-0.23.1.new/libs/libmythtv/diseqc.cpp
+--- mythtv-0.23.1.orig/libs/libmythtv/diseqc.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23.1.new/libs/libmythtv/diseqc.cpp	2010-08-29 18:54:14.302408000 -0400
+@@ -1657,6 +1657,9 @@ bool DiSEqCDevRotor::Execute(const DiSEq
+ 
+         m_last_position = position;
+         m_reset = false;
++        if (success)
++            // prevent tuning paramaters overiding rotor parameters
++            usleep(DISEQC_LONG_WAIT);
+     }
+ 
+     // chain to child
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/dtvrecorder.cpp mythtv-0.23.1.new/libs/libmythtv/dtvrecorder.cpp
+--- mythtv-0.23.1.orig/libs/libmythtv/dtvrecorder.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23.1.new/libs/libmythtv/dtvrecorder.cpp	2010-10-17 16:27:48.940894000 -0400
+@@ -437,8 +437,15 @@ void DTVRecorder::HandleKeyframe(uint64_
+         long long startpos = ringBuffer->GetWritePosition();
+         // FIXME: handle keyframes with start code spanning over two ts packets
+         startpos += _payload_buffer.size() + extra;
+-        positionMapDelta[frameNum] = startpos;
+-        positionMap[frameNum]      = startpos;
++
++        // Don't put negative offsets into the database, they get munged into
++        // MAX_INT64 - offset, which is an exceedingly large number, and
++        // certainly not valid.
++        if (startpos >= 0)
++        {
++            positionMapDelta[frameNum] = startpos;
++            positionMap[frameNum]      = startpos;
++        }
+     }
+     positionMapLock.unlock();
+ 
+@@ -649,12 +656,6 @@ void DTVRecorder::FindPSKeyFrames(const 
+         const int stream_id = _start_code & 0x000000ff;
+         if (_video_bytes_remaining)
+         {
+-            if ((stream_id >= PESStreamID::SliceStartCodeBegin) &&
+-                (stream_id <= PESStreamID::SliceStartCodeEnd))
+-            { // pes_packet_length is meaningless
+-                _other_bytes_remaining =
+-                    std::max(_other_bytes_remaining, _video_bytes_remaining);
+-            }
+             if (PESStreamID::PictureStartCode == stream_id)
+             { // pes_packet_length is meaningless
+                 pes_packet_length = -1;
+@@ -718,7 +719,7 @@ void DTVRecorder::FindPSKeyFrames(const 
+         if (hasKeyFrame)
+         {
+             _last_keyframe_seen = _frames_seen_count;
+-            HandleKeyframe(bufstart - bufptr);
++            HandleKeyframe(bufptr - bufstart);
+         }
+ 
+         if (hasFrame)
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/dvbstreamhandler.cpp mythtv-0.23.1.new/libs/libmythtv/dvbstreamhandler.cpp
+--- mythtv-0.23.1.orig/libs/libmythtv/dvbstreamhandler.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23.1.new/libs/libmythtv/dvbstreamhandler.cpp	2010-10-07 12:30:26.399349000 -0400
+@@ -276,14 +276,24 @@ void DVBStreamHandler::RunTS(void)
+     bzero(buffer, buffer_size);
+ 
+     QByteArray dvr_dev_path = _dvr_dev_path.toAscii();
+-    int dvr_fd = open(dvr_dev_path.constData(), O_RDONLY | O_NONBLOCK);
+-    if (dvr_fd < 0)
++    int dvr_fd;
++    for (int tries = 1; ; ++tries)
+     {
+-        VERBOSE(VB_IMPORTANT, LOC +
+-                QString("Failed to open DVR device %1 : %2")
++        dvr_fd = open(dvr_dev_path.constData(), O_RDONLY | O_NONBLOCK);
++        if (dvr_fd >= 0)
++            break;
++        VERBOSE(VB_IMPORTANT, LOC_WARN +
++                QString("Opening DVR device %1 failed : %2")
+                 .arg(_dvr_dev_path).arg(strerror(errno)));
+-        delete[] buffer;
+-        return;
++        if (tries >= 20 || (errno != EBUSY && errno != EAGAIN))
++        {
++            VERBOSE(VB_IMPORTANT, LOC +
++                    QString("Failed to open DVR device %1 : %2")
++                    .arg(_dvr_dev_path).arg(strerror(errno)));
++            delete[] buffer;
++            return;
++        }
++        usleep(50000);
+     }
+ 
+     bool _error = false;
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/recordingprofile.cpp mythtv-0.23.1.new/libs/libmythtv/recordingprofile.cpp
+--- mythtv-0.23.1.orig/libs/libmythtv/recordingprofile.cpp	2010-03-06 22:11:52.000000000 -0500
++++ mythtv-0.23.1.new/libs/libmythtv/recordingprofile.cpp	2010-09-11 11:03:44.604292000 -0400
+@@ -1216,6 +1216,13 @@ RecordingProfile::RecordingProfile(QStri
+     addChild(profile);
+ };
+ 
++RecordingProfile::~RecordingProfile()
++{
++    id->deleteLater();
++    delete name;
++    name = NULL;
++}
++
+ void RecordingProfile::ResizeTranscode(bool resize)
+ {
+     MythWizard *wizard = (MythWizard *)dialog;
+diff -Naurp mythtv-0.23.1.orig/libs/libmythtv/recordingprofile.h mythtv-0.23.1.new/libs/libmythtv/recordingprofile.h
+--- mythtv-0.23.1.orig/libs/libmythtv/recordingprofile.h	2009-10-21 19:30:12.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythtv/recordingprofile.h	2010-09-18 23:12:48.452556000 -0400
+@@ -84,7 +84,8 @@ class MPUBLIC RecordingProfile : public 
+ 
+   public:
+     // initializers
+-    RecordingProfile(QString profName = NULL);
++    RecordingProfile(QString profName = QString());
++    ~RecordingProfile();
+     virtual void loadByID(int id);
+     virtual bool loadByType(const QString &name, const QString &cardtype);
+     virtual bool loadByGroup(const QString &name, const QString &group);
 diff -Naurp mythtv-0.23.1.orig/libs/libmythui/lirc.cpp mythtv-0.23.1.new/libs/libmythui/lirc.cpp
 --- mythtv-0.23.1.orig/libs/libmythui/lirc.cpp	2009-11-28 10:55:09.000000000 -0500
 +++ mythtv-0.23.1.new/libs/libmythui/lirc.cpp	2010-07-23 21:29:36.107491000 -0400
@@ -2708,9 +3147,265 @@ diff -Naurp mythtv-0.23.1.orig/libs/libmythui/lirc.cpp mythtv-0.23.1.new/libs/li
              QString text = "";
              if (!mod)
                  text = QString(QChar(keycode));
+diff -Naurp mythtv-0.23.1.orig/libs/libmythui/mythmainwindow.cpp mythtv-0.23.1.new/libs/libmythui/mythmainwindow.cpp
+--- mythtv-0.23.1.orig/libs/libmythui/mythmainwindow.cpp	2010-05-13 14:40:15.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythui/mythmainwindow.cpp	2010-09-19 01:30:08.643731000 -0400
+@@ -861,8 +861,6 @@ bool MythMainWindow::event(QEvent *e)
+ 
+ void MythMainWindow::Init(void)
+ {
+-    fonTweak = GetMythDB()->GetNumSetting("QtFonTweak", 0);
+-
+     bool hideCursor = GetMythDB()->GetNumSetting("HideMouseCursor", 1);
+ #ifdef QWS
+     QWSServer::setCursorVisible(!hideCursor);
+@@ -1945,8 +1943,6 @@ int MythMainWindow::NormalizeFontSize(in
+     floatSize = floatSize * desired / logicalDpiY;
+     // adjust for myth GUI size relative to 800x600
+     floatSize = floatSize * d->hmult;
+-    // adjust by the configurable fine tuning percentage
+-    floatSize = floatSize * ((100.0 + fonTweak) / 100.0);
+     // round to the nearest point size
+     pointSize = (int)(floatSize + 0.5);
+ 
+diff -Naurp mythtv-0.23.1.orig/libs/libmythui/mythmainwindow.h mythtv-0.23.1.new/libs/libmythui/mythmainwindow.h
+--- mythtv-0.23.1.orig/libs/libmythui/mythmainwindow.h	2010-04-29 20:59:58.000000000 -0400
++++ mythtv-0.23.1.new/libs/libmythui/mythmainwindow.h	2010-09-19 01:30:08.643731000 -0400
+@@ -97,7 +97,6 @@ class MPUBLIC MythMainWindow : public QW
+     QSize NormSize(const QSize &size);
+     int NormX(const int x);
+     int NormY(const int y);
+-    int fonTweak;
+ 
+     void StartLIRC(void);
+ 
+diff -Naurp mythtv-0.23.1.orig/libs/libmythui/mythuihelper.cpp mythtv-0.23.1.new/libs/libmythui/mythuihelper.cpp
+--- mythtv-0.23.1.orig/libs/libmythui/mythuihelper.cpp	2010-02-11 15:29:25.000000000 -0500
++++ mythtv-0.23.1.new/libs/libmythui/mythuihelper.cpp	2010-09-19 01:30:08.643731000 -0400
+@@ -119,8 +119,6 @@ class MythUIHelperPrivate
+ 
+     QString themecachedir;
+ 
+-    int bigfontsize, mediumfontsize, smallfontsize;
+-
+     ScreenSaverControl *screensaver;
+     bool screensaverEnabled;
+ 
+@@ -149,7 +147,6 @@ MythUIHelperPrivate::MythUIHelperPrivate
+       m_cacheLock(new QMutex(QMutex::Recursive)), m_cacheSize(0),
+       m_cacheSizeLock(new QMutex(QMutex::Recursive)),
+       m_screenxbase(0), m_screenybase(0), m_screenwidth(0), m_screenheight(0),
+-      bigfontsize(0), mediumfontsize(0), smallfontsize(0),
+       screensaver(NULL), screensaverEnabled(false), display_res(NULL),
+       screenSetup(false), m_imageThreadPool(new QThreadPool()), parent(p)
+ {
+@@ -448,10 +445,6 @@ void MythUIHelper::LoadQtConfig(void)
+     if (themename == "default")
+         themename = "defaultmenu";
+     d->m_menuthemepathname = FindMenuThemeDir(themename) + '/';
+-
+-    d->bigfontsize    = GetMythDB()->GetNumSetting("QtFontBig",    25);
+-    d->mediumfontsize = GetMythDB()->GetNumSetting("QtFontMedium", 16);
+-    d->smallfontsize  = GetMythDB()->GetNumSetting("QtFontSmall",  12);
+ }
+ 
+ Settings *MythUIHelper::qtconfig(void)
+@@ -1380,7 +1373,7 @@ MythImage *MythUIHelper::LoadCacheImage(
+ QFont MythUIHelper::GetBigFont(void)
+ {
+     QFont font = QApplication::font();
+-    font.setPointSize(GetMythMainWindow()->NormalizeFontSize(d->bigfontsize));
++    font.setPointSize(GetMythMainWindow()->NormalizeFontSize(25));
+     font.setWeight(QFont::Bold);
+ 
+     return font;
+@@ -1389,8 +1382,7 @@ QFont MythUIHelper::GetBigFont(void)
+ QFont MythUIHelper::GetMediumFont(void)
+ {
+     QFont font = QApplication::font();
+-    font.setPointSize(GetMythMainWindow()
+-                          ->NormalizeFontSize(d->mediumfontsize));
++    font.setPointSize(GetMythMainWindow()->NormalizeFontSize(16));
+     font.setWeight(QFont::Bold);
+ 
+     return font;
+@@ -1399,7 +1391,7 @@ QFont MythUIHelper::GetMediumFont(void)
+ QFont MythUIHelper::GetSmallFont(void)
+ {
+     QFont font = QApplication::font();
+-    font.setPointSize(GetMythMainWindow()->NormalizeFontSize(d->smallfontsize));
++    font.setPointSize(GetMythMainWindow()->NormalizeFontSize(12));
+     font.setWeight(QFont::Bold);
+ 
+     return font;
+diff -Naurp mythtv-0.23.1.orig/libs/libmythupnp/eventing.h mythtv-0.23.1.new/libs/libmythupnp/eventing.h
+--- mythtv-0.23.1.orig/libs/libmythupnp/eventing.h	2009-12-31 00:38:50.000000000 -0500
++++ mythtv-0.23.1.new/libs/libmythupnp/eventing.h	2010-09-21 15:48:24.528714000 -0400
+@@ -173,6 +173,11 @@ class UPNP_PUBLIC  StateVariable : publi
+ 
+ //////////////////////////////////////////////////////////////////////////////
+ 
++template<typename T>
++inline T state_var_init(const T*) { return (T)(0); }
++template<>
++inline QString state_var_init(const QString*) { return QString(); }
++
+ class UPNP_PUBLIC StateVariables
+ {   
+     protected:
+@@ -231,9 +236,10 @@ class UPNP_PUBLIC StateVariables
+         template < class T >
+         T GetValue( const QString &sName )
+         {
++            T *dummy = NULL;
+             SVMap::iterator it = m_map.find(sName);
+             if (it == m_map.end())
+-                return T(0);
++                return state_var_init(dummy);
+ 
+             StateVariable< T > *pVariable =
+                 dynamic_cast< StateVariable< T > *>( *it );
+@@ -241,7 +247,7 @@ class UPNP_PUBLIC StateVariables
+             if (pVariable != NULL)
+                 return pVariable->GetValue();
+ 
+-            return T(0);
++            return state_var_init(dummy);
+         }
+ 
+         uint BuildNotifyBody(QTextStream &ts, TaskTime ttLastNotified) const;
+diff -Naurp mythtv-0.23.1.orig/programs/mythfrontend/globalsettings.cpp mythtv-0.23.1.new/programs/mythfrontend/globalsettings.cpp
+--- mythtv-0.23.1.orig/programs/mythfrontend/globalsettings.cpp	2010-04-04 11:28:25.000000000 -0400
++++ mythtv-0.23.1.new/programs/mythfrontend/globalsettings.cpp	2010-09-19 01:30:08.643731000 -0400
+@@ -2983,44 +2983,6 @@ static GlobalCheckBox *LiveTVPriority()
+     return bc;
+ }
+ 
+-static HostSpinBox *QtFontBig()
+-{
+-    HostSpinBox *gs = new HostSpinBox("QtFontBig", 1, 48, 1);
+-    gs->setLabel(QObject::tr("\"Big\" font"));
+-    gs->setValue(25);
+-    gs->setHelpText(QObject::tr("Default size is 25."));
+-    return gs;
+-}
+-
+-static HostSpinBox *QtFontMedium()
+-{
+-    HostSpinBox *gs = new HostSpinBox("QtFontMedium", 1, 48, 1);
+-    gs->setLabel(QObject::tr("\"Medium\" font"));
+-    gs->setValue(16);
+-    gs->setHelpText(QObject::tr("Default size is 16."));
+-    return gs;
+-}
+-
+-static HostSpinBox *QtFontSmall()
+-{
+-    HostSpinBox *gs = new HostSpinBox("QtFontSmall", 1, 48, 1);
+-    gs->setLabel(QObject::tr("\"Small\" font"));
+-    gs->setValue(12);
+-    gs->setHelpText(QObject::tr("Default size is 12."));
+-    return gs;
+-}
+-
+-static HostSpinBox *QtFonTweak()
+-{
+-    HostSpinBox *gs = new HostSpinBox("QtFonTweak", -30, 30, 1);
+-    gs->setLabel(QObject::tr("Fine tune font size (\%)"));
+-    gs->setValue(0);
+-    gs->setHelpText(QObject::tr("Fine tune all font sizes by this percentage. "
+-                    "Font sizes should be the correct relative size if the "
+-                    "X11 DPI (dots per inch) is set to 100."));
+-    return gs;
+-}
+-
+ // EPG settings
+ static HostCheckBox *EPGShowCategoryColors()
+ {
+@@ -4646,10 +4608,6 @@ AppearanceSettings::AppearanceSettings()
+ 
+     VerticalConfigurationGroup* qttheme = new VerticalConfigurationGroup(false);
+     qttheme->setLabel(QObject::tr("QT"));
+-    qttheme->addChild(QtFontSmall());
+-    qttheme->addChild(QtFontMedium());
+-    qttheme->addChild(QtFontBig());
+-    qttheme->addChild(QtFonTweak());
+     qttheme->addChild(PlayBoxTransparency());
+     qttheme->addChild(PlayBoxShading());
+     qttheme->addChild(UseVirtualKeyboard());
+diff -Naurp mythtv-0.23.1.orig/programs/mythfrontend/guidegrid.cpp mythtv-0.23.1.new/programs/mythfrontend/guidegrid.cpp
+--- mythtv-0.23.1.orig/programs/mythfrontend/guidegrid.cpp	2010-01-19 12:49:27.000000000 -0500
++++ mythtv-0.23.1.new/programs/mythfrontend/guidegrid.cpp	2010-10-17 18:12:00.336794000 -0400
+@@ -166,6 +166,10 @@ bool JumpToChannel::Update(void)
+ void GuideGrid::RunProgramGuide(uint chanid, const QString &channum,
+                     TV *player, bool embedVideo, bool allowFinder, int changrpid)
+ {
++    // which channel group should we default to
++    if (changrpid == -2)
++        changrpid = gContext->GetNumSetting("ChannelGroupDefault", -1);
++
+     // check there are some channels setup
+     DBChanList channels = ChannelUtil::GetChannels(0, true, "", changrpid);
+     if (!channels.size())
+@@ -404,6 +408,9 @@ GuideGrid::~GuideGrid()
+     // tell the player to update its channel list just in case
+     if (m_player)
+         m_player->UpdateChannelList(m_changrpid);
++
++    if (gContext->GetNumSetting("ChannelGroupRememberLast", 0))
++        gContext->SaveSetting("ChannelGroupDefault", m_changrpid);
+ }
+ 
+ bool GuideGrid::keyPressEvent(QKeyEvent *event)
+diff -Naurp mythtv-0.23.1.orig/programs/mythfrontend/main.cpp mythtv-0.23.1.new/programs/mythfrontend/main.cpp
+--- mythtv-0.23.1.orig/programs/mythfrontend/main.cpp	2010-03-14 08:58:39.000000000 -0400
++++ mythtv-0.23.1.new/programs/mythfrontend/main.cpp	2010-10-17 18:12:00.336794000 -0400
+@@ -224,7 +224,7 @@ void startGuide(void)
+     uint chanid = 0;
+     QString channum = gContext->GetSetting("DefaultTVChannel");
+     channum = (channum.isEmpty()) ? "3" : channum;
+-    GuideGrid::RunProgramGuide(chanid, channum);
++    GuideGrid::RunProgramGuide(chanid, channum, NULL, false, true, -2);
+ }
+ 
+ void startFinder(void)
+diff -Naurp mythtv-0.23.1.orig/programs/mythfrontend/playbackbox.cpp mythtv-0.23.1.new/programs/mythfrontend/playbackbox.cpp
+--- mythtv-0.23.1.orig/programs/mythfrontend/playbackbox.cpp	2010-07-16 22:09:27.000000000 -0400
++++ mythtv-0.23.1.new/programs/mythfrontend/playbackbox.cpp	2010-10-17 19:21:27.210078000 -0400
+@@ -1162,9 +1162,6 @@ void PlaybackBox::updateRecList(MythUIBu
+ 
+     m_recordingList->Reset();
+ 
+-    if (groupname == "default")
+-        groupname.clear();
+-
+     ProgramMap::iterator pmit = m_progLists.find(groupname);
+     if (pmit == m_progLists.end())
+         return;
+@@ -1514,7 +1511,7 @@ bool PlaybackBox::UpdateUILists(void)
+                 {
+                     sTitle = sortTitle(p->title, m_viewMask, titleSort,
+                             p->recpriority);
+-                    sTitle = sTitle.toLower();
++                    sTitle = sTitle.toLower().simplified();
+ 
+                     if (!sortedList.contains(sTitle))
+                         sortedList[sTitle] = p->title;
+diff -Naurp mythtv-0.23.1.orig/programs/mythfrontend/progfind.cpp mythtv-0.23.1.new/programs/mythfrontend/progfind.cpp
+--- mythtv-0.23.1.orig/programs/mythfrontend/progfind.cpp	2010-04-02 08:06:01.000000000 -0400
++++ mythtv-0.23.1.new/programs/mythfrontend/progfind.cpp	2010-10-17 18:12:00.336794000 -0400
+@@ -403,7 +403,7 @@ void ProgFinder::showGuide()
+         if (startchannel.isEmpty())
+             startchannel = '3';
+         uint startchanid = 0;
+-        GuideGrid::RunProgramGuide(startchanid, startchannel, m_player, m_embedVideo, false);
++        GuideGrid::RunProgramGuide(startchanid, startchannel, m_player, m_embedVideo, false, -2);
+     }
+ }
+ 
 diff -Naurp mythtv-0.23.1.orig/programs/mythfrontend/proglist.cpp mythtv-0.23.1.new/programs/mythfrontend/proglist.cpp
 --- mythtv-0.23.1.orig/programs/mythfrontend/proglist.cpp	2010-01-24 09:23:40.000000000 -0500
-+++ mythtv-0.23.1.new/programs/mythfrontend/proglist.cpp	2010-07-25 23:07:19.192973000 -0400
++++ mythtv-0.23.1.new/programs/mythfrontend/proglist.cpp	2010-10-17 19:10:29.333985000 -0400
 @@ -912,10 +912,14 @@ void ProgLister::fillViewList(const QStr
          {
              while (query.next())
@@ -2728,6 +3423,621 @@ diff -Naurp mythtv-0.23.1.orig/programs/mythfrontend/proglist.cpp mythtv-0.23.1.
                  m_viewList << phrase;
                  m_viewTextList << phrase;
              }
+@@ -2069,7 +2073,7 @@ PowerSearchPopup::PowerSearchPopup(MythS
+             : MythScreenType(parentStack, "phrasepopup"),
+               m_parent(parent), m_searchType(searchType), m_list(list),
+               m_currentValue(currentValue),
+-              m_titleText(NULL), m_phraseList(NULL), m_phraseEdit(NULL),
++              m_titleText(NULL), m_phraseList(NULL),
+               m_editButton(NULL), m_deleteButton(NULL), m_recordButton(NULL)
+ {
+ }
+@@ -2200,14 +2204,14 @@ void PowerSearchPopup::deleteClicked(voi
+         m_parent->m_curView = -1;
+ 
+     if (m_parent->m_viewList.count() < 1)
+-        SetFocusWidget(m_phraseEdit);
++        SetFocusWidget(m_phraseList);
+     else
+-        SetFocusWidget(m_phraseEdit);
++        SetFocusWidget(m_phraseList);
+ }
+ 
+ void PowerSearchPopup::recordClicked(void)
+ {
+-    QString text = m_phraseEdit->GetText();
++    QString text = m_phraseList->GetValue();
+     bool genreflag = false;
+ 
+     QString what = text;
+@@ -2248,7 +2252,7 @@ void PowerSearchPopup::recordClicked(voi
+     {
+         record->LoadBySearch(m_searchType, text, what);
+     }
+-    
++
+     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
+     ScheduleEditor *schededit = new ScheduleEditor(mainStack, record);
+     if (schededit->Create())
+diff -Naurp mythtv-0.23.1.orig/programs/scripts/database/mythconverg_restore.pl mythtv-0.23.1.new/programs/scripts/database/mythconverg_restore.pl
+--- mythtv-0.23.1.orig/programs/scripts/database/mythconverg_restore.pl	2010-01-11 14:51:52.000000000 -0500
++++ mythtv-0.23.1.new/programs/scripts/database/mythconverg_restore.pl	2010-10-17 18:25:35.875524000 -0400
+@@ -13,12 +13,12 @@
+ 
+ # Script info
+     $NAME           = 'MythTV Database Restore Script';
+-    $VERSION        = '1.0.12';
++    $VERSION        = '1.0.15';
+ 
+ # Some variables we'll use here
+     our ($username, $homedir, $mythconfdir, $database_information_file);
+     our ($partial_restore, $with_plugin_data, $restore_xmltvids);
+-    our ($mysql_client, $uncompress, $mc_sql);
++    our ($mysql_client, $uncompress, $drop_database, $create_database);
+     our ($change_hostname, $old_hostname, $new_hostname);
+     our ($usage, $debug, $show_version, $show_version_script, $dbh);
+     our ($d_mysql_client, $d_db_name, $d_uncompress);
+@@ -72,7 +72,8 @@
+                'restore_xmltvids|xmltvids'          => \$restore_xmltvids,
+                'mysql_client|client=s'              => \$mysql_client,
+                'uncompress=s'                       => \$uncompress,
+-               'create_database|create_db|mc_sql=s' => \$mc_sql,
++               'drop_database|drop_db'              => \$drop_database,
++               'create_database|create_db|mc_sql'   => \$create_database,
+                'change_hostname'                    => \$change_hostname,
+                'new_hostname=s'                     => \$new_hostname,
+                'old_hostname=s'                     => \$old_hostname,
+@@ -127,10 +128,12 @@ executable by issuing the command:
+ 
+ # mysql -umythtv -p mythconverg -e "DROP DATABASE IF EXISTS mythconverg;"
+ 
+-(fix the database name, username, and password, as required). Then, execute the
+-mc.sql script as described in the MythTV HOWTO ( http://www.mythtv.org/docs/ )
+-to prepare a new (empty) database (or see the description of the
+---create_database argument in the detailed help).
++(fix the database name and username, as required). Then, execute the mc.sql
++script as described in the MythTV HOWTO ( http://www.mythtv.org/docs/ ) to
++prepare a new (empty) database. Alternatively, you may specify the
++--drop_database and/or --create_database arguments to automatically drop and/or
++create the database for you (see the command-line argument descriptions in the
++detailed help for more information).
+ 
+ Then, run this script to restore the most-recent backup in the directory
+ specified in ~/.mythtv/backuprc . Use the --verbose argument to see what is
+@@ -207,21 +210,9 @@ backup resource file, or a MySQL options
+ the same way or may be specified using a command-line argument if not using a
+ database information file.
+ 
+-If no database exists, the script can attempt to create the initial database.
+-To allow this, specify the --create_database argument and specify the location
+-of the mc.sql script (full directory/filename). On most MySQL configurations
+-this will fail unless connecting to the database using the MySQL root user--
+-even if the user specified has CREATE DATABASE privilege--as RELOAD privilege
+-is also required. Though you may specify '--username=root' on the command line,
+-the script does not allow specifying a database password on the command line.
+-Therefore, you will need to specify 'DBPassword=<MySQL root user password>' in
+-the backup resource file.
+-
+ If attempting to perform a full restore, the database must be empty (no
+-tables), or--if the script is allowed to create the initial database, as
+-explained above--must not exist. If attempting to do a partial or "new
+-hardware" restore, the database must exist and must have tables. See QUICK
+-START, below, for more information.
++tables). To automatically drop any existing database and create an empty
++database, specify the --drop_database and the --create_database arguments.
+ 
+ If you have a corrupt database, you may be able to recover some information
+ using a partial restore. To do a partial restore, you must have a
+@@ -234,8 +225,10 @@ with:
+ 
+ # $0 --partial_restore
+ 
+-Include the --with_plugin_data argument if you would like to keep the data
+-used by MythTV plugins.
++Include the --with_plugin_data argument if you would like to keep the data used
++by MythTV plugins.  Note that this approach can not be used to "merge"
++databases from different MythTV databases nor to import recordings from other
++MythTV databases.
+ 
+ If you would like to do a partial/new-hardware restore and have upgraded
+ MythTV, you must first do a full restore, then start and exit mythtv-setup (to
+@@ -301,14 +294,6 @@ files. The following variables are recog
+                      specified. Therefore, if IO::Uncompress::Gunzip is
+                      installed and functional, specifying a value for
+                      uncompress is unnecessary.
+-  create_database  - The location of the mc.sql script (full directory and
+-                     filename). If specified, and if the database does not
+-                     exist, the script will attempt to create the initial
+-                     database by running the specified mc.sql script commands.
+-                     This probably requires running the restore script with
+-                     the DBUserName set to root. See, also, the MythTV HOWTO
+-                     ( http://www.mythtv.org/docs/ )for details on "Setting up
+-                     the initial database."
+ 
+ RESOURCE FILE
+ 
+@@ -379,7 +364,7 @@ options:
+ 
+ --restore_xmltvids
+ 
+-    Restore channel xmltvids from a backup create with
++    Restore channel xmltvids from a backup created with
+     mythconverg_backup.pl --backup_xmltvids
+ 
+ --mysql_client [path]
+@@ -396,10 +381,20 @@ options:
+ 
+     Default: $d_uncompress
+ 
+---create_database [path]
++--drop_database
+ 
+-    The location of the mc.sql script (full directory and filename). See
+-    create_database in the DATABASE INFORMATION FILE description, above.
++    If specified, and if the database already exists, the script will attempt
++    to drop the database. This argument may only be used when the
++    --create_database argument is also specified (see below).
++
++--create_database
++
++    If specified, and if the database does not exist or the --drop_database
++    argument is specified, the script will attempt to create the initial
++    database. Note that database creation requires a properly configured MySQL
++    user and permissions.  See, also, the MythTV HOWTO (
++    http://www.mythtv.org/docs/ ) for details on "Setting up the initial
++    database."
+ 
+ --change_hostname
+ 
+@@ -474,7 +469,8 @@ EOF
+                 "        DBSchemaVer: $mysql_conf{'db_schemaver'}",
+                 "  DBBackupDirectory: $backup_conf{'directory'}",
+                 "   DBBackupFilename: $backup_conf{'filename'}",
+-                '    create_database: '.($mc_sql ? $mc_sql : ''));
++                '      drop_database: '.($drop_database ? 'yes' : 'no'),
++                '    create_database: '.($create_database ? 'yes' : 'no'));
+         verbose($verbose_level_debug,
+                 '',
+                 'Executables:',
+@@ -614,10 +610,6 @@ EOF
+             {
+                 $uncompress = $val;
+             }
+-            elsif ($var eq 'create_database')
+-            {
+-                $mc_sql = $val;
+-            }
+         }
+         close CONF;
+         return 1;
+@@ -786,11 +778,11 @@ EOF
+             verbose($verbose_level_error,
+                     '', 'ERROR: DBBackupDirectory is not a directory. Please'.
+                     ' specify a directory in',
+-                    '        your database information file using'.
++                    '       your database information file using'.
+                     ' DBBackupDirectory.',
+-                    '        If not using a database information file,' .
++                    '       If not using a database information file,' .
+                     ' please specify the ',
+-                    '        --directory command-line option.');
++                    '       --directory command-line option.');
+             die("\nInvalid backup directory, stopped");
+         }
+         if (!$backup_conf{'filename'})
+@@ -812,7 +804,7 @@ EOF
+                 }
+             }
+             my @files = <$backup_conf{'directory'}/$backup_conf{'filename'}*>;
+-            @files = grep(!/.*mythconverg_(backup|restore).pl$/, @files);
++            @files = grep(!/.*mythconverg_(backup|restore).*\.pl$/, @files);
+             my $num_files = @files;
+             if ($num_files < 1)
+             {
+@@ -913,16 +905,24 @@ EOF
+         }
+     }
+ 
+-    sub database_exists
++    sub connect_to_database
+     {
+-        $result = 1;
+-        $dbh = DBI->connect("dbi:mysql:".
+-                            "database=$mysql_conf{'db_name'}:".
+-                            "host=$mysql_conf{'db_host'}",
++        my $use_db = shift;
++        my $show_errors = shift;
++        my $result = 1;
++        my $connect_string = 'dbi:mysql:database=';
++        if ($use_db)
++        {
++            $connect_string .= $mysql_conf{'db_name'};
++        }
++        $connect_string .= ":host=$mysql_conf{'db_host'}";
++        $dbh->disconnect if (defined($dbh));
++        $dbh = DBI->connect($connect_string,
+                             "$mysql_conf{'db_user'}",
+                             "$mysql_conf{'db_pass'}",
+                             { PrintError => 0 });
+-        if (!defined($dbh))
++        $result = 0 if (!defined($dbh));
++        if ($show_errors && !defined($dbh))
+         {
+             verbose($verbose_level_always,
+                     '', 'Unable to connect to database.',
+@@ -930,13 +930,13 @@ EOF
+                     "               host: $mysql_conf{'db_host'}",
+                     "           username: $mysql_conf{'db_user'}"
+                    );
+-        if ($debug < $verbose_level_debug)
+-        {
+-            verbose($verbose_level_always,
+-                    'To see the password used, please re-run the script with'.
+-                    ' the --verbose',
+-                    'argument.');
+-        }
++            if ($debug < $verbose_level_debug)
++            {
++                verbose($verbose_level_always,
++                        'To see the password used, please re-run the script '.
++                        'with the --verbose',
++                        'argument.');
++            }
+         # Connection issues will only occur with improper user configuration
+         # Because they should be rare, output the password with --verbose
+             verbose($verbose_level_debug,
+@@ -956,76 +956,21 @@ EOF
+                     ' will take precedence over',
+                     'the password specified in the MythTV configuration'.
+                     ' files.');
+-            $result = 0;
+         }
+         return $result;
+     }
+ 
+-    sub create_initial_database
++    sub is_database_empty
+     {
+-        return 1 if (!$mc_sql);
+-        return 1 if (!-r "$mc_sql");
+-
+-        my $defaults_extra_file = create_defaults_extra_file;
+-        my $host_arg = '';
+-        my $port_arg = '';
+-        my $user_arg = '';
+-        if ($defaults_extra_file)
+-        {
+-            $defaults_arg = " --defaults-extra-file='$defaults_extra_file'";
+-        }
+-        else
+-        {
+-            $defaults_arg = '';
+-        }
+-        my $safe_mysql_client = $mysql_client;
+-        $safe_mysql_client =~ s/'/'\\''/g;
+-    # Create the args for host, port, and user, shell-escaping values, as
+-    # necessary.
+-        my $safe_string;
+-        if ($mysql_conf{'db_host'})
+-        {
+-            $safe_string = $mysql_conf{'db_host'};
+-            $safe_string =~ s/'/'\\''/g;
+-            $host_arg = " --host='$safe_string'";
+-        }
+-        if ($mysql_conf{'db_port'} > 0)
+-        {
+-            $safe_string = $mysql_conf{'db_port'};
+-            $safe_string =~ s/'/'\\''/g;
+-            $port_arg = " --port='$safe_string'";
+-        }
+-        if ($mysql_conf{'db_user'})
+-        {
+-            $safe_string = $mysql_conf{'db_user'};
+-            $safe_string =~ s/'/'\\''/g;
+-            $user_arg = " --user='$safe_string'";
+-        }
+-        verbose($verbose_level_debug,
+-                '', 'Attempting to create initial database.');
+-        my $safe_mc_sql = $mc_sql;
+-        $safe_mc_sql =~ s/'/'\\''/g;
+-    # Use redirects to capture stdout and stderr (for debug)
+-        my $command = "'${safe_mysql_client}'${defaults_arg}${host_arg}".
+-                      "${port_arg}${user_arg} 2>&1 < '$safe_mc_sql'";
+-        verbose($verbose_level_debug,
+-                '', 'Executing command:', $command);
+-        my $result = `$command`;
+-        my $exit = $? >> 8;
+-        verbose($verbose_level_debug,
+-                '', "$mysql_client exited with status: $exit");
+-        if ($exit)
++        my $result = 1;
++        connect_to_database(1, 1);
++        if (!defined($dbh))
+         {
+             verbose($verbose_level_error,
+-                    "$mysql_client output:", $result);
+-            die("\nUnable to create initial database, stopped");
++                    '', 'ERROR: Unable to connect to database.');
++            return -1;
+         }
+-        return $exit;
+-    }
+ 
+-    sub is_database_empty
+-    {
+-        $result = 1;
+         if (defined($dbh))
+         {
+             my $sth = $dbh->table_info('', '', '', 'TABLE');
+@@ -1045,6 +990,97 @@ EOF
+         return $result;
+     }
+ 
++    sub create_initial_database
++    {
++        return 0 if (!$create_database && !$drop_database);
++
++        my $database_exists = (connect_to_database(1, 0) && defined($dbh));
++        if ($database_exists)
++        {
++            if ($drop_database && !$create_database)
++            {
++                verbose($verbose_level_error,
++                        '', 'ERROR: Refusing to drop the database without'.
++                        ' the --create_database argument.',
++                        'If you really want to drop the database, please '.
++                        're-run the script and specify',
++                        'the --create_database argument, too.');
++                return 2;
++            }
++        }
++        else
++        {
++            if (!$create_database)
++            {
++                verbose($verbose_level_error,
++                        '', 'ERROR: The database does not exist.');
++                return 1;
++            }
++        }
++
++        verbose($verbose_level_debug,
++                '', 'Preparing initial database.');
++
++        my ($query, $sth);
++
++        if ($database_exists && $drop_database)
++        {
++            verbose($verbose_level_debug, 'Dropping database.');
++            connect_to_database(0, 1);
++            if (!defined($dbh))
++            {
++                verbose($verbose_level_error,
++                        '', 'ERROR: Unable to connect to database.');
++                return -1;
++            }
++
++            $query = qq{DROP DATABASE $mysql_conf{'db_name'};};
++            $sth = $dbh->prepare($query);
++            if (! $sth->execute())
++            {
++                verbose($verbose_level_error,
++                        '', 'ERROR: Unable to drop database.',
++                        $sth->errstr);
++                return -2;
++            }
++        }
++
++        connect_to_database(0, 1) if (!defined($dbh));
++
++        if (!defined($dbh))
++        {
++            verbose($verbose_level_error,
++                    '', 'ERROR: Unable to connect to database.');
++            return -1;
++        }
++
++        verbose($verbose_level_debug, 'Creating database.');
++        $query = qq{CREATE DATABASE $mysql_conf{'db_name'};};
++        $sth = $dbh->prepare($query);
++        if (! $sth->execute())
++        {
++            verbose($verbose_level_error,
++                    '', 'ERROR: Unable to create database.',
++                    $sth->errstr);
++            return -4;
++        }
++
++        verbose($verbose_level_debug, 'Setting database character set.');
++        $query = qq{ALTER DATABASE $mysql_conf{'db_name'}
++                    DEFAULT CHARACTER SET latin1
++                    COLLATE latin1_swedish_ci;};
++        $sth = $dbh->prepare($query);
++        if (! $sth->execute())
++        {
++            verbose($verbose_level_error,
++                    '', 'ERROR: Unable to create database.',
++                    $sth->errstr);
++            return -8;
++        }
++
++        return 0;
++    }
++
+     sub check_database_libs
+     {
+     # Try to load the DBI library if available (but don't require it)
+@@ -1079,14 +1115,14 @@ EOF
+         my $have_database_libs = check_database_libs;
+         if ($have_database_libs < 2)
+         {
+-            if ($mc_sql)
++            if ($create_database || $drop_database)
+             {
+                 verbose($verbose_level_error,
+-                        '',
+-                        'ERROR: Unable to create initial database without'.
+-                        ' Perl database libraries.',
+-                        '        Please ensure the Perl DBI and DBD::mysql'.
+-                        ' modules are installed.');
++                        '', 'ERROR: Unable to drop or create the initial '.
++                        'database without Perl database',
++                        '       libraries.',
++                        'Please ensure the Perl DBI and DBD::mysql modules'.
++                        ' are installed.');
+                 die("\nPerl database libraries missing, stopped");
+             }
+             if ($change_hostname)
+@@ -1094,8 +1130,8 @@ EOF
+                 verbose($verbose_level_error,
+                         '', 'ERROR: Unable to change hostname without Perl'.
+                         ' database libraries.',
+-                        '        Please ensure the Perl DBI and DBD::mysql'.
+-                        ' modules are installed.');
++                        'Please ensure the Perl DBI and DBD::mysql modules'.
++                        ' are installed.');
+                 die("\nPerl database libraries missing, stopped");
+             }
+             else
+@@ -1111,16 +1147,17 @@ EOF
+     # DBI/DBD::mysql are available; check the DB status
+         verbose($verbose_level_debug,
+                 '', 'Checking database.');
+-        if (!database_exists)
++        my $initial_database = create_initial_database;
++        if ($initial_database)
+         {
+-            if (create_initial_database)
+-            {
+-                verbose($verbose_level_error,
+-                        '', 'ERROR: The database does not exist.');
+-                return 0;
+-            }
++            return 0;
+         }
+         my $database_empty = is_database_empty;
++        if ($database_empty == -1)
++        {
++        # Unable to connect to database
++            return 0;
++        }
+         if ($change_hostname)
+         {
+             if ($database_empty)
+@@ -1128,7 +1165,7 @@ EOF
+                 verbose($verbose_level_error,
+                         '', 'ERROR: Unable to change hostname. The database'.
+                         ' is empty.',
+-                        '        Please restore a backup, first, then re-run'.
++                        '       Please restore a backup, first, then re-run'.
+                         ' this script.');
+                 return 0;
+             }
+@@ -1140,7 +1177,7 @@ EOF
+                 verbose($verbose_level_error,
+                         '', 'ERROR: Unable to do a partial restore. The'.
+                         ' database is empty.',
+-                        '        Please run mythtv-setup, first, then re-run'.
++                        '       Please run mythtv-setup, first, then re-run'.
+                         ' this script.');
+                 return 0;
+             }
+@@ -1414,6 +1451,80 @@ EOF
+         return $exit;
+     }
+ 
++    sub get_db_schema_ver
++    {
++        connect_to_database(1, 1) if (!defined($dbh));
++        if (!defined($dbh))
++        {
++            verbose($verbose_level_error,
++                    '', 'ERROR: Unable to connect to database.');
++            return -1;
++        }
++        my $query = 'SELECT data FROM settings WHERE value = ?';
++        if (defined($dbh))
++        {
++            my $sth = $dbh->prepare($query);
++            if ($sth->execute('DBSchemaVer'))
++            {
++                while (my @data = $sth->fetchrow_array)
++                {
++                    $mysql_conf{'db_schemaver'} = $data[0];
++                    verbose($verbose_level_debug,
++                            '', 'Found DBSchemaVer:'.
++                            " $mysql_conf{'db_schemaver'}.");
++                }
++            }
++            else
++            {
++                verbose($verbose_level_debug,
++                        "Unable to retrieve DBSchemaVer from".
++                        " database.");
++            }
++        }
++
++        return 0;
++    }
++
++    sub set_database_charset
++    {
++        return 0 if (!$create_database && !$drop_database);
++
++        if (get_db_schema_ver && ! $mysql_conf{'db_schemaver'})
++        {
++            verbose($verbose_level_error,
++                    "Unknown database schema version.  Assuming current.");
++            $mysql_conf{'db_schemaver'} = '1216';
++        }
++
++        if ($mysql_conf{'db_schemaver'} > 1215)
++        {
++            connect_to_database(0, 1) if (!defined($dbh));
++            if (!defined($dbh))
++            {
++                verbose($verbose_level_error,
++                        '', 'ERROR: Unable to connect to database.');
++                return -1;
++            }
++
++            verbose($verbose_level_debug, 'Setting database character set.');
++
++            my ($query, $sth);
++            $query = qq{ALTER DATABASE $mysql_conf{'db_name'}
++                        DEFAULT CHARACTER SET utf8
++                        COLLATE utf8_general_ci;};
++            $sth = $dbh->prepare($query);
++            if (! $sth->execute())
++            {
++                verbose($verbose_level_error,
++                        '', 'ERROR: Unable to set database character set.',
++                        $sth->errstr);
++                return -16;
++            }
++        }
++
++        return 0;
++    }
++
+     sub restore_backup
+     {
+         my $exit = 0;
+@@ -1639,8 +1750,12 @@ EOF
+         elsif (!uncompress_backup_file)
+         {
+             $status = restore_backup;
+-            verbose($verbose_level_always,
+-                    '', 'Successfully restored backup.') if (!$status);
++            if (!$status)
++            {
++                verbose($verbose_level_always,
++                        '', 'Successfully restored backup.');
++                $status = set_database_charset;
++            }
+         }
+     }
+ 
 diff -Naurp mythtv-0.23.1.orig/VERSION mythtv-0.23.1.new/VERSION
 --- mythtv-0.23.1.orig/VERSION	2010-07-22 02:40:45.000000000 -0400
 +++ mythtv-0.23.1.new/VERSION	1969-12-31 19:00:00.000000000 -0500
