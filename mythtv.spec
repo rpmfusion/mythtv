@@ -80,7 +80,7 @@ Group:          Applications/Multimedia
 Version: 0.24
 %if "%{branch}" == "trunk"
 #Release: 0.1.svn.%{_svnrev}%{?dist}
-Release: 0.2.rc1%{?dist}
+Release: 0.2.rc2%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -134,9 +134,9 @@ Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
 #Patch0:    mythtv-%{version}-svnfixes.patch
 #Patch1:    mythplugins-%{version}-svnfixes.patch
 Source10:  PACKAGE-LICENSING
-Source101: mythbackend.sysconfig.in
-Source102: mythbackend.init.in
-Source103: mythbackend.logrotate.in
+Source101: mythbackend.sysconfig
+Source102: mythbackend.init
+Source103: mythbackend.logrotate
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
@@ -559,6 +559,9 @@ Obsoletes: mythphone < %{version}-%{release}
 # same deal for mythflix
 Provides: mythflix = %{version}-%{release}
 Obsoletes: mythflix < %{version}-%{release}
+# and now mythmovies
+Provides: mythmovies = %{version}-%{release}
+Obsoletes: mythmovies < %{version}-%{release}
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -597,6 +600,7 @@ Group:          Development/Languages
 #BuildArch:      noarch
 
 Requires:       MySQL-python
+Requires:       PyXML
 
 %description -n python-MythTV
 Provides a python-based interface to interacting with MythTV.
@@ -694,29 +698,6 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
-
-################################################################################
-#package -n mythgame-emulators
-#Summary:   Meta-package requiring emulators for game types mythgame knows about
-#Group:     Applications/Multimedia
-#Requires:  mythgame = %{version}-%{release}
-# Multi Arcade Machine Emulator, Amiga, Atari 2600
-#Requires:  sdlmame
-#Requires:  e-uae
-#Requires:  stella
-# Nintendo, Super Nintendo, Nintendo 64
-#Requires:  fceultra
-#Requires:  zsnes
-#Requires:  mupen64, mupen64-ricevideo
-# Sega Genesis, Sega Master System, Game Gear
-#Requires:  gens
-#Requires:  dega-sdl
-#Requires:  osmose
-# TurboGraphx 16 (and others)
-#Requires:  mednafen
-
-#description -n mythgame-emulators
-#Meta-package requiring emulators for game types mythgame knows about.
 
 %endif
 ################################################################################
@@ -826,7 +807,7 @@ Requires:  mythbrowser = %{version}-%{release}
 Requires:  python-MythTV = %{version}-%{release}
 Requires:  python-pycurl
 Requires:  python >= 2.5
-# Technically, it *does* require this... But its not in the RPM Fusion repos.
+# This is packaged in adobe's yum repo
 #Requires:  flash-plugin
 
 %description -n mythnetvision
@@ -868,25 +849,9 @@ cd mythtv-%{version}
     sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
         bindings/perl/Makefile
 
-# Install other source files, and fix pathnames
+# Install other source files
     cp -a %{SOURCE10} %{SOURCE101} %{SOURCE102} %{SOURCE103} .
     cp -a %{SOURCE106} %{SOURCE107} %{SOURCE108} %{SOURCE109} .
-    for file in mythbackend.init \
-                mythbackend.sysconfig \
-                mythbackend.logrotate; do
-        sed -e's|@logdir@|%{_localstatedir}/log|g' \
-            -e's|@rundir@|%{_localstatedir}/run|g' \
-            -e's|@sysconfdir@|%{_sysconfdir}|g' \
-            -e's|@sysconfigdir@|%{_sysconfdir}/sysconfig|g' \
-            -e's|@initdir@|%{_sysconfdir}/init.d|g' \
-            -e's|@bindir@|%{_bindir}|g' \
-            -e's|@sbindir@|%{_sbindir}|g' \
-            -e's|@subsysdir@|%{_localstatedir}/lock/subsys|g' \
-            -e's|@varlibdir@|%{_localstatedir}/lib|g' \
-            -e's|@varcachedir@|%{_localstatedir}/cache|g' \
-            -e's|@logrotatedir@|%{_sysconfdir}/logrotate.d|g' \
-            < $file.in > $file
-    done
 
 # Prevent all of those nasty installs to ../../../../../bin/whatever
 #    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
@@ -1397,12 +1362,6 @@ fi
 %dir %{_datadir}/mame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
-
-#files -n mythgame-emulators
-#defattr(-,root,root,-)
-#{_datadir}/mythtv/games/xmame
-#{_datadir}/mame/screens
-#{_datadir}/mame/flyers
 %endif
 
 %if %{with_mythmusic}
@@ -1492,6 +1451,11 @@ fi
 ################################################################################
 
 %changelog
+* Wed Nov 03 2010 Jarod Wilson <jarod@redhat.com> 0.24-0.2.rc2
+- Update to svn trunk, revision 27095 (post-rc2)
+- Add Obsoletes/Provides for nuked mythmovies
+- Restore run-with-non-root-backend-capable initscript from F13 branch
+
 * Tue Oct 26 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.2.rc1
 - Update to svn trunk, revision 26998 (which is actually post-0.24-rc1)
 
