@@ -65,7 +65,7 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r26998
+%define _svnrev r27095
 %define branch trunk
 
 #
