@@ -65,8 +65,8 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r27095
-%define branch trunk
+%define _svnrev r27163
+%define branch release-0-24-fixes
 
 #
 # Basic descriptive tags for this package:
@@ -79,8 +79,8 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.24
 %if "%{branch}" == "trunk"
-#Release: 0.1.svn.%{_svnrev}%{?dist}
-Release: 0.2.rc2%{?dist}
+Release: 0.1.svn.%{_svnrev}%{?dist}
+#Release: 0.1.rc1%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1451,7 +1451,10 @@ fi
 ################################################################################
 
 %changelog
-* Wed Nov 03 2010 Jarod Wilson <jarod@redhat.com> 0.24-0.2.rc2
+* Wed Nov 10 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-1
+- Update to 0.24 release
+
+* Wed Nov 03 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.2.rc2
 - Update to svn trunk, revision 27095 (post-rc2)
 - Add Obsoletes/Provides for nuked mythmovies
 - Restore run-with-non-root-backend-capable initscript from F13 branch
