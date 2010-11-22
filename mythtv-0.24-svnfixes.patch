@@ -1,0 +1,1539 @@
+diff -Naurp mythtv-0.24.orig/bindings/perl/IO/Socket/INET/MythTV.pm mythtv-0.24.new/bindings/perl/IO/Socket/INET/MythTV.pm
+--- mythtv-0.24.orig/bindings/perl/IO/Socket/INET/MythTV.pm	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/bindings/perl/IO/Socket/INET/MythTV.pm	2009-04-10 20:04:30.069718000 -0400
+@@ -3,8 +3,8 @@
+ # A MythTV Socket class that extends IO::Socket::INET to include some
+ # MythTV-specific data queries
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/bindings/perl/IO/Socket/INET/MythTV.pm $
+-# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/bindings/perl/IO/Socket/INET/MythTV.pm $
++# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ # @version   $Revision: 20349 $
+ # @author    $Author: xris $
+ # @copyright Silicon Mechanics
+diff -Naurp mythtv-0.24.orig/bindings/perl/MythTV/Channel.pm mythtv-0.24.new/bindings/perl/MythTV/Channel.pm
+--- mythtv-0.24.orig/bindings/perl/MythTV/Channel.pm	2010-05-22 20:48:40.000000000 -0400
++++ mythtv-0.24.new/bindings/perl/MythTV/Channel.pm	2010-05-22 20:48:40.085611000 -0400
+@@ -3,8 +3,8 @@
+ #
+ # Object containing info about a particular MythTV channel.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/bindings/perl/MythTV/Channel.pm $
+-# @date      $Date: 2010-05-22 17:48:40 -0700 (Sat, 22 May 2010) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/bindings/perl/MythTV/Channel.pm $
++# @date      $Date: 2010-05-22 20:48:40 -0400 (Sat, 22 May 2010) $
+ # @version   $Revision: 24799 $
+ # @author    $Author: mdean $
+ #
+diff -Naurp mythtv-0.24.orig/bindings/perl/MythTV/Program.pm mythtv-0.24.new/bindings/perl/MythTV/Program.pm
+--- mythtv-0.24.orig/bindings/perl/MythTV/Program.pm	2010-09-10 22:23:32.000000000 -0400
++++ mythtv-0.24.new/bindings/perl/MythTV/Program.pm	2010-09-10 22:23:32.573017000 -0400
+@@ -3,8 +3,8 @@
+ #
+ # Object containing info about a particular MythTV program.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/bindings/perl/MythTV/Program.pm $
+-# @date      $Date: 2010-09-10 19:23:32 -0700 (Fri, 10 Sep 2010) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/bindings/perl/MythTV/Program.pm $
++# @date      $Date: 2010-09-10 22:23:32 -0400 (Fri, 10 Sep 2010) $
+ # @version   $Revision: 26207 $
+ # @author    $Author: mdean $
+ #
+diff -Naurp mythtv-0.24.orig/bindings/perl/MythTV/Recording.pm mythtv-0.24.new/bindings/perl/MythTV/Recording.pm
+--- mythtv-0.24.orig/bindings/perl/MythTV/Recording.pm	2010-09-03 15:55:56.000000000 -0400
++++ mythtv-0.24.new/bindings/perl/MythTV/Recording.pm	2010-09-03 15:55:56.669684000 -0400
+@@ -3,8 +3,8 @@
+ #
+ # Object containing info about a particular MythTV recording.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/bindings/perl/MythTV/Recording.pm $
+-# @date      $Date: 2010-09-03 12:55:56 -0700 (Fri, 03 Sep 2010) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/bindings/perl/MythTV/Recording.pm $
++# @date      $Date: 2010-09-03 15:55:56 -0400 (Fri, 03 Sep 2010) $
+ # @version   $Revision: 26106 $
+ # @author    $Author: danielk $
+ #
+diff -Naurp mythtv-0.24.orig/bindings/perl/MythTV/StorageGroup.pm mythtv-0.24.new/bindings/perl/MythTV/StorageGroup.pm
+--- mythtv-0.24.orig/bindings/perl/MythTV/StorageGroup.pm	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/bindings/perl/MythTV/StorageGroup.pm	2009-04-10 20:04:30.069718000 -0400
+@@ -3,8 +3,8 @@
+ #
+ # Object containing info about a particular MythTV Storage Group.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/bindings/perl/MythTV/StorageGroup.pm $
+-# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/bindings/perl/MythTV/StorageGroup.pm $
++# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ # @version   $Revision: 20349 $
+ # @author    $Author: xris $
+ #
+diff -Naurp mythtv-0.24.orig/bindings/perl/MythTV.pm mythtv-0.24.new/bindings/perl/MythTV.pm
+--- mythtv-0.24.orig/bindings/perl/MythTV.pm	2010-09-29 13:08:29.000000000 -0400
++++ mythtv-0.24.new/bindings/perl/MythTV.pm	2010-09-29 13:08:29.859953000 -0400
+@@ -1,8 +1,8 @@
+ #
+ # MythTV bindings for perl.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/bindings/perl/MythTV.pm $
+-# @date      $Date: 2010-09-29 10:08:29 -0700 (Wed, 29 Sep 2010) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/bindings/perl/MythTV.pm $
++# @date      $Date: 2010-09-29 13:08:29 -0400 (Wed, 29 Sep 2010) $
+ # @version   $Revision: 26574 $
+ # @author    $Author: wagnerrp $
+ #
+diff -Naurp mythtv-0.24.orig/bindings/python/MythTV/mythproto.py mythtv-0.24.new/bindings/python/MythTV/mythproto.py
+--- mythtv-0.24.orig/bindings/python/MythTV/mythproto.py	2010-10-14 11:36:31.000000000 -0400
++++ mythtv-0.24.new/bindings/python/MythTV/mythproto.py	2010-11-12 13:12:59.291219000 -0500
+@@ -188,7 +188,7 @@ def ftopen(file, mode, forceremote=False
+     db = DBCache(db)
+     log = MythLog('Python File Transfer', db=db)
+     reuri = re.compile(\
+-        'myth://((?P<group>.*)@)?(?P<host>[a-zA-Z0-9_\.]*)(:[0-9]*)?/(?P<file>.*)')
++        'myth://((?P<group>.*)@)?(?P<host>[a-zA-Z0-9_\-\.]*)(:[0-9]*)?/(?P<file>.*)')
+     reip = re.compile('(?:\d{1,3}\.){3}\d{1,3}')
+ 
+     if mode not in ('r','w'):
+diff -Naurp mythtv-0.24.orig/bindings/python/MythTV/system.py mythtv-0.24.new/bindings/python/MythTV/system.py
+--- mythtv-0.24.orig/bindings/python/MythTV/system.py	2010-10-08 13:55:04.000000000 -0400
++++ mythtv-0.24.new/bindings/python/MythTV/system.py	2010-11-12 14:10:59.260250000 -0500
+@@ -195,7 +195,12 @@ class InternetMetadata( Metadata ):
+ 
+ class Grabber( System ):
+     def _processMetadata(self, xml):
+-        for item in etree.fromstring(xml).getiterator('item'):
++        try:
++            xml = etree.fromstring(xml)
++        except:
++            raise StopIteration
++
++        for item in xml.getiterator('item'):
+             yield self.cls(item)
+  
+     def command(self, *args):
+diff -Naurp mythtv-0.24.orig/contrib/icons/master_iconmap/channel_icons.pl mythtv-0.24.new/contrib/icons/master_iconmap/channel_icons.pl
+--- mythtv-0.24.orig/contrib/icons/master_iconmap/channel_icons.pl	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/contrib/icons/master_iconmap/channel_icons.pl	2009-04-10 20:04:30.069718000 -0400
+@@ -5,8 +5,8 @@
+ # Also does searches for artwork URLs based on callsign or xmltvid, or displays
+ # the master iconmap xml file from services.mythtv.org.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/contrib/icons/master_iconmap/channel_icons.pl $
+-# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/contrib/icons/master_iconmap/channel_icons.pl $
++# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ # @version   $Revision: 20349 $
+ # @author    $Author: xris $
+ # @copyright MythTV
+diff -Naurp mythtv-0.24.orig/contrib/maintenance/flush_deleted_recgroup.pl mythtv-0.24.new/contrib/maintenance/flush_deleted_recgroup.pl
+--- mythtv-0.24.orig/contrib/maintenance/flush_deleted_recgroup.pl	2009-10-05 18:36:40.000000000 -0400
++++ mythtv-0.24.new/contrib/maintenance/flush_deleted_recgroup.pl	2009-10-05 18:36:40.691937000 -0400
+@@ -2,8 +2,8 @@
+ #
+ # Tell MythTV to truly delete all recordings in the "Deleted" recgroup
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/contrib/maintenance/flush_deleted_recgroup.pl $
+-# @date      $Date: 2009-10-05 15:36:40 -0700 (Mon, 05 Oct 2009) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/contrib/maintenance/flush_deleted_recgroup.pl $
++# @date      $Date: 2009-10-05 18:36:40 -0400 (Mon, 05 Oct 2009) $
+ # @version   $Revision: 22260 $
+ # @author    $Author: mdean $
+ #
+diff -Naurp mythtv-0.24.orig/contrib/maintenance/optimize_mythdb.pl mythtv-0.24.new/contrib/maintenance/optimize_mythdb.pl
+--- mythtv-0.24.orig/contrib/maintenance/optimize_mythdb.pl	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/contrib/maintenance/optimize_mythdb.pl	2009-04-10 20:04:30.069718000 -0400
+@@ -3,8 +3,8 @@
+ # Connects to the mythtv database and repairs/optimizes the tables that it
+ # finds.  Suggested use is to cron it to run once per day.
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/contrib/maintenance/optimize_mythdb.pl $
+-# @date      $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/contrib/maintenance/optimize_mythdb.pl $
++# @date      $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ # @version   $Revision: 20349 $
+ # @author    $Author: xris $
+ # @license   GPL
+diff -Naurp mythtv-0.24.orig/contrib/user_jobs/mythlink.pl mythtv-0.24.new/contrib/user_jobs/mythlink.pl
+--- mythtv-0.24.orig/contrib/user_jobs/mythlink.pl	2010-07-21 02:05:52.000000000 -0400
++++ mythtv-0.24.new/contrib/user_jobs/mythlink.pl	2010-07-21 02:05:52.525882000 -0400
+@@ -6,8 +6,8 @@
+ # Automatically detects database settings from mysql.txt, and loads
+ # the mythtv recording directory from the database (code from nuvexport).
+ #
+-# @url       $URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/contrib/user_jobs/mythlink.pl $
+-# @date      $Date: 2010-07-20 23:05:52 -0700 (Tue, 20 Jul 2010) $
++# @url       $URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/contrib/user_jobs/mythlink.pl $
++# @date      $Date: 2010-07-21 02:05:52 -0400 (Wed, 21 Jul 2010) $
+ # @version   $Revision: 25391 $
+ # @author    $Author: mdean $
+ # @license   GPL
+diff -Naurp mythtv-0.24.orig/libs/libmyth/audiooutputbase.cpp mythtv-0.24.new/libs/libmyth/audiooutputbase.cpp
+--- mythtv-0.24.orig/libs/libmyth/audiooutputbase.cpp	2010-11-02 14:39:01.000000000 -0400
++++ mythtv-0.24.new/libs/libmyth/audiooutputbase.cpp	2010-11-18 00:34:04.654444000 -0500
+@@ -396,21 +396,21 @@ void AudioOutputBase::Reconfigure(const 
+     was_paused = true;
+     internal_vol = gCoreContext->GetNumSetting("MythControlsVolume", 0);
+ 
+-    VBAUDIO(QString("Original codec was %1, %2, %3 kHz, %4 channels")
+-            .arg(ff_codec_id_string((CodecID)codec))
+-            .arg(output_settings->FormatToString(format))
+-            .arg(samplerate/1000).arg(source_channels));
+-
+     // Don't try to do anything if audio hasn't been
+     // initialized yet (e.g. rubbish was provided)
+     if (source_channels <= 0 || format <= 0 || samplerate <= 0)
+     {
+-        Error(QString("Aborting Audio Reconfigure. ") +
+-              QString("Invalid audio parameters ch %1 fmt %2 @ %3Hz")
+-              .arg(source_channels).arg(format).arg(samplerate));
++        SilentError(QString("Aborting Audio Reconfigure. ") +
++                    QString("Invalid audio parameters ch %1 fmt %2 @ %3Hz")
++                    .arg(source_channels).arg(format).arg(samplerate));
+         return;
+     }
+ 
++    VBAUDIO(QString("Original codec was %1, %2, %3 kHz, %4 channels")
++            .arg(ff_codec_id_string((CodecID)codec))
++            .arg(output_settings->FormatToString(format))
++            .arg(samplerate/1000).arg(source_channels));
++
+     /* Encode to AC-3 if we're allowed to passthru but aren't currently
+        and we have more than 2 channels but multichannel PCM is not supported
+        or if the device just doesn't support the number of channels */
+diff -Naurp mythtv-0.24.orig/libs/libmyth/audiooutput.cpp mythtv-0.24.new/libs/libmyth/audiooutput.cpp
+--- mythtv-0.24.orig/libs/libmyth/audiooutput.cpp	2010-10-08 00:47:34.000000000 -0400
++++ mythtv-0.24.new/libs/libmyth/audiooutput.cpp	2010-11-18 00:34:04.654444000 -0500
+@@ -192,6 +192,12 @@ void AudioOutput::Error(const QString &m
+     VERBOSE(VB_IMPORTANT, "AudioOutput Error: " + lastError);
+ }
+ 
++void AudioOutput::SilentError(const QString &msg)
++{
++    lastError = msg;
++    lastError.detach();
++}
++
+ void AudioOutput::Warn(const QString &msg)
+ {
+     lastWarn = msg;
+diff -Naurp mythtv-0.24.orig/libs/libmyth/audiooutput.h mythtv-0.24.new/libs/libmyth/audiooutput.h
+--- mythtv-0.24.orig/libs/libmyth/audiooutput.h	2010-10-08 00:47:34.000000000 -0400
++++ mythtv-0.24.new/libs/libmyth/audiooutput.h	2010-11-18 00:34:04.654444000 -0500
+@@ -105,6 +105,7 @@ class MPUBLIC AudioOutput : public Volum
+ 
+   protected:
+     void Error(const QString &msg);
++    void SilentError(const QString &msg);
+     void Warn(const QString &msg);
+     void ClearError(void);
+     void ClearWarning(void);
+diff -Naurp mythtv-0.24.orig/libs/libmyth/audiooutputsettings.cpp mythtv-0.24.new/libs/libmyth/audiooutputsettings.cpp
+--- mythtv-0.24.orig/libs/libmyth/audiooutputsettings.cpp	2010-09-12 10:06:59.000000000 -0400
++++ mythtv-0.24.new/libs/libmyth/audiooutputsettings.cpp	2010-11-20 02:12:03.525376000 -0500
+@@ -239,7 +239,7 @@ void AudioOutputSettings::SetBestSupport
+     vector<int>::reverse_iterator it;
+ 
+     for (it = m_channels.rbegin();
+-         *it >= channels && it < m_channels.rend();
++         it != m_channels.rend() && *it >= channels;
+          it++)
+         m_channels.pop_back();
+     m_channels.push_back(channels);
+@@ -299,9 +299,12 @@ AudioOutputSettings* AudioOutputSettings
+ 
+     int cur_channels = gCoreContext->GetNumSetting("MaxChannels", 2);
+     int max_channels = aosettings->BestSupportedChannels();
+-    bool bAC3  = aosettings->m_AC3 &&
++    bool bForceDigital = gCoreContext->GetNumSetting("AdvancedAudioSettings", false) &&
++        gCoreContext->GetNumSetting("PassThruDeviceOverride", false);
++
++    bool bAC3  = (aosettings->m_AC3 || bForceDigital) &&
+         gCoreContext->GetNumSetting("AC3PassThru", false);
+-    bool bDTS  = aosettings->m_DTS &&
++    bool bDTS  = (aosettings->m_DTS || bForceDigital) && 
+         gCoreContext->GetNumSetting("DTSPassThru", false);
+     bool bLPCM = aosettings->m_LPCM &&
+         (aosettings->m_passthrough == -1 ||
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/AAFilter.cpp mythtv-0.24.new/libs/libmythsoundtouch/AAFilter.cpp
+--- mythtv-0.24.orig/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/AAFilter.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -12,7 +12,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: AAFilter.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/AAFilter.h mythtv-0.24.new/libs/libmythsoundtouch/AAFilter.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/AAFilter.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/AAFilter.h	2009-04-10 20:04:30.069718000 -0400
+@@ -13,7 +13,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: AAFilter.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/BPMDetect.h mythtv-0.24.new/libs/libmythsoundtouch/BPMDetect.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/BPMDetect.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/BPMDetect.h	2009-04-10 20:04:30.069718000 -0400
+@@ -26,7 +26,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: BPMDetect.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/cpu_detect.h mythtv-0.24.new/libs/libmythsoundtouch/cpu_detect.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/cpu_detect.h	2010-08-07 14:02:06.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/cpu_detect.h	2010-08-07 14:02:06.388302000 -0400
+@@ -12,7 +12,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2010-08-07 11:02:06 -0700 (Sat, 07 Aug 2010) $
++// Last changed  : $Date: 2010-08-07 14:02:06 -0400 (Sat, 07 Aug 2010) $
+ // File revision : $Revision: 25584 $
+ //
+ // $Id: cpu_detect.h 25584 2010-08-07 18:02:06Z janne $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp mythtv-0.24.new/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp
+--- mythtv-0.24.orig/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp	2010-08-07 14:02:06.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/cpu_detect_x86_gcc.cpp	2010-08-07 14:02:06.388302000 -0400
+@@ -12,7 +12,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2010-08-07 11:02:06 -0700 (Sat, 07 Aug 2010) $
++// Last changed  : $Date: 2010-08-07 14:02:06 -0400 (Sat, 07 Aug 2010) $
+ // File revision : $Revision: 25584 $
+ //
+ // $Id: cpu_detect_x86_gcc.cpp 25584 2010-08-07 18:02:06Z janne $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/FIFOSampleBuffer.cpp mythtv-0.24.new/libs/libmythsoundtouch/FIFOSampleBuffer.cpp
+--- mythtv-0.24.orig/libs/libmythsoundtouch/FIFOSampleBuffer.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/FIFOSampleBuffer.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -15,7 +15,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: FIFOSampleBuffer.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/FIFOSampleBuffer.h mythtv-0.24.new/libs/libmythsoundtouch/FIFOSampleBuffer.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/FIFOSampleBuffer.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/FIFOSampleBuffer.h	2009-04-10 20:04:30.069718000 -0400
+@@ -15,7 +15,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: FIFOSampleBuffer.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/FIFOSamplePipe.h mythtv-0.24.new/libs/libmythsoundtouch/FIFOSamplePipe.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/FIFOSamplePipe.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/FIFOSamplePipe.h	2009-04-10 20:04:30.069718000 -0400
+@@ -17,7 +17,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: FIFOSamplePipe.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/FIRFilter.cpp mythtv-0.24.new/libs/libmythsoundtouch/FIRFilter.cpp
+--- mythtv-0.24.orig/libs/libmythsoundtouch/FIRFilter.cpp	2010-05-24 23:17:44.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/FIRFilter.cpp	2010-05-24 23:17:44.510571000 -0400
+@@ -11,7 +11,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2010-05-24 20:17:44 -0700 (Mon, 24 May 2010) $
++// Last changed  : $Date: 2010-05-24 23:17:44 -0400 (Mon, 24 May 2010) $
+ // File revision : $Revision: 24847 $
+ //
+ // $Id: FIRFilter.cpp 24847 2010-05-25 03:17:44Z jyavenard $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/FIRFilter.h mythtv-0.24.new/libs/libmythsoundtouch/FIRFilter.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/FIRFilter.h	2010-05-24 23:17:44.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/FIRFilter.h	2010-05-24 23:17:44.510571000 -0400
+@@ -11,7 +11,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2010-05-24 20:17:44 -0700 (Mon, 24 May 2010) $
++// Last changed  : $Date: 2010-05-24 23:17:44 -0400 (Mon, 24 May 2010) $
+ // File revision : $Revision: 24847 $
+ //
+ // $Id: FIRFilter.h 24847 2010-05-25 03:17:44Z jyavenard $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/mmx_gcc.cpp mythtv-0.24.new/libs/libmythsoundtouch/mmx_gcc.cpp
+--- mythtv-0.24.orig/libs/libmythsoundtouch/mmx_gcc.cpp	2010-04-30 13:53:46.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/mmx_gcc.cpp	2010-04-30 13:53:46.993926000 -0400
+@@ -15,7 +15,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2010-04-30 10:53:46 -0700 (Fri, 30 Apr 2010) $
++// Last changed  : $Date: 2010-04-30 13:53:46 -0400 (Fri, 30 Apr 2010) $
+ // File revision : $Revision: 24323 $
+ //
+ // $Id: mmx_gcc.cpp 24323 2010-04-30 17:53:46Z janne $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/RateTransposer.cpp mythtv-0.24.new/libs/libmythsoundtouch/RateTransposer.cpp
+--- mythtv-0.24.orig/libs/libmythsoundtouch/RateTransposer.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/RateTransposer.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -10,7 +10,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: RateTransposer.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/RateTransposer.h mythtv-0.24.new/libs/libmythsoundtouch/RateTransposer.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/RateTransposer.h	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/RateTransposer.h	2009-04-10 20:04:30.069718000 -0400
+@@ -14,7 +14,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: RateTransposer.h 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/SoundTouch.cpp mythtv-0.24.new/libs/libmythsoundtouch/SoundTouch.cpp
+--- mythtv-0.24.orig/libs/libmythsoundtouch/SoundTouch.cpp	2009-04-10 20:04:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/SoundTouch.cpp	2009-04-10 20:04:30.069718000 -0400
+@@ -41,7 +41,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2009-04-10 17:04:30 -0700 (Fri, 10 Apr 2009) $
++// Last changed  : $Date: 2009-04-10 20:04:30 -0400 (Fri, 10 Apr 2009) $
+ // File revision : $Revision: 20349 $
+ //
+ // $Id: SoundTouch.cpp 20349 2009-04-11 00:04:30Z xris $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/SoundTouch.h mythtv-0.24.new/libs/libmythsoundtouch/SoundTouch.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/SoundTouch.h	2010-05-24 23:17:44.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/SoundTouch.h	2010-05-24 23:17:44.510571000 -0400
+@@ -41,7 +41,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2010-05-24 20:17:44 -0700 (Mon, 24 May 2010) $
++// Last changed  : $Date: 2010-05-24 23:17:44 -0400 (Mon, 24 May 2010) $
+ // File revision : $Revision: 24847 $
+ //
+ // $Id: SoundTouch.h 24847 2010-05-25 03:17:44Z jyavenard $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/STTypes.h mythtv-0.24.new/libs/libmythsoundtouch/STTypes.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/STTypes.h	2010-05-24 23:17:44.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/STTypes.h	2010-05-24 23:17:44.510571000 -0400
+@@ -8,7 +8,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2010-05-24 20:17:44 -0700 (Mon, 24 May 2010) $
++// Last changed  : $Date: 2010-05-24 23:17:44 -0400 (Mon, 24 May 2010) $
+ // File revision : $Revision: 24847 $
+ //
+ // $Id: STTypes.h 24847 2010-05-25 03:17:44Z jyavenard $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/TDStretch.cpp mythtv-0.24.new/libs/libmythsoundtouch/TDStretch.cpp
+--- mythtv-0.24.orig/libs/libmythsoundtouch/TDStretch.cpp	2010-08-07 14:02:10.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/TDStretch.cpp	2010-08-07 14:02:10.834177000 -0400
+@@ -13,7 +13,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2010-08-07 11:02:10 -0700 (Sat, 07 Aug 2010) $
++// Last changed  : $Date: 2010-08-07 14:02:10 -0400 (Sat, 07 Aug 2010) $
+ // File revision : $Revision: 25585 $
+ //
+ // $Id: TDStretch.cpp 25585 2010-08-07 18:02:10Z janne $
+diff -Naurp mythtv-0.24.orig/libs/libmythsoundtouch/TDStretch.h mythtv-0.24.new/libs/libmythsoundtouch/TDStretch.h
+--- mythtv-0.24.orig/libs/libmythsoundtouch/TDStretch.h	2010-08-07 14:02:10.000000000 -0400
++++ mythtv-0.24.new/libs/libmythsoundtouch/TDStretch.h	2010-08-07 14:02:10.834177000 -0400
+@@ -13,7 +13,7 @@
+ ///
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+-// Last changed  : $Date: 2010-08-07 11:02:10 -0700 (Sat, 07 Aug 2010) $
++// Last changed  : $Date: 2010-08-07 14:02:10 -0400 (Sat, 07 Aug 2010) $
+ // File revision : $Revision: 25585 $
+ //
+ // $Id: TDStretch.h 25585 2010-08-07 18:02:10Z janne $
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/audioplayer.cpp mythtv-0.24.new/libs/libmythtv/audioplayer.cpp
+--- mythtv-0.24.orig/libs/libmythtv/audioplayer.cpp	2010-09-12 13:59:22.000000000 -0400
++++ mythtv-0.24.new/libs/libmythtv/audioplayer.cpp	2010-11-18 00:34:04.654444000 -0500
+@@ -5,8 +5,8 @@
+ #define LOC QString("AudioPlayer: ")
+ 
+ AudioPlayer::AudioPlayer(MythPlayer *parent, bool muted)
+-  : m_parent(parent),    m_audioOutput(NULL),   m_channels(2),
+-    m_orig_channels(2),  m_codec(0),            m_format(FORMAT_NONE),
++  : m_parent(parent),    m_audioOutput(NULL),   m_channels(-1),
++    m_orig_channels(-1), m_codec(0),            m_format(FORMAT_NONE),
+     m_samplerate(44100), m_stretchfactor(1.0f), m_passthru(false),
+     m_lock(QMutex::Recursive), m_muted_on_creation(muted), 
+     m_main_device(QString::null), m_passthru_device(QString::null),
+@@ -44,18 +44,24 @@ QString AudioPlayer::ReinitAudio(void)
+     QMutexLocker lock(&m_lock);
+     QString errMsg = QString::null;
+ 
++    bool firstinit = (m_format == FORMAT_NONE &&
++                      m_channels < 0 &&
++                      m_samplerate == 44100);
++
+     if ((m_format == FORMAT_NONE) ||
+         (m_channels <= 0) ||
+         (m_samplerate <= 0))
+     {
+-        VERBOSE(VB_IMPORTANT, LOC +
+-                QString("Disabling Audio, params(%1,%2,%3)")
+-                .arg(m_format).arg(m_channels).arg(m_samplerate));
+-
++        if (!firstinit)
++        {
++            VERBOSE(VB_IMPORTANT, LOC +
++                    QString("Disabling Audio, params(%1,%2,%3)")
++                    .arg(m_format).arg(m_channels).arg(m_samplerate));
++        }
+         no_audio_in = no_audio_out = true;
+     }
+-
+-    no_audio_in = false;
++    else
++        no_audio_in = false;
+ 
+     if (no_audio_out && want_audio)
+     {
+@@ -76,8 +82,11 @@ QString AudioPlayer::ReinitAudio(void)
+ 
+         if (!errMsg.isEmpty())
+         {
+-            VERBOSE(VB_IMPORTANT, LOC + "Disabling Audio" +
+-                    QString(", reason is: %1").arg(errMsg));
++            if (!firstinit)
++            {
++                VERBOSE(VB_IMPORTANT, LOC + "Disabling Audio" +
++                        QString(", reason is: %1").arg(errMsg));
++            }
+             no_audio_out = true;
+         }
+         else if (no_audio_out)
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/avformatdecoder.cpp mythtv-0.24.new/libs/libmythtv/avformatdecoder.cpp
+--- mythtv-0.24.orig/libs/libmythtv/avformatdecoder.cpp	2010-11-05 23:29:25.000000000 -0400
++++ mythtv-0.24.new/libs/libmythtv/avformatdecoder.cpp	2010-11-15 04:26:50.999425000 -0500
+@@ -4605,7 +4605,7 @@ bool AvFormatDecoder::DoPassThrough(cons
+         passthru = m_audio->CanDTS();
+     passthru &= m_audio->CanPassthrough(ctx->sample_rate);
+         // Will downmix if we can't support the amount of channels
+-    passthru &= ctx->channels >= (int)m_audio->GetMaxChannels();
++    passthru &= ctx->channels <= (int)m_audio->GetMaxChannels();
+     passthru &= !internal_vol;
+     passthru &= !transcoding && !disable_passthru;
+     // Don't know any cards that support spdif clocked at < 44100
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/libmythtv.pro mythtv-0.24.new/libs/libmythtv/libmythtv.pro
+--- mythtv-0.24.orig/libs/libmythtv/libmythtv.pro	2010-09-17 10:49:19.000000000 -0400
++++ mythtv-0.24.new/libs/libmythtv/libmythtv.pro	2010-11-18 02:52:56.036303000 -0500
+@@ -344,8 +344,6 @@ using_frontend {
+         DEFINES += USING_OPENGL
+         HEADERS += util-opengl.h
+         SOURCES += util-opengl.cpp
+-        HEADERS += mythrender_opengl.h
+-        SOURCES += mythrender_opengl.cpp
+         QT += opengl
+     }
+     using_opengl_vsync:DEFINES += USING_OPENGL_VSYNC
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/mythplayer.h mythtv-0.24.new/libs/libmythtv/mythplayer.h
+--- mythtv-0.24.orig/libs/libmythtv/mythplayer.h	2010-11-07 23:38:30.000000000 -0500
++++ mythtv-0.24.new/libs/libmythtv/mythplayer.h	2010-11-14 09:17:38.338032000 -0500
+@@ -297,8 +297,9 @@ class MPUBLIC MythPlayer
+                        QMap<long long, long long> &posMap);
+ 
+     // OSD locking for TV class
+-    void LockOSD(void)   { osdLock.lock();   }
+-    void UnlockOSD(void) { osdLock.unlock(); }
++    bool TryLockOSD(void) { return osdLock.tryLock(50); }
++    void LockOSD(void)    { osdLock.lock();   }
++    void UnlockOSD(void)  { osdLock.unlock(); }
+ 
+   protected:
+     // Initialization
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/playercontext.cpp mythtv-0.24.new/libs/libmythtv/playercontext.cpp
+--- mythtv-0.24.orig/libs/libmythtv/playercontext.cpp	2010-10-28 23:06:06.000000000 -0400
++++ mythtv-0.24.new/libs/libmythtv/playercontext.cpp	2010-11-18 00:34:04.654444000 -0500
+@@ -468,8 +468,6 @@ bool PlayerContext::CreatePlayer(TV *tv,
+         if (audio->HasAudioOut())
+         {
+             QString errMsg = audio->ReinitAudio();
+-            if (!errMsg.isEmpty())
+-                VERBOSE(VB_IMPORTANT, LOC_ERR + errMsg);
+         }
+     }
+     else if (pipState == kPBPRight)
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/teletextdecoder.cpp mythtv-0.24.new/libs/libmythtv/teletextdecoder.cpp
+--- mythtv-0.24.orig/libs/libmythtv/teletextdecoder.cpp	2010-11-07 23:31:54.000000000 -0500
++++ mythtv-0.24.new/libs/libmythtv/teletextdecoder.cpp	2010-11-14 09:17:38.338032000 -0500
+@@ -53,7 +53,19 @@ void TeletextDecoder::Decode(const unsig
+     if (!m_player)
+         return;
+ 
+-    m_player->LockOSD();
++    int mode = m_player->GetCaptionMode();
++    if (!((mode == kDisplayNUVTeletextCaptions) ||
++          (mode == kDisplayTeletextCaptions) ||
++          (mode == kDisplayTeletextMenu)))
++    {
++        return;
++    }
++
++    if (!m_player->TryLockOSD())
++    {
++        VERBOSE(VB_PLAYBACK, "TeletextDecoder: Failed to get OSD lock.");
++        return;
++    }
+ 
+     if (!m_teletextviewer && m_player)
+     {
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/teletextscreen.cpp mythtv-0.24.new/libs/libmythtv/teletextscreen.cpp
+--- mythtv-0.24.orig/libs/libmythtv/teletextscreen.cpp	2010-10-19 04:51:15.000000000 -0400
++++ mythtv-0.24.new/libs/libmythtv/teletextscreen.cpp	2010-11-14 09:17:38.338032000 -0500
+@@ -469,6 +469,9 @@ void TeletextScreen::AddPageHeader(int p
+                                     const uint8_t * buf,
+                                     int vbimode, int lang, int flags)
+ {
++    if (!m_displaying)
++        return;
++
+     QMutexLocker locker(&m_lock);
+ 
+     int magazine = MAGAZINE(page);
+@@ -547,6 +550,9 @@ void TeletextScreen::AddPageHeader(int p
+ void TeletextScreen::AddTeletextData(int magazine, int row,
+                                       const uint8_t * buf, int vbimode)
+ {
++    if (!m_displaying)
++        return;
++
+     QMutexLocker locker(&m_lock);
+ 
+     int b1, b2, b3, err = 0;
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/tv_play.cpp mythtv-0.24.new/libs/libmythtv/tv_play.cpp
+--- mythtv-0.24.orig/libs/libmythtv/tv_play.cpp	2010-11-08 19:53:54.000000000 -0500
++++ mythtv-0.24.new/libs/libmythtv/tv_play.cpp	2010-11-18 01:58:27.296879000 -0500
+@@ -3616,8 +3616,9 @@ void TV::ProcessKeypress(PlayerContext *
+         osd->DialogHandleKeypress(e);
+         handled = true;
+     }
++    ReturnOSDLock(actx, osd);
+ 
+-    if (editmode && osd && !handled)
++    if (editmode && !handled)
+     {
+         handled |= GetMythMainWindow()->TranslateKeyPress(
+                    "TV Editing", e, actions);
+@@ -3654,7 +3655,6 @@ void TV::ProcessKeypress(PlayerContext *
+         if (handled)
+             editmode = actx->player->GetEditMode();
+     }
+-    ReturnOSDLock(actx, osd);
+ 
+     if (handled)
+         return;
+@@ -9673,6 +9673,10 @@ void TV::OSDDialogEvent(int result, QStr
+         else if (valid && desc[0] == "DELETE")
+         {
+         }
++        else if (valid && desc[0] == "PLAY")
++        {
++            DoPlay(actx);
++        }
+         else
+         {
+             VERBOSE(VB_IMPORTANT, "Unrecognised dialog event.");
+@@ -11647,7 +11651,8 @@ void TV::ShowOSDPromptDeleteRecording(Pl
+ 
+     ClearOSD(ctx);
+ 
+-    if (!ctx->paused)
++    bool paused = ctx->paused;
++    if (!paused)
+         DoTogglePause(ctx, false);
+ 
+     InfoMap infoMap;
+@@ -11676,6 +11681,8 @@ void TV::ShowOSDPromptDeleteRecording(Pl
+                                  "DIALOG_VIDEOEXIT_JUSTDELETE_0");
+             osd->DialogAddButton(tr("No, keep it, I changed my mind"),
+                                  "DIALOG_VIDEOEXIT_JUSTEXIT_0", false, true);
++            if (!paused)
++                osd->DialogBack("", "DIALOG_PLAY_0_0", true);
+         }
+ 
+         QMutexLocker locker(&timerIdLock);
+diff -Naurp mythtv-0.24.orig/libs/libmythui/mythrender_opengl.cpp mythtv-0.24.new/libs/libmythui/mythrender_opengl.cpp
+--- mythtv-0.24.orig/libs/libmythui/mythrender_opengl.cpp	2010-09-22 20:48:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythui/mythrender_opengl.cpp	2010-11-18 19:45:42.514302000 -0500
+@@ -138,9 +138,11 @@ void MythRenderOpenGL::makeCurrent()
+ 
+ void MythRenderOpenGL::doneCurrent()
+ {
++    // we don't explicitly call QGlContext::doneCurrent() as it should be
++    // unnecessary (makeCurrent() will switch contexts as necessary), it
++    // appears to cause performance issues and breaks rendering in certain
++    // situations
+     m_lock_level--;
+-    if (m_lock_level == 0)
+-        QGLContext::doneCurrent();
+     if (m_lock_level < 0)
+         VERBOSE(VB_IMPORTANT, LOC_ERR + "Mis-matched calls to makeCurrent()");
+     m_lock->unlock();
+diff -Naurp mythtv-0.24.orig/libs/libmythui/mythrender_opengl.h mythtv-0.24.new/libs/libmythui/mythrender_opengl.h
+--- mythtv-0.24.orig/libs/libmythui/mythrender_opengl.h	2010-09-22 20:48:30.000000000 -0400
++++ mythtv-0.24.new/libs/libmythui/mythrender_opengl.h	2010-11-18 19:47:43.834520000 -0500
+@@ -50,7 +50,7 @@ class MythGLTexture;
+ class MythGLShaderObject;
+ class MythRenderOpenGL;
+ 
+-class OpenGLLocker
++class MPUBLIC OpenGLLocker
+ {
+   public:
+     OpenGLLocker(MythRenderOpenGL *render);
+@@ -59,7 +59,7 @@ class OpenGLLocker
+     MythRenderOpenGL *m_render;
+ };
+ 
+-class MythRenderOpenGL : public QGLContext, public MythRender
++class MPUBLIC MythRenderOpenGL : public QGLContext, public MythRender
+ {
+   public:
+     MythRenderOpenGL(const QGLFormat& format, QPaintDevice* device);
+diff -Naurp mythtv-0.24.orig/libs/libmythui/mythuibuttonlist.cpp mythtv-0.24.new/libs/libmythui/mythuibuttonlist.cpp
+--- mythtv-0.24.orig/libs/libmythui/mythuibuttonlist.cpp	2010-09-28 19:01:35.000000000 -0400
++++ mythtv-0.24.new/libs/libmythui/mythuibuttonlist.cpp	2010-11-18 22:34:54.953795000 -0500
+@@ -265,7 +265,7 @@ bool MythUIButtonList::DistributeRow(int
+     int  max_width, max_height;
+     int  left_width, right_width;
+     int  begin, end;
+-    bool underflow;
++    bool underflow = false;	// keep from being uninitialized
+     bool added;
+     bool hsplit, vsplit;
+     int  selectedIdx;
+diff -Naurp mythtv-0.24.orig/libs/libmythui/mythuiimage.cpp mythtv-0.24.new/libs/libmythui/mythuiimage.cpp
+--- mythtv-0.24.orig/libs/libmythui/mythuiimage.cpp	2010-10-28 23:09:14.000000000 -0400
++++ mythtv-0.24.new/libs/libmythui/mythuiimage.cpp	2010-11-20 01:21:11.575509000 -0500
+@@ -210,6 +210,12 @@ void MythUIImage::Clear(void)
+         m_Images.remove(it.key());
+     }
+     m_Delays.clear();
++    if (m_animatedImage)
++    {
++        m_LowNum = 0;
++        m_HighNum = 0;
++        m_animatedImage = false;
++    }
+ }
+ 
+ /**
+@@ -221,7 +227,12 @@ void MythUIImage::Reset(void)
+     if (m_Filename != m_OrigFilename)
+     {
+         m_Filename = m_OrigFilename;
+-        m_animatedImage = false;
++        if (m_animatedImage)
++        {
++            m_LowNum = 0;
++            m_HighNum = 0;
++            m_animatedImage = false;
++        }
+         d->m_UpdateLock.unlock();
+         Load();
+     }
+@@ -626,7 +637,8 @@ bool MythUIImage::Load(bool allowLoadInB
+     int j = 0;
+     for (int i = m_LowNum; i <= m_HighNum && !m_animatedImage; i++)
+     {
+-        if (!m_animatedImage && m_HighNum >= 1)
++        if (!m_animatedImage && m_HighNum != m_LowNum && 
++            bFilename.contains("%1"))
+             filename = bFilename.arg(i);
+ 
+         imagelabel = GenImageLabel(filename, w, h);
+diff -Naurp mythtv-0.24.orig/programs/mythfrontend/globalsettings.cpp mythtv-0.24.new/programs/mythfrontend/globalsettings.cpp
+--- mythtv-0.24.orig/programs/mythfrontend/globalsettings.cpp	2010-10-14 15:35:44.000000000 -0400
++++ mythtv-0.24.new/programs/mythfrontend/globalsettings.cpp	2010-11-20 02:12:03.525376000 -0500
+@@ -118,7 +118,8 @@ AudioConfigSettings::AudioConfigSettings
+     VerticalConfigurationGroup(false, true, false, false),
+     m_OutputDevice(NULL),   m_MaxAudioChannels(NULL),
+     m_AudioUpmix(NULL),     m_AudioUpmixType(NULL),
+-    m_AC3PassThrough(NULL), m_DTSPassThrough(NULL),  m_MPCM(NULL)
++    m_AC3PassThrough(NULL), m_DTSPassThrough(NULL),  m_MPCM(NULL),
++    m_AdvancedAudioSettings(NULL),                   m_PassThroughOverride(NULL)
+ {
+     setLabel(QObject::tr("Audio System"));
+     setUseLabel(false);
+@@ -173,22 +174,22 @@ AudioConfigSettings::AudioConfigSettings
+     maingroup->addChild((m_AudioUpmix = AudioUpmix()));
+     maingroup->addChild((m_AudioUpmixType = AudioUpmixType()));
+ 
+-    Setting *advancedsettings = AdvancedAudioSettings();
+-    addChild(advancedsettings);
++    m_AdvancedAudioSettings = AdvancedAudioSettings();
++    addChild(m_AdvancedAudioSettings);
+ 
+     ConfigurationGroup *group2 =
+         new VerticalConfigurationGroup(false);
+ 
+-    TriggeredItem *sub2 = new TriggeredItem(advancedsettings, group2);
++    TriggeredItem *sub2 = new TriggeredItem(m_AdvancedAudioSettings, group2);
+     addChild(sub2);
+ 
+     ConfigurationGroup *settings3 =
+         new HorizontalConfigurationGroup(false, false);
+ 
+-    Setting *passthroughoverride = PassThroughOverride();
++    m_PassThroughOverride = PassThroughOverride();
+     TriggeredItem *sub3 =
+-        new TriggeredItem(passthroughoverride, PassThroughOutputDevice());
+-    settings3->addChild(passthroughoverride);
++        new TriggeredItem(m_PassThroughOverride, PassThroughOutputDevice());
++    settings3->addChild(m_PassThroughOverride);
+     settings3->addChild(sub3);
+ 
+     ConfigurationGroup *settings4 =
+@@ -218,6 +219,10 @@ AudioConfigSettings::AudioConfigSettings
+             this, SLOT(UpdateCapabilities(const QString&)));
+     connect(m_MPCM, SIGNAL(valueChanged(const QString&)),
+             this, SLOT(UpdateCapabilities(const QString&)));
++    connect(m_PassThroughOverride, SIGNAL(valueChanged(const QString&)),
++            this, SLOT(UpdateCapabilities(const QString&)));
++    connect(m_AdvancedAudioSettings, SIGNAL(valueChanged(const QString&)),
++            this, SLOT(UpdateCapabilities(const QString&)));
+ }
+ 
+ void AudioConfigSettings::AudioRescan()
+@@ -271,19 +276,23 @@ void AudioConfigSettings::UpdateVisibili
+ 
+ void AudioConfigSettings::UpdateCapabilities(const QString &device)
+ {
+-   int max_speakers = 8;
++    int max_speakers = 8;
+     bool invalid = false;
+     int passthrough = 0;
+     AudioOutputSettings settings;
+ 
+         // Test if everything is set yet
+     if (!m_OutputDevice   || !m_MaxAudioChannels ||
+-        !m_AC3PassThrough || !m_DTSPassThrough   || !m_MPCM)
++        !m_AC3PassThrough || !m_DTSPassThrough   || !m_MPCM ||
++        !m_AdvancedAudioSettings                 || !m_PassThroughOverride)
+         return;
+ 
+     if (!slotlock.tryLock()) // Doing a rescan of channels
+         return;
+ 
++    bool bForceDigital = (m_AdvancedAudioSettings->boolValue() &&
++                          m_PassThroughOverride->boolValue());
++
+     QString out = m_OutputDevice->getValue();
+     if (!audiodevs.contains(out))
+     {
+@@ -296,8 +305,10 @@ void AudioConfigSettings::UpdateCapabili
+ 
+         max_speakers = settings.BestSupportedChannels();
+ 
+-        bool bAC3  = settings.canAC3() && m_AC3PassThrough->boolValue();
+-        bool bDTS  = settings.canDTS() && m_DTSPassThrough->boolValue();
++        bool bAC3  = (settings.canAC3() || bForceDigital) &&
++            m_AC3PassThrough->boolValue();
++        bool bDTS  = (settings.canDTS() || bForceDigital) &&
++            m_DTSPassThrough->boolValue();
+         bool bLPCM = settings.canPassthrough() == -1 ||
+             (settings.canLPCM() && m_MPCM->boolValue());
+ 
+@@ -308,15 +319,22 @@ void AudioConfigSettings::UpdateCapabili
+         passthrough = settings.canPassthrough();
+     }
+ 
+-    m_triggerAC3->setValue(invalid || settings.canAC3());
+-    m_triggerDTS->setValue(invalid || settings.canDTS());
++    m_triggerAC3->setValue(invalid || settings.canAC3() || bForceDigital);
++    m_triggerDTS->setValue(invalid || settings.canDTS() || bForceDigital);
+ 
+     m_MPCM->setEnabled(invalid || (settings.canLPCM() &&
+                                    settings.canPassthrough() >= 0));
+     switch (passthrough)
+     {
+         case -1:
+-            m_MPCM->setLabel(QObject::tr("No digital passthrough"));
++            if (bForceDigital)
++            {
++                m_MPCM->setLabel(QString());
++            }
++            else
++            {
++                m_MPCM->setLabel(QObject::tr("No digital passthrough"));
++            }
+             break;
+         case 1:
+             m_MPCM->setLabel(QObject::tr("LPCM"));
+@@ -348,7 +366,8 @@ void AudioConfigSettings::UpdateCapabili
+     m_MaxAudioChannels->resetMaxCount(3);
+     for (int i = 1; i <= max_speakers; i++)
+     {
+-        if (invalid || settings.IsSupportedChannels(i))
++        if (invalid || settings.IsSupportedChannels(i) ||
++            (bForceDigital && i == 6))
+         {
+             QString txt;
+ 
+diff -Naurp mythtv-0.24.orig/programs/mythfrontend/globalsettings.h mythtv-0.24.new/programs/mythfrontend/globalsettings.h
+--- mythtv-0.24.orig/programs/mythfrontend/globalsettings.h	2010-07-01 03:29:22.000000000 -0400
++++ mythtv-0.24.new/programs/mythfrontend/globalsettings.h	2010-11-20 02:12:03.525376000 -0500
+@@ -57,6 +57,8 @@ class AudioConfigSettings : public Verti
+     HostCheckBox         *m_AC3PassThrough;
+     HostCheckBox         *m_DTSPassThrough;
+     HostCheckBox         *m_MPCM;
++    HostCheckBox         *m_AdvancedAudioSettings;
++    HostCheckBox         *m_PassThroughOverride;
+     ADCMap                audiodevs;
+     AudioOutput::ADCVect  devices;
+     QMutex                slotlock;
+diff -Naurp mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/bbciplayer/bbciplayer_api.py mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/bbciplayer/bbciplayer_api.py
+--- mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/bbciplayer/bbciplayer_api.py	2010-08-28 16:16:22.000000000 -0400
++++ mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/bbciplayer/bbciplayer_api.py	2010-11-15 09:48:15.215323000 -0500
+@@ -349,16 +349,19 @@ class Videos(object):
+             urlType = u'fullscreen'
+ 
+         # Translate the search results into MNV RSS item format
+-        linkFilter = etree.XPath(u".//div[@class='episode-details']/a")
+-        titleFilter = etree.XPath(u".//div[@class='episode-details']/h3")
+-        descFilter = etree.XPath(u".//div[@class='episode-details']//p")
+-        thumbnailFilter = etree.XPath(u".//div[@class='episode-thumbnail']//img")
++        audioFilter = etree.XPath('./@class="audio"')
++        linkFilter = etree.XPath(u".//div[@class='episode-info']//a")
++        titleFilter = etree.XPath(u".//div[@class='episode-info']//a")
++        descFilter = etree.XPath(u".//div[@class='episode-info']//p[@class='episode-synopsis']")
++        thumbnailFilter = etree.XPath(u".//div[@class='episode-image']//img")
+         itemDict = {}
+         for result in searchResults:
+             tmpLink = linkFilter(result)
+             if not len(tmpLink):   # Make sure that this result actually has a video
+                 continue
+             bbciplayerItem = etree.XML(self.common.mnvItem)
++            # Is this an Audio or Video item (true/false)
++            audioTF = audioFilter(result)
+             # Extract and massage data
+             link = tmpLink[0].attrib['href']
+             if urlType == 'bigscreen':
+@@ -366,7 +369,7 @@ class Videos(object):
+             elif urlType == 'bbcweb':
+                 link = u'http://www.bbc.co.uk'+ link
+             else:
+-                if tmpLink[0].attrib['class'].find('cta-video') != -1:
++                if not audioTF:
+                     link = link.replace(u'/iplayer/episode/', u'')
+                     index = link.find(u'/')
+                     link = link[:index]
+@@ -388,7 +391,10 @@ class Videos(object):
+             bbciplayerItem.xpath('.//media:thumbnail', namespaces=self.common.namespaces)[0].attrib['url'] = self.common.ampReplace(thumbnailFilter(result)[0].attrib['src'])
+             bbciplayerItem.xpath('.//media:content', namespaces=self.common.namespaces)[0].attrib['url'] = link
+             # Videos are only viewable in the UK so add a country indicator if this is a video
+-            countCode = self.setCountry(result)
++            if audioTF:
++                countCode = None
++            else:
++                countCode = u'uk'
+             if countCode:
+                 etree.SubElement(bbciplayerItem, "{http://www.mythtv.org/wiki/MythNetvision_Grabber_Script_Format}country").text = countCode
+             s_e = self.getSeasonEpisode(title)
+diff -Naurp mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/common/common_api.py mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/common/common_api.py
+--- mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/common/common_api.py	2010-08-28 16:16:22.000000000 -0400
++++ mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/common/common_api.py	2010-11-15 09:48:15.215323000 -0500
+@@ -18,7 +18,7 @@ MythNetvision Grabber scripts that run a
+ MNV grabbers.
+ '''
+ 
+-__version__="v0.2.2"
++__version__="v0.2.3"
+ # 0.0.1 Initial development
+ # 0.1.0 Alpha release
+ # 0.1.1 Added the ability to have a mashup name independant of the mashup title
+@@ -50,6 +50,7 @@ __version__="v0.2.2"
+ #       when new custom HTML pages were added.
+ # 0.2.1 Add the ability for a parameters to be passed to a XSLT style sheet
+ # 0.2.2 Added a common XPath extention to test if a string starts or ends with a substring
++# 0.2.3 Fixed Error messages that were not unicode strings
+ 
+ import os, struct, sys, re, datetime, time, subprocess, string
+ import urllib
+@@ -964,7 +965,7 @@ class getURL(Thread):
+ 
+     def run(self):
+         if self.debug:
+-            print "getURL href(%s)" % (self.urlDictionary[self.urlKey]['href'], )
++            print u"getURL href(%s)" % (self.urlDictionary[self.urlKey]['href'], )
+             print
+ 
+         # Input the data from a url
+@@ -985,9 +986,9 @@ class getURL(Thread):
+                 try:
+                    self.urlDictionary[self.urlKey]['tmp'] = self.urlDictionary[self.urlKey]['tree'].xpath(self.urlDictionary[self.urlKey]['filter'][index], namespaces=self.urlDictionary[self.urlKey]['namespaces'])
+                 except AssertionError, e:
+-                    sys.stderr.write("No filter results for Name(%s)\n" % self.urlKey)
+-                    sys.stderr.write("No filter results for url(%s)\n" % self.urlDictionary[self.urlKey]['href'])
+-                    sys.stderr.write("! Error:(%s)\n" % e)
++                    sys.stderr.write(u"No filter results for Name(%s)\n" % self.urlKey)
++                    sys.stderr.write(u"No filter results for url(%s)\n" % self.urlDictionary[self.urlKey]['href'])
++                    sys.stderr.write(u"! Error:(%s)\n" % e)
+                     if len(self.urlDictionary[self.urlKey]['filter']) == index-1:
+                         return
+                     else:
+@@ -1003,15 +1004,15 @@ self.urlDictionary[self.urlKey]['paramet
+                     else:
+                         self.urlDictionary[self.urlKey]['tmp'] = self.urlDictionary[self.urlKey]['xslt'][index](self.urlDictionary[self.urlKey]['tree'])
+                 except Exception, e:
+-                    sys.stderr.write("! XSLT Error:(%s) Key(%s)\n" % (e, self.urlKey))
++                    sys.stderr.write(u"! XSLT Error:(%s) Key(%s)\n" % (e, self.urlKey))
+                     if len(self.urlDictionary[self.urlKey]['filter']) == index-1:
+                         return
+                     else:
+                         continue
+                 # Was any data found?
+                 if self.urlDictionary[self.urlKey]['tmp'].getroot() == None:
+-                    sys.stderr.write("No Xslt results for Name(%s)\n" % self.urlKey)
+-                    sys.stderr.write("No Xslt results for url(%s)\n" % self.urlDictionary[self.urlKey]['href'])
++                    sys.stderr.write(u"No Xslt results for Name(%s)\n" % self.urlKey)
++                    sys.stderr.write(u"No Xslt results for url(%s)\n" % self.urlDictionary[self.urlKey]['href'])
+                     if len(self.urlDictionary[self.urlKey]['filter']) == index-1:
+                         return
+                     else:
+diff -Naurp mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/configs/HTML/mtv.html mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/configs/HTML/mtv.html
+--- mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/configs/HTML/mtv.html	1969-12-31 19:00:00.000000000 -0500
++++ mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/configs/HTML/mtv.html	2010-11-17 15:26:58.209982000 -0500
+@@ -0,0 +1,39 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
++<html>
++  <head>
++  <!-- Author: R.D. Vaughan
++       Nov 17th, 2010
++       Purpose: Implement full screen browser video display for MTV Videos
++  Example:
++  file:///usr/local/share/mythtv/mythnetvision/scripts/nv_python_libs/configs/HTML/mtv.html?title=We%20Are%20The%20One&videocode=176000
++  -->
++    <script type="text/javascript">
++      function gup( name )
++        {
++          name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
++          var regexS = "[\\?&]"+name+"=([^&#]*)";
++          var regex = new RegExp( regexS );
++          var results = regex.exec( window.location.href );
++          if( results == null )
++            return "";
++          else
++            return results[1];
++        }
++
++      var pageTitle = gup( 'title' );
++      if (pageTitle != "")
++          pageTitle = 'MTV: '+unescape(pageTitle);
++      var videocode = gup( 'videocode' );
++      var image = gup( 'image' );
++
++      var embedded = '<object style="visibility: visible;" data="http://media.mtvnservices.com/mgid:uma:video:mtv.com:VIDEOCODE" name="embeddedPlayer" id="embeddedPlayer" type="application/x-shockwave-flash" height="100%" width="100%"><param value="true" name="allowFullScreen"><param value="always" name="allowScriptAccess"><param value="transparent" name="wmode"><param value="true" name="swliveconnect"><param value="#000000" name="bgcolor"><param value="sid=MTV_Videos&amp;configParams=instance%3Dmtv%26vid%3DVIDEOCODE%26id%3D1572737&amp;autoPlay=true" name="flashvars"></object>'
++
++      document.write('<title>'+pageTitle+'</title>');
++      embedded = embedded.replace(/VIDEOCODE/g, videocode)
++      embedded = embedded.replace(/IMAGE/g, image)
++
++      document.write(embedded);
++
++    </script>
++  </head>
++</html>
+diff -Naurp mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/configs/XML/bbc_config.xml mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/configs/XML/bbc_config.xml
+--- mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/configs/XML/bbc_config.xml	2010-08-28 16:16:22.000000000 -0400
++++ mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/configs/XML/bbc_config.xml	2010-11-15 09:48:15.215323000 -0500
+@@ -19,9 +19,8 @@
+             <url>
+                 <name>BBC iPlayer Search</name>
+                 <href>http://www.bbc.co.uk/iplayer/search</href>
+-                <filter>//div[@class='search result-wrapper']//ul</filter>
+-                <filter>//div[@id='results-container']//ul</filter>
+-                <pageFilter>//a/@class[starts-with(.,'last page')]/..</pageFilter>
++                <filter>//ul[@class='result-list listview episodelist']/li</filter>
++                <pageFilter>//a/@title[starts-with(.,'Next page')]/..</pageFilter>
+                 <parserType>html</parserType>
+             </url>
+         </urls>
+diff -Naurp mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/configs/XML/defaultUserPrefs/trailersMashup.xml mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/configs/XML/defaultUserPrefs/trailersMashup.xml
+--- mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/configs/XML/defaultUserPrefs/trailersMashup.xml	2010-08-28 16:16:22.000000000 -0400
++++ mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/configs/XML/defaultUserPrefs/trailersMashup.xml	2010-11-15 09:48:15.215323000 -0500
+@@ -46,7 +46,7 @@
+   </subDirectory>
+ 
+   <subDirectory name="Tribute.ca">
+-    <sourceURL enabled="true" name="Tribute.ca"  xsltFile="tributecaHTML_item" type="html" url="http://www.tribute.ca/trailers/"/>
++    <sourceURL enabled="true" name="Tribute.ca"  xsltFile="tributecaHTML_item" type="html" url="http://www.tribute.ca/movietrailers/"/>
+   </subDirectory>
+ 
+   <subDirectory name="TrailerAddict.com">
+diff -Naurp mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/configs/XSLT/tributecaHTML_item.xsl mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/configs/XSLT/tributecaHTML_item.xsl
+--- mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/configs/XSLT/tributecaHTML_item.xsl	2010-07-13 12:14:21.000000000 -0400
++++ mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/configs/XSLT/tributecaHTML_item.xsl	2010-11-15 09:48:15.215323000 -0500
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <!--
+     Tribute.ca items conversion to MythNetvision item format
+--->
++-->
+ <xsl:stylesheet version="1.0"
+     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+     xmlns:media="http://search.yahoo.com/mrss/"
+@@ -11,7 +11,7 @@
+ 	xmlns:xhtml="http://www.w3.org/1999/xhtml">
+ 
+     <xsl:output method="xml" indent="yes" version="1.0" encoding="UTF-8" omit-xml-declaration="yes"/>
+-
++
+     <!--
+         This template calls all other templates which allows for multiple sources to be processed
+         within a single Xslt file
+@@ -27,11 +27,15 @@
+             </xml>
+         </xsl:if>
+     </xsl:template>
+-
+-    <xsl:template name="featured">
++
++    <xsl:template name="featured">
+         <xsl:element name="directory">
+-            <xsl:attribute name="name"><xsl:value-of select="string('Featured movie Trailers')"/></xsl:attribute>
+-            <xsl:attribute name="thumbnail"><xsl:value-of select="string('http://www.tribute.ca/images/tribute_title.gif')"/></xsl:attribute>
++            <xsl:attribute name="name">
++                <xsl:value-of select="string('Featured movie Trailers')"/>
++            </xsl:attribute>
++            <xsl:attribute name="thumbnail">
++                <xsl:value-of select="string('http://www.tribute.ca/images/tribute_title.gif')"/>
++            </xsl:attribute>
+             <xsl:for-each select="//a[@class]/img[@src]/..">
+                 <dataSet>
+                     <directoryThumbnail>http://www.tribute.ca/images/tribute_title.gif</directoryThumbnail>
+@@ -42,8 +46,8 @@
+                         <xsl:otherwise>
+                             <xsl:element name="item">
+                                 <title><xsl:value-of select="normalize-space(string(.))"/></title>
+-                                <author>Tribute.ca</author>
+-                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
++                                <author>Tribute.ca</author>
++                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
+                                 <description><xsl:value-of select="normalize-space(img/@alt)"/></description>
+                                 <link><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), //a[@class]/img[@src]/..)"/></link>
+                                 <xsl:if test="mnvXpath:tributecaIsCustomHTML(('dummy'))">
+@@ -62,19 +66,20 @@
+                                         <xsl:attribute name="lang">en</xsl:attribute>
+                                     </xsl:element>
+                                 </xsl:element>
+-                            </xsl:element>
++                            </xsl:element>
+                         </xsl:otherwise>
+                     </xsl:choose>
+                 </dataSet>
+             </xsl:for-each>
+-        </xsl:element>
++        </xsl:element>
+     </xsl:template>
+ 
+-    <xsl:template name="nowplaying">
++    <xsl:template name="nowplaying">
+         <xsl:element name="directory">
+             <xsl:attribute name="name"><xsl:value-of select="string('Movie Trailers Now Playing')"/></xsl:attribute>
+             <xsl:attribute name="thumbnail"><xsl:value-of select="string('http://www.tribute.ca/images/tribute_title.gif')"/></xsl:attribute>
+-            <xsl:for-each select="//h3[string(span)='Movie Trailers Now Playing']/..//a">
++            <!-- ul = 1 for 'Movie Trailers Now Playing'-->
++            <xsl:for-each select="mnvXpath:tributecaGetAnchors(//ul[@class='clump'], 1)">
+                 <dataSet>
+                     <directoryThumbnail>http://www.tribute.ca/images/tribute_title.gif</directoryThumbnail>
+                     <xsl:choose>
+@@ -84,10 +89,10 @@
+                         <xsl:otherwise>
+                             <xsl:element name="item">
+                                 <title><xsl:value-of select="normalize-space(string(.))"/></title>
+-                                <author>Tribute.ca</author>
+-                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
++                                <author>Tribute.ca</author>
++                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
+                                 <description><xsl:value-of select="normalize-space(./@title)"/></description>
+-                                <link><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), //h3[string(span)='Movie Trailers Now Playing']/..//a)"/></link>
++                                <link><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), ../..//a)"/></link>
+                                 <xsl:if test="mnvXpath:tributecaIsCustomHTML(('dummy'))">
+                                     <mythtv:customhtml>true</mythtv:customhtml>
+                                 </xsl:if>
+@@ -96,7 +101,7 @@
+                                         <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaThumbnailLink(string(.))"/></xsl:attribute>
+                                     </xsl:element>
+                                     <xsl:element name="media:content">
+-                                        <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), //h3[string(span)='Movie Trailers Now Playing']/..//a)"/></xsl:attribute>
++                                        <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), ../..//a)"/></xsl:attribute>
+                                         <xsl:attribute name="duration"></xsl:attribute>
+                                         <xsl:attribute name="width"></xsl:attribute>
+                                         <xsl:attribute name="height"></xsl:attribute>
+@@ -104,19 +109,20 @@
+                                         <xsl:attribute name="lang">en</xsl:attribute>
+                                     </xsl:element>
+                                 </xsl:element>
+-                            </xsl:element>
++                            </xsl:element>
+                         </xsl:otherwise>
+                     </xsl:choose>
+                 </dataSet>
+             </xsl:for-each>
+-        </xsl:element>
++        </xsl:element>
+     </xsl:template>
+ 
+-    <xsl:template name="comingsoon">
++    <xsl:template name="comingsoon">
+         <xsl:element name="directory">
+-            <xsl:attribute name="name"><xsl:value-of select="string('Coming Soon Movie Trailers')"/></xsl:attribute>
++            <xsl:attribute name="name"><xsl:value-of select="string('Coming Soon  Movie Trailers')"/></xsl:attribute>
+             <xsl:attribute name="thumbnail"><xsl:value-of select="string('http://www.tribute.ca/images/tribute_title.gif')"/></xsl:attribute>
+-            <xsl:for-each select="//h3[string(span)='Coming Soon Movie Trailers']/..//a">
++            <!-- ul = 3 for 'Coming Soon  Movie Trailers'-->
++            <xsl:for-each select="mnvXpath:tributecaGetAnchors(//ul[@class='clump'], 3)">
+                 <dataSet>
+                     <directoryThumbnail>http://www.tribute.ca/images/tribute_title.gif</directoryThumbnail>
+                     <xsl:choose>
+@@ -126,10 +132,10 @@
+                         <xsl:otherwise>
+                             <xsl:element name="item">
+                                 <title><xsl:value-of select="normalize-space(string(.))"/></title>
+-                                <author>Tribute.ca</author>
+-                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
+-                                <description><xsl:value-of select="concat(normalize-space(string(.)), ' coming ', normalize-space(string(../small/i)))"/></description>
+-                                <link><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), //h3[string(span)='Coming Soon Movie Trailers']/..//a)"/></link>
++                                <author>Tribute.ca</author>
++                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
++                                <description><xsl:value-of select="concat(normalize-space(string(.)), ' coming ', normalize-space(string(../small/i)))"/></description>
++                                <link><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), ../..//a)"/></link>
+                                 <xsl:if test="mnvXpath:tributecaIsCustomHTML(('dummy'))">
+                                     <mythtv:customhtml>true</mythtv:customhtml>
+                                 </xsl:if>
+@@ -138,7 +144,7 @@
+                                         <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaThumbnailLink(string(.))"/></xsl:attribute>
+                                     </xsl:element>
+                                     <xsl:element name="media:content">
+-                                        <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), //h3[string(span)='Coming Soon Movie Trailers']/..//a)"/></xsl:attribute>
++                                        <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), ../..//a)"/></xsl:attribute>
+                                         <xsl:attribute name="duration"></xsl:attribute>
+                                         <xsl:attribute name="width"></xsl:attribute>
+                                         <xsl:attribute name="height"></xsl:attribute>
+@@ -146,19 +152,20 @@
+                                         <xsl:attribute name="lang">en</xsl:attribute>
+                                     </xsl:element>
+                                 </xsl:element>
+-                            </xsl:element>
++                            </xsl:element>
+                         </xsl:otherwise>
+                     </xsl:choose>
+                 </dataSet>
+             </xsl:for-each>
+-        </xsl:element>
++        </xsl:element>
+     </xsl:template>
+ 
+-    <xsl:template name="topupcoming">
++    <xsl:template name="topupcoming">
+         <xsl:element name="directory">
+             <xsl:attribute name="name"><xsl:value-of select="string('Top 10 Upcoming Trailers')"/></xsl:attribute>
+             <xsl:attribute name="thumbnail"><xsl:value-of select="string('http://www.tribute.ca/images/tribute_title.gif')"/></xsl:attribute>
+-            <xsl:for-each select="//h3[string(span)='Top 10 Upcoming Trailers']/..//a">
++            <!-- ul = 2 for 'Top 10 Upcoming Trailers'-->
++            <xsl:for-each select="mnvXpath:tributecaGetAnchors(//ul[@class='clump'], 2)">
+                 <dataSet>
+                     <directoryThumbnail>http://www.tribute.ca/images/tribute_title.gif</directoryThumbnail>
+                     <xsl:choose>
+@@ -168,10 +175,10 @@
+                         <xsl:otherwise>
+                             <xsl:element name="item">
+                                 <title><xsl:value-of select="normalize-space(string(.))"/></title>
+-                                <author>Tribute.ca</author>
+-                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
+-                                <description><xsl:value-of select="normalize-space(./@title)"/></description>
+-                                <link><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), //h3[string(span)='Top 10 Upcoming Trailers']/..//a)"/></link>
++                                <author>Tribute.ca</author>
++                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
++                                <description><xsl:value-of select="normalize-space(./@title)"/></description>
++                                <link><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), ../..//a)"/></link>
+                                 <xsl:if test="mnvXpath:tributecaIsCustomHTML(('dummy'))">
+                                     <mythtv:customhtml>true</mythtv:customhtml>
+                                 </xsl:if>
+@@ -180,7 +187,7 @@
+                                         <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaThumbnailLink(string(.))"/></xsl:attribute>
+                                     </xsl:element>
+                                     <xsl:element name="media:content">
+-                                        <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), //h3[string(span)='Top 10 Upcoming Trailers']/..//a)"/></xsl:attribute>
++                                        <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), ../..//a)"/></xsl:attribute>
+                                         <xsl:attribute name="duration"></xsl:attribute>
+                                         <xsl:attribute name="width"></xsl:attribute>
+                                         <xsl:attribute name="height"></xsl:attribute>
+@@ -188,19 +195,20 @@
+                                         <xsl:attribute name="lang">en</xsl:attribute>
+                                     </xsl:element>
+                                 </xsl:element>
+-                            </xsl:element>
++                            </xsl:element>
+                         </xsl:otherwise>
+                     </xsl:choose>
+                 </dataSet>
+             </xsl:for-each>
+-        </xsl:element>
++        </xsl:element>
+     </xsl:template>
+ 
+-    <xsl:template name="topboxoffice">
++    <xsl:template name="topboxoffice">
+         <xsl:element name="directory">
+             <xsl:attribute name="name"><xsl:value-of select="string('Top Box Office Movie Trailers')"/></xsl:attribute>
+             <xsl:attribute name="thumbnail"><xsl:value-of select="string('http://www.tribute.ca/images/tribute_title.gif')"/></xsl:attribute>
+-            <xsl:for-each select="//h3[string(span)='Top Box Office Movie Trailers']/..//a">
++            <!-- ul = 0 for 'Top Box Office Movie Trailers'-->
++            <xsl:for-each select="mnvXpath:tributecaGetAnchors(//ul[@class='clump'], 0)">
+                 <dataSet>
+                     <directoryThumbnail>http://www.tribute.ca/images/tribute_title.gif</directoryThumbnail>
+                     <xsl:choose>
+@@ -210,10 +218,10 @@
+                         <xsl:otherwise>
+                             <xsl:element name="item">
+                                 <title><xsl:value-of select="normalize-space(mnvXpath:tributecaTopTenTitle(string(..)))"/></title>
+-                                <author>Tribute.ca</author>
+-                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
+-                                <description><xsl:value-of select="normalize-space(./@title)"/></description>
+-                                <link><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), //h3[string(span)='Top Box Office Movie Trailers']/..//a)"/></link>
++                                <author>Tribute.ca</author>
++                                <pubDate><xsl:value-of select="mnvXpath:pubDate('Now')"/></pubDate>
++                                <description><xsl:value-of select="normalize-space(./@title)"/></description>
++                                <link><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), ..//a)"/></link>
+                                 <xsl:if test="mnvXpath:tributecaIsCustomHTML(('dummy'))">
+                                     <mythtv:customhtml>true</mythtv:customhtml>
+                                 </xsl:if>
+@@ -222,7 +230,7 @@
+                                         <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaThumbnailLink(string(.))"/></xsl:attribute>
+                                     </xsl:element>
+                                     <xsl:element name="media:content">
+-                                        <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), //h3[string(span)='Top Box Office Movie Trailers']/..//a)"/></xsl:attribute>
++                                        <xsl:attribute name="url"><xsl:value-of select="mnvXpath:tributecaLinkGeneration(position(), ..//a)"/></xsl:attribute>
+                                         <xsl:attribute name="duration"></xsl:attribute>
+                                         <xsl:attribute name="width"></xsl:attribute>
+                                         <xsl:attribute name="height"></xsl:attribute>
+@@ -230,12 +238,12 @@
+                                         <xsl:attribute name="lang">en</xsl:attribute>
+                                     </xsl:element>
+                                 </xsl:element>
+-                            </xsl:element>
++                            </xsl:element>
+                         </xsl:otherwise>
+                     </xsl:choose>
+                 </dataSet>
+             </xsl:for-each>
+-        </xsl:element>
++        </xsl:element>
+     </xsl:template>
+ 
+ </xsl:stylesheet>
+diff -Naurp mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/mtv/mtv_api.py mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/mtv/mtv_api.py
+--- mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/mtv/mtv_api.py	2010-08-28 16:16:22.000000000 -0400
++++ mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/mtv/mtv_api.py	2010-11-17 15:26:58.209982000 -0500
+@@ -19,7 +19,7 @@ metadata, video and image URLs from MTV.
+ for this api are published at http://developer.mtvnservices.com/docs
+ '''
+ 
+-__version__="v0.2.4"
++__version__="v0.2.5"
+ # 0.1.0 Initial development
+ # 0.1.1 Added Tree View Processing
+ # 0.1.2 Modified Reee view code and structure to be standandized across all grabbers
+@@ -33,6 +33,7 @@ __version__="v0.2.4"
+ #       Removed the import and use of the feedparser library
+ # 0.2.3 Fixed an exception message output code error in two places
+ # 0.2.4 Removed the need for python MythTV bindings and added "%SHAREDIR%" to icon directory path
++# 0.2.5 Use MTV web page as API not returning valid URLs
+ 
+ import os, struct, sys, re, time
+ from datetime import datetime, timedelta
+@@ -238,6 +239,8 @@ class Videos(object):
+             'genres': {'Genres': 'directories/topics/music','world_reggae': 'directories/music_genres/world_reggae', 'pop': 'directories/music_genres/pop', 'metal': 'directories/music_genres/metal', 'environmental': 'directories/music_genres/environmental', 'latin': 'directories/music_genres/latino', 'randb': 'directories/music_genres/rnb', 'rock': 'directories/music_genres/rock', 'easy_listening': 'directories/music_genres/easy_listening', 'jazz': 'directories/music_genres/jazz', 'country': 'directories/music_genres/country', 'hip_hop': 'directories/music_genres/hiphop', 'classical': 'directories/music_genres/classical', 'electronic_dance': 'directories/music_genres/electronic_dance', 'blues_folk': 'directories/music_genres/blues_folk', 'alternative': 'directories/music_genres/alternative', 'soundtracks_musicals': 'directories/music_genres/soundtracks_musicals',
+             },
+             }
++        # Get the absolute path to the mtv.html file
++        self.mtvHtmlPath = u'file://'+os.path.dirname( os.path.realpath( __file__ )).replace(u'/nv_python_libs/mtv', u'/nv_python_libs/configs/HTML/mtv.html?title=%s&amp;videocode=%s')
+ 
+         # Initialize the tree view flag so that the item parsing code can be used for multiple purposes
+         self.treeview = False
+@@ -400,7 +403,7 @@ class Videos(object):
+ 
+             video_details = None
+             try:
+-                video_details = self.videoDetails(item['id'])
++                video_details = self.videoDetails(item['id'], urllib.quote(item['title'].encode("utf-8")))
+             except MtvUrlError, msg:
+                 sys.stderr.write(self.error_messages['MtvUrlError'] % msg)
+             except MtvVideoDetailError, msg:
+@@ -442,7 +445,7 @@ class Videos(object):
+         # end searchTitle()
+ 
+ 
+-    def videoDetails(self, url):
++    def videoDetails(self, url, title=u''):
+         '''Using the passed URL retrieve the video meta data details
+         return a dictionary of video metadata details
+         return
+@@ -463,7 +466,10 @@ class Videos(object):
+         cur_size = True
+         for e in etree:
+             if e.tag.endswith(u'content') and e.text == None:
+-                metadata['video'] =  e.get('url')
++                index = e.get('url').rindex(u':')
++                metadata['video'] = self.mtvHtmlPath % (title,  e.get('url')[index+1:])
++                # !! This tag will need to be added at a later date
++#                metadata['customhtml'] = u'true'
+                 metadata['duration'] =  e.get('duration')
+             if e.tag.endswith(u'player'):
+                 metadata['link'] = e.get('url')
+@@ -745,7 +751,11 @@ class Videos(object):
+             if not metadata.has_key('video'):
+                 metadata['video'] = metadata['link']
+             else:
++                index = metadata['video'].rindex(u':')
++                metadata['video'] = self.mtvHtmlPath % (urllib.quote(metadata['title'].encode("utf-8")), metadata['video'][index+1:])
+                 metadata['link'] =  metadata['video']
++                # !! This tag will need to be added at a later date
++#                metadata['customhtml'] = u'true'
+ 
+             if not dictionary_first:  # Add the dictionaries display name
+                 dictionaries.append([self.massageDescription(self.feed_names[self.tree_key][self.feed]), self.setTreeViewIcon()])
+diff -Naurp mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/xsltfunctions/tributeca_api.py mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/xsltfunctions/tributeca_api.py
+--- mythtv-0.24.orig/programs/scripts/internetcontent/nv_python_libs/xsltfunctions/tributeca_api.py	2010-08-28 16:16:22.000000000 -0400
++++ mythtv-0.24.new/programs/scripts/internetcontent/nv_python_libs/xsltfunctions/tributeca_api.py	2010-11-15 09:48:15.215323000 -0500
+@@ -21,8 +21,9 @@ See this link for the specifications:
+ http://www.mythtv.org/wiki/MythNetvision_Grabber_Script_Format
+ '''
+ 
+-__version__="v0.1.0"
++__version__="v0.1.1"
+ # 0.1.0 Initial development
++# 0.1.1 Changes to due to Web site modifications
+ 
+ 
+ # Specify the class names that have XPath extention functions
+@@ -91,8 +92,9 @@ class xpathFunctions(object):
+     """Functions specific extending XPath
+     """
+     def __init__(self):
+-        self.functList = ['tributecaLinkGeneration', 'tributecaThumbnailLink', 'tributecaTopTenTitle', 'tributecaIsCustomHTML', 'tributecaCheckIfDBItem', ]
++        self.functList = ['tributecaLinkGeneration', 'tributecaThumbnailLink', 'tributecaTopTenTitle', 'tributecaIsCustomHTML', 'tributecaCheckIfDBItem', 'tributecaDebug', 'tributecaGetAnchors', ]
+         self.TextTail = etree.XPath("string()")
++        self.anchorList = etree.XPath(".//a", namespaces=common.namespaces)
+         self.persistence = {}
+     # end __init__()
+ 
+@@ -104,12 +106,13 @@ class xpathFunctions(object):
+ 
+     def tributecaLinkGeneration(self, context, *args):
+         '''Generate a link for the Tribute.ca site. Sigificant massaging of the title is required.
+-        Call example: 'mnvXpath:tributecaLinkGeneration(string(.), string(preceding-sibling::a[1]))'
++        Call example: 'mnvXpath:tributecaLinkGeneration(position(), ..//a)'
+         return the url link
+         '''
+         downloadURL = u'http://www.tribute.ca/streamingflash/%s.flv'
+         position = int(args[0])-1
+         webURL = u'http://www.tribute.ca%s' % args[1][position].attrib['href'].strip()
++
+         # If this is for the download then just return what was found for the "link" element
+         if self.persistence.has_key('tributecaLinkGeneration'):
+             if self.persistence['tributecaLinkGeneration'] != None:
+@@ -151,7 +154,6 @@ class xpathFunctions(object):
+             trailer2 = u'tr2'
+         if currentTitle.find(': An IMAX') != -1:
+             trailer2 = u'tr2'
+-
+         titleArray[0] = titleArray[0].replace(u'&', u'and')
+         self.persistence['tributecaThumbnailLink'] = urllib.quote_plus(titleArray[0].lower().replace(u' ', u'_').replace(u"'", u'').replace(u'-', u'_').replace(u'?', u'').replace(u'.', u'').encode("utf-8"))
+         titleArray[0] = urllib.quote_plus(re.sub('[%s]' % re.escape(string.punctuation), '', titleArray[0].lower().replace(u' ', u'').encode("utf-8")))
+@@ -159,7 +161,6 @@ class xpathFunctions(object):
+         # Verify that the FLV file url really exits. If it does not then use the Web page link.
+         videocode = u'%s%s' % (titleArray[0], trailer2)
+         flvURL = downloadURL % videocode
+-
+         resultCheckUrl = common.checkURL(flvURL)
+         if not resultCheckUrl[0] or resultCheckUrl[1]['Content-Type'] != u'video/x-flv':
+             if trailer2 != u'':
+@@ -183,7 +184,6 @@ class xpathFunctions(object):
+                             flvURL = webURL
+                     else:
+                         flvURL = webURL
+-
+         if flvURL != webURL:
+             self.persistence['tributecaLinkGeneration'] = videocode
+             return common.linkWebPage(u'dummycontext', 'tributeca')+videocode
+@@ -252,6 +252,33 @@ class xpathFunctions(object):
+         return common.checkIfDBItem('dummy', {'feedtitle': 'Movie Trailers', 'title': arg[0].replace('Trailer', u'').strip(), 'author': arg[1], 'description': arg[2]})
+     # end tributecaCheckIfDBItem()
+ 
++    def tributecaGetAnchors(self, context, *arg):
++        ''' Routine used to get specific anchor elements.
++        Unfortunitely position dependant.
++        Call: mnvXpath:tributecaGetAnchors(//ul[@class='clump'], 3)
++        '''
++        return self.anchorList(arg[0][int(arg[1])])
++    # end tributecaGetAnchors()
++
++    def tributecaDebug(self, context, *arg):
++        ''' Routine only used for debugging. Prints out the node
++        passed as an argument. Not to be used in production.
++        Call example: mnvXpath:tributecaDebug(//a)
++        '''
++        testpath = etree.XPath(".//a", namespaces=common.namespaces)
++        print arg
++        count = 0
++        for x in arg:
++            sys.stdout.write(u'\nElement Count (%s):\n' % count)
++#            for y in testpath(x):
++#                sys.stdout.write(etree.tostring(y, encoding='UTF-8', pretty_print=True))
++            print "testpath(%s)" % testpath(x)
++            count+=1
++        print
++#        sys.stdout.write(etree.tostring(arg[0], encoding='UTF-8', pretty_print=True))
++        return u"========tributecaDebug Called========="
++    # end tributecaDebug()
++
+ ######################################################################################################
+ #
+ # End of XPath extension functions
+diff -Naurp mythtv-0.24.orig/VERSION mythtv-0.24.new/VERSION
+--- mythtv-0.24.orig/VERSION	2010-11-10 12:31:31.000000000 -0500
++++ mythtv-0.24.new/VERSION	1969-12-31 19:00:00.000000000 -0500
+@@ -1 +0,0 @@
+-SOURCE_VERSION="0.24"
+diff -Naurp mythtv-0.24.orig/version.sh mythtv-0.24.new/version.sh
+--- mythtv-0.24.orig/version.sh	2010-08-29 18:22:54.000000000 -0400
++++ mythtv-0.24.new/version.sh	2010-08-29 18:22:54.556844000 -0400
+@@ -30,7 +30,7 @@ case "${SOURCE_VERSION}" in
+         fi
+     ;;
+     *)
+-    SVNREPOPATH=$(echo "$$URL: http://svn.mythtv.org/svn/tags/release-0-24/mythtv/version.sh $$" | sed -e 's,.*/svn/,,' \
++    SVNREPOPATH=$(echo "$$URL: http://svn.mythtv.org/svn/branches/release-0-24-fixes/mythtv/version.sh $$" | sed -e 's,.*/svn/,,' \
+                                        -e 's,/mythtv/version\.sh.*,,' \
+                                        -e 's,/version\.sh.*,,')
+     ;;

@@ -65,7 +65,8 @@
 %define desktop_vendor  RPMFusion
 
 # SVN Revision number and branch ID
-%define _svnrev r27163
+# 0.24 release: r27163
+%define _svnrev r27307
 %define branch release-0-24-fixes
 
 #
@@ -82,7 +83,7 @@ Version: 0.24
 Release: 0.1.svn.%{_svnrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -131,8 +132,11 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
-#Patch0:    mythtv-%{version}-svnfixes.patch
-#Patch1:    mythplugins-%{version}-svnfixes.patch
+Patch0:    mythtv-%{version}-svnfixes.patch
+Patch1:    mythplugins-%{version}-svnfixes.patch
+Patch101:  0001-Tweaking-in-recording-seektable-building.patch
+Patch102:  alsa-fixes-1.patch
+Patch103:  alsa-fixes-2.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -836,6 +840,10 @@ on demand content.
 ##### MythTV
 
 cd mythtv-%{version}
+%patch0 -p1
+%patch101 -p1
+%patch102 -p1
+%patch103 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -868,8 +876,7 @@ cd ..
 %if %{with_plugins}
 
 cd mythplugins-%{version}
-#patch1 -p1
-#patch3 -p1
+%patch1 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -1451,6 +1458,11 @@ fi
 ################################################################################
 
 %changelog
+* Sat Nov 20 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-2
+- Update to release-0-24-fixes, svn revision 27307
+- Add preview image fixup patch from ticket #9256
+- Add alsa passthru device patches from trunk r27306 and r27307
+
 * Wed Nov 10 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-1
 - Update to 0.24 release
 
