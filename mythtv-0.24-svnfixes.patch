@@ -580,6 +580,42 @@ diff -Naurp mythtv-0.24.orig/libs/libmythtv/playercontext.cpp mythtv-0.24.new/li
          }
      }
      else if (pipState == kPBPRight)
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/recordingprofile.cpp mythtv-0.24.new/libs/libmythtv/recordingprofile.cpp
+--- mythtv-0.24.orig/libs/libmythtv/recordingprofile.cpp	2010-09-11 09:53:10.000000000 -0400
++++ mythtv-0.24.new/libs/libmythtv/recordingprofile.cpp	2010-11-21 17:41:37.327470000 -0500
+@@ -1166,6 +1166,7 @@ class RecordingProfilePopup
+     }
+ };
+ 
++// id and name will be deleted by ConfigurationGroup's destructor
+ RecordingProfile::RecordingProfile(QString profName)
+     : id(new ID()),        name(new Name(*this)),
+       imageSize(NULL),     videoSettings(NULL),
+@@ -1216,13 +1217,6 @@ RecordingProfile::RecordingProfile(QStri
+     addChild(profile);
+ };
+ 
+-RecordingProfile::~RecordingProfile()
+-{
+-    id->deleteLater();
+-    delete name;
+-    name = NULL;
+-}
+-
+ void RecordingProfile::ResizeTranscode(bool resize)
+ {
+     MythWizard *wizard = (MythWizard *)dialog;
+diff -Naurp mythtv-0.24.orig/libs/libmythtv/recordingprofile.h mythtv-0.24.new/libs/libmythtv/recordingprofile.h
+--- mythtv-0.24.orig/libs/libmythtv/recordingprofile.h	2010-09-18 22:17:00.000000000 -0400
++++ mythtv-0.24.new/libs/libmythtv/recordingprofile.h	2010-11-21 17:41:37.327470000 -0500
+@@ -85,7 +85,6 @@ class MPUBLIC RecordingProfile : public 
+   public:
+     // initializers
+     RecordingProfile(QString profName = QString());
+-    ~RecordingProfile();
+     virtual void loadByID(int id);
+     virtual bool loadByType(const QString &name, const QString &cardtype);
+     virtual bool loadByGroup(const QString &name, const QString &group);
 diff -Naurp mythtv-0.24.orig/libs/libmythtv/teletextdecoder.cpp mythtv-0.24.new/libs/libmythtv/teletextdecoder.cpp
 --- mythtv-0.24.orig/libs/libmythtv/teletextdecoder.cpp	2010-11-07 23:31:54.000000000 -0500
 +++ mythtv-0.24.new/libs/libmythtv/teletextdecoder.cpp	2010-11-14 09:17:38.338032000 -0500

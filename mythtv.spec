@@ -66,7 +66,7 @@
 
 # SVN Revision number and branch ID
 # 0.24 release: r27163
-%define _svnrev r27307
+%define _svnrev r27317
 %define branch release-0-24-fixes
 
 #
@@ -1458,8 +1458,8 @@ fi
 ################################################################################
 
 %changelog
-* Sat Nov 20 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-2
-- Update to release-0-24-fixes, svn revision 27307
+* Mon Nov 22 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-2
+- Update to release-0-24-fixes, svn revision 27317
 - Add preview image fixup patch from ticket #9256
 - Add alsa passthru device patches from trunk r27306 and r27307
 
