@@ -64,10 +64,10 @@
 # The vendor name we should attribute the aforementioned entries to
 %define desktop_vendor  RPMFusion
 
-# SVN Revision number and branch ID
-# 0.24 release: r27163
-%define _svnrev r27317
-%define branch release-0-24-fixes
+# Git revision and branch ID
+# 0.24 release: git tag b0.24
+%define _gitrev 945c67317
+%define branch fixes/0.24
 
 #
 # Basic descriptive tags for this package:
@@ -79,11 +79,11 @@ Group:          Applications/Multimedia
 
 # Version/Release info
 Version: 0.24
-%if "%{branch}" == "trunk"
-Release: 0.1.svn.%{_svnrev}%{?dist}
+%if "%{branch}" == "master"
+Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 2%{?dist}
+Release: 4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -132,11 +132,9 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
-Patch0:    mythtv-%{version}-svnfixes.patch
-Patch1:    mythplugins-%{version}-svnfixes.patch
-Patch101:  0001-Tweaking-in-recording-seektable-building.patch
-Patch102:  alsa-fixes-1.patch
-Patch103:  alsa-fixes-2.patch
+Patch0:    mythtv-%{version}-fixes.patch
+Patch1:    mythplugins-%{version}-fixes.patch
+Patch2:    mythweb-%{version}-fixes.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -841,9 +839,6 @@ on demand content.
 
 cd mythtv-%{version}
 %patch0 -p1
-%patch101 -p1
-%patch102 -p1
-%patch103 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -877,6 +872,7 @@ cd ..
 
 cd mythplugins-%{version}
 %patch1 -p1
+%patch2 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -1232,6 +1228,7 @@ fi
 %{_bindir}/mythfilldatabase
 %{_bindir}/mythjobqueue
 %{_bindir}/mythreplex
+%{_bindir}/mythffmpeg
 %{_datadir}/mythtv/MXML_scpd.xml
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
@@ -1264,6 +1261,7 @@ fi
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
+%{_bindir}/mythffplay
 %dir %{_libdir}/mythtv
 %dir %{_libdir}/mythtv/filters
 %{_libdir}/mythtv/filters/*
@@ -1458,6 +1456,12 @@ fi
 ################################################################################
 
 %changelog
+* Sun Jan 16 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-4
+- Update to 0.24 fixes, git revision 945c67317
+
+* Fri Nov 26 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-3
+- Update to release-0-24-fixes, svn revision 27355
+
 * Mon Nov 22 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-2
 - Update to release-0-24-fixes, svn revision 27317
 - Add preview image fixup patch from ticket #9256
