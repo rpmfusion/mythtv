@@ -66,7 +66,7 @@
 
 # Git revision and branch ID
 # 0.24 release: git tag b0.24
-%define _gitrev 945c67317
+%define _gitrev 8921ded85a
 %define branch fixes/0.24
 
 #
@@ -83,7 +83,7 @@ Version: 0.24
 Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 4%{?dist}
+Release: 5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -202,6 +202,7 @@ BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
+BuildRequires:  libcdio-devel
 # nb: libdvdcss will be dynamically loaded if installed
 BuildRequires:  libfame-devel >= 0.9.0
 BuildRequires:  libogg-devel
@@ -1456,6 +1457,11 @@ fi
 ################################################################################
 
 %changelog
+* Sun Jan 30 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-5
+- Update to 0.24 fixes, git revision 8921ded85a (rpmfbz#1605, #1585)
+- Add BR: libcdio-devel for forthcoming improved BD support
+- Fix issue with calling setfacl on non-existent devices (rpmfbz#1604)
+
 * Sun Jan 16 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-4
 - Update to 0.24 fixes, git revision 945c67317
 
