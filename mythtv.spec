@@ -4,14 +4,14 @@
 # by:   Chris Petersen <rpm@forevermore.net>
 #       Jarod Wilson <jarod@wilsonet.com>
 #
-#  Modified/Extended from the great (non-svn based) work of:
+#  Modified/Extended from the great work of:
 #     Axel Thimm <Axel.Thimm@ATrpms.net>
 #     David Bussenschutt <buzz@oska.com>
 #     and others; see changelog at bottom for details.
 #
 # The latest canonical upstream version of this file can be found at:
 #
-#     http://svn.mythtv.org/svn/trunk/packaging/rpm/mythtv.spec
+#     https://github.com/MythTV/packaging/tree/master/rpm
 #
 # The latest RPM Fusion version can be found at:
 #
@@ -977,7 +977,7 @@ cd mythtv-%{version}
     --enable-debug
 
 # Insert rpm version-release for mythbackend --version output
-    echo 'SOURCE_VERSION="%{version}-%{release} (%_svnrev)"' > VERSION
+    echo 'SOURCE_VERSION="%{version}-%{release} (%_gitrev)"' > VERSION
 
 # Make
     make %{?_smp_mflags}
