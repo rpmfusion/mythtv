@@ -66,7 +66,7 @@
 
 # Git revision and branch ID
 # 0.24 release: git tag b0.24
-%define _gitrev 8921ded85a
+%define _gitrev 4af46b1f5d
 %define branch fixes/0.24
 
 #
@@ -83,7 +83,7 @@ Version: 0.24
 Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 5%{?dist}
+Release: 6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1457,6 +1457,10 @@ fi
 ################################################################################
 
 %changelog
+* Mon Feb 28 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-6
+- Update to 0.24 fixes, git revision 4af46b1f5d
+- Fix mythtv version output to properly show git revision
+
 * Sun Jan 30 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-5
 - Update to 0.24 fixes, git revision 8921ded85a (rpmfbz#1605, #1585)
 - Add BR: libcdio-devel for forthcoming improved BD support
