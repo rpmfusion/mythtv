@@ -4,14 +4,14 @@
 # by:   Chris Petersen <rpm@forevermore.net>
 #       Jarod Wilson <jarod@wilsonet.com>
 #
-#  Modified/Extended from the great (non-svn based) work of:
+#  Modified/Extended from the great work of:
 #     Axel Thimm <Axel.Thimm@ATrpms.net>
 #     David Bussenschutt <buzz@oska.com>
 #     and others; see changelog at bottom for details.
 #
 # The latest canonical upstream version of this file can be found at:
 #
-#     http://svn.mythtv.org/svn/trunk/packaging/rpm/mythtv.spec
+#     https://github.com/MythTV/packaging/tree/master/rpm
 #
 # The latest RPM Fusion version can be found at:
 #
@@ -64,9 +64,10 @@
 # The vendor name we should attribute the aforementioned entries to
 %define desktop_vendor  RPMFusion
 
-# SVN Revision number and branch ID
-%define _svnrev r26065
-%define branch trunk
+# Git revision and branch ID
+# 0.24 release: git tag b0.24
+%define _gitrev 4af46b1f5d
+%define branch fixes/0.24
 
 #
 # Basic descriptive tags for this package:
@@ -78,11 +79,11 @@ Group:          Applications/Multimedia
 
 # Version/Release info
 Version: 0.24
-%if "%{branch}" == "trunk"
-Release: 0.1.svn.%{_svnrev}%{?dist}
-#Release: 0.2.rc1%{?dist}
+%if "%{branch}" == "master"
+Release: 0.1.git.%{_gitrev}%{?dist}
+#Release: 0.1.rc1%{?dist}
 %else
-Release: 1%{?dist}
+Release: 6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -131,15 +132,13 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
-#Patch0:    mythtv-%{version}-svnfixes.patch
-#Patch1:    mythplugins-%{version}-svnfixes.patch
-# http://svn.mythtv.org/trac/ticket/8572
-Patch2:    mythtv-compile_fixes_for_qt_4_7.patch
-Patch3:    mythplugins-compile_fixes_for_qt_4_7.patch
+Patch0:    mythtv-%{version}-fixes.patch
+Patch1:    mythplugins-%{version}-fixes.patch
+Patch2:    mythweb-%{version}-fixes.patch
 Source10:  PACKAGE-LICENSING
-Source101: mythbackend.sysconfig.in
-Source102: mythbackend.init.in
-Source103: mythbackend.logrotate.in
+Source101: mythbackend.sysconfig
+Source102: mythbackend.init
+Source103: mythbackend.logrotate
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
@@ -203,6 +202,7 @@ BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
+BuildRequires:  libcdio-devel
 # nb: libdvdcss will be dynamically loaded if installed
 BuildRequires:  libfame-devel >= 0.9.0
 BuildRequires:  libogg-devel
@@ -562,6 +562,9 @@ Obsoletes: mythphone < %{version}-%{release}
 # same deal for mythflix
 Provides: mythflix = %{version}-%{release}
 Obsoletes: mythflix < %{version}-%{release}
+# and now mythmovies
+Provides: mythmovies = %{version}-%{release}
+Obsoletes: mythmovies < %{version}-%{release}
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -600,6 +603,7 @@ Group:          Development/Languages
 #BuildArch:      noarch
 
 Requires:       MySQL-python
+Requires:       PyXML
 
 %description -n python-MythTV
 Provides a python-based interface to interacting with MythTV.
@@ -697,29 +701,6 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
-
-################################################################################
-#package -n mythgame-emulators
-#Summary:   Meta-package requiring emulators for game types mythgame knows about
-#Group:     Applications/Multimedia
-#Requires:  mythgame = %{version}-%{release}
-# Multi Arcade Machine Emulator, Amiga, Atari 2600
-#Requires:  sdlmame
-#Requires:  e-uae
-#Requires:  stella
-# Nintendo, Super Nintendo, Nintendo 64
-#Requires:  fceultra
-#Requires:  zsnes
-#Requires:  mupen64, mupen64-ricevideo
-# Sega Genesis, Sega Master System, Game Gear
-#Requires:  gens
-#Requires:  dega-sdl
-#Requires:  osmose
-# TurboGraphx 16 (and others)
-#Requires:  mednafen
-
-#description -n mythgame-emulators
-#Meta-package requiring emulators for game types mythgame knows about.
 
 %endif
 ################################################################################
@@ -829,7 +810,7 @@ Requires:  mythbrowser = %{version}-%{release}
 Requires:  python-MythTV = %{version}-%{release}
 Requires:  python-pycurl
 Requires:  python >= 2.5
-# Technically, it *does* require this... But its not in the RPM Fusion repos.
+# This is packaged in adobe's yum repo
 #Requires:  flash-plugin
 
 %description -n mythnetvision
@@ -858,8 +839,7 @@ on demand content.
 ##### MythTV
 
 cd mythtv-%{version}
-#patch0 -p1
-%patch2 -p1
+%patch0 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -873,25 +853,9 @@ cd mythtv-%{version}
     sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
         bindings/perl/Makefile
 
-# Install other source files, and fix pathnames
+# Install other source files
     cp -a %{SOURCE10} %{SOURCE101} %{SOURCE102} %{SOURCE103} .
     cp -a %{SOURCE106} %{SOURCE107} %{SOURCE108} %{SOURCE109} .
-    for file in mythbackend.init \
-                mythbackend.sysconfig \
-                mythbackend.logrotate; do
-        sed -e's|@logdir@|%{_localstatedir}/log|g' \
-            -e's|@rundir@|%{_localstatedir}/run|g' \
-            -e's|@sysconfdir@|%{_sysconfdir}|g' \
-            -e's|@sysconfigdir@|%{_sysconfdir}/sysconfig|g' \
-            -e's|@initdir@|%{_sysconfdir}/init.d|g' \
-            -e's|@bindir@|%{_bindir}|g' \
-            -e's|@sbindir@|%{_sbindir}|g' \
-            -e's|@subsysdir@|%{_localstatedir}/lock/subsys|g' \
-            -e's|@varlibdir@|%{_localstatedir}/lib|g' \
-            -e's|@varcachedir@|%{_localstatedir}/cache|g' \
-            -e's|@logrotatedir@|%{_sysconfdir}/logrotate.d|g' \
-            < $file.in > $file
-    done
 
 # Prevent all of those nasty installs to ../../../../../bin/whatever
 #    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
@@ -908,8 +872,8 @@ cd ..
 %if %{with_plugins}
 
 cd mythplugins-%{version}
-#patch1 -p1
-%patch3 -p1
+%patch1 -p1
+%patch2 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -1013,7 +977,7 @@ cd mythtv-%{version}
     --enable-debug
 
 # Insert rpm version-release for mythbackend --version output
-    echo 'SOURCE_VERSION="%{version}-%{release} (%_svnrev)"' > VERSION
+    echo 'SOURCE_VERSION="%{version}-%{release} (%_gitrev)"' > VERSION
 
 # Make
     make %{?_smp_mflags}
@@ -1265,6 +1229,7 @@ fi
 %{_bindir}/mythfilldatabase
 %{_bindir}/mythjobqueue
 %{_bindir}/mythreplex
+%{_bindir}/mythffmpeg
 %{_datadir}/mythtv/MXML_scpd.xml
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
@@ -1297,6 +1262,7 @@ fi
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
+%{_bindir}/mythffplay
 %dir %{_libdir}/mythtv
 %dir %{_libdir}/mythtv/filters
 %{_libdir}/mythtv/filters/*
@@ -1304,6 +1270,7 @@ fi
 %dir %{_datadir}/mythtv/i18n
 %dir %{_datadir}/mythtv/fonts
 %{_datadir}/mythtv/fonts/*.ttf
+%{_datadir}/mythtv/fonts/*.txt
 %{_datadir}/mythtv/i18n/mythfrontend_*.qm
 %{_datadir}/applications/*mythfrontend.desktop
 %{_datadir}/pixmaps/myth*.png
@@ -1401,12 +1368,6 @@ fi
 %dir %{_datadir}/mame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
-
-#files -n mythgame-emulators
-#defattr(-,root,root,-)
-#{_datadir}/mythtv/games/xmame
-#{_datadir}/mame/screens
-#{_datadir}/mame/flyers
 %endif
 
 %if %{with_mythmusic}
@@ -1496,6 +1457,40 @@ fi
 ################################################################################
 
 %changelog
+* Mon Feb 28 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-6
+- Update to 0.24 fixes, git revision 4af46b1f5d
+- Fix mythtv version output to properly show git revision
+
+* Sun Jan 30 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-5
+- Update to 0.24 fixes, git revision 8921ded85a (rpmfbz#1605, #1585)
+- Add BR: libcdio-devel for forthcoming improved BD support
+- Fix issue with calling setfacl on non-existent devices (rpmfbz#1604)
+
+* Sun Jan 16 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-4
+- Update to 0.24 fixes, git revision 945c67317
+
+* Fri Nov 26 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-3
+- Update to release-0-24-fixes, svn revision 27355
+
+* Mon Nov 22 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-2
+- Update to release-0-24-fixes, svn revision 27317
+- Add preview image fixup patch from ticket #9256
+- Add alsa passthru device patches from trunk r27306 and r27307
+
+* Wed Nov 10 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-1
+- Update to 0.24 release
+
+* Wed Nov 03 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.2.rc2
+- Update to svn trunk, revision 27095 (post-rc2)
+- Add Obsoletes/Provides for nuked mythmovies
+- Restore run-with-non-root-backend-capable initscript from F13 branch
+
+* Tue Oct 26 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.2.rc1
+- Update to svn trunk, revision 26998 (which is actually post-0.24-rc1)
+
+* Thu Sep 23 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r26482
+- Update to svn trunk, revision 26482
+
 * Wed Sep 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r26065
 - Update to svn trunk, revision 26065
 
