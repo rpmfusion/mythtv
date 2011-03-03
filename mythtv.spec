@@ -4,14 +4,14 @@
 # by:   Chris Petersen <rpm@forevermore.net>
 #       Jarod Wilson <jarod@wilsonet.com>
 #
-#  Modified/Extended from the great (non-svn based) work of:
+#  Modified/Extended from the great work of:
 #     Axel Thimm <Axel.Thimm@ATrpms.net>
 #     David Bussenschutt <buzz@oska.com>
 #     and others; see changelog at bottom for details.
 #
 # The latest canonical upstream version of this file can be found at:
 #
-#     http://svn.mythtv.org/svn/trunk/packaging/rpm/mythtv.spec
+#     https://github.com/MythTV/packaging/tree/master/rpm
 #
 # The latest RPM Fusion version can be found at:
 #
@@ -64,10 +64,10 @@
 # The vendor name we should attribute the aforementioned entries to
 %define desktop_vendor  RPMFusion
 
-# SVN Revision number and branch ID
-# 0.24 release: r27163
-%define _svnrev r27317
-%define branch release-0-24-fixes
+# Git revision and branch ID
+# 0.24 release: git tag b0.24
+%define _gitrev 4af46b1f5d
+%define branch fixes/0.24
 
 #
 # Basic descriptive tags for this package:
@@ -79,11 +79,11 @@ Group:          Applications/Multimedia
 
 # Version/Release info
 Version: 0.24
-%if "%{branch}" == "trunk"
-Release: 0.1.svn.%{_svnrev}%{?dist}
+%if "%{branch}" == "master"
+Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 2%{?dist}
+Release: 6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -132,11 +132,9 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
-Patch0:    mythtv-%{version}-svnfixes.patch
-Patch1:    mythplugins-%{version}-svnfixes.patch
-Patch101:  0001-Tweaking-in-recording-seektable-building.patch
-Patch102:  alsa-fixes-1.patch
-Patch103:  alsa-fixes-2.patch
+Patch0:    mythtv-%{version}-fixes.patch
+Patch1:    mythplugins-%{version}-fixes.patch
+Patch2:    mythweb-%{version}-fixes.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -204,6 +202,7 @@ BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
+BuildRequires:  libcdio-devel
 # nb: libdvdcss will be dynamically loaded if installed
 BuildRequires:  libfame-devel >= 0.9.0
 BuildRequires:  libogg-devel
@@ -841,9 +840,6 @@ on demand content.
 
 cd mythtv-%{version}
 %patch0 -p1
-%patch101 -p1
-%patch102 -p1
-%patch103 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -877,6 +873,7 @@ cd ..
 
 cd mythplugins-%{version}
 %patch1 -p1
+%patch2 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -980,7 +977,7 @@ cd mythtv-%{version}
     --enable-debug
 
 # Insert rpm version-release for mythbackend --version output
-    echo 'SOURCE_VERSION="%{version}-%{release} (%_svnrev)"' > VERSION
+    echo 'SOURCE_VERSION="%{version}-%{release} (%_gitrev)"' > VERSION
 
 # Make
     make %{?_smp_mflags}
@@ -1232,6 +1229,7 @@ fi
 %{_bindir}/mythfilldatabase
 %{_bindir}/mythjobqueue
 %{_bindir}/mythreplex
+%{_bindir}/mythffmpeg
 %{_datadir}/mythtv/MXML_scpd.xml
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
@@ -1264,6 +1262,7 @@ fi
 %{_bindir}/mythlcdserver
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
+%{_bindir}/mythffplay
 %dir %{_libdir}/mythtv
 %dir %{_libdir}/mythtv/filters
 %{_libdir}/mythtv/filters/*
@@ -1458,6 +1457,21 @@ fi
 ################################################################################
 
 %changelog
+* Mon Feb 28 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-6
+- Update to 0.24 fixes, git revision 4af46b1f5d
+- Fix mythtv version output to properly show git revision
+
+* Sun Jan 30 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-5
+- Update to 0.24 fixes, git revision 8921ded85a (rpmfbz#1605, #1585)
+- Add BR: libcdio-devel for forthcoming improved BD support
+- Fix issue with calling setfacl on non-existent devices (rpmfbz#1604)
+
+* Sun Jan 16 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-4
+- Update to 0.24 fixes, git revision 945c67317
+
+* Fri Nov 26 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-3
+- Update to release-0-24-fixes, svn revision 27355
+
 * Mon Nov 22 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-2
 - Update to release-0-24-fixes, svn revision 27317
 - Add preview image fixup patch from ticket #9256

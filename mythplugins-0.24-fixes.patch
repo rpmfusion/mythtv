@@ -1,0 +1,1008 @@
+diff -Naurp mythplugins-0.24.orig/.gitignore mythplugins-0.24.fixes/.gitignore
+--- mythplugins-0.24.orig/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1,6 @@
++Makefile
++themenop
++config.ep
++config.pro
++config.log
++mythconfig.mak
+diff -Naurp mythplugins-0.24.orig/mytharchive/i18n/.gitignore mythplugins-0.24.fixes/mytharchive/i18n/.gitignore
+--- mythplugins-0.24.orig/mytharchive/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mytharchive/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mytharchive/mytharchive/recordingselector.cpp mythplugins-0.24.fixes/mytharchive/mytharchive/recordingselector.cpp
+--- mythplugins-0.24.orig/mytharchive/mytharchive/recordingselector.cpp	2010-10-06 06:38:18.000000000 -0400
++++ mythplugins-0.24.fixes/mytharchive/mytharchive/recordingselector.cpp	2011-02-28 22:42:02.000000000 -0500
+@@ -116,7 +116,7 @@ bool RecordingSelector::Create(void)
+ 
+ void RecordingSelector::Init(void)
+ {
+-    QString message = tr("Retrieving Recording List. Please Wait...");
++    QString message = tr("Retrieving Recording List.\nPlease Wait...");
+ 
+     MythScreenStack *popupStack = GetMythMainWindow()->GetStack("popup stack");
+ 
+diff -Naurp mythplugins-0.24.orig/mytharchive/mytharchivehelper/.gitignore mythplugins-0.24.fixes/mytharchive/mytharchivehelper/.gitignore
+--- mythplugins-0.24.orig/mytharchive/mytharchivehelper/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mytharchive/mytharchivehelper/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++mytharchivehelper
+diff -Naurp mythplugins-0.24.orig/mytharchive/mytharchivehelper/pxsup2dast.c mythplugins-0.24.fixes/mytharchive/mytharchivehelper/pxsup2dast.c
+--- mythplugins-0.24.orig/mytharchive/mytharchivehelper/pxsup2dast.c	2010-08-28 16:16:22.000000000 -0400
++++ mythplugins-0.24.fixes/mytharchive/mytharchivehelper/pxsup2dast.c	2011-02-28 22:42:02.000000000 -0500
+@@ -1,6 +1,6 @@
+ /*
+  #
+- # $Id: pxsup2dast.c 25914 2010-08-28 20:16:22Z xris $
++ # $Id$
+  #
+  # Project X sup to dvdauthor subtitle xml file.
+  # too ät iki piste fi
+diff -Naurp mythplugins-0.24.orig/mytharchive/mythburn/scripts/mythburn.py mythplugins-0.24.fixes/mytharchive/mythburn/scripts/mythburn.py
+--- mythplugins-0.24.orig/mytharchive/mythburn/scripts/mythburn.py	2010-10-06 09:07:39.000000000 -0400
++++ mythplugins-0.24.fixes/mytharchive/mythburn/scripts/mythburn.py	2011-02-28 22:42:02.000000000 -0500
+@@ -38,7 +38,7 @@
+ #******************************************************************************
+ 
+ # version of script - change after each update
+-VERSION="0.1.20101006-1"
++VERSION="0.1.20101206-1"
+ 
+ # keep all temporary files for debugging purposes
+ # set this to True before a first run through when testing
+@@ -400,7 +400,7 @@ def getThemeFile(theme,file):
+ # Returns the path where we can find our fonts
+ 
+ def getFontPathName(fontname):
+-    return os.path.join(sharepath, fontname)
++    return os.path.join(sharepath, "fonts", fontname)
+ 
+ #############################################################
+ # Creates a file path where the temp files for a video file can be created
+@@ -2677,12 +2677,16 @@ def deMultiplexMPEG2File(folder, mediafi
+                 command += "-a %d " % (audio1[AUDIO_ID])
+             elif audio1[AUDIO_CODEC] == 'AC3':
+                 command += "-c %d " % (audio1[AUDIO_ID])
++            elif audio1[AUDIO_CODEC] == 'EAC3':
++                command += "-c %d " % (audio1[AUDIO_ID])
+ 
+         if audio2[AUDIO_ID] != -1: 
+             if audio2[AUDIO_CODEC] == 'MP2':
+                 command += "-a %d " % (audio2[AUDIO_ID])
+             elif audio2[AUDIO_CODEC] == 'AC3':
+                 command += "-c %d " % (audio2[AUDIO_ID])
++            elif audio2[AUDIO_CODEC] == 'EAC3':
++                command += "-c %d " % (audio2[AUDIO_ID])
+ 
+     else:
+         command = "mythreplex --demux --fix_sync -o %s " % (folder + "/stream")
+@@ -2693,12 +2697,17 @@ def deMultiplexMPEG2File(folder, mediafi
+                 command += "-a %d " % (audio1[AUDIO_ID] & 255)
+             elif audio1[AUDIO_CODEC] == 'AC3':
+                 command += "-c %d " % (audio1[AUDIO_ID] & 255)
++            elif audio1[AUDIO_CODEC] == 'EAC3':
++                command += "-c %d " % (audio1[AUDIO_ID] & 255)
++
+ 
+         if audio2[AUDIO_ID] != -1: 
+             if audio2[AUDIO_CODEC] == 'MP2':
+                 command += "-a %d " % (audio2[AUDIO_ID] & 255)
+             elif audio2[AUDIO_CODEC] == 'AC3':
+                 command += "-c %d " % (audio2[AUDIO_ID] & 255)
++            elif audio2[AUDIO_CODEC] == 'EAC3':
++                command += "-c %d " % (audio2[AUDIO_ID] & 255)
+ 
+     mediafile = quoteFilename(mediafile)
+     command += mediafile
+diff -Naurp mythplugins-0.24.orig/mytharchive/theme/default/mytharchive-ui.xml mythplugins-0.24.fixes/mytharchive/theme/default/mytharchive-ui.xml
+--- mythplugins-0.24.orig/mytharchive/theme/default/mytharchive-ui.xml	2010-09-22 08:39:41.000000000 -0400
++++ mythplugins-0.24.fixes/mytharchive/theme/default/mytharchive-ui.xml	2011-02-28 22:42:02.000000000 -0500
+@@ -146,7 +146,7 @@ Common MythArchive window definitions
+                     </statetype>
+                 </state>
+                 <state name="selectedactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" />
+@@ -154,7 +154,7 @@ Common MythArchive window definitions
+                     </shape>
+                 </state>
+                 <state name="selectedinactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" alpha="100" />
+@@ -259,7 +259,7 @@ Common MythArchive window definitions
+                     </statetype>
+                 </state>
+                 <state name="selectedactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" />
+@@ -267,7 +267,7 @@ Common MythArchive window definitions
+                     </shape>
+                 </state>
+                 <state name="selectedinactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" alpha="100" />
+@@ -330,7 +330,7 @@ Common MythArchive window definitions
+                     </statetype>
+                 </state>
+                 <state name="selectedactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" />
+@@ -338,7 +338,7 @@ Common MythArchive window definitions
+                     </shape>
+                 </state>
+                 <state name="selectedinactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" alpha="100" />
+diff -Naurp mythplugins-0.24.orig/mytharchive/theme/default/mythburn-ui.xml mythplugins-0.24.fixes/mytharchive/theme/default/mythburn-ui.xml
+--- mythplugins-0.24.orig/mytharchive/theme/default/mythburn-ui.xml	2010-09-22 08:39:41.000000000 -0400
++++ mythplugins-0.24.fixes/mytharchive/theme/default/mythburn-ui.xml	2011-02-28 22:42:02.000000000 -0500
+@@ -10,9 +10,10 @@ MythArchive GUI theme
+     <window name="profilepopup">
+         <area>-1,-1,413,426</area>
+ 
+-        <imagetype name="box">
+-            <filename>mz_function_popup.png</filename>
+-        </imagetype>
++        <shape name="background" from="basebackground">
++            <area>0,0,413,426</area>
++            <fill color="#000000" alpha="220" />
++        </shape>
+ 
+         <textarea name="title" from="basetextarea">
+             <area>20,20,360,40</area>
+diff -Naurp mythplugins-0.24.orig/mytharchive/theme/default-wide/mytharchive-ui.xml mythplugins-0.24.fixes/mytharchive/theme/default-wide/mytharchive-ui.xml
+--- mythplugins-0.24.orig/mytharchive/theme/default-wide/mytharchive-ui.xml	2010-09-22 08:39:41.000000000 -0400
++++ mythplugins-0.24.fixes/mytharchive/theme/default-wide/mytharchive-ui.xml	2011-02-28 22:42:02.000000000 -0500
+@@ -147,7 +147,7 @@ Common MythArchive window definitions
+                     </statetype>
+                 </state>
+                 <state name="selectedactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" />
+@@ -155,7 +155,7 @@ Common MythArchive window definitions
+                     </shape>
+                 </state>
+                 <state name="selectedinactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" alpha="100" />
+@@ -261,7 +261,7 @@ Common MythArchive window definitions
+                     </statetype>
+                 </state>
+                 <state name="selectedactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" />
+@@ -269,7 +269,7 @@ Common MythArchive window definitions
+                     </shape>
+                 </state>
+                 <state name="selectedinactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" alpha="100" />
+@@ -333,7 +333,7 @@ Common MythArchive window definitions
+                     </statetype>
+                 </state>
+                 <state name="selectedactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" />
+@@ -341,7 +341,7 @@ Common MythArchive window definitions
+                     </shape>
+                 </state>
+                 <state name="selectedinactive" from="active">
+-                    <shape name="buttonbackground">
++                    <shape name="background">
+                         <area>0,0,100%,100%</area>
+                         <fill style="gradient">
+                             <gradient start="#52CA38" end="#349838" alpha="100" />
+diff -Naurp mythplugins-0.24.orig/mytharchive/theme/default-wide/mythburn-ui.xml mythplugins-0.24.fixes/mytharchive/theme/default-wide/mythburn-ui.xml
+--- mythplugins-0.24.orig/mytharchive/theme/default-wide/mythburn-ui.xml	2010-09-22 08:39:41.000000000 -0400
++++ mythplugins-0.24.fixes/mytharchive/theme/default-wide/mythburn-ui.xml	2011-02-28 22:42:02.000000000 -0500
+@@ -10,9 +10,10 @@ MythArchive GUI theme
+     <window name="profilepopup">
+         <area>-1,-1,413,426</area>
+ 
+-        <imagetype name="box">
+-            <filename>mz_function_popup.png</filename>
+-        </imagetype>
++        <shape name="background" from="basebackground">
++            <area>0,0,413,426</area>
++            <fill color="#000000" alpha="220" />
++        </shape>
+ 
+         <textarea name="title" from="basetextarea">
+             <area>20,20,360,40</area>
+diff -Naurp mythplugins-0.24.orig/mythbrowser/i18n/.gitignore mythplugins-0.24.fixes/mythbrowser/i18n/.gitignore
+--- mythplugins-0.24.orig/mythbrowser/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythbrowser/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mythbrowser/theme/default/browser-ui.xml mythplugins-0.24.fixes/mythbrowser/theme/default/browser-ui.xml
+--- mythplugins-0.24.orig/mythbrowser/theme/default/browser-ui.xml	2010-10-09 15:44:27.000000000 -0400
++++ mythplugins-0.24.fixes/mythbrowser/theme/default/browser-ui.xml	2011-02-28 22:42:02.000000000 -0500
+@@ -53,9 +53,8 @@
+             <statetype name="buttonitem">
+                 <area>0,0,180,40</area>
+                 <state name="active">
+-                    <imagetype name="buttonbackground">
+-                        <filename>horiz_selector.png</filename>
+-                    </imagetype>
++                    <area>0,0,180,40</area>
++                    <shape name="background" from="basewidgetshape" />
+                     <textarea name="buttontext" from="basetextarea">
+                         <area>0,0,180,40</area>
+                         <font>basesmall</font>
+@@ -63,14 +62,12 @@
+                     </textarea>
+                 </state>
+                 <state name="selectedactive" from="active">
+-                    <imagetype name="buttonbackground">
+-                        <filename>horiz_selector_selected.png</filename>
+-                    </imagetype>
++                    <shape name="background" from="baseselectedwidgetshape" />
+                 </state>
+                 <state name="selectedinactive" from="active">
+-                    <imagetype name="buttonbackground">
+-                        <filename>horiz_selector_inactive.png</filename>
+-                    </imagetype>
++                   <textarea name="buttontext">
++                        <font>basesmallgrey</font>
++                    </textarea>
+                 </state>
+             </statetype>
+             <statetype name="downscrollarrow">
+diff -Naurp mythplugins-0.24.orig/mythbrowser/theme/default-wide/browser-ui.xml mythplugins-0.24.fixes/mythbrowser/theme/default-wide/browser-ui.xml
+--- mythplugins-0.24.orig/mythbrowser/theme/default-wide/browser-ui.xml	2010-10-09 15:44:27.000000000 -0400
++++ mythplugins-0.24.fixes/mythbrowser/theme/default-wide/browser-ui.xml	2011-02-28 22:42:02.000000000 -0500
+@@ -61,9 +61,8 @@
+             <statetype name="buttonitem">
+                 <area>0,0,180,40</area>
+                 <state name="active">
+-                    <imagetype name="buttonbackground">
+-                        <filename>horiz_selector.png</filename>
+-                    </imagetype>
++                    <area>0,0,180,40</area>
++                    <shape name="background" from="basewidgetshape" />
+                     <textarea name="buttontext" from="basetextarea">
+                         <area>0,0,180,40</area>
+                         <font>basesmall</font>
+@@ -73,14 +72,12 @@
+                     </textarea>
+                 </state>
+                 <state name="selectedactive" from="active">
+-                    <imagetype name="buttonbackground">
+-                        <filename>horiz_selector_selected.png</filename>
+-                    </imagetype>
++                    <shape name="background" from="baseselectedwidgetshape" />
+                 </state>
+                 <state name="selectedinactive" from="active">
+-                    <imagetype name="buttonbackground">
+-                        <filename>horiz_selector_inactive.png</filename>
+-                    </imagetype>
++                   <textarea name="buttontext">
++                        <font>basesmallgrey</font>
++                    </textarea>
+                 </state>
+             </statetype>
+             <statetype name="downscrollarrow">
+diff -Naurp mythplugins-0.24.orig/mythgallery/dcrawplugin/.gitignore mythplugins-0.24.fixes/mythgallery/dcrawplugin/.gitignore
+--- mythplugins-0.24.orig/mythgallery/dcrawplugin/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythgallery/dcrawplugin/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++config.h
+diff -Naurp mythplugins-0.24.orig/mythgallery/i18n/.gitignore mythplugins-0.24.fixes/mythgallery/i18n/.gitignore
+--- mythplugins-0.24.orig/mythgallery/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythgallery/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mythgallery/mythgallery/gallerysettings.cpp mythplugins-0.24.fixes/mythgallery/mythgallery/gallerysettings.cpp
+--- mythplugins-0.24.orig/mythgallery/mythgallery/gallerysettings.cpp	2010-08-28 16:16:22.000000000 -0400
++++ mythplugins-0.24.fixes/mythgallery/mythgallery/gallerysettings.cpp	2011-02-28 22:42:02.000000000 -0500
+@@ -78,6 +78,15 @@ static HostLineEdit *MythGalleryImportDi
+     return gc;
+ };
+ 
++static HostCheckBox *MythGalleryAutoLoad()
++{
++    HostCheckBox *gc = new HostCheckBox("GalleryAutoLoad");
++    gc->setLabel(QObject::tr("Automatically load MythGallery to display pictures"));
++    gc->setValue(false);
++    gc->setHelpText(QObject::tr("When a new CD-Rom or removable storage device containing pictures is detected then load MythGallery to display the content."));
++    return gc;
++}
++
+ #ifdef USING_OPENGL
+ 
+ static HostCheckBox *SlideshowUseOpenGL()
+@@ -217,6 +226,7 @@ GallerySettings::GallerySettings()
+     general->addChild(MythGalleryThumbnailLocation());
+     general->addChild(MythGallerySortOrder());
+     general->addChild(MythGalleryImportDirs());
++    general->addChild(MythGalleryAutoLoad());
+     general->addChild(MythGalleryMoviePlayerCmd());
+     addChild(general);
+ 
+diff -Naurp mythplugins-0.24.orig/mythgallery/mythgallery/galleryutil.cpp mythplugins-0.24.fixes/mythgallery/mythgallery/galleryutil.cpp
+--- mythplugins-0.24.orig/mythgallery/mythgallery/galleryutil.cpp	2010-08-28 16:16:22.000000000 -0400
++++ mythplugins-0.24.fixes/mythgallery/mythgallery/galleryutil.cpp	2011-02-28 22:42:02.000000000 -0500
+@@ -98,7 +98,7 @@ bool GalleryUtil::IsImage(const QString 
+     QStringList::const_iterator it = filt.begin();
+     for (; it != filt.end(); ++it)
+     {
+-        if ((*it).toLower().contains(fi.suffix()))
++        if ((*it).contains(fi.suffix().toLower()))
+             return true;
+     }
+ 
+@@ -115,7 +115,7 @@ bool GalleryUtil::IsMovie(const QString 
+     QStringList::const_iterator it = filt.begin();
+     for (; it != filt.end(); ++it)
+     {
+-        if ((*it).toLower().contains(fi.suffix()))
++        if ((*it).contains(fi.suffix().toLower()))
+             return true;
+     }
+ 
+diff -Naurp mythplugins-0.24.orig/mythgallery/mythgallery/.gitignore mythplugins-0.24.fixes/mythgallery/mythgallery/.gitignore
+--- mythplugins-0.24.orig/mythgallery/mythgallery/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythgallery/mythgallery/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++config.h
+diff -Naurp mythplugins-0.24.orig/mythgallery/mythgallery/main.cpp mythplugins-0.24.fixes/mythgallery/mythgallery/main.cpp
+--- mythplugins-0.24.orig/mythgallery/mythgallery/main.cpp	2010-10-18 09:02:43.000000000 -0400
++++ mythplugins-0.24.fixes/mythgallery/mythgallery/main.cpp	2011-02-28 22:42:02.000000000 -0500
+@@ -59,6 +59,9 @@ static void runGallery(void)
+ 
+ static void handleMedia(MythMediaDevice *dev)
+ {
++    if (! gCoreContext->GetNumSetting("GalleryAutoLoad", 0))
++        return;
++
+     if (dev && dev->isUsable())
+         run(dev);
+ }
+diff -Naurp mythplugins-0.24.orig/mythgame/i18n/.gitignore mythplugins-0.24.fixes/mythgame/i18n/.gitignore
+--- mythplugins-0.24.orig/mythgame/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythgame/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mythgame/mythgame/.gitignore mythplugins-0.24.fixes/mythgame/mythgame/.gitignore
+--- mythplugins-0.24.orig/mythgame/mythgame/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythgame/mythgame/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++gameui.moc
+diff -Naurp mythplugins-0.24.orig/mythmusic/i18n/.gitignore mythplugins-0.24.fixes/mythmusic/i18n/.gitignore
+--- mythplugins-0.24.orig/mythmusic/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythmusic/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mythmusic/mythmusic/cdrip.cpp mythplugins-0.24.fixes/mythmusic/mythmusic/cdrip.cpp
+--- mythplugins-0.24.orig/mythmusic/mythmusic/cdrip.cpp	2010-09-12 18:53:44.000000000 -0400
++++ mythplugins-0.24.fixes/mythmusic/mythmusic/cdrip.cpp	2011-02-28 22:42:02.000000000 -0500
+@@ -945,8 +945,6 @@ QString Ripper::filenameFromMetadata(Met
+         VERBOSE(VB_GENERAL, QString("Invalid file storage definition."));
+     }
+ 
+-    filename = QString(filename.toLocal8Bit().constData());
+-
+     QStringList directoryList = filename.split("/");
+     for (int i = 0; i < (directoryList.size() - 1); i++)
+     {
+diff -Naurp mythplugins-0.24.orig/mythmusic/mythmusic/filescanner.cpp mythplugins-0.24.fixes/mythmusic/mythmusic/filescanner.cpp
+--- mythplugins-0.24.orig/mythmusic/mythmusic/filescanner.cpp	2010-05-13 00:18:15.000000000 -0400
++++ mythplugins-0.24.fixes/mythmusic/mythmusic/filescanner.cpp	2011-02-28 22:42:02.000000000 -0500
+@@ -22,7 +22,7 @@ FileScanner::FileScanner ()
+     MSqlQuery query(MSqlQuery::InitCon());
+ 
+     // Cache the directory ids from the database
+-    query.prepare("SELECT directory_id, LOWER(path) FROM music_directories");
++    query.prepare("SELECT directory_id, path FROM music_directories");
+     if (query.exec())
+     {
+         while(query.next())
+@@ -109,12 +109,12 @@ void FileScanner::BuildFileList(QString 
+             QString dir(filename);
+             dir.remove(0, m_startdir.length());
+ 
+-            newparentid = m_directoryid[QString(dir.toUtf8()).toLower()];
++            newparentid = m_directoryid[dir];
+ 
+             if (newparentid == 0)
+             {
+                 int id = GetDirectoryId(dir, parentid);
+-                m_directoryid[QString(dir.toUtf8()).toLower()] = id;
++                m_directoryid[dir] = id;
+ 
+                 if (id > 0)
+                 {
+@@ -252,8 +252,7 @@ void FileScanner::AddFileToDB(const QStr
+         query.prepare("INSERT INTO music_albumart SET filename = :FILE, "
+                       "directory_id = :DIRID, imagetype = :TYPE;");
+         query.bindValue(":FILE", name);
+-        query.bindValue(":DIRID", m_directoryid[
+-                            QString(directory.toUtf8()).toLower()]);
++        query.bindValue(":DIRID", m_directoryid[directory]);
+         query.bindValue(":TYPE", AlbumArtImages::guessImageType(name));
+ 
+         if (!query.exec() || query.numRowsAffected() <= 0)
+@@ -274,24 +273,24 @@ void FileScanner::AddFileToDB(const QStr
+             QString album_cache_string;
+ 
+             // Set values from cache
+-            int did = m_directoryid[QString(directory.toUtf8()).toLower()];
++            int did = m_directoryid[directory];
+             if (did > 0)
+                 data->setDirectoryId(did);
+ 
+-            int aid = m_artistid[QString(data->Artist().toUtf8()).toLower()];
++            int aid = m_artistid[data->Artist().toLower()];
+             if (aid > 0)
+             {
+                 data->setArtistId(aid);
+ 
+                 // The album cache depends on the artist id
+                 album_cache_string = data->getArtistId() + "#"
+-                    + QString(data->Album().toUtf8()).toLower();
++                    + data->Album().toLower();
+ 
+                 if (m_albumid[album_cache_string] > 0)
+                     data->setAlbumId(m_albumid[album_cache_string]);
+             }
+ 
+-            int gid = m_genreid[QString(data->Genre().toUtf8()).toLower()];
++            int gid = m_genreid[data->Genre().toLower()];
+             if (gid > 0)
+                 data->setGenreId(gid);
+ 
+@@ -299,14 +298,14 @@ void FileScanner::AddFileToDB(const QStr
+             data->dumpToDatabase();
+ 
+             // Update the cache
+-            m_artistid[QString(data->Artist().toUtf8()).toLower()] =
++            m_artistid[data->Artist().toLower()] =
+                 data->getArtistId();
+ 
+-            m_genreid[QString(data->Genre().toUtf8()).toLower()] =
++            m_genreid[data->Genre().toLower()] =
+                 data->getGenreId();
+ 
+             album_cache_string = data->getArtistId() + "#"
+-                + QString(data->Album().toUtf8()).toLower();
++                + data->Album().toLower();
+             m_albumid[album_cache_string] = data->getAlbumId();
+             delete data;
+         }
+@@ -445,8 +444,7 @@ void FileScanner::RemoveFileFromDB (cons
+         query.prepare("DELETE FROM music_albumart WHERE filename= :FILE AND "
+                       "directory_id= :DIRID;");
+         query.bindValue(":FILE", sqlfilename);
+-        query.bindValue(":DIRID", m_directoryid[
+-                            QString(directory.toUtf8()).toLower()]);
++        query.bindValue(":DIRID", m_directoryid[directory]);
+ 
+         if (!query.exec() || query.numRowsAffected() <= 0)
+         {
+@@ -491,24 +489,24 @@ void FileScanner::UpdateFileInDB(const Q
+             QString album_cache_string;
+ 
+             // Set values from cache
+-            int did = m_directoryid[QString(directory.toUtf8()).toLower()];
++            int did = m_directoryid[directory];
+             if (did > 0)
+                 disk_meta->setDirectoryId(did);
+ 
+-            int aid = m_artistid[QString(disk_meta->Artist().toUtf8()).toLower()];
++            int aid = m_artistid[disk_meta->Artist().toLower()];
+             if (aid > 0)
+             {
+                 disk_meta->setArtistId(aid);
+ 
+                 // The album cache depends on the artist id
+                 album_cache_string = disk_meta->getArtistId() + "#" +
+-                    QString(disk_meta->Album().toUtf8()).toLower();
++                    disk_meta->Album().toLower();
+ 
+                 if (m_albumid[album_cache_string] > 0)
+                     disk_meta->setAlbumId(m_albumid[album_cache_string]);
+             }
+ 
+-            int gid = m_genreid[QString(disk_meta->Genre().toUtf8()).toLower()];
++            int gid = m_genreid[disk_meta->Genre().toLower()];
+             if (gid > 0)
+                 disk_meta->setGenreId(gid);
+ 
+@@ -516,12 +514,12 @@ void FileScanner::UpdateFileInDB(const Q
+             disk_meta->dumpToDatabase();
+ 
+             // Update the cache
+-            m_artistid[QString(disk_meta->Artist().toUtf8()).toLower()]
++            m_artistid[disk_meta->Artist().toLower()]
+                 = disk_meta->getArtistId();
+-            m_genreid[QString(disk_meta->Genre().toUtf8()).toLower()]
++            m_genreid[disk_meta->Genre().toLower()]
+                 = disk_meta->getGenreId();
+             album_cache_string = disk_meta->getArtistId() + "#" +
+-                QString(disk_meta->Album().toUtf8()).toLower();
++                disk_meta->Album().toLower();
+             m_albumid[album_cache_string] = disk_meta->getAlbumId();
+         }
+ 
+diff -Naurp mythplugins-0.24.orig/mythmusic/mythmusic/.gitignore mythplugins-0.24.fixes/mythmusic/mythmusic/.gitignore
+--- mythplugins-0.24.orig/mythmusic/mythmusic/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythmusic/mythmusic/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++config.h
+diff -Naurp mythplugins-0.24.orig/mythmusic/mythmusic/musicplayer.cpp mythplugins-0.24.fixes/mythmusic/mythmusic/musicplayer.cpp
+--- mythplugins-0.24.orig/mythmusic/mythmusic/musicplayer.cpp	2010-10-10 17:59:02.000000000 -0400
++++ mythplugins-0.24.fixes/mythmusic/mythmusic/musicplayer.cpp	2011-02-28 22:42:02.000000000 -0500
+@@ -993,8 +993,9 @@ void MusicPlayer::decoderHandlerReady(vo
+     VERBOSE(VB_PLAYBACK, QString ("decoder handler is ready, decoding %1").
+             arg(getDecoder()->getFilename()));
+ 
+-    if (getDecoder()->getFilename().contains("cda") == 1)
+-        dynamic_cast<CdDecoder*>(getDecoder())->setDevice(m_CDdevice);
++    CdDecoder *cddecoder = dynamic_cast<CdDecoder*>(getDecoder());
++    if (cddecoder)
++        cddecoder->setDevice(m_CDdevice);
+ 
+     getDecoder()->setOutput(m_output);
+     //getDecoder()-> setBlockSize(2 * 1024);
+diff -Naurp mythplugins-0.24.orig/mythnetvision/i18n/.gitignore mythplugins-0.24.fixes/mythnetvision/i18n/.gitignore
+--- mythplugins-0.24.orig/mythnetvision/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythnetvision/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mythnetvision/mythfillnetvision/.gitignore mythplugins-0.24.fixes/mythnetvision/mythfillnetvision/.gitignore
+--- mythplugins-0.24.orig/mythnetvision/mythfillnetvision/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythnetvision/mythfillnetvision/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++mythfillnetvision
+diff -Naurp mythplugins-0.24.orig/mythnews/i18n/.gitignore mythplugins-0.24.fixes/mythnews/i18n/.gitignore
+--- mythplugins-0.24.orig/mythnews/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythnews/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mythnews/mythnews/main.cpp mythplugins-0.24.fixes/mythnews/mythnews/main.cpp
+--- mythplugins-0.24.orig/mythnews/mythnews/main.cpp	2010-08-29 18:21:36.000000000 -0400
++++ mythplugins-0.24.fixes/mythnews/mythnews/main.cpp	2011-02-28 22:42:02.000000000 -0500
+@@ -69,7 +69,7 @@ int mythplugin_init(const char *libversi
+                 "Couldn't upgrade database to new schema, exiting.");
+         return -1;
+     }
+-    gCoreContext->ActivateSettingsCache(false);
++    gCoreContext->ActivateSettingsCache(true);
+ 
+     setupKeys();
+ 
+diff -Naurp mythplugins-0.24.orig/mythvideo/i18n/.gitignore mythplugins-0.24.fixes/mythvideo/i18n/.gitignore
+--- mythplugins-0.24.orig/mythvideo/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythvideo/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mythvideo/mtd/.gitignore mythplugins-0.24.fixes/mythvideo/mtd/.gitignore
+--- mythplugins-0.24.orig/mythvideo/mtd/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythvideo/mtd/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++mtd
+diff -Naurp mythplugins-0.24.orig/mythvideo/mythvideo/.gitignore mythplugins-0.24.fixes/mythvideo/mythvideo/.gitignore
+--- mythplugins-0.24.orig/mythvideo/mythvideo/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythvideo/mythvideo/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++*.moc
+diff -Naurp mythplugins-0.24.orig/mythvideo/mythvideo/scripts/jamu.py mythplugins-0.24.fixes/mythvideo/mythvideo/scripts/jamu.py
+--- mythplugins-0.24.orig/mythvideo/mythvideo/scripts/jamu.py	2010-09-12 12:10:46.000000000 -0400
++++ mythplugins-0.24.fixes/mythvideo/mythvideo/scripts/jamu.py	2011-02-28 22:42:02.000000000 -0500
+@@ -306,6 +306,8 @@ __version__=u"v0.7.7"
+  # 0.7.5 Added the TMDB MovieRating as videometadata table "rating" field
+  # 0.7.6 Modifications to support MythTV python bindings changes
+  # 0.7.7 Pull hostname from python bindings instead of socket libraries
++ #       Added support of unicode characters within a jamu.conf file
++ #       Replace 'xml' module version check with generic Python version, to correct failure in Python 2.7
+ 
+ 
+ usage_txt=u'''
+@@ -476,14 +478,10 @@ class OutStreamEncoder(object):
+ sys.stdout = OutStreamEncoder(sys.stdout, 'utf8')
+ sys.stderr = OutStreamEncoder(sys.stderr, 'utf8')
+ 
+-try:
+-    import xml
+-except Exception, e:
+-    print '''The python module xml must be installed. error(%s)''' % e
++if sys.version_info <= (2,5):
++    print '''JAMU requires Python 2.5 or newer to run.'''
+     sys.exit(1)
+-if xml.__version__ < u'41660':
+-    print '''
+-\n! Warning - The module xml (v41660 or greater) must be installed. Your version is different (v%s) than what Jamu was tested with. Jamu may not work on your installation.\nIt is recommended that you upgrade.\n''' % xml.__version__
++
+ import xml.etree.cElementTree as ElementTree
+ 
+ 
+@@ -1246,7 +1244,7 @@ class Configuration(object):
+             )
+             sys.exit(1)
+         cfg = ConfigParser.SafeConfigParser()
+-        cfg.read(useroptions)
++        cfg.readfp(codecs.open(useroptions, "r", "utf8"))
+         for section in cfg.sections():
+             if section[:5] == 'File ':
+                 self.config['config_file'] = section[5:]
+diff -Naurp mythplugins-0.24.orig/mythweather/i18n/.gitignore mythplugins-0.24.fixes/mythweather/i18n/.gitignore
+--- mythplugins-0.24.orig/mythweather/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythweather/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mythweather/mythweather/scripts/ca_envcan/envcan_animaps.pl mythplugins-0.24.fixes/mythweather/mythweather/scripts/ca_envcan/envcan_animaps.pl
+--- mythplugins-0.24.orig/mythweather/mythweather/scripts/ca_envcan/envcan_animaps.pl	2010-06-22 00:11:23.000000000 -0400
++++ mythplugins-0.24.fixes/mythweather/mythweather/scripts/ca_envcan/envcan_animaps.pl	2011-02-28 22:42:02.000000000 -0500
+@@ -1,4 +1,5 @@
+ #!/usr/bin/perl
++# vim:ts=4:sw=4:ai:et:si:sts=4
+ # 
+ # Animated satellite map grabber for Environment Canada.
+ #
+@@ -13,6 +14,7 @@ use strict;
+ use warnings;
+ 
+ use English;
++use File::Path;
+ use File::Basename;
+ use Cwd 'abs_path';
+ use lib dirname(abs_path($0 or $PROGRAM_NAME)), 
+@@ -23,17 +25,18 @@ use Getopt::Std;
+ use LWP::Simple;
+ use Date::Manip;
+ use ENVCANMapSearch;
++use Image::Magick;
+ 
+ our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d); 
+ 
+ my $name = 'ENVCAN-Animated-Map';
+-my $version = 0.3;
++my $version = 0.4;
+ my $author = 'Joe Ripley';
+ my $email = 'vitaminjoe@gmail.com';
+ my $updateTimeout = 10*60;
+ my $retrieveTimeout = 30;
+-my @types = ('amdesc', 'updatetime', 'animatedimage');
+-my $dir = "./";
++my @types = ('amdesc', 'updatetime', 'animatedimage', 'copyright');
++my $dir = "/tmp/envcan";
+ 
+ getopts('Tvtlu:d:');
+ 
+@@ -66,6 +69,10 @@ if (defined $opt_d) {
+     $dir = $opt_d;
+ }
+ 
++if (!-d $dir) {
++    mkpath( $dir, {mode => 0755} );
++}
++
+ my $loc = shift;
+ 
+ if (!defined $loc || $loc eq "") {
+@@ -97,24 +104,27 @@ foreach my $line (split(/\n/, $response)
+ 
+ # Download map files, if necessary (maps are stale after 15 minutes)
+ my $i = 0;
++my $outimage = Image::Magick->new;
+ foreach my $image (@image_list) {
+     my $getImage = 1;
+-    if (-f $path . $i) {
++    if (-f "$path$i" ) {
+         my @stats = stat(_);
+-        if ($stats[9] > (time - 900)) { $i++; next; }
++        if ($stats[9] > (time - 900)) { 
++            $outimage->Read( "$path$i" );
++            $i++; 
++            next; 
++        }
+     } 
+ 
+-    getstore($base_url . $image, $path . $i);
++    getstore($base_url . $image, "$path$i");
++    $outimage->Read( "$path$i" );
+     $i++;
+ }
+ 
+-# Determine image size
+-if (!$size) {
+-    use Image::Size;
+-    my ($x, $y) = imgsize("${path}0");
+-    $size = "${x}x$y" if ($x && $y);
+-}
++$outimage->Write( filename => "$dir/$file.gif", delay => 75 );
+ 
+-print  "amdesc::$desc\n";
+-printf "animatedimage::${path}%%1-$i%s\n", ($size && "-$size" || '');
+-print  "updatetime::Last Updated on " . UnixDate("now", "%b %d, %I:%M %p %Z") . "\n";
++print "amdesc::$desc\n";
++print "animatedimage::$dir/$file.gif\n";
++print "updatetime::Last Updated on " . 
++      UnixDate("now", "%b %d, %I:%M %p %Z") . "\n";
++print "copyright::Environment Canada\n";
+diff -Naurp mythplugins-0.24.orig/mythweather/mythweather/scripts/ca_envcan/envcan_maps.pl mythplugins-0.24.fixes/mythweather/mythweather/scripts/ca_envcan/envcan_maps.pl
+--- mythplugins-0.24.orig/mythweather/mythweather/scripts/ca_envcan/envcan_maps.pl	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythweather/mythweather/scripts/ca_envcan/envcan_maps.pl	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1,127 @@
++#!/usr/bin/perl
++# vim:ts=4:sw=4:ai:et:si:sts=4
++# 
++# Static satellite map grabber for Environment Canada.
++#
++# This script downloads satellite map data from the Environment Canada 
++# website.  It uses the lists of JPEG images supplied by the page at
++# http://www.weatheroffice.gc.ca/satellite/index_e.html.
++#
++# The bulk of the code in this script was originally authored by 
++# Lucien Dunning (ldunning@gmail.com).
++# Based on envcan_animaps.pl by Joe Ripley <vitaminjoe@gmail.com>
++
++use strict;
++use warnings;
++
++use English;
++use File::Path;
++use File::Basename;
++use Cwd 'abs_path';
++use lib dirname(abs_path($0 or $PROGRAM_NAME)), 
++        '/usr/share/mythtv/mythweather/scripts/ca_envcan', 
++        '/usr/local/share/mythtv/mythweather/scripts/ca_envcan';
++
++use Getopt::Std;
++use LWP::Simple;
++use Date::Manip;
++use ENVCANMapSearch;
++use Image::Magick;
++
++our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d); 
++
++my $name = 'ENVCAN-Static-Map';
++my $version = 0.1;
++my $author = 'Gavin Hurlbut';
++my $email = 'gjhurlbu@gmail.com';
++my $updateTimeout = 10*60;
++my $retrieveTimeout = 30;
++my @types = ('smdesc', 'updatetime', 'map', 'copyright');
++my $dir = "/tmp/envcan";
++
++getopts('Tvtlu:d:');
++
++if (defined $opt_v) {
++    print "$name,$version,$author,$email\n";
++    exit 0;
++}
++
++if (defined $opt_T) {
++    print "$updateTimeout,$retrieveTimeout\n";
++    exit 0;
++}
++if (defined $opt_l) {
++    my $search = shift;
++    ENVCANMapSearch::AddSatSearch($search);
++    ENVCANMapSearch::AddSatClassSearch($search);
++    ENVCANMapSearch::AddImageTypeSearch($search);
++    foreach my $result (@{ENVCANMapSearch::doSearch()}) {
++        print "$result->{entry_id}::($result->{satellite_class}) $result->{satellite} $result->{image_type}\n";
++    }
++    exit 0;
++}
++
++if (defined $opt_t) {
++    foreach (@types) {print; print "\n";}
++    exit 0;
++}
++
++if (defined $opt_d) {
++    $dir = $opt_d;
++}
++
++if (!-d $dir) {
++    mkpath( $dir, {mode => 0755} );
++}
++
++my $loc = shift;
++
++if (!defined $loc || $loc eq "") {
++    die "Invalid usage";
++}
++
++# Get map info
++ENVCANMapSearch::AddAniSearch($loc);
++my $results = ENVCANMapSearch::doSearch();
++my $desc    = $results->[0]->{satellite}; 
++
++# Get HTML and find image list
++my $response = get $results->[0]->{animated_url};
++die unless defined $response;
++
++my @image_list;
++my $size;
++my $base_url = "http://www.weatheroffice.gc.ca";
++my $file     = $loc;
++my $path     = "$dir/$file";
++
++# Get list of images (at most 10)
++foreach my $line (split(/\n/, $response)) {
++    if ($line =~ /theImagesComplete\[\d*\] \= \"(.*)\"\;/) {
++        push (@image_list, $1);
++        if ($#image_list >= 1) { shift @image_list; }
++    }
++}
++
++# Download map file, if necessary (maps are stale after 15 minutes)
++my $image = shift @image_list;
++my $ext = $image;
++$ext =~ s/.*\.(.*?)$/$1/;
++
++my $cached = 0;
++if (-f "$path.$ext" ) {
++    my @stats = stat(_);
++    if ($stats[9] > (time - 900)) { 
++        $cached = 1;
++    }
++} 
++
++if (!$cached) {
++    getstore($base_url . $image, "$path.$ext");
++}
++
++print "smdesc::$desc\n";
++print "map::$path.$ext\n";
++print "updatetime::Last Updated on " . 
++      UnixDate("now", "%b %d, %I:%M %p %Z") . "\n";
++print "copyright::Environment Canada\n";
+diff -Naurp mythplugins-0.24.orig/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl mythplugins-0.24.fixes/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl
+--- mythplugins-0.24.orig/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl	2010-06-22 00:11:23.000000000 -0400
++++ mythplugins-0.24.fixes/mythweather/mythweather/scripts/uk_bbc/bbccurrentxml.pl	2011-02-28 22:42:02.000000000 -0500
+@@ -154,14 +154,14 @@ elsif ($weather_string =~ /^heavy rain$/
+ }
+ elsif ($weather_string =~ /^thundery rain$/i ||
+     $weather_string =~ /^thunder storm$/i    ||
+-    $weather_string =~ /^thundery showers$/i) {
++    $weather_string =~ /^thundery showers?$/i) {
+     printf "weather_icon::thunshowers.png\n";
+ }
+ elsif ($weather_string =~ /^heavy snow$/i) {
+     printf "weather_icon::snowshow.png\n";
+ }
+ elsif ($weather_string =~ /^light snow$/i ||
+-    $weather_string =~ /^light snow showers$/i) {
++    $weather_string =~ /^light snow showers?$/i) {
+     printf "weather_icon::flurries.png\n";
+ }
+ elsif ($weather_string =~ /^sleet$/i ||
+diff -Naurp mythplugins-0.24.orig/mythweather/mythweather/scripts/uk_bbc/bbcthreedayxml.pl mythplugins-0.24.fixes/mythweather/mythweather/scripts/uk_bbc/bbcthreedayxml.pl
+--- mythplugins-0.24.orig/mythweather/mythweather/scripts/uk_bbc/bbcthreedayxml.pl	2010-06-22 00:11:23.000000000 -0400
++++ mythplugins-0.24.fixes/mythweather/mythweather/scripts/uk_bbc/bbcthreedayxml.pl	2011-02-28 22:42:02.000000000 -0500
+@@ -179,14 +179,14 @@ foreach $item (@{$xml->{channel}->{item}
+     }
+     elsif ($weather_string =~ /^thundery rain$/i ||
+         $weather_string =~ /^thunder storm$/i    ||
+-        $weather_string =~ /^thundery showers$/i) {
++        $weather_string =~ /^thundery showers?$/i) {
+         printf "icon-" . $i . "::thunshowers.png\n";
+     }
+     elsif ($weather_string =~ /^heavy snow$/i) {
+         printf "icon-" . $i . "::snowshow.png\n";
+     }
+     elsif ($weather_string =~ /^light snow$/i ||
+-        $weather_string =~ /^light snow showers$/i) {
++        $weather_string =~ /^light snow showers?$/i) {
+         printf "icon-" . $i . "::flurries.png\n";
+     }
+     elsif ($weather_string =~ /^sleet$/i ||
+diff -Naurp mythplugins-0.24.orig/mythweather/mythweather/scripts/wunderground/wunderground-animaps.pl mythplugins-0.24.fixes/mythweather/mythweather/scripts/wunderground/wunderground-animaps.pl
+--- mythplugins-0.24.orig/mythweather/mythweather/scripts/wunderground/wunderground-animaps.pl	2010-10-10 17:47:57.000000000 -0400
++++ mythplugins-0.24.fixes/mythweather/mythweather/scripts/wunderground/wunderground-animaps.pl	2011-02-28 22:42:02.000000000 -0500
+@@ -5,6 +5,7 @@ use English;
+ use strict;
+ use warnings;
+ 
++use File::Path;
+ use File::Basename;
+ use Cwd 'abs_path';
+ use lib dirname(abs_path($0 or $PROGRAM_NAME)),
+diff -Naurp mythplugins-0.24.orig/mythweather/mythweather/scripts/wunderground/wunderground-maps.pl mythplugins-0.24.fixes/mythweather/mythweather/scripts/wunderground/wunderground-maps.pl
+--- mythplugins-0.24.orig/mythweather/mythweather/scripts/wunderground/wunderground-maps.pl	2010-10-10 17:47:57.000000000 -0400
++++ mythplugins-0.24.fixes/mythweather/mythweather/scripts/wunderground/wunderground-maps.pl	2011-02-28 22:42:02.000000000 -0500
+@@ -5,6 +5,7 @@ use English;
+ use strict;
+ use warnings;
+ 
++use File::Path;
+ use File::Basename;
+ use Cwd 'abs_path';
+ use lib dirname(abs_path($0 or $PROGRAM_NAME)),
+diff -Naurp mythplugins-0.24.orig/mythzoneminder/i18n/.gitignore mythplugins-0.24.fixes/mythzoneminder/i18n/.gitignore
+--- mythplugins-0.24.orig/mythzoneminder/i18n/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythzoneminder/i18n/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++i18n
+diff -Naurp mythplugins-0.24.orig/mythzoneminder/mythzmserver/.gitignore mythplugins-0.24.fixes/mythzoneminder/mythzmserver/.gitignore
+--- mythplugins-0.24.orig/mythzoneminder/mythzmserver/.gitignore	1969-12-31 19:00:00.000000000 -0500
++++ mythplugins-0.24.fixes/mythzoneminder/mythzmserver/.gitignore	2011-02-28 22:42:02.000000000 -0500
+@@ -0,0 +1 @@
++mythzmserver
+diff -Naurp mythplugins-0.24.orig/mythzoneminder/mythzoneminder/zmliveplayer.cpp mythplugins-0.24.fixes/mythzoneminder/mythzoneminder/zmliveplayer.cpp
+--- mythplugins-0.24.orig/mythzoneminder/mythzoneminder/zmliveplayer.cpp	2010-08-15 06:52:05.000000000 -0400
++++ mythplugins-0.24.fixes/mythzoneminder/mythzoneminder/zmliveplayer.cpp	2011-02-28 22:42:02.000000000 -0500
+@@ -12,10 +12,6 @@
+  *
+  * ============================================================ */
+ 
+-#include <iostream>
+-#include <sys/shm.h>
+-#include <cstdlib>
+-
+ // qt
+ #include <QDateTime>
+ #include <QTimer>
+diff -Naurp mythplugins-0.24.orig/mythzoneminder/theme/default-wide/zoneminder-ui.xml mythplugins-0.24.fixes/mythzoneminder/theme/default-wide/zoneminder-ui.xml
+--- mythplugins-0.24.orig/mythzoneminder/theme/default-wide/zoneminder-ui.xml	2010-10-06 11:44:50.000000000 -0400
++++ mythplugins-0.24.fixes/mythzoneminder/theme/default-wide/zoneminder-ui.xml	2011-02-28 22:42:02.000000000 -0500
+@@ -652,23 +652,23 @@
+ 
+     <window name="zmplayer">
+ 
+-        <font name="label" from="basesmall">
++        <fontdef name="label" from="basesmall">
+             <color>#ffff00</color>
+             <size>16</size>
+             <weight>bold</weight>
+-        </font>
++        </fontdef>
+ 
+-        <font name="data" from="basesmall">
++        <fontdef name="data" from="basesmall">
+             <color>#ffffff</color>
+             <size>14</size>
+             <weight>bold</weight>
+-        </font>
++        </fontdef>
+ 
+-        <font name="buttons" from="basesmall">
++        <fontdef name="buttons" from="basesmall">
+             <color>#ffffff</color>
+             <size>12</size>
+             <weight>bold</weight>
+-        </font>
++        </fontdef>
+ 
+         <textarea name="pagetitle" from="basetextarea">
+             <area>30,10,570,40</area>
