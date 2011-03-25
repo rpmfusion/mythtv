@@ -66,7 +66,7 @@
 
 # Git revision and branch ID
 # 0.24 release: git tag b0.24
-%define _gitrev 4af46b1f5d
+%define _gitrev 464fa28373
 %define branch fixes/0.24
 
 #
@@ -83,7 +83,7 @@ Version: 0.24
 Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 6%{?dist}
+Release: 7%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -417,10 +417,6 @@ Requires:  libXvMC-devel
 Requires:  libXxf86vm-devel
 Requires:  mesa-libGLU-devel
 Requires:  xorg-x11-proto-devel
-%ifarch %{ix86} x86_64
-Requires:  xorg-x11-drv-i810-devel
-Requires:  xorg-x11-drv-openchrome-devel
-%endif
 
 # OpenGL video output and vsync support
 Requires:  libGL-devel, libGLU-devel
@@ -1457,6 +1453,10 @@ fi
 ################################################################################
 
 %changelog
+* Thu Mar 24 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-7
+- Update to 0.24 fixes, git revision 464fa28373
+- Remove i810 and openchrome detritus
+
 * Mon Feb 28 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-6
 - Update to 0.24 fixes, git revision 4af46b1f5d
 - Fix mythtv version output to properly show git revision
