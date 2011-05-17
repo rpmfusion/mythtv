@@ -66,7 +66,7 @@
 
 # Git revision and branch ID
 # 0.24 release: git tag b0.24
-%define _gitrev 464fa28373
+%define _gitrev b5a3805b92
 %define branch fixes/0.24
 
 #
@@ -78,12 +78,12 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.24
+Version: 0.24.1
 %if "%{branch}" == "master"
 Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 7%{?dist}
+Release: 1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -132,9 +132,9 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
-Patch0:    mythtv-%{version}-fixes.patch
-Patch1:    mythplugins-%{version}-fixes.patch
-Patch2:    mythweb-%{version}-fixes.patch
+#Patch0:    mythtv-%{version}-fixes.patch
+#Patch1:    mythplugins-%{version}-fixes.patch
+#Patch2:    mythweb-%{version}-fixes.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -373,7 +373,7 @@ Summary: MythTV documentation
 Group:   Documentation
 
 %description docs
-The MythTV documentation, contrib files, database initialization file
+The MythTV documentation, database initialization file
 and miscellaneous other bits and pieces.
 
 ################################################################################
@@ -835,7 +835,7 @@ on demand content.
 ##### MythTV
 
 cd mythtv-%{version}
-%patch0 -p1
+#patch0 -p1
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -868,8 +868,8 @@ cd ..
 %if %{with_plugins}
 
 cd mythplugins-%{version}
-%patch1 -p1
-%patch2 -p1
+#patch1 -p1
+#patch2 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -1202,7 +1202,7 @@ fi
 %doc mythtv-%{version}/AUTHORS mythtv-%{version}/COPYING mythtv-%{version}/FAQ
 %doc mythtv-%{version}/database mythtv-%{version}/keys.txt
 %doc mythtv-%{version}/docs/*.html mythtv-%{version}/docs/*.png
-%doc mythtv-%{version}/docs/*.txt mythtv-%{version}/contrib
+%doc mythtv-%{version}/docs/*.txt
 %doc mythtv-%{version}/PACKAGE-LICENSING
 
 %files common
@@ -1453,6 +1453,9 @@ fi
 ################################################################################
 
 %changelog
+* Tue May 17 2011 Jarod Wilson <jarod@wilsonet.com> 0.24.1-1
+- Update to 0.24.1 stable update release
+
 * Thu Mar 24 2011 Jarod Wilson <jarod@wilsonet.com> 0.24-7
 - Update to 0.24 fixes, git revision 464fa28373
 - Remove i810 and openchrome detritus
