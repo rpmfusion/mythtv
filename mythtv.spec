@@ -65,8 +65,8 @@
 %define desktop_vendor  RPMFusion
 
 # Git revision and branch ID
-# 0.24 release: git tag b0.24
-%define _gitrev b5a3805b92
+# 0.24 release: git tag v0.24.1
+%define _gitrev 3657f313ac
 %define branch fixes/0.24
 
 #
@@ -83,7 +83,7 @@ Version: 0.24.1
 Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -132,8 +132,8 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
 Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
-#Patch0:    mythtv-%{version}-fixes.patch
-#Patch1:    mythplugins-%{version}-fixes.patch
+Patch0:    mythtv-%{version}-fixes.patch
+Patch1:    mythplugins-%{version}-fixes.patch
 #Patch2:    mythweb-%{version}-fixes.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
@@ -333,7 +333,9 @@ Requires:  perl-MythTV        = %{version}-%{release}
 Requires:  python-MythTV      = %{version}-%{release}
 
 Requires:  mythplugins        = %{version}-%{release}
-Requires:  mythtv-themes      = %{version}
+# These are available via mythtv's built-in theme downloader now,
+# so lets not install them by default.
+#Requires:  mythtv-themes      = %{version}
 
 Requires:  mysql-server >= 5, mysql >= 5
 # XMLTV is not yet packaged for rpmfusion
@@ -835,7 +837,7 @@ on demand content.
 ##### MythTV
 
 cd mythtv-%{version}
-#patch0 -p1
+%patch0 -p2
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -868,7 +870,7 @@ cd ..
 %if %{with_plugins}
 
 cd mythplugins-%{version}
-#patch1 -p1
+%patch1 -p2
 #patch2 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
@@ -1453,6 +1455,11 @@ fi
 ################################################################################
 
 %changelog
+* Mon May 30 2011 Jarod Wilson <jarod@wilsonet.com> 0.24.1-2
+- Drop dependency on mythtv-themes, since upstream is no longer tarring
+  them up, in preference of people using the built-in theme downloader.
+- Update to 0.24-fixes, git revision 3657f313ac
+
 * Tue May 17 2011 Jarod Wilson <jarod@wilsonet.com> 0.24.1-1
 - Update to 0.24.1 stable update release
 
