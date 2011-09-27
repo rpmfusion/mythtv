@@ -80,7 +80,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version: 0.24.1
 %if "%{branch}" == "master"
-Release: 0.1.git.%{_gitrev}%{?dist}
+Release: 0.2.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
 Release: 1%{?dist}
@@ -1453,6 +1453,9 @@ fi
 ################################################################################
 
 %changelog
+* Tue Sep 27 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.24.1-1
+- Rebuild for perl
+
 * Tue May 17 2011 Jarod Wilson <jarod@wilsonet.com> 0.24.1-1
 - Update to 0.24.1 stable update release
 
