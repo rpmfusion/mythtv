@@ -65,8 +65,8 @@
 %define desktop_vendor  RPMFusion
 
 # Git revision and branch ID
-# 0.24 release: git tag b0.24
-%define _gitrev b5a3805b92
+# 0.24 release: git tag v0.24.1
+%define _gitrev e89d6a9f7e
 %define branch fixes/0.24
 
 #
@@ -83,7 +83,7 @@ Version: 0.24.1
 Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -130,15 +130,17 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 ################################################################################
 
-Source0:   http://www.mythtv.org/mc/mythtv-%{version}.tar.bz2
-Source1:   http://www.mythtv.org/mc/mythplugins-%{version}.tar.bz2
-#Patch0:    mythtv-%{version}-fixes.patch
-#Patch1:    mythplugins-%{version}-fixes.patch
-#Patch2:    mythweb-%{version}-fixes.patch
+Source0:   mythtv-%{version}.tar.bz2
+Source1:   mythplugins-%{version}.tar.bz2
+Patch0:    mythtv-%{version}-fixes.patch
+Patch1:    mythplugins-%{version}-fixes.patch
+#Patch2:    mythweb-%{version}-fixes.patch\
+Patch3:    mythtv-0.24.1-glu_h_gluErrorString.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
 Source103: mythbackend.logrotate
+Source104: mythbackend.service
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
@@ -159,6 +161,22 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ################################################################################
 
 # Global MythTV and Shared Build Requirements
+
+%if 0%{?fedora} >= 16
+# Use systemd
+BuildRequires:  systemd-units
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+# For sysv -> systemd transition
+Requires(post): systemd-sysv
+%else
+# Use SysV
+Requires(post): chkconfig
+Requires(preun): chkconfig
+Requires(preun): initscripts
+Requires(postun): initscripts
+%endif
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
@@ -333,7 +351,9 @@ Requires:  perl-MythTV        = %{version}-%{release}
 Requires:  python-MythTV      = %{version}-%{release}
 
 Requires:  mythplugins        = %{version}-%{release}
-Requires:  mythtv-themes      >= 0.24
+# These are available via mythtv's built-in theme downloader now,
+# so lets not install them by default.
+#Requires:  mythtv-themes      = %{version}
 
 Requires:  mysql-server >= 5, mysql >= 5
 # XMLTV is not yet packaged for rpmfusion
@@ -519,6 +539,7 @@ Group:      Applications/Multimedia
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
 Requires:   wget
+Requires(pre): shadow-utils
 Conflicts:  xmltv-grabbers < 0.5.37
 
 %description backend
@@ -771,10 +792,7 @@ Group:     Applications/Multimedia
 Requires:  httpd >= 1.3.26
 Requires:  php >= 5.1
 Requires:  php-mysql
-# php-process is broken out from main php package in Fedora 11 and later
-%if 0%{?fedora} >= 11
 Requires:  php-process
-%endif
 
 %description -n mythweb
 The web interface to MythTV.
@@ -835,7 +853,8 @@ on demand content.
 ##### MythTV
 
 cd mythtv-%{version}
-#patch0 -p1
+%patch0 -p2
+%patch3 -p1 -b .p3
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -850,7 +869,7 @@ cd mythtv-%{version}
         bindings/perl/Makefile
 
 # Install other source files
-    cp -a %{SOURCE10} %{SOURCE101} %{SOURCE102} %{SOURCE103} .
+    cp -a %{SOURCE10} .
     cp -a %{SOURCE106} %{SOURCE107} %{SOURCE108} %{SOURCE109} .
 
 # Prevent all of those nasty installs to ../../../../../bin/whatever
@@ -868,7 +887,7 @@ cd ..
 %if %{with_plugins}
 
 cd mythplugins-%{version}
-#patch1 -p1
+%patch1 -p2
 #patch2 -p1
 
 # Fix /mnt/store -> /var/lib/mythmusic
@@ -1085,9 +1104,14 @@ cd mythtv-%{version}
     mkdir -p %{buildroot}%{_localstatedir}/cache/mythtv
     mkdir -p %{buildroot}%{_localstatedir}/log/mythtv
     mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
+    %if 0%{?fedora} >= 16
+    mkdir -p %{buildroot}%{_unitdir}
+    %else
     mkdir -p %{buildroot}%{_sysconfdir}/init.d
     mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
+    %endif
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
+
 
 # Fix permissions on executable python bindings
 #    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
@@ -1095,9 +1119,13 @@ cd mythtv-%{version}
 # mysql.txt and other config/init files
     install -m 644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
-    install -p -m 755 mythbackend.init %{buildroot}%{_sysconfdir}/init.d/mythbackend
-    install -p -m 644 mythbackend.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/mythbackend
-    install -p -m 644 mythbackend.logrotate  %{buildroot}%{_sysconfdir}/logrotate.d/mythbackend
+    %if 0%{?fedora} >= 16
+    install -p -m 644 %{SOURCE104} %{buildroot}%{_unitdir}/
+    %else
+    install -p -m 755 %{SOURCE102} %{buildroot}%{_sysconfdir}/init.d/mythbackend
+    install -p -m 644 %{SOURCE101} %{buildroot}%{_sysconfdir}/sysconfig/mythbackend
+    %endif
+    install -p -m 644 %{SOURCE103} %{buildroot}%{_sysconfdir}/logrotate.d/mythbackend
 
 # Desktop entries
     mkdir -p %{buildroot}%{_datadir}/pixmaps
@@ -1178,18 +1206,68 @@ rm -rf %{buildroot}
 %postun libs -p /sbin/ldconfig
 
 %pre backend
-# Add the "mythtv" user, with membership in the video group
-/usr/sbin/useradd -c "mythtvbackend User" \
-    -s /sbin/nologin -r -d %{_localstatedir}/lib/mythtv -G video mythtv 2> /dev/null || :
+# Add the "mythtv" user, with membership in the audio and video group
+getent group mythtv >/dev/null || groupadd -r mythtv
+getent passwd mythtv >/dev/null || \
+    useradd -r -g mythtv -d d %{_localstatedir}/lib/mythtv -s /sbin/nologin \
+    -c "mythbackend user" mythtv
+exit 0
+# Make sure the mythtv user is in the audio and video group for existing
+# or new installs.
+usermod -a -G audio,video mythtv
 
 %post backend
+%if 0%{?fedora} >= 16
+if [ $1 -eq 1 ] ; then 
+    # Initial installation 
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
+%else
 /sbin/chkconfig --add mythbackend
+%endif
+
 
 %preun backend
+%if 0%{?fedora} >= 16
+if [ $1 -eq 0 ] ; then
+    # Package removal, not upgrade
+    /bin/systemctl --no-reload disable mythbackend.service > /dev/null 2>&1 || :
+    /bin/systemctl stop mythbackend.service > /dev/null 2>&1 || :
+fi
+%else
 if [ $1 = 0 ]; then
     /sbin/service mythbackend stop > /dev/null 2>&1
     /sbin/chkconfig --del mythbackend
 fi
+%endif
+
+%postun backend
+%if 0%{?fedora} >= 16
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ] ; then
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart mythbackend.service >/dev/null 2>&1 || :
+fi
+%else
+if [ "$1" -ge "1" ] ; then
+    /sbin/service mythbackend condrestart >/dev/null 2>&1 || :
+fi
+%endif
+
+%if 0%{?fedora} >= 16
+%triggerun -- mythtv < 0.24.1-3
+# Save the current service runlevel info
+# User must manually run systemd-sysv-convert --apply httpd
+# to migrate them to systemd targets
+/usr/bin/systemd-sysv-convert --save mythbackend >/dev/null 2>&1 ||:
+
+# If the package is allowed to autostart:
+/bin/systemctl --no-reload enable mythbackend.service >/dev/null 2>&1 ||:
+
+# Run these because the SysV package being removed won't do them
+/sbin/chkconfig --del mythbackend >/dev/null 2>&1 || :
+/bin/systemctl try-restart mythbackend.service >/dev/null 2>&1 || :
+%endif
 
 ################################################################################
 
@@ -1229,8 +1307,12 @@ fi
 %{_datadir}/mythtv/MXML_scpd.xml
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
+%if 0%{?fedora} >=16
+%{_unitdir}/mythbackend.service
+%else
 %{_sysconfdir}/init.d/mythbackend
 %config(noreplace) %{_sysconfdir}/sysconfig/mythbackend
+%endif
 %config(noreplace) %{_sysconfdir}/logrotate.d/mythbackend
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
 %dir %{_datadir}/mythtv/internetcontent
@@ -1453,8 +1535,18 @@ fi
 ################################################################################
 
 %changelog
-* Mon Oct 03 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.24.1-2
-- Rebuilt and fix requires mythtv-themes - rfbz#1956
+* Sun Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
+- Update to latest 0.24.1-fixes, git revision e89d6a9f7e.
+- Fixes BZ#1993, FTBFS on Fedora 16.
+- Moves from sysv init to systemd unit file for mythbackend on Fedora 16+
+  See http://rpmfusion.org/Package/mythtv for additonal information.
+- Changes default user for mythbackend from root to mythtv on
+  Fedora 16+. See http://rpmfusion.org/Package/mythtv for additonal information.
+
+* Mon May 30 2011 Jarod Wilson <jarod@wilsonet.com> 0.24.1-2
+- Drop dependency on mythtv-themes, since upstream is no longer tarring
+  them up, in preference of people using the built-in theme downloader.
+- Update to 0.24-fixes, git revision 3657f313ac
 
 * Tue May 17 2011 Jarod Wilson <jarod@wilsonet.com> 0.24.1-1
 - Update to 0.24.1 stable update release
