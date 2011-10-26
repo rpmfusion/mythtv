@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=mythTV setup
 Comment=Setup for mythTV.
-Icon=mythtv-setup.png
+Icon=mythtv-setup
 Exec=mythtv-setup
 Terminal=false
 Type=Application
