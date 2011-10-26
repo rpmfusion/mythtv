@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=mythTV frontend
 Comment=Record, playback and watch TV.
-Icon=mythfrontend.png
+Icon=mythfrontend
 Exec=mythfrontend
 Terminal=false
 Type=Application
