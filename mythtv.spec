@@ -83,7 +83,7 @@ Version: 0.24.1
 Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 3%{?dist}
+Release: 4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1535,6 +1535,12 @@ fi
 ################################################################################
 
 %changelog
+* Fri Oct 28 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.24.1-4
+- Fix for glibc bug rhbz#747377
+! Reminder:
+- Changes default user for mythbackend from root to mythtv on
+  Fedora 16+. See http://rpmfusion.org/Package/mythtv for additonal information.
+
 * Sun Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
 - Update to latest 0.24.1-fixes, git revision e89d6a9f7e.
 - Fixes BZ#1993, FTBFS on Fedora 16.
