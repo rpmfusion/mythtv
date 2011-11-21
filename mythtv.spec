@@ -854,7 +854,6 @@ on demand content.
 
 cd mythtv-%{version}
 %patch0 -p2
-%patch3 -p1 -b .p3
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
