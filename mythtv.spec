@@ -135,6 +135,7 @@ Source1:   mythplugins-%{version}.tar.bz2
 Patch0:    mythtv-%{version}-fixes.patch
 Patch1:    mythplugins-%{version}-fixes.patch
 #Patch2:    mythweb-%{version}-fixes.patch\
+Patch3:    mythtv-0.24.1-glu_h_gluErrorString.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -853,6 +854,7 @@ on demand content.
 
 cd mythtv-%{version}
 %patch0 -p2
+%patch3 -p1 -b .p3
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
