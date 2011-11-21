@@ -1,3 +1,26 @@
+ mythplugins/mytharchive/i18n/mytharchive_da.qm     |  Bin 28888 -> 28824 bytes
+ mythplugins/mytharchive/i18n/mytharchive_da.ts     |   20 +-
+ mythplugins/mytharchive/i18n/mytharchive_en_gb.ts  |    6 +-
+ mythplugins/mythgallery/i18n/mythgallery_da.qm     |  Bin 13074 -> 13649 bytes
+ mythplugins/mythgallery/i18n/mythgallery_da.ts     |   86 +-
+ mythplugins/mythgallery/i18n/mythgallery_en_gb.qm  |  Bin 297 -> 684 bytes
+ mythplugins/mythgallery/i18n/mythgallery_en_gb.ts  |  162 +-
+ mythplugins/mythgallery/i18n/mythgallery_es.qm     |  Bin 13684 -> 13676 bytes
+ mythplugins/mythgallery/i18n/mythgallery_es.ts     |   20 +-
+ .../mythgallery/mythgallery/gallerysettings.cpp    |    4 +-
+ mythplugins/mythgame/i18n/mythgame_en_gb.ts        |  101 +-
+ mythplugins/mythmusic/i18n/mythmusic_en_gb.ts      |  327 ++--
+ mythplugins/mythmusic/i18n/mythmusic_es.qm         |  Bin 31964 -> 60973 bytes
+ mythplugins/mythmusic/i18n/mythmusic_es.ts         | 1957 +++++++++++---------
+ mythplugins/mythmusic/mythmusic/main.cpp           |    8 +-
+ .../mythnetvision/i18n/mythnetvision_en_gb.ts      |   82 +-
+ mythplugins/mythnetvision/i18n/mythnetvision_es.qm |  Bin 23 -> 7911 bytes
+ mythplugins/mythnetvision/i18n/mythnetvision_es.ts |  226 ++--
+ mythplugins/mythvideo/mythvideo/scripts/jamu.py    |    7 +-
+ mythplugins/mythweather/i18n/mythweather_en_gb.ts  |    2 +-
+ .../mythzoneminder/i18n/mythzoneminder_en_gb.ts    |    2 +-
+ 21 files changed, 1630 insertions(+), 1380 deletions(-)
+
 diff --git a/mythplugins/mytharchive/i18n/mytharchive_da.qm b/mythplugins/mytharchive/i18n/mytharchive_da.qm
 index b744be6..623eff6 100644
 Binary files a/mythplugins/mytharchive/i18n/mytharchive_da.qm and b/mythplugins/mytharchive/i18n/mytharchive_da.qm differ
