@@ -83,7 +83,7 @@ Version: 0.24.1
 Release: 0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 3%{?dist}
+Release: 5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1209,7 +1209,7 @@ rm -rf %{buildroot}
 # Add the "mythtv" user, with membership in the audio and video group
 getent group mythtv >/dev/null || groupadd -r mythtv
 getent passwd mythtv >/dev/null || \
-    useradd -r -g mythtv -d d %{_localstatedir}/lib/mythtv -s /sbin/nologin \
+    useradd -r -g mythtv -d %{_localstatedir}/lib/mythtv -s /sbin/nologin \
     -c "mythbackend user" mythtv
 exit 0
 # Make sure the mythtv user is in the audio and video group for existing
@@ -1535,6 +1535,17 @@ fi
 ################################################################################
 
 %changelog
+* Mon Nov 21 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-5
+- Fix typo in spec file causing mythtv user to not be created (#2051).
+- Change mythbackend systemd type to "simple" and other fixes (#2016).
+- Update to latest 0.24.1-fixes, git revision f5fd11fa54.
+
+* Fri Oct 28 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.24.1-4
+- Fix for glibc bug rhbz#747377
+! Reminder:
+- Changes default user for mythbackend from root to mythtv on
+  Fedora 16+. See http://rpmfusion.org/Package/mythtv for additonal information.
+
 * Sun Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
 - Update to latest 0.24.1-fixes, git revision e89d6a9f7e.
 - Fixes BZ#1993, FTBFS on Fedora 16.
