@@ -135,7 +135,6 @@ Source1:   mythplugins-%{version}.tar.bz2
 Patch0:    mythtv-%{version}-fixes.patch
 Patch1:    mythplugins-%{version}-fixes.patch
 #Patch2:    mythweb-%{version}-fixes.patch\
-Patch3:    mythtv-0.24.1-glu_h_gluErrorString.patch
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -1275,12 +1274,16 @@ fi
 
 %files docs
 %defattr(-,root,root,-)
-%doc mythtv-%{version}/README* mythtv-%{version}/UPGRADING
-%doc mythtv-%{version}/AUTHORS mythtv-%{version}/COPYING mythtv-%{version}/FAQ
+%doc mythtv-%{version}/README*
+%doc mythtv-%{version}/UPGRADING
+%doc mythtv-%{version}/AUTHORS
+%doc mythtv-%{version}/COPYING
+%doc mythtv-%{version}/FAQ
 %doc mythtv-%{version}/database mythtv-%{version}/keys.txt
 %doc mythtv-%{version}/docs/*.html mythtv-%{version}/docs/*.png
 %doc mythtv-%{version}/docs/*.txt
 %doc mythtv-%{version}/PACKAGE-LICENSING
+%doc mythtv-%{version}/contrib
 
 %files common
 %defattr(-,root,root,-)
@@ -1538,6 +1541,7 @@ fi
 - Fix typo in spec file causing mythtv user to not be created (#2051).
 - Change mythbackend systemd type to "simple" and other fixes (#2016).
 - Update to latest 0.24.1-fixes, git revision f5fd11fa54.
+- Readd contrib directory (#1924).
 
 * Fri Oct 28 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.24.1-4
 - Fix for glibc bug rhbz#747377
