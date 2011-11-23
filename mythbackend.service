@@ -3,14 +3,11 @@ Description=MythTV backend service
 After=network.target mysqld.service
 
 [Service]
-Type=forking
-PIDFile=/var/run/mythbackend.pid
+Type=simple
 Environment=MYTHCONFDIR=/etc/mythtv
 Environment=HOME=/usr/share/mythtv
-Environment=MYTHBACKEND_USER=root
-EnvironmentFile=-/etc/sysconfig/mythbackend
 User=mythtv
-ExecStart=/usr/bin/mythbackend --daemon --logfile /var/log/mythtv/mythbackend.log --pidfile /var/run/mythbackend.pid
+ExecStart=/usr/bin/mythbackend --logfile /var/log/mythtv/mythbackend.log
 
 [Install]
 WantedBy=multi-user.target
