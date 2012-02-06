@@ -145,6 +145,7 @@ Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 Source1:   MythTV-mythweb-v%{version}-0-%{githash3}.tar.gz
 Patch0:    mythtv-%{version}-fixes.patch
 #Patch1:    mythplugins-%{version}-fixes.patch
+Patch2:    mythtv-0.24.2-gcc47.patch
 
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
@@ -871,6 +872,7 @@ on demand content.
 
 %patch0 -p1 -b .mythtv
 #patch1 -p1 -b .mythplug
+%patch2 -p1 -b .gcc47
 
 pushd mythtv
 
@@ -1557,11 +1559,12 @@ fi
 ################################################################################
 
 %changelog
-* Sun Jan 29 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-1
+* Mon Feb 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-1
 - Update to latest version.
 - Update mythbackend systemd service file for better compatibilty with devices
   that take time to initialize due to firmware loading.
 - Add dependency m2vrequantiser for mytharchive.
+- Patched for building with gcc 4.7 (rawhide/Fedora 17).
 
 * Mon Dec 12 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-6
 - Fix %%post to make sure group membership gets set for the mythtv user.
