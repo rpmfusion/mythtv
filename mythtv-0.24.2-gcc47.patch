@@ -1,0 +1,149 @@
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmyth/programinfoupdater.cpp MythTV-mythtv-c239b59/mythtv/libs/libmyth/programinfoupdater.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmyth/programinfoupdater.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmyth/programinfoupdater.cpp	2012-02-03 15:53:44.175781694 -0600
+@@ -1,3 +1,5 @@
++#include <unistd.h>
++
+ #include "programinfoupdater.h"
+ #include "remoteutil.h"
+ #include "compat.h"
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/httpcomms.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythdb/httpcomms.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/httpcomms.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythdb/httpcomms.cpp	2012-02-03 15:10:51.216678380 -0600
+@@ -6,6 +6,8 @@
+ #include <QTimer>
+ #include <QFile>
+ 
++#include <unistd.h>
++
+ #include "mythverbose.h"
+ #include "compat.h"
+ #include "mcodecs.h"
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/lcddevice.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythdb/lcddevice.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/lcddevice.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythdb/lcddevice.cpp	2012-02-03 15:19:21.864852865 -0600
+@@ -12,6 +12,7 @@
+ #include <cmath>
+ #include <fcntl.h>
+ #include <errno.h>
++#include <unistd.h>
+ 
+ # ifdef linux
+ #   include <sys/vfs.h>
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/mythdbcon.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythdb/mythdbcon.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/mythdbcon.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythdb/mythdbcon.cpp	2012-02-03 15:01:32.298170616 -0600
+@@ -1,5 +1,6 @@
+ // ANSI C
+ #include <cstdlib>
++#include <unistd.h>
+ 
+ // Qt
+ #include <QVector>
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/mythdownloadmanager.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythdb/mythdownloadmanager.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/mythdownloadmanager.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythdb/mythdownloadmanager.cpp	2012-02-03 15:26:50.633048610 -0600
+@@ -6,6 +6,8 @@
+ #include <QDir>
+ #include <QThreadPool>
+ 
++#include <unistd.h>
++
+ // libmythdb
+ #include "stdlib.h"
+ #include "compat.h"
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/mythsocket.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythdb/mythsocket.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/mythsocket.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythdb/mythsocket.cpp	2012-02-03 14:56:48.362583594 -0600
+@@ -2,6 +2,7 @@
+ #include <cstdlib>
+ #include <cassert>
+ #include <cerrno>
++#include <unistd.h>
+ 
+ #include "compat.h"
+ 
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/mythsocketthread.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythdb/mythsocketthread.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/mythsocketthread.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythdb/mythsocketthread.cpp	2012-02-03 14:55:59.159214440 -0600
+@@ -14,6 +14,7 @@
+ #include <sys/types.h>  // for fnctl
+ #include <fcntl.h>      // for fnctl
+ #include <errno.h>      // for checking errno
++#include <unistd.h>     // for read, write, close, pipe
+ 
+ #ifndef O_NONBLOCK
+ #define O_NONBLOCK 0 /* not actually supported in MINGW */
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/remotefile.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythdb/remotefile.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythdb/remotefile.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythdb/remotefile.cpp	2012-02-03 15:21:58.799677566 -0600
+@@ -1,6 +1,7 @@
+ #include <iostream>
+ using namespace std;
+ 
++#include <unistd.h>
+ #include <QUrl>
+ 
+ #include "mythconfig.h"
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythtv/audioinputoss.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythtv/audioinputoss.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythtv/audioinputoss.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythtv/audioinputoss.cpp	2012-02-03 16:15:18.534727182 -0600
+@@ -30,6 +30,7 @@
+ #include "audioinputoss.h"
+ #include "mythverbose.h"
+ #include <fcntl.h>
++#include <unistd.h>
+ #include <sys/ioctl.h>
+ 
+ #define LOC     QString("AudioInOSS: ")
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythtv/privatedecoder_crystalhd.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythtv/privatedecoder_crystalhd.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythtv/privatedecoder_crystalhd.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythtv/privatedecoder_crystalhd.cpp	2012-02-03 16:10:15.014854007 -0600
+@@ -1,3 +1,5 @@
++#include <unistd.h>
++
+ #include "privatedecoder_crystalhd.h"
+ #include "myth_imgconvert.h"
+ 
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythui/mythrender_vdpau.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythui/mythrender_vdpau.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythui/mythrender_vdpau.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythui/mythrender_vdpau.cpp	2012-02-03 15:47:11.064749126 -0600
+@@ -1,4 +1,5 @@
+ #include "math.h"
++#include <unistd.h>
+ 
+ #include <QSize>
+ 
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythupnp/upnpdevice.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythupnp/upnpdevice.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythupnp/upnpdevice.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythupnp/upnpdevice.cpp	2012-02-03 15:49:54.832347882 -0600
+@@ -26,6 +26,7 @@
+ #include "httpcomms.h"
+ 
+ #include <cerrno>
++#include <unistd.h>
+ 
+ #include <QFile>
+ #include <QTextStream>
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythupnp/upnptasknotify.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythupnp/upnptasknotify.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythupnp/upnptasknotify.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythupnp/upnptasknotify.cpp	2012-02-03 15:40:38.383704757 -0600
+@@ -23,6 +23,7 @@
+ 
+ // ANSI C headers
+ #include <cstdlib>
++#include <unistd.h>
+ 
+ // Qt headers
+ #include <QStringList>
+diff -Naur MythTV-mythtv-c239b59.orig/mythtv/libs/libmythupnp/upnptasksearch.cpp MythTV-mythtv-c239b59/mythtv/libs/libmythupnp/upnptasksearch.cpp
+--- MythTV-mythtv-c239b59.orig/mythtv/libs/libmythupnp/upnptasksearch.cpp	2012-01-22 07:48:23.000000000 -0600
++++ MythTV-mythtv-c239b59/mythtv/libs/libmythupnp/upnptasksearch.cpp	2012-02-03 15:43:47.453462572 -0600
+@@ -23,6 +23,7 @@
+ 
+ #include <compat.h>
+ #include <stdlib.h>
++#include <unistd.h>
+ 
+ #include <QStringList>
+ #include <QFile>

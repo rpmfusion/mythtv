@@ -3,6 +3,7 @@
 #
 # by:   Chris Petersen <rpm@forevermore.net>
 #       Jarod Wilson <jarod@wilsonet.com>
+#       Richard Shaw <hobbes1069@gmail.com>
 #
 #  Modified/Extended from the great work of:
 #     Axel Thimm <Axel.Thimm@ATrpms.net>
@@ -62,11 +63,19 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # The vendor name we should attribute the aforementioned entries to
-%define desktop_vendor  RPMFusion
+%define desktop_vendor RPMFusion
 
 # Git revision and branch ID
 # 0.24 release: git tag v0.24.1
-%define _gitrev e89d6a9f7e
+%define _gitrev 40f3bae
+
+# Mythtv and plugins from github.com
+%global githash1 g4627dc9
+%global githash2 c239b59
+# Mythweb from github.com
+%global githash3 g946deb7
+%global githash4 28a6e31
+
 %define branch fixes/0.24
 
 #
@@ -78,17 +87,17 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version: 0.24.1
+Version:        0.24.2
 %if "%{branch}" == "master"
-Release: 0.1.git.%{_gitrev}%{?dist}
+Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release: 5%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
 # projects... For a breakdown of the licensing, see PACKAGE-LICENSING.
-License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
+License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
 
 ################################################################################
 
@@ -130,11 +139,14 @@ License: GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+
 
 ################################################################################
 
-Source0:   mythtv-%{version}.tar.bz2
-Source1:   mythplugins-%{version}.tar.bz2
+#Source0:   mythtv-%{version}.tar.bz2
+#Source1:   mythplugins-%{version}.tar.bz2
+Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
+Source1:   MythTV-mythweb-v%{version}-0-%{githash3}.tar.gz
 Patch0:    mythtv-%{version}-fixes.patch
-Patch1:    mythplugins-%{version}-fixes.patch
-#Patch2:    mythweb-%{version}-fixes.patch\
+#Patch1:    mythplugins-%{version}-fixes.patch
+Patch2:    mythtv-0.24.2-gcc47.patch
+
 Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
@@ -145,6 +157,7 @@ Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
 Source110: mysql.txt
+Source111: 99-mythbackend.rules
 Source401: mythweb.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -181,12 +194,8 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
-%if 0%{?fedora} >= 14
 BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.4
-%else
-BuildRequires:  qt4-devel >= 4.4
-%endif
 BuildRequires:  phonon-devel
 
 BuildRequires:  lm_sensors-devel
@@ -323,6 +332,8 @@ BuildRequires:  perl(Image::Size)
 Requires:       perl(Image::Size)
 BuildRequires:  perl(SOAP::Lite)
 Requires:       perl(SOAP::Lite)
+BuildRequires:  perl(JSON)
+Requires:       perl(JSON)
 %endif
 
 %if %{with_mythzoneminder}
@@ -348,11 +359,7 @@ Requires:  mythtv-frontend    = %{version}-%{release}
 Requires:  mythtv-setup       = %{version}-%{release}
 Requires:  perl-MythTV        = %{version}-%{release}
 Requires:  python-MythTV      = %{version}-%{release}
-
 Requires:  mythplugins        = %{version}-%{release}
-# These are available via mythtv's built-in theme downloader now,
-# so lets not install them by default.
-#Requires:  mythtv-themes      = %{version}
 
 Requires:  mysql-server >= 5, mysql >= 5
 # XMLTV is not yet packaged for rpmfusion
@@ -366,7 +373,7 @@ Requires:  mysql-server >= 5, mysql >= 5
 
 %description
 MythTV provides a unified graphical interface for recording and viewing
-television programs.  Refer to the mythtv package for more information.
+television programs. Refer to the mythtv package for more information.
 
 There are also several add-ons and themes available. In order to facilitate
 installations with smart/apt-get/yum and other related package
@@ -375,7 +382,7 @@ resolvers this meta-package can be used to install all in one sweep.
 MythTV implements the following DVR features, and more, with a
 unified graphical interface:
 
- - Basic 'live-tv' functionality.  Pause/Fast Forward/Rewind "live" TV.
+ - Basic 'live-tv' functionality. Pause/Fast Forward/Rewind "live" TV.
  - Video compression using RTjpeg or MPEG-4, and support for DVB and
    hardware encoder cards/devices.
  - Program listing retrieval using XMLTV
@@ -518,8 +525,8 @@ Requires:  freetype, lame
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
-Obsoletes: mythcontrols < %{version}-%{release}
-Provides:  mythcontrols = %{version}-%{release}
+Obsoletes: mythcontrols        < %{version}-%{release}
+Provides:  mythcontrols        = %{version}-%{release}
 
 %description frontend
 MythTV provides a unified graphical interface for recording and viewing
@@ -670,6 +677,7 @@ Requires:  mkisofs >= 2.01
 Requires:  python >= 2.3.5
 Requires:  python-imaging
 Requires:  transcode >= 1.0.2
+Requires:  m2vrequantiser
 
 %description -n mytharchive
 MythArchive is a new plugin for MythTV that lets you create DVDs from
@@ -839,7 +847,20 @@ on demand content.
 ################################################################################
 
 %prep
-%setup -q -c -a 1
+#### MythWeb
+# Provided as a separate download so we deal with it here.
+%setup -q -T -b 1 -n MythTV-mythweb-%{githash4}
+
+# Fix up permissions for MythWeb
+    chmod -R g-w ./*
+
+# Remove execute bits from some php mythweb files
+#    chmod -x mythweb/classes/*.php
+
+
+#### MythTV
+#setup -q -c -a 1
+%setup -q -n MythTV-%{name}-%{githash2}
 
 # Replace static lib paths with %{_lib} so we build properly on x86_64
 # systems, where the libs are actually in lib64.
@@ -849,10 +870,11 @@ on demand content.
         grep -rlZ '/lib ' . | xargs -r0 sed -i -e 's,/lib ,/%{_lib} ,g'
     fi
 
-##### MythTV
+%patch0 -p1 -b .mythtv
+#patch1 -p1 -b .mythplug
+%patch2 -p1 -b .gcc47
 
-cd mythtv-%{version}
-%patch0 -p2
+pushd mythtv
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -879,14 +901,13 @@ cd mythtv-%{version}
     sed -i -e 's,VENDOR_XVMC_LIBS="-lXvMCNVIDIA",VENDOR_XVMC_LIBS="-lXvMCNVIDIA -lXv",' configure
 
 # On to mythplugins
-cd ..
+popd
+
 
 ##### MythPlugins
 %if %{with_plugins}
 
-cd mythplugins-%{version}
-%patch1 -p2
-#patch2 -p1
+pushd mythplugins
 
 # Fix /mnt/store -> /var/lib/mythmusic
     cd mythmusic
@@ -898,16 +919,11 @@ cd mythplugins-%{version}
     sed -i -e 's,/share/Movies/dvd,%{_localstatedir}/lib/mythvideo,' mythvideo/globalsettings.cpp
     cd ..
 
-# Fix up permissions for MythWeb
-    cd mythweb
-    chmod -R g-w ./*
-    cd ..
-
-# Remove execute bits from some php mythweb files
-    chmod -x mythweb/classes/*.php
-
 # And back to the compile root
-cd ..
+popd
+
+
+
 
 %endif
 
@@ -916,7 +932,7 @@ cd ..
 %build
 
 # First, we build MythTV
-cd mythtv-%{version}
+pushd mythtv
 
 # Similar to 'percent' configure, but without {_target_platform} and
 # {_exec_prefix} etc... MythTV no longer accepts the parameters that the
@@ -996,15 +1012,15 @@ cd mythtv-%{version}
     make %{?_smp_mflags}
 
 # Prepare to build the plugins
-    cd ..
-    mkdir temp
-    temp=`pwd`/temp
-    make -C mythtv-%{version} install INSTALL_ROOT=$temp
+    popd
+    mkdir fakeroot
+    temp=`pwd`/fakeroot
+    make -C mythtv install INSTALL_ROOT=$temp
     export LD_LIBRARY_PATH=$temp%{_libdir}:$LD_LIBRARY_PATH
 
 # Next, we build the plugins
 %if %{with_plugins}
-cd mythplugins-%{version}
+pushd mythplugins
 
 # Fix things up so they can find our "temp" install location for mythtv-libs
     echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
@@ -1082,7 +1098,7 @@ cd mythplugins-%{version}
 
     make %{?_smp_mflags}
 
-    cd ..
+    popd
 %endif
 
 ################################################################################
@@ -1093,7 +1109,7 @@ cd mythplugins-%{version}
     rm -rf %{buildroot}
 
 # First, install MythTV
-cd mythtv-%{version}
+pushd mythtv
 
     make install INSTALL_ROOT=%{buildroot}
 
@@ -1115,15 +1131,19 @@ cd mythtv-%{version}
 #    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
 
 # mysql.txt and other config/init files
-    install -m 644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
+    install -m 0644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
     %if 0%{?fedora} >= 16
-    install -p -m 644 %{SOURCE104} %{buildroot}%{_unitdir}/
+    install -p -m 0644 %{SOURCE104} %{buildroot}%{_unitdir}/
+    # Install udev rules for devices that may initialize late in the boot
+    # process so they are available for mythbackend.
+    mkdir -p %{buildroot}/lib/udev/rules.d/
+    install -p -m 0644 %{SOURCE111} %{buildroot}/lib/udev/rules.d/
     %else
-    install -p -m 755 %{SOURCE102} %{buildroot}%{_sysconfdir}/init.d/mythbackend
-    install -p -m 644 %{SOURCE101} %{buildroot}%{_sysconfdir}/sysconfig/mythbackend
+    install -p -m 0755 %{SOURCE102} %{buildroot}%{_sysconfdir}/init.d/mythbackend
+    install -p -m 0644 %{SOURCE101} %{buildroot}%{_sysconfdir}/sysconfig/mythbackend
     %endif
-    install -p -m 644 %{SOURCE103} %{buildroot}%{_sysconfdir}/logrotate.d/mythbackend
+    install -p -m 0644 %{SOURCE103} %{buildroot}%{_sysconfdir}/logrotate.d/mythbackend
 
 # Desktop entries
     mkdir -p %{buildroot}%{_datadir}/pixmaps
@@ -1143,11 +1163,11 @@ cd mythtv-%{version}
     mkdir -p %{buildroot}%{_datadir}/mythtv/build/
     install -p -m 644 settings.pro %{buildroot}%{_datadir}/mythtv/build/
 
-    cd ..
+popd
 
 # MythPlugins
 %if %{with_plugins}
-cd mythplugins-%{version}
+pushd mythplugins
 
     make install INSTALL_ROOT=%{buildroot}
 
@@ -1174,9 +1194,10 @@ cd mythplugins-%{version}
     ln -s ../../../../../%{_sysconfdir}/mythgame/ \
         %{buildroot}%{_datadir}/mythtv/games/PC/gamelist.xml
 %endif
+popd
 
 %if %{with_mythweb}
-    cd mythweb
+    pushd ../MythTV-mythweb-%{githash4}
     mkdir -p %{buildroot}%{_datadir}/mythweb
     cp -a * %{buildroot}%{_datadir}/mythweb/
     mkdir -p %{buildroot}%{_datadir}/mythweb/{image_cache,php_sessions}
@@ -1185,11 +1206,10 @@ cd mythplugins-%{version}
     cp %{SOURCE401} %{buildroot}%{_sysconfdir}/httpd/conf.d/
 # drop .htaccess file, settings handled in the above
     rm -f %{buildroot}%{_datadir}/mythweb/data/.htaccess
-    cd ..
+    popd
 %endif
 
 # And back to the build/install root
-    cd ..
 %endif
 
 ################################################################################
@@ -1209,10 +1229,10 @@ getent group mythtv >/dev/null || groupadd -r mythtv
 getent passwd mythtv >/dev/null || \
     useradd -r -g mythtv -d %{_localstatedir}/lib/mythtv -s /sbin/nologin \
     -c "mythbackend user" mythtv
-exit 0
 # Make sure the mythtv user is in the audio and video group for existing
 # or new installs.
 usermod -a -G audio,video mythtv
+exit 0
 
 %post backend
 %if 0%{?fedora} >= 16
@@ -1274,16 +1294,16 @@ fi
 
 %files docs
 %defattr(-,root,root,-)
-%doc mythtv-%{version}/README*
-%doc mythtv-%{version}/UPGRADING
-%doc mythtv-%{version}/AUTHORS
-%doc mythtv-%{version}/COPYING
-%doc mythtv-%{version}/FAQ
-%doc mythtv-%{version}/database mythtv-%{version}/keys.txt
-%doc mythtv-%{version}/docs/*.html mythtv-%{version}/docs/*.png
-%doc mythtv-%{version}/docs/*.txt
-%doc mythtv-%{version}/PACKAGE-LICENSING
-%doc mythtv-%{version}/contrib
+%doc mythtv/README*
+%doc mythtv/UPGRADING
+%doc mythtv/AUTHORS
+%doc mythtv/COPYING
+%doc mythtv/FAQ
+%doc mythtv/database mythtv/keys.txt
+%doc mythtv/docs/*.html mythtv/docs/*.png
+%doc mythtv/docs/*.txt
+%doc mythtv/PACKAGE-LICENSING
+%doc mythtv/contrib
 
 %files common
 %defattr(-,root,root,-)
@@ -1311,6 +1331,7 @@ fi
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
 %if 0%{?fedora} >=16
 %{_unitdir}/mythbackend.service
+/lib/udev/rules.d/99-mythbackend.rules
 %else
 %{_sysconfdir}/init.d/mythbackend
 %config(noreplace) %{_sysconfdir}/sysconfig/mythbackend
@@ -1398,15 +1419,15 @@ fi
 %if %{with_plugins}
 %files -n mythplugins
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/COPYING
+%doc mythplugins/COPYING
 
 %if %{with_mytharchive}
 %files -n mytharchive
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/mytharchive/AUTHORS
-%doc mythplugins-%{version}/mytharchive/COPYING
-%doc mythplugins-%{version}/mytharchive/README
-%doc mythplugins-%{version}/mytharchive/TODO
+%doc mythplugins/mytharchive/AUTHORS
+%doc mythplugins/mytharchive/COPYING
+%doc mythplugins/mytharchive/README
+%doc mythplugins/mytharchive/TODO
 %{_bindir}/mytharchivehelper
 %{_libdir}/mythtv/plugins/libmytharchive.so
 %{_datadir}/mythtv/archivemenu.xml
@@ -1418,9 +1439,9 @@ fi
 %if %{with_mythbrowser}
 %files -n mythbrowser
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythbrowser/AUTHORS
-%doc mythplugins-%{version}/mythbrowser/COPYING
-%doc mythplugins-%{version}/mythbrowser/README
+%doc mythplugins/mythbrowser/AUTHORS
+%doc mythplugins/mythbrowser/COPYING
+%doc mythplugins/mythbrowser/README
 %{_libdir}/mythtv/plugins/libmythbrowser.so
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 %endif
@@ -1428,12 +1449,12 @@ fi
 %if %{with_mythgallery}
 %files -n mythgallery
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythgallery/AUTHORS
-%doc mythplugins-%{version}/mythgallery/COPYING
-%doc mythplugins-%{version}/mythgallery/README
+%doc mythplugins/mythgallery/AUTHORS
+%doc mythplugins/mythgallery/COPYING
+%doc mythplugins/mythgallery/README
 %{_libdir}/mythtv/plugins/libmythgallery.so
 %{_datadir}/mythtv/i18n/mythgallery_*.qm
-%{_localstatedir}/lib/pictures
+%attr(-,mythtv,mythtv) %{_localstatedir}/lib/pictures
 %endif
 
 %if %{with_mythgame}
@@ -1453,9 +1474,9 @@ fi
 %if %{with_mythmusic}
 %files -n mythmusic
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythmusic/AUTHORS
-%doc mythplugins-%{version}/mythmusic/COPYING
-%doc mythplugins-%{version}/mythmusic/README
+%doc mythplugins/mythmusic/AUTHORS
+%doc mythplugins/mythmusic/COPYING
+%doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
 %{_localstatedir}/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
@@ -1466,9 +1487,9 @@ fi
 %if %{with_mythnews}
 %files -n mythnews
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythnews/AUTHORS
-%doc mythplugins-%{version}/mythnews/COPYING
-%doc mythplugins-%{version}/mythnews/README
+%doc mythplugins/mythnews/AUTHORS
+%doc mythplugins/mythnews/COPYING
+%doc mythplugins/mythnews/README
 %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
 %{_datadir}/mythtv/i18n/mythnews_*.qm
@@ -1477,22 +1498,22 @@ fi
 %if %{with_mythvideo}
 %files -n mythvideo
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythvideo/COPYING
-%doc mythplugins-%{version}/mythvideo/README*
+%doc mythplugins/mythvideo/COPYING
+%doc mythplugins/mythvideo/README*
 %{_libdir}/mythtv/plugins/libmythvideo.so
 %{_datadir}/mythtv/mythvideo
 %{_datadir}/mythtv/i18n/mythvideo_*.qm
 %{_datadir}/mythtv/video_settings.xml
 %{_datadir}/mythtv/videomenu.xml
-%{_localstatedir}/lib/mythvideo
+%attr(-,mythtv,mythtv) %{_localstatedir}/lib/mythvideo
 %endif
 
 %if %{with_mythweather}
 %files -n mythweather
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythweather/AUTHORS
-%doc mythplugins-%{version}/mythweather/COPYING
-%doc mythplugins-%{version}/mythweather/README
+%doc mythplugins/mythweather/AUTHORS
+%doc mythplugins/mythweather/COPYING
+%doc mythplugins/mythweather/README
 %{_libdir}/mythtv/plugins/libmythweather.so
 %{_datadir}/mythtv/i18n/mythweather_*.qm
 %{_datadir}/mythtv/weather_settings.xml
@@ -1503,7 +1524,8 @@ fi
 %if %{with_mythweb}
 %files -n mythweb
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythweb/README
+%doc ../MythTV-mythweb-%{githash4}/README
+%doc ../MythTV-mythweb-%{githash4}/LICENSE
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mythweb.conf
 %defattr(-,apache,apache,0775)
 %dir %{_datadir}/mythweb
@@ -1522,9 +1544,9 @@ fi
 %if %{with_mythnetvision}
 %files -n mythnetvision
 %defattr(-,root,root,-)
-%doc mythplugins-%{version}/mythnetvision/AUTHORS
-%doc mythplugins-%{version}/mythnetvision/ChangeLog
-%doc mythplugins-%{version}/mythnetvision/README
+%doc mythplugins/mythnetvision/AUTHORS
+%doc mythplugins/mythnetvision/ChangeLog
+%doc mythplugins/mythnetvision/README
 %{_bindir}/mythfillnetvision
 %{_libdir}/mythtv/plugins/libmythnetvision.so
 %{_datadir}/mythtv/mythnetvision
@@ -1537,6 +1559,18 @@ fi
 ################################################################################
 
 %changelog
+* Mon Feb 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-1
+- Update to latest version.
+- Update mythbackend systemd service file for better compatibilty with devices
+  that take time to initialize due to firmware loading.
+- Add dependency m2vrequantiser for mytharchive.
+- Patched for building with gcc 4.7 (rawhide/Fedora 17).
+
+* Mon Dec 12 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-6
+- Fix %%post to make sure group membership gets set for the mythtv user.
+- Fix ownership of mythtv directories.
+- Update to latest 0.24.1-fixes, git revision 40f3bae.
+
 * Mon Nov 21 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-5
 - Fix typo in spec file causing mythtv user to not be created (#2051).
 - Change mythbackend systemd type to "simple" and other fixes (#2016).
