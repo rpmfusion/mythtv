@@ -143,7 +143,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 #Source1:   mythplugins-%{version}.tar.bz2
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 Source1:   MythTV-mythweb-v%{version}-0-%{githash3}.tar.gz
-Patch0:    mythtv-%{version}-fixes.patch
+Patch0:    mythtv-0.24.2-fixes.patch
 #Patch1:    mythplugins-%{version}-fixes.patch
 Patch2:    mythtv-0.24.2-gcc47.patch
 
