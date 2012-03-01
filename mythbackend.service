@@ -32,6 +32,7 @@
 [Unit]
 Description=MythTV backend service
 After=network.target mysqld.service
+Wants=httpd.service
 
 [Service]
 Type=simple
