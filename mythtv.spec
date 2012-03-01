@@ -92,7 +92,7 @@ Version:        0.24.2
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        1%{?dist}
+Release:        1.1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1559,7 +1559,7 @@ fi
 ################################################################################
 
 %changelog
-* Mon Feb 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-1
+* Mon Feb 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-1.1
 - Update to latest version.
 - Update mythbackend systemd service file for better compatibilty with devices
   that take time to initialize due to firmware loading.
