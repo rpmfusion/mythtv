@@ -92,7 +92,7 @@ Version:        0.24.2
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -112,7 +112,13 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 # The following options are enabled by default.  Use --without to disable them
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
+
+%if 0%{?rhel}
+%define with_crystalhd     %{?_without_crystalhd:  1} %{?!_without_crystalhd:  0}
+%else
 %define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
+%endif
+
 %define with_xvmc          %{?_without_xvmc:       0} %{?!_without_xvmc:       1}
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
 %define with_python        %{?_without_python:     0} %{!?_without_python:     1}
@@ -139,11 +145,9 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 ################################################################################
 
-#Source0:   mythtv-%{version}.tar.bz2
-#Source1:   mythplugins-%{version}.tar.bz2
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 Source1:   MythTV-mythweb-v%{version}-0-%{githash3}.tar.gz
-Patch0:    mythtv-0.24.2-fixes.patch
+Patch0:    mythtv-%{version}-fixes.patch
 #Patch1:    mythplugins-%{version}-fixes.patch
 Patch2:    mythtv-0.24.2-gcc47.patch
 
@@ -160,15 +164,14 @@ Source110: mysql.txt
 Source111: 99-mythbackend.rules
 Source401: mythweb.conf
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 ################################################################################
 # Python setup
 
-%if %{with_python}
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_version: %define python_version %(%{__python} -c 'import sys; print sys.version.split(" ")[0]')}
-%endif
+#%if %{with_python}
+#%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+#%{!?python_version: %define python_version %(%{__python} -c 'import sys; print sys.version.split(" ")[0]')}
+#%endif
 
 ################################################################################
 
@@ -236,7 +239,8 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
 BuildRequires:  mjpegtools-devel >= 1.6.1
 BuildRequires:  taglib-devel >= 1.5
-BuildRequires:  transcode >= 0.6.8
+# Is transcode really a BR?
+#BuildRequires:  transcode >= 0.6.8
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
 
@@ -1212,12 +1216,6 @@ popd
 # And back to the build/install root
 %endif
 
-################################################################################
-
-%clean
-rm -rf %{buildroot}
-
-################################################################################
 
 %post libs -p /sbin/ldconfig
 
@@ -1290,10 +1288,8 @@ fi
 ################################################################################
 
 %files
-%defattr(-,root,root,-)
 
 %files docs
-%defattr(-,root,root,-)
 %doc mythtv/README*
 %doc mythtv/UPGRADING
 %doc mythtv/AUTHORS
@@ -1306,7 +1302,6 @@ fi
 %doc mythtv/contrib
 
 %files common
-%defattr(-,root,root,-)
 %dir %{_sysconfdir}/mythtv
 %dir %{_datadir}/mythtv
 %config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
@@ -1316,11 +1311,9 @@ fi
 %{_bindir}/mythtranscode
 %{_bindir}/mythwikiscripts
 %{_datadir}/mythtv/mythconverg*.pl
-%dir %{_datadir}/mythtv/locales
-%{_datadir}/mythtv/locales/*
+%{_datadir}/mythtv/locales/
 
 %files backend
-%defattr(-,root,root,-)
 %{_bindir}/mythbackend
 %{_bindir}/mythfilldatabase
 %{_bindir}/mythjobqueue
@@ -1338,11 +1331,9 @@ fi
 %endif
 %config(noreplace) %{_sysconfdir}/logrotate.d/mythbackend
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
-%dir %{_datadir}/mythtv/internetcontent
-%{_datadir}/mythtv/internetcontent/*
+%{_datadir}/mythtv/internetcontent/
 
 %files setup
-%defattr(-,root,root,-)
 %{_bindir}/mythtv-setup
 %{_bindir}/mythtvsetup
 %{_datadir}/mythtv/setup.xml
@@ -1375,20 +1366,15 @@ fi
 %{_datadir}/mythtv/i18n/mythfrontend_*.qm
 %{_datadir}/applications/*mythfrontend.desktop
 %{_datadir}/pixmaps/myth*.png
-%dir %{_datadir}/mythtv/metadata
-%{_datadir}/mythtv/metadata/*
+%{_datadir}/mythtv/metadata/
 
 %files base-themes
-%defattr(-,root,root,-)
-%dir %{_datadir}/mythtv/themes
-%{_datadir}/mythtv/themes/*
+%{_datadir}/mythtv/themes/
 
 %files libs
-%defattr(-,root,root,-)
 %{_libdir}/*.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/*.so
 %exclude %{_libdir}/*.a
@@ -1397,7 +1383,6 @@ fi
 
 %if %{with_perl}
 %files -n perl-MythTV
-%defattr(-,root,root,-)
 %{perl_vendorlib}/MythTV.pm
 %dir %{perl_vendorlib}/MythTV
 %{perl_vendorlib}/MythTV/*.pm
@@ -1409,21 +1394,17 @@ fi
 
 %if %{with_python}
 %files -n python-MythTV
-%defattr(-,root,root,-)
-%dir %{python_sitelib}/MythTV/
 %{_bindir}/mythpython
-%{python_sitelib}/MythTV/*
+%{python_sitelib}/MythTV/
 %{python_sitelib}/MythTV-*.egg-info
 %endif
 
 %if %{with_plugins}
 %files -n mythplugins
-%defattr(-,root,root,-)
 %doc mythplugins/COPYING
 
 %if %{with_mytharchive}
 %files -n mytharchive
-%defattr(-,root,root,-)
 %doc mythplugins/mytharchive/AUTHORS
 %doc mythplugins/mytharchive/COPYING
 %doc mythplugins/mytharchive/README
@@ -1438,7 +1419,6 @@ fi
 
 %if %{with_mythbrowser}
 %files -n mythbrowser
-%defattr(-,root,root,-)
 %doc mythplugins/mythbrowser/AUTHORS
 %doc mythplugins/mythbrowser/COPYING
 %doc mythplugins/mythbrowser/README
@@ -1448,7 +1428,6 @@ fi
 
 %if %{with_mythgallery}
 %files -n mythgallery
-%defattr(-,root,root,-)
 %doc mythplugins/mythgallery/AUTHORS
 %doc mythplugins/mythgallery/COPYING
 %doc mythplugins/mythgallery/README
@@ -1459,7 +1438,6 @@ fi
 
 %if %{with_mythgame}
 %files -n mythgame
-%defattr(-,root,root,-)
 %dir %{_sysconfdir}/mythgame
 %config(noreplace) %{_sysconfdir}/mythgame/gamelist.xml
 %{_libdir}/mythtv/plugins/libmythgame.so
@@ -1473,7 +1451,6 @@ fi
 
 %if %{with_mythmusic}
 %files -n mythmusic
-%defattr(-,root,root,-)
 %doc mythplugins/mythmusic/AUTHORS
 %doc mythplugins/mythmusic/COPYING
 %doc mythplugins/mythmusic/README
@@ -1486,7 +1463,6 @@ fi
 
 %if %{with_mythnews}
 %files -n mythnews
-%defattr(-,root,root,-)
 %doc mythplugins/mythnews/AUTHORS
 %doc mythplugins/mythnews/COPYING
 %doc mythplugins/mythnews/README
@@ -1497,7 +1473,6 @@ fi
 
 %if %{with_mythvideo}
 %files -n mythvideo
-%defattr(-,root,root,-)
 %doc mythplugins/mythvideo/COPYING
 %doc mythplugins/mythvideo/README*
 %{_libdir}/mythtv/plugins/libmythvideo.so
@@ -1510,7 +1485,6 @@ fi
 
 %if %{with_mythweather}
 %files -n mythweather
-%defattr(-,root,root,-)
 %doc mythplugins/mythweather/AUTHORS
 %doc mythplugins/mythweather/COPYING
 %doc mythplugins/mythweather/README
@@ -1523,18 +1497,15 @@ fi
 
 %if %{with_mythweb}
 %files -n mythweb
-%defattr(-,root,root,-)
 %doc ../MythTV-mythweb-%{githash4}/README
 %doc ../MythTV-mythweb-%{githash4}/LICENSE
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mythweb.conf
 %defattr(-,apache,apache,0775)
-%dir %{_datadir}/mythweb
-%{_datadir}/mythweb/*
+%{_datadir}/mythweb/
 %endif
 
 %if %{with_mythzoneminder}
 %files -n mythzoneminder
-%defattr(-,root,root,-)
 %{_libdir}/mythtv/plugins/libmythzoneminder.so
 %{_datadir}/mythtv/zonemindermenu.xml
 %{_bindir}/mythzmserver
@@ -1543,7 +1514,6 @@ fi
 
 %if %{with_mythnetvision}
 %files -n mythnetvision
-%defattr(-,root,root,-)
 %doc mythplugins/mythnetvision/AUTHORS
 %doc mythplugins/mythnetvision/ChangeLog
 %doc mythplugins/mythnetvision/README
@@ -1559,6 +1529,10 @@ fi
 ################################################################################
 
 %changelog
+* Fri Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
+- Remove transcode as build requirement.
+- Misc. spec file cleanup.
+
 * Mon Feb 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-1
 - Update to latest version.
 - Update mythbackend systemd service file for better compatibilty with devices
