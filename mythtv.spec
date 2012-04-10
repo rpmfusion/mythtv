@@ -1013,7 +1013,10 @@ pushd mythtv
     echo 'SOURCE_VERSION="%{version}-%{release} (%_gitrev)"' > VERSION
 
 # Make
-    make %{?_smp_mflags}
+    #make %{?_smp_mflags}
+# Let's test for the DateTime module
+    perl -e 'use DateTime::Format::ISO8601;'
+    echo "DateTime found: $?"
 
 # Prepare to build the plugins
     popd
