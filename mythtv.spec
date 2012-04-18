@@ -86,7 +86,7 @@ Version:        0.25
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -143,7 +143,7 @@ Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 Source1:   MythTV-mythweb-v%{version}-0-%{githash3}.tar.gz
 
 Patch0:    mythtv-0.25-fixes.patch
-#Patch1:    mythplugins-%{version}-fixes.patch
+#Patch1:    mythweb-%{version}-fixes.patch
 Patch2:    mythtv_0.25_gcc_4.7.patch
 
 Source10:  PACKAGE-LICENSING
@@ -352,16 +352,15 @@ Requires:  mythtv-docs        = %{version}-%{release}
 Requires:  mythtv-frontend    = %{version}-%{release}
 Requires:  mythtv-setup       = %{version}-%{release}
 Requires:  perl-MythTV        = %{version}-%{release}
+Requires:  php-MythTV         = %{version}-%{release}
 Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
-
 Requires:  mysql-server >= 5, mysql >= 5
-# XMLTV is not yet packaged for rpmfusion
-#Requires: xmltv
+Requires:  xmltv
 
 # Generate the required mythtv-frontend-api version string here so we only
 # have to do it once.
-%define mythfeapiver %(echo %{version} | awk -F. '{print $1 "." $2}')
+%global mythfeapiver %(echo %{version} | awk -F. '{print $1 "." $2}')
 
 ################################################################################
 
@@ -522,6 +521,8 @@ Requires:  mythtv-base-themes  = %{version}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
 Obsoletes: mythcontrols        < %{version}-%{release}
 Provides:  mythcontrols        = %{version}-%{release}
+Obsoletes: mythvideo           < %{version}-%{release}
+Provides:  mythvideo           = %{version}-%{release}
 
 %description frontend
 MythTV provides a unified graphical interface for recording and viewing
@@ -781,6 +782,7 @@ Requires:  httpd >= 1.3.26
 Requires:  php >= 5.1
 Requires:  php-mysql
 Requires:  php-process
+Requires:  php-MythTV
 
 %description -n mythweb
 The web interface to MythTV.
@@ -1175,7 +1177,7 @@ popd
 
     mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
     cp %{SOURCE401} %{buildroot}%{_sysconfdir}/httpd/conf.d/
-# drop .htaccess file, settings handled in the above
+    # drop .htaccess file, settings handled in the above
     rm -f %{buildroot}%{_datadir}/mythweb/data/.htaccess
     popd
 %endif
@@ -1498,6 +1500,11 @@ fi
 ################################################################################
 
 %changelog
+* Wed Apr 18 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-2
+- Update to latest fixes/0.25.
+- Change --logfile to --logpath for init files.
+- Obsolete mythvideo in spec file.
+
 * Tue Mar 20 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-1
 - Update to latest release 0.25.
 
