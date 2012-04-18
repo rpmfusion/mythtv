@@ -22,7 +22,7 @@ MYTHBACKEND_USER=${MYTHBACKEND_USER:-root}
 binary=/usr/bin/mythbackend
 prog=mythbackend
 RETVAL=0
-OPTIONS="$OPTIONS --daemon --user ${MYTHBACKEND_USER} --logfile /var/log/mythtv/$prog.log --pidfile /var/run/$prog.pid"
+OPTIONS="$OPTIONS --daemon --user ${MYTHBACKEND_USER} --logpath /var/log/mythtv --pidfile /var/run/$prog.pid"
 
 start() {
   echo -n $"Starting $prog: "
