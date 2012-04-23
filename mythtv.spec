@@ -147,8 +147,8 @@ Patch0:    mythtv-0.25-fixes.patch
 Patch2:    mythtv_0.25_gcc_4.7.patch
 
 Source10:  PACKAGE-LICENSING
-Source101: mythbackend.sysconfig
-Source102: mythbackend.init
+#Source101: mythbackend.sysconfig
+#Source102: mythbackend.init
 Source103: mythbackend.logrotate
 Source104: mythbackend.service
 Source106: mythfrontend.png
