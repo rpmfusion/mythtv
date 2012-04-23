@@ -61,7 +61,7 @@
 
 # Git revision and branch ID
 # 0.24 release: git tag v0.24.1
-%define _gitrev 40f3bae
+%define _gitrev 1a671d0
 
 # Mythtv and plugins from github.com
 %global githash1 g1f5962a
@@ -86,7 +86,7 @@ Version:        0.25
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -147,8 +147,8 @@ Patch0:    mythtv-0.25-fixes.patch
 Patch2:    mythtv_0.25_gcc_4.7.patch
 
 Source10:  PACKAGE-LICENSING
-Source101: mythbackend.sysconfig
-Source102: mythbackend.init
+#Source101: mythbackend.sysconfig
+#Source102: mythbackend.init
 Source103: mythbackend.logrotate
 Source104: mythbackend.service
 Source106: mythfrontend.png
@@ -224,15 +224,13 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
 BuildRequires:  mjpegtools-devel >= 1.6.1
 BuildRequires:  taglib-devel >= 1.6
-# Is transcode really a BR?
-#BuildRequires:  transcode >= 0.6.8
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
 
 # Audio framework support
+BuildRequires:  SDL-devel
 BuildRequires:  sox-devel
 BuildRequires:  alsa-lib-devel
-BuildRequires:  arts-devel
 BuildRequires:  jack-audio-connection-kit-devel
 %if %{with_pulseaudio}
 BuildRequires:  pulseaudio-libs-devel
@@ -375,15 +373,15 @@ resolvers this meta-package can be used to install all in one sweep.
 MythTV implements the following DVR features, and more, with a
 unified graphical interface:
 
- - Basic 'live-tv' functionality. Pause/Fast Forward/Rewind "live" TV.
- - Video compression using RTjpeg or MPEG-4, and support for DVB and
-   hardware encoder cards/devices.
- - Program listing retrieval using XMLTV
- - Themable, semi-transparent on-screen display
- - Electronic program guide
- - Scheduled recording of TV programs
- - Resolution of conflicts between scheduled recordings
- - Basic video editing
+- Basic 'live-tv' functionality. Pause/Fast Forward/Rewind "live" TV.
+- Video compression using RTjpeg or MPEG-4, and support for DVB and
+  hardware encoder cards/devices.
+- Program listing retrieval using XMLTV
+- Themable, semi-transparent on-screen display
+- Electronic program guide
+- Scheduled recording of TV programs
+- Resolution of conflicts between scheduled recordings
+- Basic video editing
 
 ################################################################################
 
@@ -463,7 +461,6 @@ Requires:  xvidcore-devel >= 0.9.1
 
 # Audio framework support
 Requires:  alsa-lib-devel
-Requires:  arts-devel
 Requires:  jack-audio-connection-kit-devel
 %if %{with_pulseaudio}
 Requires:  pulseaudio-libs-devel
@@ -835,7 +832,7 @@ on demand content.
 %setup -q -T -b 1 -n MythTV-mythweb-%{githash4}
 
 # Fix up permissions for MythWeb
-    chmod -R g-w ./*
+chmod -R g-w ./*
 
 # Remove execute bits from some php mythweb files
 #    chmod -x mythweb/classes/*.php
@@ -883,32 +880,9 @@ pushd mythtv
 # We also need Xv libs to build XvMCNVIDIA
 #    sed -i -e 's,VENDOR_XVMC_LIBS="-lXvMCNVIDIA",VENDOR_XVMC_LIBS="-lXvMCNVIDIA -lXv",' configure
 
-# On to mythplugins
 popd
 
 
-##### MythPlugins
-%if %{with_plugins}
-
-#pushd mythplugins
-
-# Fix /mnt/store -> /var/lib/mythmusic
-#    cd mythmusic
-#    sed -i -e's,/mnt/store/music,%{_localstatedir}/lib/mythmusic,' mythmusic/globalsettings.cpp
-#    cd ..
-
-# Fix /mnt/store -> /var/lib/mythvideo
-#    cd mythvideo
-#    sed -i -e 's,/share/Movies/dvd,%{_localstatedir}/lib/mythvideo,' mythvideo/globalsettings.cpp
-#    cd ..
-
-# And back to the compile root
-#popd
-
-
-
-
-%endif
 
 ################################################################################
 
@@ -988,6 +962,7 @@ pushd mythtv
 
 # Insert rpm version-release for mythbackend --version output
     echo 'SOURCE_VERSION="%{version}-%{release} (%_gitrev)"' > VERSION
+    echo 'BRANCH="%{branch}"'                               >> VERSION
 
 # Make
     make %{?_smp_mflags}
@@ -1079,10 +1054,6 @@ pushd mythplugins
 ################################################################################
 
 %install
-
-# Clean
-    rm -rf %{buildroot}
-
 # First, install MythTV
 pushd mythtv
 
@@ -1295,6 +1266,7 @@ fi
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
 %{_bindir}/mythffmpeg
+%{_bindir}/mythffplay
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
@@ -1499,7 +1471,20 @@ fi
 
 ################################################################################
 
+%clean
+rm -rf %{buildroot}
+%if %{with_mythweb}
+rm -rf ../MythTV-mythweb-%{githash4}
+%endif
+
+################################################################################
+
 %changelog
+* Sat Apr 21 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-3
+- Removed obsolete build requirement for arts-devel.
+- Re-add %%clean since it's still needed for mythweb.
+- Update logrotate config for systemd.
+
 * Wed Apr 18 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-2
 - Update to latest fixes/0.25.
 - Change --logfile to --logpath for init files.
@@ -1613,414 +1598,3 @@ fi
 * Thu Apr 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.24-0.1.svn.r23902
 - Update to svn trunk, revision 23902
 - Starts tracking 0.24-bound svn trunk, now that 0.23 has branched
-
-* Tue Mar 23 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.2.rc1
-- Update to svn trunk, revision 23781, aka MythTV 0.23 RC1 (more or less)
-
-* Thu Mar 11 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23718
-- Update to svn trunk, revision 23718
-
-* Tue Mar 09 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23702
-- Update to svn trunk, revision 23702
-- Add missing Requires: python-MythTV to mythvideo and mythnetvision plugins
-
-* Thu Mar 04 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23662
-- Update to svn trunk, revision 23662
-
-* Mon Mar 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23630
-- Update to svn trunk, revision 23630
-- Make mythbackend --version actually print useful stuff now (like pkg ver)
-
-* Mon Feb 22 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23586
-- Update to svn trunk, revision 23586
-- Attempt to fix implicit link issue w/XvMCW
-
-* Thu Feb 11 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23535
-- Update to svn trunk, revision 23535
-
-* Fri Feb 05 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23479
-- Update to svn trunk, revision 23479
-- Rename libmyth to mythtv-libs, libmyth-devel to mythtv-devel
-
-* Wed Feb 03 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23456
-- Update to svn trunk, revision 23456
-
-* Tue Feb 02 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23443
-- Update to svn trunk, revision 23443
-- Don't try applying 0.22 svn fixes branch patches to 0.23 svn trunk, duh
-
-* Mon Feb 01 2010 Jarod Wilson <jarod@wilsonet.com> 0.23-0.1.svn.r23433
-- Update to svn trunk, revision 23433
-- Drop dropped mythflix plugin
-- Add new mythnetvision plugin
-
-* Sat Nov 21 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-2
-- Update to release-0-22-fixes branch, svn revision 22880
-
-* Mon Nov 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-1
-- Update to 0.22 release
-
-* Sat Oct 31 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.9.rc2
-- Update to 0.22-rc2
-
-* Tue Oct 27 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.8.rc1
-- Update to release-0-22-fixes branch, svn revision 22579
-
-* Tue Oct 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.7.rc1
-- Update to release-0-22-fixes branch, svn revision 22548
-
-* Fri Oct 16 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.6.rc1
-- Update to release-0-22-fixes branch, svn revision 22507
-
-* Wed Oct 14 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.5.rc1
-- Update to 0.22-rc1
-- Now tracking release-0-22-fixes branch
-
-* Tue Oct 13 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22427
-- Update to pre-0.22 svn trunk revision 22427
-- Conditionalize R: php-process on F11+ so we can build and
-  install properly on F10 (builds forthcoming once 0.22 is out)
-
-* Sun Oct 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22366
-- Update to pre-0.22 svn trunk revision 22366
-- Disable faac by default, since its been deteremined to be non-free now
-
-* Thu Oct 08 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22304
-- Update to pre-0.22 svn trunk revision 22304
-
-* Tue Oct 06 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22270
-- Update to pre-0.22 svn trunk revision 22270
-- Fix temp include path for building plugins
-- Drop some old shouldn't-be-needed-anymore BR
-- Use fftw v3 instead of v2 now
-
-* Sun Oct 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22228
-- Update to pre-0.22 svn trunk revision 22228
-
-* Fri Oct 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22179
-- Update to pre-0.22 svn trunk revision 22179
-- Drop BR: libmad-devel, its no longer used
-
-* Wed Sep 30 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22144
-- Update to pre-0.22 svn trunk revision 22144
-
-* Sat Sep 26 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r22076
-- Update to pre-0.22 svn trunk revision 22076
-
-* Fri Sep 18 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r21940
-- Update to pre-0.22 svn trunk revision 21940
-- Include initial cut of semi-experimental advanced imon/lcdproc icon support
-- Assorted spec enhancements from James Twyford (via mythtv trac ticket 7090)
-
-* Wed Sep 16 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r21902
-- Update to pre-0.22 svn trunk revision 21902
-
-* Wed Sep 16 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.4.svn.r21864
-- Fix botched arch-specific handling of vdpau support
-
-* Tue Sep 15 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.3.svn.r21864
-- Oops, no libvdpau for powerpc
-
-* Mon Sep 14 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21864
-- Update to pre-0.22 svn trunk revision 21864
-- Enable vdpau support, now that libvdpau is packaged in Fedora
-
-* Fri Sep 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21778
-- Update to pre-0.22 svn trunk revision 21778
-- Build for ppc again, breakage is fixed
-
-* Fri Sep 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21770
-- Update to pre-0.22 svn trunk revision 21770
-
-* Wed Sep 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21745
-- Update to pre-0.22 svn trunk revision 21745
-
-* Sun Sep 07 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21685
-- Update to pre-0.22 svn trunk revision 21685
-
-* Fri Sep 05 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21667
-- Update to pre-0.22 svn trunk revision 21667
-
-* Sat Aug 29 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21591
-- Update to pre-0.22 svn trunk revision 21591
-- ExcludeArch: ppc/ppc64 for now, since it keeps failing to build
-  and I just don't have the time to investigate the fix at the moment,
-  so both ppc mythtv svn trunk users will just have to deal with it...
-
-* Sat Aug 29 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21585
-- Update to pre-0.22 svn trunk revision 21585
-
-* Mon Aug 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21336
-- Update to pre-0.22 svn trunk revision 21336
-
-* Sat Aug 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21179
-- Update to pre-0.22 svn trunk revision 21179
-
-* Tue Aug 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r21118
-- Update to pre-0.22 svn trunk revision 21118
-- Add infra for builds with vdpau support (need libvdpau in either
-  Fedora or RPM Fusion before we can enable by default...)
-
-* Sat Jun 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20728
-- Update to pre-0.22 svn trunk revision 20728
-- Drop BR: kdelibs3-devel, MythBrowser ported to qt4 now (rfbz#626)
-
-* Sun Jun 14 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20701
-- Update to pre-0.22 svn trunk revision 20701
-
-* Thu Jun 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20668
-- Update to pre-0.22 svn trunk revision 20668
-
-* Sun May 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20586
-- Update to pre-0.22 svn trunk revision 20586
-- Fix upgrade path for people that have mythphone installed (rfbz#596)
-- Remove ExcludeArch: ppc64, build deps now present
-
-* Mon May 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20488
-- Update to pre-0.22 svn trunk, revision 20488
-
-* Tue Apr 28 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20462
-- Update to pre-0.22 svn trunk, revision 20462
-
-* Fri Apr 24 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20448
-- Update to pre-0.22 svn trunk, revision 20448
-- Add BR: pulseaudio-libs-devel to enable proper pulseaudio support (rfbz#567)
-
-* Mon Apr 13 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20371
-- Update to pre-0.22 svn trunk, revision 20371
-- Relocate Requires: wget to the sub-packages where necessary (rfbz#384)
-- Don't use a52dec, mythtv has its own internal support these days
-
-* Tue Apr 07 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20317
-- Update to pre-0.22 svn trunk, revision 20317
-
-* Tue Mar 31 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.2.svn.r20293
-- Update to pre-0.22 svn trunk, revision 20293
-- Add BuildRequires: phonon-devel
-
-* Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 0.22-0.2.svn.r20273
-- rebuild for new F11 features
-
-* Fri Mar 27 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20273
-- Update to pre-0.22 svn trunk, revision 20273
-
-* Fri Mar 20 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20232
-- Update to pre-0.22 svn trunk, revision 20232
-
-* Thu Mar 12 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20196
-- Update to pre-0.22 svn trunk, revision r20196
-- Carries work-around for qt 4.5 "everthing is a prepared statement now"
-  bug/quirk (rpmfusion bz#421)
-
-* Wed Mar 04 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20107
-- Update to pre-0.22 svn trunk, revision 20107
-- Features misc gcc 4.4 and qt 4.5 build fixage
-
-* Mon Mar 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20089
-- Update to pre-0.22 svn trunk, revision 20089
-
-* Wed Feb 18 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r20019
-- Update to pre-0.22 svn trunk, revision 20019
-
-* Wed Feb 11 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19980
-- Update to pre-0.22 svn trunk, revision 19980
-
-* Thu Jan 29 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19874
-- Update to pre-0.22 svn trunk, revision 19874
-
-* Sat Jan 24 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19811
-- Update to pre-0.22 svn trunk, revision 19811
-- Drop mythcontrols plugin (functionality merged into mythfrontend)
-- Re-enable building iptv support
-
-* Sat Jan 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19722
-- Update to pre-0.22 svn trunk, revision 19722
-- MythPhone plugin is dead as a doornail (MythTV changeset 19702)
-
-* Sat Jan 17 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19721
-- Update to pre-0.22 svn trunk, revision 19721
-
-* Fri Jan 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19630
-- Update to pre-0.22 svn trunk, revision 19630
-- Fix a %%files list screw-up w/mythgame-emulators nukage
-
-* Fri Jan 09 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19622
-- Update to pre-0.22 svn trunk, revision 19622
-
-* Fri Jan 02 2009 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19534
-- Update to pre-0.22 svn trunk, revision 19534
-- Re-disable mythgame-emulators sub-pgk, was accidentally re-enabled
-
-* Sun Dec 28 2008 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19467
-- Update to pre-0.22 svn trunk, revision 19467
-
-* Mon Dec 15 2008 Jarod Wilson <jarod@wilsonet.com> 0.22-0.1.svn.r19390
-- MythTV svn trunk (pre-0.22), revision 19390
-- Re-enable fast cmov on x86_64 by default
-- Add BR: yasm-devel to enable yasm-specific improvements
-
-* Sat Dec 13 2008 Chris Petersen <rpm@forevermore.net> 0.22-0.1.svn
-- Update to compile for pre-0.22 svn trunk, including new files and qt4 deps
-- Major cleanup and porting from my personal spec (which was a combination
-  of works from atrpms and some of Jarod's earlier works).
-- Add a few more --with and --without options, including the ability to
-  disable specific mythplugins and/or all plugins.
-
-* Thu Dec 11 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-15
-- Update to release-0-21-fixes patches (r19344)
-- Includes critical fix for supporting use of FireWire cable
-  boxes w/Fedora's native FireWire driver stack (finally!)
-- Fix missing package ownership of some stray dirs (rpmfusion bz#222)
-
-* Fri Nov 28 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-14
-- Update release-0-21-fixes patches (r19169)
-- Should resolve 720p playback stutter, rpmfusion bz#186
-
-* Tue Oct 14 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-13
-- Enable fast cmov on x86_64
-- Disable mythgame-emulators convenience meta-package, deps not
-  available in the free repo (if available at all)
-
-* Mon Oct 06 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-12
-- Update release-0-21-fixes patches (r18567)
-
-* Tue Sep 23 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-11
-- Work-around for broken cdparanoia header (rhbz#463009)
-
-* Wed Sep 17 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-10
-- Nuke a bunch of configure flags that really shouldn't be
-  enabled anymore, per discussion with mythtv devs.
-
-* Wed Sep 03 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-9
-- Conditionalize some qt/qt3 stuff so spec builds on
-  all currently supported Fedora releases
-- Add work-around for lirc-libs mock quirk on f8 builds
-
-* Fri Aug 15 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-8
-- Don't BR: libdvdcss-devel
-- Update release-0-21-fixes patches (r18161)
-- Rebuild for libraw1394 v2.0.0
-
-* Sun Aug 03 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 0.21-7
-- rebuild
-
-* Sun Jul 20 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-7
-- Disable XvMC VLD and Pro support on ppc due to lack of
-  openchrome driver.
-
-* Sat Jul 19 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-6
-- Fix spec typo
-- Disable mythstream patch for now, too much fuzz, revisit later
-
-* Fri Jul 18 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-5
-- Update release-0-21-fixes patches (r17859)
-- Don't use %%bcond, breaks on some older buildsystems
-- Put several bits in -common sub-package, as both backend
-  and frontend may need them for one reason or another
-
-* Fri May 16 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-4
-- Add BR: xorg-x11-drv-i810-devel, xorg-x11-drv-openchrome-devel
-- Make building with nVidia XvMC an available custom option, fix up
-  conflict between it and other XvMC implementations
-- Update release-0-21-fixes patches (r17338)
-
-* Sat Apr 05 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-3
-- Fix up PACKAGE-LICENSING inclusion
-
-* Sat Apr 05 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-2
-- RPMFusion package review cleanups
-- Put mythtv-setup.desktop in mythtv-setup package
-- Fix up initscript to start properly
-- Drop unused %%ghostattr define
-- Attempt to clarify licensing
-- Clean up assorted Requires and BuildRequires
-- Update release-0-21-fixes patches (r16965)
-
-* Sun Mar 09 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-1
-- MythTV 0.21 (r16468)
-- Add release-0-21-fixes for DVD menu display fix (r16486)
-
-* Tue Mar 04 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.17.r16394
-- Update to latest release-0-21-fixes pre-release branch code (16394).
-
-* Fri Feb 29 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.16.r16316
-- Update to latest release-0-21-fixes pre-release branch code (16316).
-- Add mythgame-emulators meta-package that requires a bunch of
-  emulators for roms mythgame knows about.
-- Account for python egg on f9+
-- Enable gsm support by default
-
-* Wed Feb 27 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.15.r16307
-- Update to latest release-0-21-fixes pre-release branch code (16307).
-- Try to fix up a bunch of rpmlint warnings and errors.
-
-* Sat Feb 23 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.14.r16238
-- Update to latest svn trunk (16238).
-- Package up python bits.
-
-* Thu Feb 14 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.13.r16019
-- Update to latest svn trunk (16019).
-
-* Mon Feb 11 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.12.r15914
-- Update to latest svn trunk (15914).
-- Turn on multi-threaded video decoding.
-
-* Thu Jan 31 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.11.r15699
-- More spec file overhauling, make it build in Fedora 9
-
-* Thu Jan 31 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.10.r15699
-- Update to latest svn trunk (15699).
-- Misc spec reformatting.
-
-* Sat Jan 26 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.9.r15614
-- Update to latest svn trunk (15614).
-
-* Tue Jan 01 2008 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.8.r15281
-- Update to latest svn trunk (15281).
-- Fix up version-release insertion in mythbackend --version output
-
-* Fri Dec 07 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.7.r15081
-- Update to latest svn trunk (15081).
-
-* Sat Nov 17 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.6.r14888
-- Update to latest svn trunk (14888).
-
-* Wed Oct 17 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.6.r14695
-- Update to latest svn trunk (14695).
-
-* Fri Oct 12 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.6.r14667
-- Update to latest svn trunk (14667).
-- Build dvb support against kernel-headers instead
-- Drop unnecessary patches
-- Tweak BR: to not use any file deps (I only care about recent distros)
-- Rework mythweb bits to be compliant w/Fedora packaging guidelines
-- Enable OpenGL video output support
-- Make dvb and opengl bits non-conditional (always enabled)
-
-* Wed Oct 10 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.5.r14658
-- Update to latest svn trunk (14658).
-- Tweak configure options a bit more
-
-* Tue Oct 02 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.4.r14589
-- Update to latest svn trunk (14589).
-- Restructure how optflags are passed into build
-- Nuke some extra non-standard macros
-- Drop ancient dvb tarball, create with_dvb option, always using v4l-devel
-
-* Wed Sep 12 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.4.r14488
-- Update to latest svn trunk (14488).
-
-* Tue Aug 28 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.3.r14346
-- Update to latest svn trunk (14346).
-
-* Mon Aug 27 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.3.r14337
-- Update to latest svn trunk (14337).
-
-* Tue May 22 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.2.r13492
-- Update to latest svn trunk (13492).
-- More non-standard macro nuking
-
-* Mon May 21 2007 Jarod Wilson <jarod@wilsonet.com> - 0.21-0.1.r13487
-- Update to latest svn trunk (13487).
-- Reshuffle theme files
-- Credit where credit is due: forking this off the current ATrpms spec
