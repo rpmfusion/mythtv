@@ -86,7 +86,7 @@ Version:        0.25
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1480,6 +1480,10 @@ rm -rf ../MythTV-mythweb-%{githash4}
 ################################################################################
 
 %changelog
+* Sat Apr 28 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-3
+- Update to latest 0.25/fixes.
+- Really fix logrotate this time.
+
 * Sat Apr 21 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-3
 - Removed obsolete build requirement for arts-devel.
 - Re-add %%clean since it's still needed for mythweb.

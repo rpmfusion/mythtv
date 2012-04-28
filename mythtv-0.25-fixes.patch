@@ -8,6 +8,7 @@
  mythplugins/mythgame/i18n/mythgame_fi.ts           |  178 +-
  mythplugins/mythmusic/i18n/mythmusic_fi.qm         |  Bin 56677 -> 56868 bytes
  mythplugins/mythmusic/i18n/mythmusic_fi.ts         | 2219 ++++++++++--
+ mythplugins/mythmusic/mythmusic/visualize.cpp      |   60 +-
  mythplugins/mythnetvision/i18n/mythnetvision_fi.qm |  Bin 10270 -> 11758 bytes
  mythplugins/mythnetvision/i18n/mythnetvision_fi.ts |   96 +-
  .../mythnetvision/mythnetvision/nettree.cpp        |    8 +-
@@ -20,7 +21,7 @@
  .../mythzoneminder/i18n/mythzoneminder_fi.ts       |   84 +-
  .../mythzoneminder/mythzmserver/zmserver.cpp       |    3 -
  mythtv/VERSION                                     |    2 +-
- mythtv/bindings/python/MythTV/mythproto.py         |    2 +-
+ mythtv/bindings/python/MythTV/mythproto.py         |    4 +-
  mythtv/bindings/python/MythTV/static.py            |    2 +-
  mythtv/configure                                   |   15 +-
  mythtv/docs/doxygen-create-developer-docs.cfg      |    2 +-
@@ -37,6 +38,7 @@
  mythtv/libs/libmyth/remoteutil.cpp                 |   16 -
  mythtv/libs/libmyth/remoteutil.h                   |    1 -
  mythtv/libs/libmyth/rssparse.h                     |    1 +
+ mythtv/libs/libmythbase/bonjourregister.cpp        |    5 +-
  mythtv/libs/libmythbase/compat.h                   |    2 +
  mythtv/libs/libmythbase/logging.cpp                |    3 +-
  mythtv/libs/libmythbase/serverpool.cpp             |   46 +-
@@ -46,15 +48,20 @@
  mythtv/libs/libmythtv/audioinput.h                 |    1 +
  mythtv/libs/libmythtv/avformatdecoder.cpp          |   10 +-
  mythtv/libs/libmythtv/dvdringbuffer.cpp            |   49 +-
+ mythtv/libs/libmythtv/fileringbuffer.cpp           |    6 +-
  mythtv/libs/libmythtv/libmythtv.pro                |    1 +
  mythtv/libs/libmythtv/mythairplayserver.cpp        |    2 +-
  mythtv/libs/libmythtv/mythplayer.cpp               |   30 +-
  mythtv/libs/libmythtv/mythplayer.h                 |    3 +
- mythtv/libs/libmythtv/mythraopdevice.cpp           |    5 +-
+ mythtv/libs/libmythtv/mythraopconnection.cpp       |  262 +-
+ mythtv/libs/libmythtv/mythraopconnection.h         |   13 +-
+ mythtv/libs/libmythtv/mythraopdevice.cpp           |   13 +-
+ mythtv/libs/libmythtv/osd.cpp                      |    2 +-
  mythtv/libs/libmythtv/playercontext.h              |    4 +-
  mythtv/libs/libmythtv/ringbuffer.cpp               |    8 +-
  mythtv/libs/libmythtv/teletextscreen.cpp           |    8 +-
  mythtv/libs/libmythtv/tv_play.cpp                  |   26 +-
+ mythtv/libs/libmythtv/tv_rec.cpp                   |    3 +
  mythtv/libs/libmythtv/tvremoteutil.cpp             |   55 +-
  mythtv/libs/libmythtv/tvremoteutil.h               |    7 +-
  mythtv/libs/libmythtv/videodisplayprofile.cpp      |    3 -
@@ -64,13 +71,15 @@
  mythtv/libs/libmythtv/videooutbase.cpp             |   48 +-
  mythtv/libs/libmythui/mythmainwindow.cpp           |    2 +
  mythtv/libs/libmythupnp/httprequest.cpp            |    1 +
+ mythtv/programs/mythbackend/filetransfer.cpp       |    4 +
  .../programs/mythfrontend/audiogeneralsettings.cpp |    5 +-
  mythtv/programs/mythfrontend/globalsettings.cpp    |    2 +-
- mythtv/programs/mythfrontend/guidegrid.cpp         |    4 +-
+ mythtv/programs/mythfrontend/guidegrid.cpp         |    8 +-
  mythtv/programs/mythfrontend/scheduleeditor.cpp    |    7 +-
  mythtv/programs/mythtranscode/transcode.h          |    5 +-
  mythtv/programs/mythutil/markuputils.cpp           |    4 +-
- 72 files changed, 5420 insertions(+), 1981 deletions(-)
+ .../nv_python_libs/bliptv/bliptv_api.py            |    2 +-
+ 81 files changed, 5628 insertions(+), 2144 deletions(-)
 
 diff --git a/mythplugins/mytharchive/i18n/mytharchive_fi.qm b/mythplugins/mytharchive/i18n/mytharchive_fi.qm
 index 2fc0f91..8e2d841 100644
@@ -4872,6 +4881,195 @@ index 3678883..db18fd2 100644
      </message>
  </context>
  </TS>
+diff --git a/mythplugins/mythmusic/mythmusic/visualize.cpp b/mythplugins/mythmusic/mythmusic/visualize.cpp
+index 66b050c..fac7989 100644
+--- a/mythplugins/mythmusic/mythmusic/visualize.cpp
++++ b/mythplugins/mythmusic/mythmusic/visualize.cpp
+@@ -168,11 +168,11 @@ bool StereoScope::process( VisualNode *node )
+     bool allZero = true;
+ 
+ 
+-    if (node) 
++    if (node)
+     {
+         double index = 0;
+         double const step = (double)SAMPLES_DEFAULT_SIZE / size.width();
+-        for ( int i = 0; i < size.width(); i++) 
++        for ( int i = 0; i < size.width(); i++)
+         {
+             unsigned long indexTo = (unsigned long)(index + step);
+             if (indexTo == (unsigned long)(index))
+@@ -194,13 +194,13 @@ bool StereoScope::process( VisualNode *node )
+                     if ( valL < 0. )
+                         valL = 0.;
+                 }
+-                if (valR < 0.) 
++                if (valR < 0.)
+                 {
+                     valR += falloff;
+                     if ( valR > 0. )
+                         valR = 0.;
+-                } 
+-                else 
++                }
++                else
+                 {
+                     valR -= falloff;
+                     if ( valR < 0. )
+@@ -208,7 +208,7 @@ bool StereoScope::process( VisualNode *node )
+                 }
+             }
+ #endif
+-            for (unsigned long s = (unsigned long)index; s < indexTo && s < node->length; s++) 
++            for (unsigned long s = (unsigned long)index; s < indexTo && s < node->length; s++)
+             {
+                 double tmpL = ( ( node->left ?
+                        double( node->left[s] ) : 0.) *
+@@ -235,10 +235,10 @@ bool StereoScope::process( VisualNode *node )
+             index = index + step;
+         }
+ #if RUBBERBAND
+-    } 
+-    else if (rubberband) 
++    }
++    else if (rubberband)
+     {
+-        for ( int i = 0; i < size.width(); i++) 
++        for ( int i = 0; i < size.width(); i++)
+         {
+             double valL = magnitudes[ i ];
+             if (valL < 0) {
+@@ -271,8 +271,8 @@ bool StereoScope::process( VisualNode *node )
+             magnitudes[ i + size.width() ] = valR;
+         }
+ #endif
+-    } 
+-    else 
++    }
++    else
+     {
+         for ( int i = 0; (unsigned) i < magnitudes.size(); i++ )
+             magnitudes[ i ] = 0.;
+@@ -284,7 +284,7 @@ bool StereoScope::process( VisualNode *node )
+ bool StereoScope::draw( QPainter *p, const QColor &back )
+ {
+     p->fillRect(0, 0, size.width(), size.height(), back);
+-    for ( int i = 1; i < size.width(); i++ ) 
++    for ( int i = 1; i < size.width(); i++ )
+     {
+ #if TWOCOLOUR
+     double r, g, b, per;
+@@ -611,7 +611,7 @@ Spectrum::Spectrum()
+     rplan = fftw_plan_dft_r2c_1d(FFTW_N, rin, (myth_fftw_complex_cast*)rout, FFTW_MEASURE);
+ 
+     startColor = QColor(0,0,255);
+-    targetColor = QColor(255,0,0); 
++    targetColor = QColor(255,0,0);
+ }
+ 
+ Spectrum::~Spectrum()
+@@ -679,7 +679,7 @@ bool Spectrum::process(VisualNode *node)
+     double *magnitudesp = magnitudes.data();
+     double magL, magR, tmp;
+ 
+-    if (node) 
++    if (node)
+     {
+         i = node->length;
+         if (i > FFTW_N)
+@@ -700,9 +700,9 @@ bool Spectrum::process(VisualNode *node)
+ 
+     for (i = 0; (int)i < rects.size(); i++, w += analyzerBarWidth)
+     {
+-        magL = (log(sq(real(lout[index])) + sq(real(lout[FFTW_N - index]))) - 22.0) * 
++        magL = (log(sq(real(lout[index])) + sq(real(lout[FFTW_N - index]))) - 22.0) *
+                scaleFactor;
+-        magR = (log(sq(real(rout[index])) + sq(real(rout[FFTW_N - index]))) - 22.0) * 
++        magR = (log(sq(real(rout[index])) + sq(real(rout[FFTW_N - index]))) - 22.0) *
+                scaleFactor;
+ 
+         if (magL > size.height() / 2)
+@@ -784,11 +784,11 @@ bool Spectrum::draw(QPainter *p, const QColor &back)
+ 
+         per = clamp(per, 1.0, 0.0);
+ 
+-        r = startColor.red() + 
++        r = startColor.red() +
+             (targetColor.red() - startColor.red()) * (per * per);
+-        g = startColor.green() + 
++        g = startColor.green() +
+             (targetColor.green() - startColor.green()) * (per * per);
+-        b = startColor.blue() + 
++        b = startColor.blue() +
+             (targetColor.blue() - startColor.blue()) * (per * per);
+ 
+         r = clamp(r, 255.0, 0.0);
+@@ -848,14 +848,14 @@ void Squares::resize (const QSize &newsize) {
+     size = newsize;
+ }
+ 
+-void Squares::drawRect(QPainter *p, QRect *rect, int i, int c, int w, int h) 
++void Squares::drawRect(QPainter *p, QRect *rect, int i, int c, int w, int h)
+ {
+     double r, g, b, per;
+     int correction = (size.width() % rects.size ()) / 2;
+     int x = ((i / 2) * w) + correction;
+     int y;
+ 
+-    if (i % 2 == 0) 
++    if (i % 2 == 0)
+     {
+         y = c - h;
+         per = double(fake_height - rect->top()) / double(fake_height);
+@@ -866,15 +866,15 @@ void Squares::drawRect(QPainter *p, QRect *rect, int i, int c, int w, int h)
+         per = double(rect->bottom()) / double(fake_height);
+     }
+ 
+-    per = clamp(per, 1.0, 0.0);        
+-    
+-    r = startColor.red() + 
++    per = clamp(per, 1.0, 0.0);
++
++    r = startColor.red() +
+         (targetColor.red() - startColor.red()) * (per * per);
+-    g = startColor.green() + 
++    g = startColor.green() +
+         (targetColor.green() - startColor.green()) * (per * per);
+-    b = startColor.blue() + 
++    b = startColor.blue() +
+         (targetColor.blue() - startColor.blue()) * (per * per);
+-    
++
+     r = clamp(r, 255.0, 0.0);
+     g = clamp(g, 255.0, 0.0);
+     b = clamp(b, 255.0, 0.0);
+@@ -1496,7 +1496,7 @@ void AlbumArt::handleKeyPress(const QString &action)
+ /// this is the time an image is shown in the albumart visualizer
+ #define ALBUMARTCYCLETIME 10
+ 
+-bool AlbumArt::needsUpdate() 
++bool AlbumArt::needsUpdate()
+ {
+     // if the track has changed we need to update the image
+     if (gPlayer->getCurrentMetadata() && m_currentMetadata != gPlayer->getCurrentMetadata())
+@@ -1536,7 +1536,7 @@ bool AlbumArt::draw(QPainter *p, const QColor &back)
+         }
+     }
+ 
+-    if (m_image.isNull()) 
++    if (m_image.isNull())
+     {
+         drawWarning(p, back, m_size, QObject::tr("?"), 100);
+         return true;
+@@ -1581,7 +1581,7 @@ static class AlbumArtFactory : public VisFactory
+ Blank::Blank()
+     : VisualBase(true)
+ {
+-    m_fps = 20;
++    m_fps = 1;
+ }
+ 
+ Blank::~Blank()
 diff --git a/mythplugins/mythnetvision/i18n/mythnetvision_fi.qm b/mythplugins/mythnetvision/i18n/mythnetvision_fi.qm
 index 38f9ca4..e8d8d66 100644
 Binary files a/mythplugins/mythnetvision/i18n/mythnetvision_fi.qm and b/mythplugins/mythnetvision/i18n/mythnetvision_fi.qm differ
@@ -5552,7 +5750,7 @@ index d6f50da..b2d1e71 100644
 \ No newline at end of file
 +SOURCE_VERSION="v0.25"
 diff --git a/mythtv/bindings/python/MythTV/mythproto.py b/mythtv/bindings/python/MythTV/mythproto.py
-index 41a39e8..9a891cb 100644
+index 41a39e8..f7ae3e6 100644
 --- a/mythtv/bindings/python/MythTV/mythproto.py
 +++ b/mythtv/bindings/python/MythTV/mythproto.py
 @@ -657,7 +657,7 @@ class FileOps( BECache ):
@@ -5564,6 +5762,15 @@ index 41a39e8..9a891cb 100644
          if host:
              m.append(host)
          return self.backendCommand(BACKEND_SEP.join(m))
+@@ -784,7 +784,7 @@ class FreeSpace( DictData ):
+     _field_order = [ 'host',         'path',     'islocal',
+                     'disknumber',   'sgroupid', 'blocksize',
+                     'totalspace', 'usedspace']
+-    _field_type = [3, 3, 2, 0, 0, 0, 0, 0, 0, 0]
++    _field_type = [3, 3, 2, 0, 0, 0, 0, 0]
+     def __str__(self):
+         return "<FreeSpace '%s@%s' at %s>"\
+                     % (self.path, self.host, hex(id(self)))
 diff --git a/mythtv/bindings/python/MythTV/static.py b/mythtv/bindings/python/MythTV/static.py
 index 6b587b2..f539706 100644
 --- a/mythtv/bindings/python/MythTV/static.py
@@ -12494,6 +12701,33 @@ index 7408ac4..dfe1427 100644
  
  #include "mythexp.h"
  
+diff --git a/mythtv/libs/libmythbase/bonjourregister.cpp b/mythtv/libs/libmythbase/bonjourregister.cpp
+index 017ee6d..7f98732 100644
+--- a/mythtv/libs/libmythbase/bonjourregister.cpp
++++ b/mythtv/libs/libmythbase/bonjourregister.cpp
+@@ -5,6 +5,7 @@
+ 
+ #include "mythlogging.h"
+ #include "bonjourregister.h"
++#include "mythcorecontext.h"
+ 
+ #define LOC QString("Bonjour: ")
+ 
+@@ -41,11 +42,13 @@ bool BonjourRegister::Register(uint16_t port, const QByteArray &type,
+         return true;
+     }
+ 
++    QByteArray host(gCoreContext->GetSetting("BonjourHostname", "").toUtf8());
++    const char *host_ptr = host.size() > 0 ? host.constData() : NULL;
+     uint16_t qport = qToBigEndian(port);
+     DNSServiceErrorType res =
+         DNSServiceRegister(&m_dnssref, 0, 0, (const char*)name.data(),
+                            (const char*)type.data(),
+-                           NULL, 0, qport, txt.size(), (void*)txt.data(),
++                           NULL, host_ptr, qport, txt.size(), (void*)txt.data(),
+                            BonjourCallback, this);
+ 
+     if (kDNSServiceErr_NoError != res)
 diff --git a/mythtv/libs/libmythbase/compat.h b/mythtv/libs/libmythbase/compat.h
 index ff2890f..425624a 100644
 --- a/mythtv/libs/libmythbase/compat.h
@@ -12766,6 +13000,30 @@ index 5a445a0..3a0573a 100644
      LOG(VB_PLAYBACK, LOG_INFO, LOC +
              QString("DVD Serial Number %1").arg(m_serialnumber));
  
+diff --git a/mythtv/libs/libmythtv/fileringbuffer.cpp b/mythtv/libs/libmythtv/fileringbuffer.cpp
+index f917416..2985f57 100644
+--- a/mythtv/libs/libmythtv/fileringbuffer.cpp
++++ b/mythtv/libs/libmythtv/fileringbuffer.cpp
+@@ -453,8 +453,8 @@ int FileRingBuffer::safe_read(int fd, void *data, uint sz)
+             tot += ret;
+         }
+ 
+-        //if (oldfile)
+-            //break;
++        if (oldfile)
++            break;
+ 
+         if (ret == 0) // EOF returns 0
+         {
+@@ -465,7 +465,7 @@ int FileRingBuffer::safe_read(int fd, void *data, uint sz)
+ 
+             // 0.36 second timeout for livetvchain with usleep(60000),
+             // or 2.4 seconds if it's a new file less than 30 minutes old.
+-            if (zerocnt >= (oldfile ? 4 : (livetvchain ? 6 : 40)))
++            if (zerocnt >= (livetvchain ? 6 : 40))
+             {
+                 break;
+             }
 diff --git a/mythtv/libs/libmythtv/libmythtv.pro b/mythtv/libs/libmythtv/libmythtv.pro
 index f50d2cb..6df71d0 100644
 --- a/mythtv/libs/libmythtv/libmythtv.pro
@@ -12867,19 +13125,501 @@ index 127b79f..a005437 100644
  };
  
  #endif
+diff --git a/mythtv/libs/libmythtv/mythraopconnection.cpp b/mythtv/libs/libmythtv/mythraopconnection.cpp
+index 962c142..df0b3a9 100644
+--- a/mythtv/libs/libmythtv/mythraopconnection.cpp
++++ b/mythtv/libs/libmythtv/mythraopconnection.cpp
+@@ -1,6 +1,3 @@
+-// TODO
+-// remove hardcoded frames per packet
+-
+ #include <QTimer>
+ #include <QTcpSocket>
+ #include <QUdpSocket>
+@@ -23,6 +20,22 @@
+ 
+ RSA* MythRAOPConnection::g_rsa = NULL;
+ 
++class NetStream : public QTextStream
++{
++public:
++    NetStream(QIODevice *device) : QTextStream(device)
++    {
++    };
++    NetStream &operator<<(const QString &str)
++    {
++        LOG(VB_GENERAL, LOG_DEBUG,
++            LOC + QString("Sending(%1): ").arg(str.length()) + str);
++        QTextStream *q = this;
++        *q << str;
++        return *this;
++    };
++};
++
+ MythRAOPConnection::MythRAOPConnection(QObject *parent, QTcpSocket *socket,
+                                        QByteArray id, int port)
+   : QObject(parent), m_watchdogTimer(NULL), m_socket(socket),
+@@ -87,7 +100,7 @@ MythRAOPConnection::~MythRAOPConnection()
+ bool MythRAOPConnection::Init(void)
+ {
+     // connect up the request socket
+-    m_textStream = new QTextStream(m_socket);
++    m_textStream = new NetStream(m_socket);
+     m_textStream->setCodec("UTF-8");
+     if (!connect(m_socket, SIGNAL(readyRead()), this, SLOT(readClient())))
+     {
+@@ -138,6 +151,24 @@ bool MythRAOPConnection::Init(void)
+     return true;
+ }
+ 
++void MythRAOPConnection::udpDataReady(void)
++{
++    QUdpSocket *socket = dynamic_cast<QUdpSocket*>(sender());
++
++    while (socket->state() == QAbstractSocket::BoundState &&
++           socket->hasPendingDatagrams())
++    {
++        QByteArray buffer;
++        buffer.resize(socket->pendingDatagramSize());
++        QHostAddress sender;
++        quint16 senderPort;
++
++        socket->readDatagram(buffer.data(), buffer.size(),
++                             &sender, &senderPort);
++        udpDataReady(buffer, sender, senderPort);
++    }
++}
++
+ void MythRAOPConnection::udpDataReady(QByteArray buf, QHostAddress peer,
+                                       quint16 port)
+ {
+@@ -191,7 +222,8 @@ void MythRAOPConnection::udpDataReady(QByteArray buf, QHostAddress peer,
+             m_resends.remove(this_sequence);
+         }
+         else
+-            LOG(VB_GENERAL, LOG_WARNING, LOC + "Received unexpected resent packet.");
++            LOG(VB_GENERAL, LOG_WARNING, LOC + QString("Received unexpected resent packet %1")
++                .arg(this_sequence));
+     }
+ 
+     ExpireResendRequests(timenow);
+@@ -332,12 +364,13 @@ void MythRAOPConnection::ProcessSyncPacket(const QByteArray &buf, uint64_t timen
+ 
+     if (m_audio)
+     {
++        uint64_t total = averageaudio + averagequeue;
+         LOG(VB_GENERAL, LOG_DEBUG, LOC +
+             QString("Sync packet: Timestamp: %1 Current Audio ts: %2 (avsync %3ms) "
+                     "Latency: audio %4 queue %5 total %6ms <-> target %7ms")
+             .arg(m_lastSyncTimestamp).arg(m_audio->GetAudiotime()).arg(averageav, 0)
+             .arg(averageaudio).arg(averagequeue)
+-            .arg(averageaudio + averagequeue).arg(m_lastLatency));
++            .arg(total).arg(m_lastLatency));
+     }
+     m_latencyAudio = m_latencyQueued = m_latencyCounter = m_avSync = 0;
+ }
+@@ -463,78 +496,82 @@ void MythRAOPConnection::ProcessRequest(const QList<QByteArray> &lines)
+         return;
+     }
+ 
+-    QByteArray option = lines[0].left(lines[0].indexOf(" "));
++    *m_textStream << "RTSP/1.0 200 OK\r\n";
+ 
+-    if (option == "OPTIONS")
++    if (tags.contains("Apple-Challenge"))
+     {
+-        StartResponse(m_textStream);
+-        if (tags.contains("Apple-Challenge"))
+-        {
+-            *m_textStream << "Apple-Response: ";
+-            if (!LoadKey())
+-                return;
+-            int tosize = RSA_size(LoadKey());
+-            unsigned char to[tosize];
+-
+-            QByteArray challenge = QByteArray::fromBase64(tags["Apple-Challenge"].data());
+-            int challenge_size = challenge.size();
+-            if (challenge_size != 16)
+-            {
+-                LOG(VB_GENERAL, LOG_ERR, LOC +
+-                    QString("Decoded challenge size %1, expected 16").arg(challenge_size));
+-                if (challenge_size > 16)
+-                    challenge_size = 16;
+-            }
++        LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Received Apple-Challenge"));
+ 
+-            int i = 0;
+-            unsigned char from[38];
+-            memcpy(from, challenge.data(), challenge_size);
+-            i += challenge_size;
+-            if (m_socket->localAddress().protocol() == QAbstractSocket::IPv4Protocol)
+-            {
+-                uint32_t ip = m_socket->localAddress().toIPv4Address();
+-                ip = qToBigEndian(ip);
+-                memcpy(from + i, &ip, 4);
+-                i += 4;
+-            }
+-            else if (m_socket->localAddress().protocol() == QAbstractSocket::IPv6Protocol)
+-            {
+-                // NB IPv6 untested
+-                Q_IPV6ADDR ip = m_socket->localAddress().toIPv6Address();
+-                //ip = qToBigEndian(ip);
+-                memcpy(from + i, &ip, 16);
+-                i += 16;
+-            }
+-            memcpy(from + i, m_hardwareId.data(), RAOP_HARDWARE_ID_SIZE);
+-            i += RAOP_HARDWARE_ID_SIZE;
++        *m_textStream << "Apple-Response: ";
++        if (!LoadKey())
++            return;
++        int tosize = RSA_size(LoadKey());
++        unsigned char to[tosize];
+ 
+-            int pad = 32 - i;
+-            if (pad > 0)
+-            {
+-                memset(from + i, 0, pad);
+-                i += pad;
+-            }
++        QByteArray challenge = QByteArray::fromBase64(tags["Apple-Challenge"].data());
++        int challenge_size = challenge.size();
++        if (challenge_size != 16)
++        {
++            LOG(VB_GENERAL, LOG_ERR, LOC +
++                QString("Decoded challenge size %1, expected 16").arg(challenge_size));
++            if (challenge_size > 16)
++                challenge_size = 16;
++        }
++
++        int i = 0;
++        unsigned char from[38];
++        memcpy(from, challenge.data(), challenge_size);
++        i += challenge_size;
++        if (m_socket->localAddress().protocol() == QAbstractSocket::IPv4Protocol)
++        {
++            uint32_t ip = m_socket->localAddress().toIPv4Address();
++            ip = qToBigEndian(ip);
++            memcpy(from + i, &ip, 4);
++            i += 4;
++        }
++        else if (m_socket->localAddress().protocol() == QAbstractSocket::IPv6Protocol)
++        {
++            // NB IPv6 untested
++            Q_IPV6ADDR ip = m_socket->localAddress().toIPv6Address();
++            //ip = qToBigEndian(ip);
++            memcpy(from + i, &ip, 16);
++            i += 16;
++        }
++        memcpy(from + i, m_hardwareId.data(), RAOP_HARDWARE_ID_SIZE);
++        i += RAOP_HARDWARE_ID_SIZE;
+ 
+-            LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Full base64 response: '%1' size %2")
+-                .arg(QByteArray((const char*)from, i).toBase64().data()).arg(i));
++        int pad = 32 - i;
++        if (pad > 0)
++        {
++            memset(from + i, 0, pad);
++            i += pad;
++        }
+ 
+-            RSA_private_encrypt(i, from, to, LoadKey(), RSA_PKCS1_PADDING);
++        LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Full base64 response: '%1' size %2")
++            .arg(QByteArray((const char*)from, i).toBase64().data()).arg(i));
+ 
+-            QByteArray base64 = QByteArray((const char*)to, tosize).toBase64();
++        RSA_private_encrypt(i, from, to, LoadKey(), RSA_PKCS1_PADDING);
+ 
+-            for (int pos = base64.size() - 1; pos > 0; pos--)
+-            {
+-                if (base64[pos] == '=')
+-                    base64[pos] = ' ';
+-                else
+-                    break;
+-            }
++        QByteArray base64 = QByteArray((const char*)to, tosize).toBase64();
+ 
+-            *m_textStream << base64.trimmed() << "\r\n";
++        for (int pos = base64.size() - 1; pos > 0; pos--)
++        {
++            if (base64[pos] == '=')
++                base64[pos] = ' ';
++            else
++                break;
+         }
++        LOG(VB_GENERAL, LOG_DEBUG, QString("tSize=%1 tLen=%2 tResponse=%3")
++            .arg(tosize).arg(base64.size()).arg(base64.data()));
++        *m_textStream << base64.trimmed() << "\r\n";
++    }
+ 
++    QByteArray option = lines[0].left(lines[0].indexOf(" "));
++
++    if (option == "OPTIONS")
++    {
++        StartResponse(m_textStream, option, tags["CSeq"]);
+         *m_textStream << "Public: ANNOUNCE, SETUP, RECORD, PAUSE, FLUSH, TEARDOWN, OPTIONS, GET_PARAMETER, SET_PARAMETER\r\n";
+-        FinishResponse(m_textStream, m_socket, option, tags["Cseq"]);
+     }
+     else if (option == "ANNOUNCE")
+     {
+@@ -589,9 +626,7 @@ void MythRAOPConnection::ProcessRequest(const QList<QByteArray> &lines)
+                     LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Audio parameter: %1").arg(fmt));
+             }
+         }
+-
+-        StartResponse(m_textStream);
+-        FinishResponse(m_textStream, m_socket, option, tags["Cseq"]);
++        StartResponse(m_textStream, option, tags["CSeq"]);
+     }
+     else if (option == "SETUP")
+     {
+@@ -617,14 +652,6 @@ void MythRAOPConnection::ProcessRequest(const QList<QByteArray> &lines)
+                 QString("control port: %1 timing port: %2")
+                     .arg(control_port).arg(timing_port));
+ 
+-            StartResponse(m_textStream);
+-            *m_textStream << "Transport: " << tags["Transport"];
+-            *m_textStream << ";server_port=" << QString::number(m_dataPort) << "\r\n";
+-            FinishResponse(m_textStream, m_socket, option, tags["Cseq"]);
+-
+-            if (OpenAudioDevice())
+-                CreateDecoder();
+-
+             if (m_clientControlSocket)
+             {
+                 m_clientControlSocket->disconnect();
+@@ -632,21 +659,31 @@ void MythRAOPConnection::ProcessRequest(const QList<QByteArray> &lines)
+                 delete m_clientControlSocket;
+             }
+ 
+-            m_clientControlSocket = new ServerPool(this);
++            m_clientControlSocket = new QUdpSocket(this);
+             if (!m_clientControlSocket->bind(control_port))
+             {
+                 LOG(VB_GENERAL, LOG_ERR, LOC +
+-                    QString("Failed to bind to client control port %1").arg(control_port));
++                    QString("Failed to bind to client control port %1. "
++                            "Control of audio stream may fail")
++                    .arg(control_port));
+             }
+             else
+             {
+                 LOG(VB_GENERAL, LOG_INFO, LOC +
+                     QString("Bound to client control port %1").arg(control_port));
+-                m_peerAddress = m_socket->peerAddress();
+-                m_clientControlPort = control_port;
+-                connect(m_clientControlSocket, SIGNAL(newDatagram(QByteArray, QHostAddress, quint16)),
+-                        this,                  SLOT(udpDataReady(QByteArray, QHostAddress, quint16)));
+             }
++
++            if (OpenAudioDevice())
++                CreateDecoder();
++
++            m_peerAddress = m_socket->peerAddress();
++            m_clientControlPort = control_port;
++            connect(m_clientControlSocket, SIGNAL(readyRead()), this, SLOT(udpDataReady()));
++
++            StartResponse(m_textStream, option, tags["CSeq"]);
++            *m_textStream << "Transport: " << tags["Transport"].data();
++            *m_textStream << ";server_port=" << QString::number(m_dataPort);
++            *m_textStream << "\r\nSession: MYTHTV\r\n";
+         }
+         else
+         {
+@@ -656,13 +693,24 @@ void MythRAOPConnection::ProcessRequest(const QList<QByteArray> &lines)
+     }
+     else if (option == "RECORD")
+     {
+-        StartResponse(m_textStream);
+-        FinishResponse(m_textStream, m_socket, option, tags["Cseq"]);
++        StartResponse(m_textStream, option, tags["CSeq"]);
++    }
++    else if (option == "TEARDOWN")
++    {
++        *m_textStream << "Connection: close\r\n";
++        StartResponse(m_textStream, option, tags["CSeq"]);
++    }
++    else if (option == "FLUSH")
++    {
++        ResetAudio();
++        *m_textStream << "flush\r\n";
++        StartResponse(m_textStream, option, tags["CSeq"]);
+     }
+     else if (option == "SET_PARAMETER")
+     {
+         foreach (QByteArray line, lines)
+         {
++            StartResponse(m_textStream, option, tags["CSeq"]);
+             if (line.startsWith("volume:") && m_allowVolumeControl && m_audio)
+             {
+                 QByteArray rawvol = line.mid(7).trimmed();
+@@ -674,43 +722,34 @@ void MythRAOPConnection::ProcessRequest(const QList<QByteArray> &lines)
+                 m_audio->SetCurrentVolume((int)volume);
+             }
+         }
+-
+-        StartResponse(m_textStream);
+-        FinishResponse(m_textStream, m_socket, option, tags["Cseq"]);
+-    }
+-    else if (option == "FLUSH")
+-    {
+-        ResetAudio();
+-        StartResponse(m_textStream);
+-        FinishResponse(m_textStream, m_socket, option, tags["Cseq"]);
+     }
+-    else if (option == "TEARDOWN")
++    else
+     {
+-        StartResponse(m_textStream);
+-        *m_textStream << "Connection: close\r\n";
+-        FinishResponse(m_textStream, m_socket, option, tags["Cseq"]);
++        LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Command not handled: %1")
++            .arg(option.data()));
++        StartResponse(m_textStream, option, tags["CSeq"]);
+     }
+-
++    FinishResponse(m_textStream, m_socket, option, tags["CSeq"]);
+ }
+ 
+-void MythRAOPConnection::StartResponse(QTextStream *stream)
++void MythRAOPConnection::StartResponse(NetStream *stream,
++                                       QByteArray &option, QByteArray &cseq)
+ {
+     if (!stream)
+         return;
+-    *stream << "RTSP/1.0 200 OK\r\n";
+-}
+-
+-void MythRAOPConnection::FinishResponse(QTextStream *stream, QTcpSocket *socket,
+-                                        QByteArray &option, QByteArray &cseq)
+-{
+     LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("%1 sequence %2")
+         .arg(option.data()).arg(cseq.data()));
+     *stream << "Audio-Jack-Status: connected; type=analog\r\n";
+     *stream << "CSeq: " << cseq << "\r\n";
++}
++
++void MythRAOPConnection::FinishResponse(NetStream *stream, QTcpSocket *socket,
++                                        QByteArray &option, QByteArray &cseq)
++{
+     *stream << "\r\n";
+     stream->flush();
+-    LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Send: %1")
+-         .arg(socket->flush()));
++    LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Finished %1 %2 , Send: %3")
++        .arg(option.data()).arg(cseq.data()).arg(socket->flush()));
+ }
+ 
+ RSA* MythRAOPConnection::LoadKey(void)
+@@ -797,7 +836,7 @@ bool MythRAOPConnection::CreateDecoder(void)
+             extradata[13] = (fs >> 16) & 0xff;
+             extradata[14] = (fs >> 8)  & 0xff;
+             extradata[15] = fs & 0xff;
+-            extradata[16] = 2; // channels
++            extradata[16] = m_channels;       // channels
+             extradata[17] = m_audioFormat[3]; // sample size
+             extradata[18] = m_audioFormat[4]; // rice_historymult
+             extradata[19] = m_audioFormat[5]; // rice_initialhistory
+@@ -805,7 +844,7 @@ bool MythRAOPConnection::CreateDecoder(void)
+         }
+         m_codeccontext->extradata = extradata;
+         m_codeccontext->extradata_size = 36;
+-        m_codeccontext->channels = 2;
++        m_codeccontext->channels = m_channels;
+         if (avcodec_open(m_codeccontext, m_codec) < 0)
+         {
+             LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to open ALAC decoder - going silent...");
+@@ -834,6 +873,7 @@ bool MythRAOPConnection::OpenAudioDevice(void)
+     CloseAudioDevice();
+ 
+     m_sampleRate = m_audioFormat.size() >= 12 ? m_audioFormat[11] : DEFAULT_SAMPLE_RATE;
++    m_channels   = m_audioFormat[7] > 0 ? m_audioFormat[7] : 2;
+     if (m_sampleRate < 1)
+         m_sampleRate = DEFAULT_SAMPLE_RATE;
+ 
+@@ -841,7 +881,7 @@ bool MythRAOPConnection::OpenAudioDevice(void)
+                         ? gCoreContext->GetSetting("PassThruOutputDevice") : QString::null;
+     QString device = gCoreContext->GetSetting("AudioOutputDevice");
+ 
+-    m_audio = AudioOutput::OpenAudio(device, passthru, FORMAT_S16, 2,
++    m_audio = AudioOutput::OpenAudio(device, passthru, FORMAT_S16, m_channels,
+                                      0, m_sampleRate, AUDIOOUTPUT_MUSIC,
+                                      m_allowVolumeControl, false);
+     if (!m_audio)
+diff --git a/mythtv/libs/libmythtv/mythraopconnection.h b/mythtv/libs/libmythtv/mythraopconnection.h
+index 9d56d4e..e229f83 100644
+--- a/mythtv/libs/libmythtv/mythraopconnection.h
++++ b/mythtv/libs/libmythtv/mythraopconnection.h
+@@ -15,12 +15,12 @@ extern "C" {
+ #include "libavformat/avformat.h"
+ }
+ 
+-class QTextStream;
+ class QTcpSocket;
+ class QUdpSocket;
+ class QTimer;
+ class AudioOutput;
+ class ServerPool;
++class NetStream;
+ 
+ typedef QHash<QByteArray,QByteArray> RawHash;
+ 
+@@ -42,6 +42,7 @@ class MythRAOPConnection : public QObject
+   public slots:
+     void readClient(void);
+     void udpDataReady(QByteArray buf, QHostAddress peer, quint16 port);
++    void udpDataReady(void);
+     void timeout(void);
+     void audioRetry(void);
+ 
+@@ -58,8 +59,9 @@ class MythRAOPConnection : public QObject
+     void    ProcessAudio(uint64_t timenow);
+     void    ResetAudio(void);
+     void    ProcessRequest(const QList<QByteArray> &lines);
+-    void    StartResponse(QTextStream *stream);
+-    void    FinishResponse(QTextStream *stream, QTcpSocket *socket,
++    void    StartResponse(NetStream *stream,
++                          QByteArray &option, QByteArray &cseq);
++    void    FinishResponse(NetStream *stream, QTcpSocket *socket,
+                            QByteArray &option, QByteArray &cseq);
+     RawHash FindTags(const QList<QByteArray> &lines);
+     bool    CreateDecoder(void);
+@@ -72,13 +74,13 @@ class MythRAOPConnection : public QObject
+     QTimer         *m_watchdogTimer;
+     // comms socket
+     QTcpSocket     *m_socket;
+-    QTextStream    *m_textStream;
++    NetStream      *m_textStream;
+     QByteArray      m_hardwareId;
+     // incoming audio
+     QHostAddress    m_peerAddress;
+     int             m_dataPort;
+     ServerPool     *m_dataSocket;
+-    ServerPool     *m_clientControlSocket;
++    QUdpSocket     *m_clientControlSocket;
+     int             m_clientControlPort;
+     QMap<uint16_t,uint64_t> m_resends;
+     // crypto
+@@ -91,6 +93,7 @@ class MythRAOPConnection : public QObject
+     AVCodecContext *m_codeccontext;
+     QList<int>      m_audioFormat;
+     int             m_sampleRate;
++    int             m_channels;
+     typedef struct 
+     {
+         int16_t *samples;
 diff --git a/mythtv/libs/libmythtv/mythraopdevice.cpp b/mythtv/libs/libmythtv/mythraopdevice.cpp
-index 82a6a61..f27f166 100644
+index 82a6a61..bad4932 100644
 --- a/mythtv/libs/libmythtv/mythraopdevice.cpp
 +++ b/mythtv/libs/libmythtv/mythraopdevice.cpp
-@@ -1,6 +1,7 @@
+@@ -1,6 +1,6 @@
  #include <QTimer>
  #include <QtEndian>
- #include <QTcpSocket>
+-#include <QTcpSocket>
 +#include <QNetworkInterface>
  
  #include "mthread.h"
  #include "mythlogging.h"
-@@ -131,7 +132,7 @@ void MythRAOPDevice::Start(void)
+@@ -131,7 +131,7 @@ void MythRAOPDevice::Start(void)
      int baseport = m_setupPort;
      while (m_setupPort < baseport + RAOP_PORT_RANGE)
      {
@@ -12888,7 +13628,28 @@ index 82a6a61..f27f166 100644
          {
              LOG(VB_GENERAL, LOG_INFO, LOC +
                  QString("Listening for connections on port %1").arg(m_setupPort));
-@@ -242,8 +243,8 @@ void MythRAOPDevice::deleteClient(void)
+@@ -145,11 +145,6 @@ void MythRAOPDevice::Start(void)
+ 
+     // announce service
+     m_bonjour = new BonjourRegister(this);
+-    if (!m_bonjour)
+-    {
+-        LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to create Bonjour object.");
+-        return;
+-    }
+ 
+     // give each frontend a unique name
+     int multiple = m_setupPort - baseport;
+@@ -176,6 +171,8 @@ void MythRAOPDevice::Start(void)
+     txt.append(4); txt.append("vn=3");
+     txt.append(9); txt.append("txtvers=1");
+ 
++    LOG(VB_GENERAL, LOG_INFO, QString("Registering service %1.%2 port %3 TXT %4")
++        .arg(QString(name)).arg(QString(type)).arg(m_setupPort).arg(QString(txt)));
+     if (!m_bonjour->Register(m_setupPort, type, name, txt))
+     {
+         LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to register service.");
+@@ -242,8 +239,8 @@ void MythRAOPDevice::deleteClient(void)
          if ((*it)->GetSocket()->state() == QTcpSocket::UnconnectedState)
          {
              LOG(VB_GENERAL, LOG_INFO, LOC + "Removing client connection.");
@@ -12898,6 +13659,19 @@ index 82a6a61..f27f166 100644
              return;
          }
      }
+diff --git a/mythtv/libs/libmythtv/osd.cpp b/mythtv/libs/libmythtv/osd.cpp
+index 207ecef..d0860db 100644
+--- a/mythtv/libs/libmythtv/osd.cpp
++++ b/mythtv/libs/libmythtv/osd.cpp
+@@ -428,7 +428,7 @@ void OSD::SetText(const QString &window, QHash<QString,QString> &map,
+             if (!iconpath.isEmpty())
+             {
+                 QString iconurl =
+-                                gCoreContext->GetMasterHostPrefix("ChannelIcon",
++                                gCoreContext->GetMasterHostPrefix("ChannelIcons",
+                                                                   iconpath);
+ 
+                 icon->SetFilename(iconurl);
 diff --git a/mythtv/libs/libmythtv/playercontext.h b/mythtv/libs/libmythtv/playercontext.h
 index 5854de4..a4ce9f1 100644
 --- a/mythtv/libs/libmythtv/playercontext.h
@@ -12922,39 +13696,59 @@ index 5854de4..a4ce9f1 100644
      PlayerContext(const QString &inUseID = QString("Unknown"));
      ~PlayerContext();
 diff --git a/mythtv/libs/libmythtv/ringbuffer.cpp b/mythtv/libs/libmythtv/ringbuffer.cpp
-index e3f0a5a..3883de2 100644
+index e3f0a5a..5e720c2 100644
 --- a/mythtv/libs/libmythtv/ringbuffer.cpp
 +++ b/mythtv/libs/libmythtv/ringbuffer.cpp
-@@ -724,6 +724,7 @@ void RingBuffer::run(void)
-     struct timeval lastread, now;
-     int readtimeavg = 300;
-     bool ignore_for_read_timing = true;
-+    bool did_set_oldfile = false;
+@@ -553,6 +553,7 @@ void RingBuffer::KillReadAheadThread(void)
+  */
+ void RingBuffer::StopReads(void)
+ {
++    LOG(VB_FILE, LOG_INFO, LOC + "StopReads()");
+     stopreads = true;
+     generalWait.wakeAll();
+ }
+@@ -563,6 +564,7 @@ void RingBuffer::StopReads(void)
+  */
+ void RingBuffer::StartReads(void)
+ {
++    LOG(VB_FILE, LOG_INFO, LOC + "StartReads()");
+     stopreads = false;
+     generalWait.wakeAll();
+ }
+@@ -573,6 +575,7 @@ void RingBuffer::StartReads(void)
+  */
+ void RingBuffer::Pause(void)
+ {
++    LOG(VB_FILE, LOG_INFO, LOC + "Pause()");
+     StopReads();
  
-     gettimeofday(&lastread, NULL); // this is just to keep gcc happy
+     rwlock.lockForWrite();
+@@ -586,6 +589,7 @@ void RingBuffer::Pause(void)
+  */
+ void RingBuffer::Unpause(void)
+ {
++    LOG(VB_FILE, LOG_INFO, LOC + "Unpause()");
+     StartReads();
  
-@@ -842,8 +843,12 @@ void RingBuffer::run(void)
+     rwlock.lockForWrite();
+@@ -842,9 +846,6 @@ void RingBuffer::run(void)
                      "Reading enough data to start playback");
              }
  
 -            if (remotefile && livetvchain && livetvchain->HasNext())
-+            if (!did_set_oldfile && remotefile && livetvchain &&
-+                livetvchain->HasNext())
-+            {
-                 remotefile->SetTimeout(true);
-+                did_set_oldfile = true;
-+            }
- 
+-                remotefile->SetTimeout(true);
+-
              LOG(VB_FILE, LOG_DEBUG, LOC +
                  QString("safe_read(...@%1, %2) -- begin")
-@@ -917,6 +922,7 @@ void RingBuffer::run(void)
-                     {
-                         livetvchain->SwitchToNext(true);
-                         setswitchtonext = true;
-+                        did_set_oldfile = false;
-                     }
-                 }
-                 else
+                     .arg(rbwpos).arg(totfree));
+@@ -1551,6 +1552,7 @@ void RingBuffer::SetWriteBufferMinWriteSize(int newMinSize)
+  */
+ void RingBuffer::SetOldFile(bool is_old)
+ {
++    LOG(VB_FILE, LOG_INFO, LOC + QString("SetOldFile(%1)").arg(is_old));
+     rwlock.lockForWrite();
+     oldfile = is_old;
+     rwlock.unlock();
 diff --git a/mythtv/libs/libmythtv/teletextscreen.cpp b/mythtv/libs/libmythtv/teletextscreen.cpp
 index 5490672..6bb0e13 100644
 --- a/mythtv/libs/libmythtv/teletextscreen.cpp
@@ -13056,6 +13850,21 @@ index d1133c5..912b46f 100644
      vector<uint> interesting = CardUtil::GetCardIDs(sourceid);
  
      // filter disconnected cards
+diff --git a/mythtv/libs/libmythtv/tv_rec.cpp b/mythtv/libs/libmythtv/tv_rec.cpp
+index bf15151..3311360 100644
+--- a/mythtv/libs/libmythtv/tv_rec.cpp
++++ b/mythtv/libs/libmythtv/tv_rec.cpp
+@@ -1080,7 +1080,10 @@ void TVRec::TeardownRecorder(uint request_flags)
+     }
+ 
+     if (ringBuffer)
++    {
++        LOG(VB_FILE, LOG_INFO, LOC + "calling StopReads()");
+         ringBuffer->StopReads();
++    }
+ 
+     if (curRecording)
+     {
 diff --git a/mythtv/libs/libmythtv/tvremoteutil.cpp b/mythtv/libs/libmythtv/tvremoteutil.cpp
 index d348d64..a73cc52 100644
 --- a/mythtv/libs/libmythtv/tvremoteutil.cpp
@@ -13362,6 +14171,42 @@ index e0a93cc..4885de3 100644
      { "pdf" , "application/pdf"            },
      { "avi" , "video/avi"                  },
      { "css" , "text/css"                   },
+diff --git a/mythtv/programs/mythbackend/filetransfer.cpp b/mythtv/programs/mythbackend/filetransfer.cpp
+index c339dc2..7c9d173 100644
+--- a/mythtv/programs/mythbackend/filetransfer.cpp
++++ b/mythtv/programs/mythbackend/filetransfer.cpp
+@@ -7,6 +7,7 @@
+ #include "mythmiscutil.h"
+ #include "mythsocket.h"
+ #include "programinfo.h"
++#include "mythlogging.h"
+ 
+ FileTransfer::FileTransfer(QString &filename, MythSocket *remote,
+                            bool usereadahead, int timeout_ms) :
+@@ -94,6 +95,7 @@ void FileTransfer::Stop(void)
+     if (readthreadlive)
+     {
+         readthreadlive = false;
++        LOG(VB_FILE, LOG_INFO, "calling StopReads()");
+         rbuffer->StopReads();
+         QMutexLocker locker(&lock);
+         readsLocked = true;
+@@ -108,6 +110,7 @@ void FileTransfer::Stop(void)
+ 
+ void FileTransfer::Pause(void)
+ {
++    LOG(VB_FILE, LOG_INFO, "calling StopReads()");
+     rbuffer->StopReads();
+     QMutexLocker locker(&lock);
+     readsLocked = true;
+@@ -118,6 +121,7 @@ void FileTransfer::Pause(void)
+ 
+ void FileTransfer::Unpause(void)
+ {
++    LOG(VB_FILE, LOG_INFO, "calling StartReads()");
+     rbuffer->StartReads();
+     {
+         QMutexLocker locker(&lock);
 diff --git a/mythtv/programs/mythfrontend/audiogeneralsettings.cpp b/mythtv/programs/mythfrontend/audiogeneralsettings.cpp
 index 7a676fd..7d40e09 100644
 --- a/mythtv/programs/mythfrontend/audiogeneralsettings.cpp
@@ -13399,7 +14244,7 @@ index 0983623..b93931e 100644
          !profiles.contains("OpenGL High Quality") &&
          !profiles.contains("OpenGL Slim"))
 diff --git a/mythtv/programs/mythfrontend/guidegrid.cpp b/mythtv/programs/mythfrontend/guidegrid.cpp
-index 6dbf1aa..17d5fad 100644
+index 6dbf1aa..4ddac0e 100644
 --- a/mythtv/programs/mythfrontend/guidegrid.cpp
 +++ b/mythtv/programs/mythfrontend/guidegrid.cpp
 @@ -1390,11 +1390,11 @@ void GuideGrid::customEvent(QEvent *event)
@@ -13416,6 +14261,24 @@ index 6dbf1aa..17d5fad 100644
              {
                  enter();
              }
+@@ -1578,7 +1578,7 @@ void GuideGrid::updateChannels(void)
+             if (!chinfo->icon.isEmpty())
+             {
+                 QString iconurl =
+-                                gCoreContext->GetMasterHostPrefix("ChannelIcon",
++                                gCoreContext->GetMasterHostPrefix("ChannelIcons",
+                                                                   chinfo->icon);
+                 item->SetImage(iconurl, "channelicon");
+             }
+@@ -1612,7 +1612,7 @@ void GuideGrid::updateInfo(void)
+         m_channelImage->Reset();
+         if (!chinfo->icon.isEmpty())
+         {
+-            QString iconurl = gCoreContext->GetMasterHostPrefix("ChannelIcon",
++            QString iconurl = gCoreContext->GetMasterHostPrefix("ChannelIcons",
+                                                                 chinfo->icon);
+ 
+             m_channelImage->SetFilename(iconurl);
 diff --git a/mythtv/programs/mythfrontend/scheduleeditor.cpp b/mythtv/programs/mythfrontend/scheduleeditor.cpp
 index 4f85c70..877371a 100644
 --- a/mythtv/programs/mythfrontend/scheduleeditor.cpp
@@ -13474,3 +14337,16 @@ index 94fc136..fee2df3 100644
  
      return GENERIC_EXIT_OK;
  }
+diff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/bliptv/bliptv_api.py b/mythtv/programs/scripts/internetcontent/nv_python_libs/bliptv/bliptv_api.py
+index 2f2ad3b..4abbf69 100644
+--- a/mythtv/programs/scripts/internetcontent/nv_python_libs/bliptv/bliptv_api.py
++++ b/mythtv/programs/scripts/internetcontent/nv_python_libs/bliptv/bliptv_api.py
+@@ -187,7 +187,7 @@ class Videos(object):
+         self.config[u'urls'] = {}
+ 
+         # v2 api calls - An example that must be customized for each target site
+-        self.config[u'urls'][u'video.search'] = "http://www.blip.tv/search?q=%s;&page=%s;&pagelen=%s;&language_code=%s;&skin=rss"
++        self.config[u'urls'][u'video.search'] = "http://www.blip.tv/?search=%s;&page=%s;&pagelen=%s;&language_code=%s;&skin=rss"
+         self.config[u'urls'][u'categories'] = "http://www.blip.tv/?section=categories&cmd=view&skin=api"
+ 
+         self.config[u'image_extentions'] = ["png", "jpg", "bmp"] # Acceptable image extentions
