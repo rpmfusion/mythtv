@@ -86,7 +86,7 @@ Version:        0.25
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        4%{?dist}
+Release:        5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -683,6 +683,7 @@ Requires:  python >= 2.3.5
 Requires:  python-imaging
 Requires:  transcode >= 1.0.2
 Requires:  m2vrequantiser
+Requires:  pmount
 
 %description -n mytharchive
 MythArchive is a new plugin for MythTV that lets you create DVDs from
@@ -1480,9 +1481,10 @@ rm -rf ../MythTV-mythweb-%{githash4}
 ################################################################################
 
 %changelog
-* Sat Apr 28 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-3
+* Sun Apr 29 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-5
 - Update to latest 0.25/fixes.
 - Really fix logrotate this time.
+- Add pmount to mytharchive requirements.
 
 * Sat Apr 21 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-3
 - Removed obsolete build requirement for arts-devel.
