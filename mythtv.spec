@@ -150,7 +150,6 @@ Source10:  PACKAGE-LICENSING
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
 Source103: mythbackend.logrotate
-Source104: mythbackend.service
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
