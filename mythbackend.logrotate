@@ -1,4 +1,4 @@
-/var/log/mythtv/mythbackend.log {
+/var/log/mythtv/mythbackend.log /var/log/mythtv/myth*.*.*.log {
     notifempty
     missingok
     compress
@@ -9,6 +9,6 @@
     rotate 4
     size 10M
     postrotate
-       /bin/kill -HUP `cat /var/run/mythbackend.pid 2>/dev/null` 2> /dev/null || true
+         /bin/systemctl kill mythbackend.service --signal=HUP --kill-who=main 2>/dev/null || true
     endscript
 }
