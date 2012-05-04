@@ -86,7 +86,7 @@ Version:        0.25
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        5%{?dist}
+Release:        6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -235,6 +235,7 @@ BuildRequires:  jack-audio-connection-kit-devel
 %if %{with_pulseaudio}
 BuildRequires:  pulseaudio-libs-devel
 %endif
+BuildRequires:  avahi-compat-libdns_sd-devel
 
 # Bluray support
 BuildRequires:  libxml2-devel
@@ -1173,6 +1174,28 @@ getent passwd mythtv >/dev/null || \
 usermod -a -G audio,video mythtv
 exit 0
 
+%pre frontend
+# Add the "mythtv" user, with membership in the audio and video group
+getent group mythtv >/dev/null || groupadd -r mythtv
+getent passwd mythtv >/dev/null || \
+    useradd -r -g mythtv -d %{_localstatedir}/lib/mythtv -s /sbin/nologin \
+    -c "mythbackend user" mythtv
+# Make sure the mythtv user is in the audio and video group for existing
+# or new installs.
+usermod -a -G audio,video mythtv
+exit 0
+
+%pre -n mythmusic
+# Add the "mythtv" user, with membership in the audio and video group
+getent group mythtv >/dev/null || groupadd -r mythtv
+getent passwd mythtv >/dev/null || \
+    useradd -r -g mythtv -d %{_localstatedir}/lib/mythtv -s /sbin/nologin \
+    -c "mythbackend user" mythtv
+# Make sure the mythtv user is in the audio and video group for existing
+# or new installs.
+usermod -a -G audio,video mythtv
+exit 0
+
 %post backend
 %if 0%{?fedora} >= 16
 if [ $1 -eq 1 ] ; then 
@@ -1305,8 +1328,7 @@ fi
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
 %dir %{_libdir}/mythtv
-%dir %{_libdir}/mythtv/filters
-%{_libdir}/mythtv/filters/*
+%{_libdir}/mythtv/filters/
 %dir %{_libdir}/mythtv/plugins
 %dir %{_datadir}/mythtv/i18n
 %dir %{_datadir}/mythtv/fonts
@@ -1481,6 +1503,11 @@ rm -rf ../MythTV-mythweb-%{githash4}
 ################################################################################
 
 %changelog
+* Fri May 04 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-6
+- Add Bonjour (Airplay) support.
+- Fix user creation for packages that create directories owned by mythtv user.
+  Fixes BZ#2309.
+
 * Sun Apr 29 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-5
 - Update to latest 0.25/fixes.
 - Really fix logrotate this time.
