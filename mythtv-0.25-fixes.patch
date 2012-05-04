@@ -23,6 +23,7 @@
  mythtv/VERSION                                     |    2 +-
  mythtv/bindings/python/MythTV/mythproto.py         |    4 +-
  mythtv/bindings/python/MythTV/static.py            |    2 +-
+ mythtv/bindings/python/setup.py                    |    2 +-
  mythtv/configure                                   |   15 +-
  mythtv/docs/doxygen-create-developer-docs.cfg      |    2 +-
  mythtv/filters/yadif/filter_yadif.c                |    2 +-
@@ -47,6 +48,7 @@
  .../libs/libmythsoundtouch/libmythsoundtouch.pro   |    1 +
  mythtv/libs/libmythtv/audioinput.h                 |    1 +
  mythtv/libs/libmythtv/avformatdecoder.cpp          |   10 +-
+ mythtv/libs/libmythtv/dtvrecorder.cpp              |    4 +-
  mythtv/libs/libmythtv/dvdringbuffer.cpp            |   49 +-
  mythtv/libs/libmythtv/fileringbuffer.cpp           |    6 +-
  mythtv/libs/libmythtv/libmythtv.pro                |    1 +
@@ -71,15 +73,21 @@
  mythtv/libs/libmythtv/videooutbase.cpp             |   48 +-
  mythtv/libs/libmythui/mythmainwindow.cpp           |    2 +
  mythtv/libs/libmythupnp/httprequest.cpp            |    1 +
+ mythtv/libs/libmythupnp/soapclient.h               |    6 +
  mythtv/programs/mythbackend/filetransfer.cpp       |    4 +
+ mythtv/programs/mythbackend/housekeeper.cpp        |    4 +-
  .../programs/mythfrontend/audiogeneralsettings.cpp |    5 +-
  mythtv/programs/mythfrontend/globalsettings.cpp    |    2 +-
  mythtv/programs/mythfrontend/guidegrid.cpp         |    8 +-
  mythtv/programs/mythfrontend/scheduleeditor.cpp    |    7 +-
  mythtv/programs/mythtranscode/transcode.h          |    5 +-
+ mythtv/programs/mythutil/backendutils.cpp          |   20 +
+ mythtv/programs/mythutil/commandlineparser.cpp     |    4 +
  mythtv/programs/mythutil/markuputils.cpp           |    4 +-
+ mythtv/programs/mythutil/mythutil.pro              |    2 +-
  .../nv_python_libs/bliptv/bliptv_api.py            |    2 +-
- 81 files changed, 5628 insertions(+), 2144 deletions(-)
+ mythtv/version.sh                                  |    1 +
+ 89 files changed, 5666 insertions(+), 2149 deletions(-)
 
 diff --git a/mythplugins/mytharchive/i18n/mytharchive_fi.qm b/mythplugins/mytharchive/i18n/mytharchive_fi.qm
 index 2fc0f91..8e2d841 100644
@@ -5784,6 +5792,19 @@ index 6b587b2..f539706 100644
  SCHEMA_VERSION = 1299
  NVSCHEMA_VERSION = 1007
  MUSICSCHEMA_VERSION = 1018
+diff --git a/mythtv/bindings/python/setup.py b/mythtv/bindings/python/setup.py
+index f4bdbe6..44dcc5f 100755
+--- a/mythtv/bindings/python/setup.py
++++ b/mythtv/bindings/python/setup.py
+@@ -78,7 +78,7 @@ class build(pybuild):
+ 
+ setup(
+         name='MythTV',
+-        version='0.24.0',
++        version='0.25.0',
+         description='MythTV Python bindings.',
+         long_description='Provides canned database and protocol access to the MythTV database, mythproto, mythxml, and frontend remote control.',
+         packages=['MythTV', 'MythTV/tmdb', 'MythTV/tmdb3', 'MythTV/ttvdb', 'MythTV/wikiscripts'],
 diff --git a/mythtv/configure b/mythtv/configure
 index 5e9c8a8..09fbe4c 100755
 --- a/mythtv/configure
@@ -12925,6 +12946,21 @@ index dd02e57..8311697 100644
  #ifdef USING_DXVA2
                      MythCodecID dxva2_mcid;
                      PixelFormat pix_fmt = PIX_FMT_YUV420P;
+diff --git a/mythtv/libs/libmythtv/dtvrecorder.cpp b/mythtv/libs/libmythtv/dtvrecorder.cpp
+index 31a5971..9d7d89f 100644
+--- a/mythtv/libs/libmythtv/dtvrecorder.cpp
++++ b/mythtv/libs/libmythtv/dtvrecorder.cpp
+@@ -32,7 +32,9 @@ extern "C" {
+ extern const uint8_t *ff_find_start_code(const uint8_t *p, const uint8_t *end, uint32_t *state);
+ }
+ 
+-#define LOC      QString("DTVRec(%1): ").arg(tvrec->GetCaptureCardNum())
++#define LOC ((tvrec) ? \
++    QString("DTVRec(%1): ").arg(tvrec->GetCaptureCardNum()) : \
++    QString("DTVRec(0x%1): ").arg(intptr_t(this),0,16))
+ 
+ const uint DTVRecorder::kMaxKeyFrameDistance = 80;
+ 
 diff --git a/mythtv/libs/libmythtv/dvdringbuffer.cpp b/mythtv/libs/libmythtv/dvdringbuffer.cpp
 index 5a445a0..3a0573a 100644
 --- a/mythtv/libs/libmythtv/dvdringbuffer.cpp
@@ -14171,6 +14207,23 @@ index e0a93cc..4885de3 100644
      { "pdf" , "application/pdf"            },
      { "avi" , "video/avi"                  },
      { "css" , "text/css"                   },
+diff --git a/mythtv/libs/libmythupnp/soapclient.h b/mythtv/libs/libmythupnp/soapclient.h
+index 981d741..6b35a91 100644
+--- a/mythtv/libs/libmythupnp/soapclient.h
++++ b/mythtv/libs/libmythupnp/soapclient.h
+@@ -47,6 +47,12 @@ class UPNP_PUBLIC SOAPClient
+     QString  GetNodeValue(const QDomNode &node,
+                           const QString  &sName,
+                           const QString  &sDefault) const;
++    QString  GetNodeValue(const QDomNode &node,
++                          const QString  &sName,
++                          const char *sDefault) const
++    {
++        return GetNodeValue(node, sName, QString(sDefault));
++    }
+ 
+     QDomNode FindNode(const QString  &sName,
+                       const QDomNode &baseNode) const;
 diff --git a/mythtv/programs/mythbackend/filetransfer.cpp b/mythtv/programs/mythbackend/filetransfer.cpp
 index c339dc2..7c9d173 100644
 --- a/mythtv/programs/mythbackend/filetransfer.cpp
@@ -14207,6 +14260,21 @@ index c339dc2..7c9d173 100644
      rbuffer->StartReads();
      {
          QMutexLocker locker(&lock);
+diff --git a/mythtv/programs/mythbackend/housekeeper.cpp b/mythtv/programs/mythbackend/housekeeper.cpp
+index 866429e..29ab7ea 100644
+--- a/mythtv/programs/mythbackend/housekeeper.cpp
++++ b/mythtv/programs/mythbackend/housekeeper.cpp
+@@ -429,8 +429,8 @@ void HouseKeeper::RunMFD(void)
+     if (mfpath == "mythfilldatabase")
+         mfpath = GetInstallPrefix() + "/bin/mythfilldatabase";
+ 
+-    QString command = QString("%1 %2").arg(mfpath).arg(mfarg);
+-    command += logPropagateArgs;
++    QString command = QString("%1 %2 %3").arg(mfpath).arg(logPropagateArgs)
++                        .arg(mfarg);
+ 
+     {
+         QMutexLocker locker(&fillDBLock);
 diff --git a/mythtv/programs/mythfrontend/audiogeneralsettings.cpp b/mythtv/programs/mythfrontend/audiogeneralsettings.cpp
 index 7a676fd..7d40e09 100644
 --- a/mythtv/programs/mythfrontend/audiogeneralsettings.cpp
@@ -14322,6 +14390,68 @@ index a99a871..ce5b909 100644
      RingBuffer             *inRingBuffer;
      RingBuffer             *outRingBuffer;
      FIFOWriter             *fifow;
+diff --git a/mythtv/programs/mythutil/backendutils.cpp b/mythtv/programs/mythutil/backendutils.cpp
+index 151fa7d..494e071 100644
+--- a/mythtv/programs/mythutil/backendutils.cpp
++++ b/mythtv/programs/mythutil/backendutils.cpp
+@@ -1,8 +1,12 @@
++// C++ includes
++#include <iostream>
++
+ // libmyth* headers
+ #include "exitcodes.h"
+ #include "mythcorecontext.h"
+ #include "mythlogging.h"
+ #include "remoteutil.h"
++#include "videometadata.h"
+ 
+ // local headers
+ #include "backendutils.h"
+@@ -79,6 +83,21 @@ static int ScanVideos(const MythUtilCommandLineParser &cmdline)
+     return GENERIC_EXIT_CONNECT_ERROR;
+ }
+ 
++static int ParseVideoFilename(const MythUtilCommandLineParser &cmdline)
++{
++    QString filename = cmdline.toString("parsevideo");
++    cout << "Title:    " << VideoMetadata::FilenameToMeta(filename, 1)
++                                            .toLocal8Bit().constData() << endl
++         << "Season:   " << VideoMetadata::FilenameToMeta(filename, 2)
++                                            .toLocal8Bit().constData() << endl
++         << "Episode:  " << VideoMetadata::FilenameToMeta(filename, 3)
++                                            .toLocal8Bit().constData() << endl
++         << "Subtitle: " << VideoMetadata::FilenameToMeta(filename, 4)
++                                            .toLocal8Bit().constData() << endl;
++
++    return GENERIC_EXIT_OK;
++}
++
+ void registerBackendUtils(UtilMap &utilMap)
+ {
+     utilMap["clearcache"]           = &ClearSettingsCache;
+@@ -86,6 +105,7 @@ void registerBackendUtils(UtilMap &utilMap)
+     utilMap["resched"]              = &Reschedule;
+     utilMap["scanvideos"]           = &ScanVideos;
+     utilMap["systemevent"]          = &SendSystemEvent;
++    utilMap["parsevideo"]           = &ParseVideoFilename;
+ }
+ 
+ /* vim: set expandtab tabstop=4 shiftwidth=4: */
+diff --git a/mythtv/programs/mythutil/commandlineparser.cpp b/mythtv/programs/mythutil/commandlineparser.cpp
+index 7f00e50..f4a6035 100644
+--- a/mythtv/programs/mythutil/commandlineparser.cpp
++++ b/mythtv/programs/mythutil/commandlineparser.cpp
+@@ -96,6 +96,10 @@ void MythUtilCommandLineParser::LoadArguments(void)
+                 "local database settings cache used by each program, causing "
+                 "options to be re-read from the database upon next use.")
+                 ->SetGroup("Backend")
++        << add("--parse-video-filename", "parsevideo", "", "",
++                "Diagnostic tool for testing filename formats against what "
++                "the Video Library name parser will detect them as.")
++                ->SetGroup("Backend")
+ 
+         // jobutils.cpp
+         << add("--queuejob", "queuejob", "",
 diff --git a/mythtv/programs/mythutil/markuputils.cpp b/mythtv/programs/mythutil/markuputils.cpp
 index 94fc136..fee2df3 100644
 --- a/mythtv/programs/mythutil/markuputils.cpp
@@ -14337,6 +14467,19 @@ index 94fc136..fee2df3 100644
  
      return GENERIC_EXIT_OK;
  }
+diff --git a/mythtv/programs/mythutil/mythutil.pro b/mythtv/programs/mythutil/mythutil.pro
+index 774528f..066e618 100644
+--- a/mythtv/programs/mythutil/mythutil.pro
++++ b/mythtv/programs/mythutil/mythutil.pro
+@@ -2,7 +2,7 @@ include ( ../../settings.pro )
+ include ( ../../version.pro )
+ include ( ../programs-libs.pro )
+ 
+-QT += network sql
++QT += network sql xml
+ 
+ TEMPLATE = app
+ CONFIG += thread
 diff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/bliptv/bliptv_api.py b/mythtv/programs/scripts/internetcontent/nv_python_libs/bliptv/bliptv_api.py
 index 2f2ad3b..4abbf69 100644
 --- a/mythtv/programs/scripts/internetcontent/nv_python_libs/bliptv/bliptv_api.py
@@ -14350,3 +14493,15 @@ index 2f2ad3b..4abbf69 100644
          self.config[u'urls'][u'categories'] = "http://www.blip.tv/?section=categories&cmd=view&skin=api"
  
          self.config[u'image_extentions'] = ["png", "jpg", "bmp"] # Acceptable image extentions
+diff --git a/mythtv/version.sh b/mythtv/version.sh
+index d2c53af..a8939c4 100755
+--- a/mythtv/version.sh
++++ b/mythtv/version.sh
+@@ -22,6 +22,7 @@ GITREPOPATH="exported"
+ 
+ cd ${GITTREEDIR}
+ 
++git status > /dev/null 2>&1
+ SOURCE_VERSION=$(git describe --dirty || git describe || echo Unknown)
+ 
+ case "${SOURCE_VERSION}" in
