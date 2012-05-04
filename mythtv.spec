@@ -1507,6 +1507,7 @@ rm -rf ../MythTV-mythweb-%{githash4}
 - Add Bonjour (Airplay) support.
 - Fix user creation for packages that create directories owned by mythtv user.
   Fixes BZ#2309.
+- Update to latest 0.25/fixes.
 
 * Sun Apr 29 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-5
 - Update to latest 0.25/fixes.
