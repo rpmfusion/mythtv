@@ -155,7 +155,6 @@ Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
 Source110: mysql.txt
-Source111: 99-mythbackend.rules
 Source401: mythweb.conf
 
 
