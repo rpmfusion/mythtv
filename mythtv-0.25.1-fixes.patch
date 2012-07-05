@@ -1,0 +1,3213 @@
+ mythplugins/mythmusic/mythmusic/metadata.cpp       |    6 +
+ .../mythweather/scripts/us_nws/NDFDParser.pm       |    3 +-
+ .../mythweather/mythweather/scripts/us_nws/ndfd.pl |   17 +-
+ .../mythweather/scripts/us_nws/ndfd18.pl           |   13 +-
+ .../mythweather/scripts/us_nws/ndfdXML.pm          |   24 +-
+ .../mythweather/scripts/us_nws/nws-alert.pl        |    8 +-
+ .../mythweather/scripts/us_nws/nwsxml.pl           |   12 +-
+ mythtv/bindings/python/MythTV/utility.py           |    2 +-
+ mythtv/bindings/python/tmdb3/README                |   51 +++-
+ mythtv/bindings/python/tmdb3/setup.py              |    2 +-
+ mythtv/bindings/python/tmdb3/tmdb3/__init__.py     |    7 +-
+ mythtv/bindings/python/tmdb3/tmdb3/cache.py        |   35 ++-
+ mythtv/bindings/python/tmdb3/tmdb3/cache_engine.py |   31 ++-
+ mythtv/bindings/python/tmdb3/tmdb3/cache_file.py   |  342 ++++++++++++++++----
+ mythtv/bindings/python/tmdb3/tmdb3/cache_null.py   |    4 +-
+ mythtv/bindings/python/tmdb3/tmdb3/locales.py      |   72 ++++-
+ mythtv/bindings/python/tmdb3/tmdb3/pager.py        |    2 +
+ mythtv/bindings/python/tmdb3/tmdb3/request.py      |   49 +++-
+ mythtv/bindings/python/tmdb3/tmdb3/tmdb_api.py     |  339 ++++++++++++++------
+ mythtv/bindings/python/tmdb3/tmdb3/tmdb_auth.py    |  131 ++++++++
+ .../bindings/python/tmdb3/tmdb3/tmdb_exceptions.py |   17 +-
+ mythtv/bindings/python/tmdb3/tmdb3/util.py         |   44 ++-
+ mythtv/libs/libmythbase/mthreadpool.cpp            |    1 +
+ mythtv/libs/libmythbase/mythcorecontext.cpp        |    2 +-
+ .../requesthandler/outboundhandler.cpp             |    2 +
+ mythtv/libs/libmythtv/decoderbase.cpp              |   46 ++-
+ mythtv/libs/libmythtv/dtvmultiplex.cpp             |    4 +-
+ mythtv/libs/libmythtv/eithelper.cpp                |   19 ++
+ mythtv/libs/libmythtv/hdhrstreamhandler.cpp        |   28 ++-
+ mythtv/libs/libmythtv/mythplayer.cpp               |    3 +-
+ mythtv/libs/libmythtv/mythplayer.h                 |    3 +
+ mythtv/libs/libmythtv/ringbuffer.cpp               |    2 +-
+ mythtv/libs/libmythtv/tv_rec.cpp                   |   74 +++--
+ mythtv/libs/libmythtv/tv_rec.h                     |    5 +-
+ mythtv/programs/mythbackend/mainserver.cpp         |   16 +-
+ mythtv/programs/mythbackend/scheduler.cpp          |   43 ++-
+ mythtv/programs/mythbackend/scheduler.h            |    6 +
+ mythtv/programs/mythcommflag/main.cpp              |    7 +-
+ mythtv/programs/mythfrontend/playbackbox.cpp       |    3 +-
+ mythtv/programs/mythtranscode/transcode.cpp        |  147 +++------
+ mythtv/programs/programs-libs.pro                  |    1 +
+ mythtv/themes/Terra/osd.xml                        |    4 +-
+ scripts/pytmdb3.py                                 |   53 +++
+ tmdb3/tmdb_auth.py                                 |  131 ++++++++
+ 44 files changed, 1367 insertions(+), 444 deletions(-)
+
+diff --git a/mythplugins/mythmusic/mythmusic/metadata.cpp b/mythplugins/mythmusic/mythmusic/metadata.cpp
+index 18ac7e3..4e167b0 100644
+--- a/mythplugins/mythmusic/mythmusic/metadata.cpp
++++ b/mythplugins/mythmusic/mythmusic/metadata.cpp
+@@ -171,6 +171,12 @@ bool Metadata::isInDatabase()
+     bool retval = false;
+ 
+     QString sqldir = m_filename.section('/', 0, -2);
++
++    // Filename is the absolute path, we want the relative path
++    QString musicdir = gCoreContext->GetSetting("MusicLocation");
++    if (sqldir.startsWith(musicdir))
++        sqldir.remove(0, musicdir.length());
++    
+     QString sqlfilename = m_filename.section('/', -1);
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+diff --git a/mythplugins/mythweather/mythweather/scripts/us_nws/NDFDParser.pm b/mythplugins/mythweather/mythweather/scripts/us_nws/NDFDParser.pm
+index 2be6748..4ede85d 100644
+--- a/mythplugins/mythweather/mythweather/scripts/us_nws/NDFDParser.pm
++++ b/mythplugins/mythweather/mythweather/scripts/us_nws/NDFDParser.pm
+@@ -177,7 +177,7 @@ sub timeChar {
+ ########## Exported method to do parsing #################
+ 
+ sub doParse {
+-    my ($lat, $lon, $start, $end, $params) = @_;
++    my ($lat, $lon, $start, $end, $units, $params) = @_;
+     my $product = "time-series";
+ 
+     my $NDFD_XML = ndfdXML->NDFDgen(SOAP::Data->name("latitude" => $lat), 
+@@ -185,6 +185,7 @@ sub doParse {
+         SOAP::Data->name("product" => $product),
+         SOAP::Data->name("startTime" => $start),
+         SOAP::Data->name("endTime" => $end),
++        SOAP::Data->name("Unit" => $units),
+         SOAP::Data->name("weatherParameters" => 
+             \SOAP::Data->value(
+                 SOAP::Data->type('boolean')->name("maxt" => $params->{maxt}),
+diff --git a/mythplugins/mythweather/mythweather/scripts/us_nws/ndfd.pl b/mythplugins/mythweather/mythweather/scripts/us_nws/ndfd.pl
+index 081bb12..c16fb55 100755
+--- a/mythplugins/mythweather/mythweather/scripts/us_nws/ndfd.pl
++++ b/mythplugins/mythweather/mythweather/scripts/us_nws/ndfd.pl
+@@ -22,9 +22,9 @@ use Getopt::Std;
+ our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d); 
+ 
+ my $name = 'NDFD-6_day';
+-my $version = 0.3;
+-my $author = 'Lucien Dunning';
+-my $email = 'ldunning@gmail.com';
++my $version = 0.4;
++my $author = 'Gavin Hurlbut & Lucien Dunning';
++my $email = 'gjhurlbu@gmail.com';
+ my $updateTimeout = 15*60;
+ my $retrieveTimeout = 30;
+ my @types = ('3dlocation', '6dlocation',  'updatetime', 
+@@ -119,7 +119,8 @@ if (open (CACHE, "$dir/ndfd_cache_${latitude}_${longitude}")) {
+ } 
+ 
+ if ($getData) {
+-    ($result, $creationdate) = NDFDParser::doParse($latitude, $longitude, $d1, $d2, $param);
++    my $unit = ($units eq "SI" ? "m" : "e");
++    ($result, $creationdate) = NDFDParser::doParse($latitude, $longitude, $d1, $d2, $unit, $param);
+     # output cache
+     open(CACHE, ">$dir/ndfd_cache_${latitude}_${longitude}") or 
+         die "cannot open cache ($dir/ndfd_cache_${latitude}_${longitude}) for writing";
+@@ -171,17 +172,9 @@ foreach $time (sort(keys(%$result))) {
+     }
+     my $geticon = 0;
+     if ($lowindex <= 5 && $result->{$time}->{temperature_minimum}) { 
+-        if ($units eq 'SI') {
+-            $result->{$time}->{temperature_minimum} =
+-                int ( (5/9) * ($result->{$time}->{temperature_minimum}-32));
+-        }
+         print "low-${lowindex}::$result->{$time}->{temperature_minimum}\n";
+         $lowindex++;
+     } elsif ($hiindex <= 5 && $result->{$time}->{temperature_maximum}) {
+-        if ($units eq 'SI') {
+-            $result->{$time}->{temperature_maximum} =
+-                int ( (5/9) * ($result->{$time}->{temperature_maximum}-32));
+-        }
+         print "high-${hiindex}::$result->{$time}->{temperature_maximum}\n";
+         $hiindex++;
+         $geticon = 1;
+diff --git a/mythplugins/mythweather/mythweather/scripts/us_nws/ndfd18.pl b/mythplugins/mythweather/mythweather/scripts/us_nws/ndfd18.pl
+index ae99c99..f4b8049 100755
+--- a/mythplugins/mythweather/mythweather/scripts/us_nws/ndfd18.pl
++++ b/mythplugins/mythweather/mythweather/scripts/us_nws/ndfd18.pl
+@@ -18,9 +18,9 @@ use Date::Manip;
+ our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d); 
+ 
+ my $name = 'NDFD-18_Hour';
+-my $version = 0.2;
+-my $author = 'Lucien Dunning';
+-my $email = 'ldunning@gmail.com';
++my $version = 0.3;
++my $author = 'Gavin Hurlbut & Lucien Dunning';
++my $email = 'gjhurlbu@gmail.com';
+ my $updateTimeout = 15*60;
+ my $retrieveTimeout = 30;
+ my @types = ('18hrlocation',  'updatetime', 
+@@ -116,7 +116,8 @@ if (open (CACHE, "$dir/ndfd18_cache_${latitude}_${longitude}")) {
+ } 
+ 
+ if ($getData) {
+-    ($result, $creationdate) = NDFDParser::doParse($latitude, $longitude, $d1, $d2, $param);
++    my $unit = ($units eq "SI" ? "m" : "e");
++    ($result, $creationdate) = NDFDParser::doParse($latitude, $longitude, $d1, $d2, $unit, $param);
+     # output cache
+     open(CACHE, ">$dir/ndfd18_cache_${latitude}_${longitude}") or 
+         die "cannot open cache ($dir/ndfd18_cache_${latitude}_${longitude}) for writing";
+@@ -149,10 +150,6 @@ foreach my $time (sort keys %$result) {
+     }
+ 
+     print "time-${index}::" . UnixDate($time, "%i %p\n");
+-    if ($units eq 'SI') {
+-        $result->{$time}->{temperature_hourly} =
+-            int( (5/9) * ($result->{$time}->{temperature_hourly}-32));
+-    }
+     print "temp-${index}::$result->{$time}->{temperature_hourly}\n";
+     print "pop-${index}::$pop12 %\n";
+     $icon = $result->{$time}->{'conditions-icon_forecast-NWS'};
+diff --git a/mythplugins/mythweather/mythweather/scripts/us_nws/ndfdXML.pm b/mythplugins/mythweather/mythweather/scripts/us_nws/ndfdXML.pm
+index 873ff8e..4cef7fb 100644
+--- a/mythplugins/mythweather/mythweather/scripts/us_nws/ndfdXML.pm
++++ b/mythplugins/mythweather/mythweather/scripts/us_nws/ndfdXML.pm
+@@ -5,9 +5,9 @@ package ndfdXML;
+ 
+ my %methods = (
+   NDFDgenByDay => {
+-    endpoint => 'http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php',
+-    soapaction => 'http://www.weather.gov/forecasts/xml/DWMLgen/wsdl/ndfdXML.wsdl#NDFDgenByDay',
+-    uri => 'http://www.weather.gov/forecasts/xml/DWMLgen/wsdl/ndfdXML.wsdl',
++    endpoint => 'http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php',
++    soapaction => 'http://graphical.weather.gov/xml/DWMLgen/wsdl/ndfdXML.wsdl#NDFDgenByDay',
++    uri => 'http://graphical.weather.gov/xml/DWMLgen/wsdl/ndfdXML.wsdl',
+     parameters => [
+       SOAP::Data->new(name => 'latitude', type => 'xsd:decimal', attr => {}),
+       SOAP::Data->new(name => 'longitude', type => 'xsd:decimal', attr => {}),
+@@ -17,15 +17,16 @@ my %methods = (
+     ],
+   },
+   NDFDgen => {
+-    endpoint => 'http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php',
+-    soapaction => 'http://www.weather.gov/forecasts/xml/DWMLgen/wsdl/ndfdXML.wsdl#NDFDgen',
+-    uri => 'http://www.weather.gov/forecasts/xml/DWMLgen/wsdl/ndfdXML.wsdl',
++    endpoint => 'http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php',
++    soapaction => 'http://graphical.weather.gov/xml/DWMLgen/wsdl/ndfdXML.wsdl#NDFDgen',
++    uri => 'http://graphical.weather.gov/xml/DWMLgen/wsdl/ndfdXML.wsdl',
+     parameters => [
+       SOAP::Data->new(name => 'latitude', type => 'xsd:decimal', attr => {}),
+       SOAP::Data->new(name => 'longitude', type => 'xsd:decimal', attr => {}),
+-      SOAP::Data->new(name => 'product', type => 'typens:productType', attr => {}),
++      SOAP::Data->new(name => 'product', type => 'xsd:string', attr => {}),
+       SOAP::Data->new(name => 'startTime', type => 'xsd:dateTime', attr => {}),
+       SOAP::Data->new(name => 'endTime', type => 'xsd:dateTime', attr => {}),
++      SOAP::Data->new(name => 'Unit', type => 'xsd:string', attr => {}),
+       SOAP::Data->new(name => 'weatherParameters', type => 'typens:weatherParametersType', attr => {}),
+     ],
+   },
+@@ -50,15 +51,16 @@ for my $method (@EXPORT_OK) {
+                   : (shift->self || __PACKAGE__->self(__PACKAGE__->new))
+       # function call, either get self or create new and assign to self
+       : (__PACKAGE__->self || __PACKAGE__->self(__PACKAGE__->new));
+-    $self->proxy($method{endpoint} || Carp::croak "No server address (proxy) specified") unless $self->proxy;
++    $self->proxy(($method{endpoint} || Carp::croak "No server address (proxy) specified"), options => {compress_threshold => 10000}) unless $self->proxy;
+     my @templates = @{$method{parameters}};
+     my $som = $self
+       -> endpoint($method{endpoint})
+       -> uri($method{uri})
+       -> on_action(sub{qq!"$method{soapaction}"!})
+-      -> call($method => map {@templates ? shift(@templates)->value($_) : $_} @_); 
+-    UNIVERSAL::isa($som => 'SOAP::SOM') ? wantarray ? $som->paramsall : $som->result 
+-                                        : $som;
++      -> call($method => map {@templates ? shift(@templates)->value($_) : $_} @_);
++
++    (UNIVERSAL::isa($som => 'SOAP::SOM') ?
++     (wantarray ? $som->paramsall : $som->result) : $som);
+   }
+ }
+ 
+diff --git a/mythplugins/mythweather/mythweather/scripts/us_nws/nws-alert.pl b/mythplugins/mythweather/mythweather/scripts/us_nws/nws-alert.pl
+old mode 100644
+new mode 100755
+index bc48637..e268a6f
+--- a/mythplugins/mythweather/mythweather/scripts/us_nws/nws-alert.pl
++++ b/mythplugins/mythweather/mythweather/scripts/us_nws/nws-alert.pl
+@@ -141,9 +141,9 @@ sub getEffectiveWarnings {
+ our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d); 
+ 
+ my $name = 'NWS-Alerts';
+-my $version = 0.3;
+-my $author = 'Lucien Dunning';
+-my $email = 'ldunning@gmail.com';
++my $version = 0.4;
++my $author = 'Gavin Hurlbut & Lucien Dunning';
++my $email = 'gjhurlbu@gmail.com';
+ my $updateTimeout = 10*60;
+ my $retrieveTimeout = 30;
+ my @types = ('swlocation', 'updatetime', 'alerts', 'copyright');
+@@ -223,7 +223,7 @@ $updatetime = ParseDate($updatetime);
+ $updatetime = UnixDate($updatetime, "%b %d, %I:%M %p %Z");
+ 
+ print "updatetime::Last Updated at $updatetime\n";
+-print "copyright::NOAA,National Weather Service\n";
++print "copyright::NOAA, National Weather Service\n";
+ 
+ sub doLocation {
+     my $code = shift;
+diff --git a/mythplugins/mythweather/mythweather/scripts/us_nws/nwsxml.pl b/mythplugins/mythweather/mythweather/scripts/us_nws/nwsxml.pl
+index a09b0f4..38f1f1f 100755
+--- a/mythplugins/mythweather/mythweather/scripts/us_nws/nwsxml.pl
++++ b/mythplugins/mythweather/mythweather/scripts/us_nws/nwsxml.pl
+@@ -18,9 +18,9 @@ use NWSLocation;
+ our ($opt_v, $opt_t, $opt_T, $opt_l, $opt_u, $opt_d); 
+ 
+ my $name = 'NWS-XML';
+-my $version = 0.3;
+-my $author = 'Lucien Dunning';
+-my $email = 'ldunning@gmail.com';
++my $version = 0.4;
++my $author = 'Gavin Hurlbut & Lucien Dunning';
++my $email = 'gjhurlbu@gmail.com';
+ my $updateTimeout = 15*60;
+ my $retrieveTimeout = 30;
+ my @types = ('cclocation', 'station_id', 'latitude', 'longitude',
+@@ -80,9 +80,9 @@ if (!(defined $opt_u && defined $loc && !$loc eq "")) {
+ 
+ my $units = $opt_u;
+ 
+-my $base_url = 'http://www.weather.gov/data/current_obs/';
+-
+-my $response = get $base_url . $loc . '.xml';
++my $base_url = 'http://w1.weather.gov/xml/current_obs/';
++my $url = $base_url . $loc . '.xml';
++my $response = get $url;
+ die unless defined $response;
+ 
+ my $xml = XMLin($response);
+diff --git a/mythtv/bindings/python/MythTV/utility.py b/mythtv/bindings/python/MythTV/utility.py
+index aa732e8..b91b897 100644
+--- a/mythtv/bindings/python/MythTV/utility.py
++++ b/mythtv/bindings/python/MythTV/utility.py
+@@ -1018,7 +1018,7 @@ class DequeBuffer( object ):
+                         continue
+                     fds[pipe.fileno()] = (weakref.ref(buff), pipe)
+ 
+-                for fd,event in poller.poll(0.1):
++                for fd,event in poller.poll(100):
+                     # loop through file numbers and handle events
+                     buff, pipe = fds[fd]
+                     if buff() is None:
+diff --git a/mythtv/bindings/python/tmdb3/README b/mythtv/bindings/python/tmdb3/README
+index e4f205c..f0682c8 100644
+--- a/mythtv/bindings/python/tmdb3/README
++++ b/mythtv/bindings/python/tmdb3/README
+@@ -79,10 +79,10 @@ This is not yet supported.
+ 
+ ## Searching
+ 
+-There are currently two search methods available for use: movies and people.
+-Search results from TheMovieDb are sent iteratively, twenty results per page.
+-The search methods provided by the PyTMDB3 module return list-like structures
+-that will automatically grab new pages as needed.
++There are currently three search methods available for use: movies, people, 
++and studios. Search results from TheMovieDb are sent iteratively, twenty
++results per page. The search methods provided by the PyTMDB3 module return
++list-like structures that will automatically grab new pages as needed.
+ 
+   >>> from tmdb3 import searchMovie
+   >>> res = searchMovie('A New Hope')
+@@ -104,20 +104,34 @@ out. The people search method behaves similarly.
+   >>> res[0]
+   <Person 'Tom Hanks'>
+ 
++  >>> from tmdb import searchStudio
++  >>> res = searchStudio('Sony Pictures')
++  >>> res
++  <Search Results: Sony Pictures>
++  >>> res[0]
++  <Studio 'Sony Pictures'>
++
++
+ ## Direct Queries
+ 
+-There are currently three data types that support direct access: collections,
+-movies, and people. These each take a single integer ID as an argument. All
+-data attributes are implemented as properties, and populated on-demand as
+-used, rather than when the object is created.
++There are currently four data types that support direct access: collections,
++movies, people, and studios. These each take a single integer ID as an
++argument. All data attributes are implemented as properties, and populated
++on-demand as used, rather than when the object is created.
+ 
+-  >>> from tmdb3 import Collection, Movie, Person
++  >>> from tmdb3 import Collection, Movie, Person, Studio
+   >>> Collection(10)
+   <Collection 'Star Wars Collection'>
+   >>> Movie(11)
+   <Movie 'Star Wars: Episode IV - A New Hope' (1977)>
+   >>> Person(2)
+   <Person 'Mark Hamill'>
++  >>> Studio(1)
++  <Studio 'Lucasfilm'>
++
++The Genre class cannot be called by id directly, however it does have a getAll
++classmethod, capable of returning all available genres for a specified
++language.
+ 
+ ## Image Behavior
+ 
+@@ -168,7 +182,7 @@ trailers offer multiple sizes.
+ 
+ ## List of Available Data 
+ 
+-  type              name
++  type                  name
+ 
+ Collection:
+   integer               id
+@@ -208,8 +222,9 @@ Movie:
+   list(Keyword)         keywords
+   dict(Release)         releases            (indexed by country)
+   list(Translation)     translations
++  list(Movie)           getSimilar()
+ 
+-Movie classmethods
++Movie classmethods:
+   Movie                 fromIMDB(imdbid)    special constructor for use with IMDb codes
+   Movie                 latest()            gets latest movie added to database
+   list(Movie)           nowplaying()        content currently in theater
+@@ -223,7 +238,9 @@ Person:
+   datetime              dayofbirth
+   datetime              dayofdeath
+   string                homepage
+-  Profile               profilie
++  Profile               profile
++  boolean               adult
++  list(string)          aliases
+   list(ReverseCast)     roles
+   list(ReverseCrew)     crew
+   list(Profile)         profiles
+@@ -255,6 +272,7 @@ Image:
+ Backdrop (derived from Image)
+ Poster (derived from Image)
+ Profile (derived from Image)
++Logo (derived from Image)
+ 
+ AlternateTitle:
+   string                country
+@@ -273,10 +291,19 @@ Translation:
+ Genre:
+   integer               id
+   string                name
++  list(Movie)           movies
++
++Genre classmethods:
++  list(Genre)           getAll(language)    returns list of all genres
+ 
+ Studio:
+   integer               id
+   string                name
++  string                description
++  string                headquarters
++  Logo                  logo
++  Studio                parent
++  list(Movie)           movies
+ 
+ Country:
+   string                code
+diff --git a/mythtv/bindings/python/tmdb3/setup.py b/mythtv/bindings/python/tmdb3/setup.py
+index a4023a2..b254f78 100755
+--- a/mythtv/bindings/python/tmdb3/setup.py
++++ b/mythtv/bindings/python/tmdb3/setup.py
+@@ -4,7 +4,7 @@ from distutils.core import setup
+ 
+ setup(
+         name='tmdb3',
+-        version='0.3.4',
++        version='0.6.4',
+         description='TheMovieDB.org APIv3 interface',
+         long_description="Object-oriented interface to TheMovieDB.org's v3 API.",
+         packages=['tmdb3']
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/__init__.py b/mythtv/bindings/python/tmdb3/tmdb3/__init__.py
+index 76bc473..b0799ee 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/__init__.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/__init__.py
+@@ -1,9 +1,10 @@
+ #!/usr/bin/env python
+ 
+-from tmdb_api import Configuration, searchMovie, searchPerson, Person, \
+-                     Movie, Collection, __version__
++from tmdb_api import Configuration, searchMovie, searchPerson, searchStudio, \
++                     Studio, Person, Movie, Collection, Genre, __version__
+ from request import set_key, set_cache
+ from locales import get_locale, set_locale
+-from cache import CacheEngine
++from tmdb_auth import get_session, set_session
++from cache_engine import CacheEngine
+ from tmdb_exceptions import *
+ 
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/cache.py b/mythtv/bindings/python/tmdb3/tmdb3/cache.py
+index 0e9e70a..9e124ea 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/cache.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/cache.py
+@@ -27,8 +27,23 @@ class Cache( object ):
+     """
+     def __init__(self, engine=None, *args, **kwargs):
+         self._engine = None
++        self._data = {}
++        self._age = 0
+         self.configure(engine, *args, **kwargs)
+ 
++    def _import(self, data=None):
++        if data is None:
++            data = self._engine.get(self._age)
++        for obj in sorted(data, key=lambda x: x.creation):
++            if not obj.expired:
++                self._data[obj.key] = obj
++                self._age = max(self._age, obj.creation)
++
++    def _expire(self):
++        for k,v in self._data.items():
++            if v.expired:
++                del self._data[k]
++
+     def configure(self, engine, *args, **kwargs):
+         if engine is None:
+             engine = 'file'
+@@ -37,21 +52,23 @@ class Cache( object ):
+         self._engine = Engines[engine](self)
+         self._engine.configure(*args, **kwargs)
+ 
+-    def put(self, key, data, lifetime=3600):
++    def put(self, key, data, lifetime=60*60*12):
+         # pull existing data, so cache will be fresh when written back out
+         if self._engine is None:
+             raise TMDBCacheError("No cache engine configured")
+-        self._engine.put(key, data, lifetime)
++        self._expire()
++        self._import(self._engine.put(key, data, lifetime))
+ 
+     def get(self, key):
+         if self._engine is None:
+             raise TMDBCacheError("No cache engine configured")
+-        return self._engine.get(key)
+-
+-        self._read()
+-        if (key in self._cache) and (time.time() < self._cache[key][0]):
+-            return self._cache[key][1]
+-        return None
++        self._expire()
++        if key not in self._data:
++            self._import()
++        try:
++            return self._data[key].data
++        except:
++            return None
+ 
+     def cached(self, callback):
+         """
+@@ -85,6 +102,8 @@ class Cache( object ):
+                     raise TMDBCacheError('Cache.Cached must be provided a '+\
+                                          'callable object.')
+                 return self.__class__(self.cache, self.callback, args[0])
++            elif self.inst.lifetime == 0:
++                return self.func(*args, **kwargs)
+             else:
+                 key = self.callback()
+                 data = self.cache.get(key)
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/cache_engine.py b/mythtv/bindings/python/tmdb3/tmdb3/cache_engine.py
+index a98a110..99ad4cd 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/cache_engine.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/cache_engine.py
+@@ -7,6 +7,9 @@
+ # Purpose: Base cache engine class for collecting registered engines
+ #-----------------------
+ 
++import time
++from weakref import ref
++
+ class Engines( object ):
+     def __init__(self):
+         self._engines = {}
+@@ -15,6 +18,8 @@ class Engines( object ):
+         self._engines[engine.name] = engine
+     def __getitem__(self, key):
+         return self._engines[key]
++    def __contains__(self, key):
++        return self._engines.__contains__(key)
+ Engines = Engines()
+ 
+ class CacheEngineType( type ):
+@@ -33,13 +38,35 @@ class CacheEngine( object ):
+ 
+     name = 'unspecified'
+     def __init__(self, parent):
+-        self.parent = parent
++        self.parent = ref(parent)
+     def configure(self):
+         raise RuntimeError
+-    def get(self, key):
++    def get(self, date):
+         raise RuntimeError
+     def put(self, key, value, lifetime):
+         raise RuntimeError
+     def expire(self, key):
+         raise RuntimeError
+ 
++class CacheObject( object ):
++    """
++    Cache object class, containing one stored record.
++    """
++
++    def __init__(self, key, data, lifetime=0, creation=None):
++        self.key = key
++        self.data = data
++        self.lifetime = lifetime
++        self.creation = creation if creation is not None else time.time()
++
++    def __len__(self):
++        return len(self.data)
++
++    @property
++    def expired(self):
++        return (self.remaining == 0)
++
++    @property
++    def remaining(self):
++        return max((self.creation + self.lifetime) - time.time(), 0)
++
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/cache_file.py b/mythtv/bindings/python/tmdb3/tmdb3/cache_file.py
+index 867306c..54a9ca4 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/cache_file.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/cache_file.py
+@@ -14,8 +14,41 @@ import errno
+ import json
+ import time
+ import os
++import io
++
++from cStringIO import StringIO
++
++from tmdb_exceptions import *
++from cache_engine import CacheEngine, CacheObject
++
++####################
++# Cache File Format
++#------------------
++# cache version         (2) unsigned short
++# slot count            (2) unsigned short
++# slot 0: timestamp     (8) double
++# slot 0: lifetime      (4) unsigned int
++# slot 0: seek point    (4) unsigned int
++# slot 1: timestamp
++# slot 1: lifetime          index slots are IDd by their query date and
++# slot 1: seek point        are filled incrementally forwards. lifetime
++#   ....                    is how long after query date before the item
++#   ....                    expires, and seek point is the location of the
++# slot N-2: timestamp       start of data for that entry. 256 empty slots
++# slot N-2: lifetime        are pre-allocated, allowing fast updates.
++# slot N-2: seek point      when all slots are filled, the cache file is
++# slot N-1: timestamp       rewritten from scrach to add more slots.
++# slot N-1: lifetime
++# slot N-1: seek point
++# block 1               (?) ASCII
++# block 2
++#    ....                   blocks are just simple ASCII text, generated
++#    ....                   as independent objects by the JSON encoder
++# block N-2
++# block N-1
++#
++####################
+ 
+-from cache_engine import CacheEngine
+ 
+ def _donothing(*args, **kwargs):
+     pass
+@@ -45,11 +78,25 @@ try:
+                 suppress = self.callback(exc_type, exc_value, exc_tb)
+             fcntl.flock(self.fileobj, fcntl.LOCK_UN)
+             return suppress
++
++    def parse_filename(filename):
++        if '$' in filename:
++            # replace any environmental variables
++            filename = os.path.expandvars(filename)
++        if filename.startswith('~'):
++            # check for home directory
++            return os.path.expanduser(filename)
++        elif filename.startswith('/'):
++            # check for absolute path
++            return filename
++        # return path with temp directory prepended
++        return '/tmp/' + filename
++
+ except ImportError:
+     import msvcrt
+     class Flock( object ):
+-        LOCK_EX = msvcrt.NBLCK
+-        LOCK_SH = msvcrt.NBLCK
++        LOCK_EX = msvcrt.LK_LOCK
++        LOCK_SH = msvcrt.LK_LOCK
+ 
+         def __init__(self, fileobj, operation, callback=None):
+             self.fileobj = fileobj
+@@ -65,20 +112,107 @@ except ImportError:
+             msvcrt.locking(self.fileobj.fileno(), msvcrt.LK_UNLCK, self.size)
+             return suppress
+ 
++    def parse_filename(filename):
++        if '%' in filename:
++            # replace any environmental variables
++            filename = os.path.expandvars(filename)
++        if filename.startswith('~'):
++            # check for home directory
++            return os.path.expanduser(filename)
++        elif (ord(filename[0]) in (range(65,91)+range(99,123))) \
++                and (filename[1:3] == ':\\'):
++            # check for absolute drive path (e.g. C:\...)
++            return filename
++        elif (filename.count('\\') >= 3) and (filename.startswith('\\\\')):
++            # check for absolute UNC path (e.g. \\server\...)
++            return filename
++        # return path with temp directory prepended
++        return os.path.expandvars(os.path.join('%TEMP%',filename))
++
++
++class FileCacheObject( CacheObject ):
++    _struct = struct.Struct('dII') # double and two ints
++                                   # timestamp, lifetime, position
++
++    @classmethod
++    def fromFile(cls, fd):
++        dat = cls._struct.unpack(fd.read(cls._struct.size))
++        obj = cls(None, None, dat[1], dat[0])
++        obj.position = dat[2]
++        return obj
++
++    def __init__(self, *args, **kwargs):
++        self._key = None
++        self._data = None
++        self._size = None
++        self._buff = StringIO()
++        super(FileCacheObject, self).__init__(*args, **kwargs)
++
++    @property
++    def size(self):
++        if self._size is None:
++            self._buff.seek(0,2)
++            size = self._buff.tell()
++            if size == 0:
++                if (self._key is None) or (self._data is None):
++                    raise RuntimeError
++                json.dump([self.key, self.data], self._buff)
++                self._size = self._buff.tell()
++            self._size = size
++        return self._size
++    @size.setter
++    def size(self, value): self._size = value
++
++    @property
++    def key(self):
++        if self._key is None:
++            try:
++                self._key, self._data = json.loads(self._buff.getvalue())
++            except:
++                pass
++        return self._key
++    @key.setter
++    def key(self, value): self._key = value
++
++    @property
++    def data(self):
++        if self._data is None:
++            self._key, self._data = json.loads(self._buff.getvalue())
++        return self._data
++    @data.setter
++    def data(self, value): self._data = value
++
++    def load(self, fd):
++        fd.seek(self.position)
++        self._buff.seek(0)
++        self._buff.write(fd.read(self.size))
++
++    def dumpslot(self, fd):
++        pos = fd.tell()
++        fd.write(self._struct.pack(self.creation, self.lifetime, self.position))
++
++    def dumpdata(self, fd):
++        self.size
++        fd.seek(self.position)
++        fd.write(self._buff.getvalue())
++
++
+ class FileEngine( CacheEngine ):
+     """Simple file-backed engine."""
+     name = 'file'
+-    __time_struct = struct.Struct('d') # double placed at start of file to
+-                                       # check for updated data
++    _struct = struct.Struct('HH') # two shorts for version and count
++    _version = 2
+ 
+     def __init__(self, parent):
+         super(FileEngine, self).__init__(parent)
+         self.configure(None)
+ 
+-    def configure(self, filename):
++    def configure(self, filename, preallocate=256):
++        self.preallocate = preallocate
+         self.cachefile = filename
+-        self.cacheage = 0
+-        self.cache = None
++        self.size = 0
++        self.free = 0
++        self.age = 0
+ 
+     def _init_cache(self):
+         # only run this once
+@@ -86,15 +220,13 @@ class FileEngine( CacheEngine ):
+ 
+         if self.cachefile is None:
+             raise TMDBCacheError("No cache filename given.")
+-        if self.cachefile.startswith('~'):
+-            self.cachefile = os.path.expanduser(self.cachefile)
+-        elif not self.cachefile.startswith('/'):
+-            self.cachefile = '/tmp/' + self.cachefile
++
++        self.cachefile = parse_filename(self.cachefile)
+ 
+         try:
+             # attempt to read existing cache at filename
+             # handle any errors that occur
+-            self._read()
++            self._open('r+b')
+             # seems to have read fine, make sure we have write access
+             if not os.access(self.cachefile, os.W_OK):
+                 raise TMDBCacheWriteError(self.cachefile)
+@@ -102,9 +234,9 @@ class FileEngine( CacheEngine ):
+         except IOError as e:
+             if e.errno == errno.ENOENT:
+                 # file does not exist, create a new one
+-                self.cache = {}
+                 try:
+-                    self._write()
++                    self._open('w+b')
++                    self._write([])
+                 except IOError as e:
+                     if e.errno == errno.ENOENT:
+                         # directory does not exist
+@@ -122,71 +254,139 @@ class FileEngine( CacheEngine ):
+                 # let the unhandled error continue through
+                 raise
+ 
+-    def _open(self, mode='r'):
++    def get(self, date):
++        self._init_cache()
++        self._open('r+b')
++        
++        with Flock(self.cachefd, Flock.LOCK_SH): # lock for shared access
++            # return any new objects in the cache
++            return self._read(date)
++
++    def put(self, key, value, lifetime):
++        self._init_cache()
++        self._open('r+b')
++
++        with Flock(self.cachefd, Flock.LOCK_EX): # lock for exclusive access
++            newobjs = self._read(self.age)
++            newobjs.append(FileCacheObject(key, value, lifetime))
++
++            # this will cause a new file object to be opened with the proper
++            # access mode, however the Flock should keep the old object open
++            # and properly locked
++            self._open('r+b')
++            self._write(newobjs)
++            return newobjs
++
++    def _open(self, mode='r+b'):
+         # enforce binary operation
+-        mode += 'b'
+         try:
+             if self.cachefd.mode == mode:
+                 # already opened in requested mode, nothing to do
+                 self.cachefd.seek(0)
+                 return
+         except: pass # catch issue of no cachefile yet opened
+-        self.cachefd = open(self.cachefile, mode)
++        self.cachefd = io.open(self.cachefile, mode)
+ 
++    def _read(self, date):
++        try:
++            self.cachefd.seek(0)
++            version, count = self._struct.unpack(\
++                                    self.cachefd.read(self._struct.size))
++            if version != self._version:
++                # old version, break out and well rewrite when finished
++                raise Exception
+ 
+-    def _read(self):
+-        self._init_cache()
+-        self._open('r')
+-        
+-        with Flock(self.cachefd, Flock.LOCK_SH): # lock for shared access
+-            try:
+-                age = self.__time_struct.unpack(self.cachefd.read(8))
+-            except:
+-                # failed to read age, ignore and we'll clean up when
+-                # it gets rewritten
+-                if self.cache is None:
+-                    self.cache = {}
+-                return 
+-
+-            if self.cacheage >= age:
+-                # local copy is sufficiently new, no need to read
+-                return
+-            # read remaining data from file
+-            self.cacheage = age
+-            self.cache = json.load(self.cachefd)
++            self.size = count
++            cache = []
++            while count:
++                # loop through storage definitions
++                obj = FileCacheObject.fromFile(self.cachefd)
++                cache.append(obj)
++                count -= 1
+ 
+-    def _write(self):
+-        self._init_cache()
+-        # WARNING: this does no testing to ensure this instance has the newest
+-        # copy of the file cache
+-        self._open('w')
+-        # the slight delay between truncating the file with 'w' and flocking
+-        # could cause problems with another instance simultaneously trying to
+-        # read the timestamp
+-        with Flock(self.cachefd, Flock.LOCK_EX): # lock for exclusive access
+-            # filter expired data from cache
+-            # running this while flocked means the file is locked for additional
+-            # time, however we do not want anyone else writing to the file
+-            # before we write our stuff
+-            self.expire()
+-            self.cacheage = time.time()
+-            self.cachefd.write(self.__time_struct.pack(self.cacheage))
+-            json.dump(self.cache, self.cachefd)
+-
+-    def get(self, key):
+-        self._read()
+-        if (key in self.cache) and (time.time() < self.cache[key][0]):
+-            return self.cache[key][1]
+-        return None
++        except:
++            # failed to read information, so just discard it and return empty
++            self.size = 0
++            self.free = 0
++            return []
++
++        # get end of file
++        self.cachefd.seek(0,2)
++        position = self.cachefd.tell()
++        newobjs = []
++        emptycount = 0
++
++        # walk backward through all, collecting new content and populating size
++        while len(cache):
++            obj = cache.pop()
++            if obj.creation == 0:
++                # unused slot, skip
++                emptycount += 1
++            elif obj.expired:
++                # object has passed expiration date, no sense processing
++                continue
++            elif obj.creation > date:
++                # used slot with new data, process
++                obj.size, position = position - obj.position, obj.position
++                newobjs.append(obj)
++                # update age
++                self.age = max(self.age, obj.creation)
++            elif len(newobjs):
++                # end of new data, break
++                break
++
++        # walk forward and load new content
++        for obj in newobjs:
++            obj.load(self.cachefd)
++
++        self.free = emptycount
++        return newobjs
++
++    def _write(self, data):
++        if self.free and (self.size != self.free):
++            # we only care about the last data point, since the rest are
++            # already stored in the file
++            data = data[-1]
++
++            # determine write position of data in cache
++            self.cachefd.seek(0,2)
++            end = self.cachefd.tell()
++            data.position = end
++
++            # write incremental update to free slot
++            self.cachefd.seek(4 + 16*(self.size-self.free))
++            data.dumpslot(self.cachefd)
++            data.dumpdata(self.cachefd)
++
++        else:
++            # rewrite cache file from scratch
++            # pull data from parent cache
++            data.extend(self.parent()._data.values())
++            data.sort(key=lambda x: x.creation)
++            # write header
++            size = len(data) + self.preallocate
++            self.cachefd.seek(0)
++            self.cachefd.truncate()
++            self.cachefd.write(self._struct.pack(self._version, size))
++            # write storage slot definitions
++            prev = None
++            for d in data:
++                if prev == None:
++                    d.position = 4 + 16*size
++                else:
++                    d.position = prev.position + prev.size
++                d.dumpslot(self.cachefd)
++                prev = d
++            # fill in allocated slots
++            for i in range(2**8):
++                self.cachefd.write(FileCacheObject._struct.pack(0, 0, 0))
++            # write stored data
++            for d in data:
++                d.dumpdata(self.cachefd)
++
++        self.cachefd.flush()
++
++    def expire(self, key):
++        pass
+ 
+-    def put(self, key, value, lifetime):
+-        self._read()
+-        self.cache[key] = (time.time()+lifetime, value)
+-        self._write()
+-
+-    def expire(self, key=None):
+-        t = time.time()
+-        for k,v in self.cache.items():
+-            if v[0] < t: # expiration has passed
+-                del self.cache[k]
+ 
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/cache_null.py b/mythtv/bindings/python/tmdb3/tmdb3/cache_null.py
+index ae2f2b9..a59741c 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/cache_null.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/cache_null.py
+@@ -13,7 +13,7 @@ class NullEngine( CacheEngine ):
+     """Non-caching engine for debugging."""
+     name = 'null'
+     def configure(self): pass
+-    def get(self, key): return None
+-    def put(self, key, value, lifetime): pass
++    def get(self, date): return []
++    def put(self, key, value, lifetime): return []
+     def expire(self, key): pass
+ 
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/locales.py b/mythtv/bindings/python/tmdb3/tmdb3/locales.py
+index 2cb17aa..1c41983 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/locales.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/locales.py
+@@ -32,6 +32,13 @@ class LocaleBase( object ):
+                                 ' does not support modification.')
+         super(LocaleBase, self).__delattr__(key)
+ 
++    def __lt__(self, other):
++        return (id(self) != id(other)) and (str(self) > str(other))
++    def __gt__(self, other):
++        return (id(self) != id(other)) and (str(self) < str(other))
++    def __eq__(self, other):
++        return (id(self) == id(other)) or (str(self) == str(other))
++
+     @classmethod
+     def getstored(cls, key):
+         if key is None:
+@@ -39,7 +46,8 @@ class LocaleBase( object ):
+         try:
+             return cls._stored[key.lower()]
+         except:
+-            raise TMDBLocaleError("'{0}' is not a known valid {1} code.".format(key, cls.__name__))
++            raise TMDBLocaleError("'{0}' is not a known valid {1} code."\
++                                        .format(key, cls.__name__))
+ 
+ class Language( LocaleBase ):
+     __slots__ = ['ISO639_1', 'ISO639_2', 'ISO639_2B', 'englishname',
+@@ -76,42 +84,82 @@ class Country( LocaleBase ):
+         return u"<Country '{0.name}' ({0.alpha2})>".format(self)
+ 
+ class Locale( LocaleBase ):
+-    __slots__ = ['language', 'country']
++    __slots__ = ['language', 'country', 'encoding']
+ 
+-    def __init__(self, language, country):
++    def __init__(self, language, country, encoding):
+         self.language = Language.getstored(language)
+         self.country = Country.getstored(country)
++        self.encoding = encoding if encoding else 'latin-1'
++
++    def __str__(self):
++        return u"{0}_{1}".format(self.language, self.country)
+ 
+     def __repr__(self):
+         return u"<Locale {0.language}_{0.country}>".format(self)
+ 
++    def encode(self, dat):
++        """Encode using system default encoding for network/file output."""
++        try:
++            return dat.encode(self.encoding)
++        except AttributeError:
++            # not a string type, pass along
++            return dat
++        except UnicodeDecodeError:
++            # just return unmodified and hope for the best
++            return dat
++
++    def decode(self, dat):
++        """Decode to system default encoding for internal use."""
++        try:
++            return dat.decode(self.encoding)
++        except AttributeError:
++            # not a string type, pass along
++            return dat
++        except UnicodeEncodeError:
++            # just return unmodified and hope for the best
++            return dat
++
+ def set_locale(language=None, country=None, fallthrough=False):
+     global syslocale
+     LocaleBase.fallthrough = fallthrough
+ 
++    sysloc, sysenc = locale.getdefaultlocale()
++
+     if (not language) or (not country):
+         dat = None
+         if syslocale is not None:
+             dat = (str(syslocale.language), str(syslocale.country))
+         else:
+-            res = locale.getdefaultlocale()[0]
+-            if (res is None) or ('_' not in res):
++            if (sysloc is None) or ('_' not in sysloc):
+                 dat = ('en', 'US')
+             else:
+-                dat = res.split('_')
++                dat = sysloc.split('_')
+         if language is None:
+             language = dat[0]
+         if country is None:
+             country = dat[1]
+-    syslocale = Locale(language, country)
+ 
+-def get_locale(language=None, country=None):
++    syslocale = Locale(language, country, sysenc)
++
++def get_locale(language=-1, country=-1):
++    """Output locale using provided attributes, or return system locale."""
+     global syslocale
+-    if language and country:
+-        return Locale(language, country)
++    # pull existing stored values
+     if syslocale is None:
+-        return Locale(None, None)
+-    return syslocale
++        loc = Locale(None, None, locale.getdefaultlocale()[1])
++    else:
++        loc = syslocale
++
++    # both options are default, return stored values
++    if language == country == -1:
++        return loc
++
++    # supplement default option with stored values
++    if language == -1:
++        language = loc.language
++    elif country == -1:
++        country = loc.country
++    return Locale(language, country, loc.encoding)
+ 
+ ######## AUTOGENERATED LANGUAGE AND COUNTRY DATA BELOW HERE #########
+ 
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/pager.py b/mythtv/bindings/python/tmdb3/tmdb3/pager.py
+index efa34d2..6cb874c 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/pager.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/pager.py
+@@ -57,6 +57,8 @@ class PagedList( Sequence ):
+         self._pagesize = pagesize
+ 
+     def __getitem__(self, index):
++        if isinstance(index, slice):
++            return [self[x] for x in xrange(*index.indices(len(self)))]
+         if index >= len(self):
+             raise IndexError("list index outside range")
+         if (index >= len(self._data)) \
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/request.py b/mythtv/bindings/python/tmdb3/tmdb3/request.py
+index ea71396..d521959 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/request.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/request.py
+@@ -9,17 +9,20 @@
+ #-----------------------
+ 
+ from tmdb_exceptions import *
++from locales import get_locale
+ from cache import Cache
+ 
++from urllib import urlencode
+ import urllib2
+-import urllib
+ import json
+ import os
+ 
+ DEBUG = False
+-
+ cache = Cache(filename='pytmdb3.cache')
+ 
++#DEBUG = True
++#cache = Cache(engine='null')
++
+ def set_key(key):
+     """
+     Specify the API key to use retrieving data from themoviedb.org. This
+@@ -54,8 +57,13 @@ class Request( urllib2.Request ):
+         self._url = url.lstrip('/')
+         self._kwargs = dict([(kwa,kwv) for kwa,kwv in kwargs.items()
+                                         if kwv is not None])
+-        url = '{0}{1}?{2}'.format(self._base_url, self._url,
+-                                  urllib.urlencode(kwargs))
++
++        locale = get_locale()
++        kwargs = {}
++        for k,v in self._kwargs.items():
++            kwargs[k] = locale.encode(v)
++        url = '{0}{1}?{2}'.format(self._base_url, self._url, urlencode(kwargs))
++
+         urllib2.Request.__init__(self, url)
+         self.add_header('Accept', 'application/json')
+         self.lifetime = 3600 # 1hr
+@@ -73,14 +81,20 @@ class Request( urllib2.Request ):
+         obj.lifetime = self.lifetime
+         return obj
+ 
++    def add_data(self, data):
++        """Provide data to be sent with POST."""
++        urllib2.Request.add_data(self, urlencode(data))
++
+     def open(self):
+         """Open a file object to the specified URL."""
+         try:
+             if DEBUG:
+                 print 'loading '+self.get_full_url()
++                if self.has_data():
++                    print '  '+self.get_data()
+             return urllib2.urlopen(self)
+         except urllib2.HTTPError, e:
+-            raise TMDBHTTPError(str(e))
++            raise TMDBHTTPError(e)
+ 
+     def read(self):
+         """Return result from specified URL as a string."""
+@@ -90,7 +104,21 @@ class Request( urllib2.Request ):
+     def readJSON(self):
+         """Parse result from specified URL as JSON data."""
+         url = self.get_full_url()
+-        data = json.load(self.open())
++        try:
++            # catch HTTP error from open()
++            data = json.load(self.open())
++        except TMDBHTTPError, e:
++            try:
++                # try to load whatever was returned
++                data = json.loads(e.response)
++            except:
++                # cannot parse json, just raise existing error
++                raise e
++            else:
++                # response parsed, try to raise error from TMDB
++                handle_status(data, url)
++            # no error from TMDB, just raise existing error
++            raise e
+         handle_status(data, url)
+         if DEBUG:
+             import pprint
+@@ -99,14 +127,14 @@ class Request( urllib2.Request ):
+ 
+ status_handlers = {
+     1: None,
+-    2: TMDBRequestError('Invalid service - This service does not exist.'),
++    2: TMDBRequestInvalid('Invalid service - This service does not exist.'),
+     3: TMDBRequestError('Authentication Failed - You do not have '+\
+                         'permissions to access this service.'),
+-    4: TMDBRequestError("Invalid format - This service doesn't exist "+\
++    4: TMDBRequestInvalid("Invalid format - This service doesn't exist "+\
+                         'in that format.'),
+-    5: TMDBRequestError('Invalid parameters - Your request parameters '+\
++    5: TMDBRequestInvalid('Invalid parameters - Your request parameters '+\
+                         'are incorrect.'),
+-    6: TMDBRequestError('Invalid id - The pre-requisite id is invalid '+\
++    6: TMDBRequestInvalid('Invalid id - The pre-requisite id is invalid '+\
+                         'or not found.'),
+     7: TMDBKeyInvalid('Invalid API key - You must be granted a valid key.'),
+     8: TMDBRequestError('Duplicate entry - The data you tried to submit '+\
+@@ -125,5 +153,6 @@ status_handlers = {
+ def handle_status(data, query):
+     status = status_handlers[data.get('status_code', 1)]
+     if status is not None:
++        status.tmdberrno = data['status_code']
+         status.query = query
+         raise status
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/tmdb_api.py b/mythtv/bindings/python/tmdb3/tmdb3/tmdb_api.py
+index 1d123e9..6492cd1 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/tmdb_api.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/tmdb_api.py
+@@ -22,7 +22,7 @@ for search and retrieval of text metadata and image URLs from TMDB.
+ Preliminary API specifications can be found at
+ http://help.themoviedb.org/kb/api/about-3"""
+ 
+-__version__="v0.4.1"
++__version__="v0.6.4"
+ # 0.1.0 Initial development
+ # 0.2.0 Add caching mechanism for API queries
+ # 0.2.1 Temporary work around for broken search paging
+@@ -36,11 +36,23 @@ __version__="v0.4.1"
+ # 0.3.7 Generalize caching mechanism, and allow controllability
+ # 0.4.0 Add full locale support (language and country) and optional fall through
+ # 0.4.1 Add custom classmethod for dealing with IMDB movie IDs
++# 0.4.2 Improve cache file selection for Windows systems
++# 0.4.3 Add a few missed Person properties
++# 0.4.4 Add support for additional Studio information
++# 0.4.5 Add locale fallthrough for images and alternate titles
++# 0.4.6 Add slice support for search results
++# 0.5.0 Rework cache framework and improve file cache performance
++# 0.6.0 Add user authentication support
++# 0.6.1 Add adult filtering for people searches
++# 0.6.2 Add similar movie search for Movie objects
++# 0.6.3 Add Studio search
++# 0.6.4 Add Genre list and associated Movie search
+ 
+ from request import set_key, Request
+-from util import Datapoint, Datalist, Datadict, Element
++from util import Datapoint, Datalist, Datadict, Element, NameRepr, SearchRepr
+ from pager import PagedRequest
+ from locales import get_locale, set_locale
++from tmdb_auth import get_session, set_session
+ from tmdb_exceptions import *
+ 
+ import json
+@@ -50,18 +62,36 @@ import datetime
+ 
+ DEBUG = False
+ 
++def process_date(datestr):
++    return datetime.date(*[int(x) for x in datestr.split('-')])
++
+ class Configuration( Element ):
+     images = Datapoint('images')
+     def _populate(self):
+         return Request('configuration')
+ Configuration = Configuration()
+ 
++class Account( NameRepr, Element ):
++    def _populate(self):
++        return Request('account', session_id=self._session.sessionid)
++
++    id              = Datapoint('id')
++    adult           = Datapoint('include_adult')
++    country         = Datapoint('iso_3166_1')
++    language        = Datapoint('iso_639_1')
++    name            = Datapoint('name')
++    username        = Datapoint('username')
++
++    @property
++    def locale(self):
++        return get_locale(self.language, self.country)
++
+ def searchMovie(query, locale=None, adult=False):
+     return MovieSearchResult(
+                     Request('search/movie', query=query, include_adult=adult),
+                     locale=locale)
+ 
+-class MovieSearchResult( PagedRequest ):
++class MovieSearchResult( SearchRepr, PagedRequest ):
+     """Stores a list of search matches."""
+     _name = None
+     def __init__(self, request, locale=None):
+@@ -70,22 +100,27 @@ class MovieSearchResult( PagedRequest ):
+         super(MovieSearchResult, self).__init__(
+                                 request.new(language=locale.language),
+                                 lambda x: Movie(raw=x, locale=locale))
+-    
+-    def __repr__(self):
+-        name = self._name if self._name else self._request._kwargs['query']
+-        return u"<Search Results: {0}>".format(name)
+ 
+-def searchPerson(query):
+-    return PeopleSearchResult(Request('search/person', query=query))
++def searchPerson(query, adult=False):
++    return PeopleSearchResult(Request('search/person', query=query,
++                                      include_adult=adult))
+ 
+-class PeopleSearchResult( PagedRequest ):
++class PeopleSearchResult( SearchRepr, PagedRequest ):
+     """Stores a list of search matches."""
++    _name = None
+     def __init__(self, request):
+         super(PeopleSearchResult, self).__init__(request,
+                                 lambda x: Person(raw=x))
+ 
+-    def __repr__(self):
+-        return u"<Search Results: {0}>".format(self._request._kwargs['query'])
++def searchStudio(query):
++    return StudioSearchResult(Request('search/company', query=query))
++
++class StudioSearchResult( SearchRepr, PagedRequest ):
++    """Stores a list of search matches."""
++    _name = None
++    def __init__(self, request):
++        super(StudioSearchResult, self).__init__(request,
++                                lambda x: Studio(raw=x))
+ 
+ class Image( Element ):
+     filename        = Datapoint('file_path', initarg=1,
+@@ -104,7 +139,18 @@ class Image( Element ):
+         url = Configuration.images['base_url'].rstrip('/')
+         return url+'/{0}/{1}'.format(size, self.filename)
+ 
++    # sort preferring locale's language, but keep remaining ordering consistent
++    def __lt__(self, other):
++        return (self.language == self._locale.language) \
++                and (self.language != other.language)
++    def __gt__(self, other):
++        return (self.language != other.language) \
++                and (other.language == self._locale.language)
++    def __eq__(self, other):
++        return self.language == other.language
++
+     def __repr__(self):
++        # BASE62 encoded filename, no need to worry about unicode
+         return u"<{0.__class__.__name__} '{0.filename}'>".format(self)
+ 
+ class Backdrop( Image ):
+@@ -116,36 +162,56 @@ class Poster( Image ):
+ class Profile( Image ):
+     def sizes(self):
+         return Configuration.images['profile_sizes']
++class Logo( Image ):
++    def sizes(self):
++        return Configuration.images['logo_sizes']
+ 
+ class AlternateTitle( Element ):
+     country     = Datapoint('iso_3166_1')
+     title       = Datapoint('title')
+ 
++    # sort preferring locale's country, but keep remaining ordering consistent
++    def __lt__(self, other):
++        return (self.country == self._locale.country) \
++                and (self.country != other.country)
++    def __gt__(self, other):
++        return (self.country != other.country) \
++                and (other.country == self._locale.country)
++    def __eq__(self, other):
++        return self.country == other.country
++
++    def __repr__(self):
++        return u"<{0.__class__.__name__} '{0.title}' ({0.country})>"\
++                        .format(self).encode('utf-8')
++
+ class Person( Element ):
+     id          = Datapoint('id', initarg=1)
+     name        = Datapoint('name')
+     biography   = Datapoint('biography')
+-    dayofbirth  = Datapoint('birthday', default=None, handler=lambda x: \
+-                                         datetime.datetime.strptime(x, '%Y-%m-%d'))
+-    dayofdeath  = Datapoint('deathday', default=None, handler=lambda x: \
+-                                         datetime.datetime.strptime(x, '%Y-%m-%d'))
++    dayofbirth  = Datapoint('birthday', default=None, handler=process_date)
++    dayofdeath  = Datapoint('deathday', default=None, handler=process_date)
+     homepage    = Datapoint('homepage')
+     birthplace  = Datapoint('place_of_birth')
+     profile     = Datapoint('profile_path', handler=Profile, raw=False)
++    adult       = Datapoint('adult')
++    aliases     = Datalist('also_known_as')
+ 
+     def __repr__(self):
+-        return u"<{0} '{1.name}' at {2}>".\
+-                        format(self.__class__.__name__, self, hex(id(self)))
++        return u"<{0.__class__.__name__} '{0.name}'>"\
++                            .format(self).encode('utf-8')
+ 
+     def _populate(self):
+         return Request('person/{0}'.format(self.id))
+     def _populate_credits(self):
+-        return Request('person/{0}/credits'.format(self.id), language=self._locale.language)
++        return Request('person/{0}/credits'.format(self.id), \
++                                language=self._locale.language)
+     def _populate_images(self):
+         return Request('person/{0}/images'.format(self.id))
+ 
+-    roles       = Datalist('cast', handler=lambda x: ReverseCast(raw=x), poller=_populate_credits)
+-    crew        = Datalist('crew', handler=lambda x: ReverseCrew(raw=x), poller=_populate_credits)
++    roles       = Datalist('cast', handler=lambda x: ReverseCast(raw=x), \
++                            poller=_populate_credits)
++    crew        = Datalist('crew', handler=lambda x: ReverseCrew(raw=x), \
++                            poller=_populate_credits)
+     profiles    = Datalist('profiles', handler=Profile, poller=_populate_images)
+ 
+ class Cast( Person ):
+@@ -153,30 +219,31 @@ class Cast( Person ):
+     order       = Datapoint('order')
+ 
+     def __repr__(self):
+-        return u"<{0} '{1.name}' as '{1.character}'>".\
+-                        format(self.__class__.__name__, self)
++        return u"<{0.__class__.__name__} '{0.name}' as '{0.character}'>"\
++                            .format(self).encode('utf-8')
+ 
+ class Crew( Person ):
+     job         = Datapoint('job')
+     department  = Datapoint('department')
+ 
+     def __repr__(self):
+-        return u"<{0.__class__.__name__} '{1.name}','{1.job}'>".format(self)
++        return u"<{0.__class__.__name__} '{0.name}','{0.job}'>"\
++                            .format(self).encode('utf-8')
+ 
+ class Keyword( Element ):
+     id   = Datapoint('id')
+     name = Datapoint('name')
+ 
+     def __repr__(self):
+-        return u"<{0.__class__.__name__} {0.name}>".format(self)
++        return u"<{0.__class__.__name__} {0.name}>".format(self).encode('utf-8')
+ 
+ class Release( Element ):
+     certification   = Datapoint('certification')
+     country         = Datapoint('iso_3166_1')
+-    releasedate     = Datapoint('release_date', handler=lambda x: \
+-                                         datetime.datetime.strptime(x, '%Y-%m-%d'))
++    releasedate     = Datapoint('release_date', handler=process_date)
+     def __repr__(self):
+-        return u"<Release {0.country}, {0.releasedate}>".format(self)
++        return u"<{0.__class__.__name__} {0.country}, {0.releasedate}>"\
++                            .format(self).encode('utf-8')
+ 
+ class Trailer( Element ):
+     name    = Datapoint('name')
+@@ -188,6 +255,7 @@ class YoutubeTrailer( Trailer ):
+         return "http://www.youtube.com/watch?v={0}".format(self.source)
+ 
+     def __repr__(self):
++        # modified BASE64 encoding, no need to worry about unicode
+         return u"<{0.__class__.__name__} '{0.name}'>".format(self)
+ 
+ class AppleTrailer( Element ):
+@@ -212,36 +280,70 @@ class Translation( Element ):
+     englishname   = Datapoint('english_name')
+ 
+     def __repr__(self):
+-        return u"<{0.__class__.__name__} '{0.name}' ({0.language})>".format(self)
++        return u"<{0.__class__.__name__} '{0.name}' ({0.language})>"\
++                                .format(self).encode('utf-8')
+ 
+-class Genre( Element ):
++class Genre( NameRepr, Element ):
+     id      = Datapoint('id')
+     name    = Datapoint('name')
+ 
+-    def __repr__(self):
+-        return u"<{0.__class__.__name__} '{0.name}'>".format(self)
++    def _populate_movies(self):
++        return Request('genre/{0}/movies'.format(self.id), \
++                            language=self._locale.language)
+ 
+-class Studio( Element ):
+-    id      = Datapoint('id')
+-    name    = Datapoint('name')
++    @property
++    def movies(self):
++        if 'movies' not in self._data:
++            search = MovieSearchResult(self._populate_movies(), \
++                                                locale=self._locale)
++            search._name = "{0.name} Movies".format(self)
++            self._data['movies'] = search
++        return self._data['movies']
+ 
+-    def __repr__(self):
+-        return u"<{0.__class__.__name__} '{0.name}'>".format(self)
++    @classmethod
++    def getAll(cls, locale=None):
++        class GenreList( Element ):
++            genres = Datalist('genres', handler=Genre)
++            def _populate(self):
++                return Request('genre/list', language=self._locale.language)
++        return GenreList(locale=locale).genres
++        
++
++class Studio( NameRepr, Element ):
++    id              = Datapoint('id', initarg=1)
++    name            = Datapoint('name')
++    description     = Datapoint('description')
++    headquarters    = Datapoint('headquarters')
++    logo            = Datapoint('logo_path', handler=Logo, raw=False)
++    # FIXME: manage not-yet-defined handlers in a way that will propogate
++    #        locale information properly
++    parent          = Datapoint('parent_company', \
++                                    handler=lambda x: Studio(raw=x))
+ 
+-class Country( Element ):
++    def _populate(self):
++        return Request('company/{0}'.format(self.id))
++    def _populate_movies(self):
++        return Request('company/{0}/movies'.format(self.id), \
++                            language=self._locale.language)
++
++    # FIXME: add a cleaner way of adding types with no additional processing
++    @property
++    def movies(self):
++        if 'movies' not in self._data:
++            search = MovieSearchResult(self._populate_movies(), \
++                                            locale=self._locale)
++            search._name = "{0.name} Movies".format(self)
++            self._data['movies'] = search
++        return self._data['movies']
++
++class Country( NameRepr, Element ):
+     code    = Datapoint('iso_3166_1')
+     name    = Datapoint('name')
+ 
+-    def __repr__(self):
+-        return u"<{0.__class__.__name__} '{0.name}'>".format(self)
+-
+-class Language( Element ):
++class Language( NameRepr, Element ):
+     code    = Datapoint('iso_639_1')
+     name    = Datapoint('name')
+ 
+-    def __repr__(self):
+-        return u"<{0.__class__.__name__} '{0.name}'>".format(self)
+-
+ class Movie( Element ):
+     @classmethod
+     def latest(cls):
+@@ -268,6 +370,28 @@ class Movie( Element ):
+         return res
+ 
+     @classmethod
++    def favorites(cls, session=None):
++        if session is None:
++            session = get_session()
++        account = Account(session=session)
++        res = MovieSearchResult(
++                    Request('account/{0}/favorite_movies'.format(account.id),
++                                session_id=session.sessionid))
++        res._name = "Favorites"
++        return res
++
++    @classmethod
++    def ratedmovies(cls, session=None):
++        if session is None:
++            session = get_session()
++        account = Account(session=session)
++        res = MovieSearchResult(
++                    Request('account/{0}/rated_movies'.format(account.id),
++                                session_id=session.sessionid))
++        res._name = "Movies You Rated"
++        return res
++
++    @classmethod
+     def fromIMDB(cls, imdbid, locale=None):
+         try:
+             # assume string
+@@ -290,8 +414,7 @@ class Movie( Element ):
+     runtime         = Datapoint('runtime')
+     budget          = Datapoint('budget')
+     revenue         = Datapoint('revenue')
+-    releasedate     = Datapoint('release_date', handler=lambda x: \
+-                                datetime.datetime.strptime(x, '%Y-%m-%d'))
++    releasedate     = Datapoint('release_date', handler=process_date)
+     homepage        = Datapoint('homepage')
+     imdb            = Datapoint('imdb_id')
+ 
+@@ -311,34 +434,75 @@ class Movie( Element ):
+     languages   = Datalist('spoken_languages', handler=Language)
+ 
+     def _populate(self):
+-        return Request('movie/{0}'.format(self.id), language=self._locale.language)
++        return Request('movie/{0}'.format(self.id), \
++                            language=self._locale.language)
+     def _populate_titles(self):
+-        return Request('movie/{0}/alternative_titles'.format(self.id), country=self._locale.country)
++        kwargs = {}
++        if not self._locale.fallthrough:
++            kwargs['country'] = self._locale.country
++        return Request('movie/{0}/alternative_titles'.format(self.id), **kwargs)
+     def _populate_cast(self):
+         return Request('movie/{0}/casts'.format(self.id))
+     def _populate_images(self):
+-        return Request('movie/{0}/images'.format(self.id), language=self._locale.language)
++        kwargs = {}
++        if not self._locale.fallthrough:
++            kwargs['country'] = self._locale.country
++        return Request('movie/{0}/images'.format(self.id), **kwargs)
+     def _populate_keywords(self):
+         return Request('movie/{0}/keywords'.format(self.id))
+     def _populate_releases(self):
+         return Request('movie/{0}/releases'.format(self.id))
+     def _populate_trailers(self):
+-        return Request('movie/{0}/trailers'.format(self.id), language=self._locale.language)
++        return Request('movie/{0}/trailers'.format(self.id), \
++                            language=self._locale.language)
+     def _populate_translations(self):
+         return Request('movie/{0}/translations'.format(self.id))
+ 
+-    alternate_titles = Datalist('titles', handler=AlternateTitle, poller=_populate_titles)
+-    cast             = Datalist('cast', handler=Cast, poller=_populate_cast, sort='order')
++    alternate_titles = Datalist('titles', handler=AlternateTitle, \
++                                    poller=_populate_titles, sort=True)
++    cast             = Datalist('cast', handler=Cast, \
++                                    poller=_populate_cast, sort='order')
+     crew             = Datalist('crew', handler=Crew, poller=_populate_cast)
+-    backdrops        = Datalist('backdrops', handler=Backdrop, poller=_populate_images)
+-    posters          = Datalist('posters', handler=Poster, poller=_populate_images)
+-    keywords         = Datalist('keywords', handler=Keyword, poller=_populate_keywords)
+-    releases         = Datadict('countries', handler=Release, poller=_populate_releases, attr='country')
+-    youtube_trailers = Datalist('youtube', handler=YoutubeTrailer, poller=_populate_trailers)
+-    apple_trailers   = Datalist('quicktime', handler=AppleTrailer, poller=_populate_trailers)
+-    translations     = Datalist('translations', handler=Translation, poller=_populate_translations)
++    backdrops        = Datalist('backdrops', handler=Backdrop, \
++                                    poller=_populate_images, sort=True)
++    posters          = Datalist('posters', handler=Poster, \
++                                    poller=_populate_images, sort=True)
++    keywords         = Datalist('keywords', handler=Keyword, \
++                                    poller=_populate_keywords)
++    releases         = Datadict('countries', handler=Release, \
++                                    poller=_populate_releases, attr='country')
++    youtube_trailers = Datalist('youtube', handler=YoutubeTrailer, \
++                                    poller=_populate_trailers)
++    apple_trailers   = Datalist('quicktime', handler=AppleTrailer, \
++                                    poller=_populate_trailers)
++    translations     = Datalist('translations', handler=Translation, \
++                                    poller=_populate_translations)
++
++    def setFavorite(self, value):
++        req = Request('account/{0}/favorite'.format(\
++                                        Account(session=self._session).id),
++                            session_id=self._session.sessionid)
++        req.add_data({'movie_id':self.id, 'favorite':str(bool(value)).lower()})
++        req.lifetime = 0
++        req.readJSON()
++
++    def setRating(self, value):
++        if not (0 <= value <= 10):
++            raise TMDBError("Ratings must be between '0' and '10'.")
++        req = Request('movie/{0}/favorite'.format(self.id), \
++                            session_id=self._session.sessionid)
++        req.lifetime = 0
++        req.add_data({'value':value})
++        req.readJSON()
++
++    def getSimilar(self):
++        res = MovieSearchResult(Request('movie/{0}/similar_movies'\
++                                                            .format(self.id)),
++                                        locale=self._locale)
++        res._name = 'Similar to {0}'.format(self._printable_name())
++        return res
+ 
+-    def __repr__(self):
++    def _printable_name(self):
+         if self.title is not None:
+             s = u"'{0}'".format(self.title)
+         elif self.originaltitle is not None:
+@@ -347,38 +511,28 @@ class Movie( Element ):
+             s = u"'No Title'"
+         if self.releasedate:
+             s = u"{0} ({1})".format(s, self.releasedate.year)
+-        return u"<{0} {1}>".format(self.__class__.__name__, s).encode('utf-8')
++        return s
++
++    def __repr__(self):
++        return u"<{0} {1}>".format(self.__class__.__name__,\
++                                   self._printable_name()).encode('utf-8')
+ 
+ class ReverseCast( Movie ):
+     character   = Datapoint('character')
+ 
+     def __repr__(self):
+-        if self.title is not None:
+-            s = u"'{0}'".format(self.title)
+-        elif self.originaltitle is not None:
+-            s = u"'{0}'".format(self.originaltitle)
+-        else:
+-            s = u"'No Title'"
+-        if self.releasedate:
+-            s = u"{0} ({1})".format(s, self.releasedate.year)
+-        return u"<{0.__class__.__name__} '{0.character}' on {1}>".format(self, s).encode('utf-8')
++        return u"<{0.__class__.__name__} '{0.character}' on {1}>"\
++                        .format(self, self._printable_name()).encode('utf-8')
+ 
+ class ReverseCrew( Movie ):
+     department  = Datapoint('department')
+     job         = Datapoint('job')
+ 
+     def __repr__(self):
+-        if self.title is not None:
+-            s = u"'{0}'".format(self.title)
+-        elif self.originaltitle is not None:
+-            s = u"'{0}'".format(self.originaltitle)
+-        else:
+-            s = u"'No Title'"
+-        if self.releasedate:
+-            s = u"{0} ({1})".format(s, self.releasedate.year)
+-        return u"<{0.__class__.__name__} '{0.job}' for {1}>".format(self, s).encode('utf-8')
++        return u"<{0.__class__.__name__} '{0.job}' for {1}>"\
++                        .format(self, self._printable_name()).encode('utf-8')
+ 
+-class Collection( Element ):
++class Collection( NameRepr, Element ):
+     id       = Datapoint('id', initarg=1)
+     name     = Datapoint('name')
+     backdrop = Datapoint('backdrop_path', handler=Backdrop, raw=False)
+@@ -386,25 +540,6 @@ class Collection( Element ):
+     members  = Datalist('parts', handler=Movie, sort='releasedate')
+ 
+     def _populate(self):
+-        return Request('collection/{0}'.format(self.id), language=self._locale.language)
++        return Request('collection/{0}'.format(self.id), \
++                            language=self._locale.language)
+ 
+-    def __repr__(self):
+-        return u"<{0.__class__.__name__} '{0.name}'>".format(self).encode('utf-8')
+-        return u"<{0} {1}>".format(self.__class__.__name__, s).encode('utf-8')
+-
+-if __name__ == '__main__':
+-    set_key('c27cb71cff5bd76e1a7a009380562c62') #MythTV API Key
+-    DEBUG = True
+-
+-    banner = 'tmdb_api interactive shell.'
+-    import code
+-    try:
+-        import readline, rlcompleter
+-    except:
+-        pass
+-    else:
+-        readline.parse_and_bind("tab: complete")
+-        banner += ' TAB completion available.'
+-    namespace = globals().copy()
+-    namespace.update(locals())
+-    code.InteractiveConsole(namespace).interact(banner)
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/tmdb_auth.py b/mythtv/bindings/python/tmdb3/tmdb3/tmdb_auth.py
+new file mode 100644
+index 0000000..8583b99
+--- /dev/null
++++ b/mythtv/bindings/python/tmdb3/tmdb3/tmdb_auth.py
+@@ -0,0 +1,131 @@
++#!/usr/bin/env python
++# -*- coding: utf-8 -*-
++#-----------------------
++# Name: tmdb_auth.py
++# Python Library
++# Author: Raymond Wagner
++# Purpose: Provide authentication and session services for 
++#          calls against the TMDB v3 API
++#-----------------------
++
++from datetime import datetime as _pydatetime, \
++                     tzinfo as _pytzinfo
++import re
++class datetime( _pydatetime ):
++    """Customized datetime class with ISO format parsing."""
++    _reiso = re.compile('(?P<year>[0-9]{4})'
++                       '-(?P<month>[0-9]{1,2})'
++                       '-(?P<day>[0-9]{1,2})'
++                        '.'
++                        '(?P<hour>[0-9]{2})'
++                       ':(?P<min>[0-9]{2})'
++                       '(:(?P<sec>[0-9]{2}))?'
++                        '(?P<tz>Z|'
++                            '(?P<tzdirec>[-+])'
++                            '(?P<tzhour>[0-9]{1,2})'
++                            '(:)?'
++                            '(?P<tzmin>[0-9]{2})?'
++                        ')?')
++
++    class _tzinfo( _pytzinfo):
++        def __init__(self, direc='+', hr=0, min=0):
++            if direc == '-':
++                hr = -1*int(hr)
++            self._offset = timedelta(hours=int(hr), minutes=int(min))
++        def utcoffset(self, dt): return self._offset
++        def tzname(self, dt): return ''
++        def dst(self, dt): return timedelta(0)
++
++    @classmethod
++    def fromIso(cls, isotime, sep='T'):
++        match = cls._reiso.match(isotime)
++        if match is None:
++            raise TypeError("time data '%s' does not match ISO 8601 format" \
++                                % isotime)
++
++        dt = [int(a) for a in match.groups()[:5]]
++        if match.group('sec') is not None:
++            dt.append(int(match.group('sec')))
++        else:
++            dt.append(0)
++        if match.group('tz'):
++            if match.group('tz') == 'Z':
++                tz = cls._tzinfo()
++            elif match.group('tzmin'):
++                tz = cls._tzinfo(*match.group('tzdirec','tzhour','tzmin'))
++            else:
++                tz = cls._tzinfo(*match.group('tzdirec','tzhour'))
++            dt.append(0)
++            dt.append(tz)
++        return cls(*dt)
++
++from request import Request
++from tmdb_exceptions import *
++
++syssession = None
++
++def set_session(sessionid):
++    global syssession
++    syssession = Session(sessionid)
++
++def get_session(sessionid=None):
++    global syssession
++    if sessionid:
++        return Session(sessionid)
++    elif syssession is not None:
++        return syssession
++    else:
++        return Session.new()
++
++class Session( object ):
++
++    @classmethod
++    def new(cls):
++        return cls(None)
++
++    def __init__(self, sessionid):
++        self.sessionid = sessionid
++
++    @property
++    def sessionid(self):
++        if self._sessionid is None:
++            if self._authtoken is None:
++                raise TMDBError("No Auth Token to produce Session for")
++            # TODO: check authtokenexpiration against current time
++            req = Request('authentication/session/new', \
++                                            request_token=self._authtoken)
++            req.lifetime = 0
++            dat = req.readJSON()
++            if not dat['success']:
++                raise TMDBError("Session generation failed")
++            self._sessionid = dat['session_id']
++        return self._sessionid
++
++    @sessionid.setter
++    def sessionid(self, value):
++        self._sessionid = value
++        self._authtoken = None
++        self._authtokenexpiration = None
++        if value is None:
++            self.authenticated = False
++        else:
++            self.authenticated = True
++
++    @property
++    def authtoken(self):
++        if self.authenticated:
++            raise TMDBError("Session is already authenticated")
++        if self._authtoken is None:
++            req = Request('authentication/token/new')
++            req.lifetime = 0
++            dat = req.readJSON()
++            if not dat['success']:
++                raise TMDBError("Auth Token request failed")
++            self._authtoken = dat['request_token']
++            self._authtokenexpiration = datetime.fromIso(dat['expires_at'])
++        return self._authtoken
++
++    @property
++    def callbackurl(self):
++        return "http://www.themoviedb.org/authenticate/"+self._authtoken
++
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/tmdb_exceptions.py b/mythtv/bindings/python/tmdb3/tmdb3/tmdb_exceptions.py
+index 7c8f04a..35e0364 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/tmdb_exceptions.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/tmdb_exceptions.py
+@@ -13,6 +13,7 @@ class TMDBError( Exception ):
+     KeyInvalid              = 30
+     KeyRevoked              = 40
+     RequestError            = 50
++    RequestInvalid          = 51
+     PagingIssue             = 60
+     CacheError              = 70
+     CacheReadError          = 71
+@@ -25,7 +26,7 @@ class TMDBError( Exception ):
+ 
+     def __init__(self, msg=None, errno=0):
+         self.errno = errno
+-        if errno:
++        if errno == 0:
+             self.errno = getattr(self, 'TMDB'+self.__class__.__name__, errno)
+         self.args = (msg,)
+ 
+@@ -44,6 +45,9 @@ class TMDBKeyRevoked( TMDBKeyInvalid ):
+ class TMDBRequestError( TMDBError ):
+     pass
+ 
++class TMDBRequestInvalid( TMDBRequestError ):
++    pass
++
+ class TMDBPagingIssue( TMDBRequestError ):
+     pass
+ 
+@@ -52,19 +56,19 @@ class TMDBCacheError( TMDBRequestError ):
+ 
+ class TMDBCacheReadError( TMDBCacheError ):
+     def __init__(self, filename):
+-        super(TMDBCachePermissionsError, self).__init__(
++        super(TMDBCacheReadError, self).__init__(
+             "User does not have permission to access cache file: {0}.".format(filename))
+         self.filename = filename
+ 
+ class TMDBCacheWriteError( TMDBCacheError ):
+     def __init__(self, filename):
+-        super(TMDBCachePermissionsError, self).__init__(
++        super(TMDBCacheWriteError, self).__init__(
+             "User does not have permission to write cache file: {0}.".format(filename))
+         self.filename = filename
+ 
+ class TMDBCacheDirectoryError( TMDBCacheError ):
+     def __init__(self, filename):
+-        super(TMDBCachePermissionsError, self).__init__(
++        super(TMDBCacheDirectoryError, self).__init__(
+             "Directory containing cache file does not exist: {0}.".format(filename))
+         self.filename = filename
+ 
+@@ -72,7 +76,10 @@ class TMDBImageSizeError( TMDBError ):
+     pass
+ 
+ class TMDBHTTPError( TMDBError ):
+-    pass
++    def __init__(self, err):
++        self.httperrno = err.code
++        self.response = err.fp.read()
++        super(TMDBHTTPError, self).__init__(str(err))
+ 
+ class TMDBOffline( TMDBError ):
+     pass
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/util.py b/mythtv/bindings/python/tmdb3/tmdb3/util.py
+index 2fefaf9..1ac5c29 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/util.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/util.py
+@@ -8,6 +8,22 @@
+ 
+ from copy import copy
+ from locales import get_locale
++from tmdb_auth import get_session
++
++class NameRepr( object ):
++    """Mixin for __repr__ methods using 'name' attribute."""
++    def __repr__(self):
++        return u"<{0.__class__.__name__} '{0.name}'>"\
++                                .format(self).encode('utf-8')
++
++class SearchRepr( object ):
++    """
++    Mixin for __repr__ methods for classes with '_name' and
++    '_request' attributes.
++    """
++    def __repr__(self):
++        name = self._name if self._name else self._request._kwargs['query']
++        return u"<Search Results: {0}>".format(name).encode('utf-8')
+ 
+ class Poller( object ):
+     """
+@@ -90,10 +106,10 @@ class Data( object ):
+         """
+         This defines how the dictionary value is to be processed by the poller
+             field   -- defines the dictionary key that filters what data this uses
+-            initarg -- (optional) specifies that this field must be supplied when
+-                       creating a new instance of the Element class this definition
+-                       is mapped to. Takes an integer for the order it should be
+-                       used in the input arguments
++            initarg -- (optional) specifies that this field must be supplied
++                       when creating a new instance of the Element class this
++                       definition is mapped to. Takes an integer for the order
++                       it should be used in the input arguments
+             handler -- (optional) callable used to process the received value
+                        before being stored in the Element object.
+             poller  -- (optional) callable to be used if data is requested and
+@@ -124,12 +140,13 @@ class Data( object ):
+         return inst._data[self.field]
+ 
+     def __set__(self, inst, value):
+-        if value:
++        if (value is not None) and (value != ''):
+             value = self.handler(value)
+         else:
+             value = self.default
+         if isinstance(value, Element):
+             value._locale = inst._locale
++            value._session = inst._session
+         inst._data[self.field] = value
+ 
+     def sethandler(self, handler):
+@@ -179,9 +196,13 @@ class Datalist( Data ):
+                 val = self.handler(val)
+                 if isinstance(val, Element):
+                     val._locale = inst._locale
++                    val._session = inst._session
+                 data.append(val)
+             if self.sort:
+-                data.sort(key=lambda x: getattr(x, self.sort))
++                if self.sort is True:
++                    data.sort()
++                else:
++                    data.sort(key=lambda x: getattr(x, self.sort))
+         inst._data[self.field] = data
+ 
+ class Datadict( Data ):
+@@ -189,7 +210,8 @@ class Datadict( Data ):
+     Response definition class for dictionary data
+     This maps to a key in a JSON dictionary storing a dictionary of data
+     """
+-    def __init__(self, field, handler=None, poller=None, raw=True, key=None, attr=None):
++    def __init__(self, field, handler=None, poller=None, raw=True,
++                       key=None, attr=None):
+         """
+         This defines how the dictionary value is to be processed by the poller
+             field   -- defines the dictionary key that filters what data this uses
+@@ -229,6 +251,7 @@ class Datadict( Data ):
+                 val = self.handler(val)
+                 if isinstance(val, Element):
+                     val._locale = inst._locale
++                    val._session = inst._session
+                 data[self.getkey(val)] = val
+         inst._data[self.field] = data
+ 
+@@ -305,11 +328,16 @@ class ElementType( type ):
+ 
+     def __call__(cls, *args, **kwargs):
+         obj = cls.__new__(cls)
+-        if 'locale' in kwargs:
++        if ('locale' in kwargs) and (kwargs['locale'] is not None):
+             obj._locale = kwargs['locale']
+         else:
+             obj._locale = get_locale()
+ 
++        if 'session' in kwargs:
++            obj._session = kwargs['session']
++        else:
++            obj._session = get_session()
++
+         obj._data = {}
+         if 'raw' in kwargs:
+             # if 'raw' keyword is supplied, create populate object manually
+diff --git a/mythtv/libs/libmythbase/mthreadpool.cpp b/mythtv/libs/libmythbase/mthreadpool.cpp
+index 671670c..3cce98d 100644
+--- a/mythtv/libs/libmythbase/mthreadpool.cpp
++++ b/mythtv/libs/libmythbase/mthreadpool.cpp
+@@ -97,6 +97,7 @@ class MPoolThread : public MThread
+ 
+             GetMythDB()->GetDBManager()->PurgeIdleConnections(false);
+             QCoreApplication::processEvents();
++            QCoreApplication::sendPostedEvents(0, QEvent::DeferredDelete);
+ 
+             t.start();
+ 
+diff --git a/mythtv/libs/libmythbase/mythcorecontext.cpp b/mythtv/libs/libmythbase/mythcorecontext.cpp
+index ad58f59..84cb01a 100644
+--- a/mythtv/libs/libmythbase/mythcorecontext.cpp
++++ b/mythtv/libs/libmythbase/mythcorecontext.cpp
+@@ -486,8 +486,8 @@ MythSocket *MythCoreContext::ConnectEventSocket(const QString &hostname,
+             LOG(VB_GENERAL, LOG_ERR, LOC + "Timeout connecting "
+                                            "event socket to master backend");
+ 
+-        m_eventSock->DownRef();
+         m_eventSock->Unlock();
++        m_eventSock->DownRef();
+         m_eventSock = NULL;
+         return NULL;
+     }
+diff --git a/mythtv/libs/libmythprotoserver/requesthandler/outboundhandler.cpp b/mythtv/libs/libmythprotoserver/requesthandler/outboundhandler.cpp
+index a5f2c71..b28877d 100644
+--- a/mythtv/libs/libmythprotoserver/requesthandler/outboundhandler.cpp
++++ b/mythtv/libs/libmythprotoserver/requesthandler/outboundhandler.cpp
+@@ -59,6 +59,7 @@ bool OutboundRequestHandler::DoConnectToMaster(void)
+     if (!m_socket->Validate())
+     {
+         LOG(VB_GENERAL, LOG_NOTICE, "Unable to confirm protocol version with backend.");
++        m_socket->Unlock();
+         m_socket->DownRef();
+         m_socket = NULL;
+         return false;
+@@ -68,6 +69,7 @@ bool OutboundRequestHandler::DoConnectToMaster(void)
+     if (!AnnounceSocket())
+     {
+         LOG(VB_GENERAL, LOG_NOTICE, "Announcement to upstream master backend failed.");
++        m_socket->Unlock();
+         m_socket->DownRef();
+         m_socket = NULL;
+         return false;
+diff --git a/mythtv/libs/libmythtv/decoderbase.cpp b/mythtv/libs/libmythtv/decoderbase.cpp
+index 3286be9..cd2234a 100644
+--- a/mythtv/libs/libmythtv/decoderbase.cpp
++++ b/mythtv/libs/libmythtv/decoderbase.cpp
+@@ -951,29 +951,41 @@ int DecoderBase::AutoSelectTrack(uint type)
+ 
+     if (selTrack < 0 && numStreams)
+     {
+-        LOG(VB_PLAYBACK, LOG_INFO, LOC + "Trying to select track (w/lang)");
+-        // Find first track stream that matches a language in
+-        // order of most preferred to least preferred language.
+-        vector<int>::iterator it = languagePreference.begin();
+-        for (; it != languagePreference.end() && (selTrack < 0); ++it)
++        // Select the best track.  Primary attribute is to favor a
++        // forced track.  Secondary attribute is language preference,
++        // in order of most preferred to least preferred language.
++        // Third attribute is track order, preferring the earliest
++        // track.
++        LOG(VB_PLAYBACK, LOG_INFO,
++            LOC + "Trying to select track (w/lang & forced)");
++        const int kForcedWeight   = (1 << 20);
++        const int kLanguageWeight = (1 << 10);
++        const int kPositionWeight = (1 << 0);
++        int bestScore = -1;
++        selTrack = 0;
++        for (uint i = 0; i < numStreams; i++)
+         {
+-            for (uint i = 0; i < numStreams; i++)
++            int forced = (type == kTrackTypeSubtitle &&
++                          tracks[type][i].forced &&
++                          m_parent->ForcedSubtitlesFavored());
++            int position = numStreams - i;
++            int language = 0;
++            for (int j = 0; language == 0 && j < languagePreference.size(); ++j)
+             {
+-                if (*it == tracks[type][i].language)
+-                {
+-                    selTrack = i;
+-                    break;
+-                }
++                if (tracks[type][i].language == languagePreference[j])
++                    language = languagePreference.size() - j;
++            }
++            int score = kForcedWeight * forced
++                + kLanguageWeight * language
++                + kPositionWeight * position;
++            if (score > bestScore)
++            {
++                bestScore = score;
++                selTrack = i;
+             }
+         }
+     }
+ 
+-    if (selTrack < 0 && numStreams)
+-    {
+-        LOG(VB_PLAYBACK, LOG_INFO, LOC + "Selecting first track");
+-        selTrack = 0;
+-    }
+-
+     int oldTrack = currentTrack[type];
+     currentTrack[type] = (selTrack < 0) ? -1 : selTrack;
+     StreamInfo tmp = tracks[type][currentTrack[type]];
+diff --git a/mythtv/libs/libmythtv/dtvmultiplex.cpp b/mythtv/libs/libmythtv/dtvmultiplex.cpp
+index 69336ed..21f6166 100644
+--- a/mythtv/libs/libmythtv/dtvmultiplex.cpp
++++ b/mythtv/libs/libmythtv/dtvmultiplex.cpp
+@@ -320,7 +320,9 @@ bool DTVMultiplex::ParseTuningParams(
+     if (DTVTunerType::kTunerTypeATSC == type)
+         return ParseATSC(_frequency, _modulation);
+ 
+-    LOG(VB_GENERAL, LOG_ERR, LOC + "ParseTuningParams -- Unknown tuner type");
++    LOG(VB_GENERAL, LOG_ERR, LOC +
++        QString("ParseTuningParams -- Unknown tuner type = 0x%1")
++        .arg(type,0,16,QChar('0')));
+ 
+     return false;
+ }
+diff --git a/mythtv/libs/libmythtv/eithelper.cpp b/mythtv/libs/libmythtv/eithelper.cpp
+index 1094ed2..9fc27e1 100644
+--- a/mythtv/libs/libmythtv/eithelper.cpp
++++ b/mythtv/libs/libmythtv/eithelper.cpp
+@@ -795,8 +795,12 @@ static void init_fixup(QMap<uint64_t,uint> &fix)
+     fix[ 9018U << 16] = EITFixUp::kFixUK;
+     // UK Freesat
+     fix[ 2013LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2017LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2018LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2026LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2041LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2042LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2043LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2044LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2045LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2046LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+@@ -811,6 +815,21 @@ static void init_fixup(QMap<uint64_t,uint> &fix)
+     fix[ 2057LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2063LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2068LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2301LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2302LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2303LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2304LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2305LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2306LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2311LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2312LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2313LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2314LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2401LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2412LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2413LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2602LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2612LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+ 
+     // ComHem Sweden
+     fix[40999U << 16       ] = EITFixUp::kFixComHem;
+diff --git a/mythtv/libs/libmythtv/hdhrstreamhandler.cpp b/mythtv/libs/libmythtv/hdhrstreamhandler.cpp
+index 1f23de8..d771761 100644
+--- a/mythtv/libs/libmythtv/hdhrstreamhandler.cpp
++++ b/mythtv/libs/libmythtv/hdhrstreamhandler.cpp
+@@ -271,7 +271,33 @@ bool HDHRStreamHandler::Open(void)
+         _tuner_types.clear();
+         if (QString(model).toLower().contains("cablecard"))
+         {
+-            _tuner_types.push_back(DTVTunerType::kTunerTypeOCUR);
++            QString status_channel = "none";
++            hdhomerun_tuner_status_t t_status;
++
++            if (hdhomerun_device_get_oob_status(
++                    _hdhomerun_device, NULL, &t_status) < 0)
++            {
++                LOG(VB_GENERAL, LOG_ERR, LOC +
++                    "Failed to query Cable card OOB channel");
++            }
++            else
++            {
++                status_channel = QString(t_status.channel);
++                LOG(VB_RECORD, LOG_INFO, LOC +
++                    QString("Cable card OOB channel is '%1'")
++                    .arg(status_channel));
++            }
++
++            if (status_channel ==  "none")
++            {
++                LOG(VB_RECORD, LOG_INFO, LOC + "Cable card is not present");
++                _tuner_types.push_back(DTVTunerType::kTunerTypeATSC);
++            }
++            else
++            {
++                LOG(VB_RECORD, LOG_INFO, LOC + "Cable card is present");
++                _tuner_types.push_back(DTVTunerType::kTunerTypeOCUR);
++            }
+         }
+         else if (QString(model).toLower().contains("dvb"))
+         {
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index 86fba24..a64a97b 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -5008,7 +5008,8 @@ void MythPlayer::ToggleNightMode(void)
+ bool MythPlayer::CanVisualise(void)
+ {
+     if (videoOutput)
+-        return videoOutput->CanVisualise(&audio, NULL);
++        return videoOutput->
++            CanVisualise(&audio, GetMythMainWindow()->GetRenderDevice());
+     return false;
+ }
+ 
+diff --git a/mythtv/libs/libmythtv/mythplayer.h b/mythtv/libs/libmythtv/mythplayer.h
+index a005437..39b0e56 100644
+--- a/mythtv/libs/libmythtv/mythplayer.h
++++ b/mythtv/libs/libmythtv/mythplayer.h
+@@ -279,6 +279,9 @@ class MTV_PUBLIC MythPlayer
+     void TracksChanged(uint trackType);
+     void EnableSubtitles(bool enable);
+     void EnableForcedSubtitles(bool enable);
++    bool ForcedSubtitlesFavored(void) const {
++        return allowForcedSubtitles && !captionsEnabledbyDefault;
++    }
+     // How to handle forced Subtitles (i.e. when in a movie someone speaks
+     // in a different language than the rest of the movie, subtitles are
+     // forced on even if the user doesn't have them turned on.)
+diff --git a/mythtv/libs/libmythtv/ringbuffer.cpp b/mythtv/libs/libmythtv/ringbuffer.cpp
+index 5e720c2..90e3016 100644
+--- a/mythtv/libs/libmythtv/ringbuffer.cpp
++++ b/mythtv/libs/libmythtv/ringbuffer.cpp
+@@ -789,7 +789,7 @@ void RingBuffer::run(void)
+         {
+             // limit the read size
+             if (readblocksize > totfree)
+-                totfree = (int)(totfree / KB32) * KB32; // must be multiple of 32KB
++                totfree = (long long)(totfree / KB32) * KB32; // must be multiple of 32KB
+             else
+                 totfree = readblocksize;
+ 
+diff --git a/mythtv/libs/libmythtv/tv_rec.cpp b/mythtv/libs/libmythtv/tv_rec.cpp
+index 3311360..3d38c6d 100644
+--- a/mythtv/libs/libmythtv/tv_rec.cpp
++++ b/mythtv/libs/libmythtv/tv_rec.cpp
+@@ -107,7 +107,7 @@ TVRec::TVRec(int capturecardnum)
+       switchingBuffer(false),
+       m_recStatus(rsUnknown),
+       // Current recording info
+-      curRecording(NULL), autoRunJobs(JOB_NONE),
++      curRecording(NULL),
+       overrecordseconds(0),
+       // Pseudo LiveTV recording
+       pseudoLiveTVRecording(NULL),
+@@ -784,6 +784,10 @@ void TVRec::StartedRecording(RecordingInfo *curRec)
+     if (curRec->IsCommercialFree())
+         curRec->SaveCommFlagged(COMM_FLAG_COMMFREE);
+ 
++    AutoRunInitType t = (curRec->QueryRecordingGroup() == "LiveTV") ?
++        kAutoRunNone : kAutoRunProfile;
++    InitAutoRunJobs(curRec, t, NULL, __LINE__);
++
+     SendMythSystemRecEvent("REC_STARTED", curRec);
+ }
+ 
+@@ -916,7 +920,7 @@ void TVRec::FinishedRecording(RecordingInfo *curRec, RecordingQuality *recq)
+     curRec->FinishedRecording(!is_good || (recgrp == "LiveTV"));
+ 
+     // send out REC_FINISHED message
+-    SendMythSystemRecEvent("REC_FINISHED", curRecording);
++    SendMythSystemRecEvent("REC_FINISHED", curRec);
+ 
+     // send out DONE_RECORDING message
+     int secsSince = curRec->GetRecordingStartTime()
+@@ -927,18 +931,29 @@ void TVRec::FinishedRecording(RecordingInfo *curRec, RecordingQuality *recq)
+     gCoreContext->dispatch(me);
+ 
+     // Handle JobQueue
++    QHash<QString,int>::iterator autoJob =
++        autoRunJobs.find(curRec->MakeUniqueKey());
++    if (autoJob == autoRunJobs.end())
++    {
++        LOG(VB_GENERAL, LOG_INFO,
++            "autoRunJobs not initialized until FinishedRecording()");
++        AutoRunInitType t =
++            (recgrp == "LiveTV") ? kAutoRunNone : kAutoRunProfile;
++        InitAutoRunJobs(curRec, t, NULL, __LINE__);
++        autoJob = autoRunJobs.find(curRec->MakeUniqueKey());
++    }
++    LOG(VB_JOBQUEUE, LOG_INFO, QString("AutoRunJobs 0x%1").arg(*autoJob,0,16));
+     if ((recgrp == "LiveTV") || (fsize < 1000) ||
+         (curRec->GetRecordingStatus() != rsRecorded) ||
+         (curRec->GetRecordingStartTime().secsTo(
+             QDateTime::currentDateTime()) < 120))
+     {
+-        JobQueue::RemoveJobsFromMask(JOB_COMMFLAG,  autoRunJobs);
+-        JobQueue::RemoveJobsFromMask(JOB_TRANSCODE, autoRunJobs);
+-    }
+-    if (autoRunJobs)
+-    {
+-        JobQueue::QueueRecordingJobs(*curRec, autoRunJobs);
++        JobQueue::RemoveJobsFromMask(JOB_COMMFLAG,  *autoJob);
++        JobQueue::RemoveJobsFromMask(JOB_TRANSCODE, *autoJob);
+     }
++    if (*autoJob != JOB_NONE)
++        JobQueue::QueueRecordingJobs(*curRec, *autoJob);
++    autoRunJobs.erase(autoJob);
+ }
+ 
+ #define TRANSITION(ASTATE,BSTATE) \
+@@ -2691,6 +2706,31 @@ void TVRec::NotifySchedulerOfRecording(RecordingInfo *rec)
+     ClearFlags(kFlagCancelNextRecording);
+ }
+ 
++void TVRec::InitAutoRunJobs(RecordingInfo *rec, AutoRunInitType t,
++                            RecordingProfile *recpro, int line)
++{
++    if (kAutoRunProfile == t)
++    {
++        RecordingProfile profile;
++        if (!recpro)
++        {
++            load_profile(genOpt.cardtype, NULL, rec, profile);
++            recpro = &profile;
++        }
++        autoRunJobs[rec->MakeUniqueKey()] =
++            init_jobs(rec, *recpro, runJobOnHostOnly,
++                      transcodeFirst, earlyCommFlag);
++    }
++    else
++    {
++        autoRunJobs[rec->MakeUniqueKey()] = JOB_NONE;
++    }
++    LOG(VB_JOBQUEUE, LOG_INFO,
++        QString("InitAutoRunJobs for %1, line %2 -> 0x%3")
++        .arg(rec->MakeUniqueKey()).arg(line)
++        .arg(autoRunJobs[rec->MakeUniqueKey()],0,16));
++}
++
+ /** \fn TVRec::SetLiveRecording(int)
+  *  \brief Tells the Scheduler about changes to the recording status
+  *         of the LiveTV recording.
+@@ -2719,7 +2759,7 @@ void TVRec::SetLiveRecording(int recording)
+         // cancel -- 'recording' should be 0 or -1
+         SetFlags(kFlagCancelNextRecording);
+         curRecording->SetRecordingGroup("LiveTV");
+-        autoRunJobs = JOB_NONE;
++        InitAutoRunJobs(curRecording, kAutoRunNone, NULL, __LINE__);
+     }
+     else if (!was_rec && pseudoLiveTVRecording)
+     {
+@@ -2733,11 +2773,7 @@ void TVRec::SetLiveRecording(int recording)
+         NotifySchedulerOfRecording(curRecording);
+         recstat = curRecording->GetRecordingStatus();
+         curRecording->SetRecordingGroup("Default");
+-
+-        RecordingProfile profile;
+-        load_profile(genOpt.cardtype, NULL, curRecording, profile);
+-        autoRunJobs = init_jobs(curRecording, profile, runJobOnHostOnly,
+-                                transcodeFirst, earlyCommFlag);
++        InitAutoRunJobs(curRecording, kAutoRunProfile, NULL, __LINE__);
+     }
+ 
+     MythEvent me(QString("UPDATE_RECORDING_STATUS %1 %2 %3 %4 %5")
+@@ -4057,10 +4093,6 @@ void TVRec::TuningNewRecorder(MPEGStreamData *streamData)
+ 
+     SetFlags(kFlagRecorderRunning | kFlagRingBufferReady);
+ 
+-    if (!tvchain)
+-        autoRunJobs = init_jobs(rec, profile, runJobOnHostOnly,
+-                                transcodeFirst, earlyCommFlag);
+-
+     ClearFlags(kFlagNeedToStartRecorder);
+     return;
+ 
+@@ -4131,11 +4163,7 @@ void TVRec::TuningRestartRecorder(void)
+         curRecording->ApplyRecordRecGroupChange(
+             curRecording->GetRecordingRule()->m_recGroup);
+ 
+-        RecordingProfile profile;
+-        QString profileName = load_profile(genOpt.cardtype, NULL,
+-                                           curRecording, profile);
+-        autoRunJobs = init_jobs(curRecording, profile, runJobOnHostOnly,
+-                                transcodeFirst, earlyCommFlag);
++        InitAutoRunJobs(curRecording, kAutoRunProfile, NULL, __LINE__);
+     }
+ 
+     ClearFlags(kFlagNeedToStartRecorder);
+diff --git a/mythtv/libs/libmythtv/tv_rec.h b/mythtv/libs/libmythtv/tv_rec.h
+index ce54bff..a830c33 100644
+--- a/mythtv/libs/libmythtv/tv_rec.h
++++ b/mythtv/libs/libmythtv/tv_rec.h
+@@ -312,6 +312,9 @@ class MTV_PUBLIC TVRec : public SignalMonitorListener, public QRunnable
+     QDateTime GetRecordEndTime(const ProgramInfo*) const;
+     void CheckForRecGroupChange(void);
+     void NotifySchedulerOfRecording(RecordingInfo*);
++    typedef enum { kAutoRunProfile, kAutoRunNone, } AutoRunInitType;
++    void InitAutoRunJobs(RecordingInfo*, AutoRunInitType,
++                         RecordingProfile *, int line);
+ 
+     void SetRecordingStatus(
+         RecStatusType new_status, int line, bool have_lock = false);
+@@ -372,7 +375,7 @@ class MTV_PUBLIC TVRec : public SignalMonitorListener, public QRunnable
+     // Current recording info
+     RecordingInfo *curRecording;
+     QDateTime    recordEndTime;
+-    int          autoRunJobs;
++    QHash<QString,int> autoRunJobs; // RecordingInfo::MakeUniqueKey()->autoRun
+     int          overrecordseconds;
+ 
+     // Pending recording info
+diff --git a/mythtv/programs/mythbackend/mainserver.cpp b/mythtv/programs/mythbackend/mainserver.cpp
+index 610e61f..adad067 100644
+--- a/mythtv/programs/mythbackend/mainserver.cpp
++++ b/mythtv/programs/mythbackend/mainserver.cpp
+@@ -420,7 +420,14 @@ void MainServer::ProcessRequestWork(MythSocket *sock)
+     pbs->UpRef();
+     sockListLock.unlock();
+ 
+-    if (command == "QUERY_RECORDINGS")
++    if (command == "QUERY_FILETRANSFER")
++    {
++        if (tokens.size() != 2)
++            LOG(VB_GENERAL, LOG_ERR, "Bad QUERY_FILETRANSFER");
++        else
++            HandleFileTransferQuery(listline, tokens, pbs);
++    }
++    else if (command == "QUERY_RECORDINGS")
+     {
+         if (tokens.size() != 2)
+             LOG(VB_GENERAL, LOG_ERR, "Bad QUERY_RECORDINGS query");
+@@ -620,13 +627,6 @@ void MainServer::ProcessRequestWork(MythSocket *sock)
+     {
+         HandleGetRecorderNum(listline, pbs);
+     }
+-    else if (command == "QUERY_FILETRANSFER")
+-    {
+-        if (tokens.size() != 2)
+-            LOG(VB_GENERAL, LOG_ERR, "Bad QUERY_FILETRANSFER");
+-        else
+-            HandleFileTransferQuery(listline, tokens, pbs);
+-    }
+     else if (command == "QUERY_GENPIXMAP2")
+     {
+         HandleGenPreviewPixmap(listline, pbs);
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index 23db70c..47f4025 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -57,6 +57,7 @@ Scheduler::Scheduler(bool runthread, QMap<int, EncoderLink *> *tvList,
+     recordTable(tmptable),
+     priorityTable("powerpriority"),
+     schedLock(),
++    m_queueLock(),
+     reclist_changed(false),
+     specsched(master_sched),
+     schedMoveHigher(false),
+@@ -593,7 +594,9 @@ void Scheduler::UpdateRecStatus(RecordingInfo *pginfo)
+                 p->AddHistory(false);
+                 if (resched)
+                 {
++                    m_queueLock.lock();
+                     reschedQueue.enqueue(0);
++                    m_queueLock.unlock();
+                     reschedWait.wakeOne();
+                 }
+                 else
+@@ -643,7 +646,9 @@ void Scheduler::UpdateRecStatus(uint cardid, uint chanid,
+                 p->AddHistory(false);
+                 if (resched)
+                 {
++                    m_queueLock.lock();
+                     reschedQueue.enqueue(0);
++                    m_queueLock.unlock();
+                     reschedWait.wakeOne();
+                 }
+                 else
+@@ -1615,7 +1620,7 @@ void Scheduler::GetAllScheduled(QStringList &strList)
+ 
+ void Scheduler::Reschedule(int recordid)
+ {
+-    QMutexLocker locker(&schedLock);
++    QMutexLocker locker(&m_queueLock);
+ 
+     if (recordid == -1)
+         reschedQueue.clear();
+@@ -1661,7 +1666,9 @@ void Scheduler::AddRecording(const RecordingInfo &pi)
+     new_pi->GetRecordingRule();
+ 
+     // Trigger reschedule..
++    m_queueLock.lock();
+     reschedQueue.enqueue(pi.GetRecordingRuleID());
++    m_queueLock.unlock();
+     reschedWait.wakeOne();
+ }
+ 
+@@ -1765,11 +1772,13 @@ void Scheduler::run(void)
+     // wait for slaves to connect
+     sleep(3);
+ 
+-    QMutexLocker lockit(&schedLock);
+-
+-    reschedQueue.clear();
++    ClearRequestQueue();
++    m_queueLock.lock();
+     reschedQueue.enqueue(-1);
++    m_queueLock.unlock();
+ 
++    QMutexLocker lockit(&schedLock);
++    
+     int       prerollseconds  = 0;
+     int       wakeThreshold   = 300;
+     int       idleTimeoutSecs = 0;
+@@ -1807,7 +1816,7 @@ void Scheduler::run(void)
+         }
+         else
+         {
+-            if (reschedQueue.empty())
++            if (!HaveQueuedRequests())
+             {
+                 int sched_sleep = (secs_to_next - schedRunTime - 1) * 1000;
+                 sched_sleep = min(sched_sleep, maxSleep);
+@@ -1822,7 +1831,7 @@ void Scheduler::run(void)
+             }
+ 
+             QTime t; t.start();
+-            if (!reschedQueue.empty() && HandleReschedule())
++            if (HaveQueuedRequests() && HandleReschedule())
+             {
+                 statuschanged = true;
+                 startIter = reclist.begin();
+@@ -2003,9 +2012,11 @@ bool Scheduler::HandleReschedule(void)
+     QString msg;
+     bool deleteFuture = false;
+ 
+-    while (!reschedQueue.empty())
++    while (HaveQueuedRequests())
+     {
++        m_queueLock.lock();
+         int recordid = reschedQueue.dequeue();
++        m_queueLock.unlock();
+ 
+         LOG(VB_GENERAL, LOG_INFO, QString("Reschedule requested for id %1.")
+                 .arg(recordid));
+@@ -2013,7 +2024,7 @@ bool Scheduler::HandleReschedule(void)
+         if (recordid != 0)
+         {
+             if (recordid == -1)
+-                reschedQueue.clear();
++                ClearRequestQueue();
+ 
+             deleteFuture = true;
+             schedLock.unlock();
+@@ -2056,7 +2067,9 @@ bool Scheduler::HandleReschedule(void)
+     else
+     {
+         LOG(VB_GENERAL, LOG_INFO, "Reschedule interrupted, will retry");
++        m_queueLock.lock();
+         reschedQueue.enqueue(0);
++        m_queueLock.unlock();
+         return false;
+     }
+ 
+@@ -2216,7 +2229,11 @@ void Scheduler::HandleWakeSlave(RecordingInfo &ri, int prerollseconds)
+                 .arg(nexttv->GetHostName()).arg(ri.GetTitle()));
+ 
+         if (!WakeUpSlave(nexttv->GetHostName()))
++        {
++            m_queueLock.lock();
+             reschedQueue.enqueue(0);
++            m_queueLock.unlock();
++        }
+     }
+     else if ((nexttv->IsWaking()) &&
+              ((secsleft - prerollseconds) < 210) &&
+@@ -2229,7 +2246,11 @@ void Scheduler::HandleWakeSlave(RecordingInfo &ri, int prerollseconds)
+                 .arg(nexttv->GetHostName()));
+ 
+         if (!WakeUpSlave(nexttv->GetHostName(), false))
++        {
++            m_queueLock.lock();
+             reschedQueue.enqueue(0);
++            m_queueLock.unlock();
++        }
+     }
+     else if ((nexttv->IsWaking()) &&
+              ((secsleft - prerollseconds) < 150) &&
+@@ -2249,7 +2270,9 @@ void Scheduler::HandleWakeSlave(RecordingInfo &ri, int prerollseconds)
+                 (*it)->SetSleepStatus(sStatus_Undefined);
+         }
+ 
++        m_queueLock.lock();
+         reschedQueue.enqueue(0);
++        m_queueLock.unlock();
+     }
+ }
+ 
+@@ -2287,7 +2310,9 @@ bool Scheduler::HandleRecording(
+             livetvTime = (livetvTime < nextrectime) ?
+                 nextrectime : livetvTime;
+ 
++            m_queueLock.lock();
+             reschedQueue.enqueue(0);
++            m_queueLock.unlock();
+         }
+     }
+ 
+@@ -2370,7 +2395,9 @@ bool Scheduler::HandleRecording(
+                     enc->SetSleepStatus(sStatus_Undefined);
+             }
+ 
++            m_queueLock.lock();
+             reschedQueue.enqueue(0);
++            m_queueLock.unlock();
+         }
+ 
+         return false;
+diff --git a/mythtv/programs/mythbackend/scheduler.h b/mythtv/programs/mythbackend/scheduler.h
+index 8203c9f..3875749 100644
+--- a/mythtv/programs/mythbackend/scheduler.h
++++ b/mythtv/programs/mythbackend/scheduler.h
+@@ -165,10 +165,16 @@ class Scheduler : public MThread, public MythScheduler
+         bool &blockShutdown, QDateTime &idleSince, int prerollseconds,
+         int idleTimeoutSecs, int idleWaitForRecordingTime,
+         bool &statuschanged);
++    
++    bool HaveQueuedRequests(void)
++    {  QMutexLocker locker(&m_queueLock); return !reschedQueue.empty(); };
++    void ClearRequestQueue(void)
++    {  QMutexLocker locker(&m_queueLock); reschedQueue.clear(); };
+ 
+ 
+     MythDeque<int> reschedQueue;
+     mutable QMutex schedLock;
++    mutable QMutex m_queueLock;
+     QMutex recordmatchLock;
+     QWaitCondition reschedWait;
+     RecList reclist;
+diff --git a/mythtv/programs/mythcommflag/main.cpp b/mythtv/programs/mythcommflag/main.cpp
+index 74d161f..b468738 100644
+--- a/mythtv/programs/mythcommflag/main.cpp
++++ b/mythtv/programs/mythcommflag/main.cpp
+@@ -627,12 +627,7 @@ static qint64 GetFileSize(ProgramInfo *program_info)
+     if (filename.startsWith("myth://"))
+     {
+         RemoteFile remotefile(filename, false, false, 0);
+-        struct stat filestat;
+-
+-        if (remotefile.Exists(filename, &filestat))
+-        {
+-            size = filestat.st_size;
+-        }
++        size = remotefile.GetFileSize();
+     }
+     else
+     {
+diff --git a/mythtv/programs/mythfrontend/playbackbox.cpp b/mythtv/programs/mythfrontend/playbackbox.cpp
+index 2ec5e2d..6df02dd 100644
+--- a/mythtv/programs/mythfrontend/playbackbox.cpp
++++ b/mythtv/programs/mythfrontend/playbackbox.cpp
+@@ -1712,7 +1712,8 @@ bool PlaybackBox::UpdateUILists(void)
+                 }
+ 
+                 if ((m_viewMask & VIEW_WATCHLIST) &&
+-                    (p->GetRecordingGroup() != "LiveTV"))
++                    p->GetRecordingGroup() != "LiveTV" &&
++                    p->GetRecordingGroup() != "Deleted")
+                 {
+                     if (m_watchListAutoExpire && !p->IsAutoExpirable())
+                     {
+diff --git a/mythtv/programs/mythtranscode/transcode.cpp b/mythtv/programs/mythtranscode/transcode.cpp
+old mode 100644
+new mode 100755
+index 1c3ea9e..8e4bdc2
+--- a/mythtv/programs/mythtranscode/transcode.cpp
++++ b/mythtv/programs/mythtranscode/transcode.cpp
+@@ -42,31 +42,21 @@ using namespace std;
+ class AudioBuffer
+ {
+   public:
+-    AudioBuffer() : m_buffer(QByteArray()), m_time(-1) {};
++    AudioBuffer() : m_buffer(QByteArray()), m_frames(0), m_time(-1) {};
+     AudioBuffer(const AudioBuffer &old) : m_buffer(old.m_buffer),
+-        m_time(old.m_time) {};
++        m_frames(old.m_frames), m_time(old.m_time) {};
+ 
+     ~AudioBuffer() {};
+ 
+-    void appendData(unsigned char *buffer, int len, long long time)
++    void appendData(unsigned char *buffer, int len, int frames, long long time)
+     {
+         m_buffer.append((const char *)buffer, len);
++        m_frames += frames;
+         m_time = time;
+     }
+ 
+-    void setData(unsigned char *buffer, int len, long long time)
+-    {
+-        m_buffer.clear();
+-        appendData(buffer, len, time);
+-    }
+-
+-    void clear(void)
+-    {
+-        m_buffer.clear();
+-        m_time = -1;
+-    }
+-
+     QByteArray m_buffer;
++    int m_frames;
+     long long m_time;
+ };
+ 
+@@ -131,95 +121,64 @@ class AudioReencodeBuffer : public AudioOutput
+     // timecode is in milliseconds.
+     virtual bool AddData(void *buffer, int len, int64_t timecode, int frames)
+     {
+-        if (len == 0)
+-            return true;
+-
+-        QMutexLocker locker(&m_bufferMutex);
+-        AudioBuffer *ab = NULL;
+         unsigned char *buf = (unsigned char *)buffer;
+-        int savedlen = 0;
+-        int firstlen = 0;
+ 
++        // Test if target is using a fixed buffer size.
+         if (m_audioFrameSize)
+         {
+-            savedlen = (m_saveBuffer ? m_saveBuffer->m_buffer.size() : 0);
+-            if (savedlen)
+-                firstlen = m_audioFrameSize - savedlen;
++            int index = 0;
++            int total_frames = 0;
+ 
+-            int overage = (len + savedlen) % m_audioFrameSize;
+-
+-            LOG(VB_AUDIO, LOG_DEBUG, 
+-                QString("len: %1, savedlen: %2, overage: %3")
+-                .arg(len).arg(savedlen).arg(overage));
+-
+-            if (overage)
++            // Target has a fixed buffer size, which may not match len.
++            // Redistribute the bytes into appropriately sized buffers.
++            while (index < len)
+             {
+-                long long newtime = timecode + ((len / m_bytes_per_frame) /
+-                                                (m_eff_audiorate / 1000));
+-                if (overage < len)
+-                {
+-                    if (!m_saveBuffer)
+-                        ab = new AudioBuffer;
+-                    else
+-                        ab = m_saveBuffer;
+-                    m_saveBuffer = new AudioBuffer; 
+-                    len -= overage;
+-                    m_saveBuffer->setData(&buf[len], overage, newtime);
+-                }
+-                else
++                // See if we have some saved from last iteration in
++                // m_saveBuffer. If not create a new empty buffer.
++                if (!m_saveBuffer)
++                    m_saveBuffer = new AudioBuffer();
++
++                // Use as many of the remaining frames as will fit in the space
++                // left in the buffer.
++                int bufsize = m_saveBuffer->m_buffer.size();
++                int part = min(len - index, m_audioFrameSize - bufsize);
++                total_frames += part / m_bytes_per_frame;
++                timecode = total_frames * 1000 / m_eff_audiorate;
++                // Store frames in buffer, basing frame count on number of
++                // bytes, which works only for uncompressed data.
++                m_saveBuffer->appendData(&buf[index], part,
++                                         part / m_bytes_per_frame, timecode);
++
++                // If we have filled the buffer...
++                if (m_saveBuffer->m_buffer.size() == m_audioFrameSize)
+                 {
+-                    if (!m_saveBuffer)
+-                        m_saveBuffer = new AudioBuffer; 
+-                    m_saveBuffer->appendData(buf, len, newtime);
+-                    len = 0;
++                    QMutexLocker locker(&m_bufferMutex);
++
++                    // store the buffer
++                    m_bufferList.append(m_saveBuffer);
++                    // mark m_saveBuffer as emtpy.
++                    m_saveBuffer = NULL;
++                    // m_last_audiotime is updated iff we store a buffer.
++                    m_last_audiotime = timecode;
+                 }
++
++                index += part;
+             }
+-            else if (savedlen)
+-            {
+-                ab = m_saveBuffer;
+-                m_saveBuffer = NULL;
+-            }
+-            else
+-                ab = new AudioBuffer;
+         }
+         else
+         {
+-            ab = new AudioBuffer;
+-        }
+-
+-        if (!ab)
+-            return true;
+-
+-        int bufflen = (m_audioFrameSize ? m_audioFrameSize : len);
+-        int index = 0;
+-
+-        do
+-        {
+-            if (!len)
+-                break;
+-
+-            int blocklen = (firstlen ? firstlen : bufflen);
+-            blocklen = (blocklen > len ? len : blocklen);
+-
+-            m_last_audiotime = timecode + ((blocklen / m_bytes_per_frame) /
+-                                           (m_eff_audiorate / 1000));
+-            ab->appendData(&buf[index], blocklen, m_last_audiotime);
+-            m_bufferList.append(ab);
+-
+-            timecode = m_last_audiotime;
++            // Target has no fixed buffer size. We can use a simpler algorithm
++            // and use 'frames' directly rather than 'len / m_bytes_per_frame',
++            // thus also covering the passthrough case.
++            m_saveBuffer = new AudioBuffer();
++            timecode += frames * 1000 / m_eff_audiorate;
++            m_saveBuffer->appendData(buf, len, frames, timecode);
+ 
+-            LOG(VB_AUDIO, LOG_DEBUG, 
+-                QString("blocklen: %1, index: %2, timecode: %3")
+-                .arg(blocklen).arg(index).arg(timecode));
+-
+-            index += blocklen;
+-            firstlen = 0;
+-
+-            ab = new AudioBuffer;
+-        } while (index < len);
+-
+-        // The last buffer is actually unused
+-        delete ab;
++            QMutexLocker locker(&m_bufferMutex);
++            m_bufferList.append(m_saveBuffer);
++            m_saveBuffer = NULL;
++            m_last_audiotime = timecode;
++        }
+ 
+         return true;
+     }
+@@ -270,11 +229,11 @@ class AudioReencodeBuffer : public AudioOutput
+             AudioBuffer *ab = *it;
+ 
+             if (ab->m_time <= time)
+-                samples += ab->m_buffer.size();
++                samples += ab->m_frames;
+             else
+                 break;
+         }
+-        return samples / m_bytes_per_frame;
++        return samples;
+     }
+ 
+     virtual void SetTimecode(int64_t timecode)
+@@ -1734,7 +1693,7 @@ int Transcode::TranscodeFile(const QString &inputname,
+                 AudioBuffer *ab = arb->GetData();
+ 
+                 if (!cutter ||
+-                    !cutter->InhibitUseAudioFrames(1, &totalAudio))
++                    !cutter->InhibitUseAudioFrames(ab->m_frames, &totalAudio))
+                     fifow->FIFOWrite(1, ab->m_buffer.data(),
+                                      ab->m_buffer.size());
+ 
+diff --git a/mythtv/programs/programs-libs.pro b/mythtv/programs/programs-libs.pro
+index f40f8a2..24f24f6 100644
+--- a/mythtv/programs/programs-libs.pro
++++ b/mythtv/programs/programs-libs.pro
+@@ -64,6 +64,7 @@ DEPENDPATH += ../../libs/libmythlivemedia ../../libmythbase ../../libmythhdhomer
+ DEPENDPATH +=../../libs/libmythservicecontracts ../../libs/libmythprotoserver
+ 
+ using_opengl:CONFIG += opengl
++using_mingw:DEFINES += USING_MINGW
+ 
+ macx:using_firewire:using_backend:LIBS += -F$${CONFIG_MAC_AVC} -framework AVCVideoServices
+ macx:using_dvdv:LIBS += -lobjc
+diff --git a/mythtv/themes/Terra/osd.xml b/mythtv/themes/Terra/osd.xml
+index c0c1600..f11d40c 100644
+--- a/mythtv/themes/Terra/osd.xml
++++ b/mythtv/themes/Terra/osd.xml
+@@ -102,7 +102,7 @@
+         </textarea>
+ 
+         <textarea name="channum" depends="!iconpath">
+-            <area>35,95,80,30</area>
++            <area>20,95,110,30</area>
+             <font>baseextralarge</font>
+             <align>hcenter</align>
+             <template>%CHANNUM%</template>
+@@ -230,7 +230,7 @@
+         </textarea>
+ 
+         <textarea name="channum" depends="!iconpath">
+-            <area>35,95,80,30</area>
++            <area>20,95,110,30</area>
+             <font>baseextralarge</font>
+             <align>hcenter</align>
+             <template>%CHANNUM%</template>
+diff --git a/scripts/pytmdb3.py b/scripts/pytmdb3.py
+new file mode 100755
+index 0000000..f6a3e64
+--- /dev/null
++++ b/scripts/pytmdb3.py
+@@ -0,0 +1,53 @@
++#!/usr/bin/env python
++
++from optparse import OptionParser
++from tmdb3 import *
++
++import sys
++
++if __name__ == '__main__':
++    # this key is registered to this library for testing purposes.
++    # please register for your own key if you wish to use this
++    # library in your own application.
++    # http://help.themoviedb.org/kb/api/authentication-basics
++    set_key('1acd79ff610c77f3040073d004f7f5b0')
++
++    parser = OptionParser()
++    parser.add_option('-v', "--version", action="store_true", default=False,
++                      dest="version", help="Display version.")
++    parser.add_option('-d', "--debug", action="store_true", default=False,
++                      dest="debug", help="Enables verbose debugging.")
++    parser.add_option('-c', "--no-cache", action="store_true", default=False,
++                      dest="nocache", help="Disables request cache.")
++    opts, args = parser.parse_args()
++
++    if opts.version:
++        from tmdb3.tmdb_api import __title__, __purpose__, __version__, __author__
++        print __title__
++        print ""
++        print __purpose__
++        print "Version: "+__version__
++        sys.exit(0)
++
++#   TODO: make this actually do something
++#    if opts.debug:
++#        DEBUG = True
++
++    if opts.nocache:
++        set_cache(engine='null')
++    else:
++        set_cache(engine='file', filename='/tmp/pytmdb3.cache')
++
++    banner = 'PyTMDB3 Interactive Shell.'
++    import code
++    try:
++        import readline, rlcompleter
++    except ImportError:
++        pass
++    else:
++        readline.parse_and_bind("tab: complete")
++        banner += ' TAB completion available.'
++    namespace = globals().copy()
++    namespace.update(locals())
++    code.InteractiveConsole(namespace).interact(banner)
++
+diff --git a/tmdb3/tmdb_auth.py b/tmdb3/tmdb_auth.py
+new file mode 100644
+index 0000000..8583b99
+--- /dev/null
++++ b/tmdb3/tmdb_auth.py
+@@ -0,0 +1,131 @@
++#!/usr/bin/env python
++# -*- coding: utf-8 -*-
++#-----------------------
++# Name: tmdb_auth.py
++# Python Library
++# Author: Raymond Wagner
++# Purpose: Provide authentication and session services for 
++#          calls against the TMDB v3 API
++#-----------------------
++
++from datetime import datetime as _pydatetime, \
++                     tzinfo as _pytzinfo
++import re
++class datetime( _pydatetime ):
++    """Customized datetime class with ISO format parsing."""
++    _reiso = re.compile('(?P<year>[0-9]{4})'
++                       '-(?P<month>[0-9]{1,2})'
++                       '-(?P<day>[0-9]{1,2})'
++                        '.'
++                        '(?P<hour>[0-9]{2})'
++                       ':(?P<min>[0-9]{2})'
++                       '(:(?P<sec>[0-9]{2}))?'
++                        '(?P<tz>Z|'
++                            '(?P<tzdirec>[-+])'
++                            '(?P<tzhour>[0-9]{1,2})'
++                            '(:)?'
++                            '(?P<tzmin>[0-9]{2})?'
++                        ')?')
++
++    class _tzinfo( _pytzinfo):
++        def __init__(self, direc='+', hr=0, min=0):
++            if direc == '-':
++                hr = -1*int(hr)
++            self._offset = timedelta(hours=int(hr), minutes=int(min))
++        def utcoffset(self, dt): return self._offset
++        def tzname(self, dt): return ''
++        def dst(self, dt): return timedelta(0)
++
++    @classmethod
++    def fromIso(cls, isotime, sep='T'):
++        match = cls._reiso.match(isotime)
++        if match is None:
++            raise TypeError("time data '%s' does not match ISO 8601 format" \
++                                % isotime)
++
++        dt = [int(a) for a in match.groups()[:5]]
++        if match.group('sec') is not None:
++            dt.append(int(match.group('sec')))
++        else:
++            dt.append(0)
++        if match.group('tz'):
++            if match.group('tz') == 'Z':
++                tz = cls._tzinfo()
++            elif match.group('tzmin'):
++                tz = cls._tzinfo(*match.group('tzdirec','tzhour','tzmin'))
++            else:
++                tz = cls._tzinfo(*match.group('tzdirec','tzhour'))
++            dt.append(0)
++            dt.append(tz)
++        return cls(*dt)
++
++from request import Request
++from tmdb_exceptions import *
++
++syssession = None
++
++def set_session(sessionid):
++    global syssession
++    syssession = Session(sessionid)
++
++def get_session(sessionid=None):
++    global syssession
++    if sessionid:
++        return Session(sessionid)
++    elif syssession is not None:
++        return syssession
++    else:
++        return Session.new()
++
++class Session( object ):
++
++    @classmethod
++    def new(cls):
++        return cls(None)
++
++    def __init__(self, sessionid):
++        self.sessionid = sessionid
++
++    @property
++    def sessionid(self):
++        if self._sessionid is None:
++            if self._authtoken is None:
++                raise TMDBError("No Auth Token to produce Session for")
++            # TODO: check authtokenexpiration against current time
++            req = Request('authentication/session/new', \
++                                            request_token=self._authtoken)
++            req.lifetime = 0
++            dat = req.readJSON()
++            if not dat['success']:
++                raise TMDBError("Session generation failed")
++            self._sessionid = dat['session_id']
++        return self._sessionid
++
++    @sessionid.setter
++    def sessionid(self, value):
++        self._sessionid = value
++        self._authtoken = None
++        self._authtokenexpiration = None
++        if value is None:
++            self.authenticated = False
++        else:
++            self.authenticated = True
++
++    @property
++    def authtoken(self):
++        if self.authenticated:
++            raise TMDBError("Session is already authenticated")
++        if self._authtoken is None:
++            req = Request('authentication/token/new')
++            req.lifetime = 0
++            dat = req.readJSON()
++            if not dat['success']:
++                raise TMDBError("Auth Token request failed")
++            self._authtoken = dat['request_token']
++            self._authtokenexpiration = datetime.fromIso(dat['expires_at'])
++        return self._authtoken
++
++    @property
++    def callbackurl(self):
++        return "http://www.themoviedb.org/authenticate/"+self._authtoken
++
