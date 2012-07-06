@@ -48,7 +48,6 @@
 # --without mythnews
 # --without mythweather
 # --without mythzoneminder
-# --without mythweb
 #
 
 ################################################################################
@@ -60,15 +59,12 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-# 0.24 release: git tag v0.24.1
-%define _gitrev 1a671d0
+# 0.25 release: git tag v0.25.1
+%define _gitrev c2c276d
 
 # Mythtv and plugins from github.com
-%global githash1 g1f5962a
-%global githash2 9615da9
-# Mythweb from github.com
-%global githash3 g1d056f7
-%global githash4 0fc49a5
+%global githash1 gc2c276d
+%global githash2 4c30a85
 
 %define branch fixes/0.25
 
@@ -81,12 +77,12 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version:        0.25
+Version:        0.25.1
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        6%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -131,7 +127,6 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %define with_mythmusic      %{?_without_mythmusic:      0} %{!?_without_mythmusic:       1}
 %define with_mythnews       %{?_without_mythnews:       0} %{!?_without_mythnews:        1}
 %define with_mythweather    %{?_without_mythweather:    0} %{!?_without_mythweather:     1}
-%define with_mythweb        %{?_without_mythweb:        0} %{!?_without_mythweb:         1}
 %define with_mythzoneminder %{?_without_mythzoneminder: 0} %{!?_without_mythzoneminder:  1}
 %define with_mythnetvision  %{?_without_mythnetvision:  0} %{!?_without_mythnetvision:   1}
 
@@ -139,23 +134,22 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 # https://github.com/MythTV/mythtv/tarball/v0.25
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
-# https://github.com/MythTV/mythweb/tarball/v0.25
-Source1:   MythTV-mythweb-v%{version}-0-%{githash3}.tar.gz
 
-Patch0:    mythtv-0.25-fixes.patch
-#Patch1:    mythweb-%{version}-fixes.patch
-Patch2:    mythtv_0.25_gcc_4.7.patch
+Patch0:    mythtv-0.25.1-fixes.patch
 
 Source10:  PACKAGE-LICENSING
+Source11:  ChangeLog
 Source101: mythbackend.sysconfig
 Source102: mythbackend.init
-Source103: mythbackend.logrotate
+Source103: mythtv.logrotate.sysv
+Source104: mythtv.logrotate.sysd
+Source105: mythbackend.service
 Source106: mythfrontend.png
 Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
 Source110: mysql.txt
-Source401: mythweb.conf
+Source111: 99-mythbackend.rules
 
 
 # Global MythTV and Shared Build Requirements
@@ -220,7 +214,6 @@ BuildRequires:  libcdio-devel
 BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
-BuildRequires:  mjpegtools-devel >= 1.6.1
 BuildRequires:  taglib-devel >= 1.6
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
@@ -352,6 +345,7 @@ Requires:  perl-MythTV        = %{version}-%{release}
 Requires:  php-MythTV         = %{version}-%{release}
 Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
+Requires:  mythweb
 Requires:  mysql-server >= 5, mysql >= 5
 Requires:  xmltv
 
@@ -385,8 +379,9 @@ unified graphical interface:
 ################################################################################
 
 %package docs
-Summary: MythTV documentation
-Group:   Documentation
+Summary:   MythTV documentation
+Group:     Documentation
+BuildArch: noarch
 
 %description docs
 The MythTV documentation, database initialization file
@@ -514,9 +509,8 @@ Requires:  freetype, lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
+Requires:  python-MythTV python-lxml
 Provides:  mythtv-frontend-api = %{mythfeapiver}
-Obsoletes: mythcontrols        < %{version}-%{release}
-Provides:  mythcontrols        = %{version}-%{release}
 Obsoletes: mythvideo           < %{version}-%{release}
 Provides:  mythvideo           = %{version}-%{release}
 
@@ -569,13 +563,7 @@ mythtv backend.
 %package common
 Summary: Common components needed by multiple other MythTV components
 Group: Applications/Multimedia
-# mythphone is now DOA, but we need this for upgrade path preservation.
-Provides: mythphone = %{version}-%{release}
-Obsoletes: mythphone < %{version}-%{release}
-# same deal for mythflix
-Provides: mythflix = %{version}-%{release}
-Obsoletes: mythflix < %{version}-%{release}
-# and now mythmovies
+# mythpmovies is now DOA, but we need this for upgrade path preservation.
 Provides: mythmovies = %{version}-%{release}
 Obsoletes: mythmovies < %{version}-%{release}
 
@@ -592,8 +580,7 @@ This package contains components needed by multiple other MythTV components.
 %package -n perl-MythTV
 Summary:        Perl bindings for MythTV
 Group:          Development/Languages
-# Wish we could do this:
-#BuildArch:      noarch
+BuildArch:      noarch
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(DBD::mysql)
@@ -612,8 +599,7 @@ Provides a perl-based interface to interacting with MythTV.
 %package -n php-MythTV
 Summary:        PHP bindings for MythTV
 Group:          Development/Languages
-# Wish we could do this:
-#BuildArch:      noarch
+BuildArch:      noarch
 
 %description -n php-MythTV
 Provides a PHP-based interface to interacting with MythTV.
@@ -627,8 +613,7 @@ Provides a PHP-based interface to interacting with MythTV.
 %package -n python-MythTV
 Summary:        Python bindings for MythTV
 Group:          Development/Languages
-# Wish we could do this:
-#BuildArch:      noarch
+BuildArch:      noarch
 
 Requires:       MySQL-python
 Requires:       PyXML
@@ -656,7 +641,6 @@ Requires:  mythnews       = %{version}-%{release}
 Requires:  mythbrowser    = %{version}-%{release}
 Requires:  mytharchive    = %{version}-%{release}
 Requires:  mythzoneminder = %{version}-%{release}
-Requires:  mythweb        = %{version}-%{release}
 Requires:  mythnetvision  = %{version}-%{release}
 
 %description -n mythplugins
@@ -681,7 +665,6 @@ Requires:  mkisofs >= 2.01
 Requires:  python >= 2.3.5
 Requires:  python-imaging
 Requires:  transcode >= 1.0.2
-Requires:  m2vrequantiser
 Requires:  pmount
 
 %description -n mytharchive
@@ -770,22 +753,6 @@ A MythTV module that displays a weather forecast.
 
 %endif
 ################################################################################
-%if %{with_mythweb}
-
-%package -n mythweb
-Summary:   The web interface to MythTV
-Group:     Applications/Multimedia
-Requires:  httpd >= 1.3.26
-Requires:  php >= 5.1
-Requires:  php-mysql
-Requires:  php-process
-Requires:  php-MythTV
-
-%description -n mythweb
-The web interface to MythTV.
-
-%endif
-################################################################################
 %if %{with_mythzoneminder}
 
 %package -n mythzoneminder
@@ -811,6 +778,7 @@ Requires:  mythbrowser = %{version}-%{release}
 Requires:  python-MythTV = %{version}-%{release}
 Requires:  python-pycurl
 Requires:  python >= 2.5
+Requires:  python-lxml
 # This is packaged in adobe's yum repo
 #Requires:  flash-plugin
 
@@ -827,19 +795,6 @@ on demand content.
 ################################################################################
 
 %prep
-#### MythWeb
-# Provided as a separate download so we deal with it here.
-%setup -q -T -b 1 -n MythTV-mythweb-%{githash4}
-
-# Fix up permissions for MythWeb
-chmod -R g-w ./*
-
-# Remove execute bits from some php mythweb files
-#    chmod -x mythweb/classes/*.php
-
-
-#### MythTV
-#setup -q -c -a 1
 %setup -q -n MythTV-%{name}-%{githash2}
 
 # Replace static lib paths with %{_lib} so we build properly on x86_64
@@ -851,8 +806,9 @@ chmod -R g-w ./*
     fi
 
 %patch0 -p1 -b .mythtv
-#patch1 -p1 -b .mythplug
-%patch2 -p1 -b .gcc47
+
+# Install ChangeLog
+install -m 0644 %{SOURCE11} .
 
 pushd mythtv
 
@@ -1080,17 +1036,22 @@ pushd mythtv
 # mysql.txt and other config/init files
     install -m 0644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
+
+    ### SystemD based setup. ###
     %if 0%{?fedora} >= 16
-    install -p -m 0644 %{SOURCE104} %{buildroot}%{_unitdir}/
+    install -p -m 0644 %{SOURCE105} %{buildroot}%{_unitdir}/
+    install -p -m 0644 %{SOURCE104} %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
     # Install udev rules for devices that may initialize late in the boot
     # process so they are available for mythbackend.
     mkdir -p %{buildroot}/lib/udev/rules.d/
     install -p -m 0644 %{SOURCE111} %{buildroot}/lib/udev/rules.d/
+
+    ### SysV based setup. ###
     %else
     install -p -m 0755 %{SOURCE102} %{buildroot}%{_sysconfdir}/init.d/mythbackend
     install -p -m 0644 %{SOURCE101} %{buildroot}%{_sysconfdir}/sysconfig/mythbackend
+    install -p -m 0644 %{SOURCE103} %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
     %endif
-    install -p -m 0644 %{SOURCE103} %{buildroot}%{_sysconfdir}/logrotate.d/mythbackend
 
 # Desktop entries
     mkdir -p %{buildroot}%{_datadir}/pixmaps
@@ -1139,19 +1100,6 @@ pushd mythplugins
         %{buildroot}%{_datadir}/mythtv/games/PC/gamelist.xml
 %endif
 popd
-
-%if %{with_mythweb}
-    pushd ../MythTV-mythweb-%{githash4}
-    mkdir -p %{buildroot}%{_datadir}/mythweb
-    cp -a * %{buildroot}%{_datadir}/mythweb/
-    mkdir -p %{buildroot}%{_datadir}/mythweb/{image_cache,php_sessions}
-
-    mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
-    cp %{SOURCE401} %{buildroot}%{_sysconfdir}/httpd/conf.d/
-    # drop .htaccess file, settings handled in the above
-    rm -f %{buildroot}%{_datadir}/mythweb/data/.htaccess
-    popd
-%endif
 
 # And back to the build/install root
 %endif
@@ -1250,6 +1198,7 @@ fi
 ################################################################################
 
 %files
+%doc ChangeLog mythtv/PACKAGE-LICENSING
 
 %files docs
 %doc mythtv/README*
@@ -1261,7 +1210,6 @@ fi
 # Do we really need the API documentation?
 #%doc mythtv/docs/*.html mythtv/docs/*.png
 #%doc mythtv/docs/*.txt
-%doc mythtv/PACKAGE-LICENSING
 %doc mythtv/contrib
 
 %files common
@@ -1300,7 +1248,7 @@ fi
 %{_sysconfdir}/init.d/mythbackend
 %config(noreplace) %{_sysconfdir}/sysconfig/mythbackend
 %endif
-%config(noreplace) %{_sysconfdir}/logrotate.d/mythbackend
+%config(noreplace) %{_sysconfdir}/logrotate.d/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
 %{_datadir}/mythtv/internetcontent/
 %{_datadir}/mythtv/html/
@@ -1459,15 +1407,6 @@ fi
 %{_datadir}/mythtv/mythweather/*
 %endif
 
-%if %{with_mythweb}
-%files -n mythweb
-%doc ../MythTV-mythweb-%{githash4}/README
-%doc ../MythTV-mythweb-%{githash4}/LICENSE
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/mythweb.conf
-%defattr(-,apache,apache,0775)
-%{_datadir}/mythweb/
-%endif
-
 %if %{with_mythzoneminder}
 %files -n mythzoneminder
 %{_libdir}/mythtv/plugins/libmythzoneminder.so
@@ -1492,15 +1431,15 @@ fi
 
 ################################################################################
 
-%clean
-rm -rf %{buildroot}
-%if %{with_mythweb}
-rm -rf ../MythTV-mythweb-%{githash4}
-%endif
-
-################################################################################
 
 %changelog
+* Tue Jun 05 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.1-1
+- Update to latest fixes/0.25.
+- Move mythweb to a stand alone package.
+
+* Fri May 11 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-7
+- Update to latest 0.25/fixes.
+
 * Fri May 04 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-6
 - Add Bonjour (Airplay) support.
 - Fix user creation for packages that create directories owned by mythtv user.
