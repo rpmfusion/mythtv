@@ -1,0 +1,21 @@
+commit cd670ec7bf5f04f1ba67b5a7cbc00374479eb9b0
+Author: Chris Petersen <cpetersen@mythtv.org>
+Date:   Wed Jun 13 21:01:18 2012 -0700
+
+    Partial support for PHP 5.4
+    
+    Bindings portions of the patch re #10504
+
+diff --git a/mythtv/bindings/php/MythBase.php b/mythtv/bindings/php/MythBase.php
+index 9b41efc..563e6fb 100644
+--- a/mythtv/bindings/php/MythBase.php
++++ b/mythtv/bindings/php/MythBase.php
+@@ -47,7 +47,7 @@ class MythBase {
+ 
+     public function __destruct() {
+         if (!is_null($this->cacheKey))
+-            Cache::setObject($this->cacheKey, &$this, $this->cacheLifetime);
++            Cache::setObject($this->cacheKey, $this, $this->cacheLifetime);
+         $this->cacheKey = null;
+     }
+ 

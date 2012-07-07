@@ -82,7 +82,7 @@ Version:        0.25.1
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -136,6 +136,9 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 
 Patch0:    mythtv-0.25.1-fixes.patch
+
+# Fixes for PHP 5.4
+Patch1:    mythtv-0.25.1-php54.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -806,6 +809,7 @@ on demand content.
     fi
 
 %patch0 -p1 -b .mythtv
+%patch1 -p1 -b .php54
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -1433,6 +1437,9 @@ fi
 
 
 %changelog
+* Fri Jul 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.1-2
+- Patch for PHP 5.4 warnings.
+
 * Tue Jun 05 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.1-1
 - Update to latest fixes/0.25.
 - Move mythweb to a stand alone package.
