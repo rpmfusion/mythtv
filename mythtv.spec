@@ -512,7 +512,7 @@ Requires:  freetype, lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
-Requires:  python-MythTV python-lxml
+Requires:  python-MythTV
 Provides:  mythtv-frontend-api = %{mythfeapiver}
 Obsoletes: mythvideo           < %{version}-%{release}
 Provides:  mythvideo           = %{version}-%{release}
