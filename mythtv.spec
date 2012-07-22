@@ -60,13 +60,12 @@
 
 # Git revision and branch ID
 # 0.25 release: git tag v0.25.1
-%define _gitrev c2c276d
+%define _gitrev v0.25.2-4-ged58b3a
+%define branch fixes/0.25
 
 # Mythtv and plugins from github.com
-%global githash1 gc2c276d
-%global githash2 4c30a85
-
-%define branch fixes/0.25
+%global githash1 g4e44650
+%global githash2 19087cb
 
 #
 # Basic descriptive tags for this package:
@@ -77,12 +76,12 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version:        0.25.1
+Version:        0.25.2
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -135,10 +134,12 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # https://github.com/MythTV/mythtv/tarball/v0.25
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 
-Patch0:    mythtv-0.25.1-fixes.patch
+Patch0:    mythtv-0.25.2-fixes.patch
 
 # Fixes for PHP 5.4
 Patch1:    mythtv-0.25.1-php54.patch
+# Adapative HLS profile based on resolution.
+Patch2:    mythtv-0.25.1-hls_profile.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -811,6 +812,7 @@ on demand content.
 
 %patch0 -p1 -b .mythtv
 %patch1 -p1 -b .php54
+%patch2 -p1 -b .hls_profile
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -833,13 +835,13 @@ pushd mythtv
     cp -a %{SOURCE10} .
     cp -a %{SOURCE106} %{SOURCE107} %{SOURCE108} %{SOURCE109} .
 
+# Make sure we use -O2 and not -O3
+    sed -i '/speed_cflags=/d' configure
+
 # Prevent all of those nasty installs to ../../../../../bin/whatever
 #    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
 #    echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
 #    chmod 644 settings.pro
-
-# We also need Xv libs to build XvMCNVIDIA
-#    sed -i -e 's,VENDOR_XVMC_LIBS="-lXvMCNVIDIA",VENDOR_XVMC_LIBS="-lXvMCNVIDIA -lXv",' configure
 
 popd
 
@@ -1218,10 +1220,7 @@ fi
 %doc mythtv/contrib
 
 %files common
-%dir %{_sysconfdir}/mythtv
 %dir %{_datadir}/mythtv
-%config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
-%config(noreplace) %{_sysconfdir}/mythtv/config.xml
 %{_bindir}/mythccextractor
 %{_bindir}/mythcommflag
 %{_bindir}/mythmetadatalookup
@@ -1233,6 +1232,10 @@ fi
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
 %{_datadir}/mythtv/hardwareprofile/
+%attr(-,mythtv,mythtv)
+%dir %{_sysconfdir}/mythtv
+%config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
+%config(noreplace) %{_sysconfdir}/mythtv/config.xml
 
 %files backend
 %{_bindir}/mythbackend
@@ -1438,6 +1441,11 @@ fi
 
 
 %changelog
+* Mon Jul 16 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-1
+- Patch HLS for adapative x264 profile.
+- Make sure mythbackend starts after time has synced.
+- Update to latest fixies/0.25.
+
 * Fri Jul 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.1-2
 - Patch for PHP 5.4 warnings.
 

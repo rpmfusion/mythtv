@@ -28,19 +28,38 @@
 # The MythTV package ships with a default udev
 # rule file located in: /lib/udev/rules.d/99-mythbackend.rules
 
-
 [Unit]
 Description=MythTV backend service
-After=network.target mysqld.service
-# uncomment the following line if you will be using the mythweb plugin.
+After=network.target mysqld.service time-sync.target
+# Uncomment the following line if you will be using the mythweb plugin on the
+# same system as mythbackend.
 #Wants=httpd.service
 
 [Service]
+# Type=simple is recommended. If using Type=forking you will need to specify a
+# pidfile so systemd knows how to find the forked process PID, otherwise it
+# presumes that the process being started will be the remaining process.
+#Type=forking
 Type=simple
-Environment=MYTHCONFDIR=/etc/mythtv
-Environment=HOME=/usr/share/mythtv
+
+# Default setting assumes a system wide install. Otherwise it should be set to 
+# the folder containing the .mythtv subfolder containing the config.xml file
+Environment=HOME=/etc/mythtv
+
+# systemd changes execution from the calling user (possibly root) to this user
+# if you have permissions problems or obscure errors try logging in as mythtv
 User=mythtv
+
+# Uncomment one of the following...
+# Use sysloging rather than separate logging:
+#ExecStart=/usr/bin/mythbackend --syslog local7
+# If Type=forking is set you must specify the --daemon and --pidfile options:
+#ExecStart=/usr/bin/mythbackend --daemon --logpath /var/log/mythtv --loglevel crit --pidfile /run/mythbackend.pid
+# Default setting for Type=simple.
 ExecStart=/usr/bin/mythbackend --logpath /var/log/mythtv
+
+# Whether systemd will continue over-watch and restart on any halt
+#Restart=Restart-always
 
 [Install]
 WantedBy=multi-user.target
