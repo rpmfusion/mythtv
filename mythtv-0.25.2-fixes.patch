@@ -1,0 +1,406 @@
+ checksums/mythplugins-0.25.2.md5sum             |    1 +
+ checksums/mythtv-0.25.2.md5sum                  |    1 +
+ mythplugins/mythmusic/mythmusic/musicplayer.cpp |    7 +
+ mythplugins/mythmusic/mythmusic/polygon.h       |    4 +-
+ mythtv/html/setup/wizard-network.qsp            |    4 +
+ mythtv/libs/libmythbase/serverpool.cpp          |  196 +++++++++++++++--------
+ mythtv/libs/libmythtv/subtitlescreen.cpp        |    6 +-
+ mythtv/libs/libmythtv/subtitlescreen.h          |    7 +-
+ mythtv/themes/defaultmenu/mainmenu.xml          |    1 +
+ 9 files changed, 152 insertions(+), 75 deletions(-)
+
+diff --git a/checksums/mythplugins-0.25.2.md5sum b/checksums/mythplugins-0.25.2.md5sum
+new file mode 100644
+index 0000000..16f5965
+--- /dev/null
++++ b/checksums/mythplugins-0.25.2.md5sum
+@@ -0,0 +1 @@
++80466458a82759d213fe69af63d6dc80  mythplugins-0.25.2.tar.bz2
+diff --git a/checksums/mythtv-0.25.2.md5sum b/checksums/mythtv-0.25.2.md5sum
+new file mode 100644
+index 0000000..f02e863
+--- /dev/null
++++ b/checksums/mythtv-0.25.2.md5sum
+@@ -0,0 +1 @@
++2bf8c0aa75e88d39747e59c27aa6072e  mythtv-0.25.2.tar.bz2
+diff --git a/mythplugins/mythmusic/mythmusic/musicplayer.cpp b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
+index b0cccf5..d94e08f 100644
+--- a/mythplugins/mythmusic/mythmusic/musicplayer.cpp
++++ b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
+@@ -105,6 +105,7 @@ MusicPlayer::~MusicPlayer()
+         m_cdWatcher->stop();
+         m_cdWatcher->wait();
+         delete m_cdWatcher;
++        m_cdWatcher = NULL;
+     }
+ 
+     if (!hasClient())
+@@ -283,6 +284,12 @@ void MusicPlayer::stop(bool stopAll)
+         m_output = NULL;
+     }
+ 
++    if (stopAll && m_cdWatcher)
++    {
++        m_cdWatcher->stop();
++        m_cdWatcher->wait();
++    }
++
+     // because we don't actually stop the audio output we have to fake a Stopped
+     // event so any listeners can act on it
+     OutputEvent oe(OutputEvent::Stopped);
+diff --git a/mythplugins/mythmusic/mythmusic/polygon.h b/mythplugins/mythmusic/mythmusic/polygon.h
+index 2884d8e..d859d5d 100644
+--- a/mythplugins/mythmusic/mythmusic/polygon.h
++++ b/mythplugins/mythmusic/mythmusic/polygon.h
+@@ -18,13 +18,13 @@ class Bitmap
+         delete[] data;
+         width = w;
+         height = h;
+-        data = new Pixel[w*h+extra];
++        data = new Pixel[2*w*h+extra];
+         clear();
+     }
+   
+     void clear()
+     {
+-        memset(data,0,sizeof(Pixel)*(width*height+extra));
++        memset(data,0,sizeof (Pixel)*(2*width*height+extra));
+     }
+ };
+ #endif
+diff --git a/mythtv/html/setup/wizard-network.qsp b/mythtv/html/setup/wizard-network.qsp
+index 03c37ac..59b67a9 100644
+--- a/mythtv/html/setup/wizard-network.qsp
++++ b/mythtv/html/setup/wizard-network.qsp
+@@ -13,6 +13,10 @@
+         <td id='BackendServerIP6_cell'>&nbsp;
+             <a href="javascript:showSettingHelp('BackendServerIP6')">[?]</a>
+             </td></tr>
++    <tr><th align=right><i18n>Use Link-Local</i18n>:</th>
++        <td id='AllowLinkLocal_cell'>&nbsp;
++            <a href="javascript:showSettingHelp('AllowLinkLocal')">[?]</a>
++            </td></tr>
+     <tr><th align=right><i18n>Security PIN</i18n>:</th>
+         <td><input id='SecurityPin' type='password' size=10>
+             <a href="javascript:showSettingHelp('SecurityPin')">[?]</a>
+diff --git a/mythtv/libs/libmythbase/serverpool.cpp b/mythtv/libs/libmythbase/serverpool.cpp
+index 609e190..745e329 100644
+--- a/mythtv/libs/libmythbase/serverpool.cpp
++++ b/mythtv/libs/libmythbase/serverpool.cpp
+@@ -20,6 +20,13 @@ static QList<QNetworkAddressEntry> naList_4;
+ static QList<QNetworkAddressEntry> naList_6;
+ static QReadWriteLock naLock;
+ 
++static QPair<QHostAddress, int> kLinkLocal  =
++                            QHostAddress::parseSubnet("169.254.0.0/16");
++#if !defined(QT_NO_IPV6)
++static QPair<QHostAddress, int> kLinkLocal6 =
++                            QHostAddress::parseSubnet("fe80::/10");
++#endif
++
+ class PrivUdpSocket : public QUdpSocket
+ {
+ public:
+@@ -38,7 +45,7 @@ public:
+     {
+ #if !defined(QT_NO_IPV6)
+         if (addr.protocol() == QAbstractSocket::IPv6Protocol &&
+-            addr.isInSubnet(QHostAddress::parseSubnet("fe80::/10")) &&
++            addr.isInSubnet(kLinkLocal6) &&
+             host.ip().scopeId() != addr.scopeId())
+         {
+             return false;
+@@ -92,6 +99,7 @@ void ServerPool::SelectDefaultListen(bool force)
+     QHostAddress config_v6(gCoreContext->GetSetting("BackendServerIP6"));
+     bool v6IsSet = config_v6.isNull() ? true : false;
+ #endif
++    bool allowLinkLocal = gCoreContext->GetNumSetting("AllowLinkLocal", true) > 0;
+ 
+     // loop through all available interfaces
+     QList<QNetworkInterface> IFs = QNetworkInterface::allInterfaces();
+@@ -102,97 +110,147 @@ void ServerPool::SelectDefaultListen(bool force)
+             continue;
+ 
+         QList<QNetworkAddressEntry> IPs = qni->addressEntries();
+-        QList<QNetworkAddressEntry>::const_iterator qnai;
++        QList<QNetworkAddressEntry>::iterator qnai;
+         for (qnai = IPs.begin(); qnai != IPs.end(); ++qnai)
+         {
+             QHostAddress ip = qnai->ip();
+-            if (naList_4.contains(*qnai))
+-                // already defined, skip
+-                continue;
+-            else if (!config_v4.isNull() && (ip == config_v4))
++#if !defined(QT_NO_IPV6)
++            if (ip.protocol() == QAbstractSocket::IPv4Protocol)
+             {
+-                // IPv4 address is defined, add it
+-                LOG(VB_GENERAL, LOG_DEBUG,
++#endif
++                if (naList_4.contains(*qnai))
++                    // already defined, skip
++                    continue;
++
++                else if (!config_v4.isNull() && (ip == config_v4))
++                {
++                    // IPv4 address is defined, add it
++                    LOG(VB_GENERAL, LOG_DEBUG,
+                         QString("Adding BackendServerIP to address list."));
+-                naList_4.append(*qnai);
+-                v4IsSet = true;
+-            }
+-            else if (ip == QHostAddress::LocalHost)
+-            {
+-                // always listen on LocalHost
+-                LOG(VB_GENERAL, LOG_DEBUG,
+-                        QString("Adding IPv4 loopback to address list."));
+-                naList_4.append(*qnai);
+-                if (!v4IsSet && (config_v4 == ip))
++                    naList_4.append(*qnai);
+                     v4IsSet = true;
+-            }
+-            else if (config_v4.isNull() &&
+-                     (ip.protocol() == QAbstractSocket::IPv4Protocol))
+-            {
+-                // IPv4 address is not defined, populate one
+-                // restrict autoconfiguration to RFC1918 private networks
+-                if (ip.isInSubnet(QHostAddress::parseSubnet("10.0.0.0/8")) ||
+-                    ip.isInSubnet(QHostAddress::parseSubnet("172.16.0.0/12")) ||
+-                    ip.isInSubnet(QHostAddress::parseSubnet("192.168.0.0/16")))
++
++                }
++
++                else if (ip == QHostAddress::LocalHost)
+                 {
++                    // always listen on LocalHost
+                     LOG(VB_GENERAL, LOG_DEBUG,
+-                            QString("Adding '%1' to address list.")
+-                                .arg(ip.toString()));
++                        QString("Adding IPv4 loopback to address list."));
++                    naList_4.append(*qnai);
++                    if (!v4IsSet && (config_v4 == ip))
++                        v4IsSet = true;
++                }
++
++                else if (ip.isInSubnet(kLinkLocal) && allowLinkLocal)
++                {
++                    // optionally listen on linklocal
++                    // the next clause will enable it anyway if no IP address
++                    // has been set
++                    LOG(VB_GENERAL, LOG_DEBUG,
++                            QString("Adding link-local '%1' to address list.")
++                                .arg(PRETTYIP_(ip)));
+                     naList_4.append(*qnai);
+                 }
++
++                else if (config_v4.isNull())
++                {
++                    // IPv4 address is not defined, populate one
++                    // restrict autoconfiguration to RFC1918 private networks
++                    static QPair<QHostAddress, int>
++                       privNet1 = QHostAddress::parseSubnet("10.0.0.0/8"),
++                       privNet2 = QHostAddress::parseSubnet("172.16.0.0/12"),
++                       privNet3 = QHostAddress::parseSubnet("192.168.0.0/16");
++
++                    if (ip.isInSubnet(privNet1) || ip.isInSubnet(privNet2) ||
++                        ip.isInSubnet(privNet3))
++                    {
++                        LOG(VB_GENERAL, LOG_DEBUG,
++                                QString("Adding '%1' to address list.")
++                                    .arg(PRETTYIP_(ip)));
++                        naList_4.append(*qnai);
++                    }
++                    else if (ip.isInSubnet(kLinkLocal))
++                    {
++                        LOG(VB_GENERAL, LOG_DEBUG,
++                            QString("Adding link-local '%1' to address list.")
++                                    .arg(PRETTYIP_(ip)));
++                        naList_4.append(*qnai);
++                    }
++                    else
++                        LOG(VB_GENERAL, LOG_DEBUG, QString("Skipping "
++                           "non-private address during IPv4 autoselection: %1")
++                                    .arg(PRETTYIP_(ip)));
++                }
++
+                 else
+-                    LOG(VB_GENERAL, LOG_DEBUG, QString("Skipping non-private "
+-                            "address during IPv4 autoselection: %1")
+-                                .arg(ip.toString()));
+-            }
++                    LOG(VB_GENERAL, LOG_DEBUG, QString("Skipping address: %1")
++                                .arg(PRETTYIP_(ip)));
++
+ #if !defined(QT_NO_IPV6)
+-            else if (naList_6.contains(*qnai))
+-                // already defined, skip
+-                continue;
+-            else if (!config_v6.isNull() && (ip == config_v6))
++            }
++            else
+             {
++                if (ip.isInSubnet(kLinkLocal6))
++                {
++                    // set scope id for link local address
++                    ip.setScopeId(qni->name());
++                    qnai->setIp(ip);
++                }
++
++                if (naList_6.contains(*qnai))
++                    // already defined, skip
++                    continue;
++
++                else if ((!config_v6.isNull()) && (ip == config_v6))
++                {
+                 // IPv6 address is defined, add it
+-                LOG(VB_GENERAL, LOG_DEBUG,
++                    LOG(VB_GENERAL, LOG_DEBUG,
+                         QString("Adding BackendServerIP6 to address list."));
+-                naList_6.append(*qnai);
+-                v6IsSet = true;
+-            }
+-            else if (ip == QHostAddress::LocalHostIPv6)
+-            {
+-                // always listen on LocalHost
+-                LOG(VB_GENERAL, LOG_DEBUG,
+-                        QString("Adding IPv6 loopback to address list."));
+-                naList_6.append(*qnai);
+-                if (!v6IsSet && (config_v6 == ip))
++                    naList_6.append(*qnai);
+                     v6IsSet = true;
+-            }
+-            else if (config_v6.isNull() &&
+-                     (ip.protocol() == QAbstractSocket::IPv6Protocol))
+-            {
+-                bool linklocal = false;
+-                if (ip.isInSubnet(QHostAddress::parseSubnet("fe80::/10")))
++                }
++
++                else if (ip == QHostAddress::LocalHostIPv6)
+                 {
+-                    // Link-local address, find its scope ID (interface name)
+-                    QNetworkAddressEntry ae = *qnai;
+-                    QHostAddress ha = ip;
+-                    ha.setScopeId(qni->name());
+-                    ae.setIp(ha);
+-                    naList_6.append(ae);
+-                    linklocal = true;
++                // always listen on LocalHost
++                    LOG(VB_GENERAL, LOG_DEBUG,
++                            QString("Adding IPv6 loopback to address list."));
++                    naList_6.append(*qnai);
++                    if (!v6IsSet && (config_v6 == ip))
++                        v6IsSet = true;
+                 }
+-                else
++
++                else if (ip.isInSubnet(kLinkLocal6) && allowLinkLocal)
++                {
++                    // optionally listen on linklocal
++                    // the next clause will enable it anyway if no IP address
++                    // has been set
++                    LOG(VB_GENERAL, LOG_DEBUG,
++                            QString("Adding link-local '%1' to address list.")
++                                .arg(ip.toString()));
++                    naList_6.append(*qnai);
++                }
++
++                else if (config_v6.isNull())
+                 {
++                    if (ip.isInSubnet(kLinkLocal6))
++                        LOG(VB_GENERAL, LOG_DEBUG,
++                            QString("Adding link-local '%1' to address list.")
++                                .arg(PRETTYIP_(ip)));
++                    else
++                        LOG(VB_GENERAL, LOG_DEBUG,
++                            QString("Adding '%1' to address list.")
++                                .arg(PRETTYIP_(ip)));
++
+                     naList_6.append(*qnai);
+                 }
+-                LOG(VB_GENERAL, LOG_DEBUG,
+-                        QString("Adding%1 '%2' to address list.")
+-                    .arg(linklocal ? " link-local" : "")
+-                            .arg(PRETTYIP_(ip)));
++
++                else
++                    LOG(VB_GENERAL, LOG_DEBUG, QString("Skipping address: %1")
++                                .arg(PRETTYIP_(ip)));
+             }
+ #endif
+-            else
+-                LOG(VB_GENERAL, LOG_DEBUG, QString("Skipping address: %1")
+-                    .arg(PRETTYIP_(ip)));
+         }
+     }
+ 
+diff --git a/mythtv/libs/libmythtv/subtitlescreen.cpp b/mythtv/libs/libmythtv/subtitlescreen.cpp
+index 9ec70e9..43dc711 100644
+--- a/mythtv/libs/libmythtv/subtitlescreen.cpp
++++ b/mythtv/libs/libmythtv/subtitlescreen.cpp
+@@ -922,7 +922,8 @@ void FormattedTextSubtitle::InitFromCC608(vector<CC608Text*> &buffers,
+             CC708CharacterAttribute attr(isItalic, isBold, isUnderline,
+                                          clr[min(max(0, color), 7)],
+                                          useBackground);
+-            FormattedTextChunk chunk(captionText, attr, parent);
++            FormattedTextChunk chunk(captionText, attr, parent,
++                                     cc->teletextmode);
+             line.chunks += chunk;
+             LOG(VB_VBI, LOG_INFO,
+                 QString("Adding cc608 chunk (%1,%2): %3")
+@@ -1089,6 +1090,7 @@ bool FormattedTextChunk::Split(FormattedTextChunk &newChunk)
+             QString("Failed to split chunk '%1'").arg(text));
+         return false;
+     }
++    newChunk.isTeletext = isTeletext;
+     newChunk.parent = parent;
+     newChunk.format = format;
+     newChunk.text = text.mid(lastSpace + 1).trimmed() + ' ';
+@@ -1119,6 +1121,8 @@ QString FormattedTextChunk::ToLogString(void) const
+         .arg(format.boldface);
+     str += QString("font=%1 ").arg(format.font_tag);
+     str += QString(" text='%1'").arg(text);
++    if (isTeletext)
++        str += " DEPRECATED_608_TELETEXT";
+     return str;
+ }
+ 
+diff --git a/mythtv/libs/libmythtv/subtitlescreen.h b/mythtv/libs/libmythtv/subtitlescreen.h
+index 44b3f6a..8821dff 100644
+--- a/mythtv/libs/libmythtv/subtitlescreen.h
++++ b/mythtv/libs/libmythtv/subtitlescreen.h
+@@ -110,11 +110,11 @@ class FormattedTextChunk
+ {
+   public:
+     FormattedTextChunk(const QString &t, CC708CharacterAttribute formatting,
+-                       SubtitleScreen *p)
+-        : text(t), format(formatting), parent(p)
++                       SubtitleScreen *p, bool teletext = false)
++        : text(t), format(formatting), parent(p), isTeletext(teletext)
+     {
+     }
+-    FormattedTextChunk(void) : parent(NULL) {}
++    FormattedTextChunk(void) : parent(NULL), isTeletext(false) {}
+ 
+     QSize CalcSize(float layoutSpacing = 0.0f) const
+     {
+@@ -130,6 +130,7 @@ class FormattedTextChunk
+     QString text;
+     CC708CharacterAttribute format;
+     SubtitleScreen *parent; // where fonts and sizes are kept
++    bool isTeletext;
+ };
+ 
+ class FormattedTextLine
+diff --git a/mythtv/themes/defaultmenu/mainmenu.xml b/mythtv/themes/defaultmenu/mainmenu.xml
+index 1c72a92..b747575 100644
+--- a/mythtv/themes/defaultmenu/mainmenu.xml
++++ b/mythtv/themes/defaultmenu/mainmenu.xml
+@@ -41,6 +41,7 @@
+         <text>Setup</text>
+         <description>Configure MythTV and plugins</description>
+         <action>MENU main_settings.xml</action>
++        <password>SetupPinCode</password>
+     </button>
+ 
+ </mythmenu>
