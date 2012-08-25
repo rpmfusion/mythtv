@@ -1,530 +1,129 @@
-commit 1d41f74720f0c89ef73e25fe7586e33caf946802
-Author: Jim Stichnoth <jstichnoth@mythtv.org>
-Date:   Fri Jun 22 16:32:27 2012 -0700
+commit 46cab93562429cd19029402a2387f63a72aeb898
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Tue Jul 31 14:21:22 2012 -0400
 
-    Allow visualizations to be turned on during playback.
+    Correct --printexpire option in mythbackend.
     
-    In particular, allow the Audio>Visualizations submenu to appear in the
-    Playback OSD menu.
-    (cherry picked from commit 85e3a38349713330d30628dfeb33059b8d9c60bf)
+    This corrects logic that was accidentally inverted in 8bc8dd54, and
+    allows `mythbackend --printexpire` to be used again.
+    (cherry picked from commit a9f18c63bfb23494ee83a8ba76d82fc320617067)
 
-commit 6ae8bec70b17027f858793da48f1227adabd2d38
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Thu Jul 5 00:02:08 2012 +0100
+commit 8ab229a8bed860fb0855797c683655a7465e2ee4
+Merge: a4cdc9e 1c496c8
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Tue Jul 31 14:22:32 2012 -0400
 
-    Fix a bug resulting in multiple copies of the same track being inserted into the database
+    Merge branch 'fixes/0.25' of code.mythtv.org:mythtv into fixes/0.25
 
-commit 11d7795503b869aeb09b66d55f0430fcf504f924
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Wed Jul 4 20:03:11 2012 +0100
+commit 1c496c81662eabda444452071eb18f2fd375d4d0
+Author: Kyle <klillis@gmail.com>
+Date:   Mon Jul 30 13:34:11 2012 -0400
 
-    Protect the reschedule queue with a seperate lock to fix a backend deadlock.
+    Fixes #10897. Clear paused when we unpause FirewireRecorder.
     
-     Fixes a deadlock in mythbackend caused when a reschedule request occurs
-     immedately prior to a recording starting.
-    
-     The recorder thread locks the scheduler when starting a recording. The pending
-     reschedule request handled in the event loop waits for the scheduler lock to be
-     released blocking the event loop. The backend is now stopped from handling any
-     further events or protocol requests, meanwhile the recorder is waiting on
-     events to be processed before it will release the lock resulting in an
-     irrecoverable deadlock (or hang) and the failure of the recording.
-    
-     This deadlock was more likely to be triggered for users of EIT because it will
-     ask for a reschedule every 5 minutes in addition to any reschedules triggered
-     through other means.
-    
-     Refs #10771
+    Signed-off-by: Daniel Thor Kristjansson <danielk@cuymedia.net>
 
-commit 48ac7cfb51e82c3ddbaab489810b560fb8271531
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Wed Jul 4 19:42:15 2012 +0100
-
-    Revert "Protect the reschedule queue with a seperate lock to fix a backend deadlock."
-    
-    This reverts commit 5eb97790f3c36f9d2524275e545189cafda9d48a.
-    
-    While this seems to work well in master, it appears to make the
-    situation worse in 0.25 and I really don't have the time to figure out
-    why. Anyone experiencing the pre-existing deadlock will need to
-    upgrade to 0.26 when it's released. Refs #10771
-
-commit 67522d8a9ddfef6512a9d1f0a75f0f1cfef72e0e
-Author: Gavin Hurlbut <ghurlbut@mythtv.org>
-Date:   Tue Jul 3 23:50:23 2012 -0700
-
-    Reworked all of the NOAA/NWS Weather Scripts
-    
-    Seems weather.gov has moved the urls for nearly all their data services.  On
-    top of that, the SOAP response is gzip encoded by default, and SOAP::Lite is
-    stupid and can't handle it.  Also, we were missing the Units parameter which
-    is now required.
-    
-    Fixes #10821
-    (cherry picked from commit b8a78aeb35167a676a7e25c342a1869e8016d76a)
-
-commit 1282eb3fa007911f34aee70f1f0b8dadbd8918c6
-Author: Gavin Hurlbut <ghurlbut@mythtv.org>
-Date:   Sun Jul 1 22:50:07 2012 -0700
-
-    Minor formatting, plus add back the bufferMutex
-
-commit 0969941c7706067560d94002712be9b2fbc076f8
-Merge: 65913e7 199342e
-Author: Gavin Hurlbut <ghurlbut@mythtv.org>
-Date:   Sun Jul 1 22:45:31 2012 -0700
-
-    Merge remote branch 'glidos/fixes/0.25' into fixes/0.25
-
-commit 65913e707c404abbba89274a78feefa24c4d658c
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Fri Jun 29 23:37:28 2012 +0100
-
-    Fix incorrect cast causing loss of integer precision in RingBuffer
-    (cherry picked from commit 7aea3131a8801c09617012d3e892ec4fa68f626a)
-
-commit 5eb97790f3c36f9d2524275e545189cafda9d48a
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Fri Jun 29 13:28:45 2012 +0100
-
-    Protect the reschedule queue with a seperate lock to fix a backend deadlock.
-    
-    Fixes a deadlock in mythbackend caused when a reschedule request occurs
-    immedately prior to a recording starting.
-    
-    The recorder thread locks the scheduler when starting a recording. The pending
-    reschedule request handled in the event loop waits for the scheduler lock to be
-    released blocking the event loop. The backend is now stopped from handling any
-    further events or protocol requests, meanwhile the recorder is waiting on
-    events to be processed before it will release the lock resulting in an
-    irrecoverable deadlock (or hang) and the failure of the recording.
-    
-    This deadlock was more likely to be triggered for users of EIT because it will
-    ask for a reschedule every 5 minutes in addition to any reschedules triggered
-    through other means.
-    
-    Refs #10771
-    
-    Backported from master 788bc510ede427e43e77e8aaf53d8cf047d89b46
-
-commit 5b843c1287e546a7d49f59b3ae911c17279c43f5
-Author: David Engel <dengel@mythtv.org>
-Date:   Wed Jun 27 17:06:49 2012 -0500
-
-    Don't create a watch list for the "Deleted" recording group.
-    
-    Fixes #10854.
-    
-    (cherry picked from commit 22ed71e4d9eeddccae0e1b4f40321e3f624e7b4e)
-
-commit a3f400ebeb43dcaf31ba11ba742e4731e6dae20b
+commit 9c199a42258f2a19dd1c8d3b934e6eb04f1757ce
 Author: Daniel Thor Kristjansson <dkristjansson@mythtv.org>
-Date:   Tue Jun 26 13:23:41 2012 -0400
+Date:   Tue Jul 24 12:13:16 2012 -0400
 
-    Clean up deferred deletes MThreadPool.
+    Fixes #10870. Fix Start/Stop race condition in StreamHandler.
     
-    In case someone uses QObject::deleteLater() within a QRunnable
-    passed to MThreadPool, this adds a cleanup of those when done
-    with the QRunnable.
+    This is a backport of [445faaa47].
 
-commit 25dd4ce330e7b36d1c8e5e14d94a4dcdcd4cd021
+commit a72e341a4653a1b683b7ae5ac87bcaa3092d20fa
 Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Mon Jun 25 11:43:28 2012 +0100
+Date:   Sun Jul 29 12:42:41 2012 +0100
 
-    Move QUERY_FILETRANSFER handling to improve backend performance.
-    
-    This significantly reduces the backend CPU usage for me when streaming a
-    recording or other file to the frontend.
-    
-    Each time we send a command to the backend we perform a number of string
-    comparisons to find the correct handler. In the cases where that same command
-    is sent regularly, maybe several times a second those comparisons can stack up
-    to result in a high CPU load. This can be avoided by moving the most frequently
-    used commands to the top of the list thereby avoiding a couple of dozen or more
-    comparisons each time.
-    
-    There may be other commands that should be moved to the top with similar
-    benefit.
-    (cherry picked from commit 529853d11587ebee0b77753272d6dcc1a5404a11)
+    Restore setup pincode following [57adc5d120] - 'Flatten the Setup Menus in the default menu theme' which dropped util_menu.xml but failed to carry over the <password> markup.
+    (cherry picked from commit 134417fe3bf7170f3419d2388a6c26afe16c4927)
 
-commit ce8f9e25a627d4b164361a5328c3e013dd68476e
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Sun Jun 24 10:36:28 2012 +0100
-
-    Following Freesats switch from Astra 2D to Astra 1G update the transport ids associated with Freesat EIT fixups
-    (cherry picked from commit 0312ff912a743178f2ef54967866b42c894d7c4b)
-
-commit 73bc45e0e3d4bf5c137bd57b091bd4a23d0bce8d
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Thu Jun 21 01:39:44 2012 -0400
-
-    Add Genre list and associated Movie search
-    (cherry picked from commit 6e7725de7d8507c3675aa89b17a49da06abc7cc2)
-
-commit 97f8819df59cba6b7b522ac71bfc46aa09b17527
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Thu Jun 21 01:11:56 2012 -0400
-
-    Add Studio search method.
-    (cherry picked from commit c2bb6aee239e1e53ba95da232ed84ee5da21685b)
-
-commit 42b63d3ae53d8bd31fff7331a54b3cae093825b2
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Thu Jun 21 01:43:59 2012 -0400
-
-    Add TMDBv3 file missed during previous backports.
-
-commit 6aa7fbe106dbf88c2c067a0184a52d814cef1978
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Wed Jun 20 04:18:37 2012 -0400
-
-    Changes seconds to milliseconds in poller loop.
-    
-    This corrects the timeout duration in the poller loop used to read data
-    from external programs.  Code was written assuming timeouts in floating
-    point seconds, while poll() API takes milliseconds.  Ahh.. consistency..
-    
-    Fixes #10837
-    (cherry picked from commit 76433930fed60342a4b2929c6ff94a8413673e5b)
-
-commit effb32be550172b9341e17b493d209e468c5be17
-Author: Daniel Thor Kristjansson <danielk@cuymedia.net>
-Date:   Sat Jun 16 14:22:48 2012 -0400
-
-    Match Lock with Unlock in OutboundRequestHandler::DoConnectToMaster() socket error handling code.
-    
-    This was fixed in [f2a0d748] in trunk.
-
-commit 67883dde998c45ad587a3f687c8e86507ffe324a
-Author: Daniel Thor Kristjansson <dkristjansson@mythtv.org>
-Date:   Wed Jun 6 13:24:29 2012 -0400
-
-    Fixes #10685. Handle job queue properly for back-to-back recordings.
-
-commit 35c3c97b70c987dc77dff06b16862abac3aa51b1
-Author: Daniel Thor Kristjansson <danielk@cuymedia.net>
-Date:   Sat Jun 16 14:15:57 2012 -0400
-
-    Fix use of deleted socket in MythCoreContext::ConnectEventSocket()
-    
-    This was fixed in [f2a0d748] in trunk.
-
-commit 3a9dea901cd46ac240c022bbeee79841f738042d
-Author: Daniel Kristjansson <danielk@cuymedia.net>
-Date:   Mon May 28 12:02:16 2012 -0400
-
-    Refs #10712. Add error checking, proper formatting, and improve debugging of previous commit.
-
-commit 18e0f2fd2d6b5b7724e8df0ee893817e192a4903
-Author: Simon Sinister <simon.sinister@sbcglobal.net>
-Date:   Mon May 28 11:50:53 2012 -0400
-
-    Fixes #10712. Add support for HDHR Prime without CableCard.
-
-commit 05839fa0dd4c521affb811282d640e628230b40b
-Author: Daniel Kristjansson <danielk@cuymedia.net>
-Date:   Mon May 28 11:46:59 2012 -0400
-
-    Use correct RecordingInfo* in FinishedRecording()'s SendMythSystemRecEvent().
-
-commit 1555f0381252a7231e655efa351c3931d3caa595
-Author: Daniel Thor Kristjansson <danielk@cuymedia.net>
-Date:   Sat Jun 9 13:46:32 2012 -0400
-
-    Define USING_MINGW when building programs with MinGW
-
-commit 6a9af0260bf4d7c80e77a7889e999c4f0bb91867
+commit 3256849b14cc882536a153e7fbe4724adf03260c
 Author: Jim Stichnoth <jstichnoth@mythtv.org>
-Date:   Fri Jun 15 11:18:23 2012 -0700
+Date:   Tue Jul 24 10:56:15 2012 -0700
 
-    Subtitles: Be less aggressive about auto-selecting a forced track.
-    
-    1. Don't favor a forced subtitle track if DefaultCCMode=1 (i.e., the
-    user already wants subtitles or captions which are likely to also
-    contain the force subtitles).
-    
-    2. Don't favor a forced subtitle track if AllowForcedSubtitles=0
-    (i.e., the user doesn't want to be inflicted with forced subtitles).
-    
-    3. Only favor a forced track if it is a subtitle track.  (Do any other
-    track types ever have the forced flag set?)
-    
-    Note that this still may not be perfect, e.g. a user may end up
-    auto-displaying cc608 captions where a forced subtitle track is still
-    needed for the complete experience.
-    
-    Refs #10808
-    (cherry picked from commit 689a7b5d526099c2ec533701625ae62ddbba6d44)
+    Subtitles: backport some code to enable cc608 TT deprecation log message.
 
-commit 3b41cb7ae550bf0cf58cad8fe814d6bd7c03df0f
+commit 39fad46248bbcbe5ab27068e73fb7c5a91bc155b
 Author: Jim Stichnoth <jstichnoth@mythtv.org>
-Date:   Fri Jun 15 07:07:04 2012 -0700
+Date:   Tue Jul 24 08:23:53 2012 -0700
 
-    Subtitles: Favor forced tracks for auto-track selection.  Refs #10808
+    Subtitles: Put a "DEPRECATED_608_TELETEXT" message into the logs.
     
-    For first-time auto-track selection, we put highest priority on forced
-    tracks, second priority on user language preference, and third
-    priority on track order.
-    
-    This changes the previous behavior only by adding the forced flag to
-    the criteria.
-    (cherry picked from commit ea554c9cbe5fc86c4a4e301eb9f97fd90abbe7a4)
+    Support for CEA-608 teletext captions is to be removed.  Allow users
+    to check whether they would be affected.  Refs #10786.
+    (cherry picked from commit 7b1aef85ec92658acb91c1ff019aed909e5df30a)
 
-commit 56fd9e2cd63c4700f90f6e0b9326d36bc38cff92
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Mon May 21 02:32:30 2012 -0400
-
-    Move interactive access to separate script.
-    
-    This removes the interactive behavior of tmdb_api.py and places it in a
-    new script.  The script can be run from the source directory, but does
-    not get installed with the library.
-    (cherry picked from commit 76c8c518ff8dcc1206a984d2a5c12503f194870a)
-
-commit cdc03f4b09fd6a77893aa1df5948f128dd86b391
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Thu May 3 02:56:30 2012 -0400
-
-    Add method to search for movies similar to current.
-    (cherry picked from commit 30a0d398cc5f40487a69ddcc3beff77b09052def)
-
-commit 1c03ae068b8acb9bbde6dd439af482498e3b89ff
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Thu May 3 02:43:07 2012 -0400
-
-    Clean up __repr__ methods, and impose soft 80-character line limit.
-    (cherry picked from commit 676cbb1aaf9c8d19d207ec9575ffaa9665d8e710)
-
-commit c9be5e2eec12cdbfbf5556aefadb1ee63cba1160
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Thu May 3 01:12:28 2012 -0400
-
-    Improve handling of invalid responses from TMDB
-    
-    When an HTML error is received from the TMDB API, this will now attempt
-    to process a specific error type from the returned JSON.  If no error
-    type is given, or the resposnse was not JSON, it will raise the previous
-    TMDBHTTPError.
-    (cherry picked from commit 7425634d7b92f8bbe9abdc8b50c4148c96c87f40)
-
-commit f7f76e55b0ff198d19b3dce2474f98f934717a48
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Tue May 1 15:50:44 2012 -0400
-
-    Use `date` rather than `datetime` for storing dates.
-    (cherry picked from commit c2ef5d143f1bfc9931ef9f7487fda3b93780fe8f)
-
-commit e900fa37b2680d79cf26096a89555a31121b00f2
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Mon Apr 30 20:07:29 2012 -0400
-
-    Correct file cache error handling to ignore rather than raise errors.
-    (cherry picked from commit 27dff377fe6612b870a4cf28b9c058567be1a3bb)
-
-commit d590289d80ffffc792b4e386f1f2bbbcea3478dc
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Mon Apr 30 16:50:20 2012 -0400
-
-    Use `date` type rather than `datetime` for 'releasedate attribute'.
-    (cherry picked from commit 5b86d8bb95c69205d8669bb23c30ccd6b8514c4b)
-
-commit 5f5ca21fbd51ec0771034abc45e1b607c0b8db50
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Mon Apr 30 16:49:57 2012 -0400
-
-    Bypass aborts resulting from attempting to process empty strings.
-    (cherry picked from commit aa0e26f1abc7370d8840abdfd8ced2fdf2ef76f7)
-
-commit 7563f810ae017226023b476b7a5d0f9d863aa3f3
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Mon Apr 30 02:12:12 2012 -0400
-
-    Correct missed changes in __init__.py
-    (cherry picked from commit 361e06851f02f5a70f554fcee0890a7a37e6ad95)
-
-commit b277cc3bd8a723c2621e80d0d9506a46c7f5ca9a
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Mon Apr 30 01:59:11 2012 -0400
-
-    Add adult filter for people searches
-    (cherry picked from commit b28c566ef2b6a6379821bcc9023f84cba04b4e05)
-
-commit 81dabbc40b0b3fdc1b542a9d7fe9da74f0fbbefd
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Sat Apr 14 18:26:59 2012 -0400
-
-    Add assorted authenticated methods.
-    
-    This adds methods for setting ratings and favorite status against
-    movies, as well as pulling lists of movies for which those have been
-    set. This adds a bypass in the cache to not operate on anything with a
-    lifetime of '0'.
-    (cherry picked from commit fb7c7cd3dfd4692e6c5acc61f0d2fd927b04d50e)
-
-commit 9439a827f3c1178ad33a81a326d5e0ed87cdca31
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Sat Apr 14 17:31:20 2012 -0400
-
-    Add basic session handling and passthrough.
-    (cherry picked from commit 3debcd531d8ed454b8ed9f4b61da6e03690ce13c)
-
-commit 1493687d26482b777d07eb02f5fda77d0b501cef
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Sat Apr 14 15:30:26 2012 -0400
-
-    Corrects handling of '0' for cast ordering.
-    (cherry picked from commit 500454560030795a7c914cb985c30711e302d65a)
-
-commit 59cc85156d402eb2bdd91c088d44407fb8e6df3a
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Wed Apr 11 01:28:27 2012 -0400
-
-    Improve file cache performance.
-    
-    This reworks the cache framework, and alters the file cache engine to
-    support incremental writes. This allows the results from 256 queries to
-    be stored before having to rewrite the file. Previously, having to
-    rewrite the entire cache file on each step would take longer than
-    actually querying TMDB once the cache stored more than ~100 entries.
-    
-    May be a bit fragile.
-    (cherry picked from commit 23fa543ceb2690340e74d257a6bc86f817c02be6)
-
-commit 2fd53643f8911e92c01fb49ca3cd2710d735831b
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Wed Apr 11 01:24:21 2012 -0400
-
-    Fix Cache exceptions.
-    (cherry picked from commit 642de961e034072eaf6342c01451b040f0b9ab3b)
-
-commit b0e61cffcced4170c1fe8821155a830f9f38056a
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Wed Apr 11 01:23:18 2012 -0400
-
-    Remove empty space.
-    (cherry picked from commit c35f455ee4bf2dbaac87f6ce2fca2f489cd2d209)
-
-commit ac4a15845876f5802ce78152543e1cb19ec9e04e
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Mon Apr 2 13:28:11 2012 -0400
-
-    Adds proper encoding to strings being passed to a request.
-    (cherry picked from commit e0d604111ba9f09e4f161d4280ea132e0e4a1990)
-
-commit 802d86c668bacd3e6089ad9c5c9b2cd092d344bf
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Sun Apr 1 03:14:49 2012 -0400
-
-    Add slice support to search result pager.
-    (cherry picked from commit 86b54a14992a24c3f727efd5247842ee2d2393c3)
-
-commit 9c3fb94c1136f270d4a02a4ff294e6484b3b7d83
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Sat Mar 31 20:14:52 2012 -0400
-
-    Update Logo() class with proper image sizes from Configuration().
-    (cherry picked from commit 2198d9ef21d5aaf47550084b8904e3da73137956)
-
-commit 47b77a6bd2b17ea5962d1c78751e33305cdd1aa2
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Sat Mar 31 20:03:41 2012 -0400
-
-    Correct Studio.logo processing.
-    (cherry picked from commit 2e4bc644b0d2b0277a18ffa0b0e66aa18c17dfc6)
-
-commit 8ec550daa5a9a75c65b57fd5d3b62692bcb1e93b
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Sat Mar 31 19:52:53 2012 -0400
-
-    Allow locale fallthrough for movie images and alternate titles.
-    
-    When fallthrough is enabled, queries for backdrops, posters, and
-    alternate titles will not filter for the selected locale, but will
-    instead sort the results to place those matching the specified locale at
-    the top of the list.
-    
-    Also resolves an issue where Request() was incorrectly passing 'None' as
-    an argument when no locale was set.
-    (cherry picked from commit ddc0cb0550b8de72e4ddad874ad05865b3b50c3f)
-
-commit e0462f253faf920793bb76a84869cb98b4b4a218
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Sat Mar 31 19:15:39 2012 -0400
-
-    Allow Datalists to be sorted natively without supplying a key.
-    (cherry picked from commit 61045e47bca155fb40ec2de47d01cd86bd28992b)
-
-commit afc068223b062e6579586d10be2f7d0d1441524d
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Fri Mar 30 00:49:19 2012 -0400
-
-    Correct cache file selection logic inverted by 4663490f8fa.
-    (cherry picked from commit 75a14b7da282f15fc84819418ec845e86559eaf2)
-
-commit d750957b9b841d15d2c208e13df57e39419a1eb5
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Fri Mar 30 00:48:04 2012 -0400
-
-    Update README for additional options.
-    (cherry picked from commit 166655c70bb4ac340c6e559b167114f3e08bbdc0)
-
-commit a2cb6df059542bf62f627f79310e9a891d4e891d
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Fri Mar 30 00:41:31 2012 -0400
-
-    Add support for additional Studio information.
-    (cherry picked from commit e99630e023a6ae8033bba27528e9a3ca45e72c1e)
-
-commit ea43a7777f68d4b317138904b6e53616c10a9d52
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Thu Mar 29 23:43:12 2012 -0400
-
-    Add 'adult' and 'alias' to Person class.
-    (cherry picked from commit 38922793f5732d10c4dfbcf6d421d40667812675)
-
-commit 4e2e129393ecef050134d605888bfec2c565599c
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Thu Mar 29 14:15:19 2012 -0400
-
-    Improves cache file selection for Windows.
-    (cherry picked from commit 263d8680de3566f2109b76b4b1d4d2779b967d10)
-
-commit 631ae1075c35107d759c83fa1faa519841949397
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Thu Mar 29 13:36:54 2012 -0400
-
-    Add __contains__ for proper lookup in cache Engines class.
-    (cherry picked from commit 08bffa5f6df497f28fe3481fe80b517628b0f1a3)
-
-commit 648f0aec326c03b39091fda8ac64450d0f0e76e3
-Author: Michael T. Dean <mdean@mythtv.org>
-Date:   Thu Jun 7 00:17:48 2012 -0400
-
-    Fix exists check in mythcommflag
-    
-    for files that aren't visible to the master backend.  Thanks to fedora a
-    ready2think for the patch.  Fixes #10810.
-    (cherry picked from commit c5803f1dc6b1da7d77222c43ce074bb04d9bc983)
-
-commit 016db04aff2bc8c2de1d4af9d920366ed568910b
+commit 9e0d839be7667056dc65b79711dda84159a1b13d
 Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Wed Jun 6 22:05:19 2012 +0100
+Date:   Tue Jul 24 14:11:47 2012 +0100
 
-    Give more space for the channel number in the Terra OSD
-    (cherry picked from commit f842d1b1f68a6b7a0933bbd7dac1e8d381fc9fee)
+    Set m_cdWatcher to NULL after deletion, fixes segfault on exiting frontend. Fixes #10936
+    (cherry picked from commit de851dd273eaa80689a427f915c7db40d015e0ba)
 
-commit 199342ef7a3fe6230a11de547b2a8df6d07dff34
-Author: Paul Gardiner <paul@glidos.site>
-Date:   Sun May 27 11:44:30 2012 +0100
+commit 10a68895e1fcd5c409058d2eb61fe59e78736235
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sun Jul 22 23:24:40 2012 +0100
 
-    Calculate timecodes more accurately (suggeseted by JYA)
+    Fix segfault after music scan completes.
+    (cherry picked from commit b2379ae9b8d42c23c3feee26b52a1f0a2ebef394)
+
+commit ed58b3a818a1796340ba0f085a53159eb1d52266
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Jul 21 23:53:41 2012 +0100
+
+    Fix for Synaesthesia memory corruption
     
-    Also add comments explaining the algorithm.
-
-commit 34711d84919ea49221461d41566669de1500a0d8
-Author: Paul Gardiner <paul@glidos.site>
-Date:   Fri May 4 17:09:57 2012 +0100
-
-    Fix passthrough case of mythtrancode running in fifo mode
+    We were allocating just half the required space and consequently
+    writing beyond the end of the array. This consistently caused
+    segfaults for me when using the Synaesthesia visualiser.
     
-    Also simplify AudiReencodeBuffer::AddData()
+    This fix appears to be consistent with the code used in other projects
+    which were also derived from the original Synaesthia project.
+    
+    e.g. GStreamer/Source/gst-plugins-ugly/gst/synaesthesia/synaescope.c
+    (cherry picked from commit e331017f2d1ee9be82da9c0b64ca4435ec3efd1e)
+
+commit a4cdc9e01295991056cdc8c5411e70937b1a4842
+Merge: 450ed91 f0e2ad8
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Fri Jul 20 21:06:48 2012 -0400
+
+    Merge branch 'fixes/0.25' of code.mythtv.org:mythtv into fixes/0.25
+
+commit f0e2ad85dbdd6dd4041a8b1e7d8b17e7b8746b63
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Wed Jul 18 20:49:11 2012 +1000
+
+    Make AllowLinkLocal default to true
+    
+    Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+
+commit 4b82e27e6c89bac9d60c3a56f1d924979c80c746
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Wed Jul 18 01:50:46 2012 -0400
+
+    Correct bad copy/paste in ServerPool.
+    
+    Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+
+commit e4ba7d74aee6bd437e747772046a8836fa9ae5cb
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Jul 14 01:57:46 2012 -0400
+
+    Rework IP selection so link-local is always used.
+    
+    This adds an option to mythtv-setup that makes link-local addresses
+    listened to by default.  This behavior can still be disabled, to block
+    off network access.
+    
+    Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+
+commit 450ed915d3a13b84489ecdebdad6fca18fc8c312
+Author: GDragon <gdragon@jetcom.org>
+Date:   Mon Jul 9 15:33:31 2012 -0400
+
+    Properly set job type in fromProgram and fromRecorded methods.
+    
+    Signed-off-by: Raymond Wagner <rwagner@mythtv.org>
+    (cherry picked from commit 868a566c1d635be3e60f83438f87b6f21d9f1780)
