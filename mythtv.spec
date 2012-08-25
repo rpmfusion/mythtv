@@ -1293,7 +1293,7 @@ fi
 %{_datadir}/pixmaps/myth*.png
 %{_datadir}/mythtv/metadata/
 # Myth Video is now Video Gallery
-%attr(-,mythtv,mythtv) %{_localstatedir}/lib/mythvideo
+%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythvideo
 
 %files base-themes
 %{_datadir}/mythtv/themes/
@@ -1365,7 +1365,7 @@ fi
 %doc mythplugins/mythgallery/README
 %{_libdir}/mythtv/plugins/libmythgallery.so
 %{_datadir}/mythtv/i18n/mythgallery_*.qm
-%attr(-,mythtv,mythtv) %{_localstatedir}/lib/pictures
+%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/pictures
 %endif
 
 %if %{with_mythgame}
@@ -1387,7 +1387,7 @@ fi
 %doc mythplugins/mythmusic/COPYING
 %doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
-%{_localstatedir}/lib/mythmusic
+%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
