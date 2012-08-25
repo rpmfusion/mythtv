@@ -60,7 +60,7 @@
 
 # Git revision and branch ID
 # 0.25 release: git tag v0.25.1
-%define _gitrev v0.25.2-4-ged58b3a
+%define _gitrev v0.25.2-15-g46cab93
 %define branch fixes/0.25
 
 # Mythtv and plugins from github.com
@@ -1441,10 +1441,14 @@ fi
 
 
 %changelog
+* Sat Aug 25 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-2
+- Update to latest fixes/0.25.
+- Fix mythbackend looking in the wrong directory for config.xml (BZ#2450).
+
 * Mon Jul 16 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-1
 - Patch HLS for adapative x264 profile.
 - Make sure mythbackend starts after time has synced.
-- Update to latest fixies/0.25.
+- Update to latest fixes/0.25.
 
 * Fri Jul 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.1-2
 - Patch for PHP 5.4 warnings.
