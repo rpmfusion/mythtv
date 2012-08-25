@@ -1,0 +1,48 @@
+diff --git a/mythtv/libs/libmythtv/avformatwriter.cpp b/mythtv/libs/libmythtv/avformatwriter.cpp
+index 0c2d5be..dd9b585 100644
+--- a/mythtv/libs/libmythtv/avformatwriter.cpp
++++ b/mythtv/libs/libmythtv/avformatwriter.cpp
+@@ -427,7 +427,7 @@ AVStream* AVFormatWriter::AddVideoStream(void)
+         c->coder_type            = 0;
+         c->max_b_frames          = 0;
+         c->slices                = 8;
+-        c->level                 = 13;
++
+         c->flags                |= CODEC_FLAG_LOOP_FILTER;
+         c->me_cmp               |= 1;
+         c->partitions           |= X264_PART_I8X8
+@@ -448,12 +448,30 @@ AVStream* AVFormatWriter::AddVideoStream(void)
+         c->refs                  = 3;
+         c->directpred            = 1;
+         c->rc_lookahead          = 0;
++        c->trellis               = 0;
+ 
+         c->flags2               |= CODEC_FLAG2_FASTPSKIP;
+-        c->flags2               |= CODEC_FLAG2_8X8DCT;
+-        c->flags2               ^= CODEC_FLAG2_8X8DCT;
+-        c->flags2               |= CODEC_FLAG2_WPRED;
+-        c->flags2               ^= CODEC_FLAG2_WPRED;
++        c->flags2               |= CODEC_FLAG2_MIXED_REFS;
++
++        if ((c->height <= 240) &&
++            (c->width  <= 320) &&
++            (c->bit_rate <= 768000))
++        {
++            c->level             = 13;
++        }
++        else if (c->width >= 960)
++        {
++            if (c->width >= 1024)
++                c->level             = 41;
++            else
++                c->level             = 31;
++
++            c->flags2           |= CODEC_FLAG2_WPRED;
++        }
++        else
++        {
++            c->level             = 30;
++        }
+     }
+ 
+     if(m_ctx->oformat->flags & AVFMT_GLOBALHEADER)
