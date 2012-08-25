@@ -1,3 +1,36 @@
+commit 46cab93562429cd19029402a2387f63a72aeb898
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Tue Jul 31 14:21:22 2012 -0400
+
+    Correct --printexpire option in mythbackend.
+    
+    This corrects logic that was accidentally inverted in 8bc8dd54, and
+    allows `mythbackend --printexpire` to be used again.
+    (cherry picked from commit a9f18c63bfb23494ee83a8ba76d82fc320617067)
+
+commit 8ab229a8bed860fb0855797c683655a7465e2ee4
+Merge: a4cdc9e 1c496c8
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Tue Jul 31 14:22:32 2012 -0400
+
+    Merge branch 'fixes/0.25' of code.mythtv.org:mythtv into fixes/0.25
+
+commit 1c496c81662eabda444452071eb18f2fd375d4d0
+Author: Kyle <klillis@gmail.com>
+Date:   Mon Jul 30 13:34:11 2012 -0400
+
+    Fixes #10897. Clear paused when we unpause FirewireRecorder.
+    
+    Signed-off-by: Daniel Thor Kristjansson <danielk@cuymedia.net>
+
+commit 9c199a42258f2a19dd1c8d3b934e6eb04f1757ce
+Author: Daniel Thor Kristjansson <dkristjansson@mythtv.org>
+Date:   Tue Jul 24 12:13:16 2012 -0400
+
+    Fixes #10870. Fix Start/Stop race condition in StreamHandler.
+    
+    This is a backport of [445faaa47].
+
 commit a72e341a4653a1b683b7ae5ac87bcaa3092d20fa
 Author: Stuart Morgan <smorgan@mythtv.org>
 Date:   Sun Jul 29 12:42:41 2012 +0100
@@ -51,6 +84,13 @@ Date:   Sat Jul 21 23:53:41 2012 +0100
     e.g. GStreamer/Source/gst-plugins-ugly/gst/synaesthesia/synaescope.c
     (cherry picked from commit e331017f2d1ee9be82da9c0b64ca4435ec3efd1e)
 
+commit a4cdc9e01295991056cdc8c5411e70937b1a4842
+Merge: 450ed91 f0e2ad8
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Fri Jul 20 21:06:48 2012 -0400
+
+    Merge branch 'fixes/0.25' of code.mythtv.org:mythtv into fixes/0.25
+
 commit f0e2ad85dbdd6dd4041a8b1e7d8b17e7b8746b63
 Author: Jean-Yves Avenard <jyavenard@mythtv.org>
 Date:   Wed Jul 18 20:49:11 2012 +1000
@@ -78,3 +118,12 @@ Date:   Sat Jul 14 01:57:46 2012 -0400
     off network access.
     
     Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+
+commit 450ed915d3a13b84489ecdebdad6fca18fc8c312
+Author: GDragon <gdragon@jetcom.org>
+Date:   Mon Jul 9 15:33:31 2012 -0400
+
+    Properly set job type in fromProgram and fromRecorded methods.
+    
+    Signed-off-by: Raymond Wagner <rwagner@mythtv.org>
+    (cherry picked from commit 868a566c1d635be3e60f83438f87b6f21d9f1780)
