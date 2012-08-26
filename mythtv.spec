@@ -60,13 +60,12 @@
 
 # Git revision and branch ID
 # 0.25 release: git tag v0.25.1
-%define _gitrev c2c276d
+%define _gitrev v0.25.2-15-g46cab93
+%define branch fixes/0.25
 
 # Mythtv and plugins from github.com
-%global githash1 gc2c276d
-%global githash2 4c30a85
-
-%define branch fixes/0.25
+%global githash1 g4e44650
+%global githash2 19087cb
 
 #
 # Basic descriptive tags for this package:
@@ -77,12 +76,12 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version:        0.25.1
+Version:        0.25.2
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -135,7 +134,12 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # https://github.com/MythTV/mythtv/tarball/v0.25
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 
-Patch0:    mythtv-0.25.1-fixes.patch
+Patch0:    mythtv-0.25.2-fixes.patch
+
+# Fixes for PHP 5.4
+Patch1:    mythtv-0.25.1-php54.patch
+# Adapative HLS profile based on resolution.
+Patch2:    mythtv-0.25.1-hls_profile.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -509,7 +513,7 @@ Requires:  freetype, lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
-Requires:  python-MythTV python-lxml
+Requires:  python-MythTV
 Provides:  mythtv-frontend-api = %{mythfeapiver}
 Obsoletes: mythvideo           < %{version}-%{release}
 Provides:  mythvideo           = %{version}-%{release}
@@ -617,6 +621,7 @@ BuildArch:      noarch
 
 Requires:       MySQL-python
 Requires:       PyXML
+Requires:       python-lxml
 
 %description -n python-MythTV
 Provides a python-based interface to interacting with MythTV.
@@ -806,6 +811,8 @@ on demand content.
     fi
 
 %patch0 -p1 -b .mythtv
+%patch1 -p1 -b .php54
+%patch2 -p1 -b .hls_profile
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -828,13 +835,13 @@ pushd mythtv
     cp -a %{SOURCE10} .
     cp -a %{SOURCE106} %{SOURCE107} %{SOURCE108} %{SOURCE109} .
 
+# Make sure we use -O2 and not -O3
+    sed -i '/speed_cflags=/d' configure
+
 # Prevent all of those nasty installs to ../../../../../bin/whatever
 #    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
 #    echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
 #    chmod 644 settings.pro
-
-# We also need Xv libs to build XvMCNVIDIA
-#    sed -i -e 's,VENDOR_XVMC_LIBS="-lXvMCNVIDIA",VENDOR_XVMC_LIBS="-lXvMCNVIDIA -lXv",' configure
 
 popd
 
@@ -1213,10 +1220,7 @@ fi
 %doc mythtv/contrib
 
 %files common
-%dir %{_sysconfdir}/mythtv
 %dir %{_datadir}/mythtv
-%config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
-%config(noreplace) %{_sysconfdir}/mythtv/config.xml
 %{_bindir}/mythccextractor
 %{_bindir}/mythcommflag
 %{_bindir}/mythmetadatalookup
@@ -1228,6 +1232,10 @@ fi
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
 %{_datadir}/mythtv/hardwareprofile/
+%attr(-,mythtv,mythtv)
+%dir %{_sysconfdir}/mythtv
+%config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
+%config(noreplace) %{_sysconfdir}/mythtv/config.xml
 
 %files backend
 %{_bindir}/mythbackend
@@ -1285,7 +1293,7 @@ fi
 %{_datadir}/pixmaps/myth*.png
 %{_datadir}/mythtv/metadata/
 # Myth Video is now Video Gallery
-%attr(-,mythtv,mythtv) %{_localstatedir}/lib/mythvideo
+%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythvideo
 
 %files base-themes
 %{_datadir}/mythtv/themes/
@@ -1357,7 +1365,7 @@ fi
 %doc mythplugins/mythgallery/README
 %{_libdir}/mythtv/plugins/libmythgallery.so
 %{_datadir}/mythtv/i18n/mythgallery_*.qm
-%attr(-,mythtv,mythtv) %{_localstatedir}/lib/pictures
+%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/pictures
 %endif
 
 %if %{with_mythgame}
@@ -1379,7 +1387,7 @@ fi
 %doc mythplugins/mythmusic/COPYING
 %doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
-%{_localstatedir}/lib/mythmusic
+%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
@@ -1433,6 +1441,18 @@ fi
 
 
 %changelog
+* Sat Aug 25 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-2
+- Update to latest fixes/0.25.
+- Fix mythbackend looking in the wrong directory for config.xml (BZ#2450).
+
+* Mon Jul 16 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-1
+- Patch HLS for adapative x264 profile.
+- Make sure mythbackend starts after time has synced.
+- Update to latest fixes/0.25.
+
+* Fri Jul 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.1-2
+- Patch for PHP 5.4 warnings.
+
 * Tue Jun 05 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.1-1
 - Update to latest fixes/0.25.
 - Move mythweb to a stand alone package.
