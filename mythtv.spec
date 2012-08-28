@@ -60,7 +60,7 @@
 
 # Git revision and branch ID
 # 0.25 release: git tag v0.25.1
-%define _gitrev v0.25.2-4-ged58b3a
+%define _gitrev v0.25.2-15-g46cab93
 %define branch fixes/0.25
 
 # Mythtv and plugins from github.com
@@ -81,7 +81,7 @@ Version:        0.25.2
 Release:        0.1.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1293,7 +1293,7 @@ fi
 %{_datadir}/pixmaps/myth*.png
 %{_datadir}/mythtv/metadata/
 # Myth Video is now Video Gallery
-%attr(-,mythtv,mythtv) %{_localstatedir}/lib/mythvideo
+%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythvideo
 
 %files base-themes
 %{_datadir}/mythtv/themes/
@@ -1365,7 +1365,7 @@ fi
 %doc mythplugins/mythgallery/README
 %{_libdir}/mythtv/plugins/libmythgallery.so
 %{_datadir}/mythtv/i18n/mythgallery_*.qm
-%attr(-,mythtv,mythtv) %{_localstatedir}/lib/pictures
+%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/pictures
 %endif
 
 %if %{with_mythgame}
@@ -1387,7 +1387,7 @@ fi
 %doc mythplugins/mythmusic/COPYING
 %doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
-%{_localstatedir}/lib/mythmusic
+%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
@@ -1441,10 +1441,14 @@ fi
 
 
 %changelog
+* Sat Aug 25 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-2
+- Update to latest fixes/0.25.
+- Fix mythbackend looking in the wrong directory for config.xml (BZ#2450).
+
 * Mon Jul 16 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-1
 - Patch HLS for adapative x264 profile.
 - Make sure mythbackend starts after time has synced.
-- Update to latest fixies/0.25.
+- Update to latest fixes/0.25.
 
 * Fri Jul 06 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.1-2
 - Patch for PHP 5.4 warnings.

@@ -1,8 +1,58 @@
- mythplugins/mythmusic/mythmusic/polygon.h |    4 +-
- mythtv/html/setup/wizard-network.qsp      |    4 +
- mythtv/libs/libmythbase/serverpool.cpp    |  196 +++++++++++++++++++----------
- 3 files changed, 133 insertions(+), 71 deletions(-)
+ checksums/mythplugins-0.25.2.md5sum             |    1 +
+ checksums/mythtv-0.25.2.md5sum                  |    1 +
+ mythplugins/mythmusic/mythmusic/musicplayer.cpp |    7 +
+ mythplugins/mythmusic/mythmusic/polygon.h       |    4 +-
+ mythtv/bindings/python/MythTV/dataheap.py       |    2 +
+ mythtv/html/setup/wizard-network.qsp            |    4 +
+ mythtv/libs/libmythbase/serverpool.cpp          |  196 +++++++++++++++--------
+ mythtv/libs/libmythtv/firewirerecorder.cpp      |    1 +
+ mythtv/libs/libmythtv/streamhandler.cpp         |   34 ++---
+ mythtv/libs/libmythtv/streamhandler.h           |    6 +-
+ mythtv/libs/libmythtv/subtitlescreen.cpp        |    6 +-
+ mythtv/libs/libmythtv/subtitlescreen.h          |    7 +-
+ mythtv/programs/mythbackend/main_helpers.cpp    |    2 +-
+ mythtv/themes/defaultmenu/mainmenu.xml          |    1 +
+ 14 files changed, 176 insertions(+), 96 deletions(-)
 
+diff --git a/checksums/mythplugins-0.25.2.md5sum b/checksums/mythplugins-0.25.2.md5sum
+new file mode 100644
+index 0000000..16f5965
+--- /dev/null
++++ b/checksums/mythplugins-0.25.2.md5sum
+@@ -0,0 +1 @@
++80466458a82759d213fe69af63d6dc80  mythplugins-0.25.2.tar.bz2
+diff --git a/checksums/mythtv-0.25.2.md5sum b/checksums/mythtv-0.25.2.md5sum
+new file mode 100644
+index 0000000..f02e863
+--- /dev/null
++++ b/checksums/mythtv-0.25.2.md5sum
+@@ -0,0 +1 @@
++2bf8c0aa75e88d39747e59c27aa6072e  mythtv-0.25.2.tar.bz2
+diff --git a/mythplugins/mythmusic/mythmusic/musicplayer.cpp b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
+index b0cccf5..d94e08f 100644
+--- a/mythplugins/mythmusic/mythmusic/musicplayer.cpp
++++ b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
+@@ -105,6 +105,7 @@ MusicPlayer::~MusicPlayer()
+         m_cdWatcher->stop();
+         m_cdWatcher->wait();
+         delete m_cdWatcher;
++        m_cdWatcher = NULL;
+     }
+ 
+     if (!hasClient())
+@@ -283,6 +284,12 @@ void MusicPlayer::stop(bool stopAll)
+         m_output = NULL;
+     }
+ 
++    if (stopAll && m_cdWatcher)
++    {
++        m_cdWatcher->stop();
++        m_cdWatcher->wait();
++    }
++
+     // because we don't actually stop the audio output we have to fake a Stopped
+     // event so any listeners can act on it
+     OutputEvent oe(OutputEvent::Stopped);
 diff --git a/mythplugins/mythmusic/mythmusic/polygon.h b/mythplugins/mythmusic/mythmusic/polygon.h
 index 2884d8e..d859d5d 100644
 --- a/mythplugins/mythmusic/mythmusic/polygon.h
@@ -23,6 +73,26 @@ index 2884d8e..d859d5d 100644
      }
  };
  #endif
+diff --git a/mythtv/bindings/python/MythTV/dataheap.py b/mythtv/bindings/python/MythTV/dataheap.py
+index dd832ba..ae817e7 100644
+--- a/mythtv/bindings/python/MythTV/dataheap.py
++++ b/mythtv/bindings/python/MythTV/dataheap.py
+@@ -612,6 +612,7 @@ class Job( DBDataWrite, JOBTYPE, JOBCMD, JOBFLAG, JOBSTATUS ):
+     def fromRecorded(cls, rec, type, status=None, schedruntime=None,
+                                hostname=None, args=None, flags=None):
+         job = cls(db=rec._db)
++        job.type = type
+         job.chanid = rec.chanid
+         job.starttime = rec.starttime
+         if status:
+@@ -632,6 +633,7 @@ class Job( DBDataWrite, JOBTYPE, JOBCMD, JOBFLAG, JOBSTATUS ):
+         if prog.rectype != prog.rsRecorded:
+             raise MythError('Invalid recording type for Job.')
+         job = cls(db=prog._db)
++        job.type = type
+         job.chanid = prog.chanid
+         job.starttime = prog.recstartts
+         if status:
 diff --git a/mythtv/html/setup/wizard-network.qsp b/mythtv/html/setup/wizard-network.qsp
 index 03c37ac..59b67a9 100644
 --- a/mythtv/html/setup/wizard-network.qsp
@@ -289,3 +359,196 @@ index 609e190..745e329 100644
          }
      }
  
+diff --git a/mythtv/libs/libmythtv/firewirerecorder.cpp b/mythtv/libs/libmythtv/firewirerecorder.cpp
+index 9caa28e..fbb5ed0 100644
+--- a/mythtv/libs/libmythtv/firewirerecorder.cpp
++++ b/mythtv/libs/libmythtv/firewirerecorder.cpp
+@@ -210,6 +210,7 @@ bool FirewireRecorder::PauseAndWait(int timeout)
+     {
+         LOG(VB_RECORD, LOG_INFO, LOC +
+             QString("PauseAndWait(%1) -- unpause").arg(timeout));
++        paused = false;
+         StartStreaming();
+         unpauseWait.wakeAll();
+     }
+diff --git a/mythtv/libs/libmythtv/streamhandler.cpp b/mythtv/libs/libmythtv/streamhandler.cpp
+index 2b0a7b6..fbe9399 100644
+--- a/mythtv/libs/libmythtv/streamhandler.cpp
++++ b/mythtv/libs/libmythtv/streamhandler.cpp
+@@ -26,9 +26,15 @@ StreamHandler::StreamHandler(const QString &device) :
+ 
+ StreamHandler::~StreamHandler()
+ {
+-    if (!_stream_data_list.empty())
++    QMutexLocker locker(&_add_rm_lock);
++
+     {
+-        LOG(VB_GENERAL, LOG_ERR, LOC + "dtor & _stream_data_list not empty");
++        QMutexLocker locker2(&_listener_lock);
++        if (!_stream_data_list.empty())
++        {
++            LOG(VB_GENERAL, LOG_ERR, LOC +
++                "dtor & _stream_data_list not empty");
++        }
+     }
+ 
+     // This should never be triggered.. just to be safe..
+@@ -41,6 +47,8 @@ void StreamHandler::AddListener(MPEGStreamData *data,
+                                 bool needs_buffering,
+                                 QString output_file)
+ {
++    QMutexLocker locker(&_add_rm_lock);
++
+     LOG(VB_RECORD, LOG_INFO, LOC + QString("AddListener(0x%1) -- begin")
+                 .arg((uint64_t)data,0,16));
+     if (!data)
+@@ -93,6 +101,8 @@ void StreamHandler::AddListener(MPEGStreamData *data,
+ 
+ void StreamHandler::RemoveListener(MPEGStreamData *data)
+ {
++    QMutexLocker locker(&_add_rm_lock);
++
+     LOG(VB_RECORD, LOG_INFO, LOC + QString("RemoveListener(0x%1) -- begin")
+                 .arg((uint64_t)data,0,16));
+     if (!data)
+@@ -158,12 +168,6 @@ void StreamHandler::Start(void)
+     while (!_running && !_error && _running_desired)
+         _running_state_changed.wait(&_start_stop_lock, 100);
+ 
+-    if (!_running_desired)
+-    {
+-        LOG(VB_GENERAL, LOG_WARNING, LOC +
+-            "Programmer Error: Stop called before Start finished");
+-    }
+-
+     if (_error)
+     {
+         LOG(VB_GENERAL, LOG_WARNING, LOC + "Start failed");
+@@ -175,17 +179,9 @@ void StreamHandler::Stop(void)
+ {
+     QMutexLocker locker(&_start_stop_lock);
+ 
+-    do
+-    {
+-        SetRunningDesired(false);
+-        while (!_running_desired && _running)
+-            _running_state_changed.wait(&_start_stop_lock, 100);
+-        if (_running_desired)
+-        {
+-            LOG(VB_GENERAL, LOG_WARNING, LOC +
+-                "Programmer Error: Start called before Stop finished");
+-        }
+-    } while (_running_desired);
++    SetRunningDesired(false);
++    while (_running)
++        _running_state_changed.wait(&_start_stop_lock, 100);
+ 
+     wait();
+ }
+diff --git a/mythtv/libs/libmythtv/streamhandler.h b/mythtv/libs/libmythtv/streamhandler.h
+index 1db0584..8f97cdb 100644
+--- a/mythtv/libs/libmythtv/streamhandler.h
++++ b/mythtv/libs/libmythtv/streamhandler.h
+@@ -45,7 +45,9 @@ class PIDInfo
+ typedef QMap<uint,PIDInfo*> PIDInfoMap;
+ 
+ // locking order
+-// _pid_lock -> _listener_lock -> _start_stop_lock
++// _pid_lock -> _listener_lock
++// _add_rm_lock -> _listener_lock
++//              -> _start_stop_lock
+ 
+ class StreamHandler : protected MThread, public DeviceReaderCB
+ {
+@@ -101,6 +103,8 @@ class StreamHandler : protected MThread, public DeviceReaderCB
+     bool              _needs_buffering;
+     bool              _allow_section_reader;
+ 
++    QMutex            _add_rm_lock;
++
+     mutable QMutex    _start_stop_lock;
+     volatile bool     _running_desired;
+     volatile bool     _error;
+diff --git a/mythtv/libs/libmythtv/subtitlescreen.cpp b/mythtv/libs/libmythtv/subtitlescreen.cpp
+index 9ec70e9..43dc711 100644
+--- a/mythtv/libs/libmythtv/subtitlescreen.cpp
++++ b/mythtv/libs/libmythtv/subtitlescreen.cpp
+@@ -922,7 +922,8 @@ void FormattedTextSubtitle::InitFromCC608(vector<CC608Text*> &buffers,
+             CC708CharacterAttribute attr(isItalic, isBold, isUnderline,
+                                          clr[min(max(0, color), 7)],
+                                          useBackground);
+-            FormattedTextChunk chunk(captionText, attr, parent);
++            FormattedTextChunk chunk(captionText, attr, parent,
++                                     cc->teletextmode);
+             line.chunks += chunk;
+             LOG(VB_VBI, LOG_INFO,
+                 QString("Adding cc608 chunk (%1,%2): %3")
+@@ -1089,6 +1090,7 @@ bool FormattedTextChunk::Split(FormattedTextChunk &newChunk)
+             QString("Failed to split chunk '%1'").arg(text));
+         return false;
+     }
++    newChunk.isTeletext = isTeletext;
+     newChunk.parent = parent;
+     newChunk.format = format;
+     newChunk.text = text.mid(lastSpace + 1).trimmed() + ' ';
+@@ -1119,6 +1121,8 @@ QString FormattedTextChunk::ToLogString(void) const
+         .arg(format.boldface);
+     str += QString("font=%1 ").arg(format.font_tag);
+     str += QString(" text='%1'").arg(text);
++    if (isTeletext)
++        str += " DEPRECATED_608_TELETEXT";
+     return str;
+ }
+ 
+diff --git a/mythtv/libs/libmythtv/subtitlescreen.h b/mythtv/libs/libmythtv/subtitlescreen.h
+index 44b3f6a..8821dff 100644
+--- a/mythtv/libs/libmythtv/subtitlescreen.h
++++ b/mythtv/libs/libmythtv/subtitlescreen.h
+@@ -110,11 +110,11 @@ class FormattedTextChunk
+ {
+   public:
+     FormattedTextChunk(const QString &t, CC708CharacterAttribute formatting,
+-                       SubtitleScreen *p)
+-        : text(t), format(formatting), parent(p)
++                       SubtitleScreen *p, bool teletext = false)
++        : text(t), format(formatting), parent(p), isTeletext(teletext)
+     {
+     }
+-    FormattedTextChunk(void) : parent(NULL) {}
++    FormattedTextChunk(void) : parent(NULL), isTeletext(false) {}
+ 
+     QSize CalcSize(float layoutSpacing = 0.0f) const
+     {
+@@ -130,6 +130,7 @@ class FormattedTextChunk
+     QString text;
+     CC708CharacterAttribute format;
+     SubtitleScreen *parent; // where fonts and sizes are kept
++    bool isTeletext;
+ };
+ 
+ class FormattedTextLine
+diff --git a/mythtv/programs/mythbackend/main_helpers.cpp b/mythtv/programs/mythbackend/main_helpers.cpp
+index 5017af4..28d5a4a 100644
+--- a/mythtv/programs/mythbackend/main_helpers.cpp
++++ b/mythtv/programs/mythbackend/main_helpers.cpp
+@@ -405,7 +405,7 @@ int handle_command(const MythBackendCommandLineParser &cmdline)
+         return (ok) ? GENERIC_EXIT_OK : GENERIC_EXIT_CONNECT_ERROR;
+     }
+ 
+-    if (!cmdline.toBool("printexpire"))
++    if (cmdline.toBool("printexpire"))
+     {
+         expirer = new AutoExpire();
+         expirer->PrintExpireList(cmdline.toString("printexpire"));
+diff --git a/mythtv/themes/defaultmenu/mainmenu.xml b/mythtv/themes/defaultmenu/mainmenu.xml
+index 1c72a92..b747575 100644
+--- a/mythtv/themes/defaultmenu/mainmenu.xml
++++ b/mythtv/themes/defaultmenu/mainmenu.xml
+@@ -41,6 +41,7 @@
+         <text>Setup</text>
+         <description>Configure MythTV and plugins</description>
+         <action>MENU main_settings.xml</action>
++        <password>SetupPinCode</password>
+     </button>
+ 
+ </mythmenu>

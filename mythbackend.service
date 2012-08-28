@@ -44,7 +44,7 @@ Type=simple
 
 # Default setting assumes a system wide install. Otherwise it should be set to 
 # the folder containing the .mythtv subfolder containing the config.xml file
-Environment=HOME=/etc/mythtv
+Environment=MYTHCONFDIR=/etc/mythtv
 
 # systemd changes execution from the calling user (possibly root) to this user
 # if you have permissions problems or obscure errors try logging in as mythtv
