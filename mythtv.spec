@@ -78,7 +78,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.25.2
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
 Release:        2%{?dist}
@@ -1441,6 +1441,9 @@ fi
 
 
 %changelog
+* Wed Sep 05 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.25.2-2
+- Rebuilt for x264 ABI 125
+
 * Sat Aug 25 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-2
 - Update to latest fixes/0.25.
 - Fix mythbackend looking in the wrong directory for config.xml (BZ#2450).
