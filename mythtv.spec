@@ -81,7 +81,7 @@ Version:        0.25.2
 Release:        0.2.git.%{_gitrev}%{?dist}
 #Release: 0.1.rc1%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1441,7 +1441,7 @@ fi
 
 
 %changelog
-* Wed Sep 05 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.25.2-2
+* Wed Sep 05 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.25.2-3
 - Rebuilt for x264 ABI 125
 
 * Sat Aug 25 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-2
