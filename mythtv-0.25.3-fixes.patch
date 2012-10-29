@@ -1,0 +1,212 @@
+ mythtv/bindings/python/MythTV/altdict.py           |    2 +-
+ mythtv/bindings/python/MythTV/dataheap.py          |   58 ++++++++++++++++----
+ mythtv/bindings/python/MythTV/system.py            |    4 +-
+ mythtv/libs/libmythtv/ThreadedFileWriter.cpp       |    2 +-
+ mythtv/libs/libmythui/mythuiwebbrowser.cpp         |   10 +---
+ .../distros/mythtv_data/data_mythtv.py             |   16 +++++-
+ 6 files changed, 68 insertions(+), 24 deletions(-)
+
+diff --git a/mythtv/bindings/python/MythTV/altdict.py b/mythtv/bindings/python/MythTV/altdict.py
+index 61c1e73..e9d1425 100644
+--- a/mythtv/bindings/python/MythTV/altdict.py
++++ b/mythtv/bindings/python/MythTV/altdict.py
+@@ -115,7 +115,7 @@ class DictData( OrdDict ):
+         if name in self._localvars:
+             self.__dict__[name] = value
+         elif name not in self._field_order:
+-            self.__dict__[name] = value
++            object.__setattr__(self, name, value)
+         else:
+             try:
+                 self[name] = value
+diff --git a/mythtv/bindings/python/MythTV/dataheap.py b/mythtv/bindings/python/MythTV/dataheap.py
+index d99167f..d52c7de 100644
+--- a/mythtv/bindings/python/MythTV/dataheap.py
++++ b/mythtv/bindings/python/MythTV/dataheap.py
+@@ -17,20 +17,55 @@ import locale
+ import xml.etree.cElementTree as etree
+ from datetime import date, time
+ 
+-class Artwork( unicode ):
++from UserString import MutableString
++class Artwork( MutableString ):
+     _types = {'coverart':   'Coverart',
+               'coverfile':  'Coverart',
+               'fanart':     'Fanart',
+               'banner':     'Banners',
+               'screenshot': 'ScreenShots',
+               'trailer':    'Trailers'}
+-    def __new__(self, attr, parent=None, imagetype=None):
+-        s = u''
+-        if parent and (parent[attr] is not None):
+-            s = parent[attr]
+-        return super(Artwork, self).__new__(self, s)
++
++    @property
++    def data(self):
++        try:
++            val = self.parent[self.attr]
++        except:
++            raise RuntimeError("Artwork property must be used through an " +\
++                               "object, not independently.")
++        else:
++            if val is None:
++                return ''
++            return val
++    @data.setter
++    def data(self, value):
++        try:
++            self.parent[self.attr] = value
++        except:
++            raise RuntimeError("Artwork property must be used through an " +\
++                               "object, not independently.")
++    @data.deleter
++    def data(self):
++        try:
++            self.parent[self.attr] = self.parent._defaults.get(self.attr, "")
++        except:
++            raise RuntimeError("Artwork property must be used through an " +\
++                               "object, not independently.")
++
++    def __new__(cls, attr, parent=None, imagetype=None):
++        if (imagetype is None) and (attr not in cls._types):
++            # usage appears to be export from immutable UserString methods
++            # return a dumb string
++            return unicode.__new__(unicode, attr)
++        else:
++            return super(Artwork, cls).__new__(cls, attr, parent, imagetype)
+ 
+     def __init__(self, attr, parent=None, imagetype=None):
++        # replace standard MutableString init to not overwrite self.data
++        from warnings import warnpy3k
++        warnpy3k('the class UserString.MutableString has been removed in '
++                    'Python 3.0', stacklevel=2)
++
+         self.attr = attr
+         if imagetype is None:
+             imagetype = self._types[attr]
+@@ -39,10 +74,9 @@ class Artwork( unicode ):
+ 
+         if parent:
+             self.hostname = parent.get('hostname', parent.get('host', None))
+-        super(Artwork, self).__init__()
+ 
+     def __repr__(self):
+-        return u"<{0.imagetype} '{0}'>".format(self)
++        return u"<{0.imagetype} '{0.data}'>".format(self)
+ 
+     def __get__(self, inst, owner):
+         if inst is None:
+@@ -50,13 +84,15 @@ class Artwork( unicode ):
+         return Artwork(self.attr, inst, self.imagetype)
+ 
+     def __set__(self, inst, value):
+-        super(Artwork, self).__set__(inst, value)
+-        self.parent[self.attr] = value
++        inst[self.attr] = value
++
++    def __delete__(self, inst):
++        inst[self.attr] = inst._defaults.get(self.attr, "")
+ 
+     @property
+     def exists(self):
+         be = FileOps(self.hostname, db = self.parent._db)
+-        return be.fileExists(self, self.imagetype)
++        return be.fileExists(unicode(self), self.imagetype)
+ 
+     def downloadFrom(self, url):
+         if self.parent is None:
+diff --git a/mythtv/bindings/python/MythTV/system.py b/mythtv/bindings/python/MythTV/system.py
+index 7417dd9..4631bb8 100644
+--- a/mythtv/bindings/python/MythTV/system.py
++++ b/mythtv/bindings/python/MythTV/system.py
+@@ -385,12 +385,12 @@ class Grabber( System ):
+                 this method will return a fully populated object.
+         """
+         try:
+-            if inetref.season and inetref.episode:
++            if (inetref.season is not None) and (inetref.episode is not None):
+                 args = (inetref.inetref, inetref.season, inetref.episode)
+             else:
+                 args = (inetref.inetref,)
+         except:
+-            if season and episode:
++            if (season is not None) and (episode is not None):
+                 args = (inetref, season, episode)
+             else:
+                 args = (inetref,)
+diff --git a/mythtv/libs/libmythtv/ThreadedFileWriter.cpp b/mythtv/libs/libmythtv/ThreadedFileWriter.cpp
+index c756832..dd6d73d 100644
+--- a/mythtv/libs/libmythtv/ThreadedFileWriter.cpp
++++ b/mythtv/libs/libmythtv/ThreadedFileWriter.cpp
+@@ -482,7 +482,7 @@ void ThreadedFileWriter::DiskLoop(void)
+ 
+             locker.relock();
+ 
+-            if (!in_dtor)
++            if ((tot < sz) && !in_dtor)
+                 bufferHasData.wait(locker.mutex(), 50);
+         }
+ 
+diff --git a/mythtv/libs/libmythui/mythuiwebbrowser.cpp b/mythtv/libs/libmythui/mythuiwebbrowser.cpp
+index 9894c11..0152a94 100644
+--- a/mythtv/libs/libmythui/mythuiwebbrowser.cpp
++++ b/mythtv/libs/libmythui/mythuiwebbrowser.cpp
+@@ -84,13 +84,6 @@ static void DestroyNetworkAccessManager(void)
+ {
+     if (networkManager)
+     {
+-        MythDownloadManager *dlmgr = GetMythDownloadManager();
+-        if (dlmgr)
+-        {
+-            LOG(VB_GENERAL, LOG_DEBUG, "Refreshing DLManager's Cookie Jar");
+-            dlmgr->refreshCookieJar(networkManager->cookieJar());
+-        }
+-
+         delete networkManager;
+         networkManager = NULL;
+     }
+@@ -265,7 +258,8 @@ MythWebPage::MythWebPage(QObject *parent)
+ 
+ MythWebPage::~MythWebPage()
+ {
+-    DestroyNetworkAccessManager();
++    LOG(VB_GENERAL, LOG_DEBUG, "Refreshing DLManager's Cookie Jar");
++    GetMythDownloadManager()->refreshCookieJar(networkManager->cookieJar());
+ }
+ 
+ bool MythWebPage::supportsExtension(Extension extension) const
+diff --git a/mythtv/programs/scripts/hardwareprofile/distros/mythtv_data/data_mythtv.py b/mythtv/programs/scripts/hardwareprofile/distros/mythtv_data/data_mythtv.py
+index 4ceee4e..fd8b795 100755
+--- a/mythtv/programs/scripts/hardwareprofile/distros/mythtv_data/data_mythtv.py
++++ b/mythtv/programs/scripts/hardwareprofile/distros/mythtv_data/data_mythtv.py
+@@ -453,7 +453,20 @@ class _Mythtv_data:
+ 
+         return myth_systemrole , mythremote
+ 
+-
++    def ProcessLogUrgency(self):
++        c = _DB.cursor()
++        c.execute("""SELECT level,count(level) FROM logging GROUP BY level""")
++        levels = ('EMERG', 'ALERT', 'CRIT', 'ERR', 
++                  'WARNING', 'NOTICE', 'INFO') # ignore debugging from totals
++        counts = {}
++        total = 0.
++        for level,count in c.fetchall():
++            if level in range(len(levels)):
++                counts[levels[level]] = count
++                total += count
++        for k,v in counts.items():
++            counts[k] = v/total
++        return {'logurgency':counts}
+ 
+ 
+ 
+@@ -470,6 +483,7 @@ class _Mythtv_data:
+         self._data.update(self.ProcessMySQL())
+         self._data.update(self.ProcessScheduler())
+         self._data.update(self.Processtuners())
++        self._data.update(self.ProcessLogUrgency())
+         
+         self._data.theme          = _SETTINGS.Theme
+         self._data.country          = _SETTINGS.Country

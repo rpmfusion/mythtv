@@ -59,13 +59,13 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-# 0.25 release: git tag v0.25.1
-%define _gitrev v0.25.2-15-g46cab93
+# output of "git describe"
+%define _gitrev v0.25.3-9-g117b611
 %define branch fixes/0.25
 
 # Mythtv and plugins from github.com
-%global githash1 g4e44650
-%global githash2 19087cb
+%global githash1 g139bd59
+%global githash2 4024b42
 
 #
 # Basic descriptive tags for this package:
@@ -76,12 +76,11 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version:        0.25.2
+Version:        0.25.3
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
-#Release: 0.1.rc1%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -131,15 +130,16 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 ################################################################################
 
-# https://github.com/MythTV/mythtv/tarball/v0.25
+# https://github.com/MythTV/mythtv/tarball/v0.25.3
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 
-Patch0:    mythtv-0.25.2-fixes.patch
+Patch0:    mythtv-0.25.3-fixes.patch
 
 # Fixes for PHP 5.4
 Patch1:    mythtv-0.25.1-php54.patch
 # Adapative HLS profile based on resolution.
 Patch2:    mythtv-0.25.1-hls_profile.patch
+Patch3:    mythtv-0.25.2-hls_link.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -813,6 +813,7 @@ on demand content.
 %patch0 -p1 -b .mythtv
 %patch1 -p1 -b .php54
 %patch2 -p1 -b .hls_profile
+%patch3 -p1 -b .hls_link
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -1441,6 +1442,9 @@ fi
 
 
 %changelog
+* Mon Oct 29 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.3-1
+- Update to latest upstream release.
+
 * Sat Aug 25 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-2
 - Update to latest fixes/0.25.
 - Fix mythbackend looking in the wrong directory for config.xml (BZ#2450).
