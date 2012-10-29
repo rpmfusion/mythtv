@@ -32,7 +32,7 @@
 # The following options are enabled by default.  Use these options to disable:
 #
 # --without vdpau           Disable VDPAU support
-# --without crystalhd       Disable Crystal HD support (disabled, currently broken)
+# --without crystalhd       Disable Crystal HD support
 # --without perl            Disable building of the perl bindings
 # --without python          Disable building of the python bindings
 #
@@ -59,7 +59,7 @@
 
 # Git revision and branch ID
 # 0.25 release: git tag v0.25.1
-%define _gitrev v0.26.0-0-g6c3ae8
+%define _gitrev v0.26.0-28-ge3087dd
 %define branch fixes/0.26
 
 # Mythtv and plugins from github.com
@@ -129,7 +129,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 ################################################################################
 
-# https://github.com/MythTV/mythtv/tarball/v0.25
+# https://github.com/MythTV/mythtv/tarball/v0.26
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 
 Patch0:    mythtv-0.26-fixes.patch
