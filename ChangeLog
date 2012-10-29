@@ -1,129 +1,275 @@
-commit 46cab93562429cd19029402a2387f63a72aeb898
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Tue Jul 31 14:21:22 2012 -0400
+commit e3087dda66175a6b7308ad5a5e80a35ff7d72fd3
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Sun Oct 28 21:59:38 2012 +0100
 
-    Correct --printexpire option in mythbackend.
+    Internet Content: Remove deprecated YouTube categories
     
-    This corrects logic that was accidentally inverted in 8bc8dd54, and
-    allows `mythbackend --printexpire` to be used again.
-    (cherry picked from commit a9f18c63bfb23494ee83a8ba76d82fc320617067)
+    Fixes #11193
+    (cherry picked from commit 7c903d2a90d7962fa6e1ee856d506539ce17c1c8)
 
-commit 8ab229a8bed860fb0855797c683655a7465e2ee4
-Merge: a4cdc9e 1c496c8
+commit 0de21aa876e3117ff98499c5a502affc52b5277e
 Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Tue Jul 31 14:22:32 2012 -0400
+Date:   Thu Oct 25 15:16:38 2012 -0400
 
-    Merge branch 'fixes/0.25' of code.mythtv.org:mythtv into fixes/0.25
+    Tweak DictData behavior to properly function with Properties.
+    (cherry picked from commit 662b5e83cfa103fc3aed86c194b2fa2c6b9424d8)
 
-commit 1c496c81662eabda444452071eb18f2fd375d4d0
-Author: Kyle <klillis@gmail.com>
-Date:   Mon Jul 30 13:34:11 2012 -0400
+commit 5e0099555dac1c16f7a76f46996675fa99c7a6b7
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Oct 25 15:14:27 2012 -0400
 
-    Fixes #10897. Clear paused when we unpause FirewireRecorder.
+    Correct handling of Artwork when database field is set to NULL.
+    (cherry picked from commit 4646e7f56fc97f62d05d42b5896e8eceb361492e)
+
+commit 744a595db2273affca4030f4e8879860d72d4683
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Tue Oct 23 15:51:05 2012 -0400
+
+    Use 'unicode' rather than 'str' for UTF8 compatibility.
+    (cherry picked from commit 0bc83db48ec08b8df576c6ecbf1049567d34ab7a)
+
+commit 35389d8f177c94a7b6381b5a63cfcb997d22dc66
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Tue Oct 23 15:42:31 2012 -0400
+
+    Fix immutable methods in Artwork class.
+    
+    This fixes an issue with several immutable methods in the Artwork class,
+    inherited from the parent UserString class. As the Artwork class is
+    modified for use as a property, and not intended to be called directly
+    for storage of a string, the inherited UserString methods that returned
+    a new instance using the __class__ attribute would fail. This adds a
+    __new__ method that detects such uses and forces the call to return a
+    standard str type instead.
+    (cherry picked from commit 9f66fa0f9a4d9d759b9fdb44f411a4dc1a0748cb)
+
+commit 163e0e629095401268cf67309d16987ded6a0d72
+Author: Bill <billstuff2001@sbcglobal.net>
+Date:   Fri Oct 12 13:47:27 2012 -0400
+
+    Fixes #11061. Speed up TFW recovery after falling behind on writes.
     
     Signed-off-by: Daniel Thor Kristjansson <danielk@cuymedia.net>
 
-commit 9c199a42258f2a19dd1c8d3b934e6eb04f1757ce
-Author: Daniel Thor Kristjansson <dkristjansson@mythtv.org>
-Date:   Tue Jul 24 12:13:16 2012 -0400
+commit 143e2de7da6c88d8c9f736e700df2e71130f0882
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Sun Oct 21 17:30:38 2012 +0200
 
-    Fixes #10870. Fix Start/Stop race condition in StreamHandler.
+    MythUI: Fix double rendering of fading screens
+    (cherry picked from commit da065e42b2cfa3ea875df1b5c36ce34422f379a0)
+
+commit 2870590667b4b3b3e13b171c5e81a805d30512ce
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Sun Oct 21 13:29:12 2012 +0200
+
+    MythUI: Fix potential use after free when leaving a web page
     
-    This is a backport of [445faaa47].
-
-commit a72e341a4653a1b683b7ae5ac87bcaa3092d20fa
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Sun Jul 29 12:42:41 2012 +0100
-
-    Restore setup pincode following [57adc5d120] - 'Flatten the Setup Menus in the default menu theme' which dropped util_menu.xml but failed to carry over the <password> markup.
-    (cherry picked from commit 134417fe3bf7170f3419d2388a6c26afe16c4927)
-
-commit 3256849b14cc882536a153e7fbe4724adf03260c
-Author: Jim Stichnoth <jstichnoth@mythtv.org>
-Date:   Tue Jul 24 10:56:15 2012 -0700
-
-    Subtitles: backport some code to enable cc608 TT deprecation log message.
-
-commit 39fad46248bbcbe5ab27068e73fb7c5a91bc155b
-Author: Jim Stichnoth <jstichnoth@mythtv.org>
-Date:   Tue Jul 24 08:23:53 2012 -0700
-
-    Subtitles: Put a "DEPRECATED_608_TELETEXT" message into the logs.
+    It's not safe to delete a QNetworkAccessManager before the QWebPage it is being
+    used with since any outstanding QNetworkReplys will be deleted, causing
+    QWebPage to potentially access free memory.
     
-    Support for CEA-608 teletext captions is to be removed.  Allow users
-    to check whether they would be affected.  Refs #10786.
-    (cherry picked from commit 7b1aef85ec92658acb91c1ff019aed909e5df30a)
+    Fixes #11168.
+    (cherry picked from commit 83e88bc0abe21f54daace479ac921c352710c9de)
 
-commit 9e0d839be7667056dc65b79711dda84159a1b13d
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Tue Jul 24 14:11:47 2012 +0100
-
-    Set m_cdWatcher to NULL after deletion, fixes segfault on exiting frontend. Fixes #10936
-    (cherry picked from commit de851dd273eaa80689a427f915c7db40d015e0ba)
-
-commit 10a68895e1fcd5c409058d2eb61fe59e78736235
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Sun Jul 22 23:24:40 2012 +0100
-
-    Fix segfault after music scan completes.
-    (cherry picked from commit b2379ae9b8d42c23c3feee26b52a1f0a2ebef394)
-
-commit ed58b3a818a1796340ba0f085a53159eb1d52266
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Sat Jul 21 23:53:41 2012 +0100
-
-    Fix for Synaesthesia memory corruption
-    
-    We were allocating just half the required space and consequently
-    writing beyond the end of the array. This consistently caused
-    segfaults for me when using the Synaesthesia visualiser.
-    
-    This fix appears to be consistent with the code used in other projects
-    which were also derived from the original Synaesthia project.
-    
-    e.g. GStreamer/Source/gst-plugins-ugly/gst/synaesthesia/synaescope.c
-    (cherry picked from commit e331017f2d1ee9be82da9c0b64ca4435ec3efd1e)
-
-commit a4cdc9e01295991056cdc8c5411e70937b1a4842
-Merge: 450ed91 f0e2ad8
-Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Fri Jul 20 21:06:48 2012 -0400
-
-    Merge branch 'fixes/0.25' of code.mythtv.org:mythtv into fixes/0.25
-
-commit f0e2ad85dbdd6dd4041a8b1e7d8b17e7b8746b63
+commit 8b7f6ce5cb97702718d69bea8e582f5dc26746c9
 Author: Jean-Yves Avenard <jyavenard@mythtv.org>
-Date:   Wed Jul 18 20:49:11 2012 +1000
+Date:   Fri Oct 19 20:47:32 2012 +1100
 
-    Make AllowLinkLocal default to true
+    Fix OS X compilation
     
-    Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+    Signal SIGRTMIN doesn't exist under OS X so make all this code conditional.
+    
+    [cherry-picked from 9f65a657827790687b8ac24daf7a4c581e7535a3]
 
-commit 4b82e27e6c89bac9d60c3a56f1d924979c80c746
+commit fdfd45035d322bba1c537546dcf0c392dc1b35d5
 Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Wed Jul 18 01:50:46 2012 -0400
+Date:   Fri Oct 19 12:12:51 2012 -0400
 
-    Correct bad copy/paste in ServerPool.
-    
-    Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+    Add -a parameter to tmdb3.py.
+    (cherry picked from commit 150e57259794084ae6d819ff72cb9977b7cf20bf)
 
-commit e4ba7d74aee6bd437e747772046a8836fa9ae5cb
+commit bfc3dfc12d67104f37adafc9d5ad148a13db83c1
 Author: Raymond Wagner <rwagner@mythtv.org>
-Date:   Sat Jul 14 01:57:46 2012 -0400
+Date:   Fri Oct 19 02:40:57 2012 -0400
 
-    Rework IP selection so link-local is always used.
+    Add -t parameter to tmdb3.py.
+    (cherry picked from commit 144c4f5142ad783b5fce7814716816576ee232a7)
+
+commit 474107b04853831df6e7a0a3ca869a64097602bb
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Oct 18 15:20:35 2012 -0400
+
+    Fix setting of values to Artwork property.
     
-    This adds an option to mythtv-setup that makes link-local addresses
-    listened to by default.  This behavior can still be disabled, to block
-    off network access.
+    This makes the Artwork property derived from a MutableString rather than
+    a unicode type, allowing the setting of values to work properly, rather
+    than merely by chance, and correcting an issue where importMetadata
+    would not apply a coverart value to Video Library entries.
+    (cherry picked from commit e4b46f0cdc1a18ee5dca94e29229531d928a6dc1)
+
+commit bff8eb1a1893335f6b96eb6eb8ebd1d567feb9cb
+Author: Antonio Marcos Lopez Alonso <amlopezalonso@gmail.com>
+Date:   Tue Oct 16 06:50:16 2012 -0400
+
+    Updated Spanish/Spain MythFrontend, MythArchive and MythWeather
+    translation from Antonio Marcos Lopez Alonso.
     
-    Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+    Backport of af9d36763 to 0.26-fixes
+    
+    Thank you Antonio!
+    
+    Closes #11179
+    
+    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
 
-commit 450ed915d3a13b84489ecdebdad6fca18fc8c312
-Author: GDragon <gdragon@jetcom.org>
-Date:   Mon Jul 9 15:33:31 2012 -0400
+commit fd6e25bfe3074507a5f27133dddf34ccd7dbb988
+Author: Nicolas Riendeau <nriendeau@mythtv.org>
+Date:   Mon Oct 15 19:31:32 2012 -0400
 
-    Properly set job type in fromProgram and fromRecorded methods.
+    Updated Polish Mythfrontend and MythWeather translation
+    from Warpme
+    
+    Thank you Warpme and porbas!
+    
+    Refs #11178
+
+commit 280e7efd82fe2daccee8d5fa542e4610af36124a
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sat Oct 13 16:30:23 2012 -0700
+
+    Fixes #11151 by correcting a float-to-integer truncation problem.
+    (cherry picked from commit 4a09ca11c47137a88355a961efd5131c2157d4d7)
+
+commit aae34c428d30413b6f62aa2279a9189e399ed430
+Author: Morris Cavestro <morriscavestro@yahoo.it>
+Date:   Mon Oct 8 13:51:39 2012 -0400
+
+    Updated Italian MythMusic translation
+    from Morris Cavestro
+    
+    (Backport to 0.26-fixes)
+    
+    Thank you Morris!
+    
+    Closes #11167
+    
+    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
+
+commit 90ba02c17dd993792f29fb4ac5d2d71fce9670b3
+Merge: ff922bb 624ad5a
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Wed Oct 10 11:01:53 2012 -0400
+
+    Merge branch 'fixes/0.26' of code.mythtv.org:mythtv into fixes/0.26
+
+commit ff922bb074b425d086324b7d89db348f90d623dd
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Wed Oct 10 10:52:24 2012 -0400
+
+    Add reporting of logging volume to Smolt.
+    
+    This reports the logging volume as a percentage of the total amount
+    stored in the database, for each urgency level. This is intended as a
+    simple metric to determine stability of MythTV, as higher counts of
+    higher urgency levels will indicate an increase in problems seen by the
+    user base.
+    (cherry picked from commit 5f90b1d62c4d692a6c23ae22ab2047db85e6572e)
+
+commit 624ad5a3533ba34033debb37f0058da0670cf4e1
+Author: Jesse Crews <jcrews@gridlox.net>
+Date:   Tue Oct 9 10:59:27 2012 +0100
+
+    Fix mythbackend not exiting after network initialization failure. Fixes #11163
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+
+commit 2d2932ac11ed6d01f05f502a8e373455774ba46a
+Author: Lawrence Rust <lvr@softsystem.co.uk>
+Date:   Sun May 6 12:33:35 2012 +0200
+
+    libmythui: Fix a redraw bug in MythUIType
+    
+    While evaluating the ATI Catalyst 'TearFree Desktop' option I noticed
+    that sometimes a keypress was apparently being held up until the time
+    on the main menu was updated.  Initially I thought that this was a lirc
+    or fglrx issue, but on investigation it turned out that MythMainWindow::animate
+    was requesting updates for empty repaint regions.  Delving further
+    showed that MythUIType::Draw was resetting m_DirtyRegion to empty
+    even if the clipRect was smaller, thus leaving unpainted regions.
+    
+    m_DirtyRegion may be extended by HandleMovementPulse, SetRedraw
+    or SetChildNeedsRedraw etc AFTER GetDirtyArea is called.
+    So when MythUIType::Draw is called, clipRect may not include the whole
+    of m_DirtyRegion.
+    
+    This patch subtracts the Draw clipRect from m_DirtyRegion instead of
+    simply emtying it.
+    
+    Fixes #10695
+    
+    Signed-off-by: Lawrence Rust <lvr@softsystem.co.uk>
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit 39984eb579369f6cb25cd8f57acb8b23ebcccfc6)
+
+commit 52c48f983ca3175be983bdaa8c0072b736315d3c
+Author: Xavier Hervy <xavier.hervy@gmail.com>
+Date:   Sun Oct 7 19:19:54 2012 +0100
+
+    Allow adding a channel to an empty channel group from the guide. Update the cached channel group list after adding or removing a channel. Fixes #10411
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit 9d5aabc1ed42156bf23a9d0afac0b31fdaedc5e1)
+
+commit 4c67cedbea9e4b18d7688f30af02bd46e65cd07d
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Oct 6 13:42:21 2012 -0400
+
+    Read in dbPingHost value from config.xml.
+    
+    Fixes #11148
+    (cherry picked from commit 65a720c9b830ab77bbd2931e03fb428e05dee6f9)
+
+commit ad5bb8b0929d546ac91324ccee5e7f7f2a49742e
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Oct 6 12:40:36 2012 +0100
+
+    Only set the BackendServerIP6 setting to ::1 by default if that address is available, otherwise leave it blank
+
+commit 6b541e74da22ff4daa28dd13425bcc9ffe2c7303
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Oct 6 11:36:59 2012 +0100
+
+    Log an error if we are unable to find IPv4 or IPv6 addresses, only
+    exit if we are unable to find any address to bind to
+
+commit dd0521ec029f5e5413592e93b3beff946fb5499f
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Oct 6 04:28:48 2012 -0400
+
+    Fix single episode grabber for season 0 specials.
+    
+    This makes the check for arguments to grabInetref() look specifically
+    for None, rather than boolean False, to prevent false positives when
+    dealing with specials that have a season of 0.
+    (cherry picked from commit 7da754ad0d350988f324c239477a6587bf88ba1c)
+
+commit c744347675573dfc690cb263353b3ccc4a950a1a
+Author: R.D. Vaughan <r.d.vaughan@rogers.com>
+Date:   Tue Oct 2 13:29:55 2012 -0400
+
+    Adjust to datetime issues with MythTV v0.26's move to UTC datetimes in DB
     
     Signed-off-by: Raymond Wagner <rwagner@mythtv.org>
-    (cherry picked from commit 868a566c1d635be3e60f83438f87b6f21d9f1780)
+    (cherry picked from commit fcf6da5608cc5621a7bee48120d988352f34189f)
+
+commit a49c750cfc1a2d3f0b8a46f98e75a0e79b3a79fc
+Author: Gavin Hurlbut <ghurlbut@mythtv.org>
+Date:   Tue Oct 2 13:53:03 2012 -0700
+
+    Force a commit to fixes/0.26 to test the tagging
+
+commit b4deb185994d6388b55cea18aa3e861c71541101
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Tue Oct 2 12:05:20 2012 +0100
+
+    Prevent a segfault in MythUIImage, this doesn't fix the root cause of the problem but at least we won't crash. Refs #11047
