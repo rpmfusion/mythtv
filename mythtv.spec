@@ -172,7 +172,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
 BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.6
-BuildRequires:  phonon-devel
+BuildRequires:  phonon-devel phonon-backend-gstreamer
 BuildRequires:  libuuid-devel
 
 BuildRequires:  lm_sensors-devel
