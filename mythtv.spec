@@ -77,9 +77,9 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.26.0
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -172,7 +172,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
 BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.6
-BuildRequires:  phonon-devel
+BuildRequires:  phonon-devel phonon-backend-gstreamer
 BuildRequires:  libuuid-devel
 
 BuildRequires:  lm_sensors-devel
@@ -1452,6 +1452,9 @@ fi
 
 
 %changelog
+* Fri Nov 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-2
+- Rebuilt for x264
+
 * Sun Oct 28 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-1
 - Update to latest upstream release.
 - Remove mysql.txt as it is no longer used.
