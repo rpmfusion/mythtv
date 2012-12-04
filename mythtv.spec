@@ -888,7 +888,7 @@ pushd mythtv
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
 %if %{with_vdpau}
-    --enable-vdpau				\
+    --enable-vdpau                              \
 %endif
 %if %{with_vaapi}
     --enable-vaapi				\
@@ -1509,7 +1509,7 @@ fi
 * Tue Mar 20 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-1
 - Update to latest release 0.25.
 
-* Fri Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
+* Sun Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
 - Remove transcode as build requirement.
 - Misc. spec file cleanup.
 
@@ -1537,7 +1537,7 @@ fi
 - Changes default user for mythbackend from root to mythtv on
   Fedora 16+. See http://rpmfusion.org/Package/mythtv for additonal information.
 
-* Sun Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
+* Thu Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
 - Update to latest 0.24.1-fixes, git revision e89d6a9f7e.
 - Fixes BZ#1993, FTBFS on Fedora 16.
 - Moves from sysv init to systemd unit file for mythbackend on Fedora 16+
