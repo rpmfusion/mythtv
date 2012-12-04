@@ -1509,7 +1509,7 @@ fi
 * Tue Mar 20 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-1
 - Update to latest release 0.25.
 
-* Sun Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
+* Sat Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
 - Remove transcode as build requirement.
 - Misc. spec file cleanup.
 
