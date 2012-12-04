@@ -58,8 +58,7 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-# 0.25 release: git tag v0.25.1
-%define _gitrev v0.26.0-28-ge3087dd
+%define _gitrev v0.26.0-42-g10479af
 %define branch fixes/0.26
 
 # Mythtv and plugins from github.com
@@ -77,9 +76,9 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.26.0
 %if "%{branch}" == "master"
-Release:        0.2.git.%{_gitrev}%{?dist}
+Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1452,6 +1451,9 @@ fi
 
 
 %changelog
+* Tue Dec  4 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-3
+- Update to latest upstream release.
+
 * Fri Nov 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-2
 - Rebuilt for x264
 
