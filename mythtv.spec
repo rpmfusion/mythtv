@@ -1,4 +1,3 @@
-#
 # Specfile for building MythTV and MythPlugins RPMs from a subversion checkout.
 #
 # by:   Chris Petersen <rpm@forevermore.net>
@@ -59,13 +58,12 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-# 0.25 release: git tag v0.25.1
-%define _gitrev v0.25.2-15-g46cab93
-%define branch fixes/0.25
+%define _gitrev v0.26.0-55-g09ac5b2
+%define branch fixes/0.26
 
 # Mythtv and plugins from github.com
-%global githash1 g4e44650
-%global githash2 19087cb
+%global githash1 g6c3ae81
+%global githash2 d2f9798
 
 #
 # Basic descriptive tags for this package:
@@ -76,12 +74,11 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version:        0.25.2
+Version:        0.26.0
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
-#Release: 0.1.rc1%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3.1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -131,15 +128,10 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 ################################################################################
 
-# https://github.com/MythTV/mythtv/tarball/v0.25
+# https://github.com/MythTV/mythtv/tarball/v0.26
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 
-Patch0:    mythtv-0.25.2-fixes.patch
-
-# Fixes for PHP 5.4
-Patch1:    mythtv-0.25.1-php54.patch
-# Adapative HLS profile based on resolution.
-Patch2:    mythtv-0.25.1-hls_profile.patch
+Patch0:    mythtv-0.26-fixes.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -152,7 +144,6 @@ Source106: mythfrontend.png
 Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
-Source110: mysql.txt
 Source111: 99-mythbackend.rules
 
 
@@ -180,7 +171,8 @@ BuildRequires:  gcc-c++
 BuildRequires:  mysql-devel >= 5
 BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.6
-BuildRequires:  phonon-devel
+BuildRequires:  phonon-devel phonon-backend-gstreamer
+BuildRequires:  libuuid-devel
 
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -349,7 +341,8 @@ Requires:  perl-MythTV        = %{version}-%{release}
 Requires:  php-MythTV         = %{version}-%{release}
 Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
-Requires:  mythweb
+Requires:  mythweb            = %{version}
+Requires:  mythffmpeg         = %{version}-%{release}
 Requires:  mysql-server >= 5, mysql >= 5
 Requires:  xmltv
 
@@ -576,6 +569,19 @@ MythTV provides a unified graphical interface for recording and viewing
 television programs.  Refer to the mythtv package for more information.
 
 This package contains components needed by multiple other MythTV components.
+
+################################################################################
+################################################################################
+
+%package -n mythffmpeg
+Summary: MythTV build of FFmpeg
+Group: Applications/Multimedia
+
+%description -n mythffmpeg
+Several MythTV utilities interact with FFmpeg, which changes its parameters
+often enough to make it a hassle to support the variety of versions used by
+MythTV users.  This is a snapshot of the FFmpeg code so that MythTV utilities
+can interact with a known verion.
 
 ################################################################################
 
@@ -805,14 +811,10 @@ on demand content.
 # Replace static lib paths with %{_lib} so we build properly on x86_64
 # systems, where the libs are actually in lib64.
     if [ "%{_lib}" != "lib" ]; then
-        grep -rlZ '/lib/' . | xargs -r0 sed -i -e 's,/lib/,/%{_lib}/,g'
-        grep -rlZ '/lib$' . | xargs -r0 sed -i -e 's,/lib$,/%{_lib},'
-        grep -rlZ '/lib ' . | xargs -r0 sed -i -e 's,/lib ,/%{_lib} ,g'
+         find \( -name 'configure' -o -name '*pro' -o -name 'Makefile' \) -exec sed -r -i -e 's,/lib\b,/%{_lib},g' {} \+
     fi
 
 %patch0 -p1 -b .mythtv
-%patch1 -p1 -b .php54
-%patch2 -p1 -b .hls_profile
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -886,7 +888,7 @@ pushd mythtv
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
 %if %{with_vdpau}
-    --enable-vdpau				\
+    --enable-vdpau                              \
 %endif
 %if %{with_vaapi}
     --enable-vaapi				\
@@ -948,6 +950,7 @@ pushd mythplugins
         -exec sed -i -e "s,DEPLIBS = \$\${LIBDIR},DEPLIBS = $temp%{_libdir}," {} \; \
         -exec sed -i -e "s,\$\${PREFIX}/include/mythtv,$temp%{_includedir}/mythtv," {} \;
     echo "INCLUDEPATH -= \$\${PREFIX}/include" >> settings.pro
+    echo "INCLUDEPATH -= \$\${SYSROOT}/\$\${PREFIX}/include" >> settings.pro
     echo "INCLUDEPATH -= %{_includedir}"       >> settings.pro
     echo "INCLUDEPATH += $temp%{_includedir}"  >> settings.pro
     echo "INCLUDEPATH += %{_includedir}"       >> settings.pro
@@ -1040,8 +1043,7 @@ pushd mythtv
 # Fix permissions on executable python bindings
 #    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
 
-# mysql.txt and other config/init files
-    install -m 0644 %{SOURCE110} %{buildroot}%{_sysconfdir}/mythtv/
+# config/init files
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
 
     ### SystemD based setup. ###
@@ -1079,6 +1081,11 @@ pushd mythtv
     install -p -m 644 settings.pro %{buildroot}%{_datadir}/mythtv/build/
 
 popd
+
+# Clean up some stuff we don't want to include
+rm -f %{buildroot}%{_libdir}/libmythqjson.prl \
+      %{buildroot}%{_libdir}/libmythzmq.la    \
+      %{buildroot}%{_libdir}/pkgconfig/libmythzmq.pc
 
 # MythPlugins
 %if %{with_plugins}
@@ -1225,6 +1232,7 @@ fi
 %{_bindir}/mythcommflag
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
+%{_bindir}/mythlogserver
 %{_bindir}/mythpreviewgen
 %{_bindir}/mythtranscode
 %{_bindir}/mythwikiscripts
@@ -1234,7 +1242,6 @@ fi
 %{_datadir}/mythtv/hardwareprofile/
 %attr(-,mythtv,mythtv)
 %dir %{_sysconfdir}/mythtv
-%config(noreplace) %{_sysconfdir}/mythtv/mysql.txt
 %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 
 %files backend
@@ -1243,8 +1250,6 @@ fi
 %{_bindir}/mythjobqueue
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
-%{_bindir}/mythffmpeg
-%{_bindir}/mythffplay
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
@@ -1287,6 +1292,7 @@ fi
 %dir %{_datadir}/mythtv/i18n
 %dir %{_datadir}/mythtv/fonts
 %{_datadir}/mythtv/fonts/*.ttf
+%{_datadir}/mythtv/fonts/*.otf
 %{_datadir}/mythtv/fonts/*.txt
 %{_datadir}/mythtv/i18n/mythfrontend_*.qm
 %{_datadir}/applications/*mythfrontend.desktop
@@ -1307,6 +1313,9 @@ fi
 %exclude %{_libdir}/*.a
 %dir %{_datadir}/mythtv/build
 %{_datadir}/mythtv/build/settings.pro
+
+%files -n mythffmpeg
+%{_bindir}/mythffmpeg
 
 %if %{with_perl}
 %files -n perl-MythTV
@@ -1388,6 +1397,7 @@ fi
 %doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
 %attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythmusic
+%{_datadir}/mythtv/mythmusic/
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
@@ -1441,6 +1451,21 @@ fi
 
 
 %changelog
+* Tue Dec  4 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-3
+- Update to latest upstream release.
+
+* Fri Nov 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-2
+- Rebuilt for x264
+
+* Sun Oct 28 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-1
+- Update to latest upstream release.
+- Remove mysql.txt as it is no longer used.
+- Fix lib -> lib64 replacement command to be more accurate and support mythzmq
+- Add mythzmq stuff
+
+* Wed Sep 05 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.25.2-3
+- Rebuilt for x264 ABI 125
+
 * Sat Aug 25 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25.2-2
 - Update to latest fixes/0.25.
 - Fix mythbackend looking in the wrong directory for config.xml (BZ#2450).
@@ -1484,7 +1509,7 @@ fi
 * Tue Mar 20 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-1
 - Update to latest release 0.25.
 
-* Fri Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
+* Sat Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
 - Remove transcode as build requirement.
 - Misc. spec file cleanup.
 
@@ -1512,7 +1537,7 @@ fi
 - Changes default user for mythbackend from root to mythtv on
   Fedora 16+. See http://rpmfusion.org/Package/mythtv for additonal information.
 
-* Sun Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
+* Thu Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
 - Update to latest 0.24.1-fixes, git revision e89d6a9f7e.
 - Fixes BZ#1993, FTBFS on Fedora 16.
 - Moves from sysv init to systemd unit file for mythbackend on Fedora 16+

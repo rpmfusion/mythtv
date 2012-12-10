@@ -59,7 +59,7 @@ User=mythtv
 ExecStart=/usr/bin/mythbackend --logpath /var/log/mythtv
 
 # Whether systemd will continue over-watch and restart on any halt
-#Restart=Restart-always
+#Restart=always
 
 [Install]
 WantedBy=multi-user.target
