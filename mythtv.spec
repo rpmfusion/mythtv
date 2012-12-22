@@ -58,7 +58,7 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-%define _gitrev v0.26.0-42-g10479af
+%define _gitrev v0.26.0-64-g637d6d8
 %define branch fixes/0.26
 
 # Mythtv and plugins from github.com
@@ -78,7 +78,7 @@ Version:        0.26.0
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -215,7 +215,6 @@ BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
 
 # Audio framework support
-BuildRequires:  SDL-devel
 BuildRequires:  sox-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  jack-audio-connection-kit-devel
@@ -1451,6 +1450,9 @@ fi
 
 
 %changelog
+* Sat Dec 22 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-4
+- Update to latest upstream release.
+
 * Tue Dec  4 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-3
 - Update to latest upstream release.
 
