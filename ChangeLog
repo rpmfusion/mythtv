@@ -1,3 +1,365 @@
+commit 637d6d87d20aa8b17247fedf87b6c78ef091f08c
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Tue Dec 18 16:07:53 2012 +0000
+
+    Fix copy/paste error in MythUIType::SetMinArea(). Coverity 746771
+
+commit 190279b50307cd5b53d4ae9c8f4dc70b13eeeed5
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Tue Dec 18 16:06:30 2012 +0000
+
+    Fix copy/paste error in MythUIType::AdjustMinArea(). Coverity 746772
+
+commit 3d7a20ce1008b1a84127f17dea7c75e05cacb4aa
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Mon Dec 17 00:32:42 2012 +0100
+
+    Speed up and reduce temporary space of time search a lot.
+    
+    By factoring out the description into a super query the performance can
+    be greatly improved (e.g. from 2 minutes to 2 seconds)
+    
+    Thanks to sphery for inspiration by [d9fb21853f] and justinh for testing
+    and fixing my braino with the column order.
+    
+    Fixes #10023
+    (cherry picked from commit c0c47344879d3467cfea62938a33e70278252b36)
+    
+    Conflicts:
+    
+    	mythtv/libs/libmyth/programinfo.cpp
+
+commit cd0212131d67c21c1f346fbb659cf268e76a4454
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Dec 17 01:01:03 2012 +1100
+
+    Revert "Revert "Temporary fix for stuttery playback of AVI files over Storage Group.""
+    
+    This reverts commit f1cc7e3e4410195aeb6c7da3bba7dc44830bdc4e.
+    Was never supposed to commit this revert
+
+commit f1cc7e3e4410195aeb6c7da3bba7dc44830bdc4e
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sat Dec 15 20:02:44 2012 +1100
+
+    Revert "Temporary fix for stuttery playback of AVI files over Storage Group."
+    
+    This reverts commit c21e9beb16583f640e7457e798c047b3af05cf15.
+
+commit c21e9beb16583f640e7457e798c047b3af05cf15
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sat Dec 15 18:53:49 2012 +1100
+
+    Temporary fix for stuttery playback of AVI files over Storage Group.
+    
+    This is a reverse of ffmpeg SHA1:8df774be88c347c40f1b2411ed9e391dfec0ebb7
+    http://git.videolan.org/?p=ffmpeg.git;a=commit;h=8df774be88c347c40f1b2411ed9e391dfec0ebb7
+    
+    This is not a proper fix. It only reveals an issue with myth Storage Group file ring buffer.
+    With this ffmpeg change, some AVI files are detected as non-interleaved and the readahead thread starts to pull MB of data which saturates 100Mbit/s link causing the video playback to stutter.
+    (cherry picked from commit f1540fe05ee15d1f53fe30e137931b185b791821)
+
+commit b8998fc41b1cb23d816354c211e8fa96ab316db3
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Wed Dec 5 09:08:32 2012 -0800
+
+    Cutlist editor: Trigger a redraw of the editbar when changes are made.
+    
+    Otherwise, cut/keep marks may incorrectly stay visible when changes to
+    cut/keep regions are made.
+    (cherry picked from commit 1241485d5d2ec81deddf2c5ab8deb21b7d796248)
+
+commit 1ecfe64da85dad6be51174e139b7ed9c4f85b3f6
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Wed Dec 5 08:53:51 2012 -0800
+
+    Properly initialize the MythPlayer::video_aspect field.
+    
+    The MythPlayer constructor unconditionally initializes video_aspect to
+    4.0/3.0.  In some configurations, pressing EDIT during the "Please
+    Wait" screen before the start of playback of a non-4:3 recording, will
+    bring up the cutlist editor locked into 4:3 mode.  Explicitly
+    initializing video_aspect earlier fixes this.
+    (cherry picked from commit 192e850ad9a87b7ff457d30cf8308b568cc18299)
+
+commit 2baece97462dc411cbf9f45f11667b2e4f186730
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Dec 12 13:39:32 2012 +0000
+
+    Don't setup to decode every video stream found, just the first.
+    
+    Fixes playback of certain video files containing multiple video streams.
+
+commit 09ac5b2226b8e6d855dbfc9c24fdfd2cf9075687
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Dec 5 16:34:52 2012 +0000
+
+    Fix use after free in MediaMonitor::RemoveDevice(), found by cppcheck
+
+commit 93204a3747db4219833cdd24eaa41146fdc6b8d5
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Dec 5 10:35:24 2012 +0000
+
+    Fix .empty() being called when .clear() was meant in cddb.cpp. Spotted by cppcheck
+
+commit b28041a11711a2ddd9eb63f8eee0c1ce3009c4ac
+Author: Daniel Thor Kristjansson <danielk@cuymedia.net>
+Date:   Wed Nov 21 10:27:31 2012 -0500
+
+    Fix #10995. Default to local time for mythshutdown --setwakeup.
+
+commit 3c359636b261409a9cf0761bdbb82092b93a0306
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Mon Nov 26 19:16:49 2012 -0800
+
+    Subtitles: Don't use a persistent DB setting to control forced subtitles.
+    
+    Instead, always allow forced subtitles when playback starts, and allow
+    the user to disable/enable forced subtitles during the current
+    playback.
+    (cherry picked from commit 0b7e9027cbc4d4b0b15533b2701077733f62162c)
+
+commit ed7b577702442c62b5d0f43b434fcb5494d0a8d8
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sat Dec 1 17:07:09 2012 +1100
+
+    Fix cross-compilation on mac.
+    
+    Depending on the version of Qt you are using QMAKE_OBJECTIVE_CXXFLAGS may be ignored and QMAKE_OBJECTIVE_CFLAGS is used instead.
+    So define both.
+    
+    [cherry-picked from 75e47c5989248aebe5c0d2b41b11c6465b2b4ebc]
+
+commit b62198ffcada256ebf3c40c9c6c4be1615ae17ea
+Author: Chris Pinkham <cpinkham@mythtv.org>
+Date:   Fri Nov 30 20:58:26 2012 -0800
+
+    Fix mythfrontend services API /Frontend/PlayRecording call.
+    
+    We don't need to convert the specified starttime toLocalTime() anymore.
+    
+    Copies 3eef99e from master.
+    
+    Fixes #11236 and #11152 I believe.
+
+commit 6313659aba17e992b726fcf6edc613518d3c0205
+Author: Chris Petersen <cpetersen@mythtv.org>
+Date:   Sun Nov 25 13:59:46 2012 -0800
+
+    Patch to fix UTC issues
+    
+    Closes #11079
+    
+    http://code.mythtv.org/trac/ticket/11079
+
+commit 57396ed6cfe4195a6ab4ef1087e233ba66ce402c
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Fri Nov 30 20:13:54 2012 +1100
+
+    Fix AirTunes so it works with iTunes 11
+    
+    iTunes used to only send an AES-128 challenge once, and myth was expecting that the challenge came during the OPTIONS packet.
+    The challenge is now sent with more packet, including during the ANNOUNCE one.
+    So we move the handling of the challenge so it will work no matter which packet it comes with.
+    
+    Tested with iTunes 11, iTunes 10 and iOS 6.01
+    
+    [cherry-picked from 06be92206c772509875dbde313769bfae9a2adf7]
+
+commit bfa76a2f924af04327afcf4b04177a2fd6870f24
+Author: Richard <peper03@yahoo.com>
+Date:   Thu Nov 29 20:54:55 2012 +0100
+
+    Set palette correctly when DVD menu highlight changes to ensure highlights are the right colour/have the correct transparency.
+    
+    Fixes #11265
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit 5df1322ae0f73566766bcde0c7948292877fd443)
+
+commit 84cc4bb95a6496428221981a18013f8846617924
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Nov 29 19:31:49 2012 +0000
+
+    Fix playback of DVDs which feature an empty audio stream
+    (cherry picked from commit 20baa43b4b0313900dec05c11e6054760123cb9d)
+
+commit 8a7892b1ca1ec307d32a78153b57e012a721e9d3
+Author: Ian Dall <ian@beware.dropbear.id.au>
+Date:   Thu Nov 29 19:00:10 2012 +0000
+
+    Fix deletes on Slave backends. Remove references to deleted_set and
+    initialise dont_expire_set properly which conflicted with 'deleted'
+    recgroup behaviour since 0.25. Fixes #10704
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit e150a19030a81e3c099eff76b280b886122529b1)
+
+commit cd9f7eb68642f9052de40e68d544ccd40fc112a1
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Nov 29 17:54:00 2012 +0000
+
+    Treat POLLHUP as EOF not an error, fixes IVTV (PVR-) recorders failing. Based on patch from ltskinol@gmail.com Fixes #10732
+    (cherry picked from commit 3d13d795b2ae4a66f4bd3e5bdfd4168c66474282)
+
+commit 793814e81ae7f0b2e54df6adf9b64d43b0f52df3
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Nov 29 17:15:15 2012 +0000
+
+    Don't strip unnecessary white space from title when creating the title list. Fixes #11200
+    (cherry picked from commit b47711179612a12d8e4f888c426cb5b268893797)
+
+commit 10479af5e68010d0b25982323cd3b743bd353d88
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Nov 23 22:21:53 2012 -0800
+
+    Reduce the amount of "Build background buttonlist" logging.
+    (cherry picked from commit d1243e25eba64b1e20e6c1ea901eaaa6b3044049)
+
+commit ca8f5e75dd4d222599c48ad3c849356e31042bd4
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Nov 23 07:45:23 2012 -0800
+
+    Subtitles: Add support for forced text subtitle tracks.
+    
+    Fixes #11242.
+    
+    If there is a forced text subtitle track (which is possible in e.g. a
+    .mkv container), and forced subtitles are allowed, then start playback
+    with that subtitle track selected. Otherwise, use the frontend
+    settings to decide which captions/subtitles (if any) to enable at
+    startup.
+    
+    Background on the mythtv-users mailing list -
+    http://www.gossamer-threads.com/lists/mythtv/users/532845 .
+    (cherry picked from commit 64a3cd08752a07ea7928df2d1c713f75a8181f58)
+
+commit b45c98aded5223ab77de7a2be3603878f7f6cec1
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Thu Nov 1 21:34:11 2012 +0000
+
+    mythmusic: Fix streaming radio not being able to connect to some streams
+    
+    This fixes a couple of errors with creating the stream GET request header.
+    If the path part of the the URI is empty the HTTP/1.1 spec says it should be
+    specified as "/" and not be empty and the Host request-header field should
+    contain the port if it is non standard.
+    
+    Fixes #11214
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit fe22adc5c485b8b19969b0e1804a84f652227577)
+
+commit 17c0c77ddbb2e6f085be6b08bac31a9361b682ab
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Nov 21 14:05:54 2012 +0000
+
+    Fix Audio Description and Commentary track filtering when auto-selecting audio track
+    
+    Fixes #9878
+    Fixes #3260
+    Fixes #10963
+    (cherry picked from commit ee375344e4ac309917fb85f51c9e05ca2b4761c2)
+
+commit b0a1d7298b3d26a805de2535957eab2c80e87f3c
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Mon Nov 19 13:29:52 2012 +0000
+
+    Have EDIT open the metadata editor in the CD ripping screen
+    (cherry picked from commit 0e281107a8254c77317f9997625b6e3c04097742)
+
+commit 340b5d4099068fc1fe72548e2d98ac4733c51e55
+Author: Richard <peper03@yahoo.com>
+Date:   Sat Nov 17 14:38:36 2012 +0100
+
+    Changed DVD angle handling to be 1-based throughout (as they are on DVDs). This also affects the SWITCHTOANGLE action via the Services API.
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit 3e01436a867332ae2aaa24b89b1c5b8ec35480e0)
+
+commit 8c68560fd05ed4c9f99b207f22bb58306cb6ce2d
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Nov 16 18:37:07 2012 +0000
+
+    Don't treat unknown text display modes as audio tracks. Fixes
+    TOGGLE_SUBTITLES not working with DVDs after leaving a menu, although a better fix specifically for this problem may be added later.
+    (cherry picked from commit 2653de8643929aeaaaae3dd5e2a8aa3b86220c47)
+
+commit 81e8fa5175436ab2487944cc66de95c509e8cbc5
+Author: David Engel <dengel@mythtv.org>
+Date:   Tue Nov 13 10:31:05 2012 -0600
+
+    Reschedule when a recording is undeleted.
+    
+    Note: an unwitting user could unintentionally bypass this change by
+    changing the recording group directly from "Deleted" to something
+    else.  Possibly fix this in the future by moving all releated fixups
+    into RecordingInfo::ApplyRecordRecGroupChange() instead of having
+    every caller do them.
+    
+    Refs #11224
+    (cherry picked from commit 5e1c14e8c295fb00a3f2e359021be026104863db)
+
+commit c57b92740ac15e708bd8a68eb767b484d8b26f4a
+Author: David Engel <dengel@mythtv.org>
+Date:   Tue Nov 13 09:47:48 2012 -0600
+
+    Fix a possible reace condition when a recording finishes.
+    
+    There was a slight, albeit very unlikely, possibility the scheduler
+    could run before the recorded table was updated.  This avoids it by
+    updating the database before notifying the scheduler.
+    
+    Refs #11224
+    (cherry picked from commit 729e3d56d3e984d35b4fecd249da7c3e1bdcbfb9)
+
+commit 1618035441204b0a0f58e8b1f87f369c04df5527
+Author: David Engel <dengel@mythtv.org>
+Date:   Tue Nov 13 09:44:38 2012 -0600
+
+    Fix multiple database bindings issue in Scheduler::ResetDuplicates().
+    
+    This causesd the duplicate status of programs without programids or
+    findids to not get updated properly.
+    
+    Fixes #11224
+    (cherry picked from commit 6a147ecf09aea985f95d8dcbe4edacc9e18f4a38)
+
+commit 5d8e8e17df880b362ed2305b65fd5d1cd18c426f
+Author: Richard <peper03@yahoo.com>
+Date:   Mon Nov 12 00:28:05 2012 +0100
+
+    When processing frames from DVD/Blu-ray ringbuffer, menu frames are now buffered as necessary to ensure stutter-free playback.
+    
+    Refs #11233
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit 62816805dbbce996bd8ee61da3bdfca1bb1bcef9)
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+
+commit cd2e061f999d336a87fad9c3eace6fd3c0d01dd4
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Wed Nov 7 09:49:33 2012 -0500
+
+    Bump internal bindings versions.
+
+commit d988d0fc496b7ebfb5c5dedf1f3cc3f6607b030c
+Author: R.D. Vaughan <r.d.vaughan@rogers.com>
+Date:   Mon Nov 5 12:18:27 2012 -0500
+
+    Fix timezone issue with custom SQL queries.
+    
+    Signed-off-by: Raymond Wagner <rwagner@mythtv.org>
+    (cherry picked from commit ee42f13d12721b7566bbb0ec013abff1938f48aa)
+
+commit bcd34da31f2cd6c5a3a489b942c5ded0414d9aa5
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Mon Nov 5 00:06:20 2012 -0500
+
+    Use translated title rather than original title for results, if available.
+    (cherry picked from commit e13600c833eff1919479ecefca5ad18945777c70)
+
 commit e3087dda66175a6b7308ad5a5e80a35ff7d72fd3
 Author: Jonatan Lindblad <jlindblad@mythtv.org>
 Date:   Sun Oct 28 21:59:38 2012 +0100

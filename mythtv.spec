@@ -58,8 +58,7 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-# 0.25 release: git tag v0.25.1
-%define _gitrev v0.26.0-28-ge3087dd
+%define _gitrev v0.26.0-64-g637d6d8
 %define branch fixes/0.26
 
 # Mythtv and plugins from github.com
@@ -77,9 +76,9 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.26.0
 %if "%{branch}" == "master"
-Release:        0.2.git.%{_gitrev}%{?dist}
+Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -216,7 +215,6 @@ BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
 
 # Audio framework support
-BuildRequires:  SDL-devel
 BuildRequires:  sox-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  jack-audio-connection-kit-devel
@@ -889,7 +887,7 @@ pushd mythtv
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
 %if %{with_vdpau}
-    --enable-vdpau				\
+    --enable-vdpau                              \
 %endif
 %if %{with_vaapi}
     --enable-vaapi				\
@@ -1452,6 +1450,12 @@ fi
 
 
 %changelog
+* Sat Dec 22 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-4
+- Update to latest upstream release.
+
+* Tue Dec  4 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-3
+- Update to latest upstream release.
+
 * Fri Nov 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-2
 - Rebuilt for x264
 
@@ -1507,7 +1511,7 @@ fi
 * Tue Mar 20 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-1
 - Update to latest release 0.25.
 
-* Fri Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
+* Sat Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
 - Remove transcode as build requirement.
 - Misc. spec file cleanup.
 
@@ -1535,7 +1539,7 @@ fi
 - Changes default user for mythbackend from root to mythtv on
   Fedora 16+. See http://rpmfusion.org/Package/mythtv for additonal information.
 
-* Sun Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
+* Thu Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
 - Update to latest 0.24.1-fixes, git revision e89d6a9f7e.
 - Fixes BZ#1993, FTBFS on Fedora 16.
 - Moves from sysv init to systemd unit file for mythbackend on Fedora 16+

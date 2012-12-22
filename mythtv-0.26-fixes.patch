@@ -6,50 +6,83 @@
  mythplugins/mythmusic/i18n/mythmusic_es_es.ts      |   68 +-
  mythplugins/mythmusic/i18n/mythmusic_it.qm         |  Bin 55341 -> 67158 bytes
  mythplugins/mythmusic/i18n/mythmusic_it.ts         | 3790 +++++++++++++++-----
+ mythplugins/mythmusic/mythmusic/cddb.cpp           |    6 +-
+ mythplugins/mythmusic/mythmusic/cdrip.cpp          |    2 +-
+ mythplugins/mythmusic/mythmusic/shoutcast.cpp      |   20 +-
  mythplugins/mythweather/i18n/mythweather_es_es.qm  |  Bin 23630 -> 23631 bytes
  mythplugins/mythweather/i18n/mythweather_es_es.ts  |    3 +-
  mythplugins/mythweather/i18n/mythweather_pl.qm     |  Bin 23846 -> 23847 bytes
  mythplugins/mythweather/i18n/mythweather_pl.ts     |    3 +-
+ mythtv/bindings/perl/Makefile.PL                   |    1 -
+ mythtv/bindings/perl/MythTV.pm                     |   20 +-
  mythtv/bindings/python/MythTV/altdict.py           |    2 +-
  mythtv/bindings/python/MythTV/dataheap.py          |   58 +-
+ mythtv/bindings/python/MythTV/static.py            |    2 +-
  mythtv/bindings/python/MythTV/system.py            |    4 +-
- mythtv/contrib/imports/mirobridge/mirobridge.py    |   96 +-
+ mythtv/bindings/python/setup.py                    |    2 +-
+ mythtv/contrib/imports/mirobridge/mirobridge.py    |  101 +-
+ mythtv/external/FFmpeg/libavcodec/pcm.c            |    5 +-
+ mythtv/external/FFmpeg/libavformat/avidec.c        |    9 +
  mythtv/i18n/mythfrontend_es_es.qm                  |  Bin 669897 -> 672530 bytes
- mythtv/i18n/mythfrontend_es_es.ts                  | 2180 ++++++------
+ mythtv/i18n/mythfrontend_es_es.ts                  | 2180 +++++------
  mythtv/i18n/mythfrontend_pl.qm                     |  Bin 350611 -> 354449 bytes
- mythtv/i18n/mythfrontend_pl.ts                     | 2733 ++++++++-------
+ mythtv/i18n/mythfrontend_pl.ts                     | 2733 +++++++-------
  mythtv/libs/libmyth/mythcontext.cpp                |    2 +-
+ mythtv/libs/libmyth/mythmediamonitor.cpp           |    2 +-
+ mythtv/libs/libmyth/programinfo.cpp                |   20 +-
  mythtv/libs/libmythbase/signalhandling.cpp         |    8 +-
+ .../libs/libmythtv/AirPlay/mythraopconnection.cpp  |  153 +-
+ mythtv/libs/libmythtv/Bluray/bdringbuffer.h        |    6 +-
+ mythtv/libs/libmythtv/Bluray/mythbdplayer.cpp      |    4 +-
+ mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp        |    8 +
+ mythtv/libs/libmythtv/DVD/dvdringbuffer.h          |    6 +-
+ mythtv/libs/libmythtv/DVD/mythdvdplayer.cpp        |    8 +-
+ mythtv/libs/libmythtv/DeviceReadBuffer.cpp         |    7 +-
  mythtv/libs/libmythtv/ThreadedFileWriter.cpp       |    2 +-
- mythtv/libs/libmythtv/mythplayer.cpp               |    4 +-
+ mythtv/libs/libmythtv/avformatdecoder.cpp          |  117 +-
+ mythtv/libs/libmythtv/decoderbase.h                |    3 +-
+ mythtv/libs/libmythtv/mythplayer.cpp               |   41 +-
+ mythtv/libs/libmythtv/ringbuffer.h                 |    4 +-
+ mythtv/libs/libmythtv/tv_play.cpp                  |   11 +-
+ mythtv/libs/libmythtv/tv_rec.cpp                   |    6 +-
+ mythtv/libs/libmythui/libmythui.pro                |    1 +
  mythtv/libs/libmythui/mythscreenstack.cpp          |    2 +-
+ mythtv/libs/libmythui/mythuibuttonlist.cpp         |    2 +-
+ mythtv/libs/libmythui/mythuieditbar.cpp            |    1 +
  mythtv/libs/libmythui/mythuiimage.cpp              |    3 +-
- mythtv/libs/libmythui/mythuitype.cpp               |    7 +-
+ mythtv/libs/libmythui/mythuitype.cpp               |   11 +-
  mythtv/libs/libmythui/mythuiwebbrowser.cpp         |   10 +-
  mythtv/programs/mythavtest/main.cpp                |    5 +-
+ mythtv/programs/mythbackend/autoexpire.cpp         |    4 +-
+ mythtv/programs/mythbackend/autoexpire.h           |    1 -
  mythtv/programs/mythbackend/main.cpp               |    5 +-
  mythtv/programs/mythbackend/main_helpers.cpp       |    4 +-
- mythtv/programs/mythbackend/mainserver.cpp         |   16 +-
+ mythtv/programs/mythbackend/mainserver.cpp         |   18 +-
+ mythtv/programs/mythbackend/scheduler.cpp          |   14 +-
  mythtv/programs/mythccextractor/main.cpp           |    5 +-
  mythtv/programs/mythcommflag/main.cpp              |    5 +-
  mythtv/programs/mythfilldatabase/main.cpp          |    5 +-
  mythtv/programs/mythfrontend/guidegrid.cpp         |   17 +-
  mythtv/programs/mythfrontend/main.cpp              |    5 +-
+ mythtv/programs/mythfrontend/playbackbox.cpp       |    4 +-
+ mythtv/programs/mythfrontend/services/frontend.cpp |    2 +-
  mythtv/programs/mythjobqueue/main.cpp              |    5 +-
  mythtv/programs/mythlcdserver/main.cpp             |    5 +-
  mythtv/programs/mythlogserver/main.cpp             |    5 +-
  mythtv/programs/mythmediaserver/main.cpp           |    5 +-
  mythtv/programs/mythmetadatalookup/main.cpp        |    5 +-
  mythtv/programs/mythpreviewgen/main.cpp            |    5 +-
- mythtv/programs/mythshutdown/main.cpp              |    5 +-
+ mythtv/programs/mythshutdown/commandlineparser.cpp |   14 +-
+ mythtv/programs/mythshutdown/main.cpp              |   55 +-
  mythtv/programs/mythtranscode/main.cpp             |    5 +-
  mythtv/programs/mythtv-setup/backendsettings.cpp   |    6 +-
  mythtv/programs/mythtv-setup/main.cpp              |    5 +-
  mythtv/programs/mythutil/main.cpp                  |    6 +-
  mythtv/programs/mythwelcome/main.cpp               |    5 +-
  .../distros/mythtv_data/data_mythtv.py             |   20 +-
- mythtv/programs/scripts/metadata/Movie/tmdb3.py    |  103 +-
- 51 files changed, 5902 insertions(+), 3379 deletions(-)
+ .../nv_python_libs/youtube/youtube_api.py          |   27 +-
+ mythtv/programs/scripts/metadata/Movie/tmdb3.py    |  107 +-
+ 84 files changed, 6245 insertions(+), 3630 deletions(-)
 
 diff --git a/README.rst b/README.rst
 index a151d89..576e0dc 100644
@@ -5861,6 +5894,83 @@ index cdf0832..7b37805 100644
      </message>
  </context>
  </TS>
+diff --git a/mythplugins/mythmusic/mythmusic/cddb.cpp b/mythplugins/mythmusic/mythmusic/cddb.cpp
+index e08e33d..f7657d6 100644
+--- a/mythplugins/mythmusic/mythmusic/cddb.cpp
++++ b/mythplugins/mythmusic/mythmusic/cddb.cpp
+@@ -310,10 +310,10 @@ Cddb::Album& Cddb::Album::operator =(const QString& rhs)
+     submitter = "MythTV " MYTH_BINARY_VERSION;
+     rev = 1;
+     isCompilation = false;
+-    tracks.empty();
+-    toc.empty();
++    tracks.clear();
++    toc.clear();
+     extd.clear();
+-    ext.empty();
++    ext.clear();
+ 
+     enum { kNorm, kToc } eState = kNorm;
+ 
+diff --git a/mythplugins/mythmusic/mythmusic/cdrip.cpp b/mythplugins/mythmusic/mythmusic/cdrip.cpp
+index b1d1231..c04c38d 100644
+--- a/mythplugins/mythmusic/mythmusic/cdrip.cpp
++++ b/mythplugins/mythmusic/mythmusic/cdrip.cpp
+@@ -635,7 +635,7 @@ bool Ripper::keyPressEvent(QKeyEvent *event)
+         QString action = actions[i];
+         handled = true;
+ 
+-        if (action == "INFO")
++        if (action == "EDIT" || action == "INFO") // INFO purely for historical reasons
+         {
+             showEditMetadataDialog(m_trackList->GetItemCurrent());
+         }
+diff --git a/mythplugins/mythmusic/mythmusic/shoutcast.cpp b/mythplugins/mythmusic/mythmusic/shoutcast.cpp
+index 7aaecc7..2608af8 100644
+--- a/mythplugins/mythmusic/mythmusic/shoutcast.cpp
++++ b/mythplugins/mythmusic/mythmusic/shoutcast.cpp
+@@ -77,11 +77,19 @@ class ShoutCastRequest
+                       "Accept: */*\r\n");
+ 
+         QString path = url.path();
++        QString host = url.host();
++
++        if (path.isEmpty())
++            path = "/";
++
+         if (url.hasQuery())
+             path += '?' + url.encodedQuery();
+ 
++        if (url.port() != -1)
++            host += QString(":%1").arg(url.port());
++
+         hdr.replace("%PATH%", path);
+-        hdr.replace("%HOST%", url.host());
++        hdr.replace("%HOST%", host);
+         hdr.replace("%VERSION%", MYTH_BINARY_VERSION);
+ 
+         if (!url.userName().isEmpty() && !url.password().isEmpty()) 
+@@ -123,11 +131,19 @@ class IceCastRequest
+                       "Accept: */*\r\n");
+ 
+         QString path = url.path();
++        QString host = url.host();
++
++        if (path.isEmpty())
++            path = "/";
++
+         if (url.hasQuery())
+             path += '?' + url.encodedQuery();
+ 
++        if (url.port() != -1)
++            host += QString(":%1").arg(url.port());
++
+         hdr.replace("%PATH%", path);
+-        hdr.replace("%HOST%", url.host());
++        hdr.replace("%HOST%", host);
+         hdr.replace("%VERSION%", MYTH_BINARY_VERSION);
+ 
+         if (!url.userName().isEmpty() && !url.password().isEmpty()) 
 diff --git a/mythplugins/mythweather/i18n/mythweather_es_es.qm b/mythplugins/mythweather/i18n/mythweather_es_es.qm
 index deab269..8968bb3 100644
 Binary files a/mythplugins/mythweather/i18n/mythweather_es_es.qm and b/mythplugins/mythweather/i18n/mythweather_es_es.qm differ
@@ -5895,6 +6005,72 @@ index e6058a5..336faad 100644
          <translation>Wiatr:</translation>
      </message>
      <message>
+diff --git a/mythtv/bindings/perl/Makefile.PL b/mythtv/bindings/perl/Makefile.PL
+index d072d29..49c4930 100644
+--- a/mythtv/bindings/perl/Makefile.PL
++++ b/mythtv/bindings/perl/Makefile.PL
+@@ -18,7 +18,6 @@ WriteMakefile(
+                             'Config'           => 0,
+                             'DBI'              => 0,
+                             'DBD::mysql'       => 0,
+-                            'Date::Manip'      => 0,
+                             'Fcntl'            => 0,
+                             'File::Copy'       => 0,
+                             'HTTP::Request'    => 0,
+diff --git a/mythtv/bindings/perl/MythTV.pm b/mythtv/bindings/perl/MythTV.pm
+index cb0d055..fae7b77 100644
+--- a/mythtv/bindings/perl/MythTV.pm
++++ b/mythtv/bindings/perl/MythTV.pm
+@@ -23,7 +23,7 @@ package MythTV;
+     use DBI;
+     use HTTP::Request;
+     use LWP::UserAgent;
+-    use Time::Local;
++    use POSIX;
+ 
+ # Load the UPNP libraries if we have them, but die nicely if we don't.
+     BEGIN {
+@@ -372,6 +372,8 @@ EOF
+                                       $self->{'db_user'},
+                                       $self->{'db_pass'})
+             or die "Cannot connect to database: $!\n\n";
++        $self->{'dbh'}->do("SET time_zone = 'UTC'")
++            or die "Can't set timezone: $!\n\n";
+ 
+     # Check for supported schema version
+         $self->{'schema_version'} = $self->backend_setting('DBSchemaVer');
+@@ -798,26 +800,20 @@ EOF
+         if ($time =~ /^(\d{4})(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)$/) {
+             return "$1-$2-${3}T$4:$5:$6";
+         }
+-    # Otherwise, format it as necessary.  We have to use MySQL here because
+-    # Date::Manip is not aware of DST differences.  Yay.  Blech.
+-        my $sh = $self->{'dbh'}->prepare('SELECT FROM_UNIXTIME(?)');
+-        $sh->execute($time);    # Assumed to be a correct epoch time (in GMT)
+-        ($time) = $sh->fetchrow_array();
+-        $time =~ s/\s/T/;
+-        return $time;
++    # Otherwise, format it as necessary.
++        return POSIX::strftime("%Y-%m-%dT%H:%M:%S", gmtime($time));
+     }
+ 
+ # Format a MythTV timestamp into a unix timestamp.  This function is exported.
+-# We have to use MySQL here because Date::Manip is not aware of DST.
++# We have to use MySQL here because it was used historically, and so the
++# formats that MySQL supports is effectively the API...
+     sub myth_to_unix_time {
+         my $self = (ref $_[0] ? shift : $MythTV::last);
+         my $time = shift;
+         my $sh = $self->{'dbh'}->prepare('SELECT UNIX_TIMESTAMP(?)');
+         $sh->execute($time);
+         ($time) = $sh->fetchrow_array();
+-        my @t = localtime(time);
+-        my $offset = timegm(@t) - timelocal(@t);
+-        return $time - $offset;
++        return $time;
+     }
+ 
+ # Create a new MythTV::Program object
 diff --git a/mythtv/bindings/python/MythTV/altdict.py b/mythtv/bindings/python/MythTV/altdict.py
 index b90192c..0b326d7 100644
 --- a/mythtv/bindings/python/MythTV/altdict.py
@@ -6005,6 +6181,19 @@ index bb49bc8..6c66c44 100644
  
      def downloadFrom(self, url):
          if self.parent is None:
+diff --git a/mythtv/bindings/python/MythTV/static.py b/mythtv/bindings/python/MythTV/static.py
+index 54b5777..1438076 100644
+--- a/mythtv/bindings/python/MythTV/static.py
++++ b/mythtv/bindings/python/MythTV/static.py
+@@ -4,7 +4,7 @@
+ Contains any static and global variables for MythTV Python Bindings
+ """
+ 
+-OWN_VERSION = (0,26,-1,1)
++OWN_VERSION = (0,26,0,0)
+ SCHEMA_VERSION = 1307
+ NVSCHEMA_VERSION = 1007
+ MUSICSCHEMA_VERSION = 1018
 diff --git a/mythtv/bindings/python/MythTV/system.py b/mythtv/bindings/python/MythTV/system.py
 index 154f01c..f24c8a9 100644
 --- a/mythtv/bindings/python/MythTV/system.py
@@ -6024,8 +6213,21 @@ index 154f01c..f24c8a9 100644
                  args = (inetref, season, episode)
              else:
                  args = (inetref,)
+diff --git a/mythtv/bindings/python/setup.py b/mythtv/bindings/python/setup.py
+index be33d84..a24dfb6 100755
+--- a/mythtv/bindings/python/setup.py
++++ b/mythtv/bindings/python/setup.py
+@@ -78,7 +78,7 @@ class build(pybuild):
+ 
+ setup(
+         name='MythTV',
+-        version='0.25.0',
++        version='0.26.0',
+         description='MythTV Python bindings.',
+         long_description='Provides canned database and protocol access to the MythTV database, mythproto, mythxml, and frontend remote control.',
+         packages=['MythTV', 'MythTV/tmdb', 'MythTV/tmdb3', 'MythTV/ttvdb',
 diff --git a/mythtv/contrib/imports/mirobridge/mirobridge.py b/mythtv/contrib/imports/mirobridge/mirobridge.py
-index 155e53c..f04d0a0 100755
+index 155e53c..d5c7d29 100755
 --- a/mythtv/contrib/imports/mirobridge/mirobridge.py
 +++ b/mythtv/contrib/imports/mirobridge/mirobridge.py
 @@ -30,7 +30,7 @@ The source of all cover art and screen shots are from those downloaded and maint
@@ -6033,19 +6235,20 @@ index 155e53c..f04d0a0 100755
  '''
  
 -__version__=u"v0.6.8"
-+__version__=u"v0.6.9"
++__version__=u"v0.7.0"
  # 0.1.0 Initial development
  # 0.2.0 Initial Alpha release for internal testing only
  # 0.2.1 Fixes from initial alpha test
-@@ -209,6 +209,7 @@ __version__=u"v0.6.8"
+@@ -209,6 +209,8 @@ __version__=u"v0.6.8"
  #           by MythVideo
  #       Fixed the options "-h, --help" command line display
  # 0.6.8 Sometimes Miro metadata has no video filename. Skip these invalid videos.
 +# 0.6.9 Adjust to datetime issues with MythTV v0.26's move to UTC datatimes in DB
++# 0.7.0 Fix bug introduced with v0.6.9, ticket reported as #11219 and #11220
  
  examples_txt=u'''
  For examples, please see the Mirobridge's wiki page at http://www.mythtv.org/wiki/MiroBridge
-@@ -216,8 +217,9 @@ For examples, please see the Mirobridge's wiki page at http://www.mythtv.org/wik
+@@ -216,8 +218,8 @@ For examples, please see the Mirobridge's wiki page at http://www.mythtv.org/wik
  
  # Common function imports
  import sys, os, re, locale, subprocess, locale, ConfigParser, codecs, shutil, struct
@@ -6053,7 +6256,6 @@ index 155e53c..f04d0a0 100755
 -from datetime import date
 +import fnmatch, string, time, logging, traceback, platform, fnmatch, ConfigParser
 +from datetime import timedelta
-+from dateutil.tz import tzutc, tzlocal
  from optparse import OptionParser
  from socket import gethostbyname
  import formatter
@@ -6074,7 +6276,7 @@ index 155e53c..f04d0a0 100755
                               stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                               close_fds=True)
      except:
-@@ -676,34 +679,48 @@ def is_not_punct_char(char):
+@@ -676,34 +679,51 @@ def is_not_punct_char(char):
      return not is_punct_char(char)
  
  
@@ -6085,8 +6287,8 @@ index 155e53c..f04d0a0 100755
 -    Just delete an oldrecorded record. Never abort as sometimes a record may not exist.
 -    This routine is not supported in the native python bindings as MiroBridge uses the 
 -    oldrecorded table outside of its original intent.  return nothing
-+    This routine is not supported in the native python bindings as MiroBridge uses the
-+    oldrecorded table outside of its original intent.
++    This routine is not supported in the native python bindings as MiroBridge
++    uses the oldrecorded table outside of its original intent.
 +    return nothing
      '''
 -    _table = 'oldrecorded'
@@ -6099,14 +6301,17 @@ index 155e53c..f04d0a0 100755
 +                        WHERE `oldrecorded`.`chanid` = '%s'
 +                          AND `oldrecorded`.`starttime` = '%s'
 +                          AND `oldrecorded`.`endtime` = '%s';"""
-+    sql_del_a_record(sql_cmd, (chanid, set_del_datatime(starttime), set_del_datatime(endtime)))
++    sql_del_a_record(sql_cmd % (chanid, set_del_datatime(starttime),
++                     set_del_datatime(endtime)))
  # end delOldRecorded()
 -MythDB.searchOldRecorded.handler = delOldRecorded
  
  
 -class delRecorded( Recorded ):
+-    '''Just delete a recorded record. Never abort as sometimes a record may not exist.
 +def delRecorded(chanid, starttime):
-     '''Just delete a recorded record. Never abort as sometimes a record may not exist.
++    '''Just delete a recorded record. Never abort as sometimes a record
++    may not exist.
      return nothing
      '''
 -    _table = 'recorded'
@@ -6118,7 +6323,7 @@ index 155e53c..f04d0a0 100755
 +    sql_cmd = u"""DELETE FROM `mythconverg`.`recorded`
 +                        WHERE `recorded`.`chanid` = %s
 +                          AND `recorded`.`starttime` = '%s';"""
-+    sql_del_a_record(sql_cmd, (chanid, set_del_datatime(starttime)))
++    sql_del_a_record(sql_cmd % (chanid, set_del_datatime(starttime)))
  # end delRecorded()
 -MythDB.searchRecorded.handler = delRecorded
 +
@@ -6126,11 +6331,12 @@ index 155e53c..f04d0a0 100755
 +def set_del_datatime(rec_time):
 +    ''' Set the SQL datetime so that the delRecorded and delOldrecorded
 +    methods use UTC datetime values.
-+    return rec_time
++    return rec_time datetime string
 +    '''
 +    #
-+    return rec_time.replace(tzinfo=tzlocal()).astimezone(
-+                    tzutc()).strftime("%Y-%m-%d %H:%M:%S")
++    return rec_time.astimezone(
++                        rec_time.UTCTZ()).strftime("%Y-%m-%d %H:%M:%S")
++# end set_del_datetime()
 +
 +def sql_del_a_record(sql_cmd):
 +    ## Get a MythTV data base cursor
@@ -6142,7 +6348,7 @@ index 155e53c..f04d0a0 100755
  
  
  def hashFile(filename):
-@@ -1170,8 +1187,9 @@ def getOldrecordedOrphans():
+@@ -1170,8 +1190,9 @@ def getOldrecordedOrphans():
              try:
              # Sometimes a channel issues videos with identical publishing (starttime) dates.
              # Try to using additiional details to identify the correct oldrecord.
@@ -6154,7 +6360,7 @@ index 155e53c..f04d0a0 100755
              except:
                  pass
  
-@@ -1208,7 +1226,7 @@ def getStartEndTimes(duration, downloadedTime):
+@@ -1208,7 +1229,7 @@ def getStartEndTimes(duration, downloadedTime):
      return an array of initialised values if either duration or downloadedTime is invalid
      return an array of the video's start, end times and isotime
      '''
@@ -6163,7 +6369,7 @@ index 155e53c..f04d0a0 100755
      end = starttime
      start_end = [starttime.strftime('%Y-%m-%d %H:%M:%S'),
                   starttime.strftime('%Y-%m-%d %H:%M:%S'),
-@@ -1218,8 +1236,8 @@ def getStartEndTimes(duration, downloadedTime):
+@@ -1218,8 +1239,8 @@ def getStartEndTimes(duration, downloadedTime):
          try:
              dummy = downloadedTime.strftime('%Y-%m-%d')
          except ValueError:
@@ -6174,7 +6380,7 @@ index 155e53c..f04d0a0 100755
          start_end[0] = downloadedTime.strftime('%Y-%m-%d %H:%M:%S')
          start_end[1] = end.strftime('%Y-%m-%d %H:%M:%S')
          start_end[2] = downloadedTime.strftime('%Y%m%d%H%M%S')
-@@ -1229,8 +1247,8 @@ def getStartEndTimes(duration, downloadedTime):
+@@ -1229,8 +1250,8 @@ def getStartEndTimes(duration, downloadedTime):
      while True:
          if not len(list(mythdb.searchOldRecorded(chanid=channel_id, starttime=start_end[0]))):
              break
@@ -6185,7 +6391,7 @@ index 155e53c..f04d0a0 100755
          start_end[0] = starttime.strftime('%Y-%m-%d %H:%M:%S')
          start_end[1] = end.strftime('%Y-%m-%d %H:%M:%S')
          start_end[2] = starttime.strftime('%Y%m%d%H%M%S')
-@@ -1574,7 +1592,7 @@ def createChannelRecord(icon, channel_id, channel_num):
+@@ -1574,7 +1595,7 @@ def createChannelRecord(icon, channel_id, channel_num):
          data['icon'] = icon
      data['callsign'] = u'Miro'
      data['name'] = u'Miro'
@@ -6194,7 +6400,7 @@ index 155e53c..f04d0a0 100755
  
      if simulation:
          logger.info(u"Simulation: Create Miro channel record channel_id(%d) and channel_num(%d)" % \
-@@ -1740,7 +1758,7 @@ def updateMythRecorded(items):
+@@ -1740,7 +1761,7 @@ def updateMythRecorded(items):
                  try:
                      # Attempting to clean up an recorded record and
                      # its associated video file (miro symlink)
@@ -6203,7 +6409,7 @@ index 155e53c..f04d0a0 100755
                  except MythError, e:
                      pass
  
-@@ -1750,9 +1768,9 @@ def updateMythRecorded(items):
+@@ -1750,9 +1771,9 @@ def updateMythRecorded(items):
                               record[u'starttime'].strftime('%Y%m%d%H%M%S'), u'png'))
  
                  try: # Attempting to clean up an orphaned oldrecorded record which may or may not exist
@@ -6215,7 +6421,7 @@ index 155e53c..f04d0a0 100755
                  except Exception, e:
                      pass
  
-@@ -1913,10 +1931,12 @@ def updateMythVideo(items):
+@@ -1913,10 +1934,12 @@ def updateMythVideo(items):
                      try: # An orphaned oldrecorded record may not exist
                          for oldrecorded in mythdb.searchOldRecorded(title=record[u'title'],
                                                                      subtitle=record[u'subtitle'] ):
@@ -6232,6 +6438,49 @@ index 155e53c..f04d0a0 100755
                      except Exception, e:
                          pass
                  statistics[u'Total_Miro_MythVideos']-=1
+diff --git a/mythtv/external/FFmpeg/libavcodec/pcm.c b/mythtv/external/FFmpeg/libavcodec/pcm.c
+index b0cca03..7376c79 100644
+--- a/mythtv/external/FFmpeg/libavcodec/pcm.c
++++ b/mythtv/external/FFmpeg/libavcodec/pcm.c
+@@ -207,7 +207,10 @@ static av_cold int pcm_decode_init(AVCodecContext *avctx)
+     PCMDecode *s = avctx->priv_data;
+     int i;
+ 
+-    if (avctx->channels <= 0 || avctx->channels > MAX_CHANNELS) {
++// Breaks playback of some DVDs which feature an empty audio stream
++//
++//     if (avctx->channels <= 0 || avctx->channels > MAX_CHANNELS) {
++    if (avctx->channels < 0 || avctx->channels > MAX_CHANNELS) {
+         av_log(avctx, AV_LOG_ERROR, "PCM channels out of bounds\n");
+         return AVERROR(EINVAL);
+     }
+diff --git a/mythtv/external/FFmpeg/libavformat/avidec.c b/mythtv/external/FFmpeg/libavformat/avidec.c
+index 24aacd0..008cd60 100644
+--- a/mythtv/external/FFmpeg/libavformat/avidec.c
++++ b/mythtv/external/FFmpeg/libavformat/avidec.c
+@@ -1334,6 +1334,12 @@ static int guess_ni_flag(AVFormatContext *s){
+             first_end= st->index_entries[n-1].pos;
+     }
+     avio_seek(s->pb, oldpos, SEEK_SET);
++
++    return (last_start > first_end);
++
++/* myth
++    
++    
+     if (last_start > first_end)
+         return 1;
+     idx= av_mallocz(sizeof(*idx) * s->nb_streams);
+@@ -1360,6 +1366,9 @@ static int guess_ni_flag(AVFormatContext *s){
+     }
+     av_free(idx);
+     return 0;
++
++ 
++*/
+ }
+ 
+ static int avi_load_index(AVFormatContext *s)
 diff --git a/mythtv/i18n/mythfrontend_es_es.qm b/mythtv/i18n/mythfrontend_es_es.qm
 index 535f1d0..8a61686 100644
 Binary files a/mythtv/i18n/mythfrontend_es_es.qm and b/mythtv/i18n/mythfrontend_es_es.qm differ
@@ -20373,6 +20622,74 @@ index 3505b6d..384846f 100644
      m_DBparams.dbHostName = m_pConfig->GetValue(kDefaultDB + "Host", "");
      m_DBparams.dbUserName = m_pConfig->GetValue(kDefaultDB + "UserName", "");
      m_DBparams.dbPassword = m_pConfig->GetValue(kDefaultDB + "Password", "");
+diff --git a/mythtv/libs/libmyth/mythmediamonitor.cpp b/mythtv/libs/libmyth/mythmediamonitor.cpp
+index e0b9389..542c3b7 100644
+--- a/mythtv/libs/libmyth/mythmediamonitor.cpp
++++ b/mythtv/libs/libmyth/mythmediamonitor.cpp
+@@ -380,9 +380,9 @@ bool MediaMonitor::RemoveDevice(const QString &dev)
+         {
+             if (m_UseCount[*it] == 0)
+             {
++                m_UseCount.remove(*it);
+                 (*it)->deleteLater();
+                 m_Devices.erase(it);
+-                m_UseCount.remove(*it);
+             }
+             else
+             {
+diff --git a/mythtv/libs/libmyth/programinfo.cpp b/mythtv/libs/libmyth/programinfo.cpp
+index 3bf35ea..6816f72 100644
+--- a/mythtv/libs/libmyth/programinfo.cpp
++++ b/mythtv/libs/libmyth/programinfo.cpp
+@@ -4530,8 +4530,9 @@ static bool FromProgramQuery(
+     const QString &sql, const MSqlBindings &bindings, MSqlQuery &query)
+ {
+     QString querystr = QString(
++        "SELECT program.description, sub.* FROM program, ("
+         "SELECT DISTINCT program.chanid, program.starttime, program.endtime, "
+-        "    program.title, program.subtitle, program.description, "
++        "    program.title, program.subtitle, "
+         "    program.category, channel.channum, channel.callsign, "
+         "    channel.name, program.previouslyshown, channel.commmethod, "
+         "    channel.outputfilters, program.seriesid, program.programid, "
+@@ -4565,6 +4566,7 @@ static bool FromProgramQuery(
+     if (!sql.contains(" LIMIT "))
+         querystr += " LIMIT 20000 ";
+ 
++    querystr += " ) AS sub WHERE program.chanid=sub.chanid AND program.starttime=sub.starttime";
+     query.prepare(querystr);
+     MSqlBindings::const_iterator it;
+     for (it = bindings.begin(); it != bindings.end(); ++it)
+@@ -4597,21 +4599,21 @@ bool LoadFromProgram(
+     {
+         destination.push_back(
+             new ProgramInfo(
+-                query.value(3).toString(), // title
+-                query.value(4).toString(), // subtitle
+-                query.value(5).toString(), // description
++                query.value(4).toString(), // title
++                query.value(5).toString(), // subtitle
++                query.value(0).toString(), // description
+                 query.value(6).toString(), // category
+ 
+-                query.value(0).toUInt(), // chanid
++                query.value(1).toUInt(), // chanid
+                 query.value(7).toString(), // channum
+                 query.value(8).toString(), // chansign
+                 query.value(9).toString(), // channame
+                 query.value(12).toString(), // chanplaybackfilters
+ 
+-                MythDate::as_utc(query.value(1).toDateTime()), // startts
+-                MythDate::as_utc(query.value(2).toDateTime()), // endts
+-                MythDate::as_utc(query.value(1).toDateTime()), // recstartts
+-                MythDate::as_utc(query.value(2).toDateTime()), // recendts
++                MythDate::as_utc(query.value(2).toDateTime()), // startts
++                MythDate::as_utc(query.value(3).toDateTime()), // endts
++                MythDate::as_utc(query.value(2).toDateTime()), // recstartts
++                MythDate::as_utc(query.value(3).toDateTime()), // recendts
+ 
+                 query.value(13).toString(), // seriesid
+                 query.value(14).toString(), // programid
 diff --git a/mythtv/libs/libmythbase/signalhandling.cpp b/mythtv/libs/libmythbase/signalhandling.cpp
 index 004d0fe..53f5bb1 100644
 --- a/mythtv/libs/libmythbase/signalhandling.cpp
@@ -20406,6 +20723,304 @@ index 004d0fe..53f5bb1 100644
  
      switch (signum)
      {
+diff --git a/mythtv/libs/libmythtv/AirPlay/mythraopconnection.cpp b/mythtv/libs/libmythtv/AirPlay/mythraopconnection.cpp
+index db683c5..ecae527 100644
+--- a/mythtv/libs/libmythtv/AirPlay/mythraopconnection.cpp
++++ b/mythtv/libs/libmythtv/AirPlay/mythraopconnection.cpp
+@@ -931,90 +931,91 @@ void MythRAOPConnection::ProcessRequest(const QStringList &header,
+     }
+     *m_textStream << "RTSP/1.0 200 OK\r\n";
+ 
+-    if (option == "OPTIONS")
++    if (tags.contains("Apple-Challenge"))
+     {
+-        if (tags.contains("Apple-Challenge"))
++        LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Received Apple-Challenge"));
++        
++        *m_textStream << "Apple-Response: ";
++        if (!LoadKey())
++            return;
++        int tosize = RSA_size(LoadKey());
++        uint8_t *to = new uint8_t[tosize];
++        
++        QByteArray challenge =
++        QByteArray::fromBase64(tags["Apple-Challenge"].toAscii());
++        int challenge_size = challenge.size();
++        if (challenge_size != 16)
+         {
+-            LOG(VB_GENERAL, LOG_DEBUG, LOC + QString("Received Apple-Challenge"));
+-
+-            *m_textStream << "Apple-Response: ";
+-            if (!LoadKey())
+-                return;
+-            int tosize = RSA_size(LoadKey());
+-            uint8_t *to = new uint8_t[tosize];
+-
+-            QByteArray challenge =
+-                QByteArray::fromBase64(tags["Apple-Challenge"].toAscii());
+-            int challenge_size = challenge.size();
+-            if (challenge_size != 16)
+-            {
+-                LOG(VB_GENERAL, LOG_ERR, LOC +
+-                    QString("Decoded challenge size %1, expected 16")
+-                    .arg(challenge_size));
+-                if (challenge_size > 16)
+-                    challenge_size = 16;
+-            }
+-
+-            int i = 0;
+-            unsigned char from[38];
+-            memcpy(from, challenge.constData(), challenge_size);
+-            i += challenge_size;
+-            if (m_socket->localAddress().protocol() ==
+-                QAbstractSocket::IPv4Protocol)
++            LOG(VB_GENERAL, LOG_ERR, LOC +
++                QString("Decoded challenge size %1, expected 16")
++                .arg(challenge_size));
++            if (challenge_size > 16)
++                challenge_size = 16;
++        }
++        
++        int i = 0;
++        unsigned char from[38];
++        memcpy(from, challenge.constData(), challenge_size);
++        i += challenge_size;
++        if (m_socket->localAddress().protocol() ==
++            QAbstractSocket::IPv4Protocol)
++        {
++            uint32_t ip = m_socket->localAddress().toIPv4Address();
++            ip = qToBigEndian(ip);
++            memcpy(from + i, &ip, 4);
++            i += 4;
++        }
++        else if (m_socket->localAddress().protocol() ==
++                 QAbstractSocket::IPv6Protocol)
++        {
++            Q_IPV6ADDR ip = m_socket->localAddress().toIPv6Address();
++            if(memcmp(&ip,
++                      "\x00\x00\x00\x00" "\x00\x00\x00\x00" "\x00\x00\xff\xff",
++                      12) == 0)
+             {
+-                uint32_t ip = m_socket->localAddress().toIPv4Address();
+-                ip = qToBigEndian(ip);
+-                memcpy(from + i, &ip, 4);
++                memcpy(from + i, &ip[12], 4);
+                 i += 4;
+             }
+-            else if (m_socket->localAddress().protocol() ==
+-                     QAbstractSocket::IPv6Protocol)
+-            {
+-                Q_IPV6ADDR ip = m_socket->localAddress().toIPv6Address();
+-                if(memcmp(&ip,
+-                          "\x00\x00\x00\x00" "\x00\x00\x00\x00" "\x00\x00\xff\xff",
+-                          12) == 0)
+-                {
+-                    memcpy(from + i, &ip[12], 4);
+-                    i += 4;
+-                }
+-                else
+-                {
+-                    memcpy(from + i, &ip, 16);
+-                    i += 16;
+-                }
+-            }
+-            memcpy(from + i, m_hardwareId.constData(), AIRPLAY_HARDWARE_ID_SIZE);
+-            i += AIRPLAY_HARDWARE_ID_SIZE;
+-
+-            int pad = 32 - i;
+-            if (pad > 0)
+-            {
+-                memset(from + i, 0, pad);
+-                i += pad;
+-            }
+-
+-            LOG(VB_GENERAL, LOG_DEBUG, LOC +
+-                QString("Full base64 response: '%1' size %2")
+-                .arg(QByteArray((const char *)from, i).toBase64().constData())
+-                .arg(i));
+-
+-            RSA_private_encrypt(i, from, to, LoadKey(), RSA_PKCS1_PADDING);
+-
+-            QByteArray base64 = QByteArray((const char *)to, tosize).toBase64();
+-            delete[] to;
+-
+-            for (int pos = base64.size() - 1; pos > 0; pos--)
++            else
+             {
+-                if (base64[pos] == '=')
+-                    base64[pos] = ' ';
+-                else
+-                    break;
++                memcpy(from + i, &ip, 16);
++                i += 16;
+             }
+-            LOG(VB_GENERAL, LOG_DEBUG, QString("tSize=%1 tLen=%2 tResponse=%3")
+-                .arg(tosize).arg(base64.size()).arg(base64.constData()));
+-            *m_textStream << base64.trimmed() << "\r\n";
+         }
++        memcpy(from + i, m_hardwareId.constData(), AIRPLAY_HARDWARE_ID_SIZE);
++        i += AIRPLAY_HARDWARE_ID_SIZE;
++        
++        int pad = 32 - i;
++        if (pad > 0)
++        {
++            memset(from + i, 0, pad);
++            i += pad;
++        }
++        
++        LOG(VB_GENERAL, LOG_DEBUG, LOC +
++            QString("Full base64 response: '%1' size %2")
++            .arg(QByteArray((const char *)from, i).toBase64().constData())
++            .arg(i));
++        
++        RSA_private_encrypt(i, from, to, LoadKey(), RSA_PKCS1_PADDING);
++        
++        QByteArray base64 = QByteArray((const char *)to, tosize).toBase64();
++        delete[] to;
++        
++        for (int pos = base64.size() - 1; pos > 0; pos--)
++        {
++            if (base64[pos] == '=')
++                base64[pos] = ' ';
++            else
++                break;
++        }
++        LOG(VB_GENERAL, LOG_DEBUG, QString("tSize=%1 tLen=%2 tResponse=%3")
++            .arg(tosize).arg(base64.size()).arg(base64.constData()));
++        *m_textStream << base64.trimmed() << "\r\n";
++    }
++
++    if (option == "OPTIONS")
++    {
+         *m_textStream << "Public: ANNOUNCE, SETUP, RECORD, PAUSE, FLUSH, "
+             "TEARDOWN, OPTIONS, GET_PARAMETER, SET_PARAMETER, POST, GET\r\n";
+     }
+diff --git a/mythtv/libs/libmythtv/Bluray/bdringbuffer.h b/mythtv/libs/libmythtv/Bluray/bdringbuffer.h
+index a41ed1a..8c77a90 100644
+--- a/mythtv/libs/libmythtv/Bluray/bdringbuffer.h
++++ b/mythtv/libs/libmythtv/Bluray/bdringbuffer.h
+@@ -85,10 +85,8 @@ class MTV_PUBLIC BDRingBuffer : public RingBuffer
+     uint64_t GetChapterStartFrame(uint32_t chapter);
+     bool IsOpen(void)        const { return bdnav; }
+     bool IsHDMVNavigation(void) const { return m_isHDMVNavigation; }
+-    bool IsInMenu(void) const { return m_inMenu; }
+-    bool IsInStillFrame(void) const;
+-    virtual bool IsInDiscMenuOrStillFrame(void) const
+-        { return IsInMenu() || IsInStillFrame(); } // RingBuffer
++    virtual bool IsInMenu(void) const { return m_inMenu; }
++    virtual bool IsInStillFrame(void) const;
+     bool TitleChanged(void);
+ 
+     void GetDescForPos(QString &desc);
+diff --git a/mythtv/libs/libmythtv/Bluray/mythbdplayer.cpp b/mythtv/libs/libmythtv/Bluray/mythbdplayer.cpp
+index a86faeb..f8c9c25 100644
+--- a/mythtv/libs/libmythtv/Bluray/mythbdplayer.cpp
++++ b/mythtv/libs/libmythtv/Bluray/mythbdplayer.cpp
+@@ -239,9 +239,9 @@ QString MythBDPlayer::GetTitleName(int title) const
+ 
+ QString MythBDPlayer::GetAngleName(int angle) const
+ {
+-    if (angle >= 0 && angle < GetNumAngles())
++    if (angle >= 1 && angle <= GetNumAngles())
+     {
+-        QString name = QObject::tr("Angle %1").arg(angle+1);
++        QString name = QObject::tr("Angle %1").arg(angle);
+         return name;
+     }
+     return QString();
+diff --git a/mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp b/mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp
+index 11ecffd..0913fe2 100644
+--- a/mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp
++++ b/mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp
+@@ -1483,6 +1483,14 @@ bool DVDRingBuffer::DVDButtonUpdate(bool b_mode)
+         m_button_color[i] = 0xf & (hl.palette >> (16+4 *i ));
+     }
+ 
++    // If the button overlay has already been decoded, make sure
++    // the correct palette for the current highlight is set
++    if (m_dvdMenuButton.rects && (m_dvdMenuButton.num_rects > 1))
++    {
++        guess_palette((uint32_t*)m_dvdMenuButton.rects[1]->pict.data[1],
++                    m_button_color, m_button_alpha);
++    }
++
+     m_hl_button.setCoords(hl.sx, hl.sy, hl.ex, hl.ey);
+ 
+     if (((hl.sx + hl.sy) > 0) &&
+diff --git a/mythtv/libs/libmythtv/DVD/dvdringbuffer.h b/mythtv/libs/libmythtv/DVD/dvdringbuffer.h
+index 17c44aa..3a31c1b 100644
+--- a/mythtv/libs/libmythtv/DVD/dvdringbuffer.h
++++ b/mythtv/libs/libmythtv/DVD/dvdringbuffer.h
+@@ -71,22 +71,20 @@ class MTV_PUBLIC DVDRingBuffer : public RingBuffer
+     uint GetCellStart(void);
+     bool PGCLengthChanged(void);
+     bool CellChanged(void);
+-    bool IsInStillFrame(void)   const { return m_still > 0;             }
++    virtual bool IsInStillFrame(void)   const { return m_still > 0;             }
+     bool NeedsStillFrame(void) { return IsInStillFrame() || NewSequence(); }
+     bool NewSequence(bool new_sequence = false);
+     bool AudioStreamsChanged(void) const { return m_audioStreamsChanged; }
+     bool IsWaiting(void) const           { return m_dvdWaiting;          }
+     int  NumPartsInTitle(void)     const { return m_titleParts;          }
+     void GetMenuSPUPkt(uint8_t *buf, int len, int stream_id);
+-    virtual bool IsInDiscMenuOrStillFrame(void) const
+-        { return IsInMenu() || IsInStillFrame(); }
+ 
+     // Public menu/button stuff
+     AVSubtitle *GetMenuSubtitle(uint &version);
+     int         NumMenuButtons(void) const;
+     QRect       GetButtonCoords(void);
+     void        ReleaseMenuButton(void);
+-    bool        IsInMenu(void) const { return m_inMenu; }
++    virtual bool IsInMenu(void) const { return m_inMenu; }
+     virtual bool HandleAction(const QStringList &actions, int64_t pts);
+ 
+     // Subtitles
+diff --git a/mythtv/libs/libmythtv/DVD/mythdvdplayer.cpp b/mythtv/libs/libmythtv/DVD/mythdvdplayer.cpp
+index 0230428..1c4fa45 100644
+--- a/mythtv/libs/libmythtv/DVD/mythdvdplayer.cpp
++++ b/mythtv/libs/libmythtv/DVD/mythdvdplayer.cpp
+@@ -628,9 +628,9 @@ int MythDVDPlayer::GetCurrentAngle(void) const
+ 
+ QString MythDVDPlayer::GetAngleName(int angle) const
+ {
+-    if (angle >= 0 && angle < GetNumAngles())
++    if (angle >= 1 && angle <= GetNumAngles())
+     {
+-        QString name = QObject::tr("Angle %1").arg(angle+1);
++        QString name = QObject::tr("Angle %1").arg(angle);
+         return name;
+     }
+     return QString();
+@@ -642,8 +642,8 @@ bool MythDVDPlayer::SwitchAngle(int angle)
+     if (!total || angle == GetCurrentAngle())
+         return false;
+ 
+-    if (angle >= (int)total)
+-        angle = 0;
++    if (angle < 1 || angle > (int)total)
++        angle = 1;
+ 
+     return player_ctx->buffer->DVD()->SwitchAngle(angle);
+ }
+diff --git a/mythtv/libs/libmythtv/DeviceReadBuffer.cpp b/mythtv/libs/libmythtv/DeviceReadBuffer.cpp
+index 0004437..871597b 100644
+--- a/mythtv/libs/libmythtv/DeviceReadBuffer.cpp
++++ b/mythtv/libs/libmythtv/DeviceReadBuffer.cpp
+@@ -455,7 +455,12 @@ bool DeviceReadBuffer::Poll(void) const
+ 
+         int ret = poll(polls, poll_cnt, timeout);
+ 
+-        if (polls[0].revents & (POLLHUP | POLLNVAL))
++        if (polls[0].revents & POLLHUP)
++        {
++            LOG(VB_GENERAL, LOG_ERR, LOC + "poll eof (POLLHUP)");
++            break;
++        }
++        else if (polls[0].revents & POLLNVAL)
+         {
+             LOG(VB_GENERAL, LOG_ERR, LOC + "poll error");
+             error = true;
 diff --git a/mythtv/libs/libmythtv/ThreadedFileWriter.cpp b/mythtv/libs/libmythtv/ThreadedFileWriter.cpp
 index e6ca088..3b24d58 100644
 --- a/mythtv/libs/libmythtv/ThreadedFileWriter.cpp
@@ -20419,11 +21034,381 @@ index e6ca088..3b24d58 100644
                  bufferHasData.wait(locker.mutex(), 50);
          }
  
+diff --git a/mythtv/libs/libmythtv/avformatdecoder.cpp b/mythtv/libs/libmythtv/avformatdecoder.cpp
+index 9439d39..a3fbfac 100644
+--- a/mythtv/libs/libmythtv/avformatdecoder.cpp
++++ b/mythtv/libs/libmythtv/avformatdecoder.cpp
+@@ -1687,14 +1687,16 @@ void AvFormatDecoder::ScanRawTextCaptions(int av_stream_index)
+     AVDictionaryEntry *metatag =
+         av_dict_get(ic->streams[av_stream_index]->metadata, "language", NULL,
+                     0);
++    bool forced =
++      ic->streams[av_stream_index]->disposition & AV_DISPOSITION_FORCED;
+     int lang = metatag ? get_canonical_lang(metatag->value) :
+                          iso639_str3_to_key("und");
+     LOG(VB_PLAYBACK, LOG_INFO, LOC +
+         QString("Text Subtitle track #%1 is A/V stream #%2 "
+-                "and is in the %3 language(%4).")
++                "and is in the %3 language(%4), forced=%5.")
+                     .arg(tracks[kTrackTypeRawText].size()).arg(av_stream_index)
+-                    .arg(iso639_key_toName(lang)).arg(lang));
+-    StreamInfo si(av_stream_index, lang, 0, 0, 0);
++                    .arg(iso639_key_toName(lang)).arg(lang).arg(forced));
++    StreamInfo si(av_stream_index, lang, 0, 0, 0, false, false, forced);
+     tracks[kTrackTypeRawText].push_back(si);
+ }
+ 
+@@ -1816,8 +1818,6 @@ int AvFormatDecoder::ScanStreams(bool novideo)
+                     continue;
+                 }
+ 
+-                codec_is_mpeg = CODEC_IS_FFMPEG_MPEG(enc->codec_id);
+-
+                 // ffmpeg does not return a bitrate for several codecs and
+                 // formats. Forcing it to 500000 ensures the ringbuffer does not
+                 // use optimisations for low bitrate (audio and data) streams.
+@@ -1833,6 +1833,15 @@ int AvFormatDecoder::ScanStreams(bool novideo)
+                 if (novideo)
+                     break;
+ 
++                // Set the default stream to the stream
++                // that is found first in the PMT
++                if (selectedTrack[kTrackTypeVideo].av_stream_index < 0)
++                    selectedTrack[kTrackTypeVideo] = si;
++                else
++                    break;
++
++                codec_is_mpeg = CODEC_IS_FFMPEG_MPEG(enc->codec_id);
++                
+                 delete private_dec;
+                 private_dec = NULL;
+                 m_h264_parser->Reset();
+@@ -1942,11 +1951,6 @@ int AvFormatDecoder::ScanStreams(bool novideo)
+                             .arg(ff_codec_type_string(enc->codec_type)));
+                 }
+ 
+-                // Set the default stream to the stream
+-                // that is found first in the PMT
+-                if (selectedTrack[kTrackTypeVideo].av_stream_index < 0)
+-                    selectedTrack[kTrackTypeVideo] = si;
+-
+                 // Use a PrivateDecoder if allowed in playerFlags AND matched
+                 // via the decoder name
+                 if (selectedTrack[kTrackTypeVideo].av_stream_index == (int) i)
+@@ -1970,7 +1974,7 @@ int AvFormatDecoder::ScanStreams(bool novideo)
+                     enc->thread_count = thread_count;
+ 
+                 InitVideoCodec(ic->streams[i], enc,
+-                    selectedTrack[kTrackTypeVideo].av_stream_index == (int) i);
++                    (selectedTrack[kTrackTypeVideo].av_stream_index == (int) i));
+ 
+                 ScanATSCCaptionStreams(i);
+                 UpdateATSCCaptionTracks();
+@@ -3653,6 +3657,7 @@ QString AvFormatDecoder::GetTrackDesc(uint type, uint trackNo) const
+ 
+     bool forced = tracks[type][trackNo].forced;
+     int lang_key = tracks[type][trackNo].language;
++    QString forcedString = forced ? QObject::tr(" (forced)") : "";
+     if (kTrackTypeAudio == type)
+     {
+         if (ringBuffer->IsDVD())
+@@ -3706,7 +3711,11 @@ QString AvFormatDecoder::GetTrackDesc(uint type, uint trackNo) const
+ 
+         return QObject::tr("Subtitle") + QString(" %1: %2%3")
+             .arg(trackNo + 1).arg(iso639_key_toName(lang_key))
+-            .arg(forced ? QObject::tr(" (forced)") : "");
++            .arg(forcedString);
++    }
++    else if (forced && kTrackTypeRawText == type)
++    {
++        return DecoderBase::GetTrackDesc(type, trackNo) + forcedString;
+     }
+     else
+     {
+@@ -3799,25 +3808,29 @@ int AvFormatDecoder::AutoSelectTrack(uint type)
+     return DecoderBase::AutoSelectTrack(type);
+ }
+ 
+-static vector<int> filter_lang(const sinfo_vec_t &tracks, int lang_key)
++static vector<int> filter_lang(const sinfo_vec_t &tracks, int lang_key,
++                               const vector<int> ftype)
+ {
+     vector<int> ret;
+ 
+-    for (uint i = 0; i < tracks.size(); i++)
+-        if ((lang_key < 0) || tracks[i].language == lang_key)
+-            ret.push_back(i);
++    vector<int>::const_iterator it = ftype.begin();
++    for (; it != ftype.end(); ++it)
++    {
++        if ((lang_key < 0) || tracks[*it].language == lang_key)
++            ret.push_back(*it);
++    }
+ 
+     return ret;
+ }
+ 
+-static sinfo_vec_t filter_type(const sinfo_vec_t &tracks, AudioTrackType type)
++static vector<int> filter_type(const sinfo_vec_t &tracks, AudioTrackType type)
+ {
+-    sinfo_vec_t ret;
++    vector<int> ret;
+ 
+     for (uint i = 0; i < tracks.size(); i++)
+     {
+         if (tracks[i].audio_type == type)
+-            ret.push_back(tracks[i]);
++            ret.push_back(i);
+     }
+ 
+     return ret;
+@@ -3981,12 +3994,14 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
+         LOG(VB_AUDIO, LOG_INFO, LOC + "Trying to select audio track (w/lang)");
+ 
+         // Filter out commentary and audio description tracks
+-        sinfo_vec_t ftracks = filter_type(atracks, kAudioTypeNormal);
++        vector<int> ftype = filter_type(atracks, kAudioTypeNormal);
+ 
+-        if (ftracks.empty())
++        if (ftype.empty())
+         {
+-            LOG(VB_AUDIO, LOG_WARNING, "No audio tracks matched the filter so trying without filter.");
+-            ftracks = atracks;
++            LOG(VB_AUDIO, LOG_WARNING, "No audio tracks matched the type filter, "
++                                       "so trying all tracks.");
++            for (int i = 0; i < atracks.size(); i++)
++                ftype.push_back(i);
+         }
+ 
+         // try to get the language track matching the frontend language.
+@@ -3994,28 +4009,28 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
+         uint language_key = iso639_str3_to_key(language_key_convert);
+         uint canonical_key = iso639_key_to_canonical_key(language_key);
+ 
+-        vector<int> flang = filter_lang(ftracks, canonical_key);
++        vector<int> flang = filter_lang(atracks, canonical_key, ftype);
+ 
+         if (m_audio->CanDTSHD())
+-            selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_DTS,
++            selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_DTS,
+                                      FF_PROFILE_DTS_HD_MA);
+         if (selTrack < 0)
+-            selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_TRUEHD);
++            selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_TRUEHD);
+ 
+         if (selTrack < 0 && m_audio->CanDTSHD())
+-            selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_DTS,
++            selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_DTS,
+                                      FF_PROFILE_DTS_HD_HRA);
+         if (selTrack < 0)
+-            selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_EAC3);
++            selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_EAC3);
+ 
+         if (selTrack < 0)
+-            selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_DTS);
++            selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_DTS);
+ 
+         if (selTrack < 0)
+-            selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_AC3);
++            selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_AC3);
+ 
+         if (selTrack < 0)
+-            selTrack = filter_max_ch(ic, ftracks, flang);
++            selTrack = filter_max_ch(ic, atracks, flang);
+ 
+         // try to get best track for most preferred language
+         // Set by the "Guide Data" language prefs in Appearance.
+@@ -4024,31 +4039,31 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
+             vector<int>::const_iterator it = languagePreference.begin();
+             for (; it !=  languagePreference.end() && selTrack < 0; ++it)
+             {
+-                vector<int> flang = filter_lang(ftracks, *it);
++                vector<int> flang = filter_lang(atracks, *it, ftype);
+ 
+                 if (m_audio->CanDTSHD())
+-                    selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_DTS,
++                    selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_DTS,
+                                              FF_PROFILE_DTS_HD_MA);
+                 if (selTrack < 0)
+-                    selTrack = filter_max_ch(ic, ftracks, flang,
++                    selTrack = filter_max_ch(ic, atracks, flang,
+                                              CODEC_ID_TRUEHD);
+ 
+                 if (selTrack < 0 && m_audio->CanDTSHD())
+-                    selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_DTS,
++                    selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_DTS,
+                                              FF_PROFILE_DTS_HD_HRA);
+ 
+                 if (selTrack < 0)
+-                    selTrack = filter_max_ch(ic, ftracks, flang,
++                    selTrack = filter_max_ch(ic, atracks, flang,
+                                              CODEC_ID_EAC3);
+ 
+                 if (selTrack < 0)
+-                    selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_DTS);
++                    selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_DTS);
+ 
+                 if (selTrack < 0)
+-                    selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_AC3);
++                    selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_AC3);
+ 
+                 if (selTrack < 0)
+-                    selTrack = filter_max_ch(ic, ftracks, flang);
++                    selTrack = filter_max_ch(ic, atracks, flang);
+             }
+         }
+         // try to get best track for any language
+@@ -4056,29 +4071,29 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
+         {
+             LOG(VB_AUDIO, LOG_INFO, LOC +
+                 "Trying to select audio track (wo/lang)");
+-            vector<int> flang = filter_lang(ftracks, -1);
++            vector<int> flang = filter_lang(atracks, -1, ftype);
+ 
+             if (m_audio->CanDTSHD())
+-                selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_DTS,
++                selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_DTS,
+                                          FF_PROFILE_DTS_HD_MA);
+             if (selTrack < 0)
+-                selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_TRUEHD);
++                selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_TRUEHD);
+ 
+             if (selTrack < 0 && m_audio->CanDTSHD())
+-                selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_DTS,
++                selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_DTS,
+                                          FF_PROFILE_DTS_HD_HRA);
+ 
+             if (selTrack < 0)
+-                selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_EAC3);
++                selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_EAC3);
+ 
+             if (selTrack < 0)
+-                selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_DTS);
++                selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_DTS);
+ 
+             if (selTrack < 0)
+-                selTrack = filter_max_ch(ic, ftracks, flang, CODEC_ID_AC3);
++                selTrack = filter_max_ch(ic, atracks, flang, CODEC_ID_AC3);
+ 
+             if (selTrack < 0)
+-                selTrack = filter_max_ch(ic, ftracks, flang);
++                selTrack = filter_max_ch(ic, atracks, flang);
+         }
+     }
+ 
+@@ -4328,7 +4343,7 @@ bool AvFormatDecoder::ProcessAudioPacket(AVStream *curstream, AVPacket *pkt,
+         LOG(VB_TIMESTAMP, LOG_INFO, LOC + QString("audio timecode %1 %2 %3 %4")
+                 .arg(pkt->pts).arg(pkt->dts).arg(temppts).arg(lastapts));
+ 
+-        allowedquit |= ringBuffer->IsInDiscMenuOrStillFrame() ||
++        allowedquit |= ringBuffer->IsInStillFrame() ||
+                        m_audio->IsBufferAlmostFull();
+ 
+         tmp_pkt.data += ret;
+@@ -4445,9 +4460,9 @@ bool AvFormatDecoder::GetFrame(DecodeType decodetype)
+                 continue;
+             }
+             else if (lowbuffers && ((decodetype & kDecodeAV) == kDecodeAV) &&
+-                     storedPackets.count() < max_video_queue_size &&
+-                     lastapts < lastvpts + 100 &&
+-                     !ringBuffer->IsInDiscMenuOrStillFrame())
++                     (storedPackets.count() < max_video_queue_size) &&
++                     (lastapts < lastvpts + 100) &&
++                     !ringBuffer->IsInStillFrame())
+             {
+                 storevideoframes = true;
+             }
+diff --git a/mythtv/libs/libmythtv/decoderbase.h b/mythtv/libs/libmythtv/decoderbase.h
+index 6fadfb6..58b4566 100644
+--- a/mythtv/libs/libmythtv/decoderbase.h
++++ b/mythtv/libs/libmythtv/decoderbase.h
+@@ -23,7 +23,8 @@ const int kDecoderProbeBufferSize = 256 * 1024;
+ /// Track types
+ typedef enum TrackTypes
+ {
+-    kTrackTypeAudio = 0,
++    kTrackTypeUnknown = 0,
++    kTrackTypeAudio,
+     kTrackTypeVideo,
+     kTrackTypeSubtitle,
+     kTrackTypeCC608,
 diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
-index 9538e9b..473a553 100644
+index 9538e9b..ae54fe5 100644
 --- a/mythtv/libs/libmythtv/mythplayer.cpp
 +++ b/mythtv/libs/libmythtv/mythplayer.cpp
-@@ -2373,7 +2373,7 @@ bool MythPlayer::FastForward(float seconds)
+@@ -129,7 +129,7 @@ static int toTrackType(int type)
+     if (kDisplayTeletextCaptions == type) return kTrackTypeTeletextCaptions;
+     if (kDisplayTextSubtitle == type)     return kTrackTypeTextSubtitle;
+     if (kDisplayRawTextSubtitle == type)  return kTrackTypeRawText;
+-    return 0;
++    return kTrackTypeUnknown;
+ }
+ 
+ MythPlayer::MythPlayer(PlayerFlags flags)
+@@ -243,7 +243,6 @@ MythPlayer::MythPlayer(PlayerFlags flags)
+     endExitPrompt      = gCoreContext->GetNumSetting("EndOfRecordingExitPrompt");
+     pip_default_loc    = (PIPLocation)gCoreContext->GetNumSetting("PIPLocation", kPIPTopLeft);
+     tc_wrap[TC_AUDIO]  = gCoreContext->GetNumSetting("AudioSyncOffset", 0);
+-    allowForcedSubtitles = gCoreContext->GetNumSetting("AllowForcedSubtitles", 1);
+ 
+     // Get VBI page number
+     QString mypage = gCoreContext->GetSetting("VBIpageNr", "888");
+@@ -813,6 +812,8 @@ void MythPlayer::SetVideoParams(int width, int height, double fps,
+ 
+     video_dim      = QSize((width + 15) & ~0xf, (height + 15) & ~0xf);
+     video_disp_dim = QSize(width, height);
++    if (height)
++        video_aspect = (float)width / height;
+ 
+     if (fps > 0.0f && fps < 121.0f)
+     {
+@@ -1577,11 +1578,6 @@ void MythPlayer::SetAllowForcedSubtitles(bool allow)
+                       tr("Forced Subtitles On") :
+                       tr("Forced Subtitles Off"),
+                   kOSDTimeout_Med);
+-    if (old != allowForcedSubtitles)
+-    {
+-        gCoreContext->SaveSetting("AllowForcedSubtitles",
+-                                  allowForcedSubtitles);
+-    }
+ }
+ 
+ void MythPlayer::DoDisableForcedSubtitles(void)
+@@ -2266,7 +2262,32 @@ void MythPlayer::VideoStart(void)
+         }
+ #endif // USING_MHEG
+ 
+-        SetCaptionsEnabled(captionsEnabledbyDefault, false);
++        // If there is a forced text subtitle track (which is possible
++        // in e.g. a .mkv container), and forced subtitles are
++        // allowed, then start playback with that subtitle track
++        // selected.  Otherwise, use the frontend settings to decide
++        // which captions/subtitles (if any) to enable at startup.
++        // TODO: modify the fix to #10735 to use this approach
++        // instead.
++        bool hasForcedTextTrack = false;
++        uint forcedTrackNumber = 0;
++        if (GetAllowForcedSubtitles())
++        {
++            uint numTextTracks = decoder->GetTrackCount(kTrackTypeRawText);
++            for (uint i = 0; !hasForcedTextTrack && i < numTextTracks; ++i)
++            {
++                if (decoder->GetTrackInfo(kTrackTypeRawText, i).forced)
++                {
++                    hasForcedTextTrack = true;
++                    forcedTrackNumber = i;
++                }
++            }
++        }
++        if (hasForcedTextTrack)
++            SetTrack(kTrackTypeRawText, forcedTrackNumber);
++        else
++            SetCaptionsEnabled(captionsEnabledbyDefault, false);
++
+         osdLock.unlock();
+     }
+ 
+@@ -2373,7 +2394,7 @@ bool MythPlayer::FastForward(float seconds)
          return false;
  
      if (fftime <= 0)
@@ -20432,7 +21417,7 @@ index 9538e9b..473a553 100644
      return fftime > CalcMaxFFTime(fftime, false);
  }
  
-@@ -2383,7 +2383,7 @@ bool MythPlayer::Rewind(float seconds)
+@@ -2383,7 +2404,7 @@ bool MythPlayer::Rewind(float seconds)
          return false;
  
      if (rewindtime <= 0)
@@ -20441,6 +21426,93 @@ index 9538e9b..473a553 100644
      return (uint64_t)rewindtime >= framesPlayed;
  }
  
+diff --git a/mythtv/libs/libmythtv/ringbuffer.h b/mythtv/libs/libmythtv/ringbuffer.h
+index f208aed..3195163 100644
+--- a/mythtv/libs/libmythtv/ringbuffer.h
++++ b/mythtv/libs/libmythtv/ringbuffer.h
+@@ -96,7 +96,9 @@ class MTV_PUBLIC RingBuffer : protected MThread
+     BDRingBuffer  *BD(void);
+     virtual bool StartFromBeginning(void)                   { return true;  }
+     virtual void IgnoreWaitStates(bool ignore)              { }
+-    virtual bool IsInDiscMenuOrStillFrame(void) const       { return false; }
++    virtual bool IsInMenu(void) const                       { return false; }
++    virtual bool IsInStillFrame(void) const                 { return false; }
++    virtual bool IsInDiscMenuOrStillFrame(void) const       { return IsInMenu() || IsInStillFrame(); }
+     virtual bool HandleAction(const QStringList &, int64_t) { return false; }
+ 
+     // General Commands
+diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
+index 89e27df..2ba6d81 100644
+--- a/mythtv/libs/libmythtv/tv_play.cpp
++++ b/mythtv/libs/libmythtv/tv_play.cpp
+@@ -10978,7 +10978,7 @@ void TV::FillOSDMenuSubtitles(const PlayerContext *ctx, OSD *osd,
+             osd->DialogAddButton(tr("Disable Subtitles"), ACTION_DISABLESUBS);
+         else if (have_subs && !enabled)
+             osd->DialogAddButton(tr("Enable Subtitles"), ACTION_ENABLESUBS);
+-        if (!av_tracks.empty())
++        if (!av_tracks.empty() || !text_tracks.empty())
+         {
+             if (forcedon)
+             {
+@@ -10990,9 +10990,10 @@ void TV::FillOSDMenuSubtitles(const PlayerContext *ctx, OSD *osd,
+                 osd->DialogAddButton(tr("Enable Forced Subtitles"),
+                                      ACTION_ENABLEFORCEDSUBS);
+             }
+-            osd->DialogAddButton(tr("Select Subtitle"),
+-                                 "DIALOG_MENU_AVSUBTITLES_0",
+-                                 true, selected == "AVSUBTITLES");
++            if (!av_tracks.empty())
++                osd->DialogAddButton(tr("Select Subtitle"),
++                                     "DIALOG_MENU_AVSUBTITLES_0",
++                                     true, selected == "AVSUBTITLES");
+         }
+         if (havetext || !text_tracks.empty())
+         {
+@@ -11229,7 +11230,7 @@ void TV::FillOSDMenuNavigate(const PlayerContext *ctx, OSD *osd,
+         currenttext = tr("Angle");
+         int current_angle = GetCurrentAngle(ctx);
+ 
+-        for (int i = 0; i < num_angles; i++)
++        for (int i = 1; i <= num_angles; i++)
+         {
+             QString angleIdx = QString("%1").arg(i, 3, 10, QChar(48));
+             QString desc = GetAngleName(ctx, i);
+diff --git a/mythtv/libs/libmythtv/tv_rec.cpp b/mythtv/libs/libmythtv/tv_rec.cpp
+index 5387ce5a..721c513 100644
+--- a/mythtv/libs/libmythtv/tv_rec.cpp
++++ b/mythtv/libs/libmythtv/tv_rec.cpp
+@@ -918,6 +918,9 @@ void TVRec::FinishedRecording(RecordingInfo *curRec, RecordingQuality *recq)
+         PreviewGeneratorQueue::GetPreviewImage(*curRec, "");
+     }
+ 
++    // store recording in recorded table
++    curRec->FinishedRecording(!is_good || (recgrp == "LiveTV"));
++
+     // send out UPDATE_RECORDING_STATUS message
+     if (recgrp != "LiveTV")
+     {
+@@ -930,9 +933,6 @@ void TVRec::FinishedRecording(RecordingInfo *curRec, RecordingQuality *recq)
+         gCoreContext->dispatch(me);
+     }
+ 
+-    // store recording in recorded table
+-    curRec->FinishedRecording(!is_good || (recgrp == "LiveTV"));
+-
+     // send out REC_FINISHED message
+     SendMythSystemRecEvent("REC_FINISHED", curRec);
+ 
+diff --git a/mythtv/libs/libmythui/libmythui.pro b/mythtv/libs/libmythui/libmythui.pro
+index 4560bb2..fd2ce18 100644
+--- a/mythtv/libs/libmythui/libmythui.pro
++++ b/mythtv/libs/libmythui/libmythui.pro
+@@ -97,6 +97,7 @@ using_x11 {
+ macx {
+     HEADERS += screensaver-osx.h   DisplayResOSX.h   util-osx.h
+     SOURCES += screensaver-osx.cpp DisplayResOSX.cpp util-osx.cpp
++    QMAKE_OBJECTIVE_CFLAGS += $$QMAKE_CXXFLAGS
+     QMAKE_OBJECTIVE_CXXFLAGS += $$QMAKE_CXXFLAGS
+     OBJECTIVE_HEADERS += util-osx-cocoa.h
+     OBJECTIVE_SOURCES += util-osx-cocoa.mm
 diff --git a/mythtv/libs/libmythui/mythscreenstack.cpp b/mythtv/libs/libmythui/mythscreenstack.cpp
 index 9331024..15e9129 100644
 --- a/mythtv/libs/libmythui/mythscreenstack.cpp
@@ -20454,6 +21526,31 @@ index 9331024..15e9129 100644
          m_DrawOrder.push_back(screen);
  
      if (!m_Children.isEmpty())
+diff --git a/mythtv/libs/libmythui/mythuibuttonlist.cpp b/mythtv/libs/libmythui/mythuibuttonlist.cpp
+index 2fa7b82..271a2bf 100644
+--- a/mythtv/libs/libmythui/mythuibuttonlist.cpp
++++ b/mythtv/libs/libmythui/mythuibuttonlist.cpp
+@@ -2516,7 +2516,7 @@ void MythUIButtonList::customEvent(QEvent *event)
+         for (; cur < npe->m_start + npe->m_pageSize && cur < GetCount(); ++cur)
+         {
+             const int loginterval = (cur < 1000 ? 100 : 500);
+-            if (cur % loginterval == 0)
++            if (cur > 200 && cur % loginterval == 0)
+                 LOG(VB_GENERAL, LOG_INFO,
+                     QString("Build background buttonlist item %1").arg(cur));
+             emit itemLoaded(GetItemAt(cur));
+diff --git a/mythtv/libs/libmythui/mythuieditbar.cpp b/mythtv/libs/libmythui/mythuieditbar.cpp
+index ae2a842..b4ad7b2 100644
+--- a/mythtv/libs/libmythui/mythuieditbar.cpp
++++ b/mythtv/libs/libmythui/mythuieditbar.cpp
+@@ -296,6 +296,7 @@ void MythUIEditBar::ClearImages(void)
+ {
+     while (m_images.size())
+         DeleteChild(m_images.takeFirst());
++    SetRedraw();
+ }
+ 
+ /**
 diff --git a/mythtv/libs/libmythui/mythuiimage.cpp b/mythtv/libs/libmythui/mythuiimage.cpp
 index 474cf94..ac748c3 100644
 --- a/mythtv/libs/libmythui/mythuiimage.cpp
@@ -20469,7 +21566,7 @@ index 474cf94..ac748c3 100644
  
                  delete animationFrames;
 diff --git a/mythtv/libs/libmythui/mythuitype.cpp b/mythtv/libs/libmythui/mythuitype.cpp
-index 5341e4b..ebd5235 100644
+index 5341e4b..754af0d 100644
 --- a/mythtv/libs/libmythui/mythuitype.cpp
 +++ b/mythtv/libs/libmythui/mythuitype.cpp
 @@ -478,7 +478,10 @@ void MythUIType::DrawSelf(MythPainter *, int, int, int, QRect)
@@ -20484,6 +21581,24 @@ index 5341e4b..ebd5235 100644
  
      if (!m_Visible || m_Vanished)
          return;
+@@ -639,7 +642,7 @@ void MythUIType::AdjustMinArea(int delta_x, int delta_y,
+     if (bounded.x() + bounded.width() > m_Area.x() + m_Area.width())
+         bounded.moveRight(m_Area.x() + m_Area.width());
+     if (bounded.y() + bounded.height() > m_Area.y() + m_Area.height())
+-        bounded.moveBottom(m_Area.x() + m_Area.height());
++        bounded.moveBottom(m_Area.y() + m_Area.height());
+     if (bounded.x() < m_Area.x())
+     {
+         bounded.moveLeft(m_Area.x());
+@@ -825,7 +828,7 @@ void MythUIType::SetMinArea(const MythRect &rect)
+         if (bounded.x() + bounded.width() > m_Area.x() + m_Area.width())
+             bounded.moveRight(m_Area.x() + m_Area.width());
+         if (bounded.y() + bounded.height() > m_Area.y() + m_Area.height())
+-            bounded.moveBottom(m_Area.x() + m_Area.height());
++            bounded.moveBottom(m_Area.y() + m_Area.height());
+         if (bounded.x() < m_Area.x())
+         {
+             bounded.moveLeft(m_Area.x());
 @@ -1406,4 +1409,4 @@ void MythUIType::ConnectDependants(bool recurse)
                  (*it)->ConnectDependants(recurse);
          }
@@ -20535,6 +21650,40 @@ index 8ed2ba1..3e38084 100644
      SignalHandler::Init(signallist);
      signal(SIGHUP, SIG_IGN);
  #endif
+diff --git a/mythtv/programs/mythbackend/autoexpire.cpp b/mythtv/programs/mythbackend/autoexpire.cpp
+index b085cad..80dea44 100644
+--- a/mythtv/programs/mythbackend/autoexpire.cpp
++++ b/mythtv/programs/mythbackend/autoexpire.cpp
+@@ -645,8 +645,6 @@ void AutoExpire::SendDeleteMessages(pginfolist_t &deleteList)
+                      .arg((*it)->GetRecordingStartTime(MythDate::ISODate)));
+         gCoreContext->dispatch(me);
+ 
+-        deleted_set.insert((*it)->MakeUniqueKey());
+-
+         ++it; // move on to next program
+     }
+ }
+@@ -1104,7 +1102,7 @@ void AutoExpire::Update(int encoder, int fsID, bool immediately)
+ 
+ void AutoExpire::UpdateDontExpireSet(void)
+ {
+-    dont_expire_set = deleted_set;
++    dont_expire_set.clear();
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.prepare(
+diff --git a/mythtv/programs/mythbackend/autoexpire.h b/mythtv/programs/mythbackend/autoexpire.h
+index 8939f38..d47ff86 100644
+--- a/mythtv/programs/mythbackend/autoexpire.h
++++ b/mythtv/programs/mythbackend/autoexpire.h
+@@ -113,7 +113,6 @@ class AutoExpire : public QObject
+ 
+     // main expire info
+     QSet<QString> dont_expire_set;
+-    QSet<QString> deleted_set;
+     ExpireThread *expire_thread;     // protected by instance_lock
+     uint          desired_freq;      // protected by instance_lock
+     bool          expire_thread_run; // protected by instance_lock
 diff --git a/mythtv/programs/mythbackend/main.cpp b/mythtv/programs/mythbackend/main.cpp
 index 22820bf..5e30d28 100644
 --- a/mythtv/programs/mythbackend/main.cpp
@@ -20567,7 +21716,7 @@ index bc9d698..04ff974 100644
  
      if (httpStatus && mainServer)
 diff --git a/mythtv/programs/mythbackend/mainserver.cpp b/mythtv/programs/mythbackend/mainserver.cpp
-index b105fff..6e23d0a 100644
+index b105fff..ba1fbc5 100644
 --- a/mythtv/programs/mythbackend/mainserver.cpp
 +++ b/mythtv/programs/mythbackend/mainserver.cpp
 @@ -227,7 +227,7 @@ MainServer::MainServer(bool master, int port,
@@ -20612,6 +21761,44 @@ index b105fff..6e23d0a 100644
      if (masterFreeSpaceListUpdater)
      {
          MThreadPool::globalInstance()->startReserved(
+@@ -2670,6 +2682,8 @@ void MainServer::DoHandleUndeleteRecording(
+         recinfo.ApplyRecordRecGroupChange("Default");
+         recinfo.UpdateLastDelete(false);
+         recinfo.SaveAutoExpire(kDisableAutoExpire);
++        if (m_sched)
++            m_sched->RescheduleCheck(recinfo, "DoHandleUndelete");
+         ret = 0;
+ #if 0
+     }
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index d6676b3..061d6f2 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -2041,16 +2041,18 @@ void Scheduler::ResetDuplicates(uint recordid, uint findid,
+         if (!subtitle.isEmpty())
+         {
+             // Need to check both for kDupCheckSubThenDesc
+-            filterClause += "OR p.subtitle = :SUBTITLE "
+-                            "OR p.description = :SUBTITLE ";
+-            bindings[":SUBTITLE"] = subtitle;
++            filterClause += "OR p.subtitle = :SUBTITLE1 "
++                            "OR p.description = :SUBTITLE2 ";
++            bindings[":SUBTITLE1"] = subtitle;
++            bindings[":SUBTITLE2"] = subtitle;
+         }
+         if (!descrip.isEmpty())
+         {
+             // Need to check both for kDupCheckSubThenDesc
+-            filterClause += "OR p.description = :DESCRIP "
+-                            "OR p.subtitle = :DESCRIP ";
+-            bindings[":DESCRIP"] = descrip;
++            filterClause += "OR p.description = :DESCRIP1 "
++                            "OR p.subtitle = :DESCRIP2 ";
++            bindings[":DESCRIP1"] = descrip;
++            bindings[":DESCRIP2"] = descrip;
+         }
+         if (!programid.isEmpty())
+         {
 diff --git a/mythtv/programs/mythccextractor/main.cpp b/mythtv/programs/mythccextractor/main.cpp
 index 68272bd..a9d26ab 100644
 --- a/mythtv/programs/mythccextractor/main.cpp
@@ -20726,6 +21913,41 @@ index 9d91967..d923a28 100644
      SignalHandler::Init(signallist);
      SignalHandler::SetHandler(SIGUSR1, handleSIGUSR1);
      SignalHandler::SetHandler(SIGUSR2, handleSIGUSR2);
+diff --git a/mythtv/programs/mythfrontend/playbackbox.cpp b/mythtv/programs/mythfrontend/playbackbox.cpp
+index 734cce1..d6f428f 100644
+--- a/mythtv/programs/mythfrontend/playbackbox.cpp
++++ b/mythtv/programs/mythfrontend/playbackbox.cpp
+@@ -1333,7 +1333,7 @@ void PlaybackBox::UpdateUIGroupList(const QStringList &groupPreferences)
+         QStringList::iterator it;
+         for (it = m_titleList.begin(); it != m_titleList.end(); ++it)
+         {
+-            QString groupname = (*it).simplified();
++            QString groupname = (*it);
+ 
+             MythUIButtonListItem *item =
+                 new MythUIButtonListItem(
+@@ -1690,7 +1690,7 @@ bool PlaybackBox::UpdateUILists(void)
+                     sTitle = construct_sort_title(
+                         p->GetTitle(), m_viewMask, titleSort,
+                         p->GetRecordingPriority(), m_prefixes);
+-                    sTitle = sTitle.toLower().simplified();
++                    sTitle = sTitle.toLower();
+ 
+                     if (!sortedList.contains(sTitle))
+                         sortedList[sTitle] = p->GetTitle();
+diff --git a/mythtv/programs/mythfrontend/services/frontend.cpp b/mythtv/programs/mythfrontend/services/frontend.cpp
+index 168a1f9..0426615 100644
+--- a/mythtv/programs/mythfrontend/services/frontend.cpp
++++ b/mythtv/programs/mythfrontend/services/frontend.cpp
+@@ -133,7 +133,7 @@ bool Frontend::PlayRecording(int ChanID, const QDateTime &StartTime)
+ 
+         QString message = QString("NETWORK_CONTROL PLAY PROGRAM %1 %2 %3")
+             .arg(ChanID)
+-            .arg(starttime.toLocalTime().toString("yyyyMMddhhmmss"))
++            .arg(starttime.toString("yyyyMMddhhmmss"))
+             .arg("12345");
+ 
+         MythEvent me(message);
 diff --git a/mythtv/programs/mythjobqueue/main.cpp b/mythtv/programs/mythjobqueue/main.cpp
 index bd9c638..42a5c76 100644
 --- a/mythtv/programs/mythjobqueue/main.cpp
@@ -20822,11 +22044,87 @@ index 5c238e2..4d0079f 100644
      SignalHandler::Init(signallist);
      signal(SIGHUP, SIG_IGN);
  #endif
+diff --git a/mythtv/programs/mythshutdown/commandlineparser.cpp b/mythtv/programs/mythshutdown/commandlineparser.cpp
+index d1cb383..e30d38e 100644
+--- a/mythtv/programs/mythshutdown/commandlineparser.cpp
++++ b/mythtv/programs/mythshutdown/commandlineparser.cpp
+@@ -22,7 +22,8 @@ void MythShutdownCommandLineParser::LoadArguments(void)
+     CommandLineArg::AllowOneOf( QList<CommandLineArg*>()
+          << add(QStringList( QStringList() << "-w" << "--setwakeup" ),
+                 "setwakeup", "",
+-                "Set the wakeup time (yyyy-MM-ddThh:mm:ss)", "")
++                "Set the wakeup time (yyyy-MM-ddThh:mm:ss) "
++                "default is in local time", "")
+          << add(QStringList( QStringList() << "-t" << "--setscheduledwakeup" ),
+                 "setschedwakeup", false,
+                 "Set wakeup time to the next scheduled recording", "")
+@@ -66,5 +67,16 @@ void MythShutdownCommandLineParser::LoadArguments(void)
+                 "        64 - In daily wakeup/shutdown period\n"
+                 "       128 - Less than 15 minutes to next wakeup period\n"
+                 "       255 - Setup is running") );
++
++    // The localtime command line parameter exists solely to make scripts
++    // using this executable self documenting.
++
++    CommandLineArg::AllowOneOf( QList<CommandLineArg*>()
++         << add("--utc",
++                "utc", false,
++                "Specify that the wakeup time is in utc", "")
++         << add("--localtime",
++                "localtime", false,
++                "Specify that the wakeup time is in local time", "") );
+ }
+ 
 diff --git a/mythtv/programs/mythshutdown/main.cpp b/mythtv/programs/mythshutdown/main.cpp
-index 1505924..cf369d9 100644
+index 1505924..3988580 100644
 --- a/mythtv/programs/mythshutdown/main.cpp
 +++ b/mythtv/programs/mythshutdown/main.cpp
-@@ -787,7 +787,10 @@ int main(int argc, char **argv)
+@@ -375,31 +375,16 @@ static int checkOKShutdown(bool bWantRecStatus)
+     return res;
+ }
+ 
+-static int setWakeupTime(QString sWakeupTime)
++static void setWakeupTime(const QDateTime &wakeupTime)
+ {
+     LOG(VB_GENERAL, LOG_INFO, "Mythshutdown: --setwakeup");
+ 
+     LOG(VB_GENERAL, LOG_NOTICE,
+-        QString("Mythshutdown: wakeup time given is: %1").arg(sWakeupTime));
+-
+-    // check time given is valid
+-    QDateTime dtWakeupTime;
+-    dtWakeupTime = MythDate::fromString(sWakeupTime);
+-
+-    if (!dtWakeupTime.isValid())
+-    {
+-        LOG(VB_GENERAL, LOG_ERR,
+-            QString("Mythshutdown: --setwakeup invalid date "
+-                                      "format (%1)\n\t\t\t"
+-                                      "must be yyyy-MM-ddThh:mm:ss")
+-                                      .arg(sWakeupTime));
+-        return 1;
+-    }
++        QString("Mythshutdown: wakeup time given is: %1 (local time)")
++        .arg(MythDate::toString(wakeupTime)));
+ 
+     setGlobalSetting("MythShutdownNextScheduled",
+-                     MythDate::toString(dtWakeupTime, MythDate::kDatabase));
+-
+-    return 0;
++                     MythDate::toString(wakeupTime, MythDate::kDatabase));
+ }
+ 
+ static int setScheduledWakeupTime()
+@@ -432,7 +417,7 @@ static int setScheduledWakeupTime()
+         if (add)
+             restarttime = restarttime.addSecs((-1) * add);
+ 
+-        setWakeupTime(restarttime.toString(Qt::ISODate));
++        setWakeupTime(restarttime);
+ 
+         return 0;
+     }
+@@ -787,7 +772,10 @@ int main(int argc, char **argv)
  #ifndef _WIN32
      QList<int> signallist;
      signallist << SIGINT << SIGTERM << SIGSEGV << SIGABRT << SIGBUS << SIGFPE
@@ -20838,6 +22136,38 @@ index 1505924..cf369d9 100644
      SignalHandler::Init(signallist);
      signal(SIGHUP, SIG_IGN);
  #endif
+@@ -818,7 +806,30 @@ int main(int argc, char **argv)
+     else if (cmdline.toBool("status"))
+         res = getStatus((bool)(cmdline.toInt("status") == 1));
+     else if (cmdline.toBool("setwakeup"))
+-        res = setWakeupTime(cmdline.toString("setwakeup"));
++    {
++        // only one of --utc or --localtime can be passed per
++        // CommandLineArg::AllowOneOf() in commandlineparser.cpp
++        bool utc = cmdline.toBool("utc");
++        QString tmp = cmdline.toString("setwakeup");
++
++        QDateTime wakeuptime = (utc) ?
++            MythDate::fromString(tmp) :
++            QDateTime::fromString(tmp, Qt::ISODate).toUTC();
++
++        if (!wakeuptime.isValid())
++        {
++            cerr << qPrintable(
++                QObject::tr("mythshutdown: --setwakeup invalid date "
++                            "format (%1)\n\t\t\t"
++                            "must be yyyy-MM-ddThh:mm:ss")
++                .arg(tmp)) << endl;
++            res = 1;
++        }
++        else
++        {
++            setWakeupTime(wakeuptime);
++        }
++    }
+     else if (cmdline.toBool("safeshutdown"))
+     { 
+         res = checkOKShutdown(true);
 diff --git a/mythtv/programs/mythtranscode/main.cpp b/mythtv/programs/mythtranscode/main.cpp
 index 49a1a7a..13d572b 100644
 --- a/mythtv/programs/mythtranscode/main.cpp
@@ -20973,16 +22303,73 @@ index 93ce5e0..0d6b5aa 100755
              try:
                  self._data.update(func())
              except:
+diff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py b/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py
+index 29e1f641..f6f967f 100644
+--- a/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py
++++ b/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py
+@@ -212,16 +212,11 @@ class Videos(object):
+         self.tree_order = ['standard_feeds', 'location_feeds', 'local_feeds', 'category']
+         self.tree_org = {
+             'category': [
+-                ['Movies', u''],
+-                ['Trailers and Movies', ['Trailers', 'Movies']],
+-                ['Movies by Genre', ['Movies_Action_adventure', 'Movies_Drama', 'Movies_Sci_fi_fantasy', 'Movies_Thriller', 'Movies_Comedy', 'Movies_Classics', 'Movies_Horror', 'Movies_Family', 'Movies_Anime_animation', 'Movies_Foreign', 'Movies_Documentary', 'Movies_Shorts',]],
+-                ['Amateur', ['Shortmov', 'Film']],
+-                ['',u''],
+-                ['TV', ['Shows', 'Comedy',]],
++                ['', ['Film']],
+                 ['', ['Sports']],
+                 ['Information', ['News', 'Tech', 'Education', 'Howto', ]],
+-                ['Entertainment', ['Music', 'Games', 'Entertainment', ]],
+-                ['Other', ['Autos', 'Animals', 'Travel', 'Videoblog', 'People', 'Nonprofit']] ],
++                ['Entertainment', ['Comedy', 'Music', 'Games', 'Entertainment', ]],
++                ['Other', ['Autos', 'Animals', 'Travel', 'People', 'Nonprofit']] ],
+             'standard_feeds':
+                 [['Feeds', ['top_rated', 'top_favourites', 'most_viewed', 'most_popular', 'most_recent', 'most_discussed', 'most_responded', 'recently_featured', '']], ],
+             'local_feeds':
+@@ -234,8 +229,7 @@ class Videos(object):
+             'category': {
+                 '__default__': {'order': 'rating', 'max-results': '20', 'start-index': '1', 'Ir': self.config['language']},
+                 #'cat name': {'order: '', 'max-results': , 'start-index': , 'restriction: '', 'time': '', 'Ir': ''},
+-                'Trailers': {'max-results': '40', 'time': 'this_month',},
+-                'Movies': {'max-results': '40', 'time': 'this_month',},
++                'Film': {'max-results': '40', 'time': 'this_month',},
+                 'Music': {'max-results': '40', 'time': 'this_month',},
+                 'Sports': {'max-results': '40', 'time': 'this_month',},
+             },
+@@ -263,19 +257,12 @@ class Videos(object):
+             'local_feeds': {'top_rated': 'directories/topics/rated', 'top_favourites': 'directories/topics/most_subscribed', 'most_viewed': 'directories/topics/most_viewed', 'most_popular': None, 'most_recent': 'directories/topics/most_recent', 'most_discussed': 'directories/topics/most_comments', 'most_responded': None, 'recently_featured': 'directories/topics/featured'
+                 },
+             'category': {
+-                'Trailers and Movies': 'directories/topics/movies',
+-                'Movies by Genre': 'directories/topics/movies',
+-                'Amateur': 'directories/topics/movies',
+-                'TV': 'directories/topics/tv',
+-                'Movies': 'directories/topics/movies',
+-                'Trailers': 'directories/film_genres/trailers',
+-                'Movies_Action_adventure': 'directories/film_genres/action_adventure', 'Movies_Drama': 'directories/film_genres/drama', 'Movies_Sci_fi_fantasy': 'directories/film_genres/scifi', 'Movies_Thriller': 'directories/film_genres/thriller', 'Movies_Comedy': 'directories/film_genres/comedy', 'Movies_Classics': 'directories/film_genres/classics', 'Movies_Horror': 'directories/film_genres/horror', 'Movies_Family': 'directories/film_genres/family_films', 'Movies_Anime_animation': 'directories/film_genres/animation', 'Movies_Foreign': 'directories/film_genres/foreign_films', 'Movies_Documentary': 'directories/film_genres/documentaries', 'Movies_Shorts': 'directories/film_genres/short_film',
+-                'Shortmov': 'directories/film_genres/short_film', 'Film': 'directories/film_genres/animation',
+-                'Shows': 'directories/topics/tv', 'Comedy': 'directories/film_genres/comedy',
++                'Film': 'directories/topics/movies',
++                'Comedy': 'directories/film_genres/comedy',
+                 'Sports': 'directories/topics/sports',
+                 'News': 'directories/topics/news', 'Tech': 'directories/topics/technology', 'Education': 'directories/topics/education', 'Howto': 'directories/topics/howto',
+                 'Music': 'directories/topics/music', 'Games': 'directories/topics/games', 'Entertainment': 'directories/topics/entertainment',
+-                'Autos': 'directories/topics/automotive', 'Animals': 'directories/topics/animals', 'Travel': 'directories/topics/travel', 'Videoblog': 'directories/topics/videoblog', 'People': 'directories/topics/people', 'Nonprofit': 'directories/topics/nonprofit',
++                'Autos': 'directories/topics/automotive', 'Animals': 'directories/topics/animals', 'Travel': 'directories/topics/travel', 'People': 'directories/topics/people', 'Nonprofit': 'directories/topics/nonprofit',
+                 },
+             }
+ 
 diff --git a/mythtv/programs/scripts/metadata/Movie/tmdb3.py b/mythtv/programs/scripts/metadata/Movie/tmdb3.py
-index 6a133f5..853fbe4 100755
+index 6a133f5..c748b7a 100755
 --- a/mythtv/programs/scripts/metadata/Movie/tmdb3.py
 +++ b/mythtv/programs/scripts/metadata/Movie/tmdb3.py
-@@ -11,19 +11,21 @@
+@@ -11,19 +11,22 @@
  #-----------------------
  __title__ = "TheMovieDB.org V3"
  __author__ = "Raymond Wagner"
 -__version__ = "0.3.0"
-+__version__ = "0.3.2"
++__version__ = "0.3.3"
  # 0.1.0 Initial version
  # 0.2.0 Add language support, move cache to home directory
  # 0.3.0 Enable version detection to allow use in MythTV
@@ -20992,6 +22379,7 @@ index 6a133f5..853fbe4 100755
 +# 0.3.1 Add --test parameter for proper compatibility with mythmetadatalookup
 +# 0.3.2 Add --area parameter to allow country selection for release date and
 +#       parental ratings
++# 0.3.3 Use translated title if available
  
  from optparse import OptionParser
 -from lxml import etree
@@ -21005,18 +22393,17 @@ index 6a133f5..853fbe4 100755
      movie = Movie(inetref)
      tree = etree.XML(u'<metadata></metadata>')
      mapping = [['runtime',      'runtime'],     ['title',       'originaltitle'],
-@@ -35,12 +37,30 @@ def buildSingle(inetref):
+@@ -35,12 +38,29 @@ def buildSingle(inetref):
      for i,j in mapping:
          if getattr(movie, j):
              setattr(m, i, getattr(movie, j))
 +
++    if movie.title:
++        m.title = movie.title
++
 +    releases = movie.releases.items()
 +
 +    if opts.country:
-+        for alt in movie.alternate_titles:
-+            if alt.country == opts.country:
-+                m.title = alt.title
-+                break
 +        try:
 +            # resort releases with selected country at top to ensure it
 +            # is selected by the metadata libraries
@@ -21056,10 +22443,14 @@ index 6a133f5..853fbe4 100755
      results = searchMovie(query)
      tree = etree.XML(u'<metadata></metadata>')
      mapping = [['runtime',      'runtime'],     ['title',       'originaltitle'],
-@@ -89,6 +113,10 @@ def buildList(query):
+@@ -89,6 +113,14 @@ def buildList(query):
              if getattr(res, j):
                  setattr(m, i, getattr(res, j))
          m.inetref = str(res.id)
++
++        if res.title:
++            m.title = res.title
++
 +        #TODO:
 +        # should releasedate and year be pulled from the country-specific data
 +        # or should it be left to the default information to cut down on
@@ -21067,7 +22458,7 @@ index 6a133f5..853fbe4 100755
          if res.releasedate:
              m.year = res.releasedate.year
          if res.backdrop:
-@@ -109,7 +137,10 @@ def buildList(query):
+@@ -109,7 +141,10 @@ def buildList(query):
                                      xml_declaration=True))
      sys.exit(0)
  
@@ -21079,7 +22470,7 @@ index 6a133f5..853fbe4 100755
      collection = Collection(inetref)
      tree = etree.XML(u'<metadata></metadata>')
      m = VideoMetadata()
-@@ -129,6 +160,7 @@ def buildCollection(inetref):
+@@ -129,6 +164,7 @@ def buildCollection(inetref):
      sys.exit()
  
  def buildVersion():
@@ -21087,7 +22478,7 @@ index 6a133f5..853fbe4 100755
      version = etree.XML(u'<grabber></grabber>')
      etree.SubElement(version, "name").text = __title__
      etree.SubElement(version, "author").text = __author__
-@@ -142,43 +174,78 @@ def buildVersion():
+@@ -142,43 +178,78 @@ def buildVersion():
                                      xml_declaration=True))
      sys.exit(0)
  
