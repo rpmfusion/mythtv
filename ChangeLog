@@ -1,3 +1,565 @@
+commit 3944ca9ad0f8df1a0240c5812e5b3b04431e7eac
+Author: John Poet <jpoet@mythtv.org>
+Date:   Wed Feb 13 15:39:46 2013 -0700
+
+    Cleanup some useless "discontinuity detected" messages following 87a15e1ce
+    
+    Closes #11328
+    (cherry picked from commit efc1e46a8a2d913a8070483178ca46293f0a4423)
+
+commit e54b9b6fd635df024f81c1d2f33956996c95c379
+Author: John Poet <jpoet@mythtv.org>
+Date:   Tue Feb 12 10:26:30 2013 -0700
+
+    DTVRecorder: buffer up each payload until we know if the payload is a
+    keyframe.
+    
+    Especially with H.264, we can be several packets into a payload before we
+    know if it is a keyframe or just a frame or something else.  Always buffer
+    the packets of a payload until we know what we are doing with the payload.
+    
+    If we need to switch ringbuffers, we now do it so the new file will start at
+    the beginning of the payload holding a keyframe.  Each file will also start
+    with a PAT/PMT if the "recorder" calls for it.
+    (cherry picked from commit 87a15e1ce40d81058ff221308d666d73b1517ff2)
+    
+    Conflicts:
+    	mythtv/libs/libmythtv/dtvrecorder.cpp
+    	mythtv/libs/libmythtv/recorders/iptvrecorder.cpp
+    	mythtv/libs/libmythtv/recorders/iptvrecorder.h
+
+commit 12c443eb1cd22cecd257ea61984fa2dfb31d4992
+Author: John Poet <jpoet@mythtv.org>
+Date:   Tue Feb 5 13:56:45 2013 -0700
+
+    SignalMonitor: Timeout if we don't get a lock in a reasonable amount of time.
+    (cherry picked from commit 6bae400b0bbeb539e6e9390517e1a90f8f6f13d4)
+
+commit fdcc9c202b85c7d00b13aa5ee1232113382110fa
+Author: Thomas Joiner <thomas.b.joiner@gmail.com>
+Date:   Sun Feb 10 19:41:06 2013 -0600
+
+    fix issue #10222: mythcommflag segfaulting
+    
+    The problem in issue #10222 is that it is adding the CODEC_FLAG2_FAST flag.  This causes unsafe functions to be used, causing a segfault. The proper way to fix this would probably be to figure out how to test for the "experimental speedups" flag, however I don't know the codebase well enough for this.
+    
+    I tested how this would affect the speed of mythcommflag on one of my recordings.  The results:
+    
+    Before removing flag:
+    real 2m13.123s
+    user 2m16.713s
+    sys 0m3.502s
+    
+    After removing flag:
+    real 2m13.021s
+    user 2m15.446s
+    sys 0m3.758s
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+    (cherry-picked from 0026dda883ef50ab7f2fda7f2d2218bc56f094a7)
+
+commit e39b4d5b45155320bc1b62296560dab6c1705e73
+Merge: 43bb6d9 75fa1eb
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Tue Feb 26 20:37:20 2013 +0000
+
+    Add AAC and AAC_LATM tages to mythtranscode info output
+    
+    Pull request: https://github.com/MythTV/mythtv/pull/33
+    Merge remote-tracking branch 'glidos/fixes/0.26' into fixes/0.26
+    
+    Refs #11380 and e78e59c6b2d71631e18027b9b9c84212744472bf
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+
+commit 43bb6d9541578631182c54d4d944fc7d94dd8cb6
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Tue Feb 26 00:16:32 2013 +0000
+
+    Make comparisons consistent
+    
+    Refs #11299
+
+commit 093bc647f4b8ca0b9e4bb85f2a336d95a734d122
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Fri Jan 4 11:38:11 2013 +0000
+
+    MythArchive: update mythburn.py to work with the new mpeg2video codec name
+    
+    Refs #11299.
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+    
+    (cherry picked from 13c3035d1fed13a37c42d872b1f8dafb2e6f556f)
+
+commit ca24c0c3246e70c16846771bb1480154043059d2
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Fri Jan 4 11:03:35 2013 +0000
+
+    MythArchive: update mythburn.py to work with the updated encoding profiles
+    
+    Refs #11299.
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+    
+    (cherry picked from a784b93f1d1c6edbc0b47ac578def5d3275171a8)
+
+commit 5bd998931ce84a31f462c28fda3c3af243b51777
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Fri Jan 4 10:50:26 2013 +0000
+
+    MythArchive: update the encoding profiles to work with the current mythffmpeg
+    
+    Refs #11299.
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+    
+    (cherry picked from 5a0e83a20e8f75612b86fb56039b7803a11afd1b)
+
+commit 7a2e60f90081771de6efd495590e3ec461885319
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Mon Feb 25 06:08:35 2013 -0800
+
+    Bump binary version after cherry picking 86c22ed3d5c522bcecb88ecacd58104fc0dd6d8d
+
+commit 7bd6221e17f605d88df3e160075be903ad50508b
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Wed Feb 20 14:14:41 2013 -0800
+
+    Fix h.264 frame/keyframe identification in the player.
+    
+    If a NAL unit that determines a frame start appears as the last NAL
+    unit in the packet, then the frame start is not identified until the
+    start of the next packet.  If this new packet has its own NAL unit
+    that determines a frame start, and that NAL unit is not at the end of
+    the packet, then only one frame start would be counted rather than
+    two.  This is fixed by returning the total number of frame starts,
+    rather than a bool.
+    
+    In theory, the same problem could exist in the recorder, but it
+    appears that the packets in the original recording may have some
+    trailing NAL units that are stripped by the ffmpeg libraries when
+    assembling the packet for the player, causing the situation not to
+    occur.
+    (cherry picked from commit 86c22ed3d5c522bcecb88ecacd58104fc0dd6d8d)
+
+commit 75fa1eb44ac97c4dbc1f46497b0631bbee45b130
+Author: Paul Gardiner <paul@glidos.site>
+Date:   Sat Apr 21 08:52:46 2012 +0100
+
+    Have mythtranscode report aac_latm
+
+commit c3fff6e88c1ab3c9e39483ef5101f83da38acff1
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Wed Feb 20 13:22:06 2013 -0500
+
+    Called methods against wrong object in destructor.
+    
+    Refs #11412
+    (cherry picked from commit e1f14a5380886c6ddf95379341aa0f56481b7587)
+
+commit 060094b10462c9c5494e66c31f4ad80d4dde6990
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Wed Feb 20 13:09:14 2013 -0500
+
+    Make sure forked process has stopped when deleting MythSystem
+    
+    This forces a termination in a forked MythSystem process when the
+    MythSystem object is destroyed, preventing a situation where the private
+    internal object tries to access resources from the no-longer-existent
+    parent object.
+    
+    Fixes #11412
+    (cherry picked from commit 9c51ad39a65eee7a3f985a127700fbc8473ffb4e)
+
+commit f20555091f7ad9cfc7ace955aab59d468156af11
+Author: Kenni Lund <klund@mythtv.org>
+Date:   Sat Feb 16 23:11:00 2013 +0100
+
+    Update the Danish translation of mythfrontend.
+
+commit 87f6f2c12e101f515cefc733bf944936be16174c
+Author: Kenni Lund <klund@mythtv.org>
+Date:   Sat Feb 16 23:07:44 2013 +0100
+
+    Make the string "Record at any time on any channel" translatable in 0.26-fixes.
+
+commit 64f0e4ec24eb52bbbd4318365b3252f9b462ade1
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Feb 10 09:35:52 2013 -0800
+
+    Improved cropping of the bottom 8 lines of 1088-line video.
+    
+    Refs #11358.  Reverts 9d9de7b75d5354c9130526311a0c74d7172ebe6d and
+    cleans up the bottom 8 lines by applying a crop filter to the source.
+    This is tested for the XVideo output method.
+    
+    The VDPAU output method does not use the standard filter mechanism,
+    but it works fine on 1088-line video until the h.264 parser thinks the
+    resolution has changed from 1080 to 1088 lines.  To compensate, we
+    don't acknowledge a resolution change when this happens.
+    (cherry picked from commit c0bc92822fe63221ad8fc5cf52a6e661b37b6f21)
+    
+    Note: the hard-coding of 1088->1080 is not the best way to handle
+    this.  It will be cleaned up in Master.
+
+commit 9aaccb0e199a21311d0200b7787b705e4a67ca87
+Author: Michael Niedermayer <michaelni@gmx.at>
+Date:   Wed Feb 13 22:36:07 2013 +0100
+
+    h264: Reset last_pocs in case of reference or frame number inconsistencies
+    
+    This prevents faulty increasing of has_b_frames
+    Should fix Ticket 2062
+    
+    Signed-off-by: Michael Niedermayer <michaelni@gmx.at>
+    (cherry picked from commit c230af9bccc3cadb373f9007ba14fffb6c2acc75)
+    Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+    (cherry picked from commit 1c1076385f01619f0d0933f9f4fb8f5d1e80435b)
+    
+    Conflicts:
+    	mythtv/external/FFmpeg/libavcodec/h264_refs.c
+
+commit a1b9b1f94a774710443637de034c661618e5baa3
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Feb 1 06:27:27 2013 -0800
+
+    Fix Live TV startup, particularly for analog PVR-xxx tuners.
+    
+    At the start of playback, ffmpeg scans the start of the file for
+    stream info.  While reading packets, it uses ffio_limit() to truncate
+    packets during attempts to read past the size of the file.  The file
+    size is cached at the start of playback, and may be inordinately small
+    for live TV files, triggering a storm of packet truncation and failure
+    to start playback.  We fix this by faking a large file size for live
+    TV playback during the initial call to avformat_find_stream_info().
+    (cherry picked from commit 5758c2a1d8ce448fce51fd5af3ce1a95494a3408)
+
+commit fd43ad10c97eb71ed557db2062e740434f5c372b
+Author: David Engel <dengel@mythtv.org>
+Date:   Fri Feb 1 13:19:48 2013 -0600
+
+    Fix StatusBox to account for template recording rules.
+    
+    Cherry-pick part of SHA1:22c5dbff from master.
+
+commit 856d121b0100cdd8cffa21a5503685ccd45d9bb9
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Thu Jan 31 16:25:40 2013 -0800
+
+    Enable more ffmpeg logging at startup of playback.
+    
+    Allow logging in avformat_find_stream_info() if
+    "-v libav --loglevel debug" is specified.
+    This proves useful for live TV debugging among others.
+    (cherry picked from commit ae0dcaf6dfbbef1ac0bcc0cec1c684262ea9ee5c)
+
+commit 28144cd1c59c9eb5d639f616e544dcd2a5cfb5ed
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Wed Jan 30 09:04:51 2013 +1100
+
+    Revert "Temporary fix for #11159: Fix playback of HD-PVR recording"
+    
+    This reverts commit 3c8d88ac55c2b2c1bc652076d7824529254829a4.
+    
+    It breaks BBC-HD playback consistently.
+
+commit 14aa70771e85e401c68cac78a49b8ef344cce873
+Author: David Engel <dengel@mythtv.org>
+Date:   Fri Jan 25 17:59:34 2013 -0600
+
+    Fix issues which sometimes prevente scheduling around live TV.
+    
+    Backport of SHA1:b05ecd46 to fixes/0.26.
+    
+    There are some cases where we don't attempt to schedule around live
+    TV.  This change cleans up the logic which determines when to do that
+    and fixes some of the bugs found in the process.
+    
+    NB: the case where a user enters live TV immediately before a
+    recording is scheduled to start is still not handled gracefully.
+    Fixing that is a lot tougher and will likely mean involving the
+    scheduler in choosing which input to use for live TV.
+    
+    Refs #11207
+
+commit 3587b8240a5b136df1b454b6b4e2d44294e7ed0a
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Wed Jan 23 21:13:11 2013 -0800
+
+    Rescale 1088-row videos to avoid showing trailing garbage.
+    
+    Refs #11358.  1080i videos may present themselves as 1088 rows
+    (divisible by 16).  The HD-PVR in particular may contain garbage in
+    those last rows.  Specifically, the last two rows may form an annoying
+    green line.  We add a scaling pass to shift the bottom 4 rows (4 to be
+    on the safe side) off the bottom of the display area.
+    (cherry picked from commit 9d9de7b75d5354c9130526311a0c74d7172ebe6d)
+
+commit c86a3d78953ac1e3ffa10f670c73c836cfb1235d
+Author: Daniel Thor Kristjansson <danielk@cuymedia.net>
+Date:   Mon Jan 21 10:48:39 2013 -0500
+
+    Add DCX-3200 as a supported Firewire recorder STB.
+    
+    Fixes #11296.
+
+commit 012ebe9de7e20a0bae1920cfc55199ad63937636
+Author: Richard <peper03@yahoo.com>
+Date:   Fri Dec 14 20:59:53 2012 +0100
+
+    Use the right highlight area in DVD menus when 'wide' is not the first in the list.
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    
+    Fixes #11291
+    (cherry picked from commit 1eaecea6dd38db0c20b94f8ecb549b4c29491297)
+
+commit 512391ddecaa529bba374ed338e3ce170fecfd3f
+Author: Richard <peper03@yahoo.com>
+Date:   Sun Dec 9 20:24:01 2012 +0100
+
+    Always update the still frame timer whenever the timeout changes (including when it should be disabled) to ensure that it doesn't 'expire' accidentally and cause the next still frame (at whatever point in time that may be) to be skipped.
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit d9b022eceab5f979717b6d66335b4d1e7f398b55)
+
+commit 2d710a70ba68fa5139fb2fc4936e167db69637dc
+Author: Richard <peper03@yahoo.com>
+Date:   Wed Dec 5 19:40:04 2012 +0100
+
+    kDecodeAudio is now re-enabled if an audio stream becomes available
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit b082334c82bfb9caa513c29f5f9da44e282c973b)
+
+commit c1929686fd424b51c9725100e2e326525c879b0d
+Author: Richard <peper03@yahoo.com>
+Date:   Sat Jan 19 14:50:31 2013 +0000
+
+    Simplify DVD startup to improve playback reliability
+    
+    The startup code for DVD playback jumps around somewhat trying to find
+    a playable title, which is then used to create audio/video decoders
+    before playback is restarted at firstplay.
+    
+    This doesn't always work as it can leave the DVDs VM in an
+    inconsistent state and, depending on the DVD, looks ugly as playback
+    starts and then restarts or appears to jump somewhere else after a
+    couple of seconds. Because the VM can be left in an inconsistent
+    state, menu navigation/selection issues can arise, which can make it
+    difficult to start playback.
+    
+    The attached patch attempts to clean up the startup code. The
+    DVDRingBuffer no longer tries to find a playable title in OpenFile??,
+    but rather just lets the VM get on with playback. AVFormatDecoder no
+    longer processes the initial frames more than is required to create
+    decoders. Once this has been achieved, any cached data is flushed
+    before jumping back to 'firstplay' (and cleanly resetting the VM). By
+    not displaying the initial frames used to determine the decoders and
+    flushing the cached data, the ugly jump at the start of some DVDs is
+    no longer visible.
+    
+    Fixes #11288
+    
+    Backport from master [414de880b]
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+
+commit 8f8274aa90a5caa37e0cf16c20938a8d73782f02
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Thu Jan 17 14:51:40 2013 -0800
+
+    Fixes #10829.  Handle aspect ratio changes when seeking while paused.
+    (cherry picked from commit 0db9bf4999ab06e0451d57f43af59cee53648559)
+
+commit 91e93155fbeca2c7eaaf061aad91126c8f6a76a1
+Author: Wayne McDougall <waynemcdougall@gmail.com>
+Date:   Wed Jan 16 00:45:58 2013 -0500
+
+    Remove references to --hogcpu from mythcommflag readme.
+    
+    Fixes #11134
+    
+    Signed-off-by: Raymond Wagner <rwagner@mythtv.org>
+    (cherry picked from commit 0a94fc03e31dc6e17c5a6155ecaa71b2a255ca3e)
+
+commit 8ca4caf0c0ed3debd0659c4170970a37fb7dc916
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Tue Jan 15 06:30:32 2013 -0800
+
+    Allow seeking back through the live TV chain.
+    
+     Fixes a regression introduced in 0.25.  Refs #11174.
+
+commit 3c8d88ac55c2b2c1bc652076d7824529254829a4
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Wed Dec 26 13:02:15 2012 +1100
+
+    Temporary fix for #11159: Fix playback of HD-PVR recording
+    
+    This revert FFmpeg commit bfca35114ae174bbabd88526379d95d4022a98b1
+    (ref https://ffmpeg.org/trac/ffmpeg/ticket/2062)
+    (cherry picked from commit d34833f2eeab06bc17338e4d5a8bc33589f41506)
+    
+    Conflicts:
+    	mythtv/external/FFmpeg/libavcodec/h264.c
+
+commit f35f899c79fa4769c7206948ea9612cc1d9adbd7
+Author: Richard <peper03@yahoo.com>
+Date:   Sun Jan 13 07:52:38 2013 -0800
+
+    Fix transitions from a DVD still frame into video.  Fixes #11347.
+    
+    Signed-off-by: Jim Stichnoth <jstichnoth@mythtv.org>
+    (cherry picked from commit fcf176db6e06928364f35f32aa022696fb19edf6)
+
+commit 430900f7bce45d031ec948d867f0903e20544750
+Author: Bradley Baetz <bbaetz@gmail.com>
+Date:   Sun Jan 13 07:30:58 2013 -0800
+
+    Fix a memory leak introduced in 92016b949.  Fixes #11329.
+    
+    Signed-off-by: Jim Stichnoth <jstichnoth@mythtv.org>
+
+commit adb65cc236d40b3a99a74f95718de3eee4c9a602
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sat Jan 12 06:29:19 2013 -0800
+
+    Fix "mythcommflag --rebuild" for non-HDPVR recordings.
+    
+    By default, only identify IDR keyframes for h.264 recordings.
+    However, since DVB-S recordings may lack IDR frames, we check after
+    1000 frames whether any keyframes have been found, and if not, back up
+    and restart using the more lenient setting.
+    
+    Adapted from 802e32ba4dc8852da56db170893e95cbc28637e3 and
+    77bf3275ef3133d81fc979ae40d9728523ff9974.
+
+commit eca41c857ef9618a2e8335b90e97583e08858107
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Jan 11 22:45:11 2013 -0800
+
+    Subtitles: fix missing CEA-708 closed captions.
+    
+    This is a quick hack version of
+    7d9bf3193e0f3d1795c1ead6f16aa386ab7de587, which fixes a CEA-708
+    decoding bug exposed by recent changes to NBC's CEA-708 encoding.
+
+commit 72bca07f09deb4f6fbce6219b6d5aaaa2548bc35
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Thu Jan 3 19:32:21 2013 +0100
+
+    mythccextractor: Skip teletext page headers
+    (cherry picked from commit 9519a103da6ad8dc589042fbda4fdfe4e1a2fca8)
+
+commit 1b055c0eae7cd63f627591a5607eb4703a46f360
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Thu Jan 3 20:52:10 2013 +0100
+
+    mythccextractor: Fix teletext subtitle duration
+    
+    Previously ProcessTeletext() didn't leave one subtitle behind.  This caused the
+    length calculation in IngestSubtitle() to never be performed, which meant that
+    the length was always set to the default value 750 ms.
+    
+    Fixes #11081.
+    (cherry picked from commit 08ad6cef707456e959b48d5e48c09929e023fc49)
+    (cherry picked from commit 018691f04687321f90ef2938455824065bcf674e)
+
+commit 28846f87db59efa28ce20c9309089a49520227bb
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Thu Jan 3 09:01:37 2013 -0800
+
+    Configure the h.264 parser to identify only IDR keyframes.
+    
+    This makes keyframes identified by "mythcommflag --rebuild" and
+    mythtranscode much closer to reality, though there are still
+    discrepancies compared to the recorder and raw ffmpeg.
+    (cherry picked from commit 590f161b1d5ff8c7e08b0beae480ece7a185d3ab)
+
+commit bcc459fa2893f65c1debe9a7f976d3c23e865531
+Author: Chris Pinkham <cpinkham@mythtv.org>
+Date:   Wed Jan 2 10:36:24 2013 -0800
+
+    Bump MDM::downloadNow() timeout up to 60 seconds.
+    
+    The previous 10-second timeout was causing issues when trying to
+    download large lineups from Schedules Direct. This commit bumps
+    the downloadNow() timeout to 60 seconds.  This is a blocking call,
+    so if the caller doesn't want to potentially block for that long,
+    they should be use one of the non-blocking methods.
+    
+    References #11287.
+    
+    (cherry picked from commit afa03f27a2fb442800f148fb28da1f7585a2f02f)
+
+commit ff4edc7e61e6f1f14161f67ab865b6e4d14ff80b
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Tue Jan 1 06:17:48 2013 -0800
+
+    Fix an issue with keyframe positions produced by mythcommflag --rebuild.
+    
+    The seeking code in DecoderBase assumes there is a keyframe at frame
+    0, otherwise it shifts all keyframe numbers by the value of the first
+    keyframe number in the map.  This causes problems for recordings with
+    variable keyframe distances.  To correct this, make sure mythcommflag
+    --rebuild creates an explicit entry for frame 0.
+    
+    Note: this does not fix the issue of mythcommflag --rebuild adding
+    bogus keyframes to the seektable for h.264 recordings.
+    
+    Cherry-picked from a small part of
+    49dbed5be0729b04a5f0fd0426a32fceb2dd7935 .
+
+commit 12f0d5deb4b5bacffbdc3bca4772a2ecc66f79c0
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sun Dec 30 13:03:15 2012 -0500
+
+    Fix typo in tmdb3.py that returns invalid crew IDs.
+    (cherry picked from commit f4bb17ff2b964c001df376337aa29323615cf790)
+
+commit feffc6907bfb4047ef73102c53e3540cd00917d8
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sun Dec 30 02:07:12 2012 -0500
+
+    Allow posixtzinfo to use the TZ environmental variable.
+    
+    This adds a check for the TZ environmental variable, and uses that to
+    define the local timezone if available, rather than always using
+    /etc/localtime. This resolves an issue on Debian-based systems that
+    always use the TZ variable, rather than defining the localtime file.
+    (cherry picked from commit 0bffe0648d7b19ff2b2ca289699982c23a12f455)
+
+commit edba581f7347baa060e1ab75095a57f935ac281d
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sun Dec 30 02:02:14 2012 -0500
+
+    Remove incorrect selection of DST offset.
+    
+    This makes the default offsettzinfo just use the standard timezone
+    offset from the time module, rather than incorrectly using the existence
+    of a DST offset as indication that the system is currently in DST.
+    (cherry picked from commit 4dd0bf8014bf8261c8ed347517ef8197ac7f942e)
+
+commit b563d7f01b3dc3c40abc430150f3f00deb7d6a1d
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Fri Dec 28 20:37:04 2012 +1100
+
+    Fix playback of HLS encrypted streams.
+    
+    The allows ABC iView on iPad to stream to Myth
+    (cherry picked from commit c5a4229401b2c224640cda2a31e9339fcd8157de)
+
+commit a4d2dd12c7f9143dc31be4005e1d437adebd9646
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Dec 27 21:27:51 2012 +1100
+
+    URI is RFC3986 and is escape encoded. Must decode it before using it.
+    
+    Fixes #11307
+    (cherry picked from commit a99e92c8173fb1887a9b3c116b72edf119fbfd5b)
+
 commit 637d6d87d20aa8b17247fedf87b6c78ef091f08c
 Author: Stuart Morgan <smorgan@mythtv.org>
 Date:   Tue Dec 18 16:07:53 2012 +0000
