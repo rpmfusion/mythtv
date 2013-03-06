@@ -174,7 +174,11 @@ Requires(postun): initscripts
 BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
+%if 0%{?fedora} >= 19
+BuildRequires:  mariadb-devel >= 5
+%else
 BuildRequires:  mysql-devel >= 5
+%endif
 BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.6
 BuildRequires:  phonon-devel phonon-backend-gstreamer
@@ -351,7 +355,11 @@ Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
+%if 0%{?fedora} >= 19
+Requires:  mariadb-server >= 5, mariadb >= 5
+%else
 Requires:  mysql-server >= 5, mysql >= 5
+%endif
 Requires:  xmltv
 
 # Generate the required mythtv-frontend-api version string here so we only
@@ -421,7 +429,11 @@ Obsoletes: libmyth-devel < %{version}-%{release}
 Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
+%if 0%{?fedora} >= 19
+Requires:  mariadb-devel >= 5
+%else
 Requires:  mysql-devel >= 5
+%endif
 Requires:  qt4-devel >= 4.6
 Requires:  lm_sensors-devel
 Requires:  lirc-devel
@@ -1449,6 +1461,7 @@ fi
 - Update to latest fixes/0.26, v0.26.0-111-g3944ca9.
 - Add patch for mythlogserver segfault.
 - Add patch for includes in bundled ffmpeg.
+- Add conditionals for mariadb replacing mysql in rawhide (F19).
 
 * Sun Jan 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-5
 - Rebuilt for ffmpeg/x264
