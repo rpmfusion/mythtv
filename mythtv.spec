@@ -78,7 +78,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.26.0
 %if "%{branch}" == "master"
-Release:        0.2.git.%{_gitrev}%{?dist}
+Release:        0.1.git.%{_gitrev}%{?dist}
 %else
 Release:        7%{?dist}
 %endif
@@ -140,6 +140,7 @@ Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 # git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
 Patch0:    mythtv-0.26-fixes.patch
 Patch1:    mythlogserver-segv.patch
+Patch2:    mythtv-0.26.0-types_h.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -822,6 +823,7 @@ on demand content.
 
 %patch0 -p1 -b .mythtv
 %patch1 -p1 -b .mythlogserver
+%patch2 -p1 -b .types_h
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -1443,9 +1445,10 @@ fi
 
 
 %changelog
-* Tue Mar  5 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-7
+* Tue Feb 26 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-7
 - Update to latest fixes/0.26, v0.26.0-111-g3944ca9.
 - Add patch for mythlogserver segfault.
+- Add patch for includes in bundled ffmpeg.
 
 * Sun Jan 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-5
 - Rebuilt for ffmpeg/x264
