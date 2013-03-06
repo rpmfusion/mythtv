@@ -1,0 +1,22 @@
+diff -Naur MythTV-mythtv-d2f9798.orig/mythtv/external/FFmpeg/libavdevice/alsa-audio-common.c MythTV-mythtv-d2f9798/mythtv/external/FFmpeg/libavdevice/alsa-audio-common.c
+--- MythTV-mythtv-d2f9798.orig/mythtv/external/FFmpeg/libavdevice/alsa-audio-common.c	2012-10-02 05:30:24.000000000 -0500
++++ MythTV-mythtv-d2f9798/mythtv/external/FFmpeg/libavdevice/alsa-audio-common.c	2013-03-06 08:00:05.197116477 -0600
+@@ -28,6 +28,7 @@
+  * @author Nicolas George ( nicolas george normalesup org )
+  */
+ 
++#include <sys/types.h>
+ #include <alsa/asoundlib.h>
+ #include "avdevice.h"
+ #include "libavutil/avassert.h"
+diff -Naur MythTV-mythtv-d2f9798.orig/mythtv/external/FFmpeg/libavdevice/alsa-audio-enc.c MythTV-mythtv-d2f9798/mythtv/external/FFmpeg/libavdevice/alsa-audio-enc.c
+--- MythTV-mythtv-d2f9798.orig/mythtv/external/FFmpeg/libavdevice/alsa-audio-enc.c	2012-10-02 05:30:24.000000000 -0500
++++ MythTV-mythtv-d2f9798/mythtv/external/FFmpeg/libavdevice/alsa-audio-enc.c	2013-03-06 08:16:22.113142230 -0600
+@@ -37,6 +37,7 @@
+  * which gives a low latency suitable for real-time playback.
+  */
+ 
++#include <sys/types.h>
+ #include <alsa/asoundlib.h>
+ 
+ #include "libavformat/internal.h"

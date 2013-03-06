@@ -1,8 +1,7 @@
-# Specfile for building MythTV and MythPlugins RPMs from a subversion checkout.
+# Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
-# by:   Chris Petersen <rpm@forevermore.net>
+# by:   Chris Petersen <cpetersen@mythtv.org>
 #       Jarod Wilson <jarod@wilsonet.com>
-#       Richard Shaw <hobbes1069@gmail.com>
 #
 #  Modified/Extended from the great work of:
 #     Axel Thimm <Axel.Thimm@ATrpms.net>
@@ -31,9 +30,12 @@
 #
 # The following options are enabled by default.  Use these options to disable:
 #
+# --without systemd         Use systemd for backend rather than SysV init.
 # --without vdpau           Disable VDPAU support
+# --without vaapi           Disable VAAPI support
 # --without crystalhd       Disable Crystal HD support
 # --without perl            Disable building of the perl bindings
+# --without php             Disable building of the php bindings
 # --without python          Disable building of the python bindings
 #
 # # All plugins get built by default, but you can disable them as you wish:
@@ -58,8 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-# 0.25 release: git tag v0.25.1
-%define _gitrev v0.26.0-28-ge3087dd
+%define _gitrev v0.26.0-111-g3944ca9
 %define branch fixes/0.26
 
 # Mythtv and plugins from github.com
@@ -79,7 +80,7 @@ Version:        0.26.0
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        7%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -96,6 +97,9 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 # Set "--with debug" to enable MythTV debug compile mode
 %define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
+
+# Use SystemD service by default but allow use of SysV init script.
+%define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
 
 # The following options are enabled by default.  Use --without to disable them
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
@@ -132,7 +136,11 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # https://github.com/MythTV/mythtv/tarball/v0.26
 Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
 
+# From the mythtv git repository with the appropriate branch checked out:
+# git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
 Patch0:    mythtv-0.26-fixes.patch
+Patch1:    mythlogserver-segv.patch
+Patch2:    mythtv-0.26.0-types_h.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -147,17 +155,14 @@ Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
 Source111: 99-mythbackend.rules
 
-
 # Global MythTV and Shared Build Requirements
 
-%if 0%{?fedora} >= 16
+%if %{with_systemd}
 # Use systemd
 BuildRequires:  systemd-units
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
-# For sysv -> systemd transition
-Requires(post): systemd-sysv
 %else
 # Use SysV
 Requires(post): chkconfig
@@ -169,10 +174,14 @@ Requires(postun): initscripts
 BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  gcc-c++
+%if 0%{?fedora} >= 19
+BuildRequires:  mariadb-devel >= 5
+%else
 BuildRequires:  mysql-devel >= 5
+%endif
 BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.6
-BuildRequires:  phonon-devel
+BuildRequires:  phonon-devel phonon-backend-gstreamer
 BuildRequires:  libuuid-devel
 
 BuildRequires:  lm_sensors-devel
@@ -185,6 +194,9 @@ BuildRequires:  libXv-devel
 BuildRequires:  libXvMC-devel
 BuildRequires:  libXxf86vm-devel
 BuildRequires:  mesa-libGLU-devel
+%ifarch %arm
+BuildRequires:  mesa-libGLES-devel
+%endif
 BuildRequires:  xorg-x11-proto-devel
 %ifarch %{ix86} x86_64
 BuildRequires:  xorg-x11-drv-intel-devel
@@ -216,7 +228,6 @@ BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
 
 # Audio framework support
-BuildRequires:  SDL-devel
 BuildRequires:  sox-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  jack-audio-connection-kit-devel
@@ -344,7 +355,11 @@ Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
+%if 0%{?fedora} >= 19
+Requires:  mariadb-server >= 5, mariadb >= 5
+%else
 Requires:  mysql-server >= 5, mysql >= 5
+%endif
 Requires:  xmltv
 
 # Generate the required mythtv-frontend-api version string here so we only
@@ -414,7 +429,11 @@ Obsoletes: libmyth-devel < %{version}-%{release}
 Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
+%if 0%{?fedora} >= 19
+Requires:  mariadb-devel >= 5
+%else
 Requires:  mysql-devel >= 5
+%endif
 Requires:  qt4-devel >= 4.6
 Requires:  lm_sensors-devel
 Requires:  lirc-devel
@@ -627,7 +646,6 @@ Group:          Development/Languages
 BuildArch:      noarch
 
 Requires:       MySQL-python
-Requires:       PyXML
 Requires:       python-lxml
 
 %description -n python-MythTV
@@ -816,6 +834,8 @@ on demand content.
     fi
 
 %patch0 -p1 -b .mythtv
+%patch1 -p1 -b .mythlogserver
+%patch2 -p1 -b .types_h
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -889,7 +909,7 @@ pushd mythtv
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
 %if %{with_vdpau}
-    --enable-vdpau				\
+    --enable-vdpau                              \
 %endif
 %if %{with_vaapi}
     --enable-vaapi				\
@@ -1032,7 +1052,7 @@ pushd mythtv
     mkdir -p %{buildroot}%{_localstatedir}/cache/mythtv
     mkdir -p %{buildroot}%{_localstatedir}/log/mythtv
     mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
-    %if 0%{?fedora} >= 16
+    %if %{with_systemd}
     mkdir -p %{buildroot}%{_unitdir}
     %else
     mkdir -p %{buildroot}%{_sysconfdir}/init.d
@@ -1048,7 +1068,7 @@ pushd mythtv
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
 
     ### SystemD based setup. ###
-    %if 0%{?fedora} >= 16
+    %if %{with_systemd}
     install -p -m 0644 %{SOURCE105} %{buildroot}%{_unitdir}/
     install -p -m 0644 %{SOURCE104} %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
     # Install udev rules for devices that may initialize late in the boot
@@ -1158,7 +1178,7 @@ usermod -a -G audio,video mythtv
 exit 0
 
 %post backend
-%if 0%{?fedora} >= 16
+%if %{with_systemd}
 if [ $1 -eq 1 ] ; then 
     # Initial installation 
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
@@ -1169,7 +1189,7 @@ fi
 
 
 %preun backend
-%if 0%{?fedora} >= 16
+%if %{with_systemd}
 if [ $1 -eq 0 ] ; then
     # Package removal, not upgrade
     /bin/systemctl --no-reload disable mythbackend.service > /dev/null 2>&1 || :
@@ -1183,7 +1203,7 @@ fi
 %endif
 
 %postun backend
-%if 0%{?fedora} >= 16
+%if %{with_systemd}
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ] ; then
     # Package upgrade, not uninstall
@@ -1193,21 +1213,6 @@ fi
 if [ "$1" -ge "1" ] ; then
     /sbin/service mythbackend condrestart >/dev/null 2>&1 || :
 fi
-%endif
-
-%if 0%{?fedora} >= 16
-%triggerun -- mythtv < 0.24.1-3
-# Save the current service runlevel info
-# User must manually run systemd-sysv-convert --apply httpd
-# to migrate them to systemd targets
-/usr/bin/systemd-sysv-convert --save mythbackend >/dev/null 2>&1 ||:
-
-# If the package is allowed to autostart:
-/bin/systemctl --no-reload enable mythbackend.service >/dev/null 2>&1 ||:
-
-# Run these because the SysV package being removed won't do them
-/sbin/chkconfig --del mythbackend >/dev/null 2>&1 || :
-/bin/systemctl try-restart mythbackend.service >/dev/null 2>&1 || :
 %endif
 
 ################################################################################
@@ -1255,7 +1260,7 @@ fi
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
-%if 0%{?fedora} >=16
+%if %{with_systemd}
 %{_unitdir}/mythbackend.service
 /lib/udev/rules.d/99-mythbackend.rules
 %else
@@ -1323,8 +1328,8 @@ fi
 %{perl_vendorlib}/MythTV.pm
 %dir %{perl_vendorlib}/MythTV
 %{perl_vendorlib}/MythTV/*.pm
-%dir %{perl_vendorlib}/IO/Socket
-%dir %{perl_vendorlib}/IO/Socket/INET
+#%dir %{perl_vendorlib}/IO/Socket
+#%dir %{perl_vendorlib}/IO/Socket/INET
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 %endif
@@ -1452,6 +1457,24 @@ fi
 
 
 %changelog
+* Tue Feb 26 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-7
+- Update to latest fixes/0.26, v0.26.0-111-g3944ca9.
+- Add patch for mythlogserver segfault.
+- Add patch for includes in bundled ffmpeg.
+- Add conditionals for mariadb replacing mysql in rawhide (F19).
+
+* Sun Jan 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-5
+- Rebuilt for ffmpeg/x264
+
+* Sat Dec 22 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-4
+- Update to latest upstream release.
+
+* Tue Dec  4 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-3
+- Update to latest upstream release.
+
+* Fri Nov 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-2
+- Rebuilt for x264
+
 * Sun Oct 28 2012 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-1
 - Update to latest upstream release.
 - Remove mysql.txt as it is no longer used.
@@ -1504,7 +1527,7 @@ fi
 * Tue Mar 20 2012 Richard Shaw <hobbes1069@gmail.com> - 0.25-1
 - Update to latest release 0.25.
 
-* Fri Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
+* Sat Mar 03 2012 Richard Shaw <hobbes1069@gmail.com> - 0.24.2-2
 - Remove transcode as build requirement.
 - Misc. spec file cleanup.
 
@@ -1532,7 +1555,7 @@ fi
 - Changes default user for mythbackend from root to mythtv on
   Fedora 16+. See http://rpmfusion.org/Package/mythtv for additonal information.
 
-* Sun Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
+* Thu Oct 20 2011 Richard Shaw <hobbes1069@gmail.com> - 0.24.1-3
 - Update to latest 0.24.1-fixes, git revision e89d6a9f7e.
 - Fixes BZ#1993, FTBFS on Fedora 16.
 - Moves from sysv init to systemd unit file for mythbackend on Fedora 16+
