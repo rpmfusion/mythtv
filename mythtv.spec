@@ -98,8 +98,6 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # Set "--with debug" to enable MythTV debug compile mode
 %define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
 
-# Use SystemD service by default but allow use of SysV init script.
-%define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
 
 # The following options are enabled by default.  Use --without to disable them
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
@@ -107,8 +105,11 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 %if 0%{?rhel}
 %define with_crystalhd     %{?_without_crystalhd:  1} %{?!_without_crystalhd:  0}
+%define with_systemd       %{?_without_systemd:    1} %{?!_without_systemd:    0}
+
 %else
 %define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
+%define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
 %endif
 
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
