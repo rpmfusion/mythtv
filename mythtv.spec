@@ -80,7 +80,7 @@ Version:        0.26.0
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        7%{?dist}
+Release:        7.1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1457,6 +1457,9 @@ fi
 
 
 %changelog
+* Wed Mar 03 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-7.1
+- Rebuild for updated x264.
+
 * Tue Feb 26 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-7
 - Update to latest fixes/0.26, v0.26.0-111-g3944ca9.
 - Add patch for mythlogserver segfault.
