@@ -1,9 +1,14 @@
  README.rst                                         |    1 +
  mythplugins/mytharchive/i18n/mytharchive_es_es.qm  |  Bin 36188 -> 36136 bytes
  mythplugins/mytharchive/i18n/mytharchive_es_es.ts  |   45 +-
+ .../mytharchive/mytharchive/exportnative.cpp       |   13 +-
+ .../mytharchive/mytharchive/importnative.cpp       |   12 +-
+ mythplugins/mytharchive/mytharchive/logviewer.cpp  |   53 +-
+ mythplugins/mytharchive/mytharchive/mythburn.cpp   |    5 +-
+ mythplugins/mytharchive/mytharchivehelper/main.cpp |  421 +--
  .../mythburn/encoder_profiles/ffmpeg_dvd_ntsc.xml  |   24 +-
  .../mythburn/encoder_profiles/ffmpeg_dvd_pal.xml   |   24 +-
- .../mytharchive/mythburn/scripts/mythburn.py       |   16 +-
+ .../mytharchive/mythburn/scripts/mythburn.py       |   17 +-
  mythplugins/mythgallery/i18n/mythgallery_es_es.ts  |    4 +-
  mythplugins/mythgame/i18n/mythgame_es_es.ts        |    4 +-
  mythplugins/mythmusic/i18n/mythmusic_es_es.ts      |   68 +-
@@ -11,7 +16,17 @@
  mythplugins/mythmusic/i18n/mythmusic_it.ts         | 3790 +++++++++++++++-----
  mythplugins/mythmusic/mythmusic/cddb.cpp           |    6 +-
  mythplugins/mythmusic/mythmusic/cdrip.cpp          |    2 +-
+ mythplugins/mythmusic/mythmusic/decoderhandler.cpp |    9 +-
+ mythplugins/mythmusic/mythmusic/musiccommon.cpp    |   12 +-
+ mythplugins/mythmusic/mythmusic/playersettings.cpp |    2 +-
+ mythplugins/mythmusic/mythmusic/pls.cpp            |  209 +-
+ mythplugins/mythmusic/mythmusic/pls.h              |   14 +-
  mythplugins/mythmusic/mythmusic/shoutcast.cpp      |   20 +-
+ .../mythmusic/mythmusic/visualizationsettings.cpp  |    6 +
+ .../mythmusic/theme/default-wide/music-base.xml    |    7 +
+ .../mythmusic/theme/default-wide/music-ui.xml      |    6 +-
+ mythplugins/mythmusic/theme/default/music-base.xml |    7 +
+ mythplugins/mythmusic/theme/default/stream-ui.xml  |  450 +++
  mythplugins/mythweather/i18n/mythweather_es_es.qm  |  Bin 23630 -> 23631 bytes
  mythplugins/mythweather/i18n/mythweather_es_es.ts  |    3 +-
  mythplugins/mythweather/i18n/mythweather_pl.qm     |  Bin 23846 -> 23847 bytes
@@ -29,6 +44,7 @@
  mythtv/external/FFmpeg/libavcodec/h264_refs.c      |    3 +
  mythtv/external/FFmpeg/libavcodec/pcm.c            |    5 +-
  mythtv/external/FFmpeg/libavformat/avidec.c        |    9 +
+ mythtv/external/FFmpeg/libavformat/mpegts-mythtv.c |    1 +
  mythtv/external/FFmpeg/libavformat/utils.c         |    4 +-
  mythtv/i18n/mythfrontend_da.qm                     |  Bin 611287 -> 611700 bytes
  mythtv/i18n/mythfrontend_da.ts                     | 1208 ++++---
@@ -36,16 +52,23 @@
  mythtv/i18n/mythfrontend_es_es.ts                  | 2180 +++++------
  mythtv/i18n/mythfrontend_pl.qm                     |  Bin 350611 -> 354449 bytes
  mythtv/i18n/mythfrontend_pl.ts                     | 2733 +++++++-------
+ mythtv/libs/libmyth/audio/audiooutputbase.cpp      |    2 +-
  mythtv/libs/libmyth/mythcontext.cpp                |    2 +-
  mythtv/libs/libmyth/mythmediamonitor.cpp           |    2 +-
- mythtv/libs/libmyth/programinfo.cpp                |   20 +-
+ mythtv/libs/libmyth/programinfo.cpp                |   22 +-
+ mythtv/libs/libmythbase/mythdate.cpp               |    6 +
  mythtv/libs/libmythbase/mythdownloadmanager.cpp    |    2 +-
  mythtv/libs/libmythbase/mythsystem.cpp             |    5 +
  mythtv/libs/libmythbase/mythversion.h              |    2 +-
  mythtv/libs/libmythbase/signalhandling.cpp         |    8 +-
  mythtv/libs/libmythdvdnav/dvdnav/dvd_types.h       |   11 +
- mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h          |    7 +
+ mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c          |   15 +-
+ mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h          |    9 +-
+ mythtv/libs/libmythdvdnav/dvdnav/dvdnav_internal.h |    8 +
  mythtv/libs/libmythdvdnav/dvdnav/highlight.c       |   60 +
+ mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c           |    3 +-
+ mythtv/libs/libmythdvdnav/dvdread/ifo_read.c       |  141 +-
+ mythtv/libs/libmythdvdnav/dvdread/ifo_types.h      |    2 +
  .../libs/libmythtv/AirPlay/mythraopconnection.cpp  |  153 +-
  mythtv/libs/libmythtv/Bluray/bdringbuffer.h        |    6 +-
  mythtv/libs/libmythtv/Bluray/mythbdplayer.cpp      |    4 +-
@@ -63,7 +86,7 @@
  mythtv/libs/libmythtv/asirecorder.h                |    1 +
  mythtv/libs/libmythtv/asisignalmonitor.cpp         |    6 +-
  mythtv/libs/libmythtv/asisignalmonitor.h           |    1 +
- mythtv/libs/libmythtv/avformatdecoder.cpp          |  227 +-
+ mythtv/libs/libmythtv/avformatdecoder.cpp          |  230 +-
  mythtv/libs/libmythtv/avformatdecoder.h            |    6 +-
  mythtv/libs/libmythtv/avfringbuffer.cpp            |    4 +
  mythtv/libs/libmythtv/avfringbuffer.h              |    6 +-
@@ -73,12 +96,14 @@
  mythtv/libs/libmythtv/cetonsignalmonitor.cpp       |    6 +-
  mythtv/libs/libmythtv/cetonsignalmonitor.h         |    1 +
  mythtv/libs/libmythtv/decoderbase.h                |    6 +-
- mythtv/libs/libmythtv/dtvrecorder.cpp              |  339 +-
+ mythtv/libs/libmythtv/diseqcsettings.cpp           |    4 +-
+ mythtv/libs/libmythtv/dtvrecorder.cpp              |  342 +-
  mythtv/libs/libmythtv/dtvrecorder.h                |    8 +-
  mythtv/libs/libmythtv/dvbrecorder.cpp              |   14 +-
  mythtv/libs/libmythtv/dvbrecorder.h                |    1 +
  mythtv/libs/libmythtv/dvbsignalmonitor.cpp         |    6 +-
  mythtv/libs/libmythtv/dvbsignalmonitor.h           |    1 +
+ mythtv/libs/libmythtv/eithelper.cpp                |   15 +-
  mythtv/libs/libmythtv/filtermanager.cpp            |   38 +
  mythtv/libs/libmythtv/firewiredevice.cpp           |    1 +
  mythtv/libs/libmythtv/firewiresignalmonitor.cpp    |    6 +-
@@ -96,18 +121,26 @@
  mythtv/libs/libmythtv/mythccextractorplayer.h      |    2 +-
  mythtv/libs/libmythtv/mythcommflagplayer.cpp       |   21 +
  mythtv/libs/libmythtv/mythplayer.cpp               |   43 +-
+ mythtv/libs/libmythtv/openglvideo.cpp              |    1 +
+ mythtv/libs/libmythtv/recordingprofile.cpp         |    2 +-
  mythtv/libs/libmythtv/ringbuffer.h                 |    4 +-
  mythtv/libs/libmythtv/signalmonitor.cpp            |    1 +
  mythtv/libs/libmythtv/signalmonitor.h              |    1 +
  mythtv/libs/libmythtv/tv_play.cpp                  |   13 +-
  mythtv/libs/libmythtv/tv_rec.cpp                   |    6 +-
+ mythtv/libs/libmythtv/videoout_openglvaapi.cpp     |    1 +
+ mythtv/libs/libmythtv/videosource.cpp              |   87 +-
+ mythtv/libs/libmythui/DisplayRes.cpp               |   36 +-
+ mythtv/libs/libmythui/DisplayResScreen.h           |    6 +
+ mythtv/libs/libmythui/DisplayResX.cpp              |    4 +-
  mythtv/libs/libmythui/libmythui.pro                |    1 +
  mythtv/libs/libmythui/mythscreenstack.cpp          |    2 +-
  mythtv/libs/libmythui/mythuibuttonlist.cpp         |    2 +-
- mythtv/libs/libmythui/mythuieditbar.cpp            |    1 +
+ mythtv/libs/libmythui/mythuieditbar.cpp            |    2 +-
  mythtv/libs/libmythui/mythuiimage.cpp              |    3 +-
  mythtv/libs/libmythui/mythuitype.cpp               |   11 +-
  mythtv/libs/libmythui/mythuiwebbrowser.cpp         |   10 +-
+ mythtv/locales/nl_nl.xml                           |   37 +
  mythtv/programs/mythavtest/main.cpp                |    5 +-
  mythtv/programs/mythbackend/autoexpire.cpp         |    4 +-
  mythtv/programs/mythbackend/autoexpire.h           |    1 -
@@ -119,9 +152,11 @@
  mythtv/programs/mythcommflag/README.txt            |   10 +-
  mythtv/programs/mythcommflag/main.cpp              |    5 +-
  mythtv/programs/mythfilldatabase/main.cpp          |    5 +-
+ mythtv/programs/mythfilldatabase/xmltvparser.cpp   |   12 +
  mythtv/programs/mythfrontend/guidegrid.cpp         |   17 +-
  mythtv/programs/mythfrontend/main.cpp              |    5 +-
- mythtv/programs/mythfrontend/playbackbox.cpp       |    4 +-
+ mythtv/programs/mythfrontend/playbackbox.cpp       |   51 +-
+ mythtv/programs/mythfrontend/playbackbox.h         |    6 +
  mythtv/programs/mythfrontend/scheduleeditor.cpp    |    2 +-
  mythtv/programs/mythfrontend/services/frontend.cpp |    2 +-
  mythtv/programs/mythfrontend/statusbox.cpp         |    8 +-
@@ -135,14 +170,23 @@
  mythtv/programs/mythshutdown/main.cpp              |   55 +-
  mythtv/programs/mythtranscode/main.cpp             |    5 +-
  mythtv/programs/mythtranscode/transcode.cpp        |    6 +
- mythtv/programs/mythtv-setup/backendsettings.cpp   |    6 +-
+ mythtv/programs/mythtv-setup/backendsettings.cpp   |   20 +-
  mythtv/programs/mythtv-setup/main.cpp              |    5 +-
  mythtv/programs/mythutil/main.cpp                  |    6 +-
  mythtv/programs/mythwelcome/main.cpp               |    5 +-
  .../distros/mythtv_data/data_mythtv.py             |   20 +-
  .../nv_python_libs/youtube/youtube_api.py          |   27 +-
  mythtv/programs/scripts/metadata/Movie/tmdb3.py    |  109 +-
- 144 files changed, 7551 insertions(+), 4606 deletions(-)
+ .../MythCenter-wide/htmls/progdetails_page1.html   |    4 +-
+ .../MythCenter-wide/htmls/progdetails_page2.html   |    4 +-
+ mythtv/themes/MythCenter-wide/music-base.xml       |    7 +
+ mythtv/themes/MythCenter-wide/music-ui.xml         |    6 +-
+ mythtv/themes/MythCenter-wide/schedule-ui.xml      |    4 +-
+ .../themes/MythCenter/htmls/progdetails_page1.html |    4 +-
+ .../themes/MythCenter/htmls/progdetails_page2.html |    4 +-
+ mythtv/themes/MythCenter/schedule-ui.xml           |    2 +-
+ mythtv/themes/Terra/weather-ui.xml                 |   49 +-
+ 188 files changed, 8609 insertions(+), 5320 deletions(-)
 
 diff --git a/README.rst b/README.rst
 index a151d89..576e0dc 100644
@@ -294,6 +338,694 @@ index 51f654c..9387d6d 100644
          <source>Burn DVD</source>
          <translation>Grabar DVD</translation>
      </message>
+diff --git a/mythplugins/mytharchive/mytharchive/exportnative.cpp b/mythplugins/mytharchive/mytharchive/exportnative.cpp
+index 38c1e89..7420a48 100644
+--- a/mythplugins/mytharchive/mytharchive/exportnative.cpp
++++ b/mythplugins/mytharchive/mytharchive/exportnative.cpp
+@@ -476,21 +476,16 @@ void ExportNative::runScript()
+     QString configDir = tempDir + "config";
+     QString commandline;
+ 
+-    // remove existing progress.log if present
+-    if (QFile::exists(logDir + "/progress.log"))
+-        QFile::remove(logDir + "/progress.log");
++    // remove any existing logs
++    myth_system("rm -f " + logDir + "/*.log");
+ 
+     // remove cancel flag file if present
+     if (QFile::exists(logDir + "/mythburncancel.lck"))
+         QFile::remove(logDir + "/mythburncancel.lck");
+ 
+     createConfigFile(configDir + "/mydata.xml");
+-    commandline = "mytharchivehelper --nativearchive --outfile " + configDir +
+-                  "/mydata.xml";  // job file
+-    commandline += logPropagateArgs;
+-    if (!logPropagateQuiet())
+-        commandline += " --quiet";
+-    commandline += " > "  + logDir + "/progress.log 2>&1 &";            // Logs
++    commandline = "mytharchivehelper --logpath " + logDir + " --nativearchive "
++                  "--outfile " + configDir + "/mydata.xml";  // job file
+ 
+     uint flags = kMSRunBackground | kMSDontBlockInputDevs |
+                  kMSDontDisableDrawing;
+diff --git a/mythplugins/mytharchive/mytharchive/importnative.cpp b/mythplugins/mytharchive/mytharchive/importnative.cpp
+index d3992b5..b180675 100644
+--- a/mythplugins/mytharchive/mytharchive/importnative.cpp
++++ b/mythplugins/mytharchive/mytharchive/importnative.cpp
+@@ -449,16 +449,12 @@ void ImportNative::finishedPressed()
+ 
+     QString logDir = tempDir + "logs";
+ 
+-    // remove existing progress.log if prescent
+-    if (QFile::exists(logDir + "/progress.log"))
+-        QFile::remove(logDir + "/progress.log");
++    // remove any existing logs
++    myth_system("rm -f " + logDir + "/*.log");
+ 
+-    commandline = "mytharchivehelper --importarchive --infile \"" + m_xmlFile +
++    commandline = "mytharchivehelper --logpath " + logDir + " --importarchive "
++                  "--infile \"" + m_xmlFile +
+                   "\" --chanid " + chanID;
+-    commandline += logPropagateArgs;
+-    if (!logPropagateQuiet())
+-        commandline += " --quiet";
+-    commandline += " > "  + logDir + "/progress.log 2>&1 &";
+ 
+     uint flags = kMSRunBackground | kMSDontBlockInputDevs |
+                  kMSDontDisableDrawing;
+diff --git a/mythplugins/mytharchive/mytharchive/logviewer.cpp b/mythplugins/mytharchive/mytharchive/logviewer.cpp
+index ba32554..da445ff 100644
+--- a/mythplugins/mytharchive/mytharchive/logviewer.cpp
++++ b/mythplugins/mytharchive/mytharchive/logviewer.cpp
+@@ -26,12 +26,49 @@ void showLogViewer(void)
+ {
+     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
+     QString logDir = getTempDirectory() + "logs";
++    QString progressLog;
++    QString fullLog;
++
++    // wait for a log file to be available
++    int tries = 10;
++    while (tries--)
++    {
++        if (QFile::exists(logDir + "/progress.log"))
++            progressLog = logDir + "/progress.log";
++
++        if (QFile::exists(logDir + "/mythburn.log"))
++            fullLog = logDir + "/mythburn.log";
++
++        // we wait for both the progress.log and mythburn.log
++        if ((!progressLog.isEmpty()) && (!fullLog.isEmpty()))
++            break;
++
++        // or we wait for a log from mytharchivehelper
++        if (progressLog.isEmpty() && fullLog.isEmpty())
++        {
++            QStringList logFiles;
++            QStringList filters;
++            filters << "*.log";
++
++            QDir d(logDir);
++            logFiles = d.entryList(filters, QDir::Files | QDir::Readable, QDir::Time);
++
++            if (logFiles.count())
++            {
++                // the first log file should be the newest one available
++                progressLog = logDir + '/' + logFiles[0];
++                break;
++            }
++        }
++
++        sleep(1);
++    }
+ 
+     // do any logs exist?
+-    if (QFile::exists(logDir + "/progress.log") || QFile::exists(logDir + "/mythburn.log"))
++    if ((!progressLog.isEmpty()) || (!fullLog.isEmpty()))
+     {
+         LogViewer *viewer = new LogViewer(mainStack);
+-        viewer->setFilenames(logDir + "/progress.log", logDir + "/mythburn.log");
++        viewer->setFilenames(progressLog, fullLog);
+         if (viewer->Create())
+             mainStack->AddScreen(viewer);
+     }
+@@ -244,6 +281,8 @@ QString LogViewer::getSetting(const QString &key)
+ 
+ bool LogViewer::loadFile(QString filename, QStringList &list, int startline)
+ {
++    bool strip = !(filename.endsWith("progress.log") || filename.endsWith("mythburn.log"));
++
+     list.clear();
+ 
+     QFile file(filename);
+@@ -267,6 +306,16 @@ bool LogViewer::loadFile(QString filename, QStringList &list, int startline)
+         while ( !stream.atEnd() )
+         {
+             s = stream.readLine();
++
++            if (strip)
++            {
++                // the logging from mytharchivehelper contains a lot of junk
++                // we are not interested in so just strip it out
++                int pos = s.indexOf(" - ");
++                if (pos != -1)
++                    s = s.mid(pos + 3);
++            }
++
+             list.append(s);
+         }
+         file.close();
+diff --git a/mythplugins/mytharchive/mytharchive/mythburn.cpp b/mythplugins/mytharchive/mytharchive/mythburn.cpp
+index 4b0c154..46bf656 100644
+--- a/mythplugins/mytharchive/mytharchive/mythburn.cpp
++++ b/mythplugins/mytharchive/mytharchive/mythburn.cpp
+@@ -942,9 +942,8 @@ void MythBurn::runScript()
+     QString configDir = tempDir + "config";
+     QString commandline;
+ 
+-    // remove existing progress.log if present
+-    if (QFile::exists(logDir + "/progress.log"))
+-        QFile::remove(logDir + "/progress.log");
++    // remove any existing logs
++    myth_system("rm -f " + logDir + "/*.log");
+ 
+     // remove cancel flag file if present
+     if (QFile::exists(logDir + "/mythburncancel.lck"))
+diff --git a/mythplugins/mytharchive/mytharchivehelper/main.cpp b/mythplugins/mytharchive/mytharchivehelper/main.cpp
+index 549999d..25eb440 100644
+--- a/mythplugins/mytharchive/mytharchivehelper/main.cpp
++++ b/mythplugins/mytharchive/mytharchivehelper/main.cpp
+@@ -119,6 +119,7 @@ class NativeArchive
+       int exportVideo(QDomElement &itemNode, const QString &saveDirectory);
+   private:
+       QString findNodeText(const QDomElement &elem, const QString &nodeName);
++      int getFieldList(QStringList &fieldList, const QString &tableName);
+ };
+ 
+ NativeArchive::NativeArchive(void)
+@@ -145,80 +146,15 @@ NativeArchive::~NativeArchive(void)
+ 
+ bool NativeArchive::copyFile(const QString &source, const QString &destination)
+ {
+-    QFile srcFile(source), destFile(destination);
+-
+-    LOG(VB_JOBQUEUE, LOG_INFO, QString("copying from %1").arg(source));
+-    LOG(VB_JOBQUEUE, LOG_INFO, QString("to %2").arg(destination));
+-
+-    if (!srcFile.open(QIODevice::ReadOnly))
+-    {
+-        LOG(VB_JOBQUEUE, LOG_ERR, "Unable to open source file");
+-        return false;
+-    }
+-
+-    if (!destFile.open(QIODevice::WriteOnly))
+-    {
+-        LOG(VB_JOBQUEUE, LOG_ERR, "Unable to open destination file");
+-        LOG(VB_JOBQUEUE, LOG_ERR, "Do you have write access to the directory?");
+-        srcFile.close();
+-        return false;
+-    }
+-
+-    // get free space available on destination
+-    int64_t dummy;
+-    int64_t freeSpace = getDiskSpace(destination, dummy, dummy);
+-
+-    int srcLen, destLen, percent = 0, lastPercent = 0;
+-    int64_t wroteSize = 0, totalSize = srcFile.size();
+-    char buffer[1024*1024];
+-
+-    if (freeSpace != -1 && freeSpace < totalSize / 1024)
+-    {
+-        LOG(VB_JOBQUEUE, LOG_ERR,
+-            "Not enough free space available on destination filesystem.");
+-        LOG(VB_JOBQUEUE, LOG_ERR, QString("Available: %1 Needed %2")
+-                             .arg(freeSpace).arg(totalSize));
+-        destFile.close();
+-        srcFile.close();
+-        return false;
+-    }
+-
+-    while ((srcLen = srcFile.read(buffer, sizeof(buffer))) > 0)
+-    {
+-        destLen = destFile.write(buffer, srcLen);
+-
+-        if (destLen == -1 || srcLen != destLen)
+-        {
+-            LOG(VB_JOBQUEUE, LOG_ERR,
+-                "While trying to write to destination file.");
+-            srcFile.close();
+-            destFile.close();
+-            return false;
+-        }
+-        wroteSize += destLen;
+-        percent = (int) ((100.0 * wroteSize) / totalSize);
+-        if (percent % 5 == 0  && percent != lastPercent)
+-        {
+-            LOG(VB_JOBQUEUE, LOG_INFO, QString("%1 out of %2 (%3%) completed")
+-                    .arg(formatSize(wroteSize/1024))
+-                    .arg(formatSize(totalSize/1024)).arg(percent));
+-            lastPercent = percent;
+-        }
+-    }
+-
+-    srcFile.close();
+-    destFile.close();
+-    if (srcFile.size() != destFile.size())
++    QString command = QString("mythutil --copyfile --infile %1 --outfile %2")
++                              .arg(source).arg(destination);
++    uint res = myth_system(command);
++    if (res != GENERIC_EXIT_OK)
+     {
+-        LOG(VB_JOBQUEUE, LOG_ERR, "Copy not completed OK - "
+-            "Source and destination file sizes do not match!!");
+         LOG(VB_JOBQUEUE, LOG_ERR,
+-            QString("Source is %1 bytes, Destination is %2 bytes")
+-                .arg(srcFile.size()).arg(destFile.size()));
++            QString("Failed while running %1. Result: %2").arg(command).arg(res));
+         return false;
+     }
+-    else
+-        LOG(VB_JOBQUEUE, LOG_INFO, "Copy completed OK");
+ 
+     return true;
+ }
+@@ -466,6 +402,24 @@ static QString fixFilename(const QString &filename)
+     return ret;
+ }
+ 
++int NativeArchive::getFieldList(QStringList &fieldList, const QString &tableName)
++{
++    fieldList.clear();
++
++    MSqlQuery query(MSqlQuery::InitCon());
++    if (query.exec("DESCRIBE " + tableName))
++    {
++        while (query.next())
++        {
++            fieldList.append(query.value(0).toString());
++        }
++    }
++    else
++        MythDB::DBError("describe table", query);
++
++    return fieldList.count();
++}
++
+ int NativeArchive::exportRecording(QDomElement   &itemNode,
+                                    const QString &saveDirectory)
+ {
+@@ -512,16 +466,13 @@ int NativeArchive::exportRecording(QDomElement   &itemNode,
+     root.appendChild(recorded);
+ 
+     // get details from recorded
++    QStringList fieldList;
++    getFieldList(fieldList, "recorded");
++
+     MSqlQuery query(MSqlQuery::InitCon());
+-    query.prepare("SELECT chanid, starttime, endtime, title, subtitle,"
+-                  " description, category, hostname, bookmark, editing,"
+-                  " cutlist, autoexpire, commflagged, recgroup, recordid,"
+-                  " seriesid, programid, lastmodified, filesize, stars,"
+-                  " previouslyshown, originalairdate, preserve, findid,"
+-                  " deletepending, transcoder, timestretch, recpriority,"
+-                  " basename, progstart, progend, playgroup, profile,"
+-                  " duplicate, transcoded FROM recorded "
+-            "WHERE chanid = :CHANID and starttime = :STARTTIME;");
++    query.prepare("SELECT " + fieldList.join(",")
++                + " FROM recorded"
++                  " WHERE chanid = :CHANID and starttime = :STARTTIME;");
+     query.bindValue(":CHANID", chanID);
+     query.bindValue(":STARTTIME", startTime);
+ 
+@@ -530,182 +481,20 @@ int NativeArchive::exportRecording(QDomElement   &itemNode,
+         QDomElement elem;
+         QDomText text;
+ 
+-        elem = doc.createElement("chanid");
+-        text = doc.createTextNode(query.value(0).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("starttime");
+-        text = doc.createTextNode(query.value(1).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("endtime");
+-        text = doc.createTextNode(query.value(2).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("title");
+-        text = doc.createTextNode(query.value(3).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("subtitle");
+-        text = doc.createTextNode(query.value(4).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("description");
+-        text = doc.createTextNode(query.value(5).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("category");
+-        text = doc.createTextNode(query.value(6).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("hostname");
+-        text = doc.createTextNode(query.value(7).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("bookmark");
+-        text = doc.createTextNode(query.value(8).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("editing");
+-        text = doc.createTextNode(query.value(9).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("cutlist");
+-        text = doc.createTextNode(query.value(10).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("autoexpire");
+-        text = doc.createTextNode(query.value(11).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("commflagged");
+-        text = doc.createTextNode(query.value(12).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("recgroup");
+-        text = doc.createTextNode(query.value(13).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("recordid");
+-        text = doc.createTextNode(query.value(14).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("seriesid");
+-        text = doc.createTextNode(query.value(15).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("programid");
+-        text = doc.createTextNode(query.value(16).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("lastmodified");
+-        text = doc.createTextNode(query.value(17).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("filesize");
+-        text = doc.createTextNode(query.value(18).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("stars");
+-        text = doc.createTextNode(query.value(19).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("previouslyshown");
+-        text = doc.createTextNode(query.value(20).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("originalairdate");
+-        text = doc.createTextNode(query.value(21).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("preserve");
+-        text = doc.createTextNode(query.value(22).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("findid");
+-        text = doc.createTextNode(query.value(23).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("deletepending");
+-        text = doc.createTextNode(query.value(24).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("transcoder");
+-        text = doc.createTextNode(query.value(25).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("timestretch");
+-        text = doc.createTextNode(query.value(26).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("recpriority");
+-        text = doc.createTextNode(query.value(27).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("basename");
+-        text = doc.createTextNode(query.value(28).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("progstart");
+-        text = doc.createTextNode(query.value(29).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("progend");
+-        text = doc.createTextNode(query.value(30).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("playgroup");
+-        text = doc.createTextNode(query.value(31).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("profile");
+-        text = doc.createTextNode(query.value(32).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+-
+-        elem = doc.createElement("duplicate");
+-        text = doc.createTextNode(query.value(33).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
++        for (int x = 0; x < fieldList.size(); x++)
++        {
++            elem = doc.createElement(fieldList[x]);
++            text = doc.createTextNode(query.value(x).toString());
++            elem.appendChild(text);
++            recorded.appendChild(elem);
++        }
+ 
+-        elem = doc.createElement("transcoded");
+-        text = doc.createTextNode(query.value(34).toString());
+-        elem.appendChild(text);
+-        recorded.appendChild(elem);
+         LOG(VB_JOBQUEUE, LOG_INFO, "Created recorded element for " + title);
+     }
++    else
++    {
++        LOG(VB_JOBQUEUE, LOG_INFO, "Failed to get recorded field list");
++    }
+ 
+     // add channel details
+     query.prepare("SELECT chanid, channum, callsign, name "
+@@ -777,7 +566,7 @@ int NativeArchive::exportRecording(QDomElement   &itemNode,
+ 
+     // add the recordedmarkup table
+     QDomElement recordedmarkup = doc.createElement("recordedmarkup");
+-    query.prepare("SELECT chanid, starttime, mark, offset, type "
++    query.prepare("SELECT chanid, starttime, mark, type, data "
+             "FROM recordedmarkup "
+             "WHERE chanid = :CHANID and starttime = :STARTTIME;");
+     query.bindValue(":CHANID", chanID);
+@@ -788,13 +577,12 @@ int NativeArchive::exportRecording(QDomElement   &itemNode,
+         {
+             QDomElement mark = doc.createElement("mark");
+             mark.setAttribute("mark", query.value(2).toString());
+-            mark.setAttribute("offset", query.value(3).toString());
+-            mark.setAttribute("type", query.value(4).toString());
++            mark.setAttribute("type", query.value(3).toString());
++            mark.setAttribute("data", query.value(4).toString());
+             recordedmarkup.appendChild(mark);
+         }
+         root.appendChild(recordedmarkup);
+-        LOG(VB_JOBQUEUE, LOG_INFO,
+-            "Created recordedmarkup element for " + title);
++        LOG(VB_JOBQUEUE, LOG_INFO, "Created recordedmarkup element for " + title);
+     }
+ 
+     // add the recordedseek table
+@@ -815,7 +603,8 @@ int NativeArchive::exportRecording(QDomElement   &itemNode,
+             recordedseek.appendChild(mark);
+         }
+         root.appendChild(recordedseek);
+-        LOG(VB_JOBQUEUE, LOG_INFO, "Created recordedseek element for " + title);
++        LOG(VB_JOBQUEUE, LOG_INFO,
++            "Created recordedseek element for " + title);
+     }
+ 
+     // finally save the xml to the file
+@@ -1211,88 +1000,44 @@ int NativeArchive::importRecording(const QDomElement &itemNode,
+         }
+     }
+ 
+-    // find the default storage location for this host
+-    QString storageDir = "";
+-    query.prepare("SELECT dirname FROM storagegroup "
+-            "WHERE groupname = :GROUPNAME AND hostname = :HOSTNAME;");
+-    query.bindValue(":GROUPNAME", "Default");
+-    query.bindValue(":HOSTNAME", gCoreContext->GetHostName());
+-    if (query.exec())
+-    {
+-        query.first();
+-        storageDir = query.value(0).toString();
+-    }
+-    else
+-    {
+-        LOG(VB_JOBQUEUE, LOG_ERR,
+-            "Failed to get 'Default' storage directory for this host");
+-        return 1;
+-    }
++    QString destFile = gCoreContext->GenMythURL(gCoreContext->GetSetting("MasterServerIP"),
++                                                gCoreContext->GetSetting("MasterServerPort"),
++                                                basename , "Default");
+ 
+     // copy file to recording directory
+-    LOG(VB_JOBQUEUE, LOG_INFO, "Copying video file.");
+-    if (!copyFile(videoFile,  storageDir + "/" + basename))
++    LOG(VB_JOBQUEUE, LOG_INFO, "Copying video file to: " + destFile);
++    if (!copyFile(videoFile,  destFile))
+         return 1;
+ 
+     // copy any preview image to recording directory
+     if (QFile::exists(videoFile + ".png"))
+     {
+-        LOG(VB_JOBQUEUE, LOG_INFO, "Copying preview image file.");
+-        if (!copyFile(videoFile + ".png", storageDir + "/" + basename + ".png"))
++        LOG(VB_JOBQUEUE, LOG_INFO, "Copying preview image file to: " + destFile + ".png");
++        if (!copyFile(videoFile + ".png", destFile + ".png"))
+             return 1;
+     }
+ 
++    // get a list of fields from the xmlFile
++    QStringList fieldList;
++    QStringList bindList;
++    QDomNodeList nodes =  recordedNode.childNodes();
++
++    for (int x = 0; x < nodes.count(); x++)
++    {
++        QDomNode n = nodes.item(x);
++        QString field = n.nodeName();
++        fieldList.append(field);
++        bindList.append(":" + field.toUpper());
++    }
++
+     // copy recorded to database
+-    query.prepare("INSERT INTO recorded (chanid,starttime,endtime,"
+-            "title,subtitle,description,category,hostname,bookmark,"
+-            "editing,cutlist,autoexpire, commflagged,recgroup,"
+-            "recordid, seriesid,programid,lastmodified,filesize,stars,"
+-            "previouslyshown,originalairdate,preserve,findid,deletepending,"
+-            "transcoder,timestretch,recpriority,basename,progstart,progend,"
+-            "playgroup,profile,duplicate,transcoded) "
+-            "VALUES(:CHANID,:STARTTIME,:ENDTIME,:TITLE,"
+-            ":SUBTITLE,:DESCRIPTION,:CATEGORY,:HOSTNAME,"
+-            ":BOOKMARK,:EDITING,:CUTLIST,:AUTOEXPIRE,"
+-            ":COMMFLAGGED,:RECGROUP,:RECORDID,:SERIESID,"
+-            ":PROGRAMID,:LASTMODIFIED,:FILESIZE,:STARS,"
+-            ":PREVIOUSLYSHOWN,:ORIGINALAIRDATE,:PRESERVE,:FINDID,"
+-            ":DELETEPENDING,:TRANSCODER,:TIMESTRETCH,:RECPRIORITY,"
+-            ":BASENAME,:PROGSTART,:PROGEND,:PLAYGROUP,:PROFILE,:DUPLICATE,:TRANSCODED);");
++    query.prepare("INSERT INTO recorded (" + fieldList.join(",") + ") "
++                  "VALUES (" + bindList.join(",") + ");");
+     query.bindValue(":CHANID", chanID);
+     query.bindValue(":STARTTIME", startTime);
+-    query.bindValue(":ENDTIME", findNodeText(recordedNode, "endtime"));
+-    query.bindValue(":TITLE", findNodeText(recordedNode, "title"));
+-    query.bindValue(":SUBTITLE", findNodeText(recordedNode, "subtitle"));
+-    query.bindValue(":DESCRIPTION", findNodeText(recordedNode, "description"));
+-    query.bindValue(":CATEGORY", findNodeText(recordedNode, "category"));
+-    query.bindValue(":HOSTNAME", gCoreContext->GetHostName());
+-    query.bindValue(":BOOKMARK", findNodeText(recordedNode, "bookmark"));
+-    query.bindValue(":EDITING", findNodeText(recordedNode, "editing"));
+-    query.bindValue(":CUTLIST", findNodeText(recordedNode, "cutlist"));
+-    query.bindValue(":AUTOEXPIRE", findNodeText(recordedNode, "autoexpire"));
+-    query.bindValue(":COMMFLAGGED", findNodeText(recordedNode, "commflagged"));
+-    query.bindValue(":RECGROUP", findNodeText(recordedNode, "recgroup"));
+-    query.bindValue(":RECORDID", findNodeText(recordedNode, "recordid"));
+-    query.bindValue(":SERIESID", findNodeText(recordedNode, "seriesid"));
+-    query.bindValue(":PROGRAMID", findNodeText(recordedNode, "programid"));
+-    query.bindValue(":LASTMODIFIED", findNodeText(recordedNode, "lastmodified"));
+-    query.bindValue(":FILESIZE", findNodeText(recordedNode, "filesize"));
+-    query.bindValue(":STARS", findNodeText(recordedNode, "stars"));
+-    query.bindValue(":PREVIOUSLYSHOWN", findNodeText(recordedNode, "previouslyshown"));
+-    query.bindValue(":ORIGINALAIRDATE", findNodeText(recordedNode, "originalairdate"));
+-    query.bindValue(":PRESERVE", findNodeText(recordedNode, "preserve"));
+-    query.bindValue(":FINDID", findNodeText(recordedNode, "findid"));
+-    query.bindValue(":DELETEPENDING", findNodeText(recordedNode, "deletepending"));
+-    query.bindValue(":TRANSCODER", findNodeText(recordedNode, "transcoder"));
+-    query.bindValue(":TIMESTRETCH", findNodeText(recordedNode, "timestretch"));
+-    query.bindValue(":RECPRIORITY", findNodeText(recordedNode, "recpriority"));
+-    query.bindValue(":BASENAME", findNodeText(recordedNode, "basename"));
+-    query.bindValue(":PROGSTART", findNodeText(recordedNode, "progstart"));
+-    query.bindValue(":PROGEND", findNodeText(recordedNode, "progend"));
+-    query.bindValue(":PLAYGROUP", findNodeText(recordedNode, "playgroup"));
+-    query.bindValue(":PROFILE", findNodeText(recordedNode, "profile"));
+-    query.bindValue(":DUPLICATE", findNodeText(recordedNode, "duplicate"));
+-    query.bindValue(":TRANSCODED", findNodeText(recordedNode, "transcoded"));
++
++    for (int x = 0; x < fieldList.count(); x++)
++        query.bindValue(bindList.at(x), findNodeText(recordedNode, fieldList.at(x)));
+ 
+     if (query.exec())
+         LOG(VB_JOBQUEUE, LOG_INFO, "Inserted recorded details into database");
+@@ -1319,18 +1064,26 @@ int NativeArchive::importRecording(const QDomElement &itemNode,
+         }
+         else
+         {
++            // delete any records for this recordings
++            query.prepare("DELETE FROM recordedmarkup "
++                          "WHERE chanid = CHANID AND starttime = STARTTIME;");
++                query.bindValue(":CHANID", chanID);
++                query.bindValue(":STARTTIME", startTime);
++            query.exec();
++
++            // add any new records for this recording
+             for (int x = 0; x < nodeList.count(); x++)
+             {
+                 n = nodeList.item(x);
+                 QDomElement e = n.toElement();
+                 query.prepare("INSERT INTO recordedmarkup (chanid, starttime, "
+-                        "mark, offset, type)"
+-                        "VALUES(:CHANID,:STARTTIME,:MARK,:OFFSET,:TYPE);");
++                        "mark, type, data)"
++                        "VALUES(:CHANID,:STARTTIME,:MARK,:TYPE,:DATA);");
+                 query.bindValue(":CHANID", chanID);
+                 query.bindValue(":STARTTIME", startTime);
+                 query.bindValue(":MARK", e.attribute("mark"));
+-                query.bindValue(":OFFSET", e.attribute("offset"));
+                 query.bindValue(":TYPE", e.attribute("type"));
++                query.bindValue(":DATA", e.attribute("data"));
+ 
+                 if (!query.exec())
+                 {
+@@ -1364,6 +1117,14 @@ int NativeArchive::importRecording(const QDomElement &itemNode,
+         }
+         else
+         {
++            // delete any records for this recordings
++            query.prepare("DELETE FROM recordedseek "
++                          "WHERE chanid = CHANID AND starttime = STARTTIME;");
++                query.bindValue(":CHANID", chanID);
++                query.bindValue(":STARTTIME", startTime);
++            query.exec();
++
++            // add the new records for this recording
+             for (int x = 0; x < nodeList.count(); x++)
+             {
+                 n = nodeList.item(x);
 diff --git a/mythplugins/mytharchive/mythburn/encoder_profiles/ffmpeg_dvd_ntsc.xml b/mythplugins/mytharchive/mythburn/encoder_profiles/ffmpeg_dvd_ntsc.xml
 index 208cdc5..d865b39 100644
 --- a/mythplugins/mytharchive/mythburn/encoder_profiles/ffmpeg_dvd_ntsc.xml
@@ -423,10 +1155,18 @@ index d4d6fc5..d8ab1eb 100644
          <parameter name="-copyts" value=""/>
          <parameter name="-aspect" value="%aspect"/>
 diff --git a/mythplugins/mytharchive/mythburn/scripts/mythburn.py b/mythplugins/mytharchive/mythburn/scripts/mythburn.py
-index 50431a3..acc164f 100755
+index 50431a3..f0c96ea 100755
 --- a/mythplugins/mytharchive/mythburn/scripts/mythburn.py
 +++ b/mythplugins/mytharchive/mythburn/scripts/mythburn.py
-@@ -2003,7 +2003,7 @@ def encodeVideoToMPEG2(source, destvideofile, video, audio1, audio2, aspectratio
+@@ -1707,7 +1707,6 @@ def runMythtranscode(chanid, starttime, destination, usecutlist, localfile):
+         write("Using cutlist: %s" % cutlist_s)
+ 
+     if (localfile != ""):
+-        localfile = quoteFilename(localfile)
+         if usecutlist == True:
+             command = "mythtranscode --mpeg2 --honorcutlist %s --infile %s --outfile %s" % (cutlist_s, quoteCmdArg(localfile), quoteCmdArg(destination))
+         else:
+@@ -2003,7 +2002,7 @@ def encodeVideoToMPEG2(source, destvideofile, video, audio1, audio2, aspectratio
          if audio1[AUDIO_CODEC] == "AC3":
              if name == "-acodec":
                  value = "copy"
@@ -435,7 +1175,7 @@ index 50431a3..acc164f 100755
                  name = ""
                  value = ""
  
-@@ -2024,15 +2024,13 @@ def encodeVideoToMPEG2(source, destvideofile, video, audio1, audio2, aspectratio
+@@ -2024,15 +2023,13 @@ def encodeVideoToMPEG2(source, destvideofile, video, audio1, audio2, aspectratio
              if audio1[AUDIO_CODEC] == "AC3":
                  if name == "-acodec":
                      value = "copy"
@@ -453,7 +1193,7 @@ index 50431a3..acc164f 100755
      #make sure we get the correct stream(s) that we want
      command += " -map 0:%d -map 0:%d " % (video[VIDEO_INDEX], audio1[AUDIO_INDEX])
      if audio2[AUDIO_ID] != -1:
-@@ -4347,7 +4345,7 @@ def getStreamList(folder):
+@@ -4347,7 +4344,7 @@ def getStreamList(folder):
  def isFileOkayForDVD(file, folder):
      """return true if the file is dvd compliant"""
  
@@ -462,7 +1202,7 @@ index 50431a3..acc164f 100755
          return False
  
  #    if string.lower(getAudioCodec(folder)) != "ac3" and encodeToAC3:
-@@ -4427,7 +4425,7 @@ def doProcessFile(file, folder, count):
+@@ -4427,7 +4424,7 @@ def doProcessFile(file, folder, count):
          #can only use mythtranscode to cut commercials on mpeg2 files
          write("File type is '%s'" % getFileType(folder))
          write("Video codec is '%s'" % getVideoCodec(folder))
@@ -471,7 +1211,7 @@ index 50431a3..acc164f 100755
              if file.attributes["usecutlist"].value == "1" and getText(infoDOM.getElementsByTagName("hascutlist")[0]) == "yes":
                  # Run from local file?
                  if file.hasAttribute("localfilename"):
-@@ -4464,8 +4462,8 @@ def doProcessFile(file, folder, count):
+@@ -4464,8 +4461,8 @@ def doProcessFile(file, folder, count):
          write("File type is '%s'" % getFileType(folder))
          write("Video codec is '%s'" % getVideoCodec(folder))
  
@@ -6173,6 +6913,392 @@ index b1d1231..c04c38d 100644
          {
              showEditMetadataDialog(m_trackList->GetItemCurrent());
          }
+diff --git a/mythplugins/mythmusic/mythmusic/decoderhandler.cpp b/mythplugins/mythmusic/mythmusic/decoderhandler.cpp
+index 2ad5c54..6125fd8 100644
+--- a/mythplugins/mythmusic/mythmusic/decoderhandler.cpp
++++ b/mythplugins/mythmusic/mythmusic/decoderhandler.cpp
+@@ -521,14 +521,9 @@ void DecoderHandler::createPlaylistForSingleFile(const QUrl &url)
+ 
+ void DecoderHandler::createPlaylistFromFile(const QUrl &url)
+ {
+-    QFile f(QFileInfo(url.path()).absolutePath() + "/" + QFileInfo(url.path()).fileName());
+-    if (!f.open(QIODevice::ReadOnly))
+-        return;
+-    QTextStream stream(&f);
+-
+-    QString extension = QFileInfo(url.path()).suffix().toLower();
++    QString file = url.toLocalFile();
+ 
+-    PlayListFile::parse(&m_playlist, &stream, extension);
++    PlayListFile::parse(&m_playlist, file);
+ 
+     doStart((m_playlist.size() > 0));
+ }
+diff --git a/mythplugins/mythmusic/mythmusic/musiccommon.cpp b/mythplugins/mythmusic/mythmusic/musiccommon.cpp
+index c549da8..7f0dcc8 100644
+--- a/mythplugins/mythmusic/mythmusic/musiccommon.cpp
++++ b/mythplugins/mythmusic/mythmusic/musiccommon.cpp
+@@ -1544,7 +1544,11 @@ void MusicCommon::customEvent(QEvent *event)
+                 Metadata *mdata = qVariantValue<Metadata*> (item->GetData());
+                 if (mdata && mdata->ID() == (Metadata::IdType) trackID)
+                 {
+-                    m_currentPlaylist->RemoveItem(item);
++                    // work around a bug in MythUIButtonlist not updating properly after removing the last item
++                    if (m_currentPlaylist->GetCount() == 1)
++                        m_currentPlaylist->Reset();
++                    else
++                        m_currentPlaylist->RemoveItem(item);
+                     break;
+                 }
+             }
+@@ -1564,6 +1568,9 @@ void MusicCommon::customEvent(QEvent *event)
+                                           m_currentTrack, &m_playlistPlayedTime);
+         updatePlaylistStats();
+         updateTrackInfo(gPlayer->getCurrentMetadata());
++
++        if (m_noTracksText)
++            m_noTracksText->SetVisible((gPlayer->getPlaylist()->getSongs().count() == 0));
+     }
+     else if (event->type() == MusicPlayerEvent::TrackAddedEvent)
+     {
+@@ -1608,6 +1615,9 @@ void MusicCommon::customEvent(QEvent *event)
+                         item->DisplayState("default", "playstate");
+                     }
+                 }
++
++                if (m_noTracksText)
++                    m_noTracksText->SetVisible((gPlayer->getPlaylist()->getSongs().count() == 0));
+             }
+         }
+ 
+diff --git a/mythplugins/mythmusic/mythmusic/playersettings.cpp b/mythplugins/mythmusic/mythmusic/playersettings.cpp
+index 2e6a047..8b7032d 100644
+--- a/mythplugins/mythmusic/mythmusic/playersettings.cpp
++++ b/mythplugins/mythmusic/mythmusic/playersettings.cpp
+@@ -58,7 +58,7 @@ bool PlayerSettings::Create()
+         m_autoLookupCD->SetCheckState(MythUIStateType::Full);
+     int loadAutoPlayCD = gCoreContext->GetNumSetting("AutoPlayCD", 0);
+     if (loadAutoPlayCD == 1)
+-        m_autoLookupCD->SetCheckState(MythUIStateType::Full);
++        m_autoPlayCD->SetCheckState(MythUIStateType::Full);
+ 
+     m_resumeMode->SetHelpText(tr("Resume playback at either the beginning of the "
+                  "active play queue, the beginning of the last track, "
+diff --git a/mythplugins/mythmusic/mythmusic/pls.cpp b/mythplugins/mythmusic/mythmusic/pls.cpp
+index 0cb8de8..f2fa96e 100644
+--- a/mythplugins/mythmusic/mythmusic/pls.cpp
++++ b/mythplugins/mythmusic/mythmusic/pls.cpp
+@@ -3,7 +3,7 @@
+   Eskil Heyn Olsen, 2005, distributed under the GPL as part of mythtv.
+ 
+   Update July 2010 updated for Qt4 (Paul Harrison)
+-
++  Update December 2012 updated to use QSettings for the pls parser
+ */
+ 
+ // c
+@@ -15,6 +15,8 @@
+ #include <QList>
+ #include <QMap>
+ #include <QStringList>
++#include <QFileInfo>
++#include <QSettings>
+ 
+ // mythtv
+ #include <mythlogging.h>
+@@ -25,172 +27,6 @@
+ 
+ using namespace std;
+ 
+-class CfgReader
+-{
+-  public:
+-    CfgReader()
+-    {
+-    }
+-    ~CfgReader()
+-    {
+-    }
+-
+-    typedef QPair<QString,QString> KeyValue;
+-    typedef QList<KeyValue> KeyValueList;
+-    typedef QMap<QString, KeyValueList> ConfigMap;
+-
+-    void parse(const char *d, int l)
+-    {
+-        const char *ptr = d;
+-        int line = 1;
+-        bool done = l <= 0;
+-
+-        QString current_section = "";
+-        KeyValueList keyvals;
+-
+-        while(!done)
+-        {
+-            switch(*ptr)
+-            {
+-                case '\0':
+-                    done = true;
+-                    break;
+-                case '#':
+-                {
+-                    const char *end = strchr(ptr, '\n');
+-                    if (!end) done = true;
+-                    ptr = end;
+-                    break;
+-                }
+-                case '\n':
+-                    ptr ++;
+-                    line ++;
+-                    break;
+-                case '[':
+-                {
+-                    ptr ++;
+-                    const char *nl = strchr(ptr, '\n');
+-                    const char *end = strchr(ptr, ']');
+-
+-                    if (!nl) nl = d + l;
+-
+-                    if (!end || nl < end)
+-                    {
+-                        LOG(VB_GENERAL, LOG_ERR,
+-                            QString("CfgReader:: Badly formatted section, "
+-                                    "line %1").arg(line));
+-                        done = true;
+-                    }
+-
+-                    if (current_section.length() > 0)
+-                    {
+-                        cfg[current_section] = keyvals;
+-                        keyvals = KeyValueList();
+-                    }
+-
+-                    current_section = std::string(ptr, end - ptr).c_str();
+-                    if (current_section.length() == 0)
+-                    {
+-                        LOG(VB_GENERAL, LOG_ERR,
+-                            QString("CfgReader:: Badly formatted section, "
+-                                    "line %1").arg(line));
+-                        done = true;
+-                    }
+-                    ptr = end + 1;
+-                    break;
+-                }
+-                default:
+-                {
+-                    if (current_section.length() > 0)
+-                    {
+-                        const char *eq = strchr(ptr, '=');
+-                        const char *nl = strchr(ptr, '\n');
+-
+-                        if (!nl) nl = d + l;
+-
+-                        if (!eq || nl < eq) 
+-                        {
+-                            LOG(VB_GENERAL, LOG_ERR,
+-                                QString("CfgReader:: Badly formatted line %1")
+-                                    .arg(line));
+-                            done = true;
+-                        }
+-                        else
+-                        {
+-                            QString key = string(ptr, eq - ptr).c_str();
+-                            QString val = string(eq + 1, nl - eq - 1).c_str();
+-                            keyvals.push_back(KeyValue(key, val));
+-                            ptr = nl;
+-                        }
+-                    }
+-                    else
+-                    {
+-                        LOG(VB_GENERAL, LOG_ERR,
+-                            QString("CfgReader:: Badly formatted line %1")
+-                                .arg(line));
+-                        done = true;
+-                    }
+-                    break;
+-                }
+-            }
+-
+-            if (ptr - d == l) 
+-                done = true;
+-        }
+-
+-        if (current_section.length() > 0)
+-            cfg[current_section] = keyvals;
+-    }
+-
+-    QList<QString> getSections(void)
+-    {
+-        QList<QString> res;
+-        for (ConfigMap::iterator it = cfg.begin(); it != cfg.end(); ++it)
+-            res.push_back(it.key());
+-        return res;
+-    }
+-
+-    QList<QString> getKeys(const QString &section)
+-    {
+-        KeyValueList keylist = cfg[section];
+-        QList<QString> res;
+-        for (KeyValueList::iterator it = keylist.begin();
+-             it != keylist.end(); ++it)
+-        {
+-            res.push_back((*it).first);
+-        }
+-        return res;
+-    }
+-
+-    QString getStrVal(const QString &section, const QString &key,
+-                      const QString &def = "")
+-    {
+-        KeyValueList keylist = cfg[section];
+-        QString res = def;
+-        for (KeyValueList::iterator it = keylist.begin();
+-             it != keylist.end(); ++it)
+-        {
+-            if ((*it).first == key) 
+-            {
+-                res =(*it).second;
+-                break;
+-            }
+-        }
+-        return res;
+-    }
+-
+-    int getIntVal(const QString &section, const QString &key, int def=0) 
+-    {
+-        QString def_str;
+-        def_str.setNum (def);
+-        return getStrVal(section, key, def_str).toInt();
+-    }
+-
+-  private:
+-    ConfigMap cfg;
+-};
+-
+-/****************************************************************************/
+ 
+ PlayListFile::PlayListFile(void) : m_version(0)
+ {
+@@ -201,30 +37,29 @@ PlayListFile::~PlayListFile(void)
+     clear();
+ }
+ 
+-int PlayListFile::parse(PlayListFile *pls, QTextStream *stream, const QString &extension)
++int PlayListFile::parse(PlayListFile *pls, const QString &filename)
+ {
+     int result = 0;
++    QString extension = QFileInfo(filename).suffix().toLower();
+ 
+     if (extension == "pls")
+-        result = PlayListFile::parsePLS(pls, stream);
++        result = PlayListFile::parsePLS(pls, filename);
+     else if (extension == "m3u")
+-        result = PlayListFile::parseM3U(pls, stream);
++        result = PlayListFile::parseM3U(pls, filename);
+ 
+     return result;
+ }
+ 
+-int PlayListFile::parsePLS(PlayListFile *pls, QTextStream *stream)
++int PlayListFile::parsePLS(PlayListFile *pls, const QString &filename)
+ {
+-    int parsed = 0;
+-    QString d = stream->readAll();
+-    CfgReader cfg;
+-    cfg.parse(d.toAscii(), d.length());
++    QSettings settings(filename, QSettings::IniFormat);
++    settings.beginGroup("playlist");
+ 
+-    int num_entries = cfg.getIntVal("playlist", "numberofentries", -1);
++    int num_entries = settings.value("numberofentries", -1).toInt();
+ 
+     // Some pls files have "numberofentries", some has "NumberOfEntries".
+-    if (num_entries == -1) 
+-        num_entries = cfg.getIntVal("playlist", "NumberOfEntries", -1);
++    if (num_entries == -1)
++        num_entries = settings.value("NumberOfEntries", -1).toInt();
+ 
+     for (int n = 1; n <= num_entries; n++)
+     {
+@@ -233,23 +68,27 @@ int PlayListFile::parsePLS(PlayListFile *pls, QTextStream *stream)
+         QString f_key = QString("File%1").arg(n);
+         QString l_key = QString("Length%1").arg(n);
+ 
+-        e->setFile(cfg.getStrVal("playlist", f_key));
+-        e->setTitle(cfg.getStrVal("playlist", t_key));
+-        e->setLength(cfg.getIntVal("playlist", l_key));
++        e->setFile(settings.value(f_key).toString());
++        e->setTitle(settings.value(t_key).toString());
++        e->setLength(settings.value(l_key).toInt());
+ 
+         pls->add(e);
+-        parsed++;
+     }
+ 
+-    return parsed;
++    return pls->size();
+ }
+ 
+ #define M3U_HEADER  "#EXTM3U"
+ #define M3U_INFO    "#EXTINF"
+ 
+-int PlayListFile::parseM3U(PlayListFile *pls, QTextStream *stream)
++int PlayListFile::parseM3U(PlayListFile *pls, const QString &filename)
+ {
+-    QString data = stream->readAll();
++    QFile f(filename);
++    if (!f.open(QIODevice::ReadOnly))
++        return 0;
++
++    QTextStream stream(&f);
++    QString data = stream.readAll();
+     QStringList lines = data.split(QRegExp("[\r\n]"));
+ 
+     QStringList::iterator it;
+diff --git a/mythplugins/mythmusic/mythmusic/pls.h b/mythplugins/mythmusic/mythmusic/pls.h
+index 309cfb0..0db6783 100644
+--- a/mythplugins/mythmusic/mythmusic/pls.h
++++ b/mythplugins/mythmusic/mythmusic/pls.h
+@@ -3,6 +3,7 @@
+   Eskil Heyn Olsen, 2005, distributed under the GPL as part of mythtv.
+ 
+   Update July 2010 updated for Qt4 (Paul Harrison)
++  Update December 2012 updated to use QSettings for the pls parser
+ */
+ 
+ #ifndef PLS_H_
+@@ -87,25 +88,24 @@ class PlayListFile
+ 
+     /** \brief Parse a pls or m3u playlist file.
+         \param pls the \p PlaylistFile to add the entries to
+-        \param stream the playlist file in a \p QTextStream
+-        \param extension the file extension of the original playlist file
++        \param filename the playlist's filename
+         \returns the number of entries parsed 
+     */
+-    static int parse(PlayListFile *pls, QTextStream *stream, const QString &extension);
++    static int parse(PlayListFile *pls, const QString &filename);
+ 
+     /** \brief Parse a pls file.
+         \param pls the \p PlaylistFile to add the entries to
+-        \param stream the playlist file in a \p QTextStream
++        \param filename the playlist's filename
+         \returns the number of entries parsed 
+     */
+-    static int parsePLS(PlayListFile *pls, QTextStream *stream);
++    static int parsePLS(PlayListFile *pls, const QString &filename);
+ 
+     /** \brief Parse a m3u file.
+         \param pls the \p PlaylistFile to add the entries to
+-        \param stream the playlist file in a \p QTextStream
++        \param filename the playlist's filename
+         \returns the number of entries parsed 
+     */
+-    static int parseM3U(PlayListFile *pls, QTextStream *stream);
++    static int parseM3U(PlayListFile *pls, const QString &filename);
+ 
+   private:
+     QList<PlayListFileEntry*> m_entries;
 diff --git a/mythplugins/mythmusic/mythmusic/shoutcast.cpp b/mythplugins/mythmusic/mythmusic/shoutcast.cpp
 index 7aaecc7..2608af8 100644
 --- a/mythplugins/mythmusic/mythmusic/shoutcast.cpp
@@ -6219,6 +7345,540 @@ index 7aaecc7..2608af8 100644
          hdr.replace("%VERSION%", MYTH_BINARY_VERSION);
  
          if (!url.userName().isEmpty() && !url.password().isEmpty()) 
+diff --git a/mythplugins/mythmusic/mythmusic/visualizationsettings.cpp b/mythplugins/mythmusic/mythmusic/visualizationsettings.cpp
+index f9b822d..3ab9ea6 100644
+--- a/mythplugins/mythmusic/mythmusic/visualizationsettings.cpp
++++ b/mythplugins/mythmusic/mythmusic/visualizationsettings.cpp
+@@ -37,6 +37,12 @@ bool VisualizationSettings::Create()
+     UIUtilE::Assign(this, m_saveButton, "save", &err);
+     UIUtilE::Assign(this, m_cancelButton, "cancel", &err);
+ 
++    if (err)
++    {
++        LOG(VB_GENERAL, LOG_ERR, "Cannot load screen 'visualizationsettings'");
++        return false;
++    }
++
+     int changeOnSongChange = gCoreContext->GetNumSetting("VisualCycleOnSongChange", 0);
+     if (changeOnSongChange == 1)
+         m_changeOnSongChange->SetCheckState(MythUIStateType::Full);
+diff --git a/mythplugins/mythmusic/theme/default-wide/music-base.xml b/mythplugins/mythmusic/theme/default-wide/music-base.xml
+index e38e782..96f14ef 100644
+--- a/mythplugins/mythmusic/theme/default-wide/music-base.xml
++++ b/mythplugins/mythmusic/theme/default-wide/music-base.xml
+@@ -830,6 +830,13 @@
+             <fill color="#000000" alpha="50" />
+         </shape>
+ 
++        <textarea name="notracks" from="basetextarea">
++            <area>40,25,1200,190</area>
++            <multiline>yes</multiline>
++            <align>allcenter</align>
++            <value>You haven't selected any tracks to play</value>
++        </textarea>
++
+         <buttonlist name="currentplaylist" from="basebuttonlist2">
+             <area>30,15,1220,210</area>
+             <spacing>0</spacing>
+diff --git a/mythplugins/mythmusic/theme/default-wide/music-ui.xml b/mythplugins/mythmusic/theme/default-wide/music-ui.xml
+index f328e97..2fa20ed 100644
+--- a/mythplugins/mythmusic/theme/default-wide/music-ui.xml
++++ b/mythplugins/mythmusic/theme/default-wide/music-ui.xml
+@@ -353,17 +353,17 @@
+         </imagetype>
+ 
+         <textarea name="title" from="basetextarea">
+-            <area>180,15,415,34</area>
++            <area>180,15,800,34</area>
+             <font>baselarge</font>
+         </textarea>
+ 
+         <textarea name="artist" from="basetextarea">
+-            <area>180,50,415,35</area>
++            <area>180,50,800,35</area>
+             <font>basemedium</font>
+         </textarea>
+ 
+         <textarea name="album" from="basetextarea">
+-            <area>180,80,415,35</area>
++            <area>180,80,800,35</area>
+             <font>basemedium</font>
+         </textarea>
+ 
+diff --git a/mythplugins/mythmusic/theme/default/music-base.xml b/mythplugins/mythmusic/theme/default/music-base.xml
+index 5bab006..dc7d649 100644
+--- a/mythplugins/mythmusic/theme/default/music-base.xml
++++ b/mythplugins/mythmusic/theme/default/music-base.xml
+@@ -537,6 +537,13 @@
+             <fill color="#000000" alpha="50" />
+         </shape>
+ 
++        <textarea name="notracks" from="basetextarea">
++            <area>35,25,730,190</area>
++            <multiline>yes</multiline>
++            <align>allcenter</align>
++            <value>You haven't selected any tracks to play</value>
++        </textarea>
++
+         <buttonlist name="currentplaylist" from="basecurrentplaylist">
+             <area>25,15,750,210</area>
+             <buttonarea>0,0,750,190</buttonarea>
+diff --git a/mythplugins/mythmusic/theme/default/stream-ui.xml b/mythplugins/mythmusic/theme/default/stream-ui.xml
+new file mode 100644
+index 0000000..457f383
+--- /dev/null
++++ b/mythplugins/mythmusic/theme/default/stream-ui.xml
+@@ -0,0 +1,450 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!DOCTYPE mythuitheme SYSTEM "http://www.mythtv.org/schema/mythuitheme.dtd">
++
++<mythuitheme>
++
++    <window name="streamview"  include="music-base.xml">
++
++        <shape name="streamlist_background" from="basebackground">
++            <area>15,15,770,219</area>
++        </shape>
++
++        <shape name="playlist_background" from="basebackground">
++            <area>15,244,770,170</area>
++        </shape>
++
++        <shape name="track_info_background" from="basebackground">
++            <area>15,424,770,161</area>
++        </shape>
++
++        <textarea name="nostreams" from="basetextarea">
++            <area>25,25,750,250</area>
++            <multiline>yes</multiline>
++            <align>allcenter</align>
++            <value>Press MENU to add some radio streams to play.</value>
++        </textarea>
++
++        <buttonlist name="streamlist" from="basebuttonlist2">
++            <area>25,25,750,204</area>
++            <spacing>0</spacing>
++            <layout>vertical</layout>
++            <arrange>stack</arrange>
++            <showarrow>no</showarrow>
++            <buttonarea>0,0,750,184</buttonarea>
++            <statetype name="buttonitem">
++                <state name="active">
++                    <area>0,0,100%,46</area>
++
++                    <imagetype name="buttonimage">
++                        <area>5,5,36,36</area>
++                        <filename>mm_icecast.png</filename>
++                    </imagetype>
++
++                    <statetype name="playstate">
++                        <position>715,10</position>
++                        <state name="playing">
++                            <imagetype name="animation">
++                                <position>0,0</position>
++                                <filepattern low="1" high="8">mm_playing_%1.png</filepattern>
++                                <delay>160</delay>
++                            </imagetype>
++                        </state>
++                        <state name="paused">
++                            <imagetype name="animation">
++                                <position>5,5</position>
++                                <filename>mm_pauseicon.png</filename>
++                            </imagetype>
++                        </state>
++                        <state name="stopped">
++                            <imagetype name="animation">
++                                <position>5,5</position>
++                                <filename>mm_stopicon.png</filename>
++                            </imagetype>
++                        </state>
++                    </statetype>
++
++                    <textarea name="station" from="buttontext">
++                        <area>55,0,340,46</area>
++                        <align>left,vcenter</align>
++                        <font>basesmall</font>
++                    </textarea>
++                    <textarea name="channel" from="buttontext">
++                        <area>400,0,300,46</area>
++                        <font>basesmall</font>
++                        <align>left,vcenter</align>
++                    </textarea>
++                </state>
++                <state name="selectedactive" from="active">
++                    <imagetype name="buttonimage">
++                        <area>5,5,36,36</area>
++                        <filename>mm_icecast.png</filename>
++                    </imagetype>
++                    <shape name="selectbar">
++                        <area>0,0,750,46</area>
++                    </shape>
++                </state>
++                <state name="selectedinactive" from="active">
++                    <shape name="selectbar">
++                        <area>0,0,750,46</area>
++                    </shape>
++                </state>
++            </statetype>
++            <statetype name="upscrollarrow">
++                <position>690,184</position>
++            </statetype>
++            <statetype name="downscrollarrow">
++                <position>720,184</position>
++            </statetype>
++        </buttonlist>
++
++        <buttonlist name="playedtrackslist" from="basebuttonlist2">
++            <area>25,254,750,150</area>
++            <spacing>0</spacing>
++            <layout>vertical</layout>
++            <arrange>stack</arrange>
++            <showarrow>no</showarrow>
++            <buttonarea>0,0,750,150</buttonarea>
++            <statetype name="buttonitem">
++                <state name="active">
++                    <area>0,0,100%,46</area>
++
++                    <imagetype name="buttonimage">
++                        <area>5,5,36,36</area>
++                        <filename>mm_icecast.png</filename>
++                    </imagetype>
++
++                    <textarea name="tracknum" from="buttontext">
++                        <area>45,0,50,46</area>
++                        <align>right,vcenter</align>
++                        <template>%1 -</template>
++                    </textarea>
++
++                    <textarea name="title" from="buttontext">
++                        <area>100,0,310,46</area>
++                        <align>left,vcenter</align>
++                        <font>basesmall</font>
++                    </textarea>
++
++                    <textarea name="artist" from="buttontext">
++                        <area>420,0,230,46</area>
++                        <font>basesmall</font>
++                        <align>left,vcenter</align>
++                    </textarea>
++
++                    <textarea name="length" from="artist">
++                        <area>660,0,80,46</area>
++                        <align>right,vcenter</align>
++                        <font>basesmall</font>
++                    </textarea>
++
++                </state>
++                <state name="selectedactive" from="active">
++                    <imagetype name="buttonimage">
++                        <area>5,5,36,36</area>
++                        <filename>mm_icecast.png</filename>
++                    </imagetype>
++                    <shape name="selectbar">
++                        <area>0,0,750,46</area>
++                    </shape>
++                </state>
++                <state name="selectedinactive" from="active">
++                    <shape name="selectbar">
++                        <area>0,0,750,46</area>
++                    </shape>
++                </state>
++            </statetype>
++            <statetype name="upscrollarrow">
++                <position>690,135</position>
++            </statetype>
++            <statetype name="downscrollarrow">
++                <position>720,135</position>
++            </statetype>
++        </buttonlist>
++
++        <imagetype name="coverart_border">
++            <filename>mm_blackhole_border.png</filename>
++            <area>27,435,114,114</area>
++        </imagetype>
++
++        <imagetype name="coverart">
++            <filename>mm_nothumb.png</filename>
++            <area>30,437,110,110</area>
++        </imagetype>
++
++        <textarea name="title" from="basetextarea">
++            <area>150,431,500,34</area>
++            <font>baselarge</font>
++        </textarea>
++
++        <textarea name="artist" from="basetextarea">
++            <area>150,471,500,34</area>
++            <font>basemedium</font>
++        </textarea>
++
++        <textarea name="channel" from="basetextarea">
++            <area>150,506,500,34</area>
++            <font>basemedium</font>
++            <template>%STATION% - %CHANNEL%</template>
++        </textarea>
++
++        <progressbar name="bufferprogress">
++            <position>150,561</position>
++            <layout>horizontal</layout>
++           <style>reveal</style>
++            <imagetype name="background">
++                <filename>mm_progress-bg.png</filename>
++            </imagetype>
++            <imagetype name="progressimage">
++                <filename>mm_progress-fg.png</filename>
++            </imagetype>
++        </progressbar>
++
++        <textarea name="bufferstatus" from="basetextarea">
++            <area>150,536,400,35</area>
++            <font>basesmall</font>
++            <value></value>
++        </textarea>
++
++        <imagetype name="visualizer_border">
++            <filename>mm_blackhole_border.png</filename>
++            <area>657,435,114,114,</area>
++        </imagetype>
++
++        <video name="visualizer">
++            <area>659,437,110,110,</area>
++        </video>
++
++        <textarea name="volume" from="basevolume">
++            <position>70,557</position>
++            <template>%VOLUMEPERCENT%</template>
++        </textarea>
++
++        <statetype name="mutestate" from="basemutestate">
++            <position>30,560</position>
++        </statetype>
++
++        <button name="play">
++            <position>565,540</position>
++            <statetype name="buttonstate">
++                <state name="active">
++                    <imagetype name="background">
++                        <filename>play_button_off.png</filename>
++                    </imagetype>
++                </state>
++                <state name="selected" from="active">
++                    <imagetype name="background">
++                        <filename>play_button_on.png</filename>
++                    </imagetype>
++                </state>
++                <state name="disabled" from="active" />
++                    <state name="pushed" from="active">
++                        <imagetype name="background">
++                            <filename>play_button_pushed.png</filename>
++                        </imagetype>
++                    </state>
++            </statetype>
++        </button>
++
++        <button name="stop">
++            <position>610,540</position>
++            <statetype name="buttonstate">
++                <state name="active">
++                    <imagetype name="background">
++                        <filename>stop_button_off.png</filename>
++                    </imagetype>
++                </state>
++                <state name="selected" from="active">
++                    <imagetype name="background">
++                        <filename>stop_button_on.png</filename>
++                    </imagetype>
++                </state>
++                <state name="disabled" from="active" />
++                <state name="pushed" from="active">
++                    <imagetype name="background">
++                        <filename>stop_button_pushed.png</filename>
++                    </imagetype>
++                </state>
++            </statetype>
++        </button>
++
++    </window>
++
++    <window name="editstreammetadata">
++
++        <textarea name="title" from="basetextarea">
++            <area>15,5,700,50</area>
++            <font>baselarge</font>
++            <value>Add/Edit Music Stream</value>
++        </textarea>
++
++        <button name="searchbutton" from="basewidebutton">
++            <position>274,70</position>
++            <value>Search For Stream</value>
++        </button>
++
++        <textarea name="stationlabel" >
++            <area>14,126,250,50</area>
++            <font>basemedium</font>
++            <align>right,vcenter</align>
++            <value>Station:</value>
++        </textarea>
++        <textedit name="stationedit" from="basetextedit">
++            <position>274,126</position>
++        </textedit>
++
++        <textarea name="channellabel" from="stationlabel">
++            <position>14,186</position>
++            <value>Channel:</value>
++        </textarea>
++        <textedit name="channeledit" from="stationedit">
++            <position>274,186</position>
++        </textedit>
++
++        <textarea name="urllabel" from="stationlabel">
++            <position>14,246</position>
++            <value>URL:</value>
++        </textarea>
++        <textedit name="urledit" from="stationedit">
++            <area>274,246,700,50</area>
++        </textedit>
++
++        <textarea name="logourllabel" from="stationlabel">
++            <position>14,306</position>
++            <value>Logo URL:</value>
++        </textarea>
++        <textedit name="logourledit" from="urledit">
++            <position>274,306</position>
++        </textedit>
++
++        <textarea name="genrelabel" from="stationlabel">
++            <position>14,366</position>
++            <value>Genres:</value>
++        </textarea>
++        <textedit name="genreedit" from="urledit">
++            <position>274,366</position>
++        </textedit>
++
++        <textarea name="formatlabel" from="stationlabel">
++            <position>14,426</position>
++            <value>Metadata Format:</value>
++        </textarea>
++        <textedit name="formatedit" from="stationedit">
++            <position>274,426</position>
++        </textedit>
++
++        <button name="cancelbutton" from="basebutton">
++            <position>50,540</position>
++            <value>Cancel</value>
++        </button>
++
++        <button name="savebutton" from="basebutton">
++            <position>600,540</position>
++            <value>Save</value>
++        </button>
++
++    </window>
++
++    <window name="searchstream">
++
++        <textarea name="title" from="basetextarea">
++            <area>15,5,700,50</area>
++            <font>baselarge</font>
++            <value>Search for Music Stream</value>
++        </textarea>
++
++        <textarea name="stationlabel" >
++            <area>14,53,250,50</area>
++            <font>basemedium</font>
++            <align>right,vcenter</align>
++            <value>Station:</value>
++        </textarea>
++        <buttonlist name="stationlist" from="basewideselector">
++            <position>270,56</position>
++        </buttonlist>
++
++        <textarea name="genrelabel" from="stationlabel">
++            <position>14,103</position>
++            <value>Genre:</value>
++        </textarea>
++        <buttonlist name="genrelist" from="basewideselector">
++            <position>270,106</position>
++        </buttonlist>
++
++        <textarea name="channellabel" from="stationlabel">
++            <position>14,156</position>
++            <value>Channel:</value>
++        </textarea>
++        <textedit name="channeledit" from="basetextedit">
++            <position>270,156</position>
++        </textedit>
++
++        <textarea name="matcheslable" from="stationlabel">
++            <area>534,10,150,30</area>
++            <align>right,vcenter</align>
++            <value>Matches:</value>
++        </textarea>
++
++        <textarea name="matchestext" from="stationlabel">
++            <area>700,10,100,30</area>
++            <align>left,vcenter</align>
++        </textarea>
++
++        <buttonlist name="streamlist" from="basebuttonlist2">
++            <area>15,215,760,380</area>
++            <spacing>0</spacing>
++            <layout>vertical</layout>
++            <arrange>stack</arrange>
++            <showarrow>no</showarrow>
++            <searchposition>-1,50</searchposition>
++            <buttonarea>0,0,760,380</buttonarea>
++            <statetype name="buttonitem">
++                <state name="active">
++                    <area>0,0,100%,46</area>
++                    <imagetype name="buttonimage">
++                        <area>5,5,36,36</area>
++                        <filename>mm_icecast.png</filename>
++                    </imagetype>
++
++                    <textarea name="station" from="buttontext">
++                        <area>50,0,400,46</area>
++                        <align>left,vcenter</align>
++                        <font>basesmall</font>
++                        <template>%STATION% - %Channel%</template>
++                    </textarea>
++
++                    <textarea name="genre" from="buttontext">
++                        <area>460,0,310,46</area>
++                        <align>left,vcenter</align>
++                        <font>basesmall</font>
++                    </textarea>
++
++                </state>
++                <state name="selectedactive" from="active">
++                    <imagetype name="buttonimage">
++                        <area>5,5,36,36</area>
++                        <filename>mm_icecast.png</filename>
++                    </imagetype>
++                    <shape name="selectbar">
++                        <area>0,0,760,46</area>
++                    </shape>
++                </state>
++                <state name="selectedinactive" from="active">
++                    <shape name="selectbar">
++                        <area>0,0,760,46</area>
++                    </shape>
++                </state>
++            </statetype>
++
++            <statetype name="upscrollarrow">
++                <position>700,360</position>
++            </statetype>
++
++            <statetype name="downscrollarrow">
++                <position>730,360</position>
++            </statetype>
++        </buttonlist>
++
++
++    </window>
++
++</mythuitheme>
 diff --git a/mythplugins/mythweather/i18n/mythweather_es_es.qm b/mythplugins/mythweather/i18n/mythweather_es_es.qm
 index deab269..8968bb3 100644
 Binary files a/mythplugins/mythweather/i18n/mythweather_es_es.qm and b/mythplugins/mythweather/i18n/mythweather_es_es.qm differ
@@ -6796,6 +8456,18 @@ index 24aacd0..008cd60 100644
  }
  
  static int avi_load_index(AVFormatContext *s)
+diff --git a/mythtv/external/FFmpeg/libavformat/mpegts-mythtv.c b/mythtv/external/FFmpeg/libavformat/mpegts-mythtv.c
+index 05b0c17..37d25f9 100644
+--- a/mythtv/external/FFmpeg/libavformat/mpegts-mythtv.c
++++ b/mythtv/external/FFmpeg/libavformat/mpegts-mythtv.c
+@@ -738,6 +738,7 @@ static const StreamType HDMV_types[] = {
+ /* ATSC ? */
+ static const StreamType MISC_types[] = {
+     { 0x81, AVMEDIA_TYPE_AUDIO,     CODEC_ID_AC3 },
++    { 0x87, AVMEDIA_TYPE_AUDIO,     CODEC_ID_EAC3 },
+     { 0x8a, AVMEDIA_TYPE_AUDIO,     CODEC_ID_DTS },
+     { 0x100, AVMEDIA_TYPE_SUBTITLE, CODEC_ID_DVB_SUBTITLE },
+     { 0x101, AVMEDIA_TYPE_DATA,     CODEC_ID_DVB_VBI },
 diff --git a/mythtv/external/FFmpeg/libavformat/utils.c b/mythtv/external/FFmpeg/libavformat/utils.c
 index 93cf637..9cf66e1 100644
 --- a/mythtv/external/FFmpeg/libavformat/utils.c
@@ -24454,6 +26126,19 @@ index d9819ea..3da9aa7 100644
          <source>Show Inputs</source>
          <translation>Pokaż wejścia</translation>
      </message>
+diff --git a/mythtv/libs/libmyth/audio/audiooutputbase.cpp b/mythtv/libs/libmyth/audio/audiooutputbase.cpp
+index f12a1b2..d0481d2 100644
+--- a/mythtv/libs/libmyth/audio/audiooutputbase.cpp
++++ b/mythtv/libs/libmyth/audio/audiooutputbase.cpp
+@@ -1122,7 +1122,7 @@ void AudioOutputBase::SetAudiotime(int frames, int64_t timecode)
+     }
+ 
+     audbuf_timecode =
+-        timecode + (effdsp ? ((frames + processframes_unstretched * 100000) +
++        timecode + (effdsp ? ((frames + processframes_unstretched) * 100000 +
+                     (processframes_stretched * eff_stretchfactor)
+                    ) / effdsp : 0);
+ 
 diff --git a/mythtv/libs/libmyth/mythcontext.cpp b/mythtv/libs/libmyth/mythcontext.cpp
 index 3505b6d..384846f 100644
 --- a/mythtv/libs/libmyth/mythcontext.cpp
@@ -24483,9 +26168,18 @@ index e0b9389..542c3b7 100644
              else
              {
 diff --git a/mythtv/libs/libmyth/programinfo.cpp b/mythtv/libs/libmyth/programinfo.cpp
-index 3bf35ea..6816f72 100644
+index 3bf35ea..f444b44 100644
 --- a/mythtv/libs/libmyth/programinfo.cpp
 +++ b/mythtv/libs/libmyth/programinfo.cpp
+@@ -1855,7 +1855,7 @@ bool ProgramInfo::LoadProgramFromRecorded(
+              query.value(31).toInt() == COMM_FLAG_DONE);
+     set_flag(programflags, FL_COMMPROCESSING ,
+              query.value(31).toInt() == COMM_FLAG_PROCESSING);
+-    set_flag(programflags, FL_REPEAT,        query.value(29).toBool());
++    set_flag(programflags, FL_REPEAT,        query.value(32).toBool());
+     set_flag(programflags, FL_TRANSCODED,
+              query.value(34).toInt() == TRANSCODING_COMPLETE);
+     set_flag(programflags, FL_DELETEPENDING, query.value(35).toBool());
 @@ -4530,8 +4530,9 @@ static bool FromProgramQuery(
      const QString &sql, const MSqlBindings &bindings, MSqlQuery &query)
  {
@@ -24535,6 +26229,30 @@ index 3bf35ea..6816f72 100644
  
                  query.value(13).toString(), // seriesid
                  query.value(14).toString(), // programid
+diff --git a/mythtv/libs/libmythbase/mythdate.cpp b/mythtv/libs/libmythbase/mythdate.cpp
+index 2562d72..c30cbda 100644
+--- a/mythtv/libs/libmythbase/mythdate.cpp
++++ b/mythtv/libs/libmythbase/mythdate.cpp
+@@ -72,6 +72,9 @@ QString toString(const QDateTime &raw_dt, uint format)
+ {
+     QString result;
+ 
++    if (!raw_dt.isValid())
++        return result;
++
+     // if no format is set default to UTC for ISO/file/DB dates.
+     if (!((format & kOverrideUTC) || (format & kOverrideLocal)))
+     {
+@@ -118,6 +121,9 @@ QString toString(const QDate &date, uint format)
+ {
+     QString result;
+ 
++    if (!date.isValid())
++        return result;
++
+     if (format & (kDateFull | kDateShort))
+     {
+         QString stringformat;
 diff --git a/mythtv/libs/libmythbase/mythdownloadmanager.cpp b/mythtv/libs/libmythbase/mythdownloadmanager.cpp
 index cc1721b..354f7dd 100644
 --- a/mythtv/libs/libmythbase/mythdownloadmanager.cpp
@@ -24632,10 +26350,60 @@ index 08b46d3..abef8e6 100644
  
  /* the following types are currently unused */
  
+diff --git a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c
+index 6b005a9..4fe270b 100644
+--- a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c
++++ b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c
+@@ -336,8 +336,9 @@ static int32_t dvdnav_get_vobu(dvdnav_t *this, dsi_t *nav_dsi, pci_t *nav_pci, d
+     dvdnav_angle_change(this, 1);
+   }
+ #endif
+-
+-  if(num_angle != 0) {
++  /* only use ILVU information if we are at the last vobunit in ILVU */
++  /* otherwise we will miss nav packets from vobunits inbetween */
++  if(num_angle != 0 && (nav_dsi->sml_pbi.category & DSI_ILVU_MASK) == (DSI_ILVU_BLOCK | DSI_ILVU_LAST)) {
+ 
+     if((next = nav_pci->nsml_agli.nsml_agl_dsta[angle-1]) != 0) {
+       if((next & 0x3fffffff) != 0) {
+@@ -1203,7 +1204,7 @@ user_ops_t dvdnav_get_restrictions(dvdnav_t* this) {
+   union {
+     user_ops_t ops_struct;
+     uint32_t   ops_int;
+-  } ops;
++  } ops, tmp;
+ 
+   ops.ops_int = 0;
+ 
+@@ -1213,10 +1214,12 @@ user_ops_t dvdnav_get_restrictions(dvdnav_t* this) {
+   }
+ 
+   pthread_mutex_lock(&this->vm_lock);
+-  ops.ops_int |= *(uint32_t*)&this->pci.pci_gi.vobu_uop_ctl;
++  ops.ops_struct = this->pci.pci_gi.vobu_uop_ctl;
+ 
+-  if(this->vm && this->vm->state.pgc)
+-    ops.ops_int |= *(uint32_t*)&this->vm->state.pgc->prohibited_ops;
++  if(this->vm && this->vm->state.pgc) {
++    tmp.ops_struct = this->vm->state.pgc->prohibited_ops;
++    ops.ops_int |= tmp.ops_int;
++  }
+   pthread_mutex_unlock(&this->vm_lock);
+ 
+   return ops.ops_struct;
 diff --git a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h
-index a05ae84..a609db8 100644
+index a05ae84..04fe99a 100644
 --- a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h
 +++ b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h
+@@ -29,7 +29,7 @@
+ #define MP_DVDNAV 1
+ 
+ // Change this only when syncing to mplayer dvdnav trunk
+-#define DVDNAV_SVN_REV "svnR1215"
++#define DVDNAV_SVN_REV "svnR1251"
+ 
+ #ifdef __cplusplus
+ extern "C" {
 @@ -481,6 +481,13 @@ dvdnav_status_t dvdnav_get_highlight_area(pci_t *nav_pci , int32_t button, int32
  					  dvdnav_highlight_area_t *highlight);
  
@@ -24650,6 +26418,25 @@ index a05ae84..a609db8 100644
   * Move button highlight around as suggested by function name (e.g. with arrow keys).
   */
  dvdnav_status_t dvdnav_upper_button_select(dvdnav_t *self, pci_t *pci);
+diff --git a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav_internal.h b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav_internal.h
+index 2f4ebfa..029b853 100644
+--- a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav_internal.h
++++ b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav_internal.h
+@@ -76,6 +76,14 @@ static inline int _private_gettimeofday( struct timeval *tv, void *tz )
+ #define DVD_VIDEO_LB_LEN 2048
+ #endif
+ 
++typedef enum {
++  DSI_ILVU_PRE   = 1 << 15, /* set during the last 3 VOBU preceeding an interleaved block. */
++  DSI_ILVU_BLOCK = 1 << 14, /* set for all VOBU in an interleaved block */
++  DSI_ILVU_FIRST = 1 << 13, /* set for the first VOBU for a given angle or scene within a ILVU, or the first VOBU in the preparation (PREU) sequence */
++  DSI_ILVU_LAST  = 1 << 12, /* set for the last VOBU for a given angle or scene within a ILVU, or the last VOBU in the preparation (PREU) sequence */
++  DSI_ILVU_MASK  = 0xf000
++} DSI_ILVU;
++
+ typedef struct read_cache_s read_cache_t;
+ 
+ /*
 diff --git a/mythtv/libs/libmythdvdnav/dvdnav/highlight.c b/mythtv/libs/libmythdvdnav/dvdnav/highlight.c
 index f484357..0f2efd2 100644
 --- a/mythtv/libs/libmythdvdnav/dvdnav/highlight.c
@@ -24721,6 +26508,364 @@ index f484357..0f2efd2 100644
  dvdnav_status_t dvdnav_button_activate(dvdnav_t *this, pci_t *pci) {
    int32_t button;
    btni_t *button_ptr = NULL;
+diff --git a/mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c b/mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c
+index 4c94ede..f531ade 100644
+--- a/mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c
++++ b/mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c
+@@ -1794,7 +1794,8 @@ static int set_PGCN(vm_t *vm, int pgcN) {
+   pgcit_t *pgcit;
+ 
+   pgcit = get_PGCIT(vm);
+-  assert(pgcit != NULL);  /* ?? Make this return -1 instead */
++  if (pgcit == NULL)
++    return 0;
+ 
+   if(pgcN < 1 || pgcN > pgcit->nr_of_pgci_srp) {
+ #ifdef TRACE
+diff --git a/mythtv/libs/libmythdvdnav/dvdread/ifo_read.c b/mythtv/libs/libmythdvdnav/dvdread/ifo_read.c
+index e21aa9e..464b8ff 100644
+--- a/mythtv/libs/libmythdvdnav/dvdread/ifo_read.c
++++ b/mythtv/libs/libmythdvdnav/dvdread/ifo_read.c
+@@ -87,9 +87,9 @@ static int ifoRead_VOBU_ADMAP_internal(ifo_handle_t *ifofile,
+ static int ifoRead_PGCIT_internal(ifo_handle_t *ifofile, pgcit_t *pgcit,
+                                   unsigned int offset);
+ 
+-static void ifoFree_PGC(pgc_t *pgc);
++static void ifoFree_PGC(pgc_t **pgc);
+ static void ifoFree_PGC_COMMAND_TBL(pgc_command_tbl_t *cmd_tbl);
+-static void ifoFree_PGCIT_internal(pgcit_t *pgcit);
++static void ifoFree_PGCIT_internal(pgcit_t **pgcit);
+ 
+ static inline int DVDFileSeekForce_( dvd_file_t *dvd_file, uint32_t offset, int force_size ) {
+   return (DVDFileSeekForce(dvd_file, (int)offset, force_size) == (int)offset);
+@@ -923,7 +923,6 @@ static int ifoRead_PGC(ifo_handle_t *ifofile, pgc_t *pgc, unsigned int offset) {
+ 
+     if(!ifoRead_PGC_COMMAND_TBL(ifofile, pgc->command_tbl,
+                                 offset + pgc->command_tbl_offset)) {
+-      free(pgc->command_tbl);
+       return 0;
+     }
+   } else {
+@@ -933,13 +932,10 @@ static int ifoRead_PGC(ifo_handle_t *ifofile, pgc_t *pgc, unsigned int offset) {
+   if(pgc->program_map_offset != 0 && pgc->nr_of_programs>0) {
+     pgc->program_map = malloc(pgc->nr_of_programs * sizeof(pgc_program_map_t));
+     if(!pgc->program_map) {
+-      ifoFree_PGC_COMMAND_TBL(pgc->command_tbl);
+       return 0;
+     }
+     if(!ifoRead_PGC_PROGRAM_MAP(ifofile, pgc->program_map,pgc->nr_of_programs,
+                                 offset + pgc->program_map_offset)) {
+-      ifoFree_PGC_COMMAND_TBL(pgc->command_tbl);
+-      free(pgc->program_map);
+       return 0;
+     }
+   } else {
+@@ -949,18 +945,11 @@ static int ifoRead_PGC(ifo_handle_t *ifofile, pgc_t *pgc, unsigned int offset) {
+   if(pgc->cell_playback_offset != 0 && pgc->nr_of_cells>0) {
+     pgc->cell_playback = malloc(pgc->nr_of_cells * sizeof(cell_playback_t));
+     if(!pgc->cell_playback) {
+-      ifoFree_PGC_COMMAND_TBL(pgc->command_tbl);
+-      if(pgc->program_map)
+-        free(pgc->program_map);
+       return 0;
+     }
+     if(!ifoRead_CELL_PLAYBACK_TBL(ifofile, pgc->cell_playback,
+                                   pgc->nr_of_cells,
+                                   offset + pgc->cell_playback_offset)) {
+-      ifoFree_PGC_COMMAND_TBL(pgc->command_tbl);
+-      if(pgc->program_map)
+-        free(pgc->program_map);
+-      free(pgc->cell_playback);
+       return 0;
+     }
+   } else {
+@@ -970,13 +959,11 @@ static int ifoRead_PGC(ifo_handle_t *ifofile, pgc_t *pgc, unsigned int offset) {
+   if(pgc->cell_position_offset != 0 && pgc->nr_of_cells>0) {
+     pgc->cell_position = malloc(pgc->nr_of_cells * sizeof(cell_position_t));
+     if(!pgc->cell_position) {
+-      ifoFree_PGC(pgc);
+       return 0;
+     }
+     if(!ifoRead_CELL_POSITION_TBL(ifofile, pgc->cell_position,
+                                   pgc->nr_of_cells,
+                                   offset + pgc->cell_position_offset)) {
+-      ifoFree_PGC(pgc);
+       return 0;
+     }
+   } else {
+@@ -999,29 +986,33 @@ int ifoRead_FP_PGC(ifo_handle_t *ifofile) {
+   if(ifofile->vmgi_mat->first_play_pgc == 0)
+     return 1;
+ 
+-  ifofile->first_play_pgc = (pgc_t *)malloc(sizeof(pgc_t));
++  ifofile->first_play_pgc = (pgc_t *)calloc(1, sizeof(pgc_t));
+   if(!ifofile->first_play_pgc)
+     return 0;
+ 
++  ifofile->first_play_pgc->ref_count = 1;
+   if(!ifoRead_PGC(ifofile, ifofile->first_play_pgc,
+                   ifofile->vmgi_mat->first_play_pgc)) {
+-    free(ifofile->first_play_pgc);
+-    ifofile->first_play_pgc = 0;
++    ifoFree_PGC(&ifofile->first_play_pgc);
+     return 0;
+   }
+ 
+   return 1;
+ }
+ 
+-static void ifoFree_PGC(pgc_t *pgc) {
+-  if(pgc) {
+-    ifoFree_PGC_COMMAND_TBL(pgc->command_tbl);
+-    if(pgc->program_map)
+-      free(pgc->program_map);
+-    if(pgc->cell_playback)
+-      free(pgc->cell_playback);
+-    if(pgc->cell_position)
+-      free(pgc->cell_position);
++static void ifoFree_PGC(pgc_t **pgc) {
++  if(pgc && *pgc && (--(*pgc)->ref_count) <= 0) {
++    ifoFree_PGC_COMMAND_TBL((*pgc)->command_tbl);
++    if((*pgc)->program_map)
++      free((*pgc)->program_map);
++    if((*pgc)->cell_playback)
++      free((*pgc)->cell_playback);
++    if((*pgc)->cell_position)
++      free((*pgc)->cell_position);
++    free(*pgc);
++  }
++  if (pgc) {
++    *pgc = NULL;
+   }
+ }
+ 
+@@ -1030,9 +1021,7 @@ void ifoFree_FP_PGC(ifo_handle_t *ifofile) {
+     return;
+ 
+   if(ifofile->first_play_pgc) {
+-    ifoFree_PGC(ifofile->first_play_pgc);
+-    free(ifofile->first_play_pgc);
+-    ifofile->first_play_pgc = 0;
++    ifoFree_PGC(&ifofile->first_play_pgc);
+   }
+ }
+ 
+@@ -1082,6 +1071,12 @@ int ifoRead_TT_SRPT(ifo_handle_t *ifofile) {
+     return 0;
+   }
+ 
++  if(tt_srpt->nr_of_srpts>info_length/sizeof(title_info_t)){
++    fprintf(stderr,"libdvdread: data mismatch: info_length (%ld)!= nr_of_srpts (%d). Truncating.\n",
++            info_length/sizeof(title_info_t),tt_srpt->nr_of_srpts);
++    tt_srpt->nr_of_srpts=info_length/sizeof(title_info_t);
++  }
++
+   for(i =  0; i < tt_srpt->nr_of_srpts; i++) {
+     B2N_16(tt_srpt->title[i].nr_of_ptts);
+     B2N_16(tt_srpt->title[i].parental_id);
+@@ -1250,6 +1245,13 @@ int ifoRead_VTS_PTT_SRPT(ifo_handle_t *ifofile) {
+       CHECK_VALUE(vts_ptt_srpt->title[i].ptt[j].pgcn < 1000); /* ?? */
+       CHECK_VALUE(vts_ptt_srpt->title[i].ptt[j].pgn != 0);
+       CHECK_VALUE(vts_ptt_srpt->title[i].ptt[j].pgn < 100); /* ?? */
++      if (vts_ptt_srpt->title[i].ptt[j].pgcn == 0 ||
++          vts_ptt_srpt->title[i].ptt[j].pgcn >= 1000 ||
++          vts_ptt_srpt->title[i].ptt[j].pgn == 0 ||
++          vts_ptt_srpt->title[i].ptt[j].pgn >= 100) {
++        return 0;
++      }
++
+     }
+   }
+ 
+@@ -1434,7 +1436,6 @@ int ifoRead_VTS_TMAPT(ifo_handle_t *ifofile) {
+ 
+   if(ifofile->vtsi_mat->vts_tmapt == 0) { /* optional(?) */
+     ifofile->vts_tmapt = NULL;
+-    fprintf(stderr,"Please send bug report - no VTS_TMAPT ?? \n");
+     return 1;
+   }
+ 
+@@ -1818,10 +1819,11 @@ int ifoRead_PGCIT(ifo_handle_t *ifofile) {
+   if(ifofile->vtsi_mat->vts_pgcit == 0) /* mandatory */
+     return 0;
+ 
+-  ifofile->vts_pgcit = (pgcit_t *)malloc(sizeof(pgcit_t));
++  ifofile->vts_pgcit = (pgcit_t *)calloc(1, sizeof(pgcit_t));
+   if(!ifofile->vts_pgcit)
+     return 0;
+ 
++  ifofile->vts_pgcit->ref_count = 1;
+   if(!ifoRead_PGCIT_internal(ifofile, ifofile->vts_pgcit,
+                              ifofile->vtsi_mat->vts_pgcit * DVD_BLOCK_LEN)) {
+     free(ifofile->vts_pgcit);
+@@ -1832,6 +1834,17 @@ int ifoRead_PGCIT(ifo_handle_t *ifofile) {
+   return 1;
+ }
+ 
++static int find_dup_pgc(pgci_srp_t *pgci_srp, uint32_t start_byte, int count) {
++  int i;
++
++  for(i = 0; i < count; i++) {
++    if(pgci_srp[i].pgc_start_byte == start_byte) {
++      return i;
++    }
++  }
++  return -1;
++}
++
+ static int ifoRead_PGCIT_internal(ifo_handle_t *ifofile, pgcit_t *pgcit,
+                                   unsigned int offset) {
+   int i, info_length;
+@@ -1880,21 +1893,26 @@ static int ifoRead_PGCIT_internal(ifo_handle_t *ifofile, pgcit_t *pgcit,
+     CHECK_VALUE(pgcit->pgci_srp[i].pgc_start_byte + PGC_SIZE <= pgcit->last_byte+1);
+ 
+   for(i = 0; i < pgcit->nr_of_pgci_srp; i++) {
+-    pgcit->pgci_srp[i].pgc = malloc(sizeof(pgc_t));
++    int dup;
++    if((dup = find_dup_pgc(pgcit->pgci_srp, pgcit->pgci_srp[i].pgc_start_byte, i)) >= 0) {
++      pgcit->pgci_srp[i].pgc = pgcit->pgci_srp[dup].pgc;
++      pgcit->pgci_srp[i].pgc->ref_count++;
++      continue;
++    }
++    pgcit->pgci_srp[i].pgc = calloc(1, sizeof(pgc_t));
+     if(!pgcit->pgci_srp[i].pgc) {
+       int j;
+       for(j = 0; j < i; j++) {
+-        ifoFree_PGC(pgcit->pgci_srp[j].pgc);
+-        free(pgcit->pgci_srp[j].pgc);
++        ifoFree_PGC(&pgcit->pgci_srp[j].pgc);
+       }
+       goto fail;
+     }
++    pgcit->pgci_srp[i].pgc->ref_count = 1;
+     if(!ifoRead_PGC(ifofile, pgcit->pgci_srp[i].pgc,
+                     offset + pgcit->pgci_srp[i].pgc_start_byte)) {
+       int j;
+-      for(j = 0; j < i; j++) {
+-        ifoFree_PGC(pgcit->pgci_srp[j].pgc);
+-        free(pgcit->pgci_srp[j].pgc);
++      for(j = 0; j <= i; j++) {
++        ifoFree_PGC(&pgcit->pgci_srp[j].pgc);
+       }
+       free(pgcit->pgci_srp[i].pgc);
+       goto fail;
+@@ -1908,16 +1926,18 @@ fail:
+   return 0;
+ }
+ 
+-static void ifoFree_PGCIT_internal(pgcit_t *pgcit) {
+-  if(pgcit) {
++static void ifoFree_PGCIT_internal(pgcit_t **pgcit) {
++  if(pgcit && *pgcit && (--(*pgcit)->ref_count <= 0)) {
+     int i;
+-    for(i = 0; i < pgcit->nr_of_pgci_srp; i++)
++    for(i = 0; i < (*pgcit)->nr_of_pgci_srp; i++)
+     {
+-      ifoFree_PGC(pgcit->pgci_srp[i].pgc);
+-      free(pgcit->pgci_srp[i].pgc);
++      ifoFree_PGC(&(*pgcit)->pgci_srp[i].pgc);
+     }
+-    free(pgcit->pgci_srp);
++    free((*pgcit)->pgci_srp);
++    free(*pgcit);
+   }
++  if (pgcit)
++    *pgcit = NULL;
+ }
+ 
+ void ifoFree_PGCIT(ifo_handle_t *ifofile) {
+@@ -1925,12 +1945,20 @@ void ifoFree_PGCIT(ifo_handle_t *ifofile) {
+     return;
+ 
+   if(ifofile->vts_pgcit) {
+-    ifoFree_PGCIT_internal(ifofile->vts_pgcit);
+-    free(ifofile->vts_pgcit);
+-    ifofile->vts_pgcit = 0;
++    ifoFree_PGCIT_internal(&ifofile->vts_pgcit);
+   }
+ }
+ 
++static int find_dup_lut(pgci_lu_t *lu, uint32_t start_byte, int count) {
++  int i;
++
++  for(i = 0; i < count; i++) {
++    if(lu[i].lang_start_byte == start_byte) {
++      return i;
++    }
++  }
++  return -1;
++}
+ 
+ int ifoRead_PGCI_UT(ifo_handle_t *ifofile) {
+   pgci_ut_t *pgci_ut;
+@@ -2024,27 +2052,31 @@ int ifoRead_PGCI_UT(ifo_handle_t *ifofile) {
+   }
+ 
+   for(i = 0; i < pgci_ut->nr_of_lus; i++) {
++    int dup;
++    if((dup = find_dup_lut(pgci_ut->lu, pgci_ut->lu[i].lang_start_byte, i)) >= 0) {
++      pgci_ut->lu[i].pgcit = pgci_ut->lu[dup].pgcit;
++      pgci_ut->lu[i].pgcit->ref_count++;
++      continue;
++    }
+     pgci_ut->lu[i].pgcit = malloc(sizeof(pgcit_t));
+     if(!pgci_ut->lu[i].pgcit) {
+       unsigned int j;
+       for(j = 0; j < i; j++) {
+-        ifoFree_PGCIT_internal(pgci_ut->lu[j].pgcit);
+-        free(pgci_ut->lu[j].pgcit);
++        ifoFree_PGCIT_internal(&pgci_ut->lu[j].pgcit);
+       }
+       free(pgci_ut->lu);
+       free(pgci_ut);
+       ifofile->pgci_ut = 0;
+       return 0;
+     }
++    pgci_ut->lu[i].pgcit->ref_count = 1;
+     if(!ifoRead_PGCIT_internal(ifofile, pgci_ut->lu[i].pgcit,
+                                sector * DVD_BLOCK_LEN
+                                + pgci_ut->lu[i].lang_start_byte)) {
+       unsigned int j;
+-      for(j = 0; j < i; j++) {
+-        ifoFree_PGCIT_internal(pgci_ut->lu[j].pgcit);
+-        free(pgci_ut->lu[j].pgcit);
++      for(j = 0; j <= i; j++) {
++        ifoFree_PGCIT_internal(&pgci_ut->lu[j].pgcit);
+       }
+-      free(pgci_ut->lu[i].pgcit);
+       free(pgci_ut->lu);
+       free(pgci_ut);
+       ifofile->pgci_ut = 0;
+@@ -2066,8 +2098,7 @@ void ifoFree_PGCI_UT(ifo_handle_t *ifofile) {
+ 
+   if(ifofile->pgci_ut) {
+     for(i = 0; i < ifofile->pgci_ut->nr_of_lus; i++) {
+-      ifoFree_PGCIT_internal(ifofile->pgci_ut->lu[i].pgcit);
+-      free(ifofile->pgci_ut->lu[i].pgcit);
++      ifoFree_PGCIT_internal(&ifofile->pgci_ut->lu[i].pgcit);
+     }
+     free(ifofile->pgci_ut->lu);
+     free(ifofile->pgci_ut);
+diff --git a/mythtv/libs/libmythdvdnav/dvdread/ifo_types.h b/mythtv/libs/libmythdvdnav/dvdread/ifo_types.h
+index 7db7d34..aa4c9d3 100644
+--- a/mythtv/libs/libmythdvdnav/dvdread/ifo_types.h
++++ b/mythtv/libs/libmythdvdnav/dvdread/ifo_types.h
+@@ -301,6 +301,7 @@ typedef struct {
+   pgc_program_map_t  *program_map;
+   cell_playback_t *cell_playback;
+   cell_position_t *cell_position;
++  int      ref_count;
+ } ATTRIBUTE_PACKED pgc_t;
+ #define PGC_SIZE 236U
+ 
+@@ -326,6 +327,7 @@ typedef struct {
+   uint16_t zero_1;
+   uint32_t last_byte;
+   pgci_srp_t *pgci_srp;
++  int      ref_count;
+ } ATTRIBUTE_PACKED pgcit_t;
+ #define PGCIT_SIZE 8U
+ 
 diff --git a/mythtv/libs/libmythtv/AirPlay/mythraopconnection.cpp b/mythtv/libs/libmythtv/AirPlay/mythraopconnection.cpp
 index db683c5..ecae527 100644
 --- a/mythtv/libs/libmythtv/AirPlay/mythraopconnection.cpp
@@ -25395,7 +27540,7 @@ index 17c9542..a9f4b64 100644
  
  #endif // ASISIGNALMONITOR_H
 diff --git a/mythtv/libs/libmythtv/avformatdecoder.cpp b/mythtv/libs/libmythtv/avformatdecoder.cpp
-index 9439d39..8fbbace 100644
+index 9439d39..2cf6358 100644
 --- a/mythtv/libs/libmythtv/avformatdecoder.cpp
 +++ b/mythtv/libs/libmythtv/avformatdecoder.cpp
 @@ -335,7 +335,8 @@ AvFormatDecoder::AvFormatDecoder(MythPlayer *parent,
@@ -25582,7 +27727,17 @@ index 9439d39..8fbbace 100644
              m_positionMap.push_back(entry);
          }
  
-@@ -2940,12 +2971,13 @@ void AvFormatDecoder::MpegPreProcessPkt(AVStream *stream, AVPacket *pkt)
+@@ -2884,6 +2915,9 @@ void AvFormatDecoder::MpegPreProcessPkt(AVStream *stream, AVPacket *pkt)
+             uint  height = seq->height() >> context->lowres;
+             current_aspect = seq->aspect(context->codec_id ==
+                                          CODEC_ID_MPEG1VIDEO);
++            if (stream->sample_aspect_ratio.num)
++                current_aspect = av_q2d(stream->sample_aspect_ratio) *
++                    width / height;
+             if (aspect_override > 0.0f)
+                 current_aspect = aspect_override;
+             float seqFPS = seq->fps();
+@@ -2940,12 +2974,13 @@ void AvFormatDecoder::MpegPreProcessPkt(AVStream *stream, AVPacket *pkt)
      }
  }
  
@@ -25598,7 +27753,7 @@ index 9439d39..8fbbace 100644
  
      // crude NAL unit vs Annex B detection.
      // the parser only understands Annex B
-@@ -2961,7 +2993,7 @@ bool AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
+@@ -2961,7 +2996,7 @@ bool AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
          {
              if (pkt->flags & AV_PKT_FLAG_KEY)
                  HandleGopStart(pkt, false);
@@ -25607,7 +27762,7 @@ index 9439d39..8fbbace 100644
          }
      }
  
-@@ -2974,7 +3006,7 @@ bool AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
+@@ -2974,7 +3009,7 @@ bool AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
              if (m_h264_parser->FieldType() != H264Parser::FIELD_BOTTOM)
              {
                  if (m_h264_parser->onFrameStart())
@@ -25616,7 +27771,7 @@ index 9439d39..8fbbace 100644
  
                  if (!m_h264_parser->onKeyFrameStart())
                      continue;
-@@ -2992,6 +3024,8 @@ bool AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
+@@ -2992,6 +3027,8 @@ bool AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
          current_aspect = get_aspect(*m_h264_parser);
          uint  width  = m_h264_parser->pictureWidth();
          uint  height = m_h264_parser->pictureHeight();
@@ -25625,7 +27780,7 @@ index 9439d39..8fbbace 100644
          float seqFPS = m_h264_parser->frameRate() * 0.001f;
  
          bool res_changed = ((width  != (uint)current_width) ||
-@@ -3072,13 +3106,13 @@ bool AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
+@@ -3072,13 +3109,13 @@ bool AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
          pkt->flags |= AV_PKT_FLAG_KEY;
      }
  
@@ -25641,7 +27796,7 @@ index 9439d39..8fbbace 100644
  
      if (CODEC_IS_FFMPEG_MPEG(context->codec_id))
      {
-@@ -3086,7 +3120,7 @@ bool AvFormatDecoder::PreProcessVideoPacket(AVStream *curstream, AVPacket *pkt)
+@@ -3086,7 +3123,7 @@ bool AvFormatDecoder::PreProcessVideoPacket(AVStream *curstream, AVPacket *pkt)
      }
      else if (CODEC_IS_H264(context->codec_id))
      {
@@ -25650,7 +27805,7 @@ index 9439d39..8fbbace 100644
      }
      else
      {
-@@ -3112,8 +3146,7 @@ bool AvFormatDecoder::PreProcessVideoPacket(AVStream *curstream, AVPacket *pkt)
+@@ -3112,8 +3149,7 @@ bool AvFormatDecoder::PreProcessVideoPacket(AVStream *curstream, AVPacket *pkt)
          return false;
      }
  
@@ -25660,7 +27815,7 @@ index 9439d39..8fbbace 100644
  
      totalDuration += av_q2d(curstream->time_base) * pkt->duration * 1000000; // usec
  
-@@ -3653,6 +3686,7 @@ QString AvFormatDecoder::GetTrackDesc(uint type, uint trackNo) const
+@@ -3653,6 +3689,7 @@ QString AvFormatDecoder::GetTrackDesc(uint type, uint trackNo) const
  
      bool forced = tracks[type][trackNo].forced;
      int lang_key = tracks[type][trackNo].language;
@@ -25668,7 +27823,7 @@ index 9439d39..8fbbace 100644
      if (kTrackTypeAudio == type)
      {
          if (ringBuffer->IsDVD())
-@@ -3706,7 +3740,11 @@ QString AvFormatDecoder::GetTrackDesc(uint type, uint trackNo) const
+@@ -3706,7 +3743,11 @@ QString AvFormatDecoder::GetTrackDesc(uint type, uint trackNo) const
  
          return QObject::tr("Subtitle") + QString(" %1: %2%3")
              .arg(trackNo + 1).arg(iso639_key_toName(lang_key))
@@ -25681,7 +27836,7 @@ index 9439d39..8fbbace 100644
      }
      else
      {
-@@ -3799,25 +3837,29 @@ int AvFormatDecoder::AutoSelectTrack(uint type)
+@@ -3799,25 +3840,29 @@ int AvFormatDecoder::AutoSelectTrack(uint type)
      return DecoderBase::AutoSelectTrack(type);
  }
  
@@ -25718,7 +27873,7 @@ index 9439d39..8fbbace 100644
      }
  
      return ret;
-@@ -3981,12 +4023,14 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
+@@ -3981,12 +4026,14 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
          LOG(VB_AUDIO, LOG_INFO, LOC + "Trying to select audio track (w/lang)");
  
          // Filter out commentary and audio description tracks
@@ -25737,7 +27892,7 @@ index 9439d39..8fbbace 100644
          }
  
          // try to get the language track matching the frontend language.
-@@ -3994,28 +4038,28 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
+@@ -3994,28 +4041,28 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
          uint language_key = iso639_str3_to_key(language_key_convert);
          uint canonical_key = iso639_key_to_canonical_key(language_key);
  
@@ -25774,7 +27929,7 @@ index 9439d39..8fbbace 100644
  
          // try to get best track for most preferred language
          // Set by the "Guide Data" language prefs in Appearance.
-@@ -4024,31 +4068,31 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
+@@ -4024,31 +4071,31 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
              vector<int>::const_iterator it = languagePreference.begin();
              for (; it !=  languagePreference.end() && selTrack < 0; ++it)
              {
@@ -25814,7 +27969,7 @@ index 9439d39..8fbbace 100644
              }
          }
          // try to get best track for any language
-@@ -4056,29 +4100,29 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
+@@ -4056,29 +4103,29 @@ int AvFormatDecoder::AutoSelectAudioTrack(void)
          {
              LOG(VB_AUDIO, LOG_INFO, LOC +
                  "Trying to select audio track (wo/lang)");
@@ -25852,7 +28007,7 @@ index 9439d39..8fbbace 100644
          }
      }
  
-@@ -4328,7 +4372,7 @@ bool AvFormatDecoder::ProcessAudioPacket(AVStream *curstream, AVPacket *pkt,
+@@ -4328,7 +4375,7 @@ bool AvFormatDecoder::ProcessAudioPacket(AVStream *curstream, AVPacket *pkt,
          LOG(VB_TIMESTAMP, LOG_INFO, LOC + QString("audio timecode %1 %2 %3 %4")
                  .arg(pkt->pts).arg(pkt->dts).arg(temppts).arg(lastapts));
  
@@ -25861,7 +28016,7 @@ index 9439d39..8fbbace 100644
                         m_audio->IsBufferAlmostFull();
  
          tmp_pkt.data += ret;
-@@ -4378,6 +4422,8 @@ bool AvFormatDecoder::GetFrame(DecodeType decodetype)
+@@ -4378,6 +4425,8 @@ bool AvFormatDecoder::GetFrame(DecodeType decodetype)
      AVPacket *pkt = NULL;
      bool have_err = false;
  
@@ -25870,7 +28025,7 @@ index 9439d39..8fbbace 100644
      gotVideoFrame = false;
  
      frame_decoded = 0;
-@@ -4392,6 +4438,11 @@ bool AvFormatDecoder::GetFrame(DecodeType decodetype)
+@@ -4392,6 +4441,11 @@ bool AvFormatDecoder::GetFrame(DecodeType decodetype)
  
      skipaudio = (lastvpts == 0);
  
@@ -25882,7 +28037,7 @@ index 9439d39..8fbbace 100644
      hasVideo = HasVideo(ic);
      needDummyVideoFrames = false;
  
-@@ -4421,16 +4472,28 @@ bool AvFormatDecoder::GetFrame(DecodeType decodetype)
+@@ -4421,16 +4475,28 @@ bool AvFormatDecoder::GetFrame(DecodeType decodetype)
  
      while (!allowedquit)
      {
@@ -25920,7 +28075,7 @@ index 9439d39..8fbbace 100644
          }
  
          StreamChangeCheck();
-@@ -4445,9 +4508,9 @@ bool AvFormatDecoder::GetFrame(DecodeType decodetype)
+@@ -4445,9 +4511,9 @@ bool AvFormatDecoder::GetFrame(DecodeType decodetype)
                  continue;
              }
              else if (lowbuffers && ((decodetype & kDecodeAV) == kDecodeAV) &&
@@ -26131,8 +28286,26 @@ index 6fadfb6..7d2ed4f 100644
      void SetWaitForChange(void);
      bool GetWaitForChange(void) const;
      void SetReadAdjust(long long adjust);
+diff --git a/mythtv/libs/libmythtv/diseqcsettings.cpp b/mythtv/libs/libmythtv/diseqcsettings.cpp
+index bab4724..ed15137 100644
+--- a/mythtv/libs/libmythtv/diseqcsettings.cpp
++++ b/mythtv/libs/libmythtv/diseqcsettings.cpp
+@@ -582,11 +582,11 @@ class lnb_preset
+ static lnb_preset lnb_presets[] =
+ {
+     /* description, type, LOF switch, LOF low, LOF high, inverted polarity */
+-    lnb_preset(DeviceTree::tr("Single (Europe)"),
+-               DiSEqCDevLNB::kTypeVoltageControl,       0,  9750000),
+     lnb_preset(DeviceTree::tr("Universal (Europe)"),
+                DiSEqCDevLNB::kTypeVoltageAndToneControl,
+                11700000,  9750000, 10600000),
++    lnb_preset(DeviceTree::tr("Single (Europe)"),
++               DiSEqCDevLNB::kTypeVoltageControl,       0,  9750000),
+     lnb_preset(DeviceTree::tr("Circular (N. America)"),
+                DiSEqCDevLNB::kTypeVoltageControl,       0, 11250000),
+     lnb_preset(DeviceTree::tr("Linear (N. America)"),
 diff --git a/mythtv/libs/libmythtv/dtvrecorder.cpp b/mythtv/libs/libmythtv/dtvrecorder.cpp
-index fccdff8..b49fe6d 100644
+index fccdff8..a006bfd 100644
 --- a/mythtv/libs/libmythtv/dtvrecorder.cpp
 +++ b/mythtv/libs/libmythtv/dtvrecorder.cpp
 @@ -85,7 +85,12 @@ DTVRecorder::DTVRecorder(TVRec *rec) :
@@ -26382,7 +28555,7 @@ index fccdff8..b49fe6d 100644
  
 -    if (hasKeyFrame)
 +    // _buffer_packets will only be true if a payload start has been seen
-+    if (hasKeyFrame && _buffer_packets)
++    if (hasKeyFrame && (_buffer_packets || _first_keyframe >= 0))
      {
 +        LOG(VB_RECORD, LOG_DEBUG, LOC + QString
 +            ("Keyframe @ %1 + %2 = %3")
@@ -26426,7 +28599,13 @@ index fccdff8..b49fe6d 100644
  }
  
  void DTVRecorder::HandleTimestamps(int stream_id, int64_t pts, int64_t dts)
-@@ -652,7 +668,7 @@ bool DTVRecorder::FindAudioKeyframes(const TSPacket*)
+@@ -647,12 +663,13 @@ bool DTVRecorder::FindAudioKeyframes(const TSPacket*)
+         if (!_frames_seen_count)
+             _audio_timer.start();
+ 
++        _buffer_packets = false;
+         _frames_seen_count++;
+ 
          if (1 == (_frames_seen_count & 0x7))
          {
              _last_keyframe_seen = _frames_seen_count;
@@ -26435,7 +28614,7 @@ index fccdff8..b49fe6d 100644
              hasKeyFrame = true;
          }
  
-@@ -680,7 +696,7 @@ bool DTVRecorder::FindOtherKeyframes(const TSPacket *tspacket)
+@@ -680,7 +697,7 @@ bool DTVRecorder::FindOtherKeyframes(const TSPacket *tspacket)
      _frames_written_count++;
      _last_keyframe_seen = _frames_seen_count;
  
@@ -26444,7 +28623,7 @@ index fccdff8..b49fe6d 100644
  
      _has_written_other_keyframe = true;
  
-@@ -716,24 +732,22 @@ void DTVRecorder::SetNextRecording(const RecordingInfo *progInf, RingBuffer *rb)
+@@ -716,24 +733,22 @@ void DTVRecorder::SetNextRecording(const RecordingInfo *progInf, RingBuffer *rb)
   *  \brief This save the current frame to the position maps
   *         and handles ringbuffer switching.
   */
@@ -26474,7 +28653,7 @@ index fccdff8..b49fe6d 100644
  
          // Don't put negative offsets into the database, they get munged into
          // MAX_INT64 - offset, which is an exceedingly large number, and
-@@ -745,9 +759,6 @@ void DTVRecorder::HandleKeyframe(uint64_t frameNum, int64_t extra)
+@@ -745,9 +760,6 @@ void DTVRecorder::HandleKeyframe(uint64_t frameNum, int64_t extra)
          }
      }
      positionMapLock.unlock();
@@ -26484,7 +28663,7 @@ index fccdff8..b49fe6d 100644
  }
  
  /** \fn DTVRecorder::FindH264Keyframes(const TSPacket*)
-@@ -757,16 +768,15 @@ void DTVRecorder::HandleKeyframe(uint64_t frameNum, int64_t extra)
+@@ -757,16 +769,15 @@ void DTVRecorder::HandleKeyframe(uint64_t frameNum, int64_t extra)
   */
  bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
  {
@@ -26505,7 +28684,7 @@ index fccdff8..b49fe6d 100644
      const bool payloadStart = tspacket->PayloadStart();
      if (payloadStart)
      {
-@@ -785,7 +795,7 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
+@@ -785,7 +796,7 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
  
      // scan for PES packets and H.264 NAL units
      uint i = tspacket->AFCOffset();
@@ -26514,7 +28693,7 @@ index fccdff8..b49fe6d 100644
      {
          // special handling required when a new PES packet begins
          if (payloadStart && !_pes_synced)
-@@ -836,7 +846,7 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
+@@ -836,7 +847,7 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
              }
  
              // we now know where the PES payload is
@@ -26523,7 +28702,7 @@ index fccdff8..b49fe6d 100644
              // loop will bump i
              i += 5 + pes_header_length;
              _pes_synced = true;
-@@ -853,10 +863,9 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
+@@ -853,10 +864,9 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
  
          // scan for a NAL unit start code
  
@@ -26537,7 +28716,7 @@ index fccdff8..b49fe6d 100644
          i += (bytes_used - 1);
  
          if (m_h264_parser.stateChanged())
-@@ -874,19 +883,41 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
+@@ -874,19 +884,41 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
                  frameRate = m_h264_parser.frameRate();
              }
          }
@@ -26546,7 +28725,7 @@ index fccdff8..b49fe6d 100644
  
 -    if (hasKeyFrame)
 +    // _buffer_packets will only be true if a payload start has been seen
-+    if (hasKeyFrame && _buffer_packets)
++    if (hasKeyFrame && (_buffer_packets || _first_keyframe >= 0))
      {
 +        LOG(VB_RECORD, LOG_DEBUG, LOC + QString
 +            ("Keyframe @ %1 + %2 = %3 AU %4")
@@ -26581,7 +28760,7 @@ index fccdff8..b49fe6d 100644
      }
  
      if ((aspectRatio > 0) && (aspectRatio != m_videoAspect))
-@@ -904,17 +935,16 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
+@@ -904,17 +936,16 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
  
      if (frameRate != 0 && frameRate != m_frameRate)
      {
@@ -26601,7 +28780,7 @@ index fccdff8..b49fe6d 100644
  }
  
  /** \fn DTVRecorder::HandleH264Keyframe(void)
-@@ -923,21 +953,28 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
+@@ -923,21 +954,28 @@ bool DTVRecorder::FindH264Keyframes(const TSPacket *tspacket)
   */
  void DTVRecorder::HandleH264Keyframe(void)
  {
@@ -26637,7 +28816,7 @@ index fccdff8..b49fe6d 100644
  }
  
  void DTVRecorder::FindPSKeyFrames(const uint8_t *buffer, uint len)
-@@ -1058,7 +1095,7 @@ void DTVRecorder::FindPSKeyFrames(const uint8_t *buffer, uint len)
+@@ -1058,7 +1096,7 @@ void DTVRecorder::FindPSKeyFrames(const uint8_t *buffer, uint len)
          if (hasKeyFrame)
          {
              _last_keyframe_seen = _frames_seen_count;
@@ -26646,7 +28825,7 @@ index fccdff8..b49fe6d 100644
          }
  
          if ((aspectRatio > 0) && (aspectRatio != m_videoAspect))
-@@ -1067,7 +1104,7 @@ void DTVRecorder::FindPSKeyFrames(const uint8_t *buffer, uint len)
+@@ -1067,7 +1105,7 @@ void DTVRecorder::FindPSKeyFrames(const uint8_t *buffer, uint len)
              AspectChange((AspectRatio)aspectRatio, _frames_written_count);
          }
  
@@ -26655,7 +28834,7 @@ index fccdff8..b49fe6d 100644
              (height != m_videoHeight || m_videoWidth != width))
          {
              m_videoHeight = height;
-@@ -1142,8 +1179,9 @@ void DTVRecorder::HandlePAT(const ProgramAssociationTable *_pat)
+@@ -1142,8 +1180,9 @@ void DTVRecorder::HandlePAT(const ProgramAssociationTable *_pat)
  
      if (!pmtpid)
      {
@@ -26667,7 +28846,7 @@ index fccdff8..b49fe6d 100644
          return;
      }
  
-@@ -1155,7 +1193,7 @@ void DTVRecorder::HandlePAT(const ProgramAssociationTable *_pat)
+@@ -1155,7 +1194,7 @@ void DTVRecorder::HandlePAT(const ProgramAssociationTable *_pat)
      delete oldpat;
  
      // Listen for the other PMTs for faster channel switching
@@ -26676,7 +28855,7 @@ index fccdff8..b49fe6d 100644
      {
          uint pmt_pid = _input_pat->ProgramPID(i);
          if (!_stream_data->IsListeningPID(pmt_pid))
-@@ -1176,7 +1214,7 @@ void DTVRecorder::HandlePMT(uint progNum, const ProgramMapTable *_pmt)
+@@ -1176,7 +1215,7 @@ void DTVRecorder::HandlePMT(uint progNum, const ProgramMapTable *_pmt)
          QString sistandard = GetSIStandard();
  
          bool has_no_av = true;
@@ -26685,7 +28864,7 @@ index fccdff8..b49fe6d 100644
          {
              has_no_av &= !_input_pmt->IsVideo(i, sistandard);
              has_no_av &= !_input_pmt->IsAudio(i, sistandard);
-@@ -1188,7 +1226,8 @@ void DTVRecorder::HandlePMT(uint progNum, const ProgramMapTable *_pmt)
+@@ -1188,7 +1227,8 @@ void DTVRecorder::HandlePMT(uint progNum, const ProgramMapTable *_pmt)
      }
  }
  
@@ -26695,7 +28874,7 @@ index fccdff8..b49fe6d 100644
  {
      if (!pat)
      {
-@@ -1203,11 +1242,11 @@ void DTVRecorder::HandleSingleProgramPAT(ProgramAssociationTable *pat)
+@@ -1203,11 +1243,11 @@ void DTVRecorder::HandleSingleProgramPAT(ProgramAssociationTable *pat)
      pat->tsheader()->SetContinuityCounter(next_cc);
      pat->GetAsTSPackets(_scratch, next_cc);
  
@@ -26710,7 +28889,7 @@ index fccdff8..b49fe6d 100644
  {
      if (!pmt)
      {
-@@ -1216,7 +1255,7 @@ void DTVRecorder::HandleSingleProgramPMT(ProgramMapTable *pmt)
+@@ -1216,7 +1256,7 @@ void DTVRecorder::HandleSingleProgramPMT(ProgramMapTable *pmt)
      }
  
      // collect stream types for H.264 (MPEG-4 AVC) keyframe detection
@@ -26719,7 +28898,7 @@ index fccdff8..b49fe6d 100644
          _stream_id[pmt->StreamPID(i)] = pmt->StreamType(i);
  
      if (!ringBuffer)
-@@ -1226,8 +1265,8 @@ void DTVRecorder::HandleSingleProgramPMT(ProgramMapTable *pmt)
+@@ -1226,8 +1266,8 @@ void DTVRecorder::HandleSingleProgramPMT(ProgramMapTable *pmt)
      pmt->tsheader()->SetContinuityCounter(next_cc);
      pmt->GetAsTSPackets(_scratch, next_cc);
  
@@ -26730,7 +28909,7 @@ index fccdff8..b49fe6d 100644
  }
  
  bool DTVRecorder::ProcessTSPacket(const TSPacket &tspacket)
-@@ -1253,7 +1292,8 @@ bool DTVRecorder::ProcessTSPacket(const TSPacket &tspacket)
+@@ -1253,7 +1293,8 @@ bool DTVRecorder::ProcessTSPacket(const TSPacket &tspacket)
      // Only create fake keyframe[s] if there are no audio/video streams
      if (_input_pmt && _has_no_av)
      {
@@ -26740,7 +28919,16 @@ index fccdff8..b49fe6d 100644
      }
      else
      {
-@@ -1277,17 +1317,20 @@ bool DTVRecorder::ProcessVideoTSPacket(const TSPacket &tspacket)
+@@ -1261,8 +1302,6 @@ bool DTVRecorder::ProcessTSPacket(const TSPacket &tspacket)
+         // if audio/video key-frames have been found
+         if (_wait_for_keyframe_option && _first_keyframe < 0)
+             return true;
+-
+-        _buffer_packets = true;
+     }
+ 
+     BufferedWrite(tspacket);
+@@ -1277,17 +1316,20 @@ bool DTVRecorder::ProcessVideoTSPacket(const TSPacket &tspacket)
  
      uint streamType = _stream_id[tspacket.PID()];
  
@@ -26769,7 +28957,7 @@ index fccdff8..b49fe6d 100644
  
      return ProcessAVTSPacket(tspacket);
  }
-@@ -1297,13 +1340,27 @@ bool DTVRecorder::ProcessAudioTSPacket(const TSPacket &tspacket)
+@@ -1297,13 +1339,27 @@ bool DTVRecorder::ProcessAudioTSPacket(const TSPacket &tspacket)
      if (!ringBuffer)
          return true;
  
@@ -26798,7 +28986,7 @@ index fccdff8..b49fe6d 100644
      const uint pid = tspacket.PID();
  
      if (pid != 0x1fff)
-@@ -1321,21 +1378,11 @@ bool DTVRecorder::ProcessAVTSPacket(const TSPacket &tspacket)
+@@ -1321,21 +1377,11 @@ bool DTVRecorder::ProcessAVTSPacket(const TSPacket &tspacket)
                  .arg(erate,5,'f',2));
      }
  
@@ -26930,6 +29118,32 @@ index 4181aea..2b8bd66 100644
  };
  
  #endif // DVBSIGNALMONITOR_H
+diff --git a/mythtv/libs/libmythtv/eithelper.cpp b/mythtv/libs/libmythtv/eithelper.cpp
+index 9ee2cc8..289062e 100644
+--- a/mythtv/libs/libmythtv/eithelper.cpp
++++ b/mythtv/libs/libmythtv/eithelper.cpp
+@@ -430,7 +430,20 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
+             if ((EITFixUp::kFixDish & fix) || (EITFixUp::kFixBell & fix))
+             {
+                 DishContentDescriptor content(content_data);
+-                category_type = content.GetTheme();
++                switch (content.GetTheme())
++                {
++                    case kThemeMovie :
++                        category_type = kCategoryMovie;
++                        break;
++                    case kThemeSeries :
++                        category_type = kCategorySeries;
++                        break;
++                    case kThemeSports :
++                        category_type = kCategorySports;
++                        break;
++                    default :
++                        category_type = kCategoryNone;
++                }
+                 if (EITFixUp::kFixDish & fix)
+                     category  = content.GetCategory();
+             }
 diff --git a/mythtv/libs/libmythtv/filtermanager.cpp b/mythtv/libs/libmythtv/filtermanager.cpp
 index 7b74d10..0a2e851 100644
 --- a/mythtv/libs/libmythtv/filtermanager.cpp
@@ -27446,6 +29660,31 @@ index 9538e9b..f820686 100644
      return (uint64_t)rewindtime >= framesPlayed;
  }
  
+diff --git a/mythtv/libs/libmythtv/openglvideo.cpp b/mythtv/libs/libmythtv/openglvideo.cpp
+index b0c8478..dbd39e2 100644
+--- a/mythtv/libs/libmythtv/openglvideo.cpp
++++ b/mythtv/libs/libmythtv/openglvideo.cpp
+@@ -484,6 +484,7 @@ bool OpenGLVideo::AddFilter(OpenGLFilterType filter)
+         temp->frameBuffers.clear();
+         temp->frameBufferTextures.clear();
+         filters[filter] = temp;
++        temp = NULL;
+         success &= OptimiseFilters();
+     }
+ 
+diff --git a/mythtv/libs/libmythtv/recordingprofile.cpp b/mythtv/libs/libmythtv/recordingprofile.cpp
+index baa73ab..e8060a4 100644
+--- a/mythtv/libs/libmythtv/recordingprofile.cpp
++++ b/mythtv/libs/libmythtv/recordingprofile.cpp
+@@ -1055,7 +1055,7 @@ class ImageSize : public VerticalConfigurationGroup
+               bool transcoding = false) :
+             SpinBoxSetting(this, transcoding ? 0 : 160,
+                            maxwidth, 16, false,
+-                           transcoding ? QObject::tr("Auto") : ""),
++                           transcoding ? QObject::tr("Auto") : QString()),
+             CodecParamStorage(this, parent, "width")
+         {
+             setLabel(QObject::tr("Width"));
 diff --git a/mythtv/libs/libmythtv/ringbuffer.h b/mythtv/libs/libmythtv/ringbuffer.h
 index f208aed..3195163 100644
 --- a/mythtv/libs/libmythtv/ringbuffer.h
@@ -27554,6 +29793,283 @@ index 5387ce5a..721c513 100644
      // send out REC_FINISHED message
      SendMythSystemRecEvent("REC_FINISHED", curRec);
  
+diff --git a/mythtv/libs/libmythtv/videoout_openglvaapi.cpp b/mythtv/libs/libmythtv/videoout_openglvaapi.cpp
+index 6469de5..3047c65 100644
+--- a/mythtv/libs/libmythtv/videoout_openglvaapi.cpp
++++ b/mythtv/libs/libmythtv/videoout_openglvaapi.cpp
+@@ -240,6 +240,7 @@ void VideoOutputOpenGLVAAPI::UpdatePauseFrame(int64_t &disp_timecode)
+     if (vbuffers.size(kVideoBuffer_used))
+     {
+         VideoFrame *frame = vbuffers.head(kVideoBuffer_used);
++        CopyFrame(&av_pause_frame, frame);
+         m_pauseBuffer = frame->buf;
+         disp_timecode = frame->disp_timecode;
+     }
+diff --git a/mythtv/libs/libmythtv/videosource.cpp b/mythtv/libs/libmythtv/videosource.cpp
+index f2d2ef2..c31ec4a 100644
+--- a/mythtv/libs/libmythtv/videosource.cpp
++++ b/mythtv/libs/libmythtv/videosource.cpp
+@@ -2261,41 +2261,44 @@ CaptureCardGroup::CaptureCardGroup(CaptureCard &parent) :
+ 
+     setTrigger(cardtype);
+     setSaveAll(false);
++    
++#ifdef USING_DVB
++    addTarget("DVB",       new DVBConfigurationGroup(parent));
++#endif // USING_DVB
+ 
+ #ifdef USING_V4L2
+-    addTarget("V4L",       new V4LConfigurationGroup(parent));
+-# ifdef USING_IVTV
+-    addTarget("MPEG",      new MPEGConfigurationGroup(parent));
+-# endif // USING_IVTV
+ # ifdef USING_HDPVR
+     addTarget("HDPVR",     new HDPVRConfigurationGroup(parent));
+ # endif // USING_HDPVR
+ #endif // USING_V4L2
+ 
+-#ifdef USING_DVB
+-    addTarget("DVB",       new DVBConfigurationGroup(parent));
+-#endif // USING_DVB
++#ifdef USING_HDHOMERUN
++    addTarget("HDHOMERUN", new HDHomeRunConfigurationGroup(parent));
++#endif // USING_HDHOMERUN
+ 
+ #ifdef USING_FIREWIRE
+     addTarget("FIREWIRE",  new FirewireConfigurationGroup(parent));
+ #endif // USING_FIREWIRE
+ 
+-#ifdef USING_HDHOMERUN
+-    addTarget("HDHOMERUN", new HDHomeRunConfigurationGroup(parent));
+-#endif // USING_HDHOMERUN
++#ifdef USING_CETON
++    addTarget("CETON",     new CetonConfigurationGroup(parent));
++#endif // USING_CETON
+ 
+ #ifdef USING_IPTV
+     addTarget("FREEBOX",   new IPTVConfigurationGroup(parent));
+ #endif // USING_IPTV
+-
++    
++#ifdef USING_V4L2
++    addTarget("V4L",       new V4LConfigurationGroup(parent));
++# ifdef USING_IVTV
++    addTarget("MPEG",      new MPEGConfigurationGroup(parent));
++# endif // USING_IVTV
++#endif // USING_V4L2
++    
+ #ifdef USING_ASI
+     addTarget("ASI",       new ASIConfigurationGroup(parent));
+ #endif // USING_ASI
+ 
+-#ifdef USING_CETON
+-    addTarget("CETON",     new CetonConfigurationGroup(parent));
+-#endif // USING_CETON
+-
+     // for testing without any actual tuner hardware:
+     addTarget("IMPORT",    new ImportConfigurationGroup(parent));
+     addTarget("DEMO",      new DemoConfigurationGroup(parent));
+@@ -2460,55 +2463,55 @@ CardType::CardType(const CaptureCard &parent) :
+ 
+ void CardType::fillSelections(SelectSetting* setting)
+ {
+-#ifdef USING_V4L2
+-    setting->addSelection(
+-        QObject::tr("Analog V4L capture card"), "V4L");
+-    setting->addSelection(
+-        QObject::tr("MJPEG capture card (Matrox G200, DC10)"), "MJPEG");
+-# ifdef USING_IVTV
++#ifdef USING_DVB
+     setting->addSelection(
+-        QObject::tr("MPEG-2 encoder card"), "MPEG");
+-# endif // USING_IVTV
++        QObject::tr("DVB-T/S/C, ATSC or ISDB-T tuner card"), "DVB");
++#endif // USING_DVB
++
++#ifdef USING_V4L2
+ # ifdef USING_HDPVR
+     setting->addSelection(
+-        QObject::tr("H.264 encoder card (HD-PVR)"), "HDPVR");
++        QObject::tr("HD-PVR H.264 encoder"), "HDPVR");
+ # endif // USING_HDPVR
+ #endif // USING_V4L2
+ 
+-#ifdef USING_DVB
++#ifdef USING_HDHOMERUN
+     setting->addSelection(
+-        QObject::tr("DVB DTV capture card (v3.x)"), "DVB");
+-#endif // USING_DVB
+-
++        QObject::tr("HDHomeRun networked tuner"), "HDHOMERUN");
++#endif // USING_HDHOMERUN
++    
+ #ifdef USING_FIREWIRE
+     setting->addSelection(
+         QObject::tr("FireWire cable box"), "FIREWIRE");
+ #endif // USING_FIREWIRE
+ 
+-#ifdef USING_V4L2
+-    setting->addSelection(
+-        QObject::tr("USB MPEG-4 encoder box (Plextor ConvertX, etc)"),
+-        "GO7007");
+-#endif // USING_V4L2
+-
+-#ifdef USING_HDHOMERUN
++#ifdef USING_CETON
+     setting->addSelection(
+-        QObject::tr("HDHomeRun DTV tuner box"), "HDHOMERUN");
+-#endif // USING_HDHOMERUN
++        QObject::tr("Ceton Cablecard tuner"), "CETON");
++#endif // USING_CETON
+ 
+ #ifdef USING_IPTV
+     setting->addSelection(QObject::tr("Network recorder"), "FREEBOX");
+ #endif // USING_IPTV
+ 
++#ifdef USING_V4L2
++# ifdef USING_IVTV
++    setting->addSelection(
++        QObject::tr("Analog to MPEG-2 encoder card (PVR-150/250/350, etc)"), "MPEG");
++# endif // USING_IVTV
++    setting->addSelection(
++        QObject::tr("Analog to MJPEG encoder card (Matrox G200, DC10, etc)"), "MJPEG");
++    setting->addSelection(
++        QObject::tr("Analog to MPEG-4 encoder (Plextor ConvertX USB, etc)"),
++        "GO7007");
++    setting->addSelection(
++        QObject::tr("Analog capture card"), "V4L");
++#endif // USING_V4L2
++
+ #ifdef USING_ASI
+     setting->addSelection(QObject::tr("DVEO ASI recorder"), "ASI");
+ #endif
+ 
+-#ifdef USING_CETON
+-    setting->addSelection(
+-        QObject::tr("Ceton Cablecard tuner "), "CETON");
+-#endif // USING_CETON
+-
+     setting->addSelection(QObject::tr("Import test recorder"), "IMPORT");
+     setting->addSelection(QObject::tr("Demo test recorder"),   "DEMO");
+ }
+diff --git a/mythtv/libs/libmythui/DisplayRes.cpp b/mythtv/libs/libmythui/DisplayRes.cpp
+index a8eebb4..13e7923 100644
+--- a/mythtv/libs/libmythui/DisplayRes.cpp
++++ b/mythtv/libs/libmythui/DisplayRes.cpp
+@@ -70,6 +70,11 @@ bool DisplayRes::Initialize(void)
+     GetMythDB()->GetResolutionSetting("DisplaySize", tW_mm, tH_mm);
+     m_mode[GUI] = DisplayResScreen(tW, tH, tW_mm, tH_mm, -1.0, tRate);
+ 
++    if (m_mode[DESKTOP] == m_mode[GUI] && tRate == 0)
++    {
++            // same resolution as current desktop
++        m_last = m_mode[DESKTOP];
++    }
+ 
+     // Initialize default VIDEO mode
+     tW = tH = 0;
+@@ -141,7 +146,7 @@ bool DisplayRes::SwitchToVideo(int iwidth, int iheight, double frate)
+         LOG(VB_PLAYBACK, LOG_INFO,
+             QString("Trying to match best refresh rate %1Hz")
+             .arg(frate, 0, 'f', 3));
+-        next.AddRefreshRate(frate);
++        next.SetRefreshRate(frate);
+     }
+ 
+     // need to change video mode?
+@@ -150,8 +155,9 @@ bool DisplayRes::SwitchToVideo(int iwidth, int iheight, double frate)
+     bool chg = !(next == m_last) ||
+                !(DisplayResScreen::compare_rates(m_last.RefreshRate(),
+                                                  target_rate));
+-
+-    LOG(VB_PLAYBACK, LOG_INFO, QString("Trying %1x%2 %3 Hz")
++    
++    LOG(VB_GENERAL, LOG_INFO, QString("%1 %2x%3 %4 Hz")
++        .arg(chg ? "Changing to" : "Using")
+         .arg(next.Width()).arg(next.Height())
+         .arg(target_rate, 0, 'f', 3));
+ 
+@@ -167,6 +173,7 @@ bool DisplayRes::SwitchToVideo(int iwidth, int iheight, double frate)
+     m_curMode = next_mode;
+ 
+     m_last = next;
++    m_last.SetRefreshRate(target_rate);
+ 
+     LOG(VB_PLAYBACK, LOG_INFO,
+         QString("SwitchToVideo: Video size %1 x %2: \n"
+@@ -181,18 +188,24 @@ bool DisplayRes::SwitchToVideo(int iwidth, int iheight, double frate)
+ bool DisplayRes::SwitchToGUI(tmode next_mode)
+ {
+     DisplayResScreen next = m_mode[next_mode];
++    double target_rate;
+ 
+     // need to change video mode?
+-    double target_rate = next.RefreshRate();
+-    DisplayResScreen::FindBestMatch(GetVideoModes(), next, target_rate);
+     // If GuiVidModeRefreshRate is 0, assume any refresh rate is good enough.
+-    bool chg = (!(next == m_last) ||
+-                (((int) next.RefreshRate()) != 0
+-                 && !(DisplayResScreen::compare_rates(m_last.RefreshRate(),
+-                                                      target_rate))));
++    if (next.RefreshRate() == 0)
++    {
++        next.SetRefreshRate(m_last.RefreshRate());
++    }
+ 
+-    LOG(VB_GENERAL, LOG_INFO, QString("Trying %1x%2 %3 Hz")
+-        .arg(next.Width()).arg(next.Height()).arg(target_rate, 0, 'f', 3));
++    DisplayResScreen::FindBestMatch(GetVideoModes(), next, target_rate);
++    bool chg = !(next == m_last) ||
++               !(DisplayResScreen::compare_rates(m_last.RefreshRate(),
++                                                 target_rate));
++
++    LOG(VB_GENERAL, LOG_INFO, QString("%1 %2x%3 %4 Hz")
++        .arg(chg ? "Changing to" : "Using")
++        .arg(next.Width()).arg(next.Height())
++        .arg(target_rate, 0, 'f', 3));
+ 
+     if (chg && !SwitchToVideoMode(next.Width(), next.Height(), target_rate))
+     {
+@@ -206,6 +219,7 @@ bool DisplayRes::SwitchToGUI(tmode next_mode)
+     m_curMode = next_mode;
+ 
+     m_last = next;
++    m_last.SetRefreshRate(target_rate);
+ 
+     LOG(VB_GENERAL, LOG_INFO, QString("SwitchToGUI: Switched to %1x%2 %3 Hz")
+         .arg(GetWidth()).arg(GetHeight()).arg(GetRefreshRate(), 0, 'f', 3));
+diff --git a/mythtv/libs/libmythui/DisplayResScreen.h b/mythtv/libs/libmythui/DisplayResScreen.h
+index ed54776..062c062 100644
+--- a/mythtv/libs/libmythui/DisplayResScreen.h
++++ b/mythtv/libs/libmythui/DisplayResScreen.h
+@@ -61,6 +61,12 @@ class MUI_PUBLIC DisplayResScreen
+         std::sort(refreshRates.begin(), refreshRates.end());
+     }
+     void ClearRefreshRates(void) { refreshRates.clear(); }
++    void SetRefreshRate(double rr) 
++    {
++        ClearRefreshRates();
++        AddRefreshRate(rr);
++    }
++
+     void SetCustom(bool b) { custom = b; }
+ 
+     // Map for matching real rates and xrandr rate;
+diff --git a/mythtv/libs/libmythui/DisplayResX.cpp b/mythtv/libs/libmythui/DisplayResX.cpp
+index 5c1cb35..e1326b4 100644
+--- a/mythtv/libs/libmythui/DisplayResX.cpp
++++ b/mythtv/libs/libmythui/DisplayResX.cpp
+@@ -161,8 +161,8 @@ const DisplayResVector& DisplayResX::GetVideoModes(void) const
+                     newrates.push_back(screenmap[key]);
+                     realRates[screenmap[key]] = (int) round(*it);
+                     found = true;
+-#if 0
+-                    LOG(VB_PLAYBACK, LOG_INFO,
++#if 1
++                    LOG(VB_PLAYBACK, LOG_DEBUG,
+                         QString("CustomRate Found, set %1x%2@%3 as %4Hz")
+                         .arg(w) .arg(h) .arg(*it) .arg(screenmap[key]));
+ #endif
 diff --git a/mythtv/libs/libmythui/libmythui.pro b/mythtv/libs/libmythui/libmythui.pro
 index 4560bb2..fd2ce18 100644
 --- a/mythtv/libs/libmythui/libmythui.pro
@@ -27593,10 +30109,18 @@ index 2fa7b82..271a2bf 100644
                      QString("Build background buttonlist item %1").arg(cur));
              emit itemLoaded(GetItemAt(cur));
 diff --git a/mythtv/libs/libmythui/mythuieditbar.cpp b/mythtv/libs/libmythui/mythuieditbar.cpp
-index ae2a842..b4ad7b2 100644
+index ae2a842..0eca097 100644
 --- a/mythtv/libs/libmythui/mythuieditbar.cpp
 +++ b/mythtv/libs/libmythui/mythuieditbar.cpp
-@@ -296,6 +296,7 @@ void MythUIEditBar::ClearImages(void)
+@@ -8,7 +8,6 @@ MythUIEditBar::MythUIEditBar(MythUIType *parent, const QString &name)
+ 
+ MythUIEditBar::~MythUIEditBar(void)
+ {
+-    ReleaseImages();
+ }
+ 
+ void MythUIEditBar::ReleaseImages(void)
+@@ -296,6 +295,7 @@ void MythUIEditBar::ClearImages(void)
  {
      while (m_images.size())
          DeleteChild(m_images.takeFirst());
@@ -27687,6 +30211,49 @@ index bc8ba6e..ea1d719 100644
  }
  
  bool MythWebPage::supportsExtension(Extension extension) const
+diff --git a/mythtv/locales/nl_nl.xml b/mythtv/locales/nl_nl.xml
+new file mode 100644
+index 0000000..5e733ae
+--- /dev/null
++++ b/mythtv/locales/nl_nl.xml
+@@ -0,0 +1,37 @@
++<?xml version="1.0" encoding="UTF-8" ?>
++<mythlocale>
++  <!-- Global Settings -->
++    <!-- EIT, Subtitle, Audio Stream Language Preferences -->
++    <setting name="ISO639Language0" global="true">dut</setting>
++    <setting name="ISO639Language1" global="true">dut</setting>
++
++    <!-- Recording -->
++    <setting name="TVFormat" global="true">PAL</setting>
++    <setting name="VbiFormat" global="true">PAL Teletext</setting>
++    <setting name="FreqTable" global="true">europe-west</setting>
++
++    <!-- Scheduling -->
++    <setting name="prefDupMethod" global="true">8</setting> <!-- Subtitle then description works best -->
++
++    <!-- Advert Detection -->
++
++
++  <!-- Per-host Settings -->
++    <!-- Languages - Self Explanatory -->
++    <setting name="Language">nl</setting>
++
++    <!-- Country -->
++    <setting name="Country">NL</setting>
++
++    <!-- Date/Time format -->
++    <setting name="DateFormat">ddd d MMM</setting>
++    <setting name="TimeFormat">h:mm</setting>
++    <setting name="ShortDateFormat">d/M</setting>
++
++    <!-- Playback -->
++    <setting name="EnableMHEG">1</setting> <!-- Red button, interactive services -->
++
++  <!-- Plugins -->
++    <!-- MythArchive -->
++    <setting name="MythArchiveVideoFormat">PAL</setting>
++</mythlocale>
 diff --git a/mythtv/programs/mythavtest/main.cpp b/mythtv/programs/mythavtest/main.cpp
 index 8ed2ba1..3e38084 100644
 --- a/mythtv/programs/mythavtest/main.cpp
@@ -28070,6 +30637,29 @@ index 30c1352..30febec 100644
      SignalHandler::Init(signallist);
      signal(SIGHUP, SIG_IGN);
  #endif
+diff --git a/mythtv/programs/mythfilldatabase/xmltvparser.cpp b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
+index a279605..b3f4456 100644
+--- a/mythtv/programs/mythfilldatabase/xmltvparser.cpp
++++ b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
+@@ -613,6 +613,18 @@ bool XMLTVParser::parseFile(
+     // now we calculate the localTimezoneOffset, so that we can fix
+     // the programdata if needed
+     QString config_offset = gCoreContext->GetSetting("TimeOffset", "None");
++    LOG(VB_GENERAL, LOG_NOTICE,
++        QString("Using 'TimeOffset' value of: %1").arg(config_offset));
++
++    if (config_offset != "Auto")
++    {
++        LOG(VB_GENERAL, LOG_WARNING,
++            "TimeOffset values other than 'Auto' are DEPRECATED and will be "
++            "removed in 0.27 which will BREAK your guide data. Please ensure "
++            "your xmltv data complies with the XMLTV spec and "
++            "either uses GMT or specifies a valid offset to GMT per ISO8601");
++    }
++
+     // we disable this feature by setting it invalid (> 840min = 14hr)
+     int localTimezoneOffset = 841;
+ 
 diff --git a/mythtv/programs/mythfrontend/guidegrid.cpp b/mythtv/programs/mythfrontend/guidegrid.cpp
 index 24e1956..bac5e18 100644
 --- a/mythtv/programs/mythfrontend/guidegrid.cpp
@@ -28137,10 +30727,72 @@ index 9d91967..d923a28 100644
      SignalHandler::SetHandler(SIGUSR1, handleSIGUSR1);
      SignalHandler::SetHandler(SIGUSR2, handleSIGUSR2);
 diff --git a/mythtv/programs/mythfrontend/playbackbox.cpp b/mythtv/programs/mythfrontend/playbackbox.cpp
-index 734cce1..d6f428f 100644
+index 734cce1..2daa298 100644
 --- a/mythtv/programs/mythfrontend/playbackbox.cpp
 +++ b/mythtv/programs/mythfrontend/playbackbox.cpp
-@@ -1333,7 +1333,7 @@ void PlaybackBox::UpdateUIGroupList(const QStringList &groupPreferences)
+@@ -407,7 +407,12 @@ PlaybackBox::PlaybackBox(MythScreenStack *parent, QString name, BoxType ltype,
+       m_needUpdate(false),
+       // Other
+       m_player(NULL),
+-      m_helper(this)
++      m_helper(this),
++
++      m_firstGroup(true),
++      m_usingGroupSelector(false),
++      m_groupSelected(false),
++      m_passwordEntered(false)
+ {
+     for (uint i = 0; i < sizeof(m_artImage) / sizeof(MythUIImage*); i++)
+     {
+@@ -602,6 +607,8 @@ void PlaybackBox::SwitchList()
+ 
+ void PlaybackBox::displayRecGroup(const QString &newRecGroup)
+ {
++    m_groupSelected = true;
++
+     QString password = m_recGroupPwCache[newRecGroup];
+ 
+     m_newRecGroup = newRecGroup;
+@@ -617,9 +624,14 @@ void PlaybackBox::displayRecGroup(const QString &newRecGroup)
+ 
+         connect(pwd, SIGNAL(haveResult(QString)),
+                 SLOT(checkPassword(QString)));
++        connect(pwd, SIGNAL(Exiting(void)),
++                SLOT(passwordClosed(void)));
++
++        m_passwordEntered = false;
+ 
+         if (pwd->Create())
+             popupStack->AddScreen(pwd, false);
++
+         return;
+     }
+ 
+@@ -628,9 +640,23 @@ void PlaybackBox::displayRecGroup(const QString &newRecGroup)
+ 
+ void PlaybackBox::checkPassword(const QString &password)
+ {
++    m_passwordEntered = true;
++
+     QString grouppass = m_recGroupPwCache[m_newRecGroup];
+     if (password == grouppass)
+         setGroupFilter(m_newRecGroup);
++    else
++        qApp->postEvent(this, new MythEvent("DISPLAY_RECGROUP",
++                                            m_newRecGroup));
++}
++
++void PlaybackBox::passwordClosed(void)
++{
++    if (m_passwordEntered)
++        return;
++
++    if (m_usingGroupSelector || m_firstGroup)
++        showGroupFilter();
+ }
+ 
+ void PlaybackBox::updateGroupInfo(const QString &groupname,
+@@ -1333,7 +1359,7 @@ void PlaybackBox::UpdateUIGroupList(const QStringList &groupPreferences)
          QStringList::iterator it;
          for (it = m_titleList.begin(); it != m_titleList.end(); ++it)
          {
@@ -28149,7 +30801,7 @@ index 734cce1..d6f428f 100644
  
              MythUIButtonListItem *item =
                  new MythUIButtonListItem(
-@@ -1690,7 +1690,7 @@ bool PlaybackBox::UpdateUILists(void)
+@@ -1690,7 +1716,7 @@ bool PlaybackBox::UpdateUILists(void)
                      sTitle = construct_sort_title(
                          p->GetTitle(), m_viewMask, titleSort,
                          p->GetRecordingPriority(), m_prefixes);
@@ -28158,6 +30810,78 @@ index 734cce1..d6f428f 100644
  
                      if (!sortedList.contains(sTitle))
                          sortedList[sTitle] = p->GetTitle();
+@@ -4185,6 +4211,12 @@ void PlaybackBox::customEvent(QEvent *event)
+         {
+             m_playListPlay.clear();
+         }
++        else if ((message == "DISPLAY_RECGROUP") &&
++                 (me->ExtraDataCount() >= 1))
++        {
++            QString recGroup = me->ExtraData(0);
++            displayRecGroup(recGroup);
++        }
+     }
+     else
+         ScheduleCommon::customEvent(event);
+@@ -4458,6 +4490,8 @@ void PlaybackBox::showGroupFilter(void)
+ 
+     if (recGroupPopup->Create())
+     {
++        m_usingGroupSelector = true;
++        m_groupSelected = false;
+         connect(recGroupPopup, SIGNAL(result(QString)),
+                 SLOT(displayRecGroup(QString)));
+         connect(recGroupPopup, SIGNAL(Exiting()),
+@@ -4470,9 +4504,13 @@ void PlaybackBox::showGroupFilter(void)
+ 
+ void PlaybackBox::groupSelectorClosed(void)
+ {
+-    if ((gCoreContext->GetNumSetting("QueryInitialFilter", 0) == 1) &&
+-        ((m_titleList.size() <= 1)))
++    if (m_groupSelected)
++        return;
++
++    if (m_firstGroup)
+         Close();
++
++    m_usingGroupSelector = false;
+ }
+ 
+ void PlaybackBox::setGroupFilter(const QString &recGroup)
+@@ -4482,6 +4520,9 @@ void PlaybackBox::setGroupFilter(const QString &recGroup)
+     if (newRecGroup.isEmpty())
+         return;
+ 
++    m_firstGroup = false;
++    m_usingGroupSelector = false;
++
+     if (newRecGroup == ProgramInfo::i18n("Default"))
+         newRecGroup = "Default";
+     else if (newRecGroup == ProgramInfo::i18n("All Programs"))
+diff --git a/mythtv/programs/mythfrontend/playbackbox.h b/mythtv/programs/mythfrontend/playbackbox.h
+index 7659ed8..1d314e8 100644
+--- a/mythtv/programs/mythfrontend/playbackbox.h
++++ b/mythtv/programs/mythfrontend/playbackbox.h
+@@ -261,6 +261,7 @@ class PlaybackBox : public ScheduleCommon
+     void saveViewChanges(void);
+ 
+     void checkPassword(const QString &password);
++    void passwordClosed(void);
+ 
+     void fanartLoad(void);
+     void bannerLoad(void);
+@@ -443,6 +444,11 @@ class PlaybackBox : public ScheduleCommon
+     PlaybackBoxHelper   m_helper;
+     /// Outstanding preview image requests
+     QSet<QString>       m_preview_tokens;
++
++    bool                m_firstGroup;
++    bool                m_usingGroupSelector;
++    bool                m_groupSelected;
++    bool                m_passwordEntered;
+ };
+ 
+ class GroupSelector : public MythScreenType
 diff --git a/mythtv/programs/mythfrontend/scheduleeditor.cpp b/mythtv/programs/mythfrontend/scheduleeditor.cpp
 index e78a07a..09881bc 100644
 --- a/mythtv/programs/mythfrontend/scheduleeditor.cpp
@@ -28464,7 +31188,7 @@ index c75b86a..e08f534 100755
                  audio_codec_name = "unknown";
          }
 diff --git a/mythtv/programs/mythtv-setup/backendsettings.cpp b/mythtv/programs/mythtv-setup/backendsettings.cpp
-index c10ad6f..a52f0f3 100644
+index c10ad6f..16737d2 100644
 --- a/mythtv/programs/mythtv-setup/backendsettings.cpp
 +++ b/mythtv/programs/mythtv-setup/backendsettings.cpp
 @@ -27,7 +27,7 @@ static HostLineEdit *LocalServerIP6()
@@ -28488,6 +31212,29 @@ index c10ad6f..a52f0f3 100644
  #endif
      return gc;
  }
+@@ -308,14 +312,16 @@ static void init_time_offsets(GlobalComboBox *gc)
+ static GlobalComboBox *TimeOffset()
+ {
+     GlobalComboBox *gc = new GlobalComboBox("TimeOffset");
+-    gc->setLabel(QObject::tr("Your local time zone (for XMLTV)"));
++    gc->setLabel(QObject::tr("DEPRECATED. Local time zone (for XMLTV)"));
+     init_time_offsets(gc);
+     QString helptext = QObject::tr(
+-        "Used if the XMLTV data comes from a different time zone than your "
+-        "own and modifies the date and time before insertion into the "
+-        "database. 'Auto' converts the XMLTV time to local time using your "
+-        "computer's time zone. "
+-        "'None' ignores the XMLTV time zone, interpreting times as local.");
++        "Provided as a TEMPORARY workaround for data which is not XMLTV "
++        "compliant. 'Auto' should be used.\n"
++        "'None' ignores the XMLTV time zone, interpreting times as local.\n"
++        "This setting will be removed in 0.27, at which point all times and "
++        "dates will be expected to be in UTC/GMT or to specify an offset to "
++        "UTC/GMT per ISO8601");
++    gc->setValue("Auto");
+     gc->setHelpText(helptext);
+     return gc;
+ };
 diff --git a/mythtv/programs/mythtv-setup/main.cpp b/mythtv/programs/mythtv-setup/main.cpp
 index 6313767..5efea94 100644
 --- a/mythtv/programs/mythtv-setup/main.cpp
@@ -28852,3 +31599,259 @@ index 6a133f5..0411e30 100755
  
  if __name__ == '__main__':
      main()
+diff --git a/mythtv/themes/MythCenter-wide/htmls/progdetails_page1.html b/mythtv/themes/MythCenter-wide/htmls/progdetails_page1.html
+index 0ac7b5e..b27343e 100644
+--- a/mythtv/themes/MythCenter-wide/htmls/progdetails_page1.html
++++ b/mythtv/themes/MythCenter-wide/htmls/progdetails_page1.html
+@@ -1,8 +1,8 @@
+ <HTML>
+ <head>
+     <style type="text/css">
+-        h1 {font-size:15pt;font-style: normal;color:#33FF33}
+-        p  {font-size:15pt;font-style: normal;color:#FFFFFF;margin-top: -10pt}
++        h1 {font-size:15pt;font-style: normal;font-family: sans-serif;color:#33FF33}
++        p  {font-size:15pt;font-style: normal;font-family: sans-serif;color:#FFFFFF;margin-top: -10pt}
+     </style>
+ </head>
+ 
+diff --git a/mythtv/themes/MythCenter-wide/htmls/progdetails_page2.html b/mythtv/themes/MythCenter-wide/htmls/progdetails_page2.html
+index ede4146..499bfb5 100644
+--- a/mythtv/themes/MythCenter-wide/htmls/progdetails_page2.html
++++ b/mythtv/themes/MythCenter-wide/htmls/progdetails_page2.html
+@@ -1,8 +1,8 @@
+ <HTML>
+ <head>
+     <style type="text/css">
+-        h1 {font-size:15pt;font-style: normal;color:#33FF33}
+-        p  {font-size:15pt;font-style: normal;color:#FFFFFF;margin-top: -10pt}
++        h1 {font-size:15pt;font-style: normal;font-family: sans-serif;color:#33FF33}
++        p  {font-size:15pt;font-style: normal;font-family: sans-serif;color:#FFFFFF;margin-top: -10pt}
+     </style>
+ </head>
+ 
+diff --git a/mythtv/themes/MythCenter-wide/music-base.xml b/mythtv/themes/MythCenter-wide/music-base.xml
+index 336ed05..1fe3241 100644
+--- a/mythtv/themes/MythCenter-wide/music-base.xml
++++ b/mythtv/themes/MythCenter-wide/music-base.xml
+@@ -829,6 +829,13 @@
+             <fill color="#000000" alpha="50" />
+         </shape>
+ 
++        <textarea name="notracks" from="basetextarea">
++            <area>40,25,1200,190</area>
++            <multiline>yes</multiline>
++            <align>allcenter</align>
++            <value>You haven't selected any tracks to play</value>
++        </textarea>
++
+         <buttonlist name="currentplaylist" from="basebuttonlist2">
+             <area>30,15,1220,210</area>
+             <spacing>0</spacing>
+diff --git a/mythtv/themes/MythCenter-wide/music-ui.xml b/mythtv/themes/MythCenter-wide/music-ui.xml
+index d27c46a..b2b7161 100644
+--- a/mythtv/themes/MythCenter-wide/music-ui.xml
++++ b/mythtv/themes/MythCenter-wide/music-ui.xml
+@@ -347,17 +347,17 @@
+         </imagetype>
+ 
+         <textarea name="title" from="basetextarea">
+-            <area>180,15,415,34</area>
++            <area>180,15,800,34</area>
+             <font>baselarge</font>
+         </textarea>
+ 
+         <textarea name="artist" from="basetextarea">
+-            <area>180,50,415,35</area>
++            <area>180,50,800,35</area>
+             <font>basemedium</font>
+         </textarea>
+ 
+         <textarea name="album" from="basetextarea">
+-            <area>180,80,415,35</area>
++            <area>180,80,800,35</area>
+             <font>basemedium</font>
+         </textarea>
+ 
+diff --git a/mythtv/themes/MythCenter-wide/schedule-ui.xml b/mythtv/themes/MythCenter-wide/schedule-ui.xml
+index e20bfd2..4232de8 100644
+--- a/mythtv/themes/MythCenter-wide/schedule-ui.xml
++++ b/mythtv/themes/MythCenter-wide/schedule-ui.xml
+@@ -630,10 +630,10 @@
+                         <area>220,2,250,24</area>
+                     </textarea>
+                     <textarea name="channelname" from="chanstr">
+-                        <area>570,2,500,24</area>
++                        <area>570,2,550,24</area>
+                     </textarea>
+                     <textarea name="priority" from="chanstr">
+-                        <area>1140,2,30,24</area>
++                        <area>1130,2,40,24</area>
+                         <align>right</align>
+                     </textarea>
+                 </state>
+diff --git a/mythtv/themes/MythCenter/htmls/progdetails_page1.html b/mythtv/themes/MythCenter/htmls/progdetails_page1.html
+index ef70612..d31c75d 100644
+--- a/mythtv/themes/MythCenter/htmls/progdetails_page1.html
++++ b/mythtv/themes/MythCenter/htmls/progdetails_page1.html
+@@ -3,8 +3,8 @@
+ <html>
+ <head>
+     <style type="text/css">
+-        h1 {font-size:15pt;font-style: normal;color:#33FF33}
+-        p  {font-size:15pt;font-style: normal;color:#FFFFFF;margin-top: -10pt}
++        h1 {font-size:15pt;font-style: normal;font-family: sans-serif;color:#33FF33}
++        p  {font-size:15pt;font-style: normal;font-family: sans-serif;color:#FFFFFF;margin-top: -10pt}
+     </style>
+ </head>
+ 
+diff --git a/mythtv/themes/MythCenter/htmls/progdetails_page2.html b/mythtv/themes/MythCenter/htmls/progdetails_page2.html
+index a1b2e02..3619729 100644
+--- a/mythtv/themes/MythCenter/htmls/progdetails_page2.html
++++ b/mythtv/themes/MythCenter/htmls/progdetails_page2.html
+@@ -3,8 +3,8 @@
+ <html>
+ <head>
+     <style type="text/css">
+-        h1 {font-size:15pt;font-style: normal;color:#33FF33}
+-        p  {font-size:15pt;font-style: normal;color:#FFFFFF;margin-top: -10pt}
++        h1 {font-size:15pt;font-style: normal;font-family: sans-serif;color:#33FF33}
++        p  {font-size:15pt;font-style: normal;font-family: sans-serif;color:#FFFFFF;margin-top: -10pt}
+     </style>
+ </head>
+ 
+diff --git a/mythtv/themes/MythCenter/schedule-ui.xml b/mythtv/themes/MythCenter/schedule-ui.xml
+index 68d57fe..7e273f4 100644
+--- a/mythtv/themes/MythCenter/schedule-ui.xml
++++ b/mythtv/themes/MythCenter/schedule-ui.xml
+@@ -1327,7 +1327,7 @@
+         </shape>
+ 
+         <webbrowser name="browser">
+-            <area>40,65,710,490</area>
++            <area>50,70,700,480</area>
+             <zoom>1.0</zoom>
+             <background color="#131564"/>
+         </webbrowser>
+diff --git a/mythtv/themes/Terra/weather-ui.xml b/mythtv/themes/Terra/weather-ui.xml
+index ac55fb6..0b78f27 100644
+--- a/mythtv/themes/Terra/weather-ui.xml
++++ b/mythtv/themes/Terra/weather-ui.xml
+@@ -156,10 +156,15 @@
+         </textarea>
+ 
+         <textarea name="copyright" from="basetextarea">
+-            <area>70,640,1140,40</area>
++            <area>70,640,850,40</area>
+             <align>left,vcenter</align>
+             <font>basesmaller</font>
+         </textarea>
++
++        <imagetype name="copyrightlogo">
++            <area>940,617,240,60</area>
++            <preserveaspect>true</preserveaspect>
++        </imagetype>
+     </window>
+ 
+     <window name="Three Day Forecast">
+@@ -265,10 +270,15 @@
+         </textarea>
+ 
+         <textarea name="copyright" from="basetextarea">
+-            <area>70,640,1140,40</area>
++            <area>70,640,850,40</area>
+             <align>left,vcenter</align>
+             <font>basesmaller</font>
+         </textarea>
++
++        <imagetype name="copyrightlogo">
++            <area>940,617,240,60</area>
++            <preserveaspect>true</preserveaspect>
++        </imagetype>
+     </window>
+ 
+     <window name="Six Day Forecast">
+@@ -428,10 +438,15 @@
+         </textarea>
+ 
+         <textarea name="copyright" from="basetextarea">
+-            <area>70,640,1140,40</area>
++            <area>70,640,850,40</area>
+             <align>left,vcenter</align>
+             <font>basesmaller</font>
+         </textarea>
++
++        <imagetype name="copyrightlogo">
++            <area>940,617,240,60</area>
++            <preserveaspect>true</preserveaspect>
++        </imagetype>
+     </window>
+ 
+     <window name="Static Map">
+@@ -447,10 +462,15 @@
+         </imagetype>
+ 
+         <textarea name="copyright" from="basetextarea">
+-            <area>70,640,1140,40</area>
++            <area>70,640,850,40</area>
+             <align>left,vcenter</align>
+             <font>basesmaller</font>
+         </textarea>
++
++        <imagetype name="copyrightlogo">
++            <area>940,617,240,60</area>
++            <preserveaspect>true</preserveaspect>
++        </imagetype>
+     </window>
+ 
+     <window name="Animated Map">
+@@ -467,10 +487,15 @@
+         </imagetype>
+ 
+         <textarea name="copyright" from="basetextarea">
+-            <area>70,640,1140,40</area>
++            <area>70,640,850,40</area>
+             <align>left,vcenter</align>
+             <font>basesmaller</font>
+         </textarea>
++
++        <imagetype name="copyrightlogo">
++            <area>940,617,240,60</area>
++            <preserveaspect>true</preserveaspect>
++        </imagetype>
+     </window>
+ 
+     <window name="Severe Weather Alerts">
+@@ -488,10 +513,15 @@
+         </textarea>
+ 
+         <textarea name="copyright" from="basetextarea">
+-            <area>70,640,1140,40</area>
++            <area>70,640,850,40</area>
+             <align>left,vcenter</align>
+             <font>basesmaller</font>
+         </textarea>
++
++        <imagetype name="copyrightlogo">
++            <area>940,617,240,60</area>
++            <preserveaspect>true</preserveaspect>
++        </imagetype>
+     </window>
+ 
+     <window name="18 Hour Forecast">
+@@ -652,10 +682,15 @@
+         </textarea>
+ 
+         <textarea name="copyright" from="basetextarea">
+-            <area>70,640,1140,40</area>
++            <area>70,640,850,40</area>
+             <align>left,vcenter</align>
+             <font>basesmaller</font>
+         </textarea>
++
++        <imagetype name="copyrightlogo">
++            <area>940,617,240,60</area>
++            <preserveaspect>true</preserveaspect>
++        </imagetype>
+     </window>
+ 
+     <window name="global-setup">

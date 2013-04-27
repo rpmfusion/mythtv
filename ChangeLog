@@ -1,3 +1,386 @@
+commit 5f45c0bd684c875f19d59974a5fe51a56731bf16
+Author: tycholursen <tycholursen@gmail.com>
+Date:   Mon Apr 22 07:42:22 2013 -0400
+
+    New Netherlands locale file
+    from tycholursen@gmail.com
+    
+    Thank you!
+    
+    closes #11502
+    
+    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
+
+commit 762a613ee4ee26ff385f20025e4c21b6609d4dda
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Fri Apr 19 08:27:59 2013 +1000
+
+    minor code cleanup.
+    
+    Following 8aca90207ffffc9dd512fa11cd9d88d1f4b5884f, remove useless test and tidy-up
+    (cherry picked from commit 4e23172d774cf36a45b7b7f382797a9887fa6de6)
+
+commit 7a70ac13a46d95bee874ce9c4e5d1bbd5e0bdac8
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Fri Apr 19 02:22:27 2013 +1000
+
+    Avoid un-necessary video mode changes.
+    
+    Fixes #11494
+    (cherry picked from commit 8aca90207ffffc9dd512fa11cd9d88d1f4b5884f)
+
+commit 0af65f783516afc2072fefc1220202193b90785f
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Fri Apr 19 08:31:25 2013 +1000
+
+    Revert "Avoid un-necessary video mode changes."
+    
+    This reverts commit 3c763fdca88075f8ba7667f5096583d66307b2cd.
+
+commit 3c763fdca88075f8ba7667f5096583d66307b2cd
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Fri Apr 19 02:22:27 2013 +1000
+
+    Avoid un-necessary video mode changes.
+    
+    Fixes #11494
+    (cherry picked from commit 8aca90207ffffc9dd512fa11cd9d88d1f4b5884f)
+
+commit c5bd828c77c5dcc141c622c3b4bc72844e00cbd6
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Mon Apr 15 14:51:41 2013 +0100
+
+    Warn about reliance on the XMLTV 'TimeOffset' setting which has been
+    removed in 0.27
+    
+    The XMLTV specification states that dates and times must be either in
+    GMT/UTC or specify an offset from GMT/UTC in ISO8601 format. Since the
+    'offset' setting has caused so much confusion over the years we're
+    removing it and requiring all xmltv input to follow the specs.
+    
+    This change also sets the default for this setting to 'Auto' which it
+    should have been from the beginning.
+
+commit 3870ce00bad53de5e81c3536839e27f4dd50b847
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Mon Jan 7 23:43:30 2013 +0100
+
+    make "Universal (Europe)" the default LNB type
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit 0556cdb6e40486ae3d1abb84e4c876d5cb1b30e6)
+
+commit d574cbc193cec0e30007de9fe0462c8e7a721111
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Mar 29 00:06:14 2013 +0000
+
+    Make DVB the first target in the CaptureCardGroup triggered configuration.
+    (cherry picked from commit 801028a3cc56db5c658bf81fd0f5a862d3bcf272)
+
+commit b45f71246d6dc1e59f286efcdaa2f265ef71b809
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Mar 28 21:51:08 2013 +0000
+
+    Reorder and rename the choices in the capture card combo box
+    
+    To try and reduce some confusion and common mis-configuration the descriptions and order of the options has been changed. The most commonly used options are listed first, through to the least used and similar or related choices are grouped together. Incorrect descriptions such as 'DVB Capture' are replaced by more descriptive strings e.g. 'DVB-T/S/C, ATSC or ISDB-T tuner card'
+    (cherry picked from commit 536b7c1a02639c4ee8fa8bb53a511a2e751ed461)
+
+commit af1d6951ae44122af9dac56591af9f2db022ab66
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Mon Apr 15 09:15:39 2013 +0100
+
+    Fix categorytype for Dish & Bell EIT. The wrong values were being set, in particular causing news to be marked as 'sports' and sports as 'series' which would affect certain scheduling decisions.
+
+commit 5f11bda1994c0dad45ff29e3fc8836eb83f98116
+Author: Kevin Ross <kevin@familyross.net>
+Date:   Mon Apr 15 14:18:23 2013 +1000
+
+    Fix audio sync.
+    
+    Fixes #11440
+    
+    Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+    (cherry picked from commit 9ec7421138adef73ef9cb83b74e046092fecdd6a)
+
+commit 69cd78b4028b7b585d238713151b684c291158e7
+Author: John Patrick Poet <jpoet@mythtv.org>
+Date:   Tue Mar 26 15:07:56 2013 -0600
+
+    Allow multiple keyframes per payload
+
+commit 5fe87ed902ec4d8c218de3d399bd5caf89d251ac
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Mar 25 19:59:41 2013 +1100
+
+    Add E-AC3 support in ATSC and DVB-T stream
+    
+    Fixes #11444
+    (cherry picked from commit 93bc3d4f3a3d6a785b860a1783ff7915c71a372f)
+    
+    Conflicts:
+    	mythtv/external/FFmpeg/libavformat/mpegts-mythtv.c
+
+commit a399d7f04287310a32c011b42353fab995f0846e
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Sun Mar 3 17:23:26 2013 +0000
+
+    MythMusic: Fix segfault on visualization settings page if a widget is missing
+    (cherry picked from commit 9ec05b1e0da40456830afcc10c7ec51b2ac94f79)
+
+commit 7f3f13b04335cae72b854f5995bc097cd9834cf6
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Sun Mar 3 17:04:57 2013 +0000
+
+    MythMusic: Tweak the text areas on the trackinfo_popup
+    (cherry picked from commit 747248929431e5193abcd57de8189e9e55d1617e)
+
+commit 13dfcc2e5e9211759966b7a6033c645f653c3110
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Sun Mar 24 11:56:17 2013 +0000
+
+    mytharchivehelper: Remove an unneeded include added in 854cb0c3b6
+
+commit 854cb0c3b663d6aa37d9ea4484964bd1c899ec81
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Sat Jan 5 23:18:55 2013 +0000
+
+    MythArchive: fix the import/export of recordings to the native archive format
+    
+    * This updates the native import/export to work with the current DB table
+      fields. Fixes #10871
+    
+    * Add storage group support so the FE running MythArchive no longer needs
+      local access to the recordings. Fixes #8657.
+    (cherry picked from commit 003f3023f2483f88f84df73b41fe2f976bb119d0)
+
+commit 5e06d2a15b6e242d407899ada1ca2a0026c5e9fb
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Fri Jan 4 20:14:44 2013 +0000
+
+    MythArchive: fix the missing logs when doing a native archive import/export
+    
+    The new logging stuff was causing both the export and import of native archives
+    logging to not be shown in the log viewer this fixes that and also makes the
+    log viewer wait a while for the logs before giving up which should fix the
+    logs not always showing the first time.
+    
+    Fixes #10505.
+    (cherry picked from commit 52a7c118aedc747bbea3a92d178eabf8566818ad)
+
+commit edb10af43dba4f46194ce998c5967c067b35a8de
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Sat Jan 5 23:01:16 2013 +0000
+
+    MythMusic: Fix typo preventing the autoplaycd setting loading correctly
+    (cherry picked from commit 84c44dd3f69d473dbe11c56e83da269111fae9c1)
+
+commit d6de041b35358184841200da19ab160e15a287e1
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Fri Jan 4 11:58:02 2013 +0000
+
+    MythArchive: fix a filename quoted twice bug introduced in b85f5bba72
+    
+    Fixes #10071.
+    (cherry picked from commit 146b49029d82e6ad92ac36ef66fe14d5c4c998e0)
+
+commit 571e9c4d96189279e3b936a583df645b5153bb27
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Sat Dec 29 11:35:14 2012 +0000
+
+    MythMusic: use QSettings for the pls parser
+    
+    This refactors the playlist parsing to use QSettings for the pls parser instead
+    of our custom one which has problems with windows style line endings.
+    
+    Fixes #11208.
+    (cherry picked from commit 8d2d9e92f15653928d9abdf831ecb30eb314b52e)
+
+commit bc7cfb61f762b659c90db7d9cba33b5430d8a851
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Tue Dec 11 13:11:52 2012 +0000
+
+    MythMusic: fix the notracks text not always showing/hiding when it should
+    
+    This fixes a problem with the "You haven't selected any tracks to play" text
+    not updating properly when adding or removing single tracks from the active
+    playlist.
+    
+    Also work around a bug in MythUIButtonlist not removing the last item properly.
+    (cherry picked from commit 088d684558a3197b022695e39b3c50d89bca92f7)
+
+commit 2748747959fc43815d727edb45fe757c2ccd22f4
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Tue Dec 11 10:53:52 2012 +0000
+
+    MythMusic: add the notracks text area to the playlist editor screen
+
+commit 6ae394bc1b3e4a559f88c670e58e01c65f1bbc01
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Sun Dec 2 12:54:27 2012 +0000
+
+    MythCenter-wide: Fix the width of the priority text on the channelrecpriority screen
+    
+    Fixes #10643. Thanks to Rick Scott for the original patch.
+
+commit f1fdf1f334d83fc7aaabab467593b05672d03abd
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Sun Dec 2 11:09:44 2012 +0000
+
+    MythCenter/MythCenter-wide: Tidy up the 'Program Details' screen
+    
+    Fix the position of the browser in MythCenter.
+    Make sure the font used in the browser is sans-serif to better match the theme.
+    
+    Fixes #10614.
+
+commit ee98ece5de4b0e12079c70e06172161c0937bc95
+Author: David Engel <dengel@mythtv.org>
+Date:   Fri Mar 22 19:26:24 2013 -0500
+
+    Change PlaybackBox group and password popup handling to be more sane.
+    
+    Backport from master to fixes/0.26.
+    
+    If an invalid password is entered, the password popup is reshown.  If
+    the password popup is aborted and was entered from the group popup or
+    is the initial group, the group popup is reshown.  If the group popup
+    is aborted and was entered because of the QueryInitialFilter setting,
+    the PlaybackBox screen is closed.
+    
+    Refs #11231
+
+commit a17d3f453b2528ec7d8da49c92b71f478f25f4a3
+Author: Chris Pinkham <cpinkham@mythtv.org>
+Date:   Fri Mar 22 11:01:34 2013 -0700
+
+    Fix auto-width calculation in mythtranscode.
+    
+    Issue discovered, corrected, and tested by 'rich0' in IRC.  Thanks.
+    (cherry picked from commit effae2211cea71bf9e954d7e99cbce39b3d38f0c)
+
+commit 6be8c10b39dcbe0fe825d22fec70795d87972a25
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Mar 22 06:43:09 2013 -0700
+
+    Enable proper display of elapsed time when paused with VAAPI.
+    
+    Make sure av_pause_frame is updated so that the player can pick up the
+    current frame number while paused.  Refs #10962
+    (cherry picked from commit 841ff3a359ce668eb51ef1da917ffab5a0932302)
+    
+    Conflicts:
+    
+    	mythtv/libs/libmythtv/videoout_openglvaapi.cpp
+
+commit 750a579240c76d8921dc0a6fc24cc18860bc6817
+Author: David Engel <dengel@mythtv.org>
+Date:   Thu Mar 21 16:08:21 2013 -0500
+
+    Change MythDate::toString() to return an empty string for invalid inputs.
+    
+    Cherry picked from master for fixes/0.26.
+    
+    It's possible a "0000-00-00 00:00:00" might be somewhat acceptable in
+    some rare cases because the all 0s value obviously represents a
+    special value.  The UTC to local conversions added in 0.26, however,
+    now causes it to change to a less obviously special, and perhaps even
+    misledaing, not all 0s value.  Since MythDate::toString() was a
+    Myth-specific replacement for QDateTime::toString() and
+    QDate::toString() and those functions return an empty string for
+    invalid inputs, we probably should too.
+    
+    Refs #11405 .
+
+commit 65e6136a72017826fa58a2e2ae6ebc1578cf17a4
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Sun Mar 3 16:18:23 2013 +0000
+
+    MythMusic: Add missing default 4:3 stream-ui.xml theme file
+    
+    Fixes #11369.
+
+commit c0419cd1759f299a4232c12cf62dbea8b30180f2
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Tue Mar 19 23:39:50 2013 +0100
+
+    MythUI: Fix use after free in MythUIEditBar
+    
+    The call to ReleaseImages() in MythUIEditBar's dtor caused a free memory read
+    since SetRedraw() accesses its parent whose dtor has already been called.
+    
+    Calling ReleaseImages() from MythUIEditBar's dtor also isn't necessary since the
+    images in m_images are children of MythUIEditBar and are automatically deleted
+    by Qt.
+    
+    Fixes #11458, Refs #11402
+    (cherry picked from commit 6e0f69dca6a554f4baf0fe8f9226458d36c459c7)
+
+commit f1715d057f42d22a08002fa69790cc08a7306dbc
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Tue Mar 19 23:39:18 2013 +0100
+
+    OpenGLVideo: Fix a double free in AddFilter() when OptimiseFilters() fails
+    
+    Fixes #11430
+    (cherry picked from commit 5769dca4c4ed442b62741e9abeeb2e3490d9b909)
+
+commit 25aa598fda8fce1d1ed36c68b9da75ebfd1c7476
+Author: Joey Morris <rjmorris.list@zoho.com>
+Date:   Mon Mar 18 21:35:53 2013 -0700
+
+    Use the correct index for program.previouslyshown in the query result.
+    
+    Signed-off-by: Jim Stichnoth <jstichnoth@mythtv.org>
+
+commit de5dd3b5181869d234b67abc8a5fb112830f3f94
+Author: Richard <peper03@yahoo.com>
+Date:   Tue Feb 19 19:33:36 2013 +0100
+
+    Sync libdvdnav up to R1251.
+    
+    * Fix failed assertion when there's no menu.
+    * Make sure we get nav packets for all cells in multi angle features
+    * Fix strict aliasing warnings.
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+
+commit 6ea48f0d0017661b4684d68ae61bb0ed137d85d8
+Author: Richard <peper03@yahoo.com>
+Date:   Tue Feb 19 19:40:53 2013 +0100
+
+    Sync libdvdread to R1250:
+    
+    * Accommodate duplicate language units and pgcs (avoid potentially consuming large amounts of memory)
+    * Fix a segmentation fault by preventing a read/write beyond end of an array due to using a length value taken from the DVD, which can exceed the allocated size.
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit 15a062f5ef22be1f8eefa9e8d300d18f8a54996b)
+
+commit 29bce5c4af609e5b8f7acce2bbe0ca7a01e5defc
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Wed Mar 13 17:08:49 2013 -0700
+
+    Apply the pixel aspect ratio, if available, to aspect ratio calculation.
+    
+    This only applies to mpeg2 video. Refs #11406.
+
+commit e2901d9f94f67d8a9c1b5e141937799cfba1aeab
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Tue Mar 12 20:29:01 2013 +0000
+
+    Fix missing copyrightlogo widget in Terra. No-one noticed mythweather was broken with Terra for over 6 months ...
+    (cherry picked from commit 23c0f7435df1cf8f146459b18a45955fc32da3b6)
+
+commit 77259c5a504d1edb79d8c9d4c6f45265b365a818
+Author: John Poet <jpoet@mythtv.org>
+Date:   Thu Mar 7 15:24:34 2013 -0700
+
+    dtvrecorder: Don't try to buffer frames for audio-only streams.
+    (cherry picked from commit 0d9312df1dd3ed2a2da40edce1bbaae5b90c9944)
+    
+    Fixes #11442
+
 commit 3944ca9ad0f8df1a0240c5812e5b3b04431e7eac
 Author: John Poet <jpoet@mythtv.org>
 Date:   Wed Feb 13 15:39:46 2013 -0700

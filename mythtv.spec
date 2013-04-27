@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-%define _gitrev v0.26.0-111-g3944ca9
+%define _gitrev v0.26.0-149-g5f45c0b
 %define branch fixes/0.26
 
 # Mythtv and plugins from github.com
@@ -80,7 +80,7 @@ Version:        0.26.0
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        7%{?dist}
+Release:        8%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -98,8 +98,6 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # Set "--with debug" to enable MythTV debug compile mode
 %define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
 
-# Use SystemD service by default but allow use of SysV init script.
-%define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
 
 # The following options are enabled by default.  Use --without to disable them
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
@@ -107,8 +105,11 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 %if 0%{?rhel}
 %define with_crystalhd     %{?_without_crystalhd:  1} %{?!_without_crystalhd:  0}
+%define with_systemd       %{?_without_systemd:    1} %{?!_without_systemd:    0}
+
 %else
 %define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
+%define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
 %endif
 
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
@@ -1457,6 +1458,9 @@ fi
 
 
 %changelog
+* Sat Apr 27 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-8
+- Update to latest fixes/0.26, v0.26.0-149-g5f45c0b.
+
 * Tue Feb 26 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-7
 - Update to latest fixes/0.26, v0.26.0-111-g3944ca9.
 - Add patch for mythlogserver segfault.
