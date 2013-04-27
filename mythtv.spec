@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-%define _gitrev v0.26.0-111-g3944ca9
+%define _gitrev v0.26.0-149-g5f45c0b
 %define branch fixes/0.26
 
 # Mythtv and plugins from github.com
@@ -80,7 +80,7 @@ Version:        0.26.0
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        7%{?dist}
+Release:        8%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1458,6 +1458,9 @@ fi
 
 
 %changelog
+* Sat Apr 27 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-8
+- Update to latest fixes/0.26, v0.26.0-149-g5f45c0b.
+
 * Tue Feb 26 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-7
 - Update to latest fixes/0.26, v0.26.0-111-g3944ca9.
 - Add patch for mythlogserver segfault.
