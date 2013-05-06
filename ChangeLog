@@ -1,3 +1,65 @@
+commit b02d25a46a2f5f3457bb9249f6071a16a9e771ee
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed May 1 15:23:31 2013 +0100
+
+    mythmusic: Save playlists to DB when changed not at frontend exit
+    
+    This changes things so any changes to playlists are saved to the database
+    immediately rather than cached and saved when the frontend exits.
+    
+    This fixes a problem were you could lose edits to a playlist if the FE is not
+    shutdown cleanly like when using the idle timer to shutdown or if you shutdown
+    the computer from the FE exit menu.
+    (cherry picked from commit 70143c30dfb67812ecd6cb29e66a10353579054f)
+    
+    Fixes #11228
+
+commit da89ee585f417584d74cbaee42467dabdc758261
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Wed Apr 24 12:49:56 2013 +0200
+
+    add NULL check missed in [a9b90652]
+    
+    found by Jim Stichnoth
+    
+    Refs #2077
+    (cherry picked from commit f04a8e42b)
+
+commit 61174b20ebba8f1ac595960fffc39f9dad7e4610
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Mon Apr 22 13:17:22 2013 +0200
+
+    update mythtranscode to work with ac3 with newer ffmpeg
+    
+    ffmpeg has moved the duration/size of the audio frame to another place, so look
+    there
+    
+    links used to figure it out how to move forward
+    http://ffmpeg.org/trac/ffmpeg/ticket/1240
+    http://git.videolan.org/?p=ffmpeg.git;a=commitdiff;h=364c71c80e9124a2624e3bfeb8e84c5cddeda222
+    http://code.mythtv.org/trac/ticket/2077#comment:42
+    
+    thanks to Nicolas Pöhlmann for finding the commit that broke it
+    
+    Refs: #2077
+    (cherry picked from commit a9b906528)
+
+commit 2ed4e2931a120ba1e2d1a642d074b3e258f015ce
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Tue Apr 30 20:47:29 2013 +0100
+
+    MythNews: improve media:content parsing in rss feeds
+    
+    * use the medium or type attributes to determine whether the content is an
+      image or video. Previously we ignored the type and ended up trying to play
+      an image.
+    
+    * if we haven't found any thumbnail image then use any images found in the
+      media:content as the thumbnail. Fixes #11161.
+    
+    * parse all the media:content items not just the first one we find.
+    (cherry picked from commit 7d9c51eb75ae37f39a57eb969c0ad7e532738e8a)
+
 commit 5f45c0bd684c875f19d59974a5fe51a56731bf16
 Author: tycholursen <tycholursen@gmail.com>
 Date:   Mon Apr 22 07:42:22 2013 -0400
