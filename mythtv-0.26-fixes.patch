@@ -17,8 +17,14 @@
  mythplugins/mythmusic/mythmusic/cddb.cpp           |    6 +-
  mythplugins/mythmusic/mythmusic/cdrip.cpp          |    2 +-
  mythplugins/mythmusic/mythmusic/decoderhandler.cpp |    9 +-
- mythplugins/mythmusic/mythmusic/musiccommon.cpp    |   12 +-
+ mythplugins/mythmusic/mythmusic/main.cpp           |   73 +-
+ mythplugins/mythmusic/mythmusic/metadata.cpp       |    5 +-
+ mythplugins/mythmusic/mythmusic/musiccommon.cpp    |   13 +-
  mythplugins/mythmusic/mythmusic/playersettings.cpp |    2 +-
+ mythplugins/mythmusic/mythmusic/playlist.cpp       |   76 +-
+ mythplugins/mythmusic/mythmusic/playlist.h         |   11 +-
+ .../mythmusic/mythmusic/playlistcontainer.cpp      |  256 +-
+ .../mythmusic/mythmusic/playlistcontainer.h        |   48 +-
  mythplugins/mythmusic/mythmusic/pls.cpp            |  209 +-
  mythplugins/mythmusic/mythmusic/pls.h              |   14 +-
  mythplugins/mythmusic/mythmusic/shoutcast.cpp      |   20 +-
@@ -27,6 +33,7 @@
  .../mythmusic/theme/default-wide/music-ui.xml      |    6 +-
  mythplugins/mythmusic/theme/default/music-base.xml |    7 +
  mythplugins/mythmusic/theme/default/stream-ui.xml  |  450 +++
+ mythplugins/mythnews/mythnews/newssite.cpp         |   66 +-
  mythplugins/mythweather/i18n/mythweather_es_es.qm  |  Bin 23630 -> 23631 bytes
  mythplugins/mythweather/i18n/mythweather_es_es.ts  |    3 +-
  mythplugins/mythweather/i18n/mythweather_pl.qm     |  Bin 23846 -> 23847 bytes
@@ -169,6 +176,8 @@
  mythtv/programs/mythshutdown/commandlineparser.cpp |   14 +-
  mythtv/programs/mythshutdown/main.cpp              |   55 +-
  mythtv/programs/mythtranscode/main.cpp             |    5 +-
+ mythtv/programs/mythtranscode/mpeg2fix.cpp         |    7 +-
+ mythtv/programs/mythtranscode/mpeg2fix.h           |    4 +
  mythtv/programs/mythtranscode/transcode.cpp        |    6 +
  mythtv/programs/mythtv-setup/backendsettings.cpp   |   20 +-
  mythtv/programs/mythtv-setup/main.cpp              |    5 +-
@@ -186,7 +195,7 @@
  .../themes/MythCenter/htmls/progdetails_page2.html |    4 +-
  mythtv/themes/MythCenter/schedule-ui.xml           |    2 +-
  mythtv/themes/Terra/weather-ui.xml                 |   49 +-
- 188 files changed, 8609 insertions(+), 5320 deletions(-)
+ 197 files changed, 8828 insertions(+), 5648 deletions(-)
 
 diff --git a/README.rst b/README.rst
 index a151d89..576e0dc 100644
@@ -6934,11 +6943,161 @@ index 2ad5c54..6125fd8 100644
  
      doStart((m_playlist.size() > 0));
  }
+diff --git a/mythplugins/mythmusic/mythmusic/main.cpp b/mythplugins/mythmusic/mythmusic/main.cpp
+index c40fda7..7da4aa2 100644
+--- a/mythplugins/mythmusic/mythmusic/main.cpp
++++ b/mythplugins/mythmusic/mythmusic/main.cpp
+@@ -65,71 +65,6 @@ static QString chooseCD(void)
+     return MediaMonitor::defaultCDdevice();
+ }
+ 
+-static void SavePending(int pending)
+-{
+-    //  Temporary Hack until mythmusic
+-    //  has a proper settings/setup
+-
+-    MSqlQuery query(MSqlQuery::InitCon());
+-    query.prepare("SELECT * FROM settings "
+-                  "WHERE value = :LASTPUSH "
+-                  "AND hostname = :HOST ;");
+-    query.bindValue(":LASTPUSH", "LastMusicPlaylistPush");
+-    query.bindValue(":HOST", gCoreContext->GetHostName());
+-
+-    if (query.exec() && query.size() == 0)
+-    {
+-        //  first run from this host / recent version
+-        query.prepare("INSERT INTO settings (value,data,hostname) VALUES "
+-                         "(:LASTPUSH, :DATA, :HOST );");
+-        query.bindValue(":LASTPUSH", "LastMusicPlaylistPush");
+-        query.bindValue(":DATA", pending);
+-        query.bindValue(":HOST", gCoreContext->GetHostName());
+-
+-        if (!query.exec())
+-            MythDB::DBError("SavePending - inserting LastMusicPlaylistPush",
+-                            query);
+-    }
+-    else if (query.size() == 1)
+-    {
+-        //  ah, just right
+-        query.prepare("UPDATE settings SET data = :DATA "
+-                         "WHERE value = :LASTPUSH "
+-                         "AND hostname = :HOST ;");
+-        query.bindValue(":DATA", pending);
+-        query.bindValue(":LASTPUSH", "LastMusicPlaylistPush");
+-        query.bindValue(":HOST", gCoreContext->GetHostName());
+-
+-        if (!query.exec())
+-            MythDB::DBError("SavePending - updating LastMusicPlaylistPush",
+-                            query);
+-    }
+-    else
+-    {
+-        //  correct thor's diabolical plot to
+-        //  consume all table space
+-
+-        query.prepare("DELETE FROM settings WHERE "
+-                         "WHERE value = :LASTPUSH "
+-                         "AND hostname = :HOST ;");
+-        query.bindValue(":LASTPUSH", "LastMusicPlaylistPush");
+-        query.bindValue(":HOST", gCoreContext->GetHostName());
+-        if (!query.exec())
+-            MythDB::DBError("SavePending - deleting LastMusicPlaylistPush",
+-                            query);
+-
+-        query.prepare("INSERT INTO settings (value,data,hostname) VALUES "
+-                         "(:LASTPUSH, :DATA, :HOST );");
+-        query.bindValue(":LASTPUSH", "LastMusicPlaylistPush");
+-        query.bindValue(":DATA", pending);
+-        query.bindValue(":HOST", gCoreContext->GetHostName());
+-
+-        if (!query.exec())
+-            MythDB::DBError("SavePending - inserting LastMusicPlaylistPush (2)",
+-                            query);
+-    }
+-}
+-
+ static void loadMusic()
+ {
+     // only do this once
+@@ -183,8 +118,7 @@ static void loadMusic()
+     AllMusic *all_music = new AllMusic();
+ 
+     //  Load all playlists into RAM (once!)
+-    PlaylistContainer *all_playlists = new PlaylistContainer(
+-            all_music, gCoreContext->GetHostName());
++    PlaylistContainer *all_playlists = new PlaylistContainer(all_music);
+ 
+     gMusicData->all_music = all_music;
+     gMusicData->all_streams = new AllStream();
+@@ -197,7 +131,6 @@ static void loadMusic()
+         qApp->processEvents();
+         usleep(50000);
+     }
+-    gMusicData->all_playlists->postLoad();
+ 
+     gMusicData->all_streams->createPlaylist();
+ 
+@@ -312,8 +245,6 @@ static void runScan(void)
+     if (gMusicData->all_playlists && gMusicData->all_playlists->cleanOutThreads())
+     {
+         gMusicData->all_playlists->save();
+-        int x = gMusicData->all_playlists->getPending();
+-        SavePending(x);
+     }
+ 
+     // force a complete reload of the tracks and playlists
+@@ -708,8 +639,6 @@ void mythplugin_destroy(void)
+     if (gMusicData->all_playlists && gMusicData->all_playlists->cleanOutThreads())
+     {
+         gMusicData->all_playlists->save();
+-        int x = gMusicData->all_playlists->getPending();
+-        SavePending(x);
+     }
+ 
+     delete gPlayer;
+diff --git a/mythplugins/mythmusic/mythmusic/metadata.cpp b/mythplugins/mythmusic/mythmusic/metadata.cpp
+index 5e53092..9559ac5 100644
+--- a/mythplugins/mythmusic/mythmusic/metadata.cpp
++++ b/mythplugins/mythmusic/mythmusic/metadata.cpp
+@@ -1451,6 +1451,8 @@ void AllStream::updateStream(Metadata* mdata)
+ 
+ void AllStream::createPlaylist(void)
+ {
++    gMusicData->all_playlists->getStreamPlaylist()->disableSaves();
++
+     gMusicData->all_playlists->getStreamPlaylist()->removeAllTracks();
+ 
+     for (int x = 0; x < m_streamList.count(); x++)
+@@ -1458,6 +1460,8 @@ void AllStream::createPlaylist(void)
+         Metadata *mdata = m_streamList.at(x);
+         gMusicData->all_playlists->getStreamPlaylist()->addTrack(mdata->ID(), false);
+     }
++
++    gMusicData->all_playlists->getStreamPlaylist()->enableSaves();
+ }
+ 
+ /**************************************************************************/
+@@ -1834,7 +1838,6 @@ void MusicData::reloadMusic(void)
+         qApp->processEvents();
+         usleep(50000);
+     }
+-    all_playlists->postLoad();
+ 
+     if (busy)
+         busy->Close();
 diff --git a/mythplugins/mythmusic/mythmusic/musiccommon.cpp b/mythplugins/mythmusic/mythmusic/musiccommon.cpp
-index c549da8..7f0dcc8 100644
+index c549da8..f719c29 100644
 --- a/mythplugins/mythmusic/mythmusic/musiccommon.cpp
 +++ b/mythplugins/mythmusic/mythmusic/musiccommon.cpp
-@@ -1544,7 +1544,11 @@ void MusicCommon::customEvent(QEvent *event)
+@@ -1471,6 +1471,7 @@ void MusicCommon::customEvent(QEvent *event)
+             QString songList = gPlayer->getPlaylist()->toRawSonglist();
+             playlist->removeAllTracks();
+             playlist->fillSongsFromSonglist(songList);
++            playlist->changed();
+             gPlayer->playlistChanged(playlist->getID());
+         }
+     }
+@@ -1544,7 +1545,11 @@ void MusicCommon::customEvent(QEvent *event)
                  Metadata *mdata = qVariantValue<Metadata*> (item->GetData());
                  if (mdata && mdata->ID() == (Metadata::IdType) trackID)
                  {
@@ -6951,7 +7110,7 @@ index c549da8..7f0dcc8 100644
                      break;
                  }
              }
-@@ -1564,6 +1568,9 @@ void MusicCommon::customEvent(QEvent *event)
+@@ -1564,6 +1569,9 @@ void MusicCommon::customEvent(QEvent *event)
                                            m_currentTrack, &m_playlistPlayedTime);
          updatePlaylistStats();
          updateTrackInfo(gPlayer->getCurrentMetadata());
@@ -6961,7 +7120,7 @@ index c549da8..7f0dcc8 100644
      }
      else if (event->type() == MusicPlayerEvent::TrackAddedEvent)
      {
-@@ -1608,6 +1615,9 @@ void MusicCommon::customEvent(QEvent *event)
+@@ -1608,6 +1616,9 @@ void MusicCommon::customEvent(QEvent *event)
                          item->DisplayState("default", "playstate");
                      }
                  }
@@ -6984,6 +7143,847 @@ index 2e6a047..8b7032d 100644
  
      m_resumeMode->SetHelpText(tr("Resume playback at either the beginning of the "
                   "active play queue, the beginning of the last track, "
+diff --git a/mythplugins/mythmusic/mythmusic/playlist.cpp b/mythplugins/mythmusic/mythmusic/playlist.cpp
+index 311172b..32ad0c2 100644
+--- a/mythplugins/mythmusic/mythmusic/playlist.cpp
++++ b/mythplugins/mythmusic/mythmusic/playlist.cpp
+@@ -43,13 +43,19 @@ bool Playlist::checkTrack(int a_track_id) const
+     return false;
+ }
+ 
+-void Playlist::copyTracks(Playlist *to_ptr, bool update_display) const
++void Playlist::copyTracks(Playlist *to_ptr, bool update_display)
+ {
++    disableSaves();
++
+     SongList::const_iterator it = m_songs.begin();
+     for (; it != m_songs.end(); ++it)
+     {
+         to_ptr->addTrack(*it, update_display);
+     }
++
++    enableSaves();
++
++    changed();
+ }
+ 
+ /// Given a tracks ID, add that track to this playlist
+@@ -76,7 +82,7 @@ void Playlist::addTrack(Metadata *mdata, bool update_display)
+     m_shuffledSongs.push_back(mdata);
+     m_songMap.insert(mdata->ID(), mdata);
+ 
+-    m_changed = true;
++    changed();
+ 
+     if (update_display)
+         gPlayer->activePlaylistChanged(mdata->ID(), false);
+@@ -88,7 +94,7 @@ void Playlist::removeAllTracks(void)
+     m_songMap.clear();
+     m_shuffledSongs.clear();
+ 
+-    m_changed = true;
++    changed();
+ }
+ 
+ void Playlist::removeTrack(int the_track)
+@@ -101,6 +107,8 @@ void Playlist::removeTrack(int the_track)
+         m_shuffledSongs.removeAll(*it);
+     }
+ 
++    changed();
++
+     gPlayer->activePlaylistChanged(the_track, true);
+ }
+ 
+@@ -137,7 +145,7 @@ void Playlist::moveTrackUpDown(bool flag, Metadata* mdata)
+     m_shuffledSongs.removeAt(where_its_at);
+     m_shuffledSongs.insert(insertion_point, mdata);
+ 
+-    m_changed = true;
++    changed();
+ }
+ 
+ Playlist::Playlist(void) :
+@@ -145,6 +153,7 @@ Playlist::Playlist(void) :
+     m_name(QObject::tr("oops")),
+     m_parent(NULL),
+     m_changed(false),
++    m_doSave(true),
+     m_progress(NULL),
+     m_proc(NULL),
+     m_procExitVal(0)
+@@ -536,7 +545,6 @@ void Playlist::loadPlaylist(QString a_name, QString a_host)
+     MSqlQuery query(MSqlQuery::InitCon());
+ 
+     if (m_name == "default_playlist_storage" ||
+-        m_name == "backup_playlist_storage"  || 
+         m_name == "stream_playlist")
+     {
+         query.prepare("SELECT playlist_id, playlist_name, playlist_songs "
+@@ -547,7 +555,7 @@ void Playlist::loadPlaylist(QString a_name, QString a_host)
+     else
+     {
+         // Technically this is never called as this function
+-        // is only used to load the default/backup playlists.
++        // is only used to load the default playlist.
+         query.prepare("SELECT playlist_id, playlist_name, playlist_songs "
+                       "FROM music_playlists "
+                       "WHERE playlist_name = :NAME"
+@@ -564,10 +572,6 @@ void Playlist::loadPlaylist(QString a_name, QString a_host)
+             m_name = query.value(1).toString();
+             rawSonglist = query.value(2).toString();
+         }
+-        if (m_name == "default_playlist_storage")
+-            m_name = QObject::tr("Default Playlist");
+-        if (m_name == "backup_playlist_storage")
+-            m_name = "and they should **REALLY** never see this";
+     }
+     else
+     {
+@@ -576,7 +580,6 @@ void Playlist::loadPlaylist(QString a_name, QString a_host)
+                           // of an existing playlist
+         rawSonglist.clear();
+         savePlaylist(a_name, a_host);
+-        m_changed = true;
+     }
+ 
+     fillSongsFromSonglist(rawSonglist);
+@@ -607,8 +610,6 @@ void Playlist::loadPlaylistByID(int id, QString a_host)
+ 
+     if (m_name == "default_playlist_storage")
+         m_name = QObject::tr("Default Playlist");
+-    if (m_name == "backup_playlist_storage")
+-        m_name = "and they should **REALLY** never see this";
+ 
+     fillSongsFromSonglist(rawSonglist);
+ }
+@@ -616,6 +617,7 @@ void Playlist::loadPlaylistByID(int id, QString a_host)
+ void Playlist::fillSongsFromSonglist(QString songList)
+ {
+     Metadata::IdType id;
++    bool badTrack = false;
+ 
+     QStringList list = songList.split(",", QString::SkipEmptyParts);
+     QStringList::iterator it = list.begin();
+@@ -634,8 +636,7 @@ void Playlist::fillSongsFromSonglist(QString songList)
+             }
+             else
+             {
+-                m_changed = true;
+-
++                badTrack = true;
+                 LOG(VB_GENERAL, LOG_ERR, LOC + QString("Got a bad track %1").arg(id));
+             }
+         }
+@@ -650,8 +651,7 @@ void Playlist::fillSongsFromSonglist(QString songList)
+             }
+             else
+             {
+-                m_changed = true;
+-
++                badTrack = true;
+                 LOG(VB_GENERAL, LOG_ERR, LOC + QString("Got a bad track %1").arg(id));
+             }
+         }
+@@ -662,10 +662,12 @@ void Playlist::fillSongsFromSonglist(QString songList)
+     else
+         shuffleTracks(MusicPlayer::SHUFFLE_OFF);
+ 
++    if (badTrack)
++        changed();
++
+     gPlayer->activePlaylistChanged(-1, false);
+ }
+ 
+-//FIXME:: this needs checking
+ void Playlist::fillSonglistFromQuery(QString whereClause,
+                                      bool removeDuplicates,
+                                      InsertPLOption insertOption,
+@@ -674,6 +676,7 @@ void Playlist::fillSonglistFromQuery(QString whereClause,
+     QString orig_songlist = toRawSonglist();
+     QString new_songlist;
+ 
++    disableSaves();
+     removeAllTracks();
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+@@ -699,6 +702,8 @@ void Playlist::fillSonglistFromQuery(QString whereClause,
+         MythDB::DBError("Load songlist from query", query);
+         new_songlist.clear();
+         fillSongsFromSonglist(new_songlist);
++        enableSaves();
++        changed();
+         return;
+     }
+ 
+@@ -754,6 +759,9 @@ void Playlist::fillSonglistFromQuery(QString whereClause,
+     }
+ 
+     fillSongsFromSonglist(new_songlist);
++
++    enableSaves();
++    changed();
+ }
+ 
+ // songList is a list of trackIDs to add
+@@ -765,6 +773,8 @@ void Playlist::fillSonglistFromList(const QList<int> &songList,
+     QString orig_songlist = toRawSonglist();
+     QString new_songlist;
+ 
++    disableSaves();
++
+     removeAllTracks();
+ 
+     for (int x = 0; x < songList.count(); x++)
+@@ -819,11 +829,10 @@ void Playlist::fillSonglistFromList(const QList<int> &songList,
+     }
+ 
+     fillSongsFromSonglist(new_songlist);
+-}
+ 
+-void Playlist::fillSongsFromCD()
+-{
+-    //FIXME: is this still needed?
++    enableSaves();
++
++    changed();
+ }
+ 
+ QString Playlist::toRawSonglist(bool shuffled)
+@@ -939,29 +948,35 @@ void Playlist::fillSonglistFromSmartPlaylist(QString category, QString name,
+     if (limitTo > 0)
+         whereClause +=  " LIMIT " + QString::number(limitTo);
+ 
+-    //m_name = name; // Set Playlist name to match smart playlist name
+-
+     fillSonglistFromQuery(whereClause, removeDuplicates,
+                           insertOption, currentTrackID);
+ }
+ 
++void Playlist::changed(void)
++{
++    m_changed = true;
++
++    if (m_doSave)
++        savePlaylist(m_name, gCoreContext->GetHostName());
++}
++
+ void Playlist::savePlaylist(QString a_name, QString a_host)
+ {
++    LOG(VB_GENERAL, LOG_DEBUG, LOC + "Saving playlist: " + a_name);
++
+     m_name = a_name.simplified();
+-    if (m_name.length() < 1)
++    if (m_name.isEmpty())
+     {
+         LOG(VB_GENERAL, LOG_WARNING, LOC + "Not saving unnamed playlist");
+         return;
+     }
+ 
+-    if (a_host.length() < 1)
++    if (a_host.isEmpty())
+     {
+         LOG(VB_GENERAL, LOG_WARNING, LOC +
+             "Not saving playlist without a host name");
+         return;
+     }
+-    if (m_name.length() < 1)
+-        return;
+ 
+     QString rawSonglist = toRawSonglist(true);
+ 
+@@ -970,8 +985,7 @@ void Playlist::savePlaylist(QString a_name, QString a_host)
+ 
+     getStats(&songcount, &playtime);
+ 
+-    bool save_host = ("default_playlist_storage" == a_name
+-        || "backup_playlist_storage" == a_name);
++    bool save_host = ("default_playlist_storage" == a_name);
+     if (m_playlistid > 0)
+     {
+         QString str_query = "UPDATE music_playlists SET "
+@@ -1014,6 +1028,8 @@ void Playlist::savePlaylist(QString a_name, QString a_host)
+ 
+     if (m_playlistid < 1)
+         m_playlistid = query.lastInsertId().toInt();
++
++    m_changed = false;
+ }
+ 
+ QString Playlist::removeDuplicateTracks(const QString &orig_songlist, const QString &new_songlist)
+diff --git a/mythplugins/mythmusic/mythmusic/playlist.h b/mythplugins/mythmusic/mythmusic/playlist.h
+index 469dc4e..25b84cc 100644
+--- a/mythplugins/mythmusic/mythmusic/playlist.h
++++ b/mythplugins/mythmusic/mythmusic/playlist.h
+@@ -53,7 +53,6 @@ class Playlist : public QObject
+ 
+     void describeYourself(void) const; //  debugging
+ 
+-    void fillSongsFromCD();
+     void fillSongsFromSonglist(QString songList);
+     void fillSonglistFromQuery(QString whereClause, 
+                                bool removeDuplicates = false,
+@@ -85,10 +84,15 @@ class Playlist : public QObject
+     void removeTrack(int the_track_id);
+     void removeAllTracks(void);
+ 
+-    void copyTracks(Playlist *to_ptr, bool update_display) const;
++    void copyTracks(Playlist *to_ptr, bool update_display);
+ 
+     bool hasChanged(void) { return m_changed; }
+-    void Changed(void) { m_changed = true; }
++    void changed(void);
++
++    /// whether any changes should be saved to the DB
++    void disableSaves(void) { m_doSave = false; }
++    void enableSaves(void) { m_doSave = true; }
++    bool doSaves(void) { return m_doSave; }
+ 
+     QString getName(void) { return m_name; } 
+     void    setName(QString a_name) { m_name = a_name; }
+@@ -118,6 +122,7 @@ class Playlist : public QObject
+     QMap<int, Metadata*>  m_songMap;
+     PlaylistContainer    *m_parent;
+     bool                  m_changed;
++    bool                  m_doSave;
+     MythProgressDialog   *m_progress;
+     MythSystem           *m_proc;
+     uint                  m_procExitVal;
+diff --git a/mythplugins/mythmusic/mythmusic/playlistcontainer.cpp b/mythplugins/mythmusic/mythmusic/playlistcontainer.cpp
+index 715811c..2c35068 100644
+--- a/mythplugins/mythmusic/mythmusic/playlistcontainer.cpp
++++ b/mythplugins/mythmusic/mythmusic/playlistcontainer.cpp
+@@ -28,95 +28,85 @@ void PlaylistLoadingThread::run()
+ 
+ void PlaylistContainer::clearCDList()
+ {
+-    cd_playlist.clear();
++    m_cdPlaylist.clear();
+ }
+ 
+ void PlaylistContainer::addCDTrack(int track)
+ {
+-    cd_playlist.push_back(track);
++    m_cdPlaylist.push_back(track);
+ }
+ 
+ void PlaylistContainer::removeCDTrack(int track)
+ {
+-    cd_playlist.removeAll(track);
++    m_cdPlaylist.removeAll(track);
+ }
+ 
+ bool PlaylistContainer::checkCDTrack(int track)
+ {
+-    return cd_playlist.contains(track);
++    return m_cdPlaylist.contains(track);
+ }
+ 
+-PlaylistContainer::PlaylistContainer(
+-    AllMusic *all_music, const QString &host_name) :
+-    active_playlist(NULL),      backup_playlist(NULL),
+-    stream_playlist(NULL),
+-    all_other_playlists(NULL),  all_available_music(all_music),
+-    pending_writeback_index(-1),
++PlaylistContainer::PlaylistContainer(AllMusic *all_music) :
++    m_activePlaylist(NULL), m_streamPlaylist(NULL),
++    m_allPlaylists(NULL),   m_allMusic(all_music),
+ 
+-    playlists_loader(new PlaylistLoadingThread(this, all_music)),
+-    done_loading(false),        my_host(host_name),
++    m_playlistsLoader(new PlaylistLoadingThread(this, all_music)),
++    m_doneLoading(false), m_myHost(gCoreContext->GetHostName()),
+ 
+-    RatingWeight(   gCoreContext->GetNumSetting("IntelliRatingWeight",    2)),
+-    PlayCountWeight(gCoreContext->GetNumSetting("IntelliPlayCountWeight", 2)),
+-    LastPlayWeight( gCoreContext->GetNumSetting("IntelliLastPlayWeight",  2)),
+-    RandomWeight(   gCoreContext->GetNumSetting("IntelliRandomWeight",    2))
++    m_ratingWeight(   gCoreContext->GetNumSetting("IntelliRatingWeight",    2)),
++    m_playCountWeight(gCoreContext->GetNumSetting("IntelliPlayCountWeight", 2)),
++    m_lastPlayWeight( gCoreContext->GetNumSetting("IntelliLastPlayWeight",  2)),
++    m_randomWeight(   gCoreContext->GetNumSetting("IntelliRandomWeight",    2))
+ {
+-    playlists_loader->start();
++    m_playlistsLoader->start();
+ }
+ 
+ PlaylistContainer::~PlaylistContainer()
+ {
+-    playlists_loader->wait();
+-    delete playlists_loader;
+-    playlists_loader = NULL;
+-
+-    if (active_playlist)
+-        delete active_playlist;
+-    if (backup_playlist)
+-        delete backup_playlist;
+-    if (stream_playlist)
+-        delete stream_playlist;
+-    if (all_other_playlists)
++    m_playlistsLoader->wait();
++    delete m_playlistsLoader;
++    m_playlistsLoader = NULL;
++
++    if (m_activePlaylist)
++        delete m_activePlaylist;
++    if (m_streamPlaylist)
++        delete m_streamPlaylist;
++    if (m_allPlaylists)
+     {
+-        while (!all_other_playlists->empty())
++        while (!m_allPlaylists->empty())
+         {
+-            delete all_other_playlists->front();
+-            all_other_playlists->pop_front();
++            delete m_allPlaylists->front();
++            m_allPlaylists->pop_front();
+         }
+-        delete all_other_playlists;
++        delete m_allPlaylists;
+     }
+ }
+ 
+ void PlaylistContainer::FillIntelliWeights(int &rating, int &playcount,
+                                             int &lastplay, int &random)
+ {
+-    rating = RatingWeight;
+-    playcount = PlayCountWeight;
+-    lastplay = LastPlayWeight;
+-    random = RandomWeight;
++    rating = m_randomWeight;
++    playcount = m_playCountWeight;
++    lastplay = m_lastPlayWeight;
++    random = m_randomWeight;
+ }
+ 
+ void PlaylistContainer::load()
+ {
+-    done_loading = false;
+-    active_playlist = new Playlist();
+-    active_playlist->setParent(this);
++    m_doneLoading = false;
++    m_activePlaylist = new Playlist();
++    m_activePlaylist->setParent(this);
+ 
+-    backup_playlist = new Playlist();
+-    backup_playlist->setParent(this);
++    m_streamPlaylist = new Playlist();
++    m_streamPlaylist->setParent(this);
+ 
+-    stream_playlist = new Playlist();
+-    stream_playlist->setParent(this);
++    m_allPlaylists = new QList<Playlist*>;
+ 
+-    all_other_playlists = new QList<Playlist*>;
++    m_cdPlaylist.clear();
+ 
+-    cd_playlist.clear();
++    m_activePlaylist->loadPlaylist("default_playlist_storage", m_myHost);
+ 
+-    active_playlist->loadPlaylist("default_playlist_storage", my_host);
+-
+-    backup_playlist->loadPlaylist("backup_playlist_storage", my_host);
+-
+-    stream_playlist->loadPlaylist("stream_playlist", my_host);
++    m_streamPlaylist->loadPlaylist("stream_playlist", m_myHost);
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.prepare("SELECT playlist_id FROM music_playlists "
+@@ -128,7 +118,7 @@ void PlaylistContainer::load()
+     query.bindValue(":DEFAULT", "default_playlist_storage");
+     query.bindValue(":BACKUP", "backup_playlist_storage");
+     query.bindValue(":STREAM", "stream_playlist");
+-    query.bindValue(":HOST", my_host);
++    query.bindValue(":HOST", m_myHost);
+ 
+     if (!query.exec())
+     {
+@@ -141,26 +131,21 @@ void PlaylistContainer::load()
+             Playlist *temp_playlist = new Playlist();
+             //  No, we don't destruct this ...
+             temp_playlist->setParent(this);
+-            temp_playlist->loadPlaylistByID(query.value(0).toInt(), my_host);
+-            all_other_playlists->push_back(temp_playlist);
++            temp_playlist->loadPlaylistByID(query.value(0).toInt(), m_myHost);
++            m_allPlaylists->push_back(temp_playlist);
+             //  ... cause it's sitting on this PtrList
+         }
+     }
+-    postLoad();
+-
+-    pending_writeback_index = 0;
+ 
+-    int x = gCoreContext->GetNumSetting("LastMusicPlaylistPush");
+-    setPending(x);
+-    done_loading = true;
++    m_doneLoading = true;
+ }
+ 
+ void PlaylistContainer::describeYourself(void) const
+ {
+     //    Debugging
+-    active_playlist->describeYourself();
+-    QList<Playlist*>::const_iterator it = all_other_playlists->begin();
+-    for (; it != all_other_playlists->end(); ++it)
++    m_activePlaylist->describeYourself();
++    QList<Playlist*>::const_iterator it = m_allPlaylists->begin();
++    for (; it != m_allPlaylists->end(); ++it)
+         (*it)->describeYourself();
+ }
+ 
+@@ -169,13 +154,13 @@ Playlist *PlaylistContainer::getPlaylist(int id)
+     //  return a pointer to a playlist
+     //  by id;
+ 
+-    if (active_playlist->getID() == id)
++    if (m_activePlaylist->getID() == id)
+     {
+-        return active_playlist;
++        return m_activePlaylist;
+     }
+ 
+-    QList<Playlist*>::iterator it = all_other_playlists->begin();
+-    for (; it != all_other_playlists->end(); ++it)
++    QList<Playlist*>::iterator it = m_allPlaylists->begin();
++    for (; it != m_allPlaylists->end(); ++it)
+     {
+         if ((*it)->getID() == id)
+             return *it;
+@@ -191,8 +176,8 @@ Playlist *PlaylistContainer::getPlaylist(const QString &name)
+     //  return a pointer to a playlist
+     //  by name;
+ 
+-    QList<Playlist*>::iterator it = all_other_playlists->begin();
+-    for (; it != all_other_playlists->end(); ++it)
++    QList<Playlist*>::iterator it = m_allPlaylists->begin();
++    for (; it != m_allPlaylists->end(); ++it)
+     {
+         if ((*it)->getName() == name)
+             return *it;
+@@ -204,16 +189,15 @@ Playlist *PlaylistContainer::getPlaylist(const QString &name)
+ 
+ void PlaylistContainer::save(void)
+ {
+-    QList<Playlist*>::const_iterator it = all_other_playlists->begin();
+-    for (; it != all_other_playlists->end(); ++it)
++    QList<Playlist*>::const_iterator it = m_allPlaylists->begin();
++    for (; it != m_allPlaylists->end(); ++it)
+     {
+         if ((*it)->hasChanged())
+-            (*it)->savePlaylist((*it)->getName(), my_host);
++            (*it)->savePlaylist((*it)->getName(), m_myHost);
+     }
+ 
+-    active_playlist->savePlaylist("default_playlist_storage", my_host);
+-    backup_playlist->savePlaylist("backup_playlist_storage", my_host);
+-    stream_playlist->savePlaylist("stream_playlist", my_host);
++    m_activePlaylist->savePlaylist("default_playlist_storage", m_myHost);
++    m_streamPlaylist->savePlaylist("stream_playlist", m_myHost);
+ }
+ 
+ void PlaylistContainer::createNewPlaylist(QString name)
+@@ -222,9 +206,9 @@ void PlaylistContainer::createNewPlaylist(QString name)
+     new_list->setParent(this);
+ 
+     //  Need to touch the database to get persistent ID
+-    new_list->savePlaylist(name, my_host);
+-    new_list->Changed();
+-    all_other_playlists->push_back(new_list);
++    new_list->savePlaylist(name, m_myHost);
++
++    m_allPlaylists->push_back(new_list);
+ }
+ 
+ void PlaylistContainer::copyNewPlaylist(QString name)
+@@ -233,41 +217,15 @@ void PlaylistContainer::copyNewPlaylist(QString name)
+     new_list->setParent(this);
+ 
+     //  Need to touch the database to get persistent ID
+-    new_list->savePlaylist(name, my_host);
+-    new_list->Changed();
+-    all_other_playlists->push_back(new_list);
+-    active_playlist->copyTracks(new_list, false);
+-    pending_writeback_index = 0;
+-}
++    new_list->savePlaylist(name, m_myHost);
+ 
+-void PlaylistContainer::popBackPlaylist()
+-{
+-    Playlist *destination = getPlaylist(pending_writeback_index);
+-    if (!destination)
+-    {
+-        LOG(VB_GENERAL, LOG_WARNING, LOC + "popBackPlaylist() " +
+-            QString("Unknown playlist: %1") .arg(pending_writeback_index));
+-        return;
+-    }
+-    destination->removeAllTracks();
+-    destination->Changed();
+-    active_playlist->copyTracks(destination, false);
+-    active_playlist->removeAllTracks();
+-    backup_playlist->copyTracks(active_playlist, true);
+-    pending_writeback_index = 0;
+-
+-    active_playlist->Changed();
+-    backup_playlist->Changed();
++    m_allPlaylists->push_back(new_list);
++    m_activePlaylist->copyTracks(new_list, false);
+ }
+ 
+ void PlaylistContainer::copyToActive(int index)
+ {
+-    backup_playlist->removeAllTracks();
+-    active_playlist->copyTracks(backup_playlist, false);
+-
+-    pending_writeback_index = index;
+-
+-    active_playlist->removeAllTracks();
++    m_activePlaylist->removeAllTracks();
+     Playlist *copy_from = getPlaylist(index);
+     if (!copy_from)
+     {
+@@ -275,20 +233,16 @@ void PlaylistContainer::copyToActive(int index)
+             QString("Unknown playlist: %1").arg(index));
+         return;
+     }
+-    copy_from->copyTracks(active_playlist, true);
+-
+-    active_playlist->Changed();
+-    backup_playlist->Changed();
++    copy_from->copyTracks(m_activePlaylist, true);
+ }
+ 
+-
+ void PlaylistContainer::renamePlaylist(int index, QString new_name)
+ {
+     Playlist *list_to_rename = getPlaylist(index);
+     if (list_to_rename)
+     {
+         list_to_rename->setName(new_name);
+-        list_to_rename->Changed();
++        list_to_rename->changed();
+     }
+ }
+ 
+@@ -301,21 +255,9 @@ void PlaylistContainer::deletePlaylist(int kill_me)
+             QString("Unknown playlist: %1").arg(kill_me));
+         return;
+     }
+-    //  First, we need to take out any **track** on any other
+-    //  playlist that is actually a reference to this
+-    //  playlist
+ 
+-    if (kill_me == pending_writeback_index)
+-        popBackPlaylist();
+-
+-    active_playlist->removeTrack(kill_me * -1);
+-
+-    QList<Playlist*>::iterator it = all_other_playlists->begin();
+-    for (; it != all_other_playlists->end(); ++it)
+-    {
+-        if ((*it) != list_to_kill)
+-            (*it)->removeTrack(kill_me * -1);
+-    }
++    list_to_kill->removeAllTracks();
++    m_allPlaylists->removeAll(list_to_kill);
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.prepare("DELETE FROM music_playlists WHERE playlist_id = :ID ;");
+@@ -325,22 +267,20 @@ void PlaylistContainer::deletePlaylist(int kill_me)
+     {
+         MythDB::DBError("playlist delete", query);
+     }
+-    list_to_kill->removeAllTracks();
+-    all_other_playlists->removeAll(list_to_kill);
+ }
+ 
+ 
+ QString PlaylistContainer::getPlaylistName(int index, bool &reference)
+ {
+-    if (active_playlist)
++    if (m_activePlaylist)
+     {
+-        if (active_playlist->getID() == index)
++        if (m_activePlaylist->getID() == index)
+         {
+-            return active_playlist->getName();
++            return m_activePlaylist->getName();
+         }
+ 
+-        QList<Playlist*>::iterator it = all_other_playlists->begin();
+-        for (; it != all_other_playlists->end(); ++it)
++        QList<Playlist*>::iterator it = m_allPlaylists->begin();
++        for (; it != m_allPlaylists->end(); ++it)
+         {
+             if ((*it)->getID() == index)
+                 return (*it)->getName();
+@@ -354,42 +294,13 @@ QString PlaylistContainer::getPlaylistName(int index, bool &reference)
+     return QObject::tr("Something is Wrong");
+ }
+ 
+-
+-void PlaylistContainer::postLoad()
+-{
+-    //FIXME remove this and the other post load stuff?
+-
+-    //  Now that everything is loaded, we need to recheck all
+-    //  tracks and update those that refer to a playlist
+-#if 0
+-    active_playlist->postLoad();
+-    backup_playlist->postLoad();
+-
+-    QList<Playlist*>::iterator it = all_other_playlists->begin();
+-    for (; it != all_other_playlists->end(); ++it)
+-        (*it)->postLoad();
+-#endif
+-}
+-
+-bool PlaylistContainer::pendingWriteback()
+-{
+-    if (pending_writeback_index > 0)
+-    {
+-        return true;
+-    }
+-    return false;
+-}
+-
+ bool PlaylistContainer::nameIsUnique(QString a_name, int which_id)
+ {
+     if (a_name == "default_playlist_storage")
+         return false;
+ 
+-    if (a_name == "backup_playlist_storage")
+-        return false;
+-
+-    QList<Playlist*>::iterator it = all_other_playlists->begin();
+-    for (; it != all_other_playlists->end(); ++it)
++    QList<Playlist*>::iterator it = m_allPlaylists->begin();
++    for (; it != m_allPlaylists->end(); ++it)
+     {
+         if ((*it)->getName() == a_name && (*it)->getID() != which_id)
+             return false;
+@@ -402,8 +313,8 @@ QStringList PlaylistContainer::getPlaylistNames(void)
+ {
+     QStringList res;
+ 
+-    QList<Playlist*>::iterator it = all_other_playlists->begin();
+-    for (; it != all_other_playlists->end(); ++it)
++    QList<Playlist*>::iterator it = m_allPlaylists->begin();
++    for (; it != m_allPlaylists->end(); ++it)
+     {
+         res.append((*it)->getName());
+     }
+@@ -413,20 +324,15 @@ QStringList PlaylistContainer::getPlaylistNames(void)
+ 
+ bool PlaylistContainer::cleanOutThreads()
+ {
+-    if (playlists_loader->isFinished())
++    if (m_playlistsLoader->isFinished())
+     {
+         return true;
+     }
+-    playlists_loader->wait();
++    m_playlistsLoader->wait();
+     return false;
+ }
+ 
+ void PlaylistContainer::clearActive()
+ {
+-    backup_playlist->removeAllTracks();
+-    active_playlist->removeAllTracks();
+-    backup_playlist->Changed();
+-    active_playlist->Changed();
+-    pending_writeback_index = 0;
++    m_activePlaylist->removeAllTracks();
+ }
+-
+diff --git a/mythplugins/mythmusic/mythmusic/playlistcontainer.h b/mythplugins/mythmusic/mythmusic/playlistcontainer.h
+index a2f826b..7550713 100644
+--- a/mythplugins/mythmusic/mythmusic/playlistcontainer.h
++++ b/mythplugins/mythmusic/mythmusic/playlistcontainer.h
+@@ -20,16 +20,16 @@ class PlaylistLoadingThread : public MThread
+ class PlaylistContainer
+ {
+   public:
+-    PlaylistContainer(AllMusic *all_music, const QString &host_name);
++    PlaylistContainer(AllMusic *all_music);
+    ~PlaylistContainer();
+ 
+     void            load();
+     void            describeYourself(void) const;    // debugging
+ 
+-    Playlist*       getActive(void) { return active_playlist; }
++    Playlist*       getActive(void) { return m_activePlaylist; }
+     Playlist*       getPlaylist(int id);
+     Playlist*       getPlaylist(const QString &name);
+-    Playlist*       getStreamPlaylist(void) { return stream_playlist; }
++    Playlist*       getStreamPlaylist(void) { return m_streamPlaylist; }
+ 
+     void            clearCDList();
+     void            addCDTrack(int x);
+@@ -43,47 +43,37 @@ class PlaylistContainer
+ 
+     QString         getPlaylistName(int index, bool &reference);
+ 
+-    void            postLoad();
+-
+     void            deletePlaylist(int index);
+     void            renamePlaylist(int index, QString new_name);
+ 
+-    void            popBackPlaylist();
+-    bool            pendingWriteback();
+-    void            setPending(int x) {pending_writeback_index = x;}
+-    int             getPending() {return pending_writeback_index;}
+-
+     bool            nameIsUnique(QString a_name, int which_id);
+ 
+     void            clearActive();
+ 
+-    bool            doneLoading(){return done_loading;}
++    bool            doneLoading(){return m_doneLoading;}
+ 
+     bool            cleanOutThreads();
+ 
+     void            FillIntelliWeights(int &rating, int &playcount,
+                                        int &lastplay, int &random);
+-    QList<Playlist*> *getPlaylists(void) { return all_other_playlists; }
++    QList<Playlist*> *getPlaylists(void) { return m_allPlaylists; }
+     QStringList       getPlaylistNames(void);
+ 
+   private:  
+-    Playlist            *active_playlist;
+-    Playlist            *backup_playlist;
+-    Playlist            *stream_playlist;
+-    QList<int>           cd_playlist;
+-    QList<Playlist*>    *all_other_playlists;
+-    AllMusic            *all_available_music;
+-
+-    int                  pending_writeback_index;
+-    
+-    PlaylistLoadingThread  *playlists_loader;
+-    bool                    done_loading;
+-    QString                 my_host;
+-
+-    int RatingWeight;
+-    int PlayCountWeight;
+-    int LastPlayWeight;
+-    int RandomWeight;
++    Playlist            *m_activePlaylist;
++    Playlist            *m_streamPlaylist;
++    QList<int>           m_cdPlaylist;
++    QList<Playlist*>    *m_allPlaylists;
++    AllMusic            *m_allMusic;
++
++    PlaylistLoadingThread  *m_playlistsLoader;
++    bool                    m_doneLoading;
++    QString                 m_myHost;
++
++    int m_ratingWeight;
++    int m_playCountWeight;
++    int m_lastPlayWeight;
++    int m_randomWeight;
+ };
+ 
+ #endif // _PLAYLIST_CONTAINER_H_
 diff --git a/mythplugins/mythmusic/mythmusic/pls.cpp b/mythplugins/mythmusic/mythmusic/pls.cpp
 index 0cb8de8..f2fa96e 100644
 --- a/mythplugins/mythmusic/mythmusic/pls.cpp
@@ -7879,6 +8879,102 @@ index 0000000..457f383
 +    </window>
 +
 +</mythuitheme>
+diff --git a/mythplugins/mythnews/mythnews/newssite.cpp b/mythplugins/mythnews/mythnews/newssite.cpp
+index 2268853..e25cb6d 100644
+--- a/mythplugins/mythnews/mythnews/newssite.cpp
++++ b/mythplugins/mythnews/mythnews/newssite.cpp
+@@ -286,6 +286,26 @@ void NewsSite::process(void)
+ 
+ }
+ 
++static bool isImage(const QString &mimeType)
++{
++    if (mimeType == "image/png" || mimeType == "image/jpeg" ||
++        mimeType == "image/jpg" || mimeType == "image/gif" ||
++        mimeType == "image/bmp")
++        return true;
++
++    return false;
++}
++
++static bool isVideo(const QString &mimeType)
++{
++    if (mimeType == "video/mpeg" || mimeType == "video/x-ms-wmv" ||
++        mimeType == "application/x-troff-msvideo" || mimeType == "video/avi" ||
++        mimeType == "video/msvideo" || mimeType == "video/x-msvideo")
++        return true;
++
++    return false;
++}
++
+ void NewsSite::parseRSS(QDomDocument domDoc)
+ {
+     QMutexLocker locker(&m_lock);
+@@ -349,6 +369,7 @@ void NewsSite::parseRSS(QDomDocument domDoc)
+         //////////////////////////////////////////////////////////////
+         // From this point forward, we process RSS 2.0 media tags.
+         // Please put all other tag processing before this comment.
++        // See http://www.rssboard.org/media-rss for details
+         //////////////////////////////////////////////////////////////
+ 
+         // Some media: tags can be enclosed in a media:group item.
+@@ -380,26 +401,41 @@ void NewsSite::parseRSS(QDomDocument domDoc)
+         if (!descNode.isNull())
+             description = descNode.toElement().text().simplified();
+ 
+-        if (enclosure.isEmpty())
++        // parse any media:content items looking for any images or videos
++        QDomElement e = itemNode.toElement();
++        QDomNodeList mediaNodes = e.elementsByTagName("media:content");
++        for (int x = 0; x < mediaNodes.count(); x++)
+         {
+-            QDomNode contentNode = itemNode.namedItem("media:content");
+-            if (!contentNode.isNull())
+-            {
+-                QDomAttr enclosureURL = contentNode.toElement()
+-                    .attributeNode("url");
++            QString medium;
++            QString type;
++            QString url;
+ 
+-                if (!enclosureURL.isNull())
+-                   enclosure  = enclosureURL.value();
++            QDomElement mediaElement = mediaNodes.at(x).toElement();
+ 
+-                QDomAttr enclosureType = contentNode.toElement()
+-                    .attributeNode("type");
++            if (mediaElement.isNull())
++                continue;
+ 
+-                if (!enclosureType.isNull())
+-                   enclosure_type  = enclosureType.value();
+-            }
+-        }
++            if (mediaElement.hasAttribute("medium"))
++                medium = mediaElement.attributeNode("medium").value();
++
++            if (mediaElement.hasAttribute("type"))
++                type = mediaElement.attributeNode("type").value();
+ 
+-        (void) enclosure_type; // not currently used...
++            if (mediaElement.hasAttribute("url"))
++                url = mediaElement.attributeNode("url").value();
++
++            LOG(VB_GENERAL, LOG_DEBUG,
++                QString("parseRSS found media:content: medium: %1, type: %2, url: 3")
++                        .arg(medium).arg(type).arg(url));
++
++            // if this is an image use it as the thumbnail if we haven't found one yet
++            if (thumbnail.isEmpty() && (medium == "image" || isImage(type)))
++                thumbnail = url;
++
++            // if this is a video use it as the enclosure if we haven't found one yet
++            if (enclosure.isEmpty() && (medium == "video" || isVideo(type)))
++                enclosure = url;
++        }
+ 
+         insertNewsArticle(NewsArticle(title, description, url,
+                                       thumbnail, mediaurl, enclosure));
 diff --git a/mythplugins/mythweather/i18n/mythweather_es_es.qm b/mythplugins/mythweather/i18n/mythweather_es_es.qm
 index deab269..8968bb3 100644
 Binary files a/mythplugins/mythweather/i18n/mythweather_es_es.qm and b/mythplugins/mythweather/i18n/mythweather_es_es.qm differ
@@ -31170,6 +32266,59 @@ index 49a1a7a..13d572b 100644
      SignalHandler::Init(signallist);
      signal(SIGHUP, SIG_IGN);
  #endif
+diff --git a/mythtv/programs/mythtranscode/mpeg2fix.cpp b/mythtv/programs/mythtranscode/mpeg2fix.cpp
+index 23184f1..224b7b8 100644
+--- a/mythtv/programs/mythtranscode/mpeg2fix.cpp
++++ b/mythtv/programs/mythtranscode/mpeg2fix.cpp
+@@ -2356,13 +2356,14 @@ int MPEG2fixup::Start()
+         {
+             FrameList *af = (*it);
+             AVCodecContext *CC = getCodecContext(it.key());
++            AVCodecParserContext *CPC = getCodecParserContext(it.key());
+             bool backwardsPTS = false;
+ 
+             while (af->count())
+             {
+                 // What to do if the CC is corrupt?
+                 // Just wait and hope it repairs itself
+-                if (CC->sample_rate == 0 || CC->frame_size == 0)
++                if (CC->sample_rate == 0 || !CPC || CPC->duration == 0)
+                     break;
+ 
+                 // The order of processing frames is critical to making
+@@ -2378,7 +2379,7 @@ int MPEG2fixup::Start()
+                 //     the audio frame
+                 int64_t nextPTS, tmpPTS;
+                 int64_t incPTS =
+-                         90000LL * (int64_t)CC->frame_size / CC->sample_rate;
++                         90000LL * (int64_t)CPC->duration / CC->sample_rate;
+ 
+                 if (poq.UpdateOrigPTS(it.key(), origaPTS[it.key()],
+                                                   af->first()->pkt) < 0)
+@@ -2447,7 +2448,7 @@ int MPEG2fixup::Start()
+                 }
+ 
+                 nextPTS = add2x33(af->first()->pkt.pts,
+-                           90000LL * (int64_t)CC->frame_size / CC->sample_rate);
++                           90000LL * (int64_t)CPC->duration / CC->sample_rate);
+ 
+                 if ((cutState[it.key()] == 1 &&
+                      cmp2x33(nextPTS, cutStartPTS) > 0) ||
+diff --git a/mythtv/programs/mythtranscode/mpeg2fix.h b/mythtv/programs/mythtranscode/mpeg2fix.h
+index fe74ac0..8796803 100644
+--- a/mythtv/programs/mythtranscode/mpeg2fix.h
++++ b/mythtv/programs/mythtranscode/mpeg2fix.h
+@@ -218,6 +218,10 @@ class MPEG2fixup
+     {
+         return inputFC->streams[id]->codec;
+     }
++    AVCodecParserContext *getCodecParserContext(int id)
++    {
++        return inputFC->streams[id]->parser;
++    }
+ 
+     void dumpList(FrameList *list);
+ 
 diff --git a/mythtv/programs/mythtranscode/transcode.cpp b/mythtv/programs/mythtranscode/transcode.cpp
 index c75b86a..e08f534 100755
 --- a/mythtv/programs/mythtranscode/transcode.cpp
