@@ -78,7 +78,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.26.0
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 %else
 Release:        9%{?dist}
 %endif
@@ -1458,6 +1458,9 @@ fi
 
 
 %changelog
+* Sat Jul 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-9
+- Rebuilt for x264
+
 * Mon May 06 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-9
 - Update to latest fixes/0.26, v0.26.0-153-gb02d25a.
 - Fixes long standing issue with transcoding on EL.
