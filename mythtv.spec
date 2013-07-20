@@ -80,7 +80,7 @@ Version:        0.26.0
 %if "%{branch}" == "master"
 Release:        0.2.git.%{_gitrev}%{?dist}
 %else
-Release:        9%{?dist}
+Release:        10%?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1458,7 +1458,7 @@ fi
 
 
 %changelog
-* Sat Jul 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-9
+* Sat Jul 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-10
 - Rebuilt for x264
 
 * Mon May 06 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.0-9
