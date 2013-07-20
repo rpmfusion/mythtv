@@ -80,7 +80,7 @@ Version:        0.26.0
 %if "%{branch}" == "master"
 Release:        0.2.git.%{_gitrev}%{?dist}
 %else
-Release:        10%?dist}
+Release:        10%?{dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
