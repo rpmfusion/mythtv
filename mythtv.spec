@@ -60,12 +60,8 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-%define _gitrev v0.26.0-153-gb02d25a
+%define _gitrev v0.26.1-1-g6a46ea0
 %define branch fixes/0.26
-
-# Mythtv and plugins from github.com
-%global githash1 g6c3ae81
-%global githash2 d2f9798
 
 #
 # Basic descriptive tags for this package:
@@ -76,11 +72,11 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version:        0.26.0
+Version:        0.26.1
 %if "%{branch}" == "master"
-Release:        0.2.git.%{_gitrev}%{?dist}
+Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        10%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -135,7 +131,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 ################################################################################
 
 # https://github.com/MythTV/mythtv/tarball/v0.26
-Source0:   MythTV-%{name}-v%{version}-0-%{githash1}.tar.gz
+Source0:   %{name}-%{version}.tar.gz
 
 # From the mythtv git repository with the appropriate branch checked out:
 # git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
@@ -184,6 +180,8 @@ BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.6
 BuildRequires:  phonon-devel phonon-backend-gstreamer
 BuildRequires:  libuuid-devel
+BuildRequires:  libcec-devel
+BuildRequires:  libvpx-devel
 
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -826,7 +824,7 @@ on demand content.
 ################################################################################
 
 %prep
-%setup -q -n MythTV-%{name}-%{githash2}
+%setup -q
 
 # Replace static lib paths with %{_lib} so we build properly on x86_64
 # systems, where the libs are actually in lib64.
@@ -909,6 +907,7 @@ pushd mythtv
     --enable-libx264                            \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
+    --enable-libvpx                             \
 %if %{with_vdpau}
     --enable-vdpau                              \
 %endif
@@ -1391,7 +1390,7 @@ fi
 %{_libdir}/mythtv/plugins/libmythgame.so
 %dir %{_datadir}/mythtv/games
 %{_datadir}/mythtv/games/*
-%dir %{_datadir}/mame/screens
+%{_datadir}/mame/screens
 %dir %{_datadir}/mame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
@@ -1458,6 +1457,9 @@ fi
 
 
 %changelog
+* Thu Aug 22 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-1
+- Update to latest bugfix release.
+
 * Sat Jul 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-10
 - Rebuilt for x264
 
