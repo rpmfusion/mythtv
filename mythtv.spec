@@ -138,6 +138,7 @@ Source0:   %{name}-%{version}.tar.gz
 Patch0:    mythtv-0.26-fixes.patch
 Patch1:    mythlogserver-segv.patch
 Patch2:    mythtv-0.26.0-types_h.patch
+Patch3:    mythtv-0.26.1-libva_121.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -835,6 +836,7 @@ on demand content.
 %patch0 -p1 -b .mythtv
 %patch1 -p1 -b .mythlogserver
 %patch2 -p1 -b .types_h
+%patch3 -p1 -b .libva
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -1459,6 +1461,7 @@ fi
 %changelog
 * Thu Aug 22 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-1
 - Update to latest bugfix release.
+- Add patch for new libva 1.2.1 version in rawhide.
 
 * Sat Jul 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.0-10
 - Rebuilt for x264
