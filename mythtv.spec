@@ -74,9 +74,9 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.26.1
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1459,6 +1459,9 @@ fi
 
 
 %changelog
+* Mon Sep 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.1-2
+- Rebuilt
+
 * Thu Aug 22 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-1
 - Update to latest bugfix release.
 - Add patch for new libva 1.2.1 version in rawhide.
