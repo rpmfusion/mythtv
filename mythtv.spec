@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-%define _gitrev v0.26.1-1-g6a46ea0
+%define _gitrev v0.26.1-24-g9fd7c61
 %define branch fixes/0.26
 
 #
@@ -76,7 +76,7 @@ Version:        0.26.1
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -102,10 +102,12 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %if 0%{?rhel}
 %define with_crystalhd     %{?_without_crystalhd:  1} %{?!_without_crystalhd:  0}
 %define with_systemd       %{?_without_systemd:    1} %{?!_without_systemd:    0}
+%define with_vpx           %{?_without_vpx:        1} %{?!_without_vpx:        0}
 
 %else
 %define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
 %define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
+%define with_vpx           %{?_without_vpx:        0} %{?!_without_vpx:        1}
 %endif
 
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
@@ -139,6 +141,8 @@ Patch0:    mythtv-0.26-fixes.patch
 Patch1:    mythlogserver-segv.patch
 Patch2:    mythtv-0.26.0-types_h.patch
 Patch3:    mythtv-0.26.1-libva_121.patch
+# http://code.mythtv.org/trac/ticket/11338
+Patch4:    mythtv-0.26-libcec2.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -181,8 +185,10 @@ BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.6
 BuildRequires:  phonon-devel phonon-backend-gstreamer
 BuildRequires:  libuuid-devel
+%if 0%{?fedora}
 BuildRequires:  libcec-devel
 BuildRequires:  libvpx-devel
+%endif
 
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -361,6 +367,7 @@ Requires:  mariadb-server >= 5, mariadb >= 5
 Requires:  mysql-server >= 5, mysql >= 5
 %endif
 Requires:  xmltv
+Requires:  udisks
 
 # Generate the required mythtv-frontend-api version string here so we only
 # have to do it once.
@@ -837,6 +844,7 @@ on demand content.
 %patch1 -p1 -b .mythlogserver
 %patch2 -p1 -b .types_h
 %patch3 -p1 -b .libva
+%patch4 -p1 -b .libcec
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -909,7 +917,9 @@ pushd mythtv
     --enable-libx264                            \
     --enable-libtheora --enable-libvorbis       \
     --enable-libxvid                            \
+%if %{with_vpx}
     --enable-libvpx                             \
+%endif
 %if %{with_vdpau}
     --enable-vdpau                              \
 %endif
@@ -948,9 +958,11 @@ pushd mythtv
 %endif
     --enable-debug
 
-# Insert rpm version-release for mythbackend --version output
-    echo 'SOURCE_VERSION="%{version}-%{release} (%_gitrev)"' > VERSION
-    echo 'BRANCH="%{branch}"'                               >> VERSION
+# Set the mythtv --version string
+    cat > VERSION <<EOF
+SOURCE_VERSION=%{_gitrev}
+BRANCH=%{branch}
+EOF
 
 # Make
     make %{?_smp_mflags}
@@ -1168,6 +1180,7 @@ getent passwd mythtv >/dev/null || \
 usermod -a -G audio,video mythtv
 exit 0
 
+%if %{with_mythmusic}
 %pre -n mythmusic
 # Add the "mythtv" user, with membership in the audio and video group
 getent group mythtv >/dev/null || groupadd -r mythtv
@@ -1178,6 +1191,7 @@ getent passwd mythtv >/dev/null || \
 # or new installs.
 usermod -a -G audio,video mythtv
 exit 0
+%endif
 
 %post backend
 %if %{with_systemd}
@@ -1459,6 +1473,15 @@ fi
 
 
 %changelog
+* Tue Oct  1 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-4
+- Update to latest bugfix release.
+- Add patch for libcec 2.
+- Update to latest bugfix release.
+- Add udisks as a requirement as it is required for ejecting cd/dvds.
+
+* Mon Sep 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.1-2
+- Rebuilt
+
 * Thu Aug 22 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-1
 - Update to latest bugfix release.
 - Add patch for new libva 1.2.1 version in rawhide.
