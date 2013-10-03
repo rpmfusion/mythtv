@@ -1,19 +1,36 @@
-commit 6a46ea014907ac0ee010bed9d8896cb2ee09bc2d
-Author: Stuart Morgan <smorgan@mythtv.org>
-Date:   Mon Aug 19 14:25:56 2013 +0100
+commit 33f0177459ded1ed3ca63c319bb825e3ee3a6d56
+Author: Martin Bene <myth@bene.priv.at>
+Date:   Sat Sep 14 16:27:22 2013 -0400
 
-    Disable database logging by default.
+    Fix MythWeb's date/time handling
     
-    It can be re-enabled using --enable-dblog
+    The code in question has partially changed so I am applying part of Martin's patch
+    (the section that clears to session variables) to fix the problem.
     
-    Until we actually start using this data somewhere there is not much
-    point in storing it. Since it's already known that writing to the
-    database can affect I/O performance, especially where drives are
-    shared with recordings, this could potentially even cause a positive
-    feedback loop. The I/O starvation causes the backend to start logging
-    slow read/write warnings, which in turn increase the writes to the
-    database exacerbating the problems.
+    Thank you Martin!
     
-    The same problem is also true, to a greater or lesser extent with file
-    based logging but we actually need the file logs so there isn't much
-    we can do there.
+    Refs #9833
+    
+    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
+
+commit 7326d7ef70fb86037d9c30ca7e0762d0cb01b7ff
+Author: Scott Shawcroft <scott.shawcroft@gmail.com>
+Date:   Tue Aug 27 22:34:55 2013 -0400
+
+    Fix the problem of MythWeb failing to load translations
+    
+    Refs #11513
+    
+    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
+
+commit 5d8ffe109286269ada87390a2b74e142ec36e364
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Mon Aug 26 22:39:35 2013 +0200
+
+    fix merge in schedule templates added in f97529656
+    
+    if (!$this->$name) ends up as if(!0)...
+    
+    Fixes #11775
+    
+    (cherry picked from commit 08b94cea6346ebeb94edf98ecb5d7b7dd8555560)
