@@ -74,9 +74,9 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.26.1
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 %else
-Release:        4%{?dist}
+Release:        5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1473,6 +1473,9 @@ fi
 
 
 %changelog
+* Tue Oct 22 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.1-5
+- Rebuilt for x264
+
 * Tue Oct  1 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-4
 - Update to latest bugfix release.
 - Add patch for libcec 2.
