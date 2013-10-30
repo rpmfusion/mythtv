@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # Git revision and branch ID
-%define _gitrev v0.26.1-24-g9fd7c61
+%define _gitrev v0.26.1-25-gc46a303
 %define branch fixes/0.26
 
 #
@@ -76,7 +76,7 @@ Version:        0.26.1
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        4%{?dist}
+Release:        5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1473,6 +1473,9 @@ fi
 
 
 %changelog
+* Wed Oct 30 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-5
+- Update to latest fixes/0.26, v0.26.1-25-gc46a303.
+
 * Tue Oct  1 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-4
 - Update to latest bugfix release.
 - Add patch for libcec 2.

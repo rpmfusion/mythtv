@@ -20,13 +20,15 @@
  mythtv/libs/libmythtv/avformatdecoder.cpp          |    2 +-
  mythtv/libs/libmythtv/decoderbase.cpp              |    5 +-
  mythtv/libs/libmythtv/eithelper.cpp                |   29 +-
+ mythtv/libs/libmythtv/previewgenerator.cpp         |    4 +-
+ mythtv/libs/libmythtv/previewgeneratorqueue.cpp    |    2 +-
  mythtv/programs/mythfrontend/commandlineparser.cpp |    2 +-
  mythtv/programs/scripts/hardwareprofile/config.py  |    5 +
  .../distros/mythtv_data/data_mythtv.py             |   16 +-
  .../programs/scripts/hardwareprofile/os_detect.py  |    5 +
  mythtv/programs/scripts/metadata/Movie/tmdb.py     |  640 ----------
  mythtv/programs/scripts/metadata/Movie/tmdb3.py    |    8 +-
- 28 files changed, 114 insertions(+), 2565 deletions(-)
+ 30 files changed, 117 insertions(+), 2568 deletions(-)
 
 diff --git a/mythtv/bindings/python/MythTV/database.py b/mythtv/bindings/python/MythTV/database.py
 index 525a213..368fb9e 100644
@@ -2348,6 +2350,41 @@ index 289062e..e5a48ce 100644
  
      // ComHem Sweden
      fix[40999U << 16       ] = EITFixUp::kFixComHem;
+diff --git a/mythtv/libs/libmythtv/previewgenerator.cpp b/mythtv/libs/libmythtv/previewgenerator.cpp
+index 20b4f2e..a7370e7 100644
+--- a/mythtv/libs/libmythtv/previewgenerator.cpp
++++ b/mythtv/libs/libmythtv/previewgenerator.cpp
+@@ -182,7 +182,7 @@ bool PreviewGenerator::RunReal(void)
+         list.push_back(programInfo.MakeUniqueKey());
+         list.push_back(output_fn);
+         list.push_back(msg);
+-        list.push_back(dt.isValid()?dt.toString(Qt::ISODate):"");
++        list.push_back(dt.isValid()?dt.toUTC().toString(Qt::ISODate):"");
+         list.push_back(token);
+         QCoreApplication::postEvent(listener, new MythEvent(message, list));
+     }
+@@ -317,7 +317,7 @@ bool PreviewGenerator::Run(void)
+         list.push_back(outFileName.isEmpty() ?
+                        (programInfo.GetPathname()+".png") : outFileName);
+         list.push_back(msg);
+-        list.push_back(dt.isValid()?dt.toString(Qt::ISODate):"");
++        list.push_back(dt.isValid()?dt.toUTC().toString(Qt::ISODate):"");
+         list.push_back(token);
+         QCoreApplication::postEvent(listener, new MythEvent(message, list));
+     }
+diff --git a/mythtv/libs/libmythtv/previewgeneratorqueue.cpp b/mythtv/libs/libmythtv/previewgeneratorqueue.cpp
+index ff14de8..1610924 100644
+--- a/mythtv/libs/libmythtv/previewgeneratorqueue.cpp
++++ b/mythtv/libs/libmythtv/previewgeneratorqueue.cpp
+@@ -231,7 +231,7 @@ void PreviewGeneratorQueue::SendEvent(
+     list.push_back(pginfo.MakeUniqueKey());
+     list.push_back(fn);
+     list.push_back(msg);
+-    list.push_back(dt.toString(Qt::ISODate));
++    list.push_back(dt.toUTC().toString(Qt::ISODate));
+     list.push_back(token);
+ 
+     QMutexLocker locker(&m_lock);
 diff --git a/mythtv/programs/mythfrontend/commandlineparser.cpp b/mythtv/programs/mythfrontend/commandlineparser.cpp
 index 0153a3d..8544875 100644
 --- a/mythtv/programs/mythfrontend/commandlineparser.cpp

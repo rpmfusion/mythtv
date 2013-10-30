@@ -1,36 +1,253 @@
-commit 33f0177459ded1ed3ca63c319bb825e3ee3a6d56
-Author: Martin Bene <myth@bene.priv.at>
-Date:   Sat Sep 14 16:27:22 2013 -0400
+commit c46a3032d333171a93f81dee4e95ebbb4055605b
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Oct 11 06:10:22 2013 -0700
 
-    Fix MythWeb's date/time handling
+    Add missing toUTC() conversions in the preview generator.
     
-    The code in question has partially changed so I am applying part of Martin's patch
-    (the section that clears to session variables) to fix the problem.
+    Without these conversions, modification timestamps on
+    backend-generated preview files are reported in local time, but
+    interpreted by the frontend as UTC.  The frontend then converts this
+    to local time and uses that to set the modification timestamp of the
+    locally cached preview, effectively back-dating the cached file in
+    most time zones.  This messes up date comparison logic for determining
+    whether to regenerate or reload the preview image.
+    (cherry picked from commit ad18e3d69c19ab6e197e15d285844ccb49e16795)
+
+commit 9fd7c6102b2cd1a3760337663803b110446c6ea7
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 17:42:35 2013 -0400
+
+    Remove more tmdb bits.
+    (cherry picked from commit a5d54217962a706c4cedc33012e9e7049d4877f6)
+
+commit a44fce2dcc2e998133f3353b92d929bb290dc135
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 17:38:33 2013 -0400
+
+    Remove tmdb library from python installer script.
+    (cherry picked from commit 9c0dfbc9f6b753a5b3d6f2e294baaf9577519a91)
+
+commit bc077360fb96f9e5ad83b6a2a9c8b4ffa66704bb
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 17:23:05 2013 -0400
+
+    Remove tmdb.py and associated library.
+    (cherry picked from commit 53c272dc4ffe2f5392ff54fb3e446801395274fb)
     
-    Thank you Martin!
+    Conflicts:
     
-    Refs #9833
+    	mythtv/programs/scripts/metadata/Movie/tmdb.py
+
+commit d198fd12cdb908c94c3aeb1b13279a0a9445a586
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 17:19:18 2013 -0400
+
+    Force use of tmdb3.py when user tries to use tmdb.py.
+    
+    Since the tmdb.py grabber using the old v2.1 API is no longer
+    functional, and we cannot issue a schema update to force users on the
+    -fixes branches to transition to it, this detects when users attempt to
+    run that grabber, and automatically replace it with the new grabber.
+
+commit ef29810bb319032776794ed3823d6d2ae2527691
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 17:03:56 2013 -0400
+
+    Change VideoGrabber() movie default to tmdb3.py.
+
+commit 3274afb32d3184faf51706b3fe2b7228c33c06e8
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 16:59:06 2013 -0400
+
+    Allow system calls to pull global settings from the database.
+    
+    This adjusts the System() class to first try local settings of the
+    supplied value, fall back to global settings, and then the supplied
+    default, before finally erroring. This corrects an issue where the
+    VideoGrabber() child class did not properly pull the global settings for
+    TelevisionGrabber and MovieGrabber, and thus just used the internal
+    defaults.
+    (cherry picked from commit 4e072b2de29c32c4d00fe62849feadd80d2c0c02)
+
+commit 7892e197d0baee8f734b5f2dabc6751125ed9ffc
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Sep 15 06:27:41 2013 -0700
+
+    Subtitles: Remove extraneous character in embedded text subtitles.
+    
+    The NUL character at the end of the C string was accidentally being
+    included as part of the subtitle string, and rendered to the screen.
+    This affected only "raw text" subtitles directly embedded into the
+    video.  Fixes #11855.
+    (cherry picked from commit b062dd43ba26836c854a0c8fda845f9997b8fba9)
+
+commit bd7198bafcab2746fed2ab473c5d9315d24a62a3
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Fri Sep 13 13:55:49 2013 -0400
+
+    Add handling for 'null' results in TheMovieDb searches.
+    
+    This adds handling for a temporary issue on TheMovieDb where the API can
+    return 'null' results for a search when the movie has been deleted but
+    not yet flushed from the cache servers.
+    
+    See http://www.themoviedb.org/talk/522e418d760ee3380c10d5a2
+    (cherry picked from commit 983bb0e4353d361f6c54f0de0c0db683b8d3be1d)
+
+commit b5938c076cf6afde5f40ea25c6f2308d947cee6d
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Sep 12 21:40:14 2013 -0400
+
+    Enable --debug flag in test application.
+    (cherry picked from commit abae25afb73f967421eb7797a868a9bdb187c18c)
+
+commit 4d341e71a685d35825db631dd43de60f6f1d3885
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Sep 12 21:35:05 2013 -0400
+
+    Have pager return Nones if the server returns null.
+    
+    This temporarily resolves an issue where the TheMovieDb server returns
+    nulls in searches when a movie has been deleted but not yet flushed out
+    of the cache. This prevents the error internally, but does not attempt
+    to re-order to remove the nulls, so is merely passing the issue onto the
+    application using this library.
+    
+    Refs #29
+    (cherry picked from commit 0d91e6fc4184c17c5a9d39e1b2a264602a47747d)
+
+commit dbdd45563bdd065a08ab1a0d8c89bfc5a1761818
+Author: Florian Bittner <mythtv@daschatten.de>
+Date:   Thu Sep 5 17:10:58 2013 -0400
+
+    Updated German MythFrontend translation from Florian Bittner
+    
+    Thank you Florian!
+    
+    Closes #11824
     
     Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
 
-commit 7326d7ef70fb86037d9c30ca7e0762d0cb01b7ff
-Author: Scott Shawcroft <scott.shawcroft@gmail.com>
-Date:   Tue Aug 27 22:34:55 2013 -0400
+commit 4144db890251caf74a05a5cbc07a6554e3c33b44
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Tue Sep 3 23:54:05 2013 +0200
 
-    Fix the problem of MythWeb failing to load translations
-    
-    Refs #11513
-    
-    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
+    Added more UK freesat transponders to fixups
+    (cherry picked from commit 844778f9fa9b6cd871ee57901baf9e2b7681cdb3)
 
-commit 5d8ffe109286269ada87390a2b74e142ec36e364
-Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Mon Aug 26 22:39:35 2013 +0200
+commit 55feb70996139d9e242f8fe161b7d6f0f216f6c7
+Author: Lawrence Rust <lvr@softsystem.co.uk>
+Date:   Fri Dec 9 12:48:50 2011 +0100
 
-    fix merge in schedule templates added in f97529656
+    eithelper: Add fixups for UK Freesat transponders
     
-    if (!$this->$name) ends up as if(!0)...
+    Signed-off-by: Lawrence Rust <lvr@softsystem.co.uk>
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+    (cherry picked from commit 5ee73afb43cf6fd2a303bacc9aee209e343ef941)
+
+commit 7727be3ab0b93c9d8c2f6a11f19c434e3fe3d93c
+Author: Lawrence Rust <lvr@softsystem.co.uk>
+Date:   Sun Sep 1 10:36:41 2013 +0100
+
+    Logging: Fix a bug in flush
     
-    Fixes #11775
+    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
+    (cherry picked from commit 53c5ef0a64df6bf542ec45da0b98f762ba93d0cc)
+
+commit 7cb39410374153a685fc70376637e889684a0e9a
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Aug 31 08:13:23 2013 -0400
+
+    Make sure smolt directory is created before trying to read from it.
     
-    (cherry picked from commit 08b94cea6346ebeb94edf98ecb5d7b7dd8555560)
+    This makes sure the configuration storage directory has been created
+    prior to attempting to use it. Smolt typically stores to /etc, and
+    assumes the packager has created its desired directory. There is
+    probably a cleaner place to put this code, but this is a catch-all for
+    several files read from that directory.
+    
+    Fixes #11803
+    (cherry picked from commit 10be7341345986d4c0e508c0a9791d35dca43770)
+
+commit 49fa7c0b190920697591adade2bd00d649171e7e
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Fri Aug 30 11:20:16 2013 -0400
+
+    Correct error in Python bindings that prevented use of custom profile.
+    (cherry picked from commit 5774843c1157e488074ece29b5bc0977608457db)
+
+commit cda857a2b3546f20e33caf2e303f61019442083b
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Aug 28 14:16:10 2013 +0100
+
+    Fix segfault in DecoderBase::PosMapFromEnc() when calling back() on an empty vector. Fixes #10598
+
+commit dc71d80b029635574989d675cfd9c83481aa9309
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sun Aug 25 21:53:06 2013 +0100
+
+    Remove a stray comma in the help text for --reset. It only resets appearance and language settings, not all settings.
+    (cherry picked from commit ee5b17c5b649dda29a39d28bfdf54471752df640)
+
+commit 46aed72fc3b5db9d69038003f18d87e3bcdbb5b3
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sun Aug 25 14:00:10 2013 -0400
+
+    Try multiple MythTV executables when retrieving --version information
+    
+    This causes Smolt to try, in order, mythutil, mythbackend, and
+    mythfrontend, when polling them for MythTV version information. This is
+    to correct a situation where users return "Unknown" data because they
+    were using 3rd party packages that did not provide the backend
+    executable.
+    (cherry picked from commit ba8a1608cfd0d73c782abbe26f33336e91e530d5)
+
+commit 3bce16c4c98452be14c73e6d8a3f03dcb8c18504
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sun Aug 25 10:08:50 2013 -0400
+
+    Add unhandled Linux fallthrough for Smolt OS detection.
+    
+    This adds a fallthrough to "Unknown Linux" based off 'uname' for Linux
+    distros that are not otherwise handled.
+    (cherry picked from commit da869de645d086284178186b0e28a4dec9bb077e)
+
+commit 080e538ed31fed1659b3e2abeba30bfca6447a0c
+Merge: d059bbd 70e52ef
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Aug 24 09:21:33 2013 -0400
+
+    Merge commit '70e52efbfaf4d44725f0bc73baa927440b885300' into fixes/0.26
+
+commit 70e52efbfaf4d44725f0bc73baa927440b885300
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Aug 24 09:18:43 2013 -0400
+
+    Catch date handling on TypeError and ValueError. We seem to get both.
+
+commit d059bbd42c1b0262c1fcf909ade6a383c7dec1a5
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Fri Aug 23 22:08:49 2013 -0400
+
+    Prevent logging fault when application is not run from absolute path.
+    (cherry picked from commit 246114bc09de10b0738ac06b8652dcc17e36cea1)
+
+commit 6a46ea014907ac0ee010bed9d8896cb2ee09bc2d
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Mon Aug 19 14:25:56 2013 +0100
+
+    Disable database logging by default.
+    
+    It can be re-enabled using --enable-dblog
+    
+    Until we actually start using this data somewhere there is not much
+    point in storing it. Since it's already known that writing to the
+    database can affect I/O performance, especially where drives are
+    shared with recordings, this could potentially even cause a positive
+    feedback loop. The I/O starvation causes the backend to start logging
+    slow read/write warnings, which in turn increase the writes to the
+    database exacerbating the problems.
+    
+    The same problem is also true, to a greater or lesser extent with file
+    based logging but we actually need the file logs so there isn't much
+    we can do there.
