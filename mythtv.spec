@@ -59,9 +59,12 @@
 # The vendor name we should attribute the aforementioned entries to
 %define desktop_vendor RPMFusion
 
+# MythTV Version string -- preferably the output from git --describe
+%define vers_string v0.27-56-g29eab51
+
 # Git revision and branch ID
-%define _gitrev v0.26.1-24-g9fd7c61
-%define branch fixes/0.26
+%define _gitrev v0.27-1-g5b917e8
+%define branch fixes/0.27
 
 #
 # Basic descriptive tags for this package:
@@ -72,11 +75,11 @@ URL:            http://www.mythtv.org/
 Group:          Applications/Multimedia
 
 # Version/Release info
-Version:        0.26.1
+Version:        0.27
 %if "%{branch}" == "master"
-Release:        0.2.git.%{_gitrev}%{?dist}
+Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        5%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -102,12 +105,10 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %if 0%{?rhel}
 %define with_crystalhd     %{?_without_crystalhd:  1} %{?!_without_crystalhd:  0}
 %define with_systemd       %{?_without_systemd:    1} %{?!_without_systemd:    0}
-%define with_vpx           %{?_without_vpx:        1} %{?!_without_vpx:        0}
 
 %else
 %define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
 %define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
-%define with_vpx           %{?_without_vpx:        0} %{?!_without_vpx:        1}
 %endif
 
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
@@ -137,12 +138,11 @@ Source0:   %{name}-%{version}.tar.gz
 
 # From the mythtv git repository with the appropriate branch checked out:
 # git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
-Patch0:    mythtv-0.26-fixes.patch
-Patch1:    mythlogserver-segv.patch
-Patch2:    mythtv-0.26.0-types_h.patch
-Patch3:    mythtv-0.26.1-libva_121.patch
+Patch0:    mythtv-0.27-fixes.patch
+Patch1:    mythtv-0.26.0-types_h.patch
 # http://code.mythtv.org/trac/ticket/11338
-Patch4:    mythtv-0.26-libcec2.patch
+# Offset required for 0.27, patch was for 0.26.1
+Patch2:    mythtv-0.26-libcec2.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -187,8 +187,8 @@ BuildRequires:  phonon-devel phonon-backend-gstreamer
 BuildRequires:  libuuid-devel
 %if 0%{?fedora}
 BuildRequires:  libcec-devel
-BuildRequires:  libvpx-devel
 %endif
+BuildRequires:  libvpx-devel
 
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -832,7 +832,7 @@ on demand content.
 ################################################################################
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}
 
 # Replace static lib paths with %{_lib} so we build properly on x86_64
 # systems, where the libs are actually in lib64.
@@ -841,15 +841,19 @@ on demand content.
     fi
 
 %patch0 -p1 -b .mythtv
-%patch1 -p1 -b .mythlogserver
-%patch2 -p1 -b .types_h
-%patch3 -p1 -b .libva
-%patch4 -p1 -b .libcec
+%patch1 -p1 -b .types_h
+%patch2 -p1 -b .libcec2
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
 
 pushd mythtv
+
+# Set the mythtv --version string
+cat > VERSION <<EOF
+SOURCE_VERSION=%{vers_string}
+BRANCH=%{branch}
+EOF
 
 # Drop execute permissions on contrib bits, since they'll be %doc
     find contrib/ -type f -exec chmod -x "{}" \;
@@ -894,7 +898,6 @@ pushd mythtv
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
-    --enable-iptv                               \
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
@@ -910,16 +913,14 @@ pushd mythtv
     --enable-ivtv                               \
     --enable-firewire                           \
     --enable-dvb                                \
+    --enable-libmp3lame                         \
+    --enable-libtheora --enable-libvorbis       \
+    --enable-libx264                            \
+    --enable-libxvid                            \
 %if %{with_faac}
     --enable-libfaac --enable-nonfree           \
 %endif
-    --enable-libmp3lame                         \
-    --enable-libx264                            \
-    --enable-libtheora --enable-libvorbis       \
-    --enable-libxvid                            \
-%if %{with_vpx}
     --enable-libvpx                             \
-%endif
 %if %{with_vdpau}
     --enable-vdpau                              \
 %endif
@@ -957,12 +958,6 @@ pushd mythtv
     --compile-type=release                      \
 %endif
     --enable-debug
-
-# Set the mythtv --version string
-    cat > VERSION <<EOF
-SOURCE_VERSION=%{_gitrev}
-BRANCH=%{branch}
-EOF
 
 # Make
     make %{?_smp_mflags}
@@ -1180,7 +1175,6 @@ getent passwd mythtv >/dev/null || \
 usermod -a -G audio,video mythtv
 exit 0
 
-%if %{with_mythmusic}
 %pre -n mythmusic
 # Add the "mythtv" user, with membership in the audio and video group
 getent group mythtv >/dev/null || groupadd -r mythtv
@@ -1191,7 +1185,6 @@ getent passwd mythtv >/dev/null || \
 # or new installs.
 usermod -a -G audio,video mythtv
 exit 0
-%endif
 
 %post backend
 %if %{with_systemd}
@@ -1252,12 +1245,12 @@ fi
 %dir %{_datadir}/mythtv
 %{_bindir}/mythccextractor
 %{_bindir}/mythcommflag
-%{_bindir}/mythmetadatalookup
-%{_bindir}/mythutil
-%{_bindir}/mythlogserver
 %{_bindir}/mythpreviewgen
 %{_bindir}/mythtranscode
 %{_bindir}/mythwikiscripts
+%{_bindir}/mythmetadatalookup
+%{_bindir}/mythutil
+%{_bindir}/mythlogserver
 %{_datadir}/mythtv/mythconverg*.pl
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
@@ -1272,6 +1265,7 @@ fi
 %{_bindir}/mythjobqueue
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
+%{_bindir}/mythhdhomerun_config
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
@@ -1304,8 +1298,8 @@ fi
 %{_datadir}/mythtv/setup.xml
 %{_bindir}/mythavtest
 %{_bindir}/mythfrontend
-#%%{_bindir}/mythmessage
 %{_bindir}/mythlcdserver
+%{_bindir}/mythscreenwizard
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
 %dir %{_libdir}/mythtv
@@ -1338,6 +1332,8 @@ fi
 
 %files -n mythffmpeg
 %{_bindir}/mythffmpeg
+%{_bindir}/mythffprobe
+%{_bindir}/mythffserver
 
 %if %{with_perl}
 %files -n perl-MythTV
@@ -1473,17 +1469,12 @@ fi
 
 
 %changelog
-* Tue Oct 22 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.1-5
-- Rebuilt for x264
+* Wed Oct 30 2013 Richard Shaw <hobbes1069@gmail.com> - 0.27-1
+- Update to release 0.27.
 
-* Tue Oct  1 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-4
-- Update to latest bugfix release.
-- Add patch for libcec 2.
+* Mon Aug 26 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-2
 - Update to latest bugfix release.
 - Add udisks as a requirement as it is required for ejecting cd/dvds.
-
-* Mon Sep 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.26.1-2
-- Rebuilt
 
 * Thu Aug 22 2013 Richard Shaw <hobbes1069@gmail.com> - 0.26.1-1
 - Update to latest bugfix release.

@@ -1,36 +1,561 @@
-commit 33f0177459ded1ed3ca63c319bb825e3ee3a6d56
-Author: Martin Bene <myth@bene.priv.at>
-Date:   Sat Sep 14 16:27:22 2013 -0400
+commit 29eab516202aa76aeb769ed636c183ba3ed0efcf
+Author: John Poet <jpoet@mythtv.org>
+Date:   Wed Oct 23 12:20:57 2013 -0600
 
-    Fix MythWeb's date/time handling
+    Any V4L card may need to preset the tuner.
     
-    The code in question has partially changed so I am applying part of Martin's patch
-    (the section that clears to session variables) to fix the problem.
+    Refs [a3cdcf573]
     
-    Thank you Martin!
-    
-    Refs #9833
-    
-    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
+    (cherry picked from commit c649ee2c2d01ad2dbb95646ec75b78294a4f3709)
 
-commit 7326d7ef70fb86037d9c30ca7e0762d0cb01b7ff
-Author: Scott Shawcroft <scott.shawcroft@gmail.com>
-Date:   Tue Aug 27 22:34:55 2013 -0400
+commit 6ecb83e8454e54eb7bf521c8b3eb111e99e35e4a
+Author: dev-team <dev-team@tikinou.com>
+Date:   Wed Oct 23 10:18:22 2013 -0400
 
-    Fix the problem of MythWeb failing to load translations
-    
-    Refs #11513
-    
-    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
+    Fixes #11905 - HttpRequest parsing fails on parameters containing encoded & character
 
-commit 5d8ffe109286269ada87390a2b74e142ec36e364
-Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Mon Aug 26 22:39:35 2013 +0200
+commit ccf877d318a9d976fababe32628d8de765ccfc29
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Mon Oct 21 06:58:31 2013 -0700
 
-    fix merge in schedule templates added in f97529656
+    Bump ABI version after 9ecf7a69ffc00d3f03dbb4c7a611a02d1f19f702.
+
+commit 9ecf7a69ffc00d3f03dbb4c7a611a02d1f19f702
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Oct 20 15:50:31 2013 -0700
+
+    Use Live TV order for the card list.
     
-    if (!$this->$name) ends up as if(!0)...
+    In many cases, the list of available cards was being returned in card
+    ID order, when it would be more appropriate (and correct) to use the
+    Live TV order.
     
-    Fixes #11775
+    This fixes a regression introduced in
+    dc6a18af542c9de80f06cc22485d6ac8b932dfeb.
     
-    (cherry picked from commit 08b94cea6346ebeb94edf98ecb5d7b7dd8555560)
+    (cherry picked from commit 2bb4d08dd087646f7c88557d6d822f98e4e1933a)
+
+commit c160ce21b9c493eaa7c911e3e2ca031b823678b2
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Oct 20 16:20:31 2013 -0700
+
+    Revert "Use Live TV order for the card list."
+    
+    This reverts commit 7ed0e9dc03ccd542567dee8b27724438166aa3b7.
+
+commit 83fb4079e92079db83c7d2a622c210610d688012
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Oct 20 16:20:18 2013 -0700
+
+    Revert "Allow Live TV to be entered from the top-level Program Guide."
+    
+    This reverts commit 7555b69babe1e600a33978ecf0d60756bf391e40.
+
+commit 7555b69babe1e600a33978ecf0d60756bf391e40
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Oct 20 15:58:50 2013 -0700
+
+    Allow Live TV to be entered from the top-level Program Guide.
+    
+    This allows the user to start Live TV on a specific channel from the
+    Program Guide grid.  Otherwise, the user needs to wait for Live TV to
+    start and tune the initial channel, then find the channel actually
+    wanted, and wait for it to be tuned.  This also provides a workaround
+    when the default initial channel is untunable for some reason.
+    
+    Currently, if the desired channel is not tunable (e.g., all capable
+    recorders are already busy), it will fail.
+    
+    Refs #11913.
+
+commit 7ed0e9dc03ccd542567dee8b27724438166aa3b7
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Oct 20 15:50:31 2013 -0700
+
+    Use Live TV order for the card list.
+    
+    In many cases, the list of available cards was being returned in card
+    ID order, when it would be more appropriate (and correct) to use the
+    Live TV order.
+
+commit 7323c328dea2094edb369433092696a06cd3b243
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Wed Oct 16 14:59:07 2013 -0700
+
+    Fix some cc608 field number handling.  Refs #11899.
+    
+    More accurately decodes CEA-608 captions encoded in SCTE-20 user data.
+      * Field number 3 is merged with field number 1 instead of 2.
+      * Data in field number 3 is not rejected.
+      * Field numbers 1 and 2 are then swapped if top_field_first is false.
+    These changes are based on the SCTE 20 handling code from ccextractor.
+    (cherry picked from commit e20a6310b1a2716ce601950a7278726c6d41b538)
+
+commit 1e5d2479f50f584a3235dea5e2633709dc9ba82b
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Oct 18 15:13:35 2013 +0100
+
+    Fix services GetChannelIcon() when height or width are specified
+    (cherry picked from commit 15b82903a101eb2111889fb2c9600181f122dcce)
+
+commit 1c8602a167c465610182edd95cf47adc60b982c8
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Oct 17 22:57:03 2013 +0100
+
+    Revert "Add ChannelIcons to the list of "special" storage groups."
+    
+    This reverts commit 88f380d100ca3e85c3ae26156eae8eb8b24400f6.
+    
+    See 3d95e17
+
+commit 93ada424fc4c307f6408b47aef1912d9d4c07ec9
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Oct 17 15:24:32 2013 +1100
+
+    decode URL before attempting to open them.
+    
+    Thanks to Chris Pinkham for finding the root cause.
+    
+    Fixes #11909
+    
+    (cherry picked from commit cba3bc592f837b4680c2ec8075502b9323bdd3fe)
+
+commit 88f380d100ca3e85c3ae26156eae8eb8b24400f6
+Author: skd5aner <skd5aner@gmail.com>
+Date:   Wed Oct 16 21:01:48 2013 -0400
+
+    Add ChannelIcons to the list of "special" storage groups.
+    
+    Signed-off-by: Raymond Wagner <rwagner@mythtv.org>
+    (cherry picked from commit d2316b47974f27dc333dd2924e8beb0aca92a73e)
+    
+    Conflicts:
+    
+    	mythtv/libs/libmythbase/storagegroup.cpp
+
+commit 85462fbc670eb3efc4d3d66cf4708541a51199f1
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Oct 16 16:02:54 2013 +0100
+
+    Use the ChannelIcon storage group in the services API Guide/GetChannelIcon()
+    (cherry picked from commit d21c685f62c58e596ce1ece86e85040285eb0ccd)
+
+commit 23131d313097cdd6bec8ea65633afb453248ef9c
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sun Oct 6 16:40:40 2013 +0100
+
+    Disable MHEG/ITV when generating previews or flagging commercials
+    (cherry picked from commit bc62d105d6cd594e18c8d0674902916d3b00d37b)
+
+commit 1224f055aa7960ffe2d6bfcd71300ff90d7e6b93
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Sep 19 12:31:15 2013 +0100
+
+    Make sure callbacks are disabled when the slave backend ANNounces.
+    
+    Refs #11867
+    (cherry picked from commit 84fa3fe02d6731d06b4d64573253710405767923)
+
+commit 0095fd137188545ec18faa4116861fd524cbe81b
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Sep 18 14:50:27 2013 +0100
+
+    Prevent the use of SendReceiveStringList() on a socket with callbacks. Fixes #11777
+    (cherry picked from commit 836eb11d96abfaa5986e7382103db69769b0ae47)
+
+commit 1a3639a3f0851d3d124d1904e029739499f5685f
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Oct 11 06:53:53 2013 -0700
+
+    Update binary version after [aaa418e].
+
+commit aaa418ef1dcd6973ec2db564f6c3c78fe7ad4096
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Oct 6 11:21:50 2013 -0700
+
+    Add mythutil --getmarkup and mythutil --setmarkup commands.
+    
+    This extracts the contents of the recordedmarkup, recordedseek, and
+    filemarkup tables to or from a local xml file.  The primary reason is
+    to allow users to extract recorder seektable information as needed and
+    attach it to a ticket, for a developer to use for debugging.  Example:
+    
+      mythutil --chanid xxx --starttime yyy --getmarkup /tmp/markup.xml
+      mythutil --video zzz.mpg --setmarkup /tmp/markup.xml
+    
+    An added benefit is to be able to copy metadata (e.g. seektable,
+    commskiplist, cutlist) between isolated MythTV instances.
+    (cherry picked from commit dafb81abcf8955112037d2e7e230ebb8eb068886)
+
+commit db1b1c87bea4555fe51786e6b2c16fafdd030fea
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Sep 20 06:12:33 2013 -0700
+
+    Mythutil: Allow --video instead of --chanid/--starttime.
+    
+    This applies to the markup utils.  Refs #10804
+    (cherry picked from commit 97a309a04f017fcfbdb2004a12008e1f563b141c)
+
+commit 95d94e291c3113b93e705c0fc72c8f087704d991
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Oct 11 06:10:22 2013 -0700
+
+    Add missing toUTC() conversions in the preview generator.
+    
+    Without these conversions, modification timestamps on
+    backend-generated preview files are reported in local time, but
+    interpreted by the frontend as UTC.  The frontend then converts this
+    to local time and uses that to set the modification timestamp of the
+    locally cached preview, effectively back-dating the cached file in
+    most time zones.  This messes up date comparison logic for determining
+    whether to regenerate or reload the preview image.
+    (cherry picked from commit ad18e3d69c19ab6e197e15d285844ccb49e16795)
+
+commit 42be114b97c095bcd0f9a35a9419dbe31538c086
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Oct 10 19:18:53 2013 -0400
+
+    Bump binary version.
+
+commit 9bfed2b0989f92dc4f98401c968a59ae9238da5d
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Oct 10 18:56:34 2013 -0400
+
+    Add back ArtworkTask enable check... properly.
+    
+    This adds the check for DailyArtworkUpdates back to ArtworkTask,
+    following its reversion in ca3a79bf407, but properly runs the
+    PeriodicHouseKeeperTask check so it does not requeue once per minute.
+    
+    Refs #11902
+    (cherry picked from commit 7905afdd4fc7d9ee2eb1bf97bffe0f6e003cc1e9)
+
+commit e72f3375f4176d3ed12eb91ce7732143860fdf19
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Oct 10 18:47:16 2013 -0400
+
+    Add secondary check to prevent housekeeper task from running twice.
+    
+    This adds an extra check to prevent a HouseKeeperTask from running
+    more than once simultaneously. This prevents an issue seen in a
+    misconfigured child task that was queued in concurrent passes. One
+    instance had not yet finished when the second one started a minute
+    later, and overwrote a shared pointer, eventually resulting in a
+    segmentation fault.
+    
+    Cause spotted by Jonatan Lindblad.
+    
+    Refs #11902
+    (cherry picked from commit c712ed04255fe416d95a674ed50e045d864759e8)
+
+commit cd6df2c8007913680bdb90f544d5a6b81f560ffa
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Oct 10 22:18:25 2013 +0100
+
+    Revert "Have backendhousekeeper check for artwork update boolean."
+    
+    This reverts commit 3798a07098272be9f04902ec71874b0d2fb1308d.
+
+commit d05c10e9fd105bc8ed6caccd0f132b8ec64767d2
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Oct 10 17:47:45 2013 +1100
+
+    Improve AirPlay device visibility in iOS 7
+    
+    For some reasons, my iPhone doesn’t always show mythtv as an AirPlay device, and more often than not only show it as an audio device.
+    After playing a lot with the various bonjour advertising data, what I can gather is:
+    - If AirPlay video reports a version >= 120.x; the iPhone will attempt to use FairPlay DRM no matter what RAOP reports (even if it reports no support for encryption)
+    - If there’s a mismatch of version between AirPlay video and RAOP: the iPhone 5 won’t show the video service
+    - If reporting a version < 110 in AirPlay video, then photo sharing doesn’t reliably work
+    - If bit 10 in features bitmask is cleared, it doesn’t reliably show up
+    So I set the AirPlay video version to 115.3 (made up value) that allows photo sharing, and RAOP also to 115.3 and it all seem to work nicely now
+    
+    (cherry picked from commit 7e2f21c8a3614fe059abed3801aafd6dbc1ed07a)
+
+commit aa362d70accb74cf3fe6bfdfd85e9a7b421aaf46
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Oct 10 13:34:31 2013 +1100
+
+    Do not display background shape in fullscreen notification if there’s nothing in it
+    
+    So nothing cover a photo when using AirPlay photo sharing
+    
+    (cherry picked from commit 92f02ac76c7011420b3e2981210826f651dc65da)
+
+commit e59e5f63de5f5c3fda1b58b2cf8e370c96c6337c
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Wed Oct 9 01:08:53 2013 -0400
+
+    Perform run checks for housekeeper tasks set to run on startup.
+    
+    This may need some rethinking if we want a way to bypass the checks and
+    force something to run on startup.
+    (cherry picked from commit 4d07f2804c64f1f045480fa1f882050b2fcb3111)
+
+commit 3798a07098272be9f04902ec71874b0d2fb1308d
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Wed Oct 9 01:08:10 2013 -0400
+
+    Have backendhousekeeper check for artwork update boolean.
+    (cherry picked from commit f4669d6c1b752b943b2b2f04c7382445b88a3d70)
+
+commit 756d95d85f9d2049b667edeb269668b502839418
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Oct 7 13:25:14 2013 -0500
+
+    Always use current time when entering EPG from live TV.
+    
+    Backported from master.
+    
+    Refs #11891
+
+commit 77db95785de9b80f87b96a46220124a1fcc50bf8
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Oct 5 21:30:45 2013 +0100
+
+    Use MythDate::fromString() instead of QDateTime::fromString()
+
+commit a8e3b71249d7871ae5f2f62d9944e588c20843b1
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Oct 5 00:26:29 2013 +0100
+
+    Ensure the date we pulled as a string from the database is actually valid
+
+commit 46d8c2392429113e40be9a7dcc3dd392c625b8d7
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Oct 4 06:59:05 2013 -0700
+
+    Bump the ABI version after 990757a.  Refs #11415.
+
+commit 990757a60e43c7054876eee5de4cc25a5a301022
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sat Sep 28 07:43:12 2013 -0700
+
+    Provide better seeking and position display for some videos.
+    
+    Specifically, there are examples of poorly-encoded avi files that
+    report a video frame rate of 30fps but the video stream is actually
+    24fps.  Because frame intervals are actually encoded as 30fps, every
+    4th frame has to be repeated.  Without an adjustment to framesPlayed,
+    translations between MythPlayer's frame-based seeking/display and
+    ffmpeg's timecode-based seeking drift out of sync.
+    
+    Note: Similar adjustments may be necessary if frames have to be
+    dropped due to a frame rate mismatch.
+    
+    Refs #11415.
+    (cherry picked from commit e7a8dfc62226f3b192559828e43f3396640c7c0e)
+
+commit c6f2e2f8f63ba113889db43327f30e4b834f4363
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Oct 4 14:33:39 2013 +0100
+
+    Add some logging to show what is happening with the startup shutdown block.
+
+commit b3a827da3bc425581d9ea17e136dd704eb70bc6b
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Oct 4 14:13:20 2013 +0100
+
+    Fix startup 'wait for client' check that assumed the client would be non-blocking. It's possible for a frontend to connect to the backend, then go idle before we re-checked for it's presence, which would have prevented the backend shutting down. If _any_ client is connected, then release the block on shutdown.
+    (cherry picked from commit 7e0fa3f28320ca658ef2e1945e3f1919bb6e2022)
+
+commit 0536d476d9d2e2f5468022d784f4bf17742b7e78
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Oct 4 13:27:53 2013 +0100
+
+    More robust checks before blocking shutdown for a mfdb run in the near future
+    (cherry picked from commit a269f9538763c426414e7dc9dd6d93d3329e2156)
+
+commit 4a7ea0f469e64a85d42e6c9c88944f5be11ca193
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Oct 4 13:17:36 2013 +0100
+
+    Add more logging HandleIdleShutdown() to give a clearer picture of what's happening
+    (cherry picked from commit be074d181b21b4107d7084d1dd6648820ed5aaed)
+
+commit c8e45cbde2f4fc628364b0ea0c4989cbf3a56f70
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Oct 3 23:04:38 2013 +0100
+
+    Fix compilation on Windows
+
+commit 7ed4e40da216e96c615a22d9d7879fb16b26f16a
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Oct 3 22:48:22 2013 +0100
+
+    More robust check before using mfdb run time as wakeup time
+    (cherry picked from commit d9f5a172d3024216b5c7b6d3e8b8ccc8e40ed3e2)
+
+commit 89fb9d45b6584ce948c26eece0494ac6614becd9
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Oct 3 13:35:37 2013 +0100
+
+    Wakeup the backend to run mythfilldatabase
+    
+    This uses MythFillSuggestedRunTime, for xmltv sources (+24 hours), for
+    datadirect whatever time was suggested by TMS to ensure that we always
+    wake up the backend to collect guide data (xmltv, DD only, EIT is not
+    yet supported). Using MythFillSuggestedRunTime is a bit of a hack, but
+    it's already set for Schedules Direct so this was the simplest
+    solution.
+    
+    For now the "Run guide data program at time suggested by the grabber"
+    setting MUST be enabled for this to work as intended.
+    
+    Without this fix the backend won't wake up to grab guide data from
+    xmltv/SD sources and that may result in it eventually running out of data
+    entirely.
+    (cherry picked from commit b27bba2921b6aed801173de8ae2707dd958b75f3)
+
+commit 6ff9ea0dc2d977c013e6fbdafc5ba2ad24d68248
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Oct 2 19:37:29 2013 +0100
+
+    Replace usage of direct queries on the settings table with SaveSetting() in MythFillDatabase
+    (cherry picked from commit 4629d336e30a62945a557fc8aa1602634aa09f24)
+
+commit 7ae9f17e658f37cd46ef5c44d1ce579369dc34ca
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Wed Oct 2 03:20:26 2013 +1000
+
+    Revert "Properly propagate quiet log option"
+    
+    This reverts commit a74baed2bbf3a72f2af58fe684398d3fdd01f256.
+    
+    (cherry picked from commit 445a73793de9f21a512232a8a82c34372aac379b)
+
+commit 74356081e9271845f7b212cddfde29c229b33bc3
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Wed Oct 2 03:20:01 2013 +1000
+
+    Remove unnecessary command option, all we are doing is adding —nologserver twice
+    
+    (cherry picked from commit 996f652f0f143513bdbe9e5510714f776c9cd44f)
+
+commit 79208f2c937a7211a19d9985154ad0ce280dde92
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Tue Oct 1 06:34:54 2013 -0700
+
+    Fix an apparent copy&paste error.  Refs #11885
+    (cherry picked from commit ba7d683767140a2ddf31664454da40ea4e63d6d3)
+
+commit a179aae608c7aa0ee80620267df7773c5fa4b75f
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed Sep 25 10:58:21 2013 +0100
+
+    MythZoneMinder: fix the grabbing of the live stream images
+    
+    * Add a missing field to the ShareData struct added it later ZM versions
+    * Change the minimum supported ZM version to 1.24.0.
+    * Remove the v4l2 hack
+    
+    Note: this bumps the MythZoneMinder protocol version so both the FE plugin
+    and mythzmserver need to be updated.
+    
+    Refs #8182
+    
+    (cherry picked from commit b1867bd45765157432f5598aa26377fb922ed116)
+
+commit d9561055abeec11fba234c9bdfbde5e79e695803
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Tue Sep 24 06:38:25 2013 -0700
+
+    Clear duration and framecount flags with mythutil --clearseektable.
+    
+    Otherwise those flags are hard to get rid of when mythcommflag
+    --rebuild doesn't produce a correct seektable for some reason.
+    (cherry picked from commit c4f0c0c57c87c4bfe2e9d143648df2a02c44d578)
+
+commit b6a657478df796c810c788922a545d84f36e7129
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Sep 23 13:26:45 2013 -0500
+
+    Fix startts copy & paste error in previous ForgetHistory() change.
+    
+    Also, do use subtitle & description semantics when the original
+    information is no longer available, but do it in a way that can be
+    easily detected and works in all code paths.
+    
+    (cherry picked from commit d2231e90b3f581c69e12cd376324a6b8cdf9ac65)
+
+commit 2ccd08f72b3d445b9a768bf72da25749326821d9
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Sep 23 12:29:09 2013 -0500
+
+    Change RI::ForgetHistory() to use dupmethod when available.
+    
+    Previously, ForgetHistory() implicily used subtitle and description as
+    the duplicate check method.  Consequently, it doesn't always match
+    correctly when other methods are used and there are guide changes in
+    data that should be ignored.  In addition, don't assume any dupmethod
+    in the Previously Recorded screen to avoid being to overzealous when
+    called from there.
+    
+    (cherry picked from commit 567cba3184db0e5801dc1ae7736d5d778ec2d96c)
+
+commit 4ae99828b0b82a8498eb0af986dfbceb626f739c
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Sep 22 23:45:54 2013 +0100
+
+    MythMusic: fix playback of ogg radio streams
+    
+    Peek the probe data from the stream buffer rather than read the data otherwise
+    ffmpeg fails to open the stream because the magic it is looking for has already
+    been read from the stream.
+    
+    Also increase the probe buffer to 16K this seems to be required for some ogg
+    streams to be probed properly.
+    
+    (cherry picked from commit 6b09d7c629e4efac81276eee9f4b7cbe3bc661ef)
+
+commit b2486bae6d57bdd8aa78301da7f43982ae5dba73
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 17:43:51 2013 -0400
+
+    Update Python bindings version.
+
+commit 3d7ac5c2d71f91990bdf73eab2299bc4caf5f278
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 17:42:35 2013 -0400
+
+    Remove more tmdb bits.
+    (cherry picked from commit a5d54217962a706c4cedc33012e9e7049d4877f6)
+
+commit 6d4572a88c1c785cf5b6e6a38256b82d6fded148
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 17:38:33 2013 -0400
+
+    Remove tmdb library from python installer script.
+    (cherry picked from commit 9c0dfbc9f6b753a5b3d6f2e294baaf9577519a91)
+
+commit db4167ec3d1396c81d00d3fe71b6ca104880136d
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 17:23:05 2013 -0400
+
+    Remove tmdb.py and associated library.
+    (cherry picked from commit 53c272dc4ffe2f5392ff54fb3e446801395274fb)
+
+commit adcda83028125dd6a26f69513ee99da2e7302be3
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sat Sep 21 16:59:06 2013 -0400
+
+    Allow system calls to pull global settings from the database.
+    
+    This adjusts the System() class to first try local settings of the
+    supplied value, fall back to global settings, and then the supplied
+    default, before finally erroring. This corrects an issue where the
+    VideoGrabber() child class did not properly pull the global settings for
+    TelevisionGrabber and MovieGrabber, and thus just used the internal
+    defaults.
+    (cherry picked from commit 4e072b2de29c32c4d00fe62849feadd80d2c0c02)
+
+commit 5b917e8d6548c40f3c6df0dcd18a090d90995306
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Wed Sep 18 23:24:45 2013 +0200
+
+    Update the Swedish translation.
+    
+    Update of the Swedish translation for mythfrontend and all plugins made
+    by me and Roger Mårtensson (thank you!).
+    
+    (cherry picked from commit 246b2e6a2e496aa8f56c32d38d3997cbf5ff2b1c)
