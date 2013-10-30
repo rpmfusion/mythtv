@@ -142,7 +142,7 @@ Patch0:    mythtv-0.27-fixes.patch
 Patch1:    mythtv-0.26.0-types_h.patch
 # http://code.mythtv.org/trac/ticket/11338
 # Offset required for 0.27, patch was for 0.26.1
-Patch2:    mythtv-0.26-libcec2.patch
+Patch2:    mythtv-0.27-libcec2.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
