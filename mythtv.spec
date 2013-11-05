@@ -77,9 +77,9 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.27
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1469,6 +1469,9 @@ fi
 
 
 %changelog
+* Tue Nov 05 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.27-2
+- Rebuilt for x264/FFmpeg
+
 * Wed Oct 30 2013 Richard Shaw <hobbes1069@gmail.com> - 0.27-1
 - Update to release 0.27.
 
