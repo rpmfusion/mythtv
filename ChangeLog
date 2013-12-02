@@ -1,3 +1,526 @@
+commit cb744f810c6133aa293ad95d65225890371951f0
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Fri Nov 29 14:35:54 2013 -0500
+
+    Correct issue where TMDB returns less results than claimed.
+    (cherry picked from commit 24bcf67da973e4eee738eca68fb5cea36e7c1306)
+
+commit e5acf0cdd90f839aff2820e52daedeef42a509a9
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Nov 22 23:55:54 2013 +0000
+
+    mythzmserver: use the frame size from the shared memory in ZM 1.26.x
+    
+    Refs #11957.
+    
+    (cherry picked from commit 3ca16b521dbbca9da868a5a6b0f5e7014b705428)
+
+commit a1e2fa40358803eee57ab4ca2b8d41f745e5eb38
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Nov 3 18:48:13 2013 +0000
+
+    MythZoneMinder: fix typo
+    
+    (cherry picked from commit fbdd0cdd12e56ae054c18ff311d557dded0fcde2)
+    
+    Refs #11957
+
+commit c47ba638456e9715d72218bdfc9420bbf0c93aac
+Author: John Poet <jpoet@mythtv.org>
+Date:   Mon Nov 18 15:10:31 2013 -0700
+
+    HLS: Reopen top level url, if playlist appears to be invalid.
+    
+    (cherry picked from commit 8a3f4b614a82784bbcee5edbffd6518fbffbebdd)
+
+commit 204d643e35e7eb532cfebe1e82a30417af18a9f9
+Author: John Poet <jpoet@mythtv.org>
+Date:   Mon Nov 18 10:06:41 2013 -0700
+
+    Improve logging of playlist downloads
+    
+    (cherry picked from commit 9e80571b52868ac4dc41c1c1dec63705042a67a6)
+
+commit 684e72a1032106ef593c0ab670149dec562c5da0
+Author: John Poet <jpoet@mythtv.org>
+Date:   Wed Nov 13 09:56:49 2013 -0700
+
+    On some systems, usleep will fail with a value greater than 1000000-1.  Fix
+    HLSStreamHandler::run to not exceed 1000000-1.
+    
+    (cherry picked from commit 3f31d6dbfa3dc68b1b7e436158ad684786ce7ea2)
+
+commit de5f1e5e86e01f92a818d3736b0da6be10cc1d91
+Author: John Poet <jpoet@mythtv.org>
+Date:   Mon Nov 4 09:07:41 2013 -0700
+
+    Quiet some HLS logging
+    
+    (cherry picked from commit 58c98b82938237a8ca36c767067616817ad9bdbc)
+
+commit ad7aed0c0a759ca57559cd194e105de8c8a87e68
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Nov 3 14:36:48 2013 -0700
+
+    Add missing 'class' to friend declaration.
+    
+    (cherry picked from commit 1dd14eaa97f4fe0d5d6f04b1fb66cfb0b933399a)
+
+commit d541c3eba8c285f239b00d560cb4c2aa21a82bd6
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Nov 3 14:18:48 2013 -0700
+
+    The classes defined in httplivestreambuffer.cpp were originally designed for
+    
+    HLS playback, and are inefficient for recording.  Create a new
+    recorder-specific HLS processing class called HLSReader.  Since it is
+    specifically designed for recording, HLSReader is more efficient and faster.
+    
+    (cherry picked from commit a212052e0184ec9a21771c6e49d4a80700aa0fc9)
+
+commit 166c80d2900315fad4d9e84ca18c9a50045daf8d
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Nov 3 14:18:48 2013 -0700
+
+    MythDownloadManager has a memory leak, which can be terminal when used by
+    
+    the HLS Recorder.  Add a simple MythSingleDownload class which uses
+    QNetworkAccessManager directly to avoid the leak, until it can be found and
+    fixed.
+    
+    (cherry picked from commit 950a627790b8a044f10bfd9387f4528618acc6f0)
+
+commit 50e5f450100addf4c01ff49067c4c96a114c884c
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Nov 3 14:18:48 2013 -0700
+
+    Cleanup and simplify the HLS Recorder.
+    
+    (cherry picked from commit 208ad3145814d51f502c85d5dac007a3eee1e7c4)
+
+commit 552fdc0e1eb538db847f2aedd54a12764b609a76
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed Nov 20 18:43:50 2013 +0000
+
+    mythzmserver: fix a possible segfault if no event frames are found
+    
+    (cherry picked from commit a33c327a1bc7cde68bbb2dfc7648f09b7dc2fdf8)
+
+commit fa62a68ad26f94e9ec44ec9eab5bd461b0aa0a7b
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Nov 17 19:05:32 2013 +0000
+
+    MythZoneMinder: use the itemVisible signal to update the event images
+    
+    This makes scrolling in the grid a little quicker since it's now only
+    updating the images for the visible items.
+    
+    (cherry picked from commit 21296a9fdcb672a21d884d04deb5983addebaf8d)
+
+commit 5db99c851b87b17dfe28806c4a58ed8ff852ce04
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Tue Nov 19 23:38:22 2013 +0000
+
+    mythburn.py: fix another utcisoformat() missed in fa94c154c7
+    
+    (cherry picked from commit 90cdee0efa51bdc8ecb20fc1dadfe676a1e1fddc)
+
+commit 860f76059dc0fa70ee1f9ec9b03b7622b98570d2
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Tue Nov 19 23:30:36 2013 +0000
+
+    mythburn.py: only use toprettyxml() in Python >= 2.7.3
+    
+    There is a bug in older versions of that function which inserts additional
+    white space into text nodes causing problems when reading back in the
+    prettified xml file.
+    
+    (cherry picked from commit 41264b6006221900d0a5fa685f67e6b6c0e972ef)
+
+commit a6c1d5336502a97f25b747e0a036fde4d25fd2ee
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Nov 18 13:16:59 2013 -0600
+
+    Limit scheduler sleeping when master backend shutdown is enabled.
+    
+    The longer sleeps added in a2eb9312 could prevent the pending shutdown
+    events from being sent.
+    
+    (cherry picked from commit 7fcc9ccc031eb6418b193b71970ca627c95e1d5c)
+
+commit b0c1c97b9e36dc4cfa91a00c9f65202536f5c10f
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Nov 17 18:21:50 2013 +0000
+
+    MythZoneMinder: fix an invalid frame no. warning when playing back events
+    
+    Sometimes while single stepping through the event frames the player would try
+    to grab frame 0 which will never exist.
+    
+    (cherry picked from commit ee5de540587a55f8b749da5ece22a15b163619c8)
+
+commit fa94c154c79d0752eb0eb59e579e1985ccf26532
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sun Nov 17 11:22:58 2013 +0000
+
+    mythburn.py: pass the starttime in utc format to mythtranscode
+    
+    I can't easily test this but hopefully this will fix the problems reported on
+    the user mailing list and in #11758.
+    
+    Refs #11758.
+    
+    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
+    (cherry picked from commit 45e62c8cb69c3abbbf883d926bd5c0e2137d7365)
+
+commit 63d03846eb95cb963ba19fd3aa87fb6a73643daa
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Nov 3 15:08:24 2013 +0000
+
+    MythZoneMinder: finish the support for ZoneMinder >= 0.26.0
+    
+    All combinations of capture palette and target colour space should now be
+    supported. This also moves all the processing to mythzmserver and always
+    passes RGB24 to the plugin.
+    
+    Note: bumps the protocol version so both mythzmserver and the plugin need to
+    be updated.
+    
+    (cherry picked from commit 68c07c49499ca5be40751bf59908bf03b242f281)
+
+commit 531b8e636d876f1f8e7aeb0f3be82cfb7eb655da
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Nov 3 11:51:30 2013 +0000
+
+    mythzmserver: fix the debug output telling us which mmap files we opened
+    
+    (cherry picked from commit ce27ac589bf510e280fa1ebabe46b250b6452722)
+
+commit 4ca9300fb95fbda7a8d7803f0c1507ebc166ed10
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Nov 15 05:45:05 2013 -0800
+
+    Fix compiler warnings spotted by Jonatan Lindblad.
+    
+    Cherry-picked from most of c06c191712a7e0721a423528f37420c30d53cab7.
+
+commit cc247f09460ac362f0fd6ffcd7b25c3139d39b7c
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Fri Nov 15 10:27:45 2013 +0100
+
+    Make ffmpeg call 'streams_changed' again when a DVD PCM stream is changed from PCM_DVD to PCM_S16BE to ensure the correct codec is loaded.
+    
+    Fixes #11941
+    (cherry picked from commit d8c710d204f5769ea4d0304a9a8618eb417f2837)
+
+commit 77a66f4fd77744727c2a22182d34a69da94290c0
+Author: John Poet <jpoet@mythtv.org>
+Date:   Thu Oct 31 09:18:25 2013 -0600
+
+    Following [080ef223c] don't segfault if curRecording is NULL.
+    
+    (cherry picked from commit fabca8bee90ed0765b9f0f902e92bdbed88f5123)
+
+commit f7a44a37cb018b7ba4875057658d549e6a8852bc
+Author: John Poet <jpoet@mythtv.org>
+Date:   Wed Oct 30 12:10:31 2013 -0600
+
+    Re-enable display of tuning status in LiveTV after [9b22460f5]
+    
+    (cherry picked from commit fc2ba41a253f115976bcc8794b13297ec41eb150)
+
+commit c169ca077787d1e5ca9a96cbfb0a45bcc1d1ff31
+Author: John Poet <jpoet@mythtv.org>
+Date:   Wed Oct 30 12:02:26 2013 -0600
+
+    Don't timeout the signalmonitor until all hope is lost.
+    
+    (cherry picked from commit 080ef223c56682bbe356be293a53f3d38f6ca5c2)
+
+commit 4f9f78f55a0c7cb5b3c6ed1d5ae43e88f5b40e50
+Author: John Poet <jpoet@mythtv.org>
+Date:   Wed Oct 30 11:39:09 2013 -0600
+
+    H264Parser: Only enter the "state changed" state if we have seen a SPS.
+    
+    Fixes #11882
+    May help or solve #11886
+    
+    (cherry picked from commit 306f9fc004d52e87defca84f8c33616ef0e00485)
+
+commit 4a2a63d2ba5b8175cea0e472463ea47e94671678
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Tue Nov 12 13:08:34 2013 -0500
+
+    Update mythpython script for new tmdb library.
+    (cherry picked from commit 5c5082a6109df3e3c4ddb99569fcf37af55b97d1)
+
+commit 11cbec350b520b28e0a2c2ae05805fb817acf9a1
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Fri Oct 11 22:23:37 2013 +0200
+
+    actually add the timecodeOffset when getting audio frames
+    
+    We have to ask the AudioReencodeBuffer for audio to write with the
+    original timecode before applying the cut list.
+    
+    Patch by Nicolas Pöhlmann
+    Reviewed by Paul Gardiner
+    
+    Refs #11213
+    Refs #11639
+    
+    (cherry picked from commit ea8c2b91e91e5cada8f8309f9fcb63f831f79aee)
+
+commit c8fb1323526d394c0d3cb38b13efbccbd0e45400
+Author: John Finlay <finlay@moeraki.com>
+Date:   Wed Nov 6 19:36:09 2013 +1100
+
+    Fix lossless transcode.
+    
+    Following 6c3653cd378aacef10b7706d8b7f71beae41274c, lossless mythtranscode got broken.
+    
+    This is just a quick workaround, the whole code needs to be revisited and properly use FFmpeg API
+    
+    Fixes #11213
+    
+    Signed-off-by: Jean-Yves Avenard <jyavenard@mythtv.org>
+    (cherry picked from commit 2a27e176275155a04498ecb8eac67dbd0164d080)
+
+commit 64a0824f53ce75a68745c16d5ecb7ce946f601d3
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Nov 10 07:56:13 2013 -0800
+
+    Handle system keypress events during playback.  Refs #11881.
+    (cherry picked from commit b83e60520062cd338f2b952a8b8bc7aeb0260b27)
+
+commit d31e729827a1a50aae87eb816881547f58c1e68f
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sat Nov 9 07:17:47 2013 -0800
+
+    Respect LiveTVOrder priority when switching sources.
+    
+    This is the playback OSD menu Playback > Source > Switch Source.
+    Refs #10967.
+    (cherry picked from commit cb602368945cf42f9072d8187991cff0b025684a)
+
+commit 4e1342491d65d1d2b11e1e0f60bb48da1be7740b
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Nov 8 14:13:08 2013 -0800
+
+    Fix reversed logic in dfe5396.  Refs #11939.
+
+commit 02d88eb79ae2ed969094787f641466137079b0f1
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Nov 6 14:00:00 2013 +0000
+
+    Simplify MythCoreContext::GetMasterHostPrefix(). It's a waste of time to get the IP/port from the socket when we can be using the values from the settings instead, if we're not already connected to the master we will soon be connecting anyway to conduct the file transfer.
+    (cherry picked from commit 22b48f435a97b6b973a2e0dea9e89548350bc01e)
+    
+    Refs #11937
+
+commit dfe53966fb66b9d846a4c2832a97e725bd082543
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Fri Nov 8 06:11:56 2013 -0800
+
+    Mythtranscode: Don't overwrite cutlist from the command line.
+    
+    Adapted from a patch by John Finlay.  Refs #11939.
+    (cherry picked from commit 22409776f5d737dbf8a9b3d31d41498b20a59774)
+
+commit 45459f9f5c63b5a75c65a4e8eafdcfb56822c212
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Thu Nov 7 15:12:03 2013 -0800
+
+    Update ABI version after 1b16c65f465588a8991b730fb23ef0d1c61ed181.
+
+commit 1b16c65f465588a8991b730fb23ef0d1c61ed181
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Thu Nov 7 15:10:43 2013 -0800
+
+    Improve the performance of Live TV embedded in the Program Guide.
+    
+    Most of the Program Guide's DB and backend queries are moved out of
+    the UI loop into a background helper thread, to minimize the chance
+    of the embedded Live TV window stuttering.
+    
+    More work can and should be done to pre-cache scheduler data and
+    channel tuning status, and to have the backend invalidate/update it
+    when there are changes.
+    
+    The background computation introduces some guide navigation UI
+    oddities, where the expensive-to-compute elements (the list of
+    channels) update on the screen slower than other elements.
+    
+    There is still some slight stuttering on a single-core ION frontend,
+    but most frontends should see a vast or complete reduction in Guide
+    navigation stuttering.
+    
+    Refs #11020
+    
+    (cherry picked from commit 7f2140ce062ade5a5523565b469ff58ada9c0d0d)
+    
+    Conflicts:
+        mythtv/programs/mythfrontend/guidegrid.cpp
+
+commit 0a5c67e424c4e500fa26567216761b46aefbd230
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Nov 6 13:43:16 2013 +0000
+
+    Since IPv6 addresses can contain %{num} as the zone index, it's not safe to use QString::arg() in GenMythUrl(). Potentially fixes #11937
+    (cherry picked from commit 08b2525642ef1defa1390a4dbf35d5a3d2993147)
+
+commit ea5af9081d46b566b638856204793c7ddc032da4
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Oct 19 14:05:23 2013 +0100
+
+    Services API: Fix aggregation of channel and program information in GetProgramGuide()
+    (cherry picked from commit 7c8e274633cea2684171e8d2daafe61b2e9732f5)
+
+commit 923bd98200a96c1a4f3d957e46e1d02ccf224103
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Oct 19 01:02:41 2013 +0100
+
+    Services API: Order programs in GetProgramGuide() by starttime
+    (cherry picked from commit a180bbc1b89290128ac617e8a640740ada3f0690)
+
+commit 9d1f4a6c2ac0db242b02a8fd32b9c15c11ffa0cf
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Oct 25 18:51:04 2013 +0100
+
+    Fix the disappearing programs bug in the Service API
+    (cherry picked from commit 0f3d24e2b478f51b1b8360386cbf97a375b1dfac)
+
+commit 2a4ede8b997f27e7ff52c4f4c2c15ace3b135ce9
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Oct 25 20:56:42 2013 +0100
+
+    Fix inclusion of year of release in services Program object.
+    (cherry picked from commit 5fde814375e6d87ad42d3eade9bed100e358f876)
+
+commit 79f9a9ebde7cc012f7bf73078d7055465c3a12d9
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Tue Oct 29 15:07:33 2013 +0000
+
+    Fix kVideoPropertyMask, we want 7 bits, not 6
+    (cherry picked from commit a69babcffb80c58d17138219e89cd3150a5510ec)
+
+commit 916dd9cdcb99410f9ef80329ccc7ae79cbba2565
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Nov 2 13:06:25 2013 +0000
+
+    Services API: Fix 'reverse' sorting in Dvr::GetRecordedList()
+    
+    Problem spotted by Jonatan Lindblad
+    (cherry picked from commit 22c59c882f84356ff28b50243620278fed314b4d)
+
+commit d7c8faa567fb1f301eceb16adeb8463e7738488c
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Tue Oct 29 23:39:00 2013 +0000
+
+    MythZoneMinder: get a normal frame image if an analysis image is not available
+    
+    Continuous (record) events don't produce any alarm frames so no analysis images
+    are produced.  It is also possible to turn analysis image creation off even for
+    alarm events so fall back to returning a normal frame image if no analysis
+    image is found.
+    
+    Fixes #8912
+    
+    (cherry picked from commit f7d05529b1980638729f2e232fc46c346fe78a0e)
+
+commit 27e74e2399133a0aed12fcd41215154c891aaa02
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Tue Oct 29 22:31:49 2013 +0000
+
+    MythZoneMinder: fix playback of continuous events
+    
+    Not every frame is stored in the database for continuous events so their
+    playback was broken. This fixes the problem by reading the number of frames
+    and the event time from the DB and interpolating the frame list and time deltas
+    from that.
+    
+    Refs #8912
+    
+    (cherry picked from commit 68f98331c2e2053e803d6237eacb75a7294c2825)
+
+commit 84c700b926a07f4780c7c74fa851438dc20f72d9
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Thu Oct 31 22:35:13 2013 +0000
+
+    MythZoneMinder: fix the monitor function popup on the console screen
+    
+    The popup was only allowing the first monitor to be changed.
+    
+    (cherry picked from commit 1e3d70b1b0ef74615c7f7f59e1bfef3621842a3e)
+
+commit 8845997d30dd093ea35426dca80222f7ab0c4a8f
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Tue Oct 29 19:51:58 2013 -0400
+
+    Manually apply logging arguments when running mythfilldatabase.
+    
+    This manually applies the logging arguments to mythfilldatabase when run
+    automatically through the housekeeper, to ensure logging arguments are
+    in place ahead of potentially conflicting user-defined arguments.
+
+commit b5f24f8886f05222dcec82a0ea2e15a448bbb4d7
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Mon Oct 28 22:05:56 2013 +0000
+
+    MythZoneMinder: tidy up the default wide zmliveplayer
+    
+    (cherry picked from commit e43fbd4ef7f1879c69812721ba5b45633ea5c556)
+
+commit 58151587b81a0071fee6655c99c06cfbb6855be8
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Mon Oct 28 21:27:59 2013 +0000
+
+    MythCenter-wide: Add the six and eight camera layouts to the ZM live screen
+    
+    (cherry picked from commit bb66f3156605ac288cc2777c8530c25ed80908aa)
+
+commit 86fbdb75c1e1c13cc4c45d77ad35bed695894b17
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Mon Oct 28 21:13:16 2013 +0000
+
+    MythZoneMinder: Add the six and eight camera layouts to the 4:3 ZM live screen
+    
+    (cherry picked from commit 29cc89dbaa955d3cda1212ec0f648dfd8f0108df)
+
+commit 821df49906463cb3ea5f503b47f1cdd92b95705f
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Oct 27 22:31:22 2013 +0000
+
+    MythZoneMinder: Add six and eight camera layouts to the live view screen
+    
+    The live view can now show 1, 2, 4, 6, or 8 cameras at the same time.
+    
+    Note to themers: You will need to add the new layouts to the zmliveplayer
+    window definition if you have themed it.
+    
+    (cherry picked from commit 02c66c8d61e4adaade50a41922ccf0f2c6820b11)
+
+commit eff6257a6cd2ada2d64ae3dfcb9346cd0246a563
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Oct 27 10:10:10 2013 +0000
+
+    MythZoneMinder: add some initial support for ZoneMinder >= 1.26.0
+    
+    Thanks to Warpme for testing the patch.
+    
+    Note: this bumps the MythZoneMinder protocol version so both the FE plugin
+    and mythzmserver need to be updated.
+    
+    (cherry picked from commit 39401bfb8de62852679564bb518e2c8a57b4c01c)
+
+commit 911e19487fe1fead2bacec416b3c0f864bf7b68e
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Tue Oct 29 17:23:12 2013 +0000
+
+    Fix marking of 1080/720 videos.
+    (cherry picked from commit 7ed0e5fb3dd90eca4eb9cdf8371be11e80a41fa6)
+
 commit 29eab516202aa76aeb769ed636c183ba3ed0efcf
 Author: John Poet <jpoet@mythtv.org>
 Date:   Wed Oct 23 12:20:57 2013 -0600
