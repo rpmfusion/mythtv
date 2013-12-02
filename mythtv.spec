@@ -60,11 +60,11 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27-56-g29eab51
+%define vers_string v0.27-109-gcb744f8
+%define branch fixes/0.27
 
 # Git revision and branch ID
-%define _gitrev v0.27-1-g5b917e8
-%define branch fixes/0.27
+%define _gitrev g5b917e8
 
 #
 # Basic descriptive tags for this package:
@@ -77,9 +77,9 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.27
 %if "%{branch}" == "master"
-Release:        0.2.git.%{_gitrev}%{?dist}
+Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -849,8 +849,9 @@ install -m 0644 %{SOURCE11} .
 
 pushd mythtv
 
+
 # Set the mythtv --version string
-cat > VERSION <<EOF
+cat > EXPORTED_VERSION <<EOF
 SOURCE_VERSION=%{vers_string}
 BRANCH=%{branch}
 EOF
@@ -898,6 +899,7 @@ pushd mythtv
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
+    --disable-mythlogserver                     \
     --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
@@ -1250,7 +1252,7 @@ fi
 %{_bindir}/mythwikiscripts
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
-%{_bindir}/mythlogserver
+#{_bindir}/mythlogserver
 %{_datadir}/mythtv/mythconverg*.pl
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
@@ -1469,6 +1471,11 @@ fi
 
 
 %changelog
+* Mon Dec  2 2013 Richard Shaw <hobbes1069@gmail.com> - 0.27-3
+- Update to latest fixes, v0.27-109-gcb744f8.
+- Disable mythlogserver as it is only really useful for developers.
+- Fix version reporting (--version).
+
 * Tue Nov 05 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.27-2
 - Rebuilt for x264/FFmpeg
 
