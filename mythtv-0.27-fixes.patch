@@ -11,7 +11,17 @@
  mythplugins/mythgame/i18n/mythgame_sv.ts           |   136 +-
  mythplugins/mythmusic/i18n/mythmusic_sv.qm         |   Bin 60650 -> 61545 bytes
  mythplugins/mythmusic/i18n/mythmusic_sv.ts         |  1902 +-
- mythplugins/mythmusic/mythmusic/avfdecoder.cpp     |     4 +-
+ mythplugins/mythmusic/mythmusic/avfdecoder.cpp     |     9 +-
+ mythplugins/mythmusic/mythmusic/editmetadata.cpp   |    34 +-
+ mythplugins/mythmusic/mythmusic/importmusic.cpp    |     4 +-
+ mythplugins/mythmusic/mythmusic/musiccommon.cpp    |   102 +-
+ mythplugins/mythmusic/mythmusic/musicplayer.cpp    |    94 +-
+ mythplugins/mythmusic/mythmusic/musicplayer.h      |     3 +-
+ mythplugins/mythmusic/mythmusic/playlist.cpp       |     2 +-
+ .../mythmusic/mythmusic/playlisteditorview.cpp     |    16 +-
+ mythplugins/mythmusic/mythmusic/searchview.cpp     |    15 +-
+ mythplugins/mythmusic/mythmusic/shoutcast.cpp      |     4 +-
+ mythplugins/mythmusic/mythmusic/streamview.cpp     |     7 +-
  mythplugins/mythnetvision/i18n/mythnetvision_sv.qm |   Bin 11838 -> 14109 bytes
  mythplugins/mythnetvision/i18n/mythnetvision_sv.ts |   279 +-
  mythplugins/mythnews/i18n/mythnews_sv.qm           |   Bin 4604 -> 4965 bytes
@@ -34,6 +44,7 @@
  .../mythzoneminder/mythzoneminder/zmplayer.h       |     3 +-
  .../theme/default-wide/zoneminder-ui.xml           |   244 +-
  .../mythzoneminder/theme/default/zoneminder-ui.xml |   203 +
+ mythtv/bindings/python/MythTV/dataheap.py          |     1 +
  mythtv/bindings/python/MythTV/system.py            |    11 +-
  .../bindings/python/MythTV/tmdb/XSLT/tmdbQuery.xsl |    99 -
  .../bindings/python/MythTV/tmdb/XSLT/tmdbVideo.xsl |   157 -
@@ -61,8 +72,14 @@
  mythtv/libs/libmythbase/mythsocket.cpp             |    12 +
  mythtv/libs/libmythbase/mythsystemlegacy.cpp       |     8 +-
  mythtv/libs/libmythbase/mythversion.h              |     2 +-
+ mythtv/libs/libmythmetadata/metadatacommon.cpp     |    23 +-
+ mythtv/libs/libmythmetadata/metadatafactory.cpp    |     6 +-
+ mythtv/libs/libmythmetadata/metaio.cpp             |     8 +
+ mythtv/libs/libmythmetadata/metaio.h               |     2 +
+ mythtv/libs/libmythmetadata/metaioavfcomment.cpp   |     2 -
  .../libs/libmythtv/AirPlay/mythairplayserver.cpp   |    14 +-
  mythtv/libs/libmythtv/AirPlay/mythraopdevice.cpp   |     3 +-
+ mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp        |     5 +-
  mythtv/libs/libmythtv/cardutil.cpp                 |    22 +
  mythtv/libs/libmythtv/cardutil.h                   |     8 +
  mythtv/libs/libmythtv/libmythtv.pro                |    14 +
@@ -83,6 +100,7 @@
  .../libmythtv/recorders/HLS/HLSStreamWorker.cpp    |    75 +
  .../libs/libmythtv/recorders/HLS/HLSStreamWorker.h |    37 +
  mythtv/libs/libmythtv/recorders/channelbase.cpp    |     4 +-
+ .../libs/libmythtv/recorders/dtvsignalmonitor.cpp  |    12 +
  .../libs/libmythtv/recorders/hlsstreamhandler.cpp  |    91 +-
  mythtv/libs/libmythtv/recorders/hlsstreamhandler.h |     5 +-
  mythtv/libs/libmythtv/recorders/importrecorder.cpp |     2 +-
@@ -92,11 +110,13 @@
  mythtv/libs/libmythtv/recorders/iptvrecorder.h     |     1 -
  .../libs/libmythtv/recorders/iptvsignalmonitor.cpp |    46 +-
  .../libs/libmythtv/recorders/iptvsignalmonitor.h   |     3 +-
+ mythtv/libs/libmythtv/recorders/recorderbase.cpp   |     4 +-
  mythtv/libs/libmythtv/recorders/signalmonitor.cpp  |     3 +-
  mythtv/libs/libmythtv/recorders/streamhandler.cpp  |     2 +
  mythtv/libs/libmythtv/recorders/streamhandler.h    |     1 +
  mythtv/libs/libmythtv/recordinginfo.cpp            |   143 +-
- mythtv/libs/libmythtv/tv_play.cpp                  |    43 +-
+ mythtv/libs/libmythtv/tv_play.cpp                  |    84 +-
+ mythtv/libs/libmythtv/tv_play.h                    |     1 +
  mythtv/libs/libmythtv/tv_rec.cpp                   |    69 +-
  mythtv/libs/libmythtv/tv_rec.h                     |     1 +
  mythtv/libs/libmythtv/tvremoteutil.cpp             |     2 +-
@@ -118,18 +138,22 @@
  mythtv/programs/mythfilldatabase/main.cpp          |    12 +-
  mythtv/programs/mythfrontend/guidegrid.cpp         |   450 +-
  mythtv/programs/mythfrontend/guidegrid.h           |    50 +-
+ mythtv/programs/mythfrontend/scheduleeditor.cpp    |    18 +-
  mythtv/programs/mythtranscode/main.cpp             |     3 +-
  mythtv/programs/mythtranscode/mpeg2fix.cpp         |     2 +
  mythtv/programs/mythtranscode/transcode.cpp        |     7 +-
+ mythtv/programs/mythtv-setup/importicons.cpp       |   107 +-
+ mythtv/programs/mythtv-setup/importicons.h         |     1 +
  mythtv/programs/mythutil/commandlineparser.cpp     |    35 +-
  mythtv/programs/mythutil/markuputils.cpp           |   157 +-
  mythtv/programs/mythutil/mythutil.cpp              |     6 +
+ mythtv/programs/mythwelcome/welcomedialog.cpp      |    30 +-
  mythtv/programs/scripts/metadata/Movie/tmdb.py     |   647 -
  mythtv/programs/scripts/metadata/Movie/tmdb3.py    |    19 +-
  mythtv/themes/MythCenter-wide/notification-ui.xml  |     2 +-
  mythtv/themes/MythCenter-wide/zoneminder-ui.xml    |   242 +-
  mythtv/themes/MythCenter/notification-ui.xml       |     2 +-
- 131 files changed, 23851 insertions(+), 18651 deletions(-)
+ 155 files changed, 24207 insertions(+), 18842 deletions(-)
 
 diff --git a/mythplugins/mytharchive/i18n/mytharchive_sv.qm b/mythplugins/mytharchive/i18n/mytharchive_sv.qm
 index fd29269..a6c7157 100644
@@ -8252,10 +8276,18 @@ index d8648fa..495724b 100644
 +</context>
  </TS>
 diff --git a/mythplugins/mythmusic/mythmusic/avfdecoder.cpp b/mythplugins/mythmusic/mythmusic/avfdecoder.cpp
-index 08cbd24..535aa12 100644
+index 08cbd24..898ebbd 100644
 --- a/mythplugins/mythmusic/mythmusic/avfdecoder.cpp
 +++ b/mythplugins/mythmusic/mythmusic/avfdecoder.cpp
-@@ -48,7 +48,7 @@ extern "C" {
+@@ -35,6 +35,7 @@ using namespace std;
+ 
+ // Mythmusic Headers
+ #include "avfdecoder.h"
++#include "metaio.h"
+ #include "metaioavfcomment.h"
+ #include "metaioid3.h"
+ #include "metaioflacvorbis.h"
+@@ -48,7 +49,7 @@ extern "C" {
  }
  
  // size of the buffer used for streaming
@@ -8264,7 +8296,7 @@ index 08cbd24..535aa12 100644
  
  // streaming callbacks
  static int ReadFunc(void *opaque, uint8_t *buf, int buf_size)
-@@ -264,7 +264,7 @@ bool avfDecoder::initialize()
+@@ -264,7 +265,7 @@ bool avfDecoder::initialize()
          probe_data.filename = filename.toLocal8Bit().constData();
          probe_data.buf_size = min(BUFFER_SIZE, (int) input()->bytesAvailable());
          probe_data.buf = m_buffer;
@@ -8273,6 +8305,862 @@ index 08cbd24..535aa12 100644
          m_inputFormat = av_probe_input_format(&probe_data, 1);
  
          if (!m_inputFormat)
+@@ -551,9 +552,7 @@ bool avfDecoderFactory::supports(const QString &source) const
+ 
+ const QString &avfDecoderFactory::extension() const
+ {
+-    static QString ext(".mp3|.mp2|.ogg|.oga|.flac|.wma|.wav|.ac3|.oma|.omg|"
+-                       ".atp|.ra|.dts|.aac|.m4a|.aa3|.tta|.mka|.aiff|.swa|.wv");
+-    return ext;
++    return MetaIO::ValidFileExtensions;
+ }
+ 
+ const QString &avfDecoderFactory::description() const
+diff --git a/mythplugins/mythmusic/mythmusic/editmetadata.cpp b/mythplugins/mythmusic/mythmusic/editmetadata.cpp
+index d25a222..fc02be4 100644
+--- a/mythplugins/mythmusic/mythmusic/editmetadata.cpp
++++ b/mythplugins/mythmusic/mythmusic/editmetadata.cpp
+@@ -205,7 +205,10 @@ void EditMetadataCommon::saveAll()
+         MetaIO *tagger = m_metadata->getTagger();
+ 
+         if (tagger)
++        {
+             tagger->write(m_metadata);
++            delete tagger;
++        }
+     }
+ 
+     saveToDatabase();
+@@ -289,7 +292,7 @@ void EditMetadataCommon::scanForImages(void)
+     // scan the tracks tag for any images
+     MetaIO *tagger = m_metadata->getTagger();
+ 
+-    if (tagger->supportsEmbeddedImages())
++    if (tagger && tagger->supportsEmbeddedImages())
+     {
+         AlbumArtList art = tagger->getAlbumArtList(m_metadata->Filename());
+         for (int x = 0; x < art.count(); x++)
+@@ -298,6 +301,9 @@ void EditMetadataCommon::scanForImages(void)
+             m_metadata->getAlbumArtImages()->addImage(image);
+         }
+     }
++
++    if (tagger)
++        delete tagger;
+ }
+ 
+ ///////////////////////////////////////////////////////////////////////////////
+@@ -1080,6 +1086,8 @@ void EditAlbumartDialog::showMenu(void )
+     menu->AddButton(tr("Rescan For Images"));
+     menu->AddButton(tr("Search Internet For Images"));
+ 
++    MetaIO *tagger = m_metadata->getTagger();
++
+     if (m_coverartList->GetItemCurrent())
+     {
+         menu->AddButton(tr("Change Image Type"), NULL, true);
+@@ -1094,12 +1102,12 @@ void EditAlbumartDialog::showMenu(void )
+                 {
+                     if (!image->embedded)
+                     {
+-                        if (m_metadata->getTagger()->supportsEmbeddedImages())
++                        if (tagger && tagger->supportsEmbeddedImages())
+                             menu->AddButton(tr("Copy Selected Image To Tag"));
+                     }
+                     else
+                     {
+-                        if (m_metadata->getTagger()->supportsEmbeddedImages())
++                        if (tagger && tagger->supportsEmbeddedImages())
+                             menu->AddButton(tr("Remove Selected Image From Tag"));
+                     }
+                 }
+@@ -1109,10 +1117,13 @@ void EditAlbumartDialog::showMenu(void )
+ 
+     if (GetMythDB()->GetNumSetting("AllowTagWriting", 0))
+     {
+-        if (m_metadata->getTagger()->supportsEmbeddedImages())
++        if (tagger && tagger->supportsEmbeddedImages())
+             menu->AddButton(tr("Copy Image To Tag"));
+     }
+ 
++    if (tagger)
++        delete tagger;
++
+     popupStack->AddScreen(menu);
+ }
+ 
+@@ -1177,6 +1188,9 @@ void EditAlbumartDialog::customEvent(QEvent *event)
+                                 if (!tagger->changeImageType(m_metadata->Filename(), &oldImage, image->imageType))
+                                     LOG(VB_GENERAL, LOG_INFO, "EditAlbumartDialog: failed to change image type");
+                             }
++
++                            if (tagger)
++                                delete tagger;
+                         }
+                         else
+                         {
+@@ -1334,10 +1348,11 @@ void EditAlbumartDialog::doRemoveImageFromTag(bool doIt)
+         {
+             MetaIO *tagger = m_metadata->getTagger();
+ 
+-            if (!tagger->supportsEmbeddedImages())
++            if (tagger && !tagger->supportsEmbeddedImages())
+             {
+                 LOG(VB_GENERAL, LOG_ERR, "EditAlbumartDialog: asked to remove an image from the tag "
+                                          "but the tagger doesn't support it!");
++                delete tagger;
+                 return;
+             }
+ 
+@@ -1348,6 +1363,9 @@ void EditAlbumartDialog::doRemoveImageFromTag(bool doIt)
+ 
+             removeCachedImage(image);
+             rescanForImages();
++
++            if (tagger)
++                delete tagger;
+         }
+     }
+ }
+@@ -1356,10 +1374,11 @@ void EditAlbumartDialog::doCopyImageToTag(const AlbumArtImage *image)
+ {
+     MetaIO *tagger = m_metadata->getTagger();
+ 
+-    if (!tagger->supportsEmbeddedImages())
++    if (tagger && !tagger->supportsEmbeddedImages())
+     {
+         LOG(VB_GENERAL, LOG_ERR, "EditAlbumartDialog: asked to write album art to the tag "
+                               "but the tagger does't support it!");
++        delete tagger;
+         return;
+     }
+ 
+@@ -1371,6 +1390,9 @@ void EditAlbumartDialog::doCopyImageToTag(const AlbumArtImage *image)
+     removeCachedImage(image);
+ 
+     rescanForImages();
++
++    if (tagger)
++        delete tagger;
+ }
+ 
+ void EditAlbumartDialog::removeCachedImage(const AlbumArtImage *image)
+diff --git a/mythplugins/mythmusic/mythmusic/importmusic.cpp b/mythplugins/mythmusic/mythmusic/importmusic.cpp
+index a016177..d0faf12 100644
+--- a/mythplugins/mythmusic/mythmusic/importmusic.cpp
++++ b/mythplugins/mythmusic/mythmusic/importmusic.cpp
+@@ -450,9 +450,11 @@ void ImportMusicDialog::addPressed()
+             AlbumArtList artList = tagger->getAlbumArtList(meta->Filename(true));
+             meta->setEmbeddedAlbumArt(artList);
+             meta->getAlbumArtImages()->dumpToDatabase();
+-            delete tagger;
+         }
+ 
++        if (tagger)
++            delete tagger;
++
+         m_somethingWasImported = true;
+ 
+         m_tracks->at(m_currentTrack)->isNewTune = 
+diff --git a/mythplugins/mythmusic/mythmusic/musiccommon.cpp b/mythplugins/mythmusic/mythmusic/musiccommon.cpp
+index e75b5d3..2292d39 100644
+--- a/mythplugins/mythmusic/mythmusic/musiccommon.cpp
++++ b/mythplugins/mythmusic/mythmusic/musiccommon.cpp
+@@ -272,8 +272,9 @@ bool MusicCommon::CreateCommon(void)
+     updateShuffleMode();
+     updateRepeatMode();
+ 
+-    gPlayer->getPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
+-                                      m_currentTrack, &m_playlistPlayedTime);
++    if (gPlayer->getCurrentPlaylist())
++        gPlayer->getCurrentPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
++                                                 m_currentTrack, &m_playlistPlayedTime);
+ 
+     if (m_playlistProgress)
+     {
+@@ -364,8 +365,9 @@ void MusicCommon::updateShuffleMode(bool updateUIList)
+     {
+         updateUIPlaylist();
+ 
+-        gPlayer->getPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
+-                                         gPlayer->getCurrentTrackPos(), &m_playlistPlayedTime);
++        if (gPlayer->getCurrentPlaylist())
++            gPlayer->getCurrentPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
++                                                     gPlayer->getCurrentTrackPos(), &m_playlistPlayedTime);
+         updatePlaylistStats();
+ 
+         // need this to update the next track info
+@@ -517,8 +519,9 @@ bool MusicCommon::keyPressEvent(QKeyEvent *e)
+                 gPlayer->moveTrackUpDown(true, m_currentPlaylist->GetCurrentPos());
+                 item->MoveUpDown(true);
+                 m_currentTrack = gPlayer->getCurrentTrackPos();
+-                gPlayer->getPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
+-                                         m_currentTrack, &m_playlistPlayedTime);
++                if (gPlayer->getCurrentPlaylist())
++                    gPlayer->getCurrentPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
++                                                             m_currentTrack, &m_playlistPlayedTime);
+                 updatePlaylistStats();
+                 updateTrackInfo(gPlayer->getCurrentMetadata());
+             }
+@@ -527,8 +530,9 @@ bool MusicCommon::keyPressEvent(QKeyEvent *e)
+                 gPlayer->moveTrackUpDown(false, m_currentPlaylist->GetCurrentPos());
+                 item->MoveUpDown(false);
+                 m_currentTrack = gPlayer->getCurrentTrackPos();
+-                gPlayer->getPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
+-                                         m_currentTrack, &m_playlistPlayedTime);
++                if (gPlayer->getCurrentPlaylist())
++                    gPlayer->getCurrentPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
++                                                             m_currentTrack, &m_playlistPlayedTime);
+                 updatePlaylistStats();
+                 updateTrackInfo(gPlayer->getCurrentMetadata());
+             }
+@@ -1266,8 +1270,11 @@ void MusicCommon::customEvent(QEvent *event)
+             }
+             else if (resulttext == tr("Remove All Tracks"))
+             {
+-                gPlayer->getPlaylist()->removeAllTracks();
+-                gPlayer->activePlaylistChanged(-1, true);
++                if (gPlayer->getCurrentPlaylist())
++                {
++                    gPlayer->getCurrentPlaylist()->removeAllTracks();
++                    gPlayer->activePlaylistChanged(-1, true);
++                }
+             }
+             else if (resulttext == tr("Save To New Playlist"))
+             {
+@@ -1419,12 +1426,15 @@ void MusicCommon::customEvent(QEvent *event)
+         }
+         else if (resultid == "updateplaylist")
+         {
+-            Playlist *playlist = gMusicData->all_playlists->getPlaylist(resulttext);
+-            QString songList = gPlayer->getPlaylist()->toRawSonglist();
+-            playlist->removeAllTracks();
+-            playlist->fillSongsFromSonglist(songList);
+-            playlist->changed();
+-            gPlayer->playlistChanged(playlist->getID());
++            if (gPlayer->getCurrentPlaylist())
++            {
++                Playlist *playlist = gMusicData->all_playlists->getPlaylist(resulttext);
++                QString songList = gPlayer->getCurrentPlaylist()->toRawSonglist();
++                playlist->removeAllTracks();
++                playlist->fillSongsFromSonglist(songList);
++                playlist->changed();
++                gPlayer->playlistChanged(playlist->getID());
++            }
+         }
+     }
+     else if (event->type() == MusicPlayerEvent::TrackChangeEvent)
+@@ -1464,8 +1474,9 @@ void MusicCommon::customEvent(QEvent *event)
+ 
+         m_currentTrack = trackNo;
+ 
+-        gPlayer->getPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
+-                                         m_currentTrack, &m_playlistPlayedTime);
++        if (gPlayer->getCurrentPlaylist())
++            gPlayer->getCurrentPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
++                                                     m_currentTrack, &m_playlistPlayedTime);
+         if (m_playlistProgress)
+         {
+             m_playlistProgress->SetTotal(m_playlistMaxTime);
+@@ -1513,13 +1524,14 @@ void MusicCommon::customEvent(QEvent *event)
+                 gPlayer->next();
+         }
+ 
+-        gPlayer->getPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
+-                                          m_currentTrack, &m_playlistPlayedTime);
++        if (gPlayer->getCurrentPlaylist())
++            gPlayer->getCurrentPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
++                                                     m_currentTrack, &m_playlistPlayedTime);
+         updatePlaylistStats();
+         updateTrackInfo(gPlayer->getCurrentMetadata());
+ 
+-        if (m_noTracksText)
+-            m_noTracksText->SetVisible((gPlayer->getPlaylist()->getSongs().count() == 0));
++        if (m_noTracksText && gPlayer->getCurrentPlaylist())
++            m_noTracksText->SetVisible((gPlayer->getCurrentPlaylist()->getSongs().count() == 0));
+     }
+     else if (event->type() == MusicPlayerEvent::TrackAddedEvent)
+     {
+@@ -1568,13 +1580,14 @@ void MusicCommon::customEvent(QEvent *event)
+                         gPlayer->changeCurrentTrack(0);
+                 }
+ 
+-                if (m_noTracksText)
+-                    m_noTracksText->SetVisible((gPlayer->getPlaylist()->getSongs().count() == 0));
++                if (m_noTracksText && gPlayer->getCurrentPlaylist())
++                    m_noTracksText->SetVisible((gPlayer->getCurrentPlaylist()->getSongs().count() == 0));
+             }
+         }
+ 
+-        gPlayer->getPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
+-                                          m_currentTrack, &m_playlistPlayedTime);
++        if (gPlayer->getCurrentPlaylist())
++            gPlayer->getCurrentPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
++                                                     m_currentTrack, &m_playlistPlayedTime);
+ 
+         updatePlaylistStats();
+         updateTrackInfo(gPlayer->getCurrentMetadata());
+@@ -1859,8 +1872,8 @@ void MusicCommon::playlistItemVisible(MythUIButtonListItem *item)
+ 
+ void MusicCommon::updateUIPlaylist(void)
+ {
+-    if (m_noTracksText)
+-        m_noTracksText->SetVisible((gPlayer->getPlaylist()->getSongs().count() == 0));
++    if (m_noTracksText && gPlayer->getCurrentPlaylist())
++        m_noTracksText->SetVisible((gPlayer->getCurrentPlaylist()->getSongs().count() == 0));
+ 
+     if (!m_currentPlaylist)
+         return;
+@@ -1869,7 +1882,10 @@ void MusicCommon::updateUIPlaylist(void)
+ 
+     m_currentTrack = -1;
+ 
+-    Playlist *playlist = gPlayer->getPlaylist();
++    Playlist *playlist = gPlayer->getCurrentPlaylist();
++
++    if (!playlist)
++        return;
+ 
+     QList<MusicMetadata*> songlist = playlist->getSongs();
+     QList<MusicMetadata*>::iterator it = songlist.begin();
+@@ -1940,7 +1956,10 @@ void MusicCommon::updateUIPlayedList(void)
+ 
+ void MusicCommon::updatePlaylistStats(void)
+ {
+-    int trackCount = gPlayer->getPlaylist()->getSongs().size();
++    int trackCount = 0;
++
++    if (gPlayer->getCurrentPlaylist())
++        trackCount = gPlayer->getCurrentPlaylist()->getSongs().size();
+ 
+     InfoMap map;
+     if (gPlayer->isPlaying() && trackCount > 0)
+@@ -1955,7 +1974,7 @@ void MusicCommon::updatePlaylistStats(void)
+         map["playlisttime"] = getTimeString(m_playlistPlayedTime + m_currentTime, m_playlistMaxTime);
+         map["playlistplayedtime"] = getTimeString(m_playlistPlayedTime + m_currentTime, 0);
+         map["playlisttotaltime"] = getTimeString(m_playlistMaxTime, 0);
+-        QString playlistName = gPlayer->getPlaylist()->getName();
++        QString playlistName = gPlayer->getCurrentPlaylist() ? gPlayer->getCurrentPlaylist()->getName() : "";
+         if (playlistName == "default_playlist_storage")
+             playlistName = tr("Default Playlist");
+         else if (playlistName ==  "stream_playlist")
+@@ -2338,10 +2357,13 @@ void MusicCommon::byTitle(void)
+ 
+ void MusicCommon::showPlaylistOptionsMenu(bool addMainMenu)
+ {
++    if (!gPlayer->getCurrentPlaylist())
++        return;
++
+     m_playlistOptions.playPLOption = PL_CURRENT;
+ 
+     // Don't bother showing the dialog if the current playlist is empty
+-    if (gPlayer->getPlaylist()->getSongs().count() == 0)
++    if (gPlayer->getCurrentPlaylist()->getSongs().count() == 0)
+     {
+         m_playlistOptions.insertPLOption = PL_REPLACE;
+         doUpdatePlaylist(true);
+@@ -2365,10 +2387,11 @@ void MusicCommon::showPlaylistOptionsMenu(bool addMainMenu)
+ 
+ void MusicCommon::doUpdatePlaylist(bool startPlayback)
+ {
+-    int curTrackID, trackCount;
++    int curTrackID, trackCount = 0;
+     int curPos = gPlayer->getCurrentTrackPos();
+ 
+-    trackCount = gPlayer->getPlaylist()->getSongs().count();
++    if (gPlayer->getCurrentPlaylist())
++        trackCount = gPlayer->getCurrentPlaylist()->getSongs().count();
+ 
+     // store id of current track
+     if (gPlayer->getCurrentMetadata())
+@@ -2482,8 +2505,9 @@ void MusicCommon::doUpdatePlaylist(bool startPlayback)
+         gPlayer->changeCurrentTrack(m_currentTrack);
+     }
+ 
+-    gPlayer->getPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
+-                                      m_currentTrack, &m_playlistPlayedTime);
++    if (gPlayer->getCurrentPlaylist())
++        gPlayer->getCurrentPlaylist()->getStats(&m_playlistTrackCount, &m_playlistMaxTime,
++                                                 m_currentTrack, &m_playlistPlayedTime);
+     updatePlaylistStats();
+     updateTrackInfo(gPlayer->getCurrentMetadata());
+ }
+@@ -2493,11 +2517,11 @@ bool MusicCommon::restorePosition(int trackID)
+     // try to move to the current track
+     bool foundTrack = false;
+ 
+-    if (trackID != -1)
++    if (trackID != -1 && gPlayer->getCurrentPlaylist())
+     {
+-        for (int x = 0; x < gPlayer->getPlaylist()->getSongs().size(); x++)
++        for (int x = 0; x < gPlayer->getCurrentPlaylist()->getSongs().size(); x++)
+         {
+-            MusicMetadata *mdata = gPlayer->getPlaylist()->getSongs().at(x);
++            MusicMetadata *mdata = gPlayer->getCurrentPlaylist()->getSongs().at(x);
+             if (mdata && mdata->ID() == (MusicMetadata::IdType) trackID)
+             {
+                 m_currentTrack = x;
+diff --git a/mythplugins/mythmusic/mythmusic/musicplayer.cpp b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
+index 5a0e414..2f23efb 100644
+--- a/mythplugins/mythmusic/mythmusic/musicplayer.cpp
++++ b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
+@@ -57,7 +57,6 @@ MusicPlayer::MusicPlayer(QObject *parent)
+ 
+     m_output = NULL;
+     m_decoderHandler = NULL;
+-    m_currentPlaylist = NULL;
+     m_currentTrack = -1;
+ 
+     m_currentTime = 0;
+@@ -408,7 +407,7 @@ void MusicPlayer::next(void)
+ {
+     int currentTrack = m_currentTrack;
+ 
+-    if (!m_currentPlaylist)
++    if (!getCurrentPlaylist())
+         return;
+ 
+     if (m_oneshotMetadata)
+@@ -419,7 +418,7 @@ void MusicPlayer::next(void)
+     else
+         currentTrack++;
+ 
+-    if (currentTrack >= m_currentPlaylist->getSongs().size())
++    if (currentTrack >= getCurrentPlaylist()->getSongs().size())
+     {
+         if (m_repeatMode == REPEAT_ALL)
+         {
+@@ -445,7 +444,7 @@ void MusicPlayer::previous(void)
+ {
+     int currentTrack = m_currentTrack;
+ 
+-    if (!m_currentPlaylist)
++    if (!getCurrentPlaylist())
+         return;
+ 
+     if (m_oneshotMetadata)
+@@ -474,7 +473,7 @@ void MusicPlayer::previous(void)
+ 
+ void MusicPlayer::nextAuto(void)
+ {
+-    if (!m_currentPlaylist)
++    if (!getCurrentPlaylist())
+         return;
+ 
+     if (m_oneshotMetadata)
+@@ -886,12 +885,10 @@ void MusicPlayer::loadPlaylist(void)
+ {
+     if (m_playMode == PLAYMODE_RADIO)
+     {
+-        m_currentPlaylist  = gMusicData->all_playlists->getStreamPlaylist();
+-
+         if (getResumeMode() > MusicPlayer::RESUME_OFF)
+         {
+             int bookmark = gCoreContext->GetNumSetting("MusicRadioBookmark", 0);
+-            if (bookmark < 0 || bookmark >= m_currentPlaylist->getSongs().size())
++            if (bookmark < 0 || bookmark >= getCurrentPlaylist()->getSongs().size())
+                 bookmark = 0;
+ 
+             m_currentTrack = bookmark;
+@@ -903,12 +900,10 @@ void MusicPlayer::loadPlaylist(void)
+     }
+     else
+     {
+-        m_currentPlaylist  = gMusicData->all_playlists->getActive();
+-
+         if (getResumeMode() > MusicPlayer::RESUME_OFF)
+         {
+             int bookmark = gCoreContext->GetNumSetting("MusicBookmark", 0);
+-            if (bookmark < 0 || bookmark >= m_currentPlaylist->getSongs().size())
++            if (bookmark < 0 || bookmark >= getCurrentPlaylist()->getSongs().size())
+                 bookmark = 0;
+ 
+             m_currentTrack = bookmark;
+@@ -936,17 +931,20 @@ void MusicPlayer::loadStreamPlaylist(void)
+ 
+ void MusicPlayer::moveTrackUpDown(bool moveUp, int whichTrack)
+ {
++    if (!getCurrentPlaylist())
++        return;
++
+     if (moveUp && whichTrack <= 0)
+         return;
+ 
+-    if (!moveUp && whichTrack >=  m_currentPlaylist->getSongs().size() - 1)
++    if (!moveUp && whichTrack >=  getCurrentPlaylist()->getSongs().size() - 1)
+         return;
+ 
+-    MusicMetadata *currTrack = m_currentPlaylist->getSongs().at(m_currentTrack);
++    MusicMetadata *currTrack = getCurrentPlaylist()->getSongs().at(m_currentTrack);
+ 
+-    m_currentPlaylist->moveTrackUpDown(moveUp, whichTrack);
++    getCurrentPlaylist()->moveTrackUpDown(moveUp, whichTrack);
+ 
+-    m_currentTrack = m_currentPlaylist->getSongs().indexOf(currTrack);
++    m_currentTrack = getCurrentPlaylist()->getSongs().indexOf(currTrack);
+ }
+ 
+ bool MusicPlayer::setCurrentTrackPos(int pos)
+@@ -998,12 +996,15 @@ void MusicPlayer::restorePosition(void)
+             id = gCoreContext->GetNumSetting("MusicBookmark", 0);
+     }
+ 
+-    for (int x = 0; x < m_currentPlaylist->getSongs().size(); x++)
++    if (getCurrentPlaylist())
+     {
+-        if (m_currentPlaylist->getSongs().at(x)->ID() == id)
++        for (int x = 0; x < getCurrentPlaylist()->getSongs().size(); x++)
+         {
+-            m_currentTrack = x;
+-            break;
++            if (getCurrentPlaylist()->getSongs().at(x)->ID() == id)
++            {
++                m_currentTrack = x;
++                break;
++            }
+         }
+     }
+ 
+@@ -1046,7 +1047,7 @@ void MusicPlayer::showMiniPlayer(void)
+ /// change the current track to the given track
+ void MusicPlayer::changeCurrentTrack(int trackNo)
+ {
+-    if (!m_currentPlaylist)
++    if (!getCurrentPlaylist())
+         return;
+ 
+     // check to see if we need to save the current tracks volatile  metadata (playcount, last played etc)
+@@ -1055,7 +1056,7 @@ void MusicPlayer::changeCurrentTrack(int trackNo)
+     m_currentTrack = trackNo;
+ 
+     // sanity check the current track
+-    if (m_currentTrack < 0 || m_currentTrack >= m_currentPlaylist->getSongs().size())
++    if (m_currentTrack < 0 || m_currentTrack >= getCurrentPlaylist()->getSongs().size())
+     {
+         LOG(VB_GENERAL, LOG_ERR,
+             QString("MusicPlayer: asked to set the current track to an invalid track no. %1")
+@@ -1071,10 +1072,10 @@ MusicMetadata *MusicPlayer::getCurrentMetadata(void)
+     if (m_oneshotMetadata)
+         return m_oneshotMetadata;
+ 
+-    if (!m_currentPlaylist || !m_currentPlaylist->getSongAt(m_currentTrack))
++    if (!getCurrentPlaylist() || !getCurrentPlaylist()->getSongAt(m_currentTrack))
+         return NULL;
+ 
+-    return m_currentPlaylist->getSongAt(m_currentTrack);
++    return getCurrentPlaylist()->getSongAt(m_currentTrack);
+ }
+ 
+ /// get the metadata for the next track in the playlist
+@@ -1086,21 +1087,21 @@ MusicMetadata *MusicPlayer::getNextMetadata(void)
+     if (m_oneshotMetadata)
+         return getCurrentMetadata();
+ 
+-    if (!m_currentPlaylist || !m_currentPlaylist->getSongAt(m_currentTrack))
++    if (!getCurrentPlaylist() || !getCurrentPlaylist()->getSongAt(m_currentTrack))
+         return NULL;
+ 
+     if (m_repeatMode == REPEAT_TRACK)
+         return getCurrentMetadata();
+ 
+     // if we are not playing the last track then just return the next track
+-    if (m_currentTrack < m_currentPlaylist->getSongs().size() - 1)
+-        return m_currentPlaylist->getSongAt(m_currentTrack + 1);
++    if (m_currentTrack < getCurrentPlaylist()->getSongs().size() - 1)
++        return getCurrentPlaylist()->getSongAt(m_currentTrack + 1);
+     else
+     {
+         // if we are playing the last track then we need to take the
+         // repeat mode into account
+         if (m_repeatMode == REPEAT_ALL)
+-            return m_currentPlaylist->getSongAt(0);
++            return getCurrentPlaylist()->getSongAt(0);
+         else
+             return NULL;
+     }
+@@ -1168,14 +1169,16 @@ void MusicPlayer::setShuffleMode(ShuffleMode mode)
+     if (m_playMode == PLAYMODE_TRACKS)
+         m_shuffleMode = mode;
+ 
+-    if (m_currentPlaylist)
+-        m_currentPlaylist->shuffleTracks(mode);
++    if (!getCurrentPlaylist())
++        return;
++
++    getCurrentPlaylist()->shuffleTracks(mode);
+ 
+     if (curTrackID != -1)
+     {
+-        for (int x = 0; x < getPlaylist()->getSongs().size(); x++)
++        for (int x = 0; x < getCurrentPlaylist()->getSongs().size(); x++)
+         {
+-            MusicMetadata *mdata = getPlaylist()->getSongs().at(x);
++            MusicMetadata *mdata = getCurrentPlaylist()->getSongs().at(x);
+             if (mdata && mdata->ID() == (MusicMetadata::IdType) curTrackID)
+             {
+                 m_currentTrack = x;
+@@ -1361,7 +1364,7 @@ void MusicPlayer::activePlaylistChanged(int trackID, bool deleted)
+     }
+ 
+     // if we don't have any tracks to play stop here
+-    if (!m_currentPlaylist || m_currentPlaylist->getSongs().count() == 0)
++    if (!getCurrentPlaylist() || getCurrentPlaylist()->getSongs().count() == 0)
+     {
+         m_currentTrack = -1;
+         if (isPlaying())
+@@ -1374,9 +1377,9 @@ void MusicPlayer::activePlaylistChanged(int trackID, bool deleted)
+     // make sure the current playing track is still valid
+     if (isPlaying() && getDecoderHandler())
+     {
+-        for (int x = 0; x < m_currentPlaylist->getSongs().size(); x++)
++        for (int x = 0; x < getCurrentPlaylist()->getSongs().size(); x++)
+         {
+-            if (m_currentPlaylist->getSongs().at(x)->ID() == getDecoderHandler()->getMetadata().ID())
++            if (getCurrentPlaylist()->getSongs().at(x)->ID() == getDecoderHandler()->getMetadata().ID())
+             {
+                 trackPos = x;
+                 break;
+@@ -1493,17 +1496,34 @@ void MusicPlayer::removeTrack(int trackID)
+     MusicMetadata *mdata = gMusicData->all_music->getMetadata(trackID);
+     if (mdata)
+     {
+-        int trackPos = gPlayer->getPlaylist()->getSongs().indexOf(mdata);
++        int trackPos = getCurrentPlaylist()->getSongs().indexOf(mdata);
+         if (m_currentTrack > 0 && m_currentTrack >= trackPos)
+             m_currentTrack--;
+ 
+-        getPlaylist()->removeTrack(trackID);
++        getCurrentPlaylist()->removeTrack(trackID);
+     }
+ }
+ 
+ void MusicPlayer::addTrack(int trackID, bool updateUI)
+ {
+-    getPlaylist()->addTrack(trackID, updateUI);
++    getCurrentPlaylist()->addTrack(trackID, updateUI);
++}
++
++Playlist* MusicPlayer::getCurrentPlaylist ( void )
++{
++    if (!gMusicData || !gMusicData->all_playlists)
++        return NULL;
++
++    if (m_playMode == PLAYMODE_RADIO)
++    {
++        return gMusicData->all_playlists->getStreamPlaylist();
++    }
++    else
++    {
++        return gMusicData->all_playlists->getActive();
++    }
++
++    return NULL;
+ }
+ 
+ StreamList  *MusicPlayer::getStreamList(void) 
+diff --git a/mythplugins/mythmusic/mythmusic/musicplayer.h b/mythplugins/mythmusic/mythmusic/musicplayer.h
+index 4a57e8b..8f6bb5c 100644
+--- a/mythplugins/mythmusic/mythmusic/musicplayer.h
++++ b/mythplugins/mythmusic/mythmusic/musicplayer.h
+@@ -113,7 +113,7 @@ class MusicPlayer : public QObject, public MythObservable
+ 
+     void         loadPlaylist(void);
+     void         loadStreamPlaylist(void);
+-    Playlist    *getPlaylist(void) { return m_currentPlaylist; }
++    Playlist    *getCurrentPlaylist(void);
+     StreamList  *getStreamList(void);
+ 
+     // these add and remove tracks from the active playlist
+@@ -198,7 +198,6 @@ class MusicPlayer : public QObject, public MythObservable
+     void setupDecoderHandler(void);
+     void decoderHandlerReady(void);
+ 
+-    Playlist    *m_currentPlaylist;
+     int          m_currentTrack;
+     int          m_currentTime;
+ 
+diff --git a/mythplugins/mythmusic/mythmusic/playlist.cpp b/mythplugins/mythmusic/mythmusic/playlist.cpp
+index ac2a4d3..4f36b58 100644
+--- a/mythplugins/mythmusic/mythmusic/playlist.cpp
++++ b/mythplugins/mythmusic/mythmusic/playlist.cpp
+@@ -680,7 +680,7 @@ void Playlist::fillSongsFromSonglist(QString songList)
+         }
+     }
+ 
+-    if (this == gPlayer->getPlaylist())
++    if (this == gPlayer->getCurrentPlaylist())
+         shuffleTracks(gPlayer->getShuffleMode());
+     else
+         shuffleTracks(MusicPlayer::SHUFFLE_OFF);
+diff --git a/mythplugins/mythmusic/mythmusic/playlisteditorview.cpp b/mythplugins/mythmusic/mythmusic/playlisteditorview.cpp
+index ce944c5..868628d 100644
+--- a/mythplugins/mythmusic/mythmusic/playlisteditorview.cpp
++++ b/mythplugins/mythmusic/mythmusic/playlisteditorview.cpp
+@@ -780,12 +780,12 @@ void PlaylistEditorView::treeItemClicked(MythUIButtonListItem *item)
+     MythGenericTree *node = qVariantValue<MythGenericTree*> (item->GetData());
+     MusicGenericTree *mnode = dynamic_cast<MusicGenericTree*>(node);
+ 
+-    if (!mnode)
++    if (!mnode || !gPlayer->getCurrentPlaylist())
+         return;
+ 
+     if (mnode->getAction() == "trackid")
+     {
+-        if (gPlayer->getPlaylist()->checkTrack(mnode->getInt()))
++        if (gPlayer->getCurrentPlaylist()->checkTrack(mnode->getInt()))
+         {
+             // remove track from the current playlist
+             gPlayer->removeTrack(mnode->getInt());
+@@ -1009,7 +1009,7 @@ void PlaylistEditorView::filterTracks(MusicGenericTree *node)
+             MusicGenericTree *newnode = new MusicGenericTree(node, i.key(), "trackid");
+             newnode->setInt(i.value());
+             newnode->setDrawArrow(false);
+-            bool hasTrack = gPlayer->getPlaylist()->checkTrack(newnode->getInt());
++            bool hasTrack = gPlayer->getCurrentPlaylist() ? gPlayer->getCurrentPlaylist()->checkTrack(newnode->getInt()) : false;
+             newnode->setCheck( hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
+             ++i;
+         }
+@@ -1288,7 +1288,7 @@ void PlaylistEditorView::filterTracks(MusicGenericTree *node)
+                 MusicGenericTree *newnode = new MusicGenericTree(node, i.key().mid(7), "trackid");
+                 newnode->setInt(i.value()->at(0)->ID());
+                 newnode->setDrawArrow(false);
+-                bool hasTrack = gPlayer->getPlaylist()->checkTrack(newnode->getInt());
++                bool hasTrack = gPlayer->getCurrentPlaylist() ? gPlayer->getCurrentPlaylist()->checkTrack(newnode->getInt()) : false;
+                 newnode->setCheck( hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
+             }
+             ++i;
+@@ -1544,7 +1544,7 @@ void PlaylistEditorView::getSmartPlaylistTracks(MusicGenericTree *node, int play
+                 new MusicGenericTree(node, query.value(1).toString(), "trackid");
+         newnode->setInt(query.value(0).toInt());
+         newnode->setDrawArrow(false);
+-        bool hasTrack = gPlayer->getPlaylist()->checkTrack(newnode->getInt());
++        bool hasTrack = gPlayer->getCurrentPlaylist() ? gPlayer->getCurrentPlaylist()->checkTrack(newnode->getInt()) : false;
+         newnode->setCheck( hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
+     }
+ 
+@@ -1581,7 +1581,7 @@ void PlaylistEditorView::getCDTracks(MusicGenericTree *node)
+         MusicGenericTree *newnode = new MusicGenericTree(node, title, "trackid");
+         newnode->setInt(mdata->ID());
+         newnode->setDrawArrow(false);
+-        bool hasTrack = gPlayer->getPlaylist()->checkTrack(mdata->ID());
++        bool hasTrack = gPlayer->getCurrentPlaylist() ? gPlayer->getCurrentPlaylist()->checkTrack(mdata->ID()) : false;
+         newnode->setCheck(hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
+     }
+ }
+@@ -1599,7 +1599,7 @@ void PlaylistEditorView::getPlaylistTracks(MusicGenericTree *node, int playlistI
+             MusicGenericTree *newnode = new MusicGenericTree(node, mdata->Title(), "trackid");
+             newnode->setInt(mdata->ID());
+             newnode->setDrawArrow(false);
+-            bool hasTrack = gPlayer->getPlaylist()->checkTrack(mdata->ID());
++            bool hasTrack = gPlayer->getCurrentPlaylist() ? gPlayer->getCurrentPlaylist()->checkTrack(mdata->ID()) : false;
+             newnode->setCheck(hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
+         }
+     }
+@@ -1627,7 +1627,7 @@ void PlaylistEditorView::updateSelectedTracks(MusicGenericTree *node)
+         {
+             if (mnode->getAction() == "trackid")
+             {
+-                bool hasTrack = gPlayer->getPlaylist()->checkTrack(mnode->getInt());
++                bool hasTrack = gPlayer->getCurrentPlaylist() ? gPlayer->getCurrentPlaylist()->checkTrack(mnode->getInt()) : false;
+                 mnode->setCheck(hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
+             }
+             else
+diff --git a/mythplugins/mythmusic/mythmusic/searchview.cpp b/mythplugins/mythmusic/mythmusic/searchview.cpp
+index 7078365..39f63f4 100644
+--- a/mythplugins/mythmusic/mythmusic/searchview.cpp
++++ b/mythplugins/mythmusic/mythmusic/searchview.cpp
+@@ -105,7 +105,7 @@ void SearchView::customEvent(QEvent *event)
+             MusicMetadata *mdata = qVariantValue<MusicMetadata*> (item->GetData());
+             if (mdata && (mdata->ID() == (MusicMetadata::IdType) trackID || trackID == -1))
+             {
+-                if (gPlayer->getPlaylist()->checkTrack(mdata->ID()))
++                if (gPlayer->getCurrentPlaylist() && gPlayer->getCurrentPlaylist()->checkTrack(mdata->ID()))
+                     item->DisplayState("on", "selectedstate");
+                 else
+                     item->DisplayState("off", "selectedstate");
+@@ -280,7 +280,7 @@ void SearchView::ShowMenu(void)
+             MusicMetadata *mdata = qVariantValue<MusicMetadata*> (item->GetData());
+             if (mdata)
+             {
+-                if (gPlayer->getPlaylist()->checkTrack(mdata->ID()))
++                if (gPlayer->getCurrentPlaylist() && gPlayer->getCurrentPlaylist()->checkTrack(mdata->ID()))
+                     menu->AddItem(tr("Remove From Playlist"));
+                 else
+                 {
+@@ -425,7 +425,7 @@ void SearchView::updateTracksList(void)
+             mdata->toMap(metadataMap);
+             newitem->SetTextFromMap(metadataMap);
+ 
+-            if (gPlayer->getPlaylist()->checkTrack(mdata->ID()))
++            if (gPlayer->getCurrentPlaylist() && gPlayer->getCurrentPlaylist()->checkTrack(mdata->ID()))
+                 newitem->DisplayState("on", "selectedstate");
+             else
+                 newitem->DisplayState("off", "selectedstate");
+@@ -442,13 +442,16 @@ void SearchView::updateTracksList(void)
+ 
+ void SearchView::trackClicked(MythUIButtonListItem *item)
+ {
++    if (!gPlayer->getCurrentPlaylist())
++        return;
++
+     MusicMetadata *mdata = qVariantValue<MusicMetadata*> (item->GetData());
+     if (mdata)
+     {
+-        if (gPlayer->getPlaylist()->checkTrack(mdata->ID()))
+-            gPlayer->getPlaylist()->removeTrack(mdata->ID());
++        if (gPlayer->getCurrentPlaylist()->checkTrack(mdata->ID()))
++            gPlayer->getCurrentPlaylist()->removeTrack(mdata->ID());
+         else
+-            gPlayer->getPlaylist()->addTrack(mdata->ID(), true);
++            gPlayer->getCurrentPlaylist()->addTrack(mdata->ID(), true);
+     }
+ }
+ 
+diff --git a/mythplugins/mythmusic/mythmusic/shoutcast.cpp b/mythplugins/mythmusic/mythmusic/shoutcast.cpp
+index 9d7f3b5..5cdb56a 100644
+--- a/mythplugins/mythmusic/mythmusic/shoutcast.cpp
++++ b/mythplugins/mythmusic/mythmusic/shoutcast.cpp
+@@ -391,6 +391,8 @@ ShoutCastIODevice::ShoutCastIODevice(void)
+     switchToState(NOT_CONNECTED);
+ 
+     setOpenMode(ReadWrite);
++
++    m_socket->setReadBufferSize(DecoderIOFactory::DefaultPrebufferSize);
+ }
+ 
+ ShoutCastIODevice::~ShoutCastIODevice(void)
+@@ -540,7 +542,7 @@ void ShoutCastIODevice::socketReadyRead(void)
+ 
+     if (!m_started && m_bytesDownloaded > DecoderIOFactory::DefaultPrebufferSize)
+     {
+-        m_socket->setReadBufferSize(DecoderIOFactory::DefaultPrebufferSize);
++        m_socket->setReadBufferSize(DecoderIOFactory::DefaultBufferSize);
+         m_started = true;
+     }
+ 
+diff --git a/mythplugins/mythmusic/mythmusic/streamview.cpp b/mythplugins/mythmusic/mythmusic/streamview.cpp
+index 08568cb..46c001d 100644
+--- a/mythplugins/mythmusic/mythmusic/streamview.cpp
++++ b/mythplugins/mythmusic/mythmusic/streamview.cpp
+@@ -411,13 +411,16 @@ void StreamView::doRemoveStream(bool ok)
+ 
+ void StreamView::updateStreamList(void)
+ {
++    if (!gPlayer->getCurrentPlaylist())
++        return;
++
+     m_streamList->Reset();
+ 
+     bool foundActiveStream = false;
+ 
+-    for (int x = 0; x < gPlayer->getPlaylist()->getSongs().count(); x++)
++    for (int x = 0; x < gPlayer->getCurrentPlaylist()->getSongs().count(); x++)
+     {
+-        MusicMetadata *mdata = gPlayer->getPlaylist()->getSongs().at(x);
++        MusicMetadata *mdata = gPlayer->getCurrentPlaylist()->getSongs().at(x);
+         MythUIButtonListItem *item = new MythUIButtonListItem(m_streamList, "", qVariantFromValue(mdata));
+         InfoMap metadataMap;
+         if (mdata)
 diff --git a/mythplugins/mythnetvision/i18n/mythnetvision_sv.qm b/mythplugins/mythnetvision/i18n/mythnetvision_sv.qm
 index 89c05a8..a2d6520 100644
 Binary files a/mythplugins/mythnetvision/i18n/mythnetvision_sv.qm and b/mythplugins/mythnetvision/i18n/mythnetvision_sv.qm differ
@@ -11688,6 +12576,18 @@ index 50bfcf3..e5cb7c5 100644
      </window>
  
  </mythuitheme>
+diff --git a/mythtv/bindings/python/MythTV/dataheap.py b/mythtv/bindings/python/MythTV/dataheap.py
+index b37b70a..f8510e3 100644
+--- a/mythtv/bindings/python/MythTV/dataheap.py
++++ b/mythtv/bindings/python/MythTV/dataheap.py
+@@ -888,6 +888,7 @@ class Video( CMPVideo, VideoSchema, DBDataWrite ):
+         self.cast.commit()
+         self.genre.commit()
+         self.country.commit()
++        self.markup.commit()
+ 
+     def __repr__(self):
+         if self._wheredat is None:
 diff --git a/mythtv/bindings/python/MythTV/system.py b/mythtv/bindings/python/MythTV/system.py
 index f24c8a9..44803bd 100644
 --- a/mythtv/bindings/python/MythTV/system.py
@@ -54746,7 +55646,7 @@ index 42a391c..3a7ee24 100644
      }
  
 diff --git a/mythtv/libs/libmythbase/mythversion.h b/mythtv/libs/libmythbase/mythversion.h
-index 52d12bf..ebaee78 100644
+index 52d12bf..2ae9c54 100644
 --- a/mythtv/libs/libmythbase/mythversion.h
 +++ b/mythtv/libs/libmythbase/mythversion.h
 @@ -12,7 +12,7 @@
@@ -54754,10 +55654,132 @@ index 52d12bf..ebaee78 100644
  /// Including changes in the libmythbase, libmyth, libmythtv, libmythav* and
  /// libmythui class methods in exported headers.
 -#define MYTH_BINARY_VERSION "0.27.20130902-1"
-+#define MYTH_BINARY_VERSION "0.27.20131107-1"
++#define MYTH_BINARY_VERSION "0.27.20140103-1"
  
  /** \brief Increment this whenever the MythTV network protocol changes.
   *
+diff --git a/mythtv/libs/libmythmetadata/metadatacommon.cpp b/mythtv/libs/libmythmetadata/metadatacommon.cpp
+index 2c320f5..9c9ae58 100644
+--- a/mythtv/libs/libmythmetadata/metadatacommon.cpp
++++ b/mythtv/libs/libmythmetadata/metadatacommon.cpp
+@@ -393,14 +393,33 @@ MetadataLookup::~MetadataLookup()
+ QList<PersonInfo> MetadataLookup::GetPeople(PeopleType type) const
+ {
+     QList<PersonInfo> ret;
+-    ret = m_people.values(type);
++    // QMultiMap::values() returns items in reverse order which we need to
++    // correct by iterating back over the list
++    // See http://qt-project.org/doc/qt-4.8/qmultimap.html#details
++    // Specifically "The items that share the same key are available from "
++    //              "most recently to least recently inserted."
++    QListIterator<PersonInfo> it(m_people.values(type));
++    it.toBack();
++    while (it.hasPrevious())
++        ret.append(it.previous());
++
+     return ret;
+ }
+ 
+ ArtworkList MetadataLookup::GetArtwork(VideoArtworkType type) const
+ {
+     ArtworkList ret;
+-    ret = m_artwork.values(type);
++
++    // QMultiMap::values() returns items in reverse order which we need to
++    // correct by iterating back over the list
++    // See http://qt-project.org/doc/qt-4.8/qmultimap.html#details
++    // Specifically "The items that share the same key are available from "
++    //              "most recently to least recently inserted."
++    QListIterator<ArtworkInfo> it(m_artwork.values(type));
++    it.toBack();
++    while (it.hasPrevious())
++        ret.append(it.previous());
++
+     return ret;
+ }
+ 
+diff --git a/mythtv/libs/libmythmetadata/metadatafactory.cpp b/mythtv/libs/libmythmetadata/metadatafactory.cpp
+index 2bda8a8..0109213 100644
+--- a/mythtv/libs/libmythmetadata/metadatafactory.cpp
++++ b/mythtv/libs/libmythmetadata/metadatafactory.cpp
+@@ -287,7 +287,7 @@ void MetadataFactory::OnSingleResult(MetadataLookup *lookup)
+         if (coverartlist.size())
+         {
+             ArtworkInfo info;
+-            info.url = coverartlist.takeLast().url;
++            info.url = coverartlist.takeFirst().url;
+             map.insert(kArtworkCoverart, info);
+         }
+ 
+@@ -309,7 +309,7 @@ void MetadataFactory::OnSingleResult(MetadataLookup *lookup)
+         if (bannerlist.size())
+         {
+             ArtworkInfo info;
+-            info.url = bannerlist.takeLast().url;
++            info.url = bannerlist.takeFirst().url;
+             map.insert(kArtworkBanner, info);
+         }
+ 
+@@ -319,7 +319,7 @@ void MetadataFactory::OnSingleResult(MetadataLookup *lookup)
+             if (screenshotlist.size())
+             {
+                 ArtworkInfo info;
+-                info.url = screenshotlist.takeLast().url;
++                info.url = screenshotlist.takeFirst().url;
+                 map.insert(kArtworkScreenshot, info);
+             }
+         }
+diff --git a/mythtv/libs/libmythmetadata/metaio.cpp b/mythtv/libs/libmythmetadata/metaio.cpp
+index a64e6eb..04d5e20 100644
+--- a/mythtv/libs/libmythmetadata/metaio.cpp
++++ b/mythtv/libs/libmythmetadata/metaio.cpp
+@@ -14,6 +14,8 @@
+ // Libmyth
+ #include <mythcontext.h>
+ 
++const QString MetaIO::ValidFileExtensions(".mp3|.mp2|.ogg|.oga|.flac|.wma|.wav|.ac3|.oma|.omg|"
++                                          ".atp|.ra|.dts|.aac|.m4a|.aa3|.tta|.mka|.aiff|.swa|.wv");
+ /*!
+  * \brief Constructor
+  */
+@@ -35,6 +37,12 @@ MetaIO* MetaIO::createTagger(const QString& filename)
+     QFileInfo fi(filename);
+     QString extension = fi.suffix().toLower();
+ 
++    if (extension.isEmpty() || !MetaIO::ValidFileExtensions.contains(extension))
++    {
++        LOG(VB_FILE, LOG_WARNING, QString("MetaIO: unknown extension: '%1'").arg(extension));
++        return NULL;
++    }
++
+     if (extension == "mp3" || extension == "mp2")
+         return new MetaIOID3;
+     else if (extension == "ogg" || extension == "oga")
+diff --git a/mythtv/libs/libmythmetadata/metaio.h b/mythtv/libs/libmythmetadata/metaio.h
+index 7b9594e..b117d69 100644
+--- a/mythtv/libs/libmythmetadata/metaio.h
++++ b/mythtv/libs/libmythmetadata/metaio.h
+@@ -156,6 +156,8 @@ class META_PUBLIC MetaIO
+     */
+     static MusicMetadata *getMetadata(const QString &filename);
+ 
++    static const QString ValidFileExtensions;
++
+   protected:
+ 
+   private:
+diff --git a/mythtv/libs/libmythmetadata/metaioavfcomment.cpp b/mythtv/libs/libmythmetadata/metaioavfcomment.cpp
+index c9ed293..ccb2af0 100644
+--- a/mythtv/libs/libmythmetadata/metaioavfcomment.cpp
++++ b/mythtv/libs/libmythmetadata/metaioavfcomment.cpp
+@@ -136,7 +136,5 @@ int MetaIOAVFComment::getTrackLength(AVFormatContext* pContext)
+     if (!pContext)
+         return 0;
+ 
+-    av_estimate_timings(pContext, 0);
+-
+     return (pContext->duration / AV_TIME_BASE) * 1000;
+ }
 diff --git a/mythtv/libs/libmythtv/AirPlay/mythairplayserver.cpp b/mythtv/libs/libmythtv/AirPlay/mythairplayserver.cpp
 index ab0f393..f6e1f15 100644
 --- a/mythtv/libs/libmythtv/AirPlay/mythairplayserver.cpp
@@ -54814,6 +55836,22 @@ index 06047e0..76fa552 100644
  
      LOG(VB_GENERAL, LOG_INFO, QString("Registering service %1.%2 port %3 TXT %4")
          .arg(QString(name)).arg(QString(type)).arg(m_setupPort).arg(QString(txt)));
+diff --git a/mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp b/mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp
+index 70bcb97..5708f76 100644
+--- a/mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp
++++ b/mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp
+@@ -942,7 +942,10 @@ int DVDRingBuffer::safe_read(void *data, uint sz)
+                     m_endPts = pci->pci_gi.vobu_e_ptm;
+                     m_inMenu = (pci->hli.hl_gi.btn_ns > 0);
+ 
+-                    if (m_inMenu && (dsi->synci.sp_synca[0] & 0x80000000) && !m_buttonExists)
++                    if (m_inMenu &&
++                        m_seeking &&
++                        (dsi->synci.sp_synca[0] & 0x80000000) &&
++                        !m_buttonExists)
+                     {
+                         LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Jumped into middle of menu: lba %1, dest %2")
+                             .arg(pci->pci_gi.nv_pck_lbn)
 diff --git a/mythtv/libs/libmythtv/cardutil.cpp b/mythtv/libs/libmythtv/cardutil.cpp
 index 9e4324c..da7998f 100644
 --- a/mythtv/libs/libmythtv/cardutil.cpp
@@ -57318,6 +58356,36 @@ index 20dc223..e7d8d0c 100644
              .arg(m_system_status). arg(ret));
  
      m_system_status = ret;
+diff --git a/mythtv/libs/libmythtv/recorders/dtvsignalmonitor.cpp b/mythtv/libs/libmythtv/recorders/dtvsignalmonitor.cpp
+index f3e4b6b..f6f9f67 100644
+--- a/mythtv/libs/libmythtv/recorders/dtvsignalmonitor.cpp
++++ b/mythtv/libs/libmythtv/recorders/dtvsignalmonitor.cpp
+@@ -321,6 +321,7 @@ void DTVSignalMonitor::HandlePAT(const ProgramAssociationTable *pat)
+                 .arg(programNumber);
+             LOG(VB_GENERAL, LOG_ERR, LOC + errStr + "\n" + pat->toString());
+         }
++        // only one entry in the PAT, just use it
+         if (pat->ProgramCount() == 1)
+         {
+             LOG(VB_GENERAL, LOG_ERR, LOC + "But there is only one program "
+@@ -329,6 +330,17 @@ void DTVSignalMonitor::HandlePAT(const ProgramAssociationTable *pat)
+             AddFlags(kDTVSigMon_PATMatch);
+             GetStreamData()->AddListeningPID(pat->ProgramPID(0));
+         }
++        // two entries, but one is a pointer to the NIT PID instead
++        // of a real program, use the other
++        if ((pat->ProgramCount() == 2) && ((pat->ProgramNumber(0) == 0) || (pat->ProgramNumber(1) == 0)))
++        {
++            LOG(VB_GENERAL, LOG_ERR, LOC + "But there is only one program "
++                                           "in the PAT, so we'll just use it");
++            uint pid = pat->FindAnyPID();
++            SetProgramNumber(pat->FindProgram(pid));
++            AddFlags(kDTVSigMon_PATMatch);
++            GetStreamData()->AddListeningPID(pid);
++        }
+     }
+ }
+ 
 diff --git a/mythtv/libs/libmythtv/recorders/hlsstreamhandler.cpp b/mythtv/libs/libmythtv/recorders/hlsstreamhandler.cpp
 index 0885ef5..c3d4dc1 100644
 --- a/mythtv/libs/libmythtv/recorders/hlsstreamhandler.cpp
@@ -57958,6 +59026,28 @@ index 1bd6a8a..a2462d8 100644
  };
  
  #endif // _IPTVSIGNALMONITOR_H_
+diff --git a/mythtv/libs/libmythtv/recorders/recorderbase.cpp b/mythtv/libs/libmythtv/recorders/recorderbase.cpp
+index 06a1f2c..57f7dd9 100644
+--- a/mythtv/libs/libmythtv/recorders/recorderbase.cpp
++++ b/mythtv/libs/libmythtv/recorders/recorderbase.cpp
+@@ -430,7 +430,7 @@ bool RecorderBase::GetKeyframePositions(
+              (it.key() <= (uint64_t)end); ++it)
+         map[it.key()] = *it;
+ 
+-    LOG(VB_GENERAL, LOG_INFO, LOC +
++    LOG(VB_GENERAL, LOG_DEBUG, LOC +
+         QString("GetKeyframePositions(%1,%2,#%3) out of %4")
+             .arg(start).arg(end).arg(map.size()).arg(positionMap.size()));
+ 
+@@ -452,7 +452,7 @@ bool RecorderBase::GetKeyframeDurations(
+              (it.key() <= (uint64_t)end); ++it)
+         map[it.key()] = *it;
+ 
+-    LOG(VB_GENERAL, LOG_INFO, LOC +
++    LOG(VB_GENERAL, LOG_DEBUG, LOC +
+         QString("GetKeyframeDurations(%1,%2,#%3) out of %4")
+             .arg(start).arg(end).arg(map.size()).arg(durationMap.size()));
+ 
 diff --git a/mythtv/libs/libmythtv/recorders/signalmonitor.cpp b/mythtv/libs/libmythtv/recorders/signalmonitor.cpp
 index cb38c42..1c413df 100644
 --- a/mythtv/libs/libmythtv/recorders/signalmonitor.cpp
@@ -58177,10 +59267,34 @@ index 7e3e8dc..5510ea7 100644
      {
          result.prepare("DELETE FROM oldfind WHERE "
 diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
-index 99d0c1f..c446dc8 100644
+index 99d0c1f..5efb78e 100644
 --- a/mythtv/libs/libmythtv/tv_play.cpp
 +++ b/mythtv/libs/libmythtv/tv_play.cpp
-@@ -1618,17 +1618,17 @@ void TV::GetStatus(void)
+@@ -982,6 +982,7 @@ TV::TV(void)
+       db_auto_set_watched(false),   db_end_of_rec_exit_prompt(false),
+       db_jump_prefer_osd(true),     db_use_gui_size_for_tv(false),
+       db_start_in_guide(false),     db_toggle_bookmark(false),
++      db_clear_saved_position(false),
+       db_run_jobs_on_remote(false), db_continue_embedded(false),
+       db_use_fixed_size(true),      db_browse_always(false),
+       db_browse_all_tuners(false),
+@@ -1087,6 +1088,7 @@ void TV::InitFromDB(void)
+     kv["JumpToProgramOSD"]         = "1";
+     kv["GuiSizeForTV"]             = "0";
+     kv["WatchTVGuide"]             = "0";
++    kv["ClearSavedPosition"]       = "1";
+     kv["AltClearSavedPosition"]    = "1";
+     kv["JobsRunOnRecordHost"]      = "0";
+     kv["ContinueEmbeddedTVPlay"]   = "0";
+@@ -1131,6 +1133,7 @@ void TV::InitFromDB(void)
+     db_jump_prefer_osd     = kv["JumpToProgramOSD"].toInt();
+     db_use_gui_size_for_tv = kv["GuiSizeForTV"].toInt();
+     db_start_in_guide      = kv["WatchTVGuide"].toInt();
++    db_clear_saved_position= kv["ClearSavedPosition"].toInt();
+     db_toggle_bookmark     = kv["AltClearSavedPosition"].toInt();
+     db_run_jobs_on_remote  = kv["JobsRunOnRecordHost"].toInt();
+     db_continue_embedded   = kv["ContinueEmbeddedTVPlay"].toInt();
+@@ -1618,17 +1621,17 @@ void TV::GetStatus(void)
                  status.insert("brightness",
                    vo->GetPictureAttribute(kPictureAttribute_Brightness));
              }
@@ -58201,7 +59315,55 @@ index 99d0c1f..c446dc8 100644
              {
                  status.insert("hue",
                    vo->GetPictureAttribute(kPictureAttribute_Hue));
-@@ -3709,6 +3709,34 @@ static bool has_action(QString action, const QStringList &actions)
+@@ -3260,17 +3263,39 @@ void TV::PrepToSwitchToRecordedProgram(PlayerContext *ctx,
+ 
+ void TV::PrepareToExitPlayer(PlayerContext *ctx, int line, BookmarkAction bookmark)
+ {
+-    bool bm_basic =
+-        (bookmark == kBookmarkAlways ||
+-         (bookmark == kBookmarkAuto && db_playback_exit_prompt == 2));
+-    bool bookmark_it = bm_basic && IsBookmarkAllowed(ctx);
++    bool bm_allowed = IsBookmarkAllowed(ctx);
+     ctx->LockDeletePlayer(__FILE__, line);
+     if (ctx->player)
+     {
+-        if (bookmark_it)
+-            SetBookmark(ctx,
+-                        (ctx->player->IsNearEnd() || getEndOfRecording())
+-                        && !StateIsRecording(GetState(ctx)));
++        if (bm_allowed)
++        {
++            // If we're exiting in the middle of the recording, we
++            // automatically save a bookmark when "Action on playback
++            // exit" is set to "Save position and exit".
++            bool allow_set_before_end =
++                (bookmark == kBookmarkAlways ||
++                 (bookmark == kBookmarkAuto &&
++                  db_playback_exit_prompt == 2));
++            // If we're exiting at the end of the recording, we
++            // automatically clear the bookmark when "Action on
++            // playback exit" is set to "Save position and exit" and
++            // "Clear bookmark on playback" is set to true.
++            bool allow_clear_at_end =
++                (bookmark == kBookmarkAlways ||
++                 (bookmark == kBookmarkAuto &&
++                  db_playback_exit_prompt == 2 &&
++                  db_clear_saved_position));
++            // Whether to set/clear a bookmark depends on whether we're
++            // exiting at the end of a recording.
++            bool at_end = (ctx->player->IsNearEnd() || getEndOfRecording());
++            // Don't consider ourselves at the end if the recording is
++            // in-progress.
++            at_end &= !StateIsRecording(GetState(ctx));
++            if (at_end && allow_clear_at_end)
++                SetBookmark(ctx, true);
++            if (!at_end && allow_set_before_end)
++                SetBookmark(ctx, false);
++        }
+         if (db_auto_set_watched)
+             ctx->player->SetWatched();
+     }
+@@ -3709,6 +3734,34 @@ static bool has_action(QString action, const QStringList &actions)
      return false;
  }
  
@@ -58236,7 +59398,7 @@ index 99d0c1f..c446dc8 100644
  bool TV::ProcessKeypress(PlayerContext *actx, QKeyEvent *e)
  {
      bool ignoreKeys = actx->IsPlayerChangingBuffers();
-@@ -3871,6 +3899,7 @@ bool TV::ProcessKeypress(PlayerContext *actx, QKeyEvent *e)
+@@ -3871,6 +3924,7 @@ bool TV::ProcessKeypress(PlayerContext *actx, QKeyEvent *e)
      bool isDVD = actx->buffer && actx->buffer->IsDVD();
      bool isMenuOrStill = actx->buffer && actx->buffer->IsInDiscMenuOrStillFrame();
  
@@ -58244,7 +59406,7 @@ index 99d0c1f..c446dc8 100644
      handled = handled || BrowseHandleAction(actx, actions);
      handled = handled || ManualZoomHandleAction(actx, actions);
      handled = handled || PictureAttributeHandleAction(actx, actions);
-@@ -8062,7 +8091,7 @@ void TV::UpdateOSDSignal(const PlayerContext *ctx, const QStringList &strlist)
+@@ -8062,7 +8116,7 @@ void TV::UpdateOSDSignal(const PlayerContext *ctx, const QStringList &strlist)
              ber = it->GetValue();
          else if ("pos" == it->GetShortName())
              pos = it->GetValue();
@@ -58253,7 +59415,7 @@ index 99d0c1f..c446dc8 100644
              tuned = it->GetValue();
          else if ("seen_pat" == it->GetShortName())
              pat = it->IsGood() ? "a" : "_";
-@@ -8574,7 +8603,7 @@ void TV::DoEditSchedule(int editType)
+@@ -8574,7 +8628,7 @@ void TV::DoEditSchedule(int editType)
      const ProgramInfo pginfo(*actx->playingInfo);
      uint    chanid  = pginfo.GetChanID();
      QString channum = pginfo.GetChanNum();
@@ -58262,7 +59424,7 @@ index 99d0c1f..c446dc8 100644
      actx->UnlockPlayingInfo(__FILE__, __LINE__);
  
      ClearOSD(actx);
-@@ -11623,7 +11652,7 @@ bool TV::MenuItemDisplayPlayback(const MenuItemContext &c)
+@@ -11623,7 +11677,7 @@ bool TV::MenuItemDisplayPlayback(const MenuItemContext &c)
      {
          if (ctx->recorder)
          {
@@ -58271,7 +59433,7 @@ index 99d0c1f..c446dc8 100644
              uint cardid  = ctx->GetCardID();
              vector<uint> excluded_cardids;
              stable_sort(cardids.begin(), cardids.end());
-@@ -11673,7 +11702,7 @@ bool TV::MenuItemDisplayPlayback(const MenuItemContext &c)
+@@ -11673,7 +11727,7 @@ bool TV::MenuItemDisplayPlayback(const MenuItemContext &c)
              uint cardid = 0;
              vector<uint> excluded_cardids;
              uint sourceid = 0;
@@ -58280,6 +59442,18 @@ index 99d0c1f..c446dc8 100644
              cardid  = ctx->GetCardID();
              excluded_cardids.push_back(cardid);
              InfoMap info;
+diff --git a/mythtv/libs/libmythtv/tv_play.h b/mythtv/libs/libmythtv/tv_play.h
+index c3bc859..8b110c1 100644
+--- a/mythtv/libs/libmythtv/tv_play.h
++++ b/mythtv/libs/libmythtv/tv_play.h
+@@ -786,6 +786,7 @@ class MTV_PUBLIC TV : public QObject, public MenuItemDisplayer
+     bool    db_use_gui_size_for_tv;
+     bool    db_start_in_guide;
+     bool    db_toggle_bookmark;
++    bool    db_clear_saved_position;
+     bool    db_run_jobs_on_remote;
+     bool    db_continue_embedded;
+     bool    db_use_fixed_size;
 diff --git a/mythtv/libs/libmythtv/tv_rec.cpp b/mythtv/libs/libmythtv/tv_rec.cpp
 index ced991b..9542baa 100644
 --- a/mythtv/libs/libmythtv/tv_rec.cpp
@@ -60050,6 +61224,44 @@ index fd11d27..94dbd8c 100644
      int               m_changrpid;
      ChannelGroupList  m_changrplist;
  
+diff --git a/mythtv/programs/mythfrontend/scheduleeditor.cpp b/mythtv/programs/mythfrontend/scheduleeditor.cpp
+index d8013b7..725c12c 100644
+--- a/mythtv/programs/mythfrontend/scheduleeditor.cpp
++++ b/mythtv/programs/mythfrontend/scheduleeditor.cpp
+@@ -1459,11 +1459,12 @@ void MetadataOptions::PerformQuery()
+ 
+     lookup->SetStep(kLookupSearch);
+     lookup->SetType(kMetadataRecording);
+-    if (m_seasonSpin->GetIntValue() > 0 ||
+-           m_episodeSpin->GetIntValue() > 0)
+-        lookup->SetSubtype(kProbableTelevision);
++    if ((m_recInfo && m_recInfo->GetCategoryType() == ProgramInfo::kCategoryMovie) ||
++        (m_seasonSpin->GetIntValue() == 0 &&
++         m_episodeSpin->GetIntValue() == 0))
++         lookup->SetSubtype(kProbableMovie);
+     else
+-        lookup->SetSubtype(kProbableMovie);
++        lookup->SetSubtype(kProbableTelevision);
+     lookup->SetAllowGeneric(true);
+     lookup->SetAutomatic(false);
+     lookup->SetHandleImages(false);
+@@ -1658,11 +1659,12 @@ void MetadataOptions::FindNetArt(VideoArtworkType type)
+     lookup->SetType(kMetadataVideo);
+     lookup->SetAutomatic(true);
+     lookup->SetHandleImages(false);
+-    if (m_seasonSpin->GetIntValue() > 0 ||
+-           m_episodeSpin->GetIntValue() > 0)
+-        lookup->SetSubtype(kProbableTelevision);
++    if ((m_recInfo && m_recInfo->GetCategoryType() == ProgramInfo::kCategoryMovie) ||
++        (m_seasonSpin->GetIntValue() == 0 &&
++         m_episodeSpin->GetIntValue() == 0))
++         lookup->SetSubtype(kProbableMovie);
+     else
+-        lookup->SetSubtype(kProbableMovie);
++        lookup->SetSubtype(kProbableTelevision);
+     lookup->SetAllowGeneric(true);
+     lookup->SetData(qVariantFromValue<VideoArtworkType>(type));
+     lookup->SetHost(gCoreContext->GetMasterHostName());
 diff --git a/mythtv/programs/mythtranscode/main.cpp b/mythtv/programs/mythtranscode/main.cpp
 index 8993042..de5c2e9 100644
 --- a/mythtv/programs/mythtranscode/main.cpp
@@ -60116,6 +61328,230 @@ index 9cfa27d..343834b 100644
              }
          }
          if (MythDate::current() > statustime)
+diff --git a/mythtv/programs/mythtv-setup/importicons.cpp b/mythtv/programs/mythtv-setup/importicons.cpp
+index 9eac506..6cceb04 100644
+--- a/mythtv/programs/mythtv-setup/importicons.cpp
++++ b/mythtv/programs/mythtv-setup/importicons.cpp
+@@ -10,6 +10,8 @@
+ #include "importicons.h"
+ #include "mythdate.h"
+ #include "mythdownloadmanager.h"
++#include "remotefile.h"
++#include "mythcorecontext.h"
+ 
+ // MythUI
+ #include "mythuitext.h"
+@@ -58,10 +60,6 @@ ImportIconsWizard::~ImportIconsWizard()
+ 
+ bool ImportIconsWizard::Create()
+ {
+-    if (!initialLoad(m_strChannelname))
+-        return false;
+-
+-
+     bool foundtheme = false;
+ 
+     // Load the theme for this screen
+@@ -109,6 +107,12 @@ bool ImportIconsWizard::Create()
+     return true;
+ }
+ 
++void ImportIconsWizard::Load()
++{
++    if (!initialLoad(m_strChannelname))
++        Close();
++}
++
+ void ImportIconsWizard::Init()
+ {
+     if (m_nMaxCount > 0)
+@@ -263,6 +267,7 @@ void ImportIconsWizard::itemChanged(MythUIButtonListItem *item)
+ 
+ bool ImportIconsWizard::initialLoad(QString name)
+ {
++
+     QString dirpath = GetConfDir();
+     QDir configDir(dirpath);
+     if (!configDir.exists() && !configDir.mkdir(dirpath))
+@@ -314,6 +319,7 @@ bool ImportIconsWizard::initialLoad(QString name)
+         {
+             m_popupStack->AddScreen(m_progressDialog);
+             m_progressDialog->SetTotal(query.size());
++            QCoreApplication::processEvents();
+         }
+         else
+         {
+@@ -324,40 +330,50 @@ bool ImportIconsWizard::initialLoad(QString name)
+         while(query.next())
+         {
+             CSVEntry entry;
++            QString relativeIconPath = query.value(11).toString();
++            QString absoluteIconPath = QString("%1%2").arg(m_strChannelDir)
++                                                      .arg(relativeIconPath);
+ 
+-            if (m_fRefresh)
++            if (m_fRefresh && !relativeIconPath.isEmpty() &&
++                QFile(absoluteIconPath).exists() &&
++                !QImage(absoluteIconPath).isNull())
++            {
++                LOG(VB_GENERAL, LOG_NOTICE, QString("Icon already exists, skipping (%1)").arg(absoluteIconPath));
++            }
++            else
+             {
+-                if (QFile(query.value(11).toString()).exists())
+-                    continue;
++                entry.strChanId=query.value(0).toString();
++                entry.strName=query.value(1).toString();
++                entry.strXmlTvId=query.value(2).toString();
++                entry.strCallsign=query.value(3).toString();
++                entry.strTransportId=query.value(4).toString();
++                entry.strAtscMajorChan=query.value(5).toString();
++                entry.strAtscMinorChan=query.value(6).toString();
++                entry.strNetworkId=query.value(7).toString();
++                entry.strServiceId=query.value(8).toString();
++                entry.strIconCSV= QString("%1,%2,%3,%4,%5,%6,%7,%8,%9\n").
++                                arg(escape_csv(entry.strChanId)).
++                                arg(escape_csv(entry.strName)).
++                                arg(escape_csv(entry.strXmlTvId)).
++                                arg(escape_csv(entry.strCallsign)).
++                                arg(escape_csv(entry.strTransportId)).
++                                arg(escape_csv(entry.strAtscMajorChan)).
++                                arg(escape_csv(entry.strAtscMinorChan)).
++                                arg(escape_csv(entry.strNetworkId)).
++                                arg(escape_csv(entry.strServiceId));
++                entry.strNameCSV=escape_csv(entry.strName);
++                LOG(VB_CHANNEL, LOG_INFO,
++                    QString("chanid %1").arg(entry.strIconCSV));
++
++                m_listEntries.append(entry);
+             }
+ 
+-            entry.strChanId=query.value(0).toString();
+-            entry.strName=query.value(1).toString();
+-            entry.strXmlTvId=query.value(2).toString();
+-            entry.strCallsign=query.value(3).toString();
+-            entry.strTransportId=query.value(4).toString();
+-            entry.strAtscMajorChan=query.value(5).toString();
+-            entry.strAtscMinorChan=query.value(6).toString();
+-            entry.strNetworkId=query.value(7).toString();
+-            entry.strServiceId=query.value(8).toString();
+-            entry.strIconCSV= QString("%1,%2,%3,%4,%5,%6,%7,%8,%9\n").
+-                              arg(escape_csv(entry.strChanId)).
+-                              arg(escape_csv(entry.strName)).
+-                              arg(escape_csv(entry.strXmlTvId)).
+-                              arg(escape_csv(entry.strCallsign)).
+-                              arg(escape_csv(entry.strTransportId)).
+-                              arg(escape_csv(entry.strAtscMajorChan)).
+-                              arg(escape_csv(entry.strAtscMinorChan)).
+-                              arg(escape_csv(entry.strNetworkId)).
+-                              arg(escape_csv(entry.strServiceId));
+-            entry.strNameCSV=escape_csv(entry.strName);
+-            LOG(VB_CHANNEL, LOG_INFO,
+-                QString("chanid %1").arg(entry.strIconCSV));
+-
+-            m_listEntries.append(entry);
+             m_nMaxCount++;
+             if (m_progressDialog)
++            {
+                 m_progressDialog->SetProgress(m_nMaxCount);
++                QCoreApplication::processEvents();
++            }
+         }
+ 
+         if (m_progressDialog)
+@@ -377,6 +393,7 @@ bool ImportIconsWizard::initialLoad(QString name)
+     {
+         m_popupStack->AddScreen(m_progressDialog);
+         m_progressDialog->SetTotal(m_listEntries.size());
++        QCoreApplication::processEvents();
+     }
+     else
+     {
+@@ -384,16 +401,18 @@ bool ImportIconsWizard::initialLoad(QString name)
+         m_progressDialog = NULL;
+     }
+ 
++    QString downloadMessage = tr("Downloading %1 of %2");
++
+     while (!closeDialog && (m_iter != m_listEntries.end()))
+     {
+         /*: %1 is the current channel position,
+          *  %2 is the total number of channels,
+          *  %3 is the channel name
+          */
+-        QString message = tr("Downloading %1 / %2 : %3")
+-                            .arg(m_nCount+1)
+-                            .arg(m_listEntries.size())
+-                            .arg((*m_iter).strName);
++        QString message = downloadMessage.arg(m_nCount+1)
++                                         .arg(m_listEntries.size());
++
++        LOG(VB_GENERAL, LOG_NOTICE, message);
+ 
+         if (m_missingEntries.size() > 0)
+         {
+@@ -414,6 +433,7 @@ bool ImportIconsWizard::initialLoad(QString name)
+         {
+             m_progressDialog->SetMessage(message);
+             m_progressDialog->SetProgress(m_nCount);
++            QCoreApplication::processEvents();
+         }
+     }
+ 
+@@ -543,11 +563,10 @@ bool ImportIconsWizard::checkAndDownload(const QString& url, const QString& loca
+     QString filename = url.section('/', -1);
+     QFileInfo file(m_strChannelDir+filename);
+ 
+-    bool fRet;
+-    if (!file.exists())
+-        fRet = GetMythDownloadManager()->download(iconUrl, file.absoluteFilePath());
+-    else
+-        fRet = true;
++    // If we get to this point we've already checked whether the icon already
++    // exist locally, we want to download anyway to fix a broken image or
++    // get the latest version of the icon
++    bool fRet = GetMythDownloadManager()->download(iconUrl, file.absoluteFilePath());
+ 
+     if (fRet)
+     {
+@@ -564,7 +583,6 @@ bool ImportIconsWizard::checkAndDownload(const QString& url, const QString& loca
+             MythDB::DBError("Error inserting channel icon", query);
+             return false;
+         }
+-
+     }
+ 
+     return fRet;
+@@ -633,13 +651,14 @@ bool ImportIconsWizard::search(const QString& strParam)
+         // HACK HACK HACK -- begin
+         // This is needed since the user can't escape out of the progress dialog
+         // and the result set may contain thousands of channels.
+-        if (strSplit.size() > 36*3)
++        if (strSplit.size() > 150)
+         {
+             LOG(VB_GENERAL, LOG_WARNING,
+                 QString("Warning: Result set contains %1 items, "
+                         "truncating to the first %2 results")
+-                    .arg(strSplit.size()).arg(18*3));
+-            while (strSplit.size() > 18*3) strSplit.removeLast();
++                    .arg(strSplit.size()).arg(150));
++            while (strSplit.size() > 150)
++                strSplit.removeLast();
+         }
+         // HACK HACK HACK -- end
+ 
+diff --git a/mythtv/programs/mythtv-setup/importicons.h b/mythtv/programs/mythtv-setup/importicons.h
+index 33b9145..56f2d38 100644
+--- a/mythtv/programs/mythtv-setup/importicons.h
++++ b/mythtv/programs/mythtv-setup/importicons.h
+@@ -35,6 +35,7 @@ class ImportIconsWizard : public MythScreenType
+    ~ImportIconsWizard();
+ 
+     bool Create(void);
++    void Load(void);
+ //    bool keyPressEvent(QKeyEvent *);
+     void customEvent(QEvent *event);
+ 
 diff --git a/mythtv/programs/mythutil/commandlineparser.cpp b/mythtv/programs/mythutil/commandlineparser.cpp
 index 141235d..902314d 100644
 --- a/mythtv/programs/mythutil/commandlineparser.cpp
@@ -60404,6 +61840,137 @@ index 9e88e51..373656a 100644
      if (!cmdline.toBool("chanid"))
      {
          LOG(VB_GENERAL, LOG_ERR, "No chanid specified");
+diff --git a/mythtv/programs/mythwelcome/welcomedialog.cpp b/mythtv/programs/mythwelcome/welcomedialog.cpp
+index e152fb7..5b88219 100644
+--- a/mythtv/programs/mythwelcome/welcomedialog.cpp
++++ b/mythtv/programs/mythwelcome/welcomedialog.cpp
+@@ -129,7 +129,7 @@ void WelcomeDialog::checkAutoStart(void)
+     //                                1 for manual startup
+     QString command = m_installDir + "/bin/mythshutdown --startup";
+     command += logPropagateArgs;
+-    uint state = myth_system(command);
++    uint state = myth_system(command, kMSDontBlockInputDevs);
+ 
+     LOG(VB_GENERAL, LOG_NOTICE,
+         QString("mythshutdown --startup returned: %1").arg(state));
+@@ -212,7 +212,7 @@ void WelcomeDialog::customEvent(QEvent *e)
+                          "MythWelcome is shutting this computer down now");
+                      QString poweroff_cmd = gCoreContext->GetSetting("MythShutdownPowerOff", "");
+                      if (!poweroff_cmd.isEmpty())
+-                         myth_system(poweroff_cmd);
++                         myth_system(poweroff_cmd, kMSDontBlockInputDevs);
+                 }
+             }
+         }
+@@ -274,16 +274,16 @@ bool WelcomeDialog::keyPressEvent(QKeyEvent *event)
+                 m_installDir + "/bin/mythshutdown --lock";
+ 
+             uint statusCode;
+-            statusCode = myth_system(mythshutdown_status + logPropagateArgs);
++            statusCode = myth_system(mythshutdown_status + logPropagateArgs, kMSDontBlockInputDevs);
+ 
+             // is shutdown locked by a user
+             if (!(statusCode & 0xFF00) && statusCode & 16)
+             {
+-                myth_system(mythshutdown_unlock + logPropagateArgs);
++                myth_system(mythshutdown_unlock + logPropagateArgs, kMSDontBlockInputDevs);
+             }
+             else
+             {
+-                myth_system(mythshutdown_lock + logPropagateArgs);
++                myth_system(mythshutdown_lock + logPropagateArgs, kMSDontBlockInputDevs);
+             }
+ 
+             updateStatusMessage();
+@@ -293,7 +293,7 @@ bool WelcomeDialog::keyPressEvent(QKeyEvent *event)
+         {
+             QString cmd = gCoreContext->GetSetting("MythShutdownXTermCmd", "");
+             if (!cmd.isEmpty())
+-                myth_system(cmd);
++                myth_system(cmd, kMSDontBlockInputDevs);
+         }
+         else if (action == "STARTSETUP")
+         {
+@@ -455,7 +455,7 @@ void WelcomeDialog::runMythFillDatabase()
+     LOG(VB_GENERAL, LOG_INFO, QString("Grabbing EPG data using command: %1\n")
+             .arg(command));
+ 
+-    myth_system(command);
++    myth_system(command, kMSDontBlockInputDevs);
+ }
+ 
+ void WelcomeDialog::updateAll(void)
+@@ -531,7 +531,7 @@ void WelcomeDialog::updateStatusMessage(void)
+     }
+ 
+     QString mythshutdown_status = m_installDir + "/bin/mythshutdown --status 0";
+-    uint statusCode = myth_system(mythshutdown_status + logPropagateArgs);
++    uint statusCode = myth_system(mythshutdown_status + logPropagateArgs, kMSDontBlockInputDevs);
+ 
+     if (!(statusCode & 0xFF00))
+     {
+@@ -602,7 +602,7 @@ void WelcomeDialog::showMenu(void)
+     m_menuPopup->SetReturnEvent(this, "action");
+ 
+     QString mythshutdown_status = m_installDir + "/bin/mythshutdown --status 0";
+-    uint statusCode = myth_system(mythshutdown_status + logPropagateArgs);
++    uint statusCode = myth_system(mythshutdown_status + logPropagateArgs, kMSDontBlockInputDevs);
+ 
+     if (!(statusCode & 0xFF00) && statusCode & 16)
+         m_menuPopup->AddButton(tr("Unlock Shutdown"), SLOT(unlockShutdown()));
+@@ -619,7 +619,7 @@ void WelcomeDialog::lockShutdown(void)
+ {
+     QString command = m_installDir + "/bin/mythshutdown --lock";
+     command += logPropagateArgs;
+-    myth_system(command);
++    myth_system(command, kMSDontBlockInputDevs);
+     updateStatusMessage();
+     updateScreen();
+ }
+@@ -628,7 +628,7 @@ void WelcomeDialog::unlockShutdown(void)
+ {
+     QString command = m_installDir + "/bin/mythshutdown --unlock";
+     command += logPropagateArgs;
+-    myth_system(command);
++    myth_system(command, kMSDontBlockInputDevs);
+     updateStatusMessage();
+     updateScreen();
+ }
+@@ -650,7 +650,7 @@ void WelcomeDialog::shutdownNow(void)
+             "MythWelcome is shutting this computer down now");
+         QString poweroff_cmd = gCoreContext->GetSetting("MythShutdownPowerOff", "");
+         if (!poweroff_cmd.isEmpty())
+-            myth_system(poweroff_cmd);
++            myth_system(poweroff_cmd, kMSDontBlockInputDevs);
+         return;
+     }
+ 
+@@ -676,7 +676,7 @@ void WelcomeDialog::shutdownNow(void)
+     QString command = m_installDir + "/bin/mythshutdown --status 0";
+     command += logPropagateArgs;
+ 
+-    uint statusCode = myth_system(command);
++    uint statusCode = myth_system(command, kMSDontBlockInputDevs);
+     if (!(statusCode & 0xFF00) && statusCode & 128)
+     {
+         ShowOkPopup(tr("Cannot shutdown because MythTV is about to start "
+@@ -712,7 +712,7 @@ void WelcomeDialog::shutdownNow(void)
+ 
+         if (!setwakeup_cmd.isEmpty())
+         {
+-            myth_system(setwakeup_cmd);
++            myth_system(setwakeup_cmd, kMSDontBlockInputDevs);
+         }
+     }
+ 
+@@ -720,6 +720,6 @@ void WelcomeDialog::shutdownNow(void)
+     command = "sudo " + m_installDir + "/bin/mythshutdown --shutdown";
+     command += logPropagateArgs;
+ 
+-    myth_system(command);
++    myth_system(command, kMSDontBlockInputDevs);
+ }
+ 
 diff --git a/mythtv/programs/scripts/metadata/Movie/tmdb.py b/mythtv/programs/scripts/metadata/Movie/tmdb.py
 deleted file mode 100755
 index 9ad4fbc..0000000
