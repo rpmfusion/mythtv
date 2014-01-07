@@ -223,7 +223,7 @@ BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
-BuildRequires:  libcdio-devel libcdio-paranoia-devel
+BuildRequires:  libcdio-devel
 # nb: libdvdcss will be dynamically loaded if installed
 #BuildRequires:  libfame-devel >= 0.9.0
 BuildRequires:  libogg-devel
