@@ -30,7 +30,7 @@
 
 [Unit]
 Description=MythTV backend service
-After=network.target mysqld.service time-sync.target
+After=network.target mariadb.service mysqld.service time-sync.target
 # Uncomment the following line if you will be using the mythweb plugin on the
 # same system as mythbackend.
 #Wants=httpd.service
@@ -59,7 +59,7 @@ User=mythtv
 ExecStart=/usr/bin/mythbackend --logpath /var/log/mythtv
 
 # Whether systemd will continue over-watch and restart on any halt
-#Restart=Restart-always
+#Restart=always
 
 [Install]
 WantedBy=multi-user.target
