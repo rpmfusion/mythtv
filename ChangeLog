@@ -1,3 +1,191 @@
+commit fac84fab9c8c6e43f51d3090e13e05e68db0ef6e
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sat Jan 4 10:12:23 2014 +0000
+
+    MythMusic: avoid storing a pointer to the current playlist in the music player
+    
+    Always get the current playlist from MusicData to avoid possibly referencing a
+    stale pointer. This can occur while doing a rescan.
+    
+    Also add NULL checks everywhere just in case.
+    
+    Refs #11906.
+    
+    (cherry picked from commit 193dc636e5fa5ac5edd3589094a58e79a6ab779b)
+
+commit bd74a288f3a9fc8911c9507b27f8fe540bde54f4
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Jan 3 18:11:45 2014 +0000
+
+    MythMusic: make sure we null check the returned tagger after 47217ca10a
+    
+    Also make sure the tagger is deleted after use.
+    
+    (cherry picked from commit b383c329417a4e4b0b786e51e0d24962728a738b)
+
+commit 70cc07f2d99dd4a2439e249a799c45ec54510991
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Jan 3 18:21:07 2014 +0000
+
+    Bump the ABI version after f359a4ebd3c
+
+commit f359a4ebd3c8a8fff18cdf21813c9d12da8c6c4e
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Jan 3 17:38:39 2014 +0000
+
+    MetaIO: validate the files extension before creating a tagger
+    
+    This checks the file extension is one we know how to handle before
+    creating the tagger. Return NULL if not valid.
+    
+    This fixes a bug with the music file scanner trying to add files with an
+    unknown file extension.
+    
+    NOTE: bumps the ABI version so compile and install myth core before compiling
+    the plugins
+    
+    (cherry picked from commit 47217ca10adae1e03a37b396d64b605c8f18e6b0)
+
+commit f984e29cc92a9bc88f2d2e4b72a6f822380efa64
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Jan 3 15:56:47 2014 +0000
+
+    MetaIOAVFComment: don't call av_estimate_timings() in getTrackLength()
+    
+    It's not needed with current ffmpeg and was causing a segfault while scanning
+    for music files.
+    
+    (cherry picked from commit c2128934644892df613590dda7e6017b72c14f94)
+
+commit 7f548de029ed84870538c87193b8b9f650cf0c5a
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Mon Dec 30 11:28:50 2013 +0000
+
+    MythMusic: fix playback of some radio stations
+    
+    Make sure the maximum size of the QTCPSocket read buffer is set appropriately.
+    
+    This seems to throttle the sending of readyRead() signals sent to us from
+    QTCPSocket better otherwise once we fill our buffer and don't read anything in the
+    readyRead() slot the QTCPSocket will eventually not send any more signals causing
+    us to run out of data.
+    
+    Fixes #11872.
+    
+    (cherry picked from commit 6ddaba216d8f6a7e178d4acfe6930458fb532d05)
+
+commit d96506156c2b200d3c6658e578d7b7fbd4014bad
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sat Dec 21 21:59:46 2013 -0800
+
+    Update binary version after 525ac31dd2215e5ce46fc3b70f7ba883d99b736a.
+
+commit 525ac31dd2215e5ce46fc3b70f7ba883d99b736a
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sat Dec 21 21:14:49 2013 -0800
+
+    Be less aggressive about clearing the bookmark on exit.
+    
+    Refs #7994.  We shouldn't automatically clear the bookmark at the end
+    of the recording if the "Clear bookmark on playback" setting is false.
+    (cherry picked from commit 670cb2d55c36f57ca056babccef1d99ae4c4bad0)
+    
+    Conflicts:
+    
+    	mythtv/libs/libmythtv/tv_play.cpp
+
+commit 9d4b5e2313ea0b1eb7718264782f529bd88c555d
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Thu Aug 29 23:00:14 2013 +0200
+
+    extend IPTV hack to handle PAT with two entries but only one program
+    
+    Fixes #11791
+    
+    (cherry picked from commit 3bd3c71551a938eec2bb50feb48501136704392d)
+
+commit 39171be37ab8d63f0f44e5dbd5a78ca6893ceafa
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sun Dec 15 21:47:04 2013 +0000
+
+    Icon Downloader: Check that the existing icon is actually a valid image.
+
+commit 65c0eb2c4ab660fcabb5b491dac8e88b6dd10d9e
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sun Dec 15 20:54:57 2013 +0000
+
+    Metadata Lookup: We want to use the first (best) result, not the last.
+
+commit 5dc9d15856ab6cc7a1f39c191a2bd577a26e4fc8
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sun Dec 15 13:53:44 2013 +0000
+
+    Fix display for progress dialog in Icon Importer
+    (cherry picked from commit 243420f6c1e043530fbe919ec85ae9f41af56323)
+
+commit 8f7c8aa6581e7afacd7e71a3566430e2119ce0b7
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sun Dec 15 13:34:32 2013 +0000
+
+    Make the check for an existing icon more robust.
+    (cherry picked from commit 8b1d8159331e85569d78f5637df49366e5198f40)
+
+commit fa5599d185014db32dd9a34582d090cb5c7121c9
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Dec 13 15:03:50 2013 +0000
+
+    Icon Downloader: Fix 'Re-scan for missing' to check the Channel Icon storage group
+    (cherry picked from commit 19f6b618045e9ac9bb7657e90f915e09dc63ba14)
+
+commit 866d1fe713116c7ff665157784b3ca7ae2c9d9b4
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Dec 11 09:31:34 2013 +0000
+
+    Fix segfault in Schedule Editor. Not all recording rules are associated with a program and this pointer therefore needs to be checked first
+
+commit f7852552a089a87d7dd53b5da59958205fbae6fd
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Thu Dec 5 00:06:42 2013 +0100
+
+    Fix python bindings to store updates to video markup data.
+    (cherry picked from commit 13ae25f5c86bd29a4e854cd5d438436f26d7345e)
+
+commit 26052f483996e28d87e77f5e879eded1e7c727a4
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Dec 4 19:04:05 2013 +0000
+
+    Use category type as a hint in the Schedule Editor Metadata/Artwork searches
+
+commit 15199917e881861add0ab5a21862dd599da45c75
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Dec 4 18:19:49 2013 +0000
+
+    Fix ordering of Artwork in selection dialogs. Best matches should now appear first, not last.
+    (cherry picked from commit d95a237d6cf7e79b4b5f807600fd635f37337e2f)
+
+commit ba15be9a30d6ce02c3bc6c8b330dbde8373f008a
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Sep 15 06:25:13 2013 -0700
+
+    Reduce logging level for GetKeyframePositions and GetKeyframeDurations.
+    (cherry picked from commit 3c90e595d998e563c7a97a39f9541c157762755e)
+
+commit aea561a518cfa1b638341ab4f42db92fcd379b75
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Mon Dec 2 22:29:20 2013 +0100
+
+    Prevent MythWelcome blocking input devices when calling mythshutdown to avoid resetting the idle timer (see [cac1413]) when trying to determine whether the backend is idle, thereby preventing shutdown.
+    (cherry picked from commit 1431eecd20c020b9c0ad826993015bc8957e82d6)
+
+commit 339d1ceb1733c0f36182260d0b1a691b0d05cbb3
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Mon Dec 2 22:27:25 2013 +0100
+
+    Only jump back in a menu to the nearest previous block with subpictures if a seek operation is already in progress.
+    
+    This should prevent infinite loops on some discs (e.g. Independence Day) where the menu highlight packets are somehow not processed before the navigation data indicates that buttons must be shown.
+    (cherry picked from commit e37383db1f55ad21f200903c18f9750753e05f00)
+
 commit cb744f810c6133aa293ad95d65225890371951f0
 Author: Raymond Wagner <rwagner@mythtv.org>
 Date:   Fri Nov 29 14:35:54 2013 -0500

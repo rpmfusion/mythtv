@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27-109-gcb744f8
+%define vers_string v0.27-130-gfac84fa
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -79,7 +79,7 @@ Version:        0.27
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -223,7 +223,7 @@ BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
 BuildRequires:  libdvdnav-devel
 BuildRequires:  libdvdread-devel >= 0.9.4
-BuildRequires:  libcdio-devel
+BuildRequires:  libcdio-devel libcdio-paranoia-devel
 # nb: libdvdcss will be dynamically loaded if installed
 #BuildRequires:  libfame-devel >= 0.9.0
 BuildRequires:  libogg-devel
@@ -1471,6 +1471,10 @@ fi
 
 
 %changelog
+* Mon Jan  6 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27-4
+- Update to latest fixes v0.27-130-gfac84fa.
+- Add libcdio-paranoia to build requirements for CD audio.
+
 * Mon Dec  2 2013 Richard Shaw <hobbes1069@gmail.com> - 0.27-3
 - Update to latest fixes, v0.27-109-gcb744f8.
 - Disable mythlogserver as it is only really useful for developers.
