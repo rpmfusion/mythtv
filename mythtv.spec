@@ -77,7 +77,7 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.27
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 %else
 Release:        4%{?dist}
 %endif
@@ -1471,6 +1471,9 @@ fi
 
 
 %changelog
+* Thu Mar 06 2014 Nicolas Chauvet <kwizart@gmail.com> - 0.27-4
+- Rebuilt for x264
+
 * Mon Jan  6 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27-4
 - Update to latest fixes v0.27-130-gfac84fa.
 - Add libcdio-paranoia to build requirements for CD audio.
