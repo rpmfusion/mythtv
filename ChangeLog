@@ -1,3 +1,443 @@
+commit 6b14852a6a3750e1d5c1bf7d461a5338ef535cbb
+Author: David Engel <dengel@mythtv.org>
+Date:   Thu Mar 6 15:50:52 2014 -0600
+
+    Apply preroll on virtual tuners when the same multiplex is in use.
+    
+    Previously, if any tuner in the same input group was already busy,
+    preroll would not be applied.  Now, if the recording on the other
+    input is on the same multiplex as the new recording, preroll will be
+    applied.
+    
+    Refs #12023
+    
+    (cherry picked from commit 11e65dfd38ca419b2157f0dbaa19f965647f648c)
+
+commit cb3b784dbaa5142a38d24b68be6de7fc13bf0585
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Mar 3 21:35:33 2014 +1100
+
+    Change verbosity for some network messages
+    (cherry picked from commit e6245ca330bc7dcc4d358819a299b28f02f5b5a5)
+
+commit 384858c5f78c199a5ec87ed0191feb8b6049cf6c
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Mar 3 11:32:25 2014 +1100
+
+    Bump API binary number following round of changes in ringbuffers
+
+commit 57c32eacfa87783b75412184cc98c6a46dea99c0
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Feb 27 20:48:28 2014 +1100
+
+    Never attempt to read more than in 512kB blocks
+    
+    Recalculate the threshold and read block size when we've encountered EOF several times in a row.
+    512kB ought to be enough to read a file smoothly (famous last words)
+    
+    This reduces the amount of unnecessary verbosity. When watching a SD 3Mbit/s DVB stream, it will take over a second to get 1MB of data, leading to a warning entry in the log for every single read.
+    
+    Refs #10428
+    
+    (cherry picked from commit 1cfdfa3f56876eb20170f33e9592b5c7ffd05064)
+
+commit 366ba7dd96c03a20d83a78f9875177d25e57189c
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Feb 27 12:51:25 2014 +1100
+
+    Allow seeking within the entire liveTV chain of recordings.
+    
+    Seeking across liveTV was fundamentally broken. You could only seek within the current recordings or go to the beginning of the next one or 15s to the end of the previous one.
+    This changes correct this behaviour. It is now possible to seek across the entire live TV session. We ensure however that we do not seek further than 15s from the end of a recordings (3s if reaching end of live program).
+    
+    Fixes #12076
+    
+    (cherry picked from commit 11daeaadc52214605e204cdfe6f7c001c9c1cc9b)
+
+commit d35650578d8bea28e4c2ccabbd3e299d5c402004
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Tue Feb 25 10:19:17 2014 +1100
+
+    Fix typo
+    
+    CR got deleted for some reason
+    
+    (cherry picked from commit 534394068373c52fd712d653e5fea725c564a673)
+
+commit ca275af14f60f3cc78e48ac2ad7c55e377e72774
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sun Feb 23 20:24:28 2014 +1100
+
+    Prevent playback to exit early should backend's writes be delayed
+    
+    Typical scenario is when watching on-going recordings and being very close to real time TV: should the backend take more than 360ms between two writes, the reader would treat it as an EOF and abort the read.
+    
+    When encountering EOF, we now check if the file is being written to in parallel and if so wait.
+    
+    We can also remove all EOF retries in FileRingBuffer::safe_read() as we definitely know now if we did reach EOF (as we check against the file size).
+    This allows for almost instantaneous program transition in live TV.
+    
+    (cherry picked from commit 443b624ebcc8ea56026cb49ca833edc7d73832c1)
+
+commit 22936ebd383a96d99602781137d9ce5dec76ab8e
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sun Feb 23 20:19:50 2014 +1100
+
+    Have backend advertise which files are currently being written to
+    
+    It is necessary in some playback scenarios to know if a file being read is currently being written to. This is useful in determining when encountering EOF if we should wait for more data or abort the read.
+    
+    MythCoreContext will now keep track of files as they are being opened for writing
+    Connected frontends will receive the information via the event socket in the form of a BACKEND_MESSAGE event.
+    
+    The myth protocol is extended with two new BACKEND_MESSAGE events:
+    FILE_WRITTEN: Sent when a file is opened in write mode, and when the file is being written to (at most every 10s)
+    FILE_CLOSED: Sent when the file opened in write mode is closed.
+    
+    The myth protocol version doesn’t have to be increased as frontends will make use of it only if available and the changes are backward compatible with exiting myth protocol.
+    
+    (cherry picked from commit fafc658597b547e2f0173032515e9790170ebcbe)
+    
+    Conflicts:
+    	mythtv/libs/libmythbase/threadedfilewriter.cpp
+
+commit 0b9470c87fe4d727e173cddf715270da7d18311e
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Feb 20 16:48:44 2014 +1100
+
+    Fix fileringbuffer locking up on read()
+    
+    From time to time, most often seen during LiveTV, FileRingBuffer::safe_read() would lock and not return for a long time (on my system, it would block in excess of 20s).
+    Upon investigation, the issue occurs while reading a file currently being written to, if a call to read() encountered EOF, returned early and a following call to read() was made, before another write. Under those conditions, read() wouldn't return for a long time, causing the backend to abort the read and dropping the frontend connection.
+    
+    So instead we now check the size of the current file via a call to POSIX fstat and never try to read beyond the EOF position.
+    If the file being read isn't a regular, or fstat returned an error, the old behaviour is used: read until we get as much data as we asked.
+    
+    Surprisingly, this has fixed most of the issues I've been having for years with liveTV:
+    - Stuttering or temporary free when close to the live
+    - Freeze at program transition.
+    
+    Add debugging information while in file mode
+    
+    Fixes #12045
+    
+    (cherry picked from commit 20f7cd2858e79385ceec07b2c19c7e4f84714e18)
+
+commit 28b768a4b9e2fa3b76835057378512cb41a3838c
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Tue Feb 25 11:30:29 2014 +0000
+
+    Enable compilation of a couple of files that were disabled on Qt5 because they are apparently not compatible. They build, so let them.
+
+commit 784c236ed0ea5cc69f829ac71833a2ede5107882
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Tue Feb 25 11:11:37 2014 +0000
+
+    Fix mythnetvision.pro for Qt5
+
+commit 4fd068eb3f34eb5e8f35e4035fcb33d106ed0171
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Tue Feb 25 12:16:22 2014 +0000
+
+    Remove check_cxxflags which doesn't work
+
+commit 83ddcc8dda52365c38e5c767cc2479e59c576442
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Wed Feb 19 17:00:15 2014 +0000
+
+    Resolve X11/Xlib.h define of Bool and Qt5 (5.2)
+    
+    Xlib.h has a "#define Bool int", which causes compilation issues with other uses of
+    Bool, specifically in qsonvalue.h in Qt5.  This patch rearranges the MythTV source file
+    includes to bypass the issue.
+    
+    Fixes #12065
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
+
+commit 0a8ffeb2da6bea0ac4005147ea80aa4f9203ed4d
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Mon Feb 24 23:47:10 2014 +0000
+
+    Rewrite qmake detection to better support Qt5 - plugins
+
+commit 0a8d441988d432c60d544b22c842eaacb5dec91e
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Mon Feb 24 20:50:39 2014 +0000
+
+    Rewrite qmake detection to better support Qt5
+
+commit e77d5977c1ee8a74beceafb2d3886ba7e59e9f63
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Feb 9 15:20:04 2014 -0700
+
+    Some HLS tweaks to make recording more robust when faced with unreliable
+    feeds.
+    
+    (cherry picked from commit 7f8dd24816a251d51b3cb42173d7dd19a4ba1a52)
+
+commit 65668cd6b98f36532fd478f4b6c491a8273c467e
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sun Feb 23 10:22:01 2014 -0500
+
+    Allow tmdb3.py to use $MYTHCONFDIR as a cache location.
+    
+    This makes tmdb3.py follow the standard behavior of using MYTHCONFDIR,
+    falling back to HOME, for its selection of scratch space. This also adds
+    explicit error reporting to stdout when something goes wrong.
+    
+    Refs #11876
+    
+    (cherry picked from commit 2c50a824be1f3083ca966ff0309ea39854452b29)
+
+commit ab18cb1166d53a0bf14bc4f49c568be8f2240fd8
+Author: angelaschmid <angela.schmid@wolke7.net>
+Date:   Sun Jan 5 20:19:56 2014 +0100
+
+    detect cropped HD (720p) content
+    
+    Fixes #12048
+    (cherry picked from commit 2a026c45758a495fee0b4a4e7557901c6f701797)
+
+commit 147dec5cd8b82f310277043fcb4f33ecc50c4bf0
+Author: Angela Schmid <angela.schmid@wolke7.net>
+Date:   Tue Feb 18 10:58:02 2014 -0600
+
+    Always show programs that are still recording in ViewScheduled.
+    
+    Includes a minor change by David Engel.
+    
+    Backport to fixes/0.27.
+    
+    Refs #12060
+
+commit 9bf1070d86ab4ca515830f4d330f7b720830463c
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Tue Feb 11 13:16:43 2014 +0000
+
+    MythMusic: fix the goom visualizer
+    
+    * use the correct image format to convert the Goom buffer to a QImage
+    * re-enable the scale factors so you can reduce the cpu utililization
+      Increasing the scale factors will reduce the amount of data to be processed
+      by Goom but that will also make the image more blocky.
+    * increase the maximum scale factor to 4 (MythGoom allows 1, 2 or 4 to be used)
+    
+    Fixes #11023.
+    
+    (cherry picked from commit 8e0c6c505cf727dd00404ede6afb6c76e06101a5)
+
+commit 75e71d3dad4ac873531005ea27ae9529c4494459
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Mon Feb 10 18:48:52 2014 -0500
+
+    Add housekeeper startup delay.
+    
+    This delays creation of the first HouseKeepingThread until the first
+    cycle, which is one minute after creation. This will allow time for
+    other potentially necessary subsystems to come up on init, should the
+    HouseKeeperTasks need them. Tasks tagged as kHKRunImmediateOnStartup
+    will still be run in-thread immediately as the housekeeper is started.
+    
+    Fixes #12042
+    (cherry picked from commit 3d14864fe8ef06147ec8cc0d6af39d89fb29b2f9)
+
+commit d48bbd891921d33f5fb34ccc46044ad8987183fb
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Mon Feb 10 00:16:37 2014 +0100
+
+    Only force a refresh of the metadata rather than invalidating the cache as that causes a crash if file system browsing is enabled.
+    
+    Refs #12052
+    (cherry picked from commit d7bee2a3cca4a76feade96a29094a3eb3affb23b)
+
+commit f5e61804d7a8ad6afc4aa4484e2c05f24ddb396b
+Author: Amar Takhar <verm@darkbeer.org>
+Date:   Wed Jan 15 21:44:48 2014 +0000
+
+    Fixes for FreeBSD 10.0 + clang
+    
+    Signed-off-by: Raymond Wagner <rwagner@mythtv.org>
+    (cherry picked from commit 366b73bc672d45be94b981a944f9f415b44ea13c)
+
+commit de615b3360219838e446ae75328730c2ff49d64f
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Sun Feb 9 20:57:25 2014 +0100
+
+    Invalidate the cache after deleting a video file to ensure the free'd entry is removed.
+    
+    Fixes #12052
+    (cherry picked from commit ffd38d1bba28aea710ad095c4e0844fe63381b38)
+
+commit 6b37da2534321ef9132d1fac29ca9efa48def326
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Sun Jan 26 00:41:49 2014 +0100
+
+    let Smolt search for the country as global and local setting
+    
+    Country became a global setting in [bf6fc7cd39]. This allows me to upload my
+    profile instead of getting error 500 from the server. It might be just
+    correlation though.
+    (cherry picked from commit 6c1f811d61de5aeaa8b4355c3b7b8dca18899aed)
+
+commit b4858000bdb375be898ee824fbbebbb14fc127ec
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Sat Jan 25 23:15:34 2014 +0100
+
+    let Smolt search for the langauge as global and local setting
+    
+    Language became a global setting in [bf6fc7cd39].
+    (cherry picked from commit de17fc4ab4f830d2d317c7522f0e584c9ed86a93)
+
+commit 5c1cdb0e96367b56258d99cdbb56a0727bf6793c
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Thu Feb 6 00:06:10 2014 +0100
+
+    Explicitly set the audio capabilities of the DVD VM to indicate all audio types are supported.  This makes DVDs that check this VM register play properly.
+    (cherry picked from commit 501de627233cdffc1032932fd0611fd2e32abca4)
+
+commit 1b7404d64080a69373f3b37fc174a5b62f9143ba
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Mon Feb 3 07:33:18 2014 -0500
+
+    Use proper string conversion for DailyArtworkUpdates setting.
+    
+    Refs #12033
+    (cherry picked from commit e45e1ca7bf329e8ecea218f0e47cc080ad736b7e)
+
+commit eaafcb4a917c1b6055e5fb908a3bc6b747aba1c4
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Sun Feb 2 02:25:26 2014 -0500
+
+    Make "DailyArtworkUpdates" a global option
+    
+    This makes the DailyArtworkUpdates setting a global setting so it can be
+    properly configured on any frontend. This patch does not include any
+    code to fix an existing improperly configured setting, which could cause
+    problems in the future, as the per-host option will override the global
+    one and will be uneditable without direct database modification.
+    
+    Refs #12033
+    (cherry picked from commit ffa364019e7d5bc0b88f4c83d21511090735b45d)
+
+commit 4ee21a4ca0c6f85e6c6b5f55cb3bbc5b623a5e14
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Feb 1 18:09:41 2014 +0000
+
+    Fix segfault in MythUIButtonList::GetItemCurrent(). Fixes #12040
+    (cherry picked from commit 4211abf7d62b9e15a61731bd1ae19400302c92ff)
+
+commit 6b353625177a4dd6483b9b8c9e0d1051d4549e8d
+Merge: b249ad4 1d9d46b
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Jan 30 09:14:06 2014 -0500
+
+    Merge commit '1d9d46beff7a7591ebbfa6e13c080617e660e52d' into fixes/0.27
+    
+    Conflicts:
+    	mythtv/bindings/python/tmdb3/tmdb3/pager.py
+
+commit b249ad4d241b8a3adf7b3cde8a26b03e736febd2
+Author: Stefan Becker <chemobejk@gmail.com>
+Date:   Fri Dec 13 22:12:04 2013 +0200
+
+    Bind to multicast address instead of ANY
+    
+    If multiple servers multicast content on the same port we can't receive
+    it on multiple recorders if bind to QHostAddress::Any. If we bind to the
+    multicast address we don't have this problem. Problem discovered and
+    patched by Niels Ole Kirkeby.
+    
+    Note: This also adds error handling for when a bind fails.
+    
+    Fixes #11979
+    Fixes #12036
+    
+    The tickets contain multiple reports of success.
+    (cherry picked from commit f2defe87d63fbe544c7333af0ca5b04aa078ebf4)
+
+commit 1d9d46beff7a7591ebbfa6e13c080617e660e52d
+Author: Amar Takhar <verm@darkbeer.org>
+Date:   Tue Jan 28 19:00:44 2014 +0000
+
+    Correct mispelling in cache_file.py
+    
+    This corrects a misspelling in error handling code that would cause an
+    irrelevant error to be thrown when unable to access an existing cache
+    file. This misspelling issue would only appear after a fatal error had
+    occurred, so there is no change in behavior.
+    
+    Signed-off-by: Raymond Wagner <rwagner@mythtv.org>
+
+commit f1e620c6fcaead237ee01c9aa7d0bd5380571189
+Author: pjokinen <pjokinen@gmail.com>
+Date:   Mon Jan 27 12:26:34 2014 -0600
+
+    Add mplexid to dummy entries when scheduling around live TV.
+    
+    This was missed when the mplexid optimization was done.  Thanks to
+    pjokinen for spotting it and submitting the patch.
+    
+    Refs #12032
+    
+    Signed-off-by: David Engel <dengel@mythtv.org>
+    
+    (cherry picked from commit 2ebd924706b97015e15f3075f93e03bfc1616fef)
+
+commit 5a5e1cd52906e10a1aa15c207764b8bdcab8caa6
+Author: David Engel <dengel@mythtv.org>
+Date:   Tue Jan 21 14:29:39 2014 -0600
+
+    Update record.last_record/deleted to UTC.
+    
+    Backport to fixes/0.27.
+    
+    These were missed in the upgrade to schema version 1303.  Note that
+    this change only works for those who haven't yet upgraded.  It's too
+    difficult to impossible to fix this for those who have already
+    upgraded.
+    
+    Fixes #12024
+    
+    (cherry picked from commit e523eedc7fb884eaa147b77091aa30ff52c54929)
+
+commit 99f546453ada182e40f1ee27c294e17611b5dfed
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Mon Jan 13 23:23:33 2014 +0100
+
+    missed variable rename in Smolt data collection in ba8a1608cf
+    
+    (cherry picked from commit 211989bea523f6a41b2e88c8e63cb37b56949955)
+
+commit 8307dd4990189d65e3b99039d77d84f6a8c81a96
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Jan 12 14:42:59 2014 -0700
+
+    In [50e5f4501] I failed to account for a possible path through
+    TuningFrequency(), and removed a necessary call to SetChannelByString().
+    
+    I big thank you to warpme for identifying the problem and solution.
+    
+    Fixes #11989
+    
+    (cherry picked from commit 5208a3a5512a4059b3cb59f4da65503003f3348f)
+
+commit 4c12503a741c5e2fa199eac414e4bafe53d51c12
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Jan 10 19:42:39 2014 +0000
+
+    MythMusic: Fix detection of compilations using special MusicBrainz Artist ID
+    
+    Look at all the fields in the 'TXXX=MusicBrainz Album Artist Id' frame for the special
+    various artists ID not just the first one which in current version of the taglib
+    contains the tags description.
+    
+    Refs #10235.
+    Fixes #12000.
+    
+    (cherry picked from commit 6530ac633300a32c76db0d10cf8d107aa712a62c)
+
 commit fac84fab9c8c6e43f51d3090e13e05e68db0ef6e
 Author: Paul Harrison <pharrison@mythtv.org>
 Date:   Sat Jan 4 10:12:23 2014 +0000
@@ -193,6 +633,24 @@ Date:   Fri Nov 29 14:35:54 2013 -0500
     Correct issue where TMDB returns less results than claimed.
     (cherry picked from commit 24bcf67da973e4eee738eca68fb5cea36e7c1306)
 
+commit 29922d1a16ed2d818f7ec7602207029cb372f53f
+Merge: e3d4c07 e3802e5
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Fri Nov 29 14:05:17 2013 -0500
+
+    Merge branch 'master' of github.com:wagnerrp/pytmdb3
+
+commit e3d4c07ee59886e92e995addf0ad226f629adcf4
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Fri Nov 29 14:02:55 2013 -0500
+
+    Updates for television data.
+    
+    This updates the version number and readme for the new Television series
+    support on TheMovieDb.org. I still want to do some tweeking on the names
+    and general presentation, but this has been sitting around for long
+    enough and should get pushed upstream.
+
 commit e5acf0cdd90f839aff2820e52daedeef42a509a9
 Author: Paul Harrison <pharrison@mythtv.org>
 Date:   Fri Nov 22 23:55:54 2013 +0000
@@ -346,6 +804,15 @@ Date:   Sun Nov 17 18:21:50 2013 +0000
     to grab frame 0 which will never exist.
     
     (cherry picked from commit ee5de540587a55f8b749da5ece22a15b163619c8)
+
+commit e3802e53b7fe556ee98639c57f7a83e84b3c2468
+Merge: 4965933 70a9dc8
+Author: wagnerrp <rwagner@mythtv.org>
+Date:   Sun Nov 17 09:14:09 2013 -0800
+
+    Merge pull request #32 from Toilal/master
+    
+    Registered and uploaded on PyPI.
 
 commit fa94c154c79d0752eb0eb59e579e1985ccf26532
 Author: Raymond Wagner <rwagner@mythtv.org>
@@ -642,6 +1109,12 @@ Date:   Thu Oct 31 22:35:13 2013 +0000
     
     (cherry picked from commit 1e3d70b1b0ef74615c7f7f59e1bfef3621842a3e)
 
+commit 6a5050f86ad3eab90bfbec174edaaf9eb711bca4
+Author: Fabian Möller <fabianm88@gmail.com>
+Date:   Thu Oct 31 17:52:11 2013 +0100
+
+    Add support for the new tv api
+
 commit 8845997d30dd093ea35426dca80222f7ab0c4a8f
 Author: Raymond Wagner <rwagner@mythtv.org>
 Date:   Tue Oct 29 19:51:58 2013 -0400
@@ -708,6 +1181,27 @@ Date:   Tue Oct 29 17:23:12 2013 +0000
 
     Fix marking of 1080/720 videos.
     (cherry picked from commit 7ed0e5fb3dd90eca4eb9cdf8371be11e80a41fa6)
+
+commit 70a9dc84046c2081b89e2a81f34e94a25fa14f72
+Author: Toilal <toilal.dev@gmail.com>
+Date:   Fri Oct 25 10:36:23 2013 +0200
+
+    Registered and uploaded on PyPI. Fix #31
+
+commit 4965933adc5e309406ad931c1f6666d22ae845f8
+Merge: 053778c e47fd39
+Author: wagnerrp <rwagner@mythtv.org>
+Date:   Wed Oct 23 17:00:47 2013 -0700
+
+    Merge pull request #30 from Toilal/master
+    
+    Fixed version in setup.py
+
+commit e47fd39eb06bc33e221b7bef25cb18ed99a9bad7
+Author: Rémi Alvergnat <remi.alvergnat@gmail.com>
+Date:   Wed Oct 23 23:00:19 2013 +0200
+
+    Fixed version in setup.py
 
 commit 29eab516202aa76aeb769ed636c183ba3ed0efcf
 Author: John Poet <jpoet@mythtv.org>
@@ -1020,6 +1514,16 @@ Date:   Mon Oct 7 13:25:14 2013 -0500
     
     Refs #11891
 
+commit 053778ce07c6080cb1343c8187d346179fccd34f
+Author: Richard O'Dwyer <richard@richard.do>
+Date:   Thu Aug 29 00:41:00 2013 +0000
+
+    PEP8 code style updates.
+    
+    Modified from original commit.
+    
+    Signed-off-by: Raymond Wagner <rwagner@mythtv.org>
+
 commit 77db95785de9b80f87b96a46220124a1fcc50bf8
 Author: Stuart Morgan <smorgan@mythtv.org>
 Date:   Sat Oct 5 21:30:45 2013 +0100
@@ -1270,3 +1774,23 @@ Date:   Wed Sep 18 23:24:45 2013 +0200
     by me and Roger Mårtensson (thank you!).
     
     (cherry picked from commit 246b2e6a2e496aa8f56c32d38d3997cbf5ff2b1c)
+
+commit abae25afb73f967421eb7797a868a9bdb187c18c
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Sep 12 21:40:14 2013 -0400
+
+    Enable --debug flag in test application.
+
+commit 0d91e6fc4184c17c5a9d39e1b2a264602a47747d
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Thu Sep 12 21:35:05 2013 -0400
+
+    Have pager return Nones if the server returns null.
+    
+    This temporarily resolves an issue where the TheMovieDb server returns
+    nulls in searches when a movie has been deleted but not yet flushed out
+    of the cache. This prevents the error internally, but does not attempt
+    to re-order to remove the nulls, so is merely passing the issue onto the
+    application using this library.
+    
+    Refs #29
