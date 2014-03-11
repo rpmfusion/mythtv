@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27-130-gfac84fa
+%define vers_string v0.27-178-g6b14852
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -175,6 +175,7 @@ Requires(postun): initscripts
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
+BuildRequires:  libpng-devel
 BuildRequires:  gcc-c++
 %if 0%{?fedora} >= 19
 BuildRequires:  mariadb-devel >= 5
@@ -1471,8 +1472,9 @@ fi
 
 
 %changelog
-* Thu Mar 06 2014 Nicolas Chauvet <kwizart@gmail.com> - 0.27-5
-- Rebuilt for x264
+* Tue Mar 11 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27-5
+- Update to latest fixes v0.27-178-g6b14852.
+- Rebuild for x264.
 
 * Mon Jan  6 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27-4
 - Update to latest fixes v0.27-130-gfac84fa.
