@@ -176,6 +176,7 @@ Requires(postun): initscripts
 BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  libpng-devel
+BuildRequires:  bzip2-devel
 BuildRequires:  gcc-c++
 %if 0%{?fedora} >= 19
 BuildRequires:  mariadb-devel >= 5
@@ -1473,7 +1474,7 @@ fi
 
 %changelog
 * Sat Mar 22 2014 Sérgio Basto <sergio@serjux.com> - 0.27-6
-- Rebuilt for x264
+- Rebuilt for x264 and add BR: bzip2-devel
 
 * Tue Mar 11 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27-5
 - Update to latest fixes v0.27-178-g6b14852.
