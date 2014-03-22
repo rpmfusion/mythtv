@@ -77,9 +77,9 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.27
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 %else
-Release:        5%{?dist}
+Release:        6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1472,6 +1472,9 @@ fi
 
 
 %changelog
+* Sat Mar 22 2014 Sérgio Basto <sergio@serjux.com> - 0.27-6
+- Rebuilt for x264
+
 * Tue Mar 11 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27-5
 - Update to latest fixes v0.27-178-g6b14852.
 - Rebuild for x264.
