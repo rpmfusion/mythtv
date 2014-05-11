@@ -1,3 +1,504 @@
+commit 583f44855ff80e032a6175939b1917a54337ccac
+Author: Klass De Waal <klaas.de.waal@gmail.com>
+Date:   Tue May 6 11:23:16 2014 +0100
+
+    Remove old entries from in-memory EIT cache
+    
+    Closes #12130.
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+    (cherry picked from commit d0e25acac0cd671cb1eee4bb965bbcd35ffd88da)
+
+commit e2acf0d940009b2b240d52e9b53a123e1309a134
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Fri Jan 3 15:05:08 2014 +0100
+
+    Always force program type to series if it has an onscreen episode number
+    (cherry picked from commit cda7494f7931ebfaacc328c66782e4536489e714)
+
+commit aa603f1a554d4d30cc22482ed69c4809862c977c
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Sat Jan 11 20:05:11 2014 +0100
+
+    consider the last segment when determining the aspect ratio
+    
+    Use the very last mark of the recording (likely a key frame) instead
+    of the beginning of the segment when it is the last aspect ratio mark.
+    (cherry picked from commit 433b72111df8aec1e97145a8c1100537a523ab0f)
+
+commit 3dfc6fad394190eec86d2f0e3b849b2324ee5db2
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Sat Jan 11 14:05:37 2014 +0100
+
+    consider all aspect ratio changes when looking for the next change
+    
+    When determining the dominant aspect ratio we must consider the next
+    mark of *any* aspect ratio instead of the next mark of the *same*
+    aspect ratio.
+    
+    The last segment is ignored as of now.
+    (cherry picked from commit 6c1af4b12367fcf9de7d3bbae3282cfe63c18013)
+
+commit 07288849888d0678bf2b50a130da24097df3b861
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Sun Jan 19 23:00:18 2014 +0100
+
+    let mythwikiscripts find the categories again when scraping script
+    
+    But it still needs more TLC.
+    (cherry picked from commit 58ebc60632ebcdba90d15db8272cd03208d2e77e)
+
+commit e50af7d5d1c119b8a7cb3fb9d7444de4b7e270dc
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Fri Jan 31 16:15:13 2014 +0100
+
+    make parameter names consistently lowercase
+    
+    Since [3d9155909f] the parameter names used inconsistent upper and lower case.
+    
+    There are two places in libmythupnp where the incoming packets are decoded, in
+    one place they are converted to lowercase, in the other place they are not.
+    This commit had made it lowercase in both places but did not change the code
+    that accessed the data, the caused serious discombobulation and the end of UPNP
+    watching through out the world.
+    
+    Patch by Steve Beinicke
+    
+    Fixes #12006
+    (cherry picked from commit e9a22c587713f2933402232b15daf82d4272dd2d)
+
+commit 55e7ed5e16221e9042b68b335ed11dd8dd0c6703
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Mon Mar 3 23:39:27 2014 +0100
+
+    Make metadata title matching more permissive
+    
+    From the ticket: Not sure why it was comparing the first char of both
+    strings, also think it shouldn't be case sensitive at all.
+    
+    I think so, too
+    
+    Fixes #11088
+    Patch by Daniel Ribeiro
+    (cherry picked from commit 18f6412f73cffc751931dc688d57ea3d7708c7f1)
+
+commit 5268cd19760b123fa142773b56e40a98858d48d4
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Wed Apr 23 19:58:38 2014 +0200
+
+    let mythtranscode --help hint at the optional cutlist
+    (cherry picked from commit 24be3436d75f5947ef6e7d444daee50666832ac6)
+
+commit 27668b7280a3d55bf1c5540ae5b44f623f4d1892
+Author: Cédric Schieli <cschieli@gmail.com>
+Date:   Tue Dec 31 18:04:37 2013 +0100
+
+    Protect pbs with proper (aka locked) refcounting.
+    
+    The PlaybackSock must not be immediatly deleted on connectionClosed()
+    if some other requests are still using it. This leads to segfaults in
+    the MBE when the SBE disconnects (#11306).
+    (cherry picked from commit 7b305848b0584bcebc55d6fe5a670ef7d2f55360)
+    
+    Refs #11306
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+    
+    (cherry picked from commit 6f246c0d1567bd84e1d9d30de7def724fc75e8f6)
+
+commit 46a146c5bd02d571b6941d69183ac6c8b5d610df
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Apr 28 08:57:51 2014 +1000
+
+    Fix null dereference
+    
+    Coverity ID 1061551
+    
+    (cherry picked from commit 9635bc42da3de7616d2ab248694ee9ae7ec2b42e)
+
+commit b93fb14831a0ca8d59a7df5267c04cb6e52d9254
+Author: Raymond Wagner <rwagner@mythtv.org>
+Date:   Wed Apr 16 04:35:43 2014 -0400
+
+    Remove file check for pytmdb3.cache
+    
+    This is a partial roll back of 2c50a824b and remove the check for the
+    pytmdb3.cache file, allowing the library to simply create the file if
+    necessary.
+    
+    Fixes #11876
+    
+    (cherry picked from commit ec084b39099d2ea43a736ac46caffad90272ef9d)
+    
+    Conflicts:
+    	mythtv/programs/scripts/metadata/Movie/tmdb3.py
+
+commit ad2f1ffebde4fcb05856584a3411a45487cc4cf5
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Mar 27 21:19:16 2014 +1100
+
+    Fix crashes when pressing menu key during channel change
+    
+    There’s a short amount of time when changing channel during which there are no video output defined.
+    
+    (cherry picked from commit 400f35aa8de2a6e29ec8e98bf173deb95e724adc)
+
+commit d17c9064d7033c410a576988945e5b81882e42f1
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Apr 7 21:02:38 2014 +1000
+
+    Should first Apple Remote listening fail, don’t attempt to use apple remote.
+    
+    This would only happen on a mac with no remote receiver
+    
+    (cherry picked from commit 42c2278813687d1d0bded1e0164b0a64e4407365)
+
+commit cfa3260ecd71adf2dedcd58187a57d973715846b
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Apr 7 13:55:55 2014 +1000
+
+    Fixes Video Playback Profile Editor.
+    
+    Two corrected issues:
+    1- Adding or Editing an existing profile, did nothing visually, but would actually update the database. Regression was introduced in 9686f034ac54
+    2- When deleting a profile, the newly selected one wasn’t actually saved as default
+    
+    (cherry picked from commit c2b22cb99313cbcd496cdbd7593edc853bac41df)
+    
+    Conflicts:
+    	mythtv/libs/libmyth/mythconfiggroups.h
+
+commit cba166380086de37fc22dab460746c805a5c5f6c
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sun Apr 6 01:55:04 2014 +1100
+
+    Fix linking issues.
+    
+    Spotted by Craig Treleaven, freetype linking parameters were added twice and too early, causing general linking with installed system libraries first, and then local tree ones.
+    Configure also automatically adds all libraries checked for to EXTRALIBS define
+    
+    (cherry picked from commit 4f15d4449a31d551d61d0a00362089d8d7d8a763)
+    
+    Conflicts:
+    	mythtv/libs/libmythtv/libmythtv.pro
+    	mythtv/settings.pro
+
+commit 1b68d626f44818ccf55ed603fe799487ba8f75bb
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sun Apr 6 00:15:04 2014 +1100
+
+    My analysis for the problem in 96ecd539de8e76a880f0013b4b8854da216e17b1 was wrong.
+    The actual issue is that QPalette inheritance appears broken on a mac; if you set the palette to the top widget container, it doesn’t do anything on its children. However, setting the palette to the main application itself does.
+    
+    Now things look exactly the same between mac and linux for better or worse. Including font sizes and colors.
+    A downside, is that the selection color appears to be misused in most themes including the default. So you can't tell if a text is selected or simply having focus
+    Qt bug: QTBUG-32067, QTBUG-26144 (over 224 bugs related to palette use in Qt as of 2014-04-05)
+    
+    (cherry picked from commit 103d4651e68215e661c843ca5862d7d64c052f93)
+
+commit 0ba4d68afbbdfcf375ca1af66b338e6a1146a944
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Apr 10 18:01:37 2014 +0700
+
+    Revert "Fix settings display on macs"
+    
+    This reverts commit 829a0986edc2ab695273ec5c8038842c243f36f3.
+
+commit 39686c6c6800053fe25764d2f27cfdfc2dd21fab
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Thu Apr 3 23:20:54 2014 +1100
+
+    Fix old Qt setting screens preventing them from accepting keyboard inputs
+    
+    Hopefully this is the final fix…
+    The issue seems to only have occurred on macs. When opening two MythDialogs (that includes MythPopup) in a row, often the 2nd one would not accept any used input anymore, only causing a “beep”; making it impossible to even exit that window.
+    
+    The existing logic (and there was nothing wrong with it) was to simply disable the current MythDialog and put the new one on top of it. However, when doing so, somehow key events are now ignored.
+    So instead, we now disable all widgets within that MythDialog, without disabling the dialog itself.
+    
+    When doing so, the newly created MythDialog is always working as expected.
+    This code should not be necessary, it is a workaround to what appears to be a Qt bug.
+    
+    Fixes #11990.
+    
+    (cherry picked from commit 9edb6d6c4aa0ed930be222ddd32cfc008d709d9f)
+
+commit 829a0986edc2ab695273ec5c8038842c243f36f3
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Fri Apr 4 20:49:22 2014 +1100
+
+    Fix settings display on macs
+    
+    My analysis for the problem in 96ecd539de8e76a880f0013b4b8854da216e17b1 was wrong.
+    The actual issue is that QPalette inheritance appears broken on a mac; if you set the palette to the top widget container, it doesn’t do anything on its children. However, setting the palette to the main application itself does.
+    
+    Now things look exactly the same between mac and linux for better or worse. Including font sizes and colors.
+    A downside, is that the selection color appears to be misused in most themes including the default. So you can't tell if a text is selected or simply having focus
+    
+    (cherry picked from commit 15425cb53e643a8c00975c1ef0ea7674464fdca2)
+
+commit 5bc3ba4fb335862be3b8f2c66736800abe68b1a4
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Fri Apr 4 20:52:32 2014 +1100
+
+    Revert "Fix settings display on macs"
+    
+    This reverts commit dca8f922a25e2ddd881ed0666f9cd9b3925c28e2.
+
+commit 74033e798c02be5522c9bb7adf772991097624b7
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Fri Apr 4 20:52:12 2014 +1100
+
+    Revert "Bump API version"
+    
+    This reverts commit c54c89865d430e2d106696695064ccd50bb88489.
+
+commit b10d885ed6450d22ad3449fdc9fef1f186a4ef90
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Wed Apr 2 21:54:27 2014 +1100
+
+    Fix MythVideo general settings page not working
+    
+    How long that one has been broken ???
+    
+    The new MythUI screen is always on top, so it must be hidden when starting on old Qt screen…
+    Hopefully there are no more like this
+    
+    (cherry picked from commit d7de3ff15162c6ce08ede065b5902bda31d1435f)
+
+commit fadcd738fdf4c6419ad0d5600843f6b70f2745a9
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Wed Apr 2 20:17:10 2014 +1100
+
+    Make python bindings work on mac
+    
+    We play with the environment variable PYTHONPATH at run time so it points to the current location where the application bundle is located.
+    It assumes —with-python=python2.6 has been provided to configure (which the mac perl packager will do from now on)
+    
+    (cherry picked from commit 66e6b5b7906eca45ae481df3c5911a6283eb225b)
+
+commit a745119cd936a7cd8efec3c9d3c92c08019263b4
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Wed Apr 2 20:14:31 2014 +1100
+
+    Fix AppleRemote thread not being killed when exiting the application
+    
+    I’ve been seeing the error about the AppleRemote thread still running when quitting for years… had enough
+    
+    (cherry picked from commit 42dd0a3470b401a59c36d22e9b0982a17db26a77)
+
+commit c54c89865d430e2d106696695064ccd50bb88489
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Tue Apr 1 13:12:43 2014 +1100
+
+    Bump API version
+    
+    Following dca8f922a25e2ddd881ed0666f9cd9b3925c28e2, a full recompile is required
+
+commit dca8f922a25e2ddd881ed0666f9cd9b3925c28e2
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Tue Apr 1 02:51:41 2014 +1100
+
+    Fix settings display on macs
+    
+    Qt widgets uses a default style that varies between platforms. On Linux, the default text is white, on mac its black.
+    The color of the text in the old settings aren’t configurable as it is (wouldn’t be difficult to do so)
+    
+    Most themes are using a dark background, so on mac, using the old type settings is proving difficult as mostly unreadable.
+    
+    So we redefine the style of most QWidget objects so it looks more similar to Linux.
+    This is done using Qt stylesheets. Where Qt stylesheets do not provided the intended behavior, we use QPalettes instead
+    
+    (cherry picked from commit 96ecd539de8e76a880f0013b4b8854da216e17b1)
+    
+    Conflicts:
+    	mythtv/libs/libmyth/mythwidgets.cpp
+
+commit 3ca3f6d0fd3f2d2f559f56175ba5806917d0c640
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Tue Mar 25 01:18:38 2014 +1100
+
+    Improve AirPlay photosharing
+    
+    Make the AirPlay photo sharing’s behavior closer to what an Apple TV does:
+    - Make the photo disappear whenever you exit the photo application
+    - Allows to play music while showing photos
+    - Improve transition between photos and videos
+    - Only make the photo disappear once video playback has started
+    
+    (cherry picked from commit 9cba5e278763bb6d18603cf9f916ef7c75157953)
+
+commit d723f0ff1fbc7efeaff89d5a7acd5567adcef715
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Mar 24 19:17:18 2014 +1100
+
+    No need to add randomisation to bonjour first registration
+    
+    (cherry picked from commit bdc75ddcec79e631149d3d42d373694c0fb1ca7b)
+
+commit 152e5b7dcbb1b99a9e9fb926fac47166b1946293
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Mar 24 13:14:28 2014 +1100
+
+    Make AirPlay photo sharing works with iOS 7.1
+    
+    (cherry picked from commit dc99ee7ca11f6dad18a93a4ab959ca4cae16ffd2)
+
+commit 8ee257cf970c2a304e746524ef43aebe4043331d
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sun Mar 23 20:50:15 2014 +1100
+
+    Fix AirPlay occasionally only showing as an audio device on iOS 7.x
+    
+    We re-announce the AirPlay video service 2s after the first registration followed by every 10s.
+    This forces the video service to be registered after the RAOP Service. Since the release of iOS 7, AirPlay has been very much unusable.
+    
+    Thanks to Memphiz from the XBMC team to figuring the cause.
+    
+    Fixes #11901
+    
+    (cherry picked from commit 5d2d30bc6af71d06230c6c3d1871dc665d12737c)
+
+commit 63a3ce6cdcd075524366583d3b7bc7416cb60d12
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sun Mar 23 21:08:23 2014 +1100
+
+    Bump API version following 00739e7019e4a14b320022279595da1bc214f4c2
+
+commit 00739e7019e4a14b320022279595da1bc214f4c2
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sun Mar 23 20:37:37 2014 +1100
+
+    Add BonjourRegister::ReAnnounceService()
+    
+    This allows to force re-announcing an already published service
+    
+    (cherry picked from commit 9712943f6d2a1add95e3ecfefd0d3150eb2880e0)
+
+commit fe66cf3a41b5608e5ec905d390b2c57ed8e3eb2a
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Sun Mar 23 20:42:20 2014 +1100
+
+    Advertise RAOP service before AirPlay service.
+    
+    This helps having the AirPlay device being recognised as a full service
+    
+    (cherry picked from commit 590f336feffe68eb89ce6996eac95ae6a8309930)
+
+commit 583395f5a376637efcd408a102fa64d0f188c12f
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Fri Mar 21 10:07:07 2014 +0000
+
+    Fixes #12098 Only dynamically load the libGLESv2 library if OpenGL ES is enabled.
+    
+    The nvidia driver version 334.21 has included the libGLESv2 library.
+    Users upgrading to the newer drivers were seeing mythfrontend segfault
+    because it was dynamically loading this library and then using it
+    incorrectly (because mythtv had been build with opengles disabled)
+    
+    (cherry picked from commit 5c7bd7f127e9ef2cb91de2bf0f82a35b7262d423)
+    
+    Distro maintainers can you pull this in immediately please.
+
+commit 036a33652708c9e7b5fc93877db310989aa997bb
+Author: Andreas Mayer <and.mayer@aon.at>
+Date:   Thu Mar 20 22:44:44 2014 +0000
+
+    MythMusic: fix mixed up smart playlist "starts with" and "ends with" criteria
+    
+    Fixes #12097
+    
+    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
+    (cherry picked from commit b582bd009a24954884832866f6b27499d1b553e8)
+
+commit 30d86b13385743ffb83ed5bbb34e08b9e0114a11
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sat Mar 15 16:56:55 2014 +0000
+
+    MythMusic: fix the playlist editor adding duplicate tracks to the playlist
+    
+    Selecting some nodes more than once in the playlist editor tree would add
+    duplicate tracks to the active playlist and the tree because we wasn't checking
+    if we had already added the tracks for the selected node.
+    
+    (cherry picked from commit c907a46d2604382b3bad6e44d4574b91e7692bf7)
+
+commit 480589a8108efd6b932480bcbac7976f12b9a7f6
+Author: John Poet <jpoet@mythtv.org>
+Date:   Wed Mar 12 16:05:00 2014 -0600
+
+    Revert 7abf18a16
+
+commit 7abf18a16523cf98c5c86d34d96349da05b086c9
+Author: John Poet <jpoet@mythtv.org>
+Date:   Mon Mar 10 11:40:21 2014 -0600
+
+    DTVRecorder::FindH264Keyframes: Only account for Adaptation Field Control
+    Offset if payloadStart is set.
+    
+    (cherry picked from commit 6c6c0cbd4d95957c107e0e7e37b6b4cf70b04de5)
+
+commit 642c55801b559d55416c63edaad203cb296388fc
+Author: John Poet <jpoet@mythtv.org>
+Date:   Mon Mar 10 10:42:07 2014 -0600
+
+    H264Parser::decode_Header: pic_order_present_flag is not required, so don't
+    insist on it.
+    
+    (cherry picked from commit faf7487bd3db2f01d273e1bd7a44cf64f7762181)
+
+commit 0b216643d2334f84a6ca8600db88a3c58f3c74d6
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Mar 9 13:29:15 2014 +0000
+
+    MythCenter-wide: fix some clipping on the playlist editor screen
+    
+    (cherry picked from commit a75cd556aaa602d5e16c4f8e001de9e5a7e669a2)
+
+commit 2d9a3d553afd681b01c3e824f493c41fdd83a23a
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Mar 9 11:30:09 2014 +0000
+
+    MythCenter-wide: fix some clipping on the music playlist editor
+    
+    When using the Qt painter the playlist progress bar appeared to not be
+    updating because it was being clipped.
+    
+    (cherry picked from commit e7a9bd0f4d32215f4cf5d26f01244dec42e44249)
+
+commit e0bbc835b60429679987bc42a18a316cc3c8cf92
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Mar 9 11:09:28 2014 +0000
+
+    MythCenter-wide: fix some clipping on the music playlist editor
+    
+    When using the Qt painter the time text was being clipped in the small info
+    panel.
+    
+    (cherry picked from commit da505d91987e2d3a832288038510971d31c3c4e0)
+
+commit 3bfe4968488610983abc122bcfa1ce06c9421a8a
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sat Mar 8 18:43:02 2014 +0000
+
+    MythMusic: missed a git add in [385011e307c]
+    
+    (cherry picked from commit 632c4f875a081dd37d3ed2d49e0722293d2146e8)
+
+commit 2ffd9fb80993a9cd831e2a7a2ab65b855ac9c34b
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sat Mar 8 18:27:59 2014 +0000
+
+    MythMusic: add a 'First' resume mode and make 'Off' never resume
+    
+    This fixes the resume playback feature so that 'Off' never starts playback and
+    adds a new 'First' mode which starts at the first track in the active playlist.
+    
+    'Track' and 'Exact' modes remain the same and resume playback at the start of
+    the track or exact position within the track that was playing when MythMusic
+    was last exited.
+    
+    (cherry picked from commit 385011e307c2d5f9d5d6a65663143f27189d1b17)
+
 commit 6b14852a6a3750e1d5c1bf7d461a5338ef535cbb
 Author: David Engel <dengel@mythtv.org>
 Date:   Thu Mar 6 15:50:52 2014 -0600

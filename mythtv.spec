@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27-178-g6b14852
+%define vers_string v0.27-222-g583f448
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -77,9 +77,9 @@ Group:          Applications/Multimedia
 # Version/Release info
 Version:        0.27
 %if "%{branch}" == "master"
-Release:        0.2.git.%{_gitrev}%{?dist}
+Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        6%{?dist}
+Release:        7%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -143,6 +143,8 @@ Patch1:    mythtv-0.26.0-types_h.patch
 # http://code.mythtv.org/trac/ticket/11338
 # Offset required for 0.27, patch was for 0.26.1
 Patch2:    mythtv-0.27-libcec2.patch
+# Patch to fix ffmpeg build for arm.
+Patch3:    mythtv-0.27-ffmpeg.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -176,7 +178,6 @@ Requires(postun): initscripts
 BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  libpng-devel
-BuildRequires:  bzip2-devel
 BuildRequires:  gcc-c++
 %if 0%{?fedora} >= 19
 BuildRequires:  mariadb-devel >= 5
@@ -845,6 +846,7 @@ on demand content.
 %patch0 -p1 -b .mythtv
 %patch1 -p1 -b .types_h
 %patch2 -p1 -b .libcec2
+%patch3 -p1 -b .ffmpeg
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -1473,6 +1475,9 @@ fi
 
 
 %changelog
+* Wed May  7 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27-7
+- Update to latest fixes, v0.27-222-g583f448.
+
 * Sat Mar 22 2014 Sérgio Basto <sergio@serjux.com> - 0.27-6
 - Rebuilt for x264 and add BR: bzip2-devel
 
