@@ -224,8 +224,6 @@ BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
 BuildRequires:  libdca-devel
-BuildRequires:  libdvdnav-devel
-BuildRequires:  libdvdread-devel >= 0.9.4
 BuildRequires:  libcdio-devel libcdio-paranoia-devel
 # nb: libdvdcss will be dynamically loaded if installed
 #BuildRequires:  libfame-devel >= 0.9.0
@@ -904,21 +902,9 @@ pushd mythtv
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
     --disable-mythlogserver                     \
-    --enable-pthreads                           \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
-    --enable-audio-alsa                         \
-    --enable-audio-oss                          \
-    --enable-audio-jack                         \
-    --enable-libfftw3                           \
-    --enable-x11 --x11-path=%{_includedir}      \
-    --enable-xv                                 \
-    --enable-opengl-video                       \
-    --enable-xrandr                             \
-    --enable-lirc                               \
-    --enable-ivtv                               \
-    --enable-firewire                           \
-    --enable-dvb                                \
+    --x11-path=%{_includedir}      \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
@@ -949,8 +935,8 @@ pushd mythtv
     --extra-cflags="%{optflags} -maltivec -fomit-frame-pointer" \
     --extra-cxxflags="%{optflags} -maltivec -fomit-frame-pointer" \
 %else
-    --extra-cflags="%{optflags} -fomit-frame-pointer" \
-    --extra-cxxflags="%{optflags} -fomit-frame-pointer" \
+    --extra-cflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
+    --extra-cxxflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
 %endif
 %ifarch %{ix86}
     --cpu=i686 --tune=i686 --enable-mmx \
