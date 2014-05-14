@@ -17,12 +17,14 @@
  mythplugins/mythmusic/mythmusic/goom/mythgoom.cpp  |    33 +-
  mythplugins/mythmusic/mythmusic/importmusic.cpp    |     4 +-
  mythplugins/mythmusic/mythmusic/musiccommon.cpp    |   102 +-
- mythplugins/mythmusic/mythmusic/musicplayer.cpp    |    94 +-
- mythplugins/mythmusic/mythmusic/musicplayer.h      |     3 +-
+ mythplugins/mythmusic/mythmusic/musicplayer.cpp    |   101 +-
+ mythplugins/mythmusic/mythmusic/musicplayer.h      |     4 +-
+ mythplugins/mythmusic/mythmusic/playersettings.cpp |     1 +
  mythplugins/mythmusic/mythmusic/playlist.cpp       |     2 +-
- .../mythmusic/mythmusic/playlisteditorview.cpp     |    16 +-
+ .../mythmusic/mythmusic/playlisteditorview.cpp     |    19 +-
  mythplugins/mythmusic/mythmusic/searchview.cpp     |    15 +-
  mythplugins/mythmusic/mythmusic/shoutcast.cpp      |     4 +-
+ mythplugins/mythmusic/mythmusic/smartplaylist.cpp  |     4 +-
  mythplugins/mythmusic/mythmusic/streamview.cpp     |     7 +-
  .../mythmusic/mythmusic/visualizationsettings.cpp  |     4 +-
  mythplugins/mythnetvision/i18n/mythnetvision_sv.qm |   Bin 11838 -> 14109 bytes
@@ -56,6 +58,7 @@
  mythtv/bindings/python/MythTV/tmdb/tmdb_api.py     |  1317 -
  .../bindings/python/MythTV/tmdb/tmdb_exceptions.py |    45 -
  mythtv/bindings/python/MythTV/tmdb/tmdb_ui.py      |   266 -
+ .../python/MythTV/wikiscripts/wikiscripts.py       |     2 +-
  mythtv/bindings/python/scripts/mythpython          |     4 +-
  mythtv/bindings/python/setup.py                    |     6 +-
  mythtv/bindings/python/tmdb3/README                |    86 +-
@@ -80,10 +83,14 @@
  mythtv/i18n/mythfrontend_sv.qm                     |   Bin 630266 -> 670910 bytes
  mythtv/i18n/mythfrontend_sv.ts                     | 28897 ++++++++++---------
  mythtv/libs/libmyth/libmyth.pro                    |     6 +-
- mythtv/libs/libmyth/programinfo.cpp                |   283 +-
+ mythtv/libs/libmyth/mythconfiggroups.cpp           |     1 -
+ mythtv/libs/libmyth/mythconfiggroups.h             |     2 +-
+ mythtv/libs/libmyth/programinfo.cpp                |   295 +-
  mythtv/libs/libmyth/programinfo.h                  |    17 +
  mythtv/libs/libmyth/programtypes.h                 |     2 +-
  mythtv/libs/libmyth/remoteutil.h                   |     2 +
+ mythtv/libs/libmythbase/bonjourregister.cpp        |    40 +
+ mythtv/libs/libmythbase/bonjourregister.h          |     4 +
  mythtv/libs/libmythbase/housekeeper.cpp            |    22 +-
  mythtv/libs/libmythbase/housekeeper.h              |     2 +
  mythtv/libs/libmythbase/libmythbase.pro            |     6 +-
@@ -103,23 +110,26 @@
  mythtv/libs/libmythbase/threadedfilewriter.cpp     |    72 +-
  mythtv/libs/libmythbase/threadedfilewriter.h       |     1 +
  mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c           |     1 +
- mythtv/libs/libmythmetadata/metadatacommon.cpp     |    23 +-
+ mythtv/libs/libmythmetadata/metadatacommon.cpp     |    29 +-
  mythtv/libs/libmythmetadata/metadatafactory.cpp    |     6 +-
  mythtv/libs/libmythmetadata/metaio.cpp             |     8 +
  mythtv/libs/libmythmetadata/metaio.h               |     2 +
  mythtv/libs/libmythmetadata/metaioavfcomment.cpp   |     2 -
  mythtv/libs/libmythmetadata/metaioid3.cpp          |    15 +-
- .../libs/libmythtv/AirPlay/mythairplayserver.cpp   |    14 +-
+ .../libs/libmythtv/AirPlay/mythairplayserver.cpp   |   151 +-
+ mythtv/libs/libmythtv/AirPlay/mythairplayserver.h  |    25 +-
  mythtv/libs/libmythtv/AirPlay/mythraopdevice.cpp   |     3 +-
  mythtv/libs/libmythtv/DVD/dvdringbuffer.cpp        |     5 +-
  mythtv/libs/libmythtv/cardutil.cpp                 |    22 +
  mythtv/libs/libmythtv/cardutil.h                   |     8 +
  mythtv/libs/libmythtv/dbcheck.cpp                  |     6 +-
+ mythtv/libs/libmythtv/eitcache.cpp                 |    60 +-
+ mythtv/libs/libmythtv/eitcache.h                   |     2 +
  mythtv/libs/libmythtv/fileringbuffer.cpp           |    53 +-
- mythtv/libs/libmythtv/libmythtv.pro                |    14 +
+ mythtv/libs/libmythtv/libmythtv.pro                |    15 +-
  mythtv/libs/libmythtv/livetvchain.cpp              |   230 +-
  mythtv/libs/libmythtv/livetvchain.h                |     9 +-
- mythtv/libs/libmythtv/mpeg/H264Parser.cpp          |     2 +-
+ mythtv/libs/libmythtv/mpeg/H264Parser.cpp          |     6 +-
  mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp      |     2 +-
  mythtv/libs/libmythtv/mythplayer.cpp               |    97 +-
  mythtv/libs/libmythtv/mythplayer.h                 |     4 +
@@ -154,7 +164,7 @@
  mythtv/libs/libmythtv/recorders/streamhandler.h    |     1 +
  mythtv/libs/libmythtv/recordinginfo.cpp            |   143 +-
  mythtv/libs/libmythtv/ringbuffer.cpp               |    82 +-
- mythtv/libs/libmythtv/tv_play.cpp                  |    84 +-
+ mythtv/libs/libmythtv/tv_play.cpp                  |    86 +-
  mythtv/libs/libmythtv/tv_play.h                    |     1 +
  mythtv/libs/libmythtv/tv_rec.cpp                   |    69 +-
  mythtv/libs/libmythtv/tv_rec.h                     |     1 +
@@ -162,13 +172,21 @@
  mythtv/libs/libmythtv/videooutbase.cpp             |     2 +-
  mythtv/libs/libmythtv/videosource.cpp              |     2 +-
  mythtv/libs/libmythtv/vsync.cpp                    |     8 +-
+ mythtv/libs/libmythui/AppleRemote.cpp              |    10 +
  mythtv/libs/libmythui/mythgesture.cpp              |     1 +
+ mythtv/libs/libmythui/mythmainwindow.cpp           |    57 +-
+ mythtv/libs/libmythui/mythnotificationcenter.cpp   |     1 +
  mythtv/libs/libmythui/mythpainter.cpp              |     1 +
+ mythtv/libs/libmythui/mythrender_opengl.cpp        |     2 +
  mythtv/libs/libmythui/mythuibuttonlist.cpp         |     8 +-
  mythtv/libs/libmythupnp/httprequest.cpp            |     3 +-
  mythtv/libs/libmythupnp/mmulticastsocketdevice.h   |     4 +
+ mythtv/libs/libmythupnp/upnpcds.cpp                |    28 +-
  mythtv/programs/mythbackend/backendhousekeeper.cpp |    52 +-
  mythtv/programs/mythbackend/backendhousekeeper.h   |     1 +
+ mythtv/programs/mythbackend/encoderlink.cpp        |   117 +-
+ mythtv/programs/mythbackend/encoderlink.h          |     9 +-
+ mythtv/programs/mythbackend/main.cpp               |    13 +
  mythtv/programs/mythbackend/mainserver.cpp         |    47 +-
  mythtv/programs/mythbackend/mainserver.h           |     2 +-
  mythtv/programs/mythbackend/playbacksock.cpp       |     6 +-
@@ -181,12 +199,16 @@
  mythtv/programs/mythfilldatabase/filldata.cpp      |    81 +-
  mythtv/programs/mythfilldatabase/filldata.h        |     7 +-
  mythtv/programs/mythfilldatabase/main.cpp          |    12 +-
+ mythtv/programs/mythfilldatabase/xmltvparser.cpp   |     8 +-
+ mythtv/programs/mythfrontend/globalsettings.cpp    |    26 +-
  mythtv/programs/mythfrontend/grabbersettings.cpp   |     3 +-
  mythtv/programs/mythfrontend/guidegrid.cpp         |   450 +-
  mythtv/programs/mythfrontend/guidegrid.h           |    50 +-
+ mythtv/programs/mythfrontend/main.cpp              |    17 +-
  mythtv/programs/mythfrontend/scheduleeditor.cpp    |    18 +-
  mythtv/programs/mythfrontend/videolist.cpp         |     7 +-
  mythtv/programs/mythfrontend/viewscheduled.cpp     |     4 +-
+ .../programs/mythtranscode/commandlineparser.cpp   |     3 +-
  mythtv/programs/mythtranscode/main.cpp             |     3 +-
  mythtv/programs/mythtranscode/mpeg2fix.cpp         |     2 +
  mythtv/programs/mythtranscode/transcode.cpp        |     7 +-
@@ -198,11 +220,13 @@
  mythtv/programs/mythwelcome/welcomedialog.cpp      |    30 +-
  .../distros/mythtv_data/data_mythtv.py             |    15 +-
  mythtv/programs/scripts/metadata/Movie/tmdb.py     |   647 -
- mythtv/programs/scripts/metadata/Movie/tmdb3.py    |    33 +-
+ mythtv/programs/scripts/metadata/Movie/tmdb3.py    |    30 +-
+ mythtv/settings.pro                                |     1 -
+ mythtv/themes/MythCenter-wide/music-base.xml       |     2 +
  mythtv/themes/MythCenter-wide/notification-ui.xml  |     2 +-
  mythtv/themes/MythCenter-wide/zoneminder-ui.xml    |   242 +-
  mythtv/themes/MythCenter/notification-ui.xml       |     2 +-
- 204 files changed, 25919 insertions(+), 19472 deletions(-)
+ 228 files changed, 26390 insertions(+), 19606 deletions(-)
 
 diff --git a/mythplugins/configure b/mythplugins/configure
 index bda1fbc..b9086ba 100755
@@ -8844,7 +8868,7 @@ index e75b5d3..2292d39 100644
              {
                  m_currentTrack = x;
 diff --git a/mythplugins/mythmusic/mythmusic/musicplayer.cpp b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
-index 5a0e414..2f23efb 100644
+index 5a0e414..3fa93a2 100644
 --- a/mythplugins/mythmusic/mythmusic/musicplayer.cpp
 +++ b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
 @@ -57,7 +57,6 @@ MusicPlayer::MusicPlayer(QObject *parent)
@@ -8855,7 +8879,16 @@ index 5a0e414..2f23efb 100644
      m_currentTrack = -1;
  
      m_currentTime = 0;
-@@ -408,7 +407,7 @@ void MusicPlayer::next(void)
+@@ -224,6 +223,8 @@ void MusicPlayer::loadSettings(void )
+     QString resumestring = gCoreContext->GetSetting("ResumeMode", "off");
+     if (resumestring.toLower() == "off")
+         m_resumeMode = RESUME_OFF;
++    else if (resumestring.toLower() == "first")
++        m_resumeMode = RESUME_FIRST;
+     else if (resumestring.toLower() == "track")
+         m_resumeMode = RESUME_TRACK;
+     else
+@@ -408,7 +409,7 @@ void MusicPlayer::next(void)
  {
      int currentTrack = m_currentTrack;
  
@@ -8864,7 +8897,7 @@ index 5a0e414..2f23efb 100644
          return;
  
      if (m_oneshotMetadata)
-@@ -419,7 +418,7 @@ void MusicPlayer::next(void)
+@@ -419,7 +420,7 @@ void MusicPlayer::next(void)
      else
          currentTrack++;
  
@@ -8873,7 +8906,7 @@ index 5a0e414..2f23efb 100644
      {
          if (m_repeatMode == REPEAT_ALL)
          {
-@@ -445,7 +444,7 @@ void MusicPlayer::previous(void)
+@@ -445,7 +446,7 @@ void MusicPlayer::previous(void)
  {
      int currentTrack = m_currentTrack;
  
@@ -8882,7 +8915,7 @@ index 5a0e414..2f23efb 100644
          return;
  
      if (m_oneshotMetadata)
-@@ -474,7 +473,7 @@ void MusicPlayer::previous(void)
+@@ -474,7 +475,7 @@ void MusicPlayer::previous(void)
  
  void MusicPlayer::nextAuto(void)
  {
@@ -8891,7 +8924,7 @@ index 5a0e414..2f23efb 100644
          return;
  
      if (m_oneshotMetadata)
-@@ -886,12 +885,10 @@ void MusicPlayer::loadPlaylist(void)
+@@ -886,12 +887,10 @@ void MusicPlayer::loadPlaylist(void)
  {
      if (m_playMode == PLAYMODE_RADIO)
      {
@@ -8905,7 +8938,7 @@ index 5a0e414..2f23efb 100644
                  bookmark = 0;
  
              m_currentTrack = bookmark;
-@@ -903,12 +900,10 @@ void MusicPlayer::loadPlaylist(void)
+@@ -903,12 +902,10 @@ void MusicPlayer::loadPlaylist(void)
      }
      else
      {
@@ -8919,7 +8952,7 @@ index 5a0e414..2f23efb 100644
                  bookmark = 0;
  
              m_currentTrack = bookmark;
-@@ -936,17 +931,20 @@ void MusicPlayer::loadStreamPlaylist(void)
+@@ -936,17 +933,20 @@ void MusicPlayer::loadStreamPlaylist(void)
  
  void MusicPlayer::moveTrackUpDown(bool moveUp, int whichTrack)
  {
@@ -8944,7 +8977,16 @@ index 5a0e414..2f23efb 100644
  }
  
  bool MusicPlayer::setCurrentTrackPos(int pos)
-@@ -998,12 +996,15 @@ void MusicPlayer::restorePosition(void)
+@@ -990,7 +990,7 @@ void MusicPlayer::restorePosition(void)
+     m_currentTrack = 0;
+     uint id = -1;
+ 
+-    if (gPlayer->getResumeMode() > MusicPlayer::RESUME_OFF)
++    if (gPlayer->getResumeMode() > MusicPlayer::RESUME_FIRST)
+     {
+         if (m_playMode == PLAYMODE_RADIO)
+             id = gCoreContext->GetNumSetting("MusicRadioBookmark", 0);
+@@ -998,18 +998,22 @@ void MusicPlayer::restorePosition(void)
              id = gCoreContext->GetNumSetting("MusicBookmark", 0);
      }
  
@@ -8964,7 +9006,15 @@ index 5a0e414..2f23efb 100644
          }
      }
  
-@@ -1046,7 +1047,7 @@ void MusicPlayer::showMiniPlayer(void)
+     if (getCurrentMetadata())
+     {
+-        play();
++        if (gPlayer->getResumeMode() > MusicPlayer::RESUME_OFF)
++            play();
+ 
+         if (gPlayer->getResumeMode() == MusicPlayer::RESUME_EXACT && m_playMode == PLAYMODE_TRACKS)
+             seek(gCoreContext->GetNumSetting("MusicBookmarkPosition", 0));
+@@ -1046,7 +1050,7 @@ void MusicPlayer::showMiniPlayer(void)
  /// change the current track to the given track
  void MusicPlayer::changeCurrentTrack(int trackNo)
  {
@@ -8973,7 +9023,7 @@ index 5a0e414..2f23efb 100644
          return;
  
      // check to see if we need to save the current tracks volatile  metadata (playcount, last played etc)
-@@ -1055,7 +1056,7 @@ void MusicPlayer::changeCurrentTrack(int trackNo)
+@@ -1055,7 +1059,7 @@ void MusicPlayer::changeCurrentTrack(int trackNo)
      m_currentTrack = trackNo;
  
      // sanity check the current track
@@ -8982,7 +9032,7 @@ index 5a0e414..2f23efb 100644
      {
          LOG(VB_GENERAL, LOG_ERR,
              QString("MusicPlayer: asked to set the current track to an invalid track no. %1")
-@@ -1071,10 +1072,10 @@ MusicMetadata *MusicPlayer::getCurrentMetadata(void)
+@@ -1071,10 +1075,10 @@ MusicMetadata *MusicPlayer::getCurrentMetadata(void)
      if (m_oneshotMetadata)
          return m_oneshotMetadata;
  
@@ -8995,7 +9045,7 @@ index 5a0e414..2f23efb 100644
  }
  
  /// get the metadata for the next track in the playlist
-@@ -1086,21 +1087,21 @@ MusicMetadata *MusicPlayer::getNextMetadata(void)
+@@ -1086,21 +1090,21 @@ MusicMetadata *MusicPlayer::getNextMetadata(void)
      if (m_oneshotMetadata)
          return getCurrentMetadata();
  
@@ -9021,7 +9071,7 @@ index 5a0e414..2f23efb 100644
          else
              return NULL;
      }
-@@ -1168,14 +1169,16 @@ void MusicPlayer::setShuffleMode(ShuffleMode mode)
+@@ -1168,14 +1172,16 @@ void MusicPlayer::setShuffleMode(ShuffleMode mode)
      if (m_playMode == PLAYMODE_TRACKS)
          m_shuffleMode = mode;
  
@@ -9042,7 +9092,7 @@ index 5a0e414..2f23efb 100644
              if (mdata && mdata->ID() == (MusicMetadata::IdType) curTrackID)
              {
                  m_currentTrack = x;
-@@ -1361,7 +1364,7 @@ void MusicPlayer::activePlaylistChanged(int trackID, bool deleted)
+@@ -1361,7 +1367,7 @@ void MusicPlayer::activePlaylistChanged(int trackID, bool deleted)
      }
  
      // if we don't have any tracks to play stop here
@@ -9051,7 +9101,7 @@ index 5a0e414..2f23efb 100644
      {
          m_currentTrack = -1;
          if (isPlaying())
-@@ -1374,9 +1377,9 @@ void MusicPlayer::activePlaylistChanged(int trackID, bool deleted)
+@@ -1374,9 +1380,9 @@ void MusicPlayer::activePlaylistChanged(int trackID, bool deleted)
      // make sure the current playing track is still valid
      if (isPlaying() && getDecoderHandler())
      {
@@ -9063,7 +9113,7 @@ index 5a0e414..2f23efb 100644
              {
                  trackPos = x;
                  break;
-@@ -1493,17 +1496,34 @@ void MusicPlayer::removeTrack(int trackID)
+@@ -1493,17 +1499,34 @@ void MusicPlayer::removeTrack(int trackID)
      MusicMetadata *mdata = gMusicData->all_music->getMetadata(trackID);
      if (mdata)
      {
@@ -9102,7 +9152,7 @@ index 5a0e414..2f23efb 100644
  
  StreamList  *MusicPlayer::getStreamList(void) 
 diff --git a/mythplugins/mythmusic/mythmusic/musicplayer.h b/mythplugins/mythmusic/mythmusic/musicplayer.h
-index 4a57e8b..8f6bb5c 100644
+index 4a57e8b..df6bd5c 100644
 --- a/mythplugins/mythmusic/mythmusic/musicplayer.h
 +++ b/mythplugins/mythmusic/mythmusic/musicplayer.h
 @@ -113,7 +113,7 @@ class MusicPlayer : public QObject, public MythObservable
@@ -9114,7 +9164,15 @@ index 4a57e8b..8f6bb5c 100644
      StreamList  *getStreamList(void);
  
      // these add and remove tracks from the active playlist
-@@ -198,7 +198,6 @@ class MusicPlayer : public QObject, public MythObservable
+@@ -163,6 +163,7 @@ class MusicPlayer : public QObject, public MythObservable
+ 
+     enum ResumeMode
+     { RESUME_OFF,
++      RESUME_FIRST,
+       RESUME_TRACK,
+       RESUME_EXACT,
+       MAX_RESUME_MODES
+@@ -198,7 +199,6 @@ class MusicPlayer : public QObject, public MythObservable
      void setupDecoderHandler(void);
      void decoderHandlerReady(void);
  
@@ -9122,6 +9180,18 @@ index 4a57e8b..8f6bb5c 100644
      int          m_currentTrack;
      int          m_currentTime;
  
+diff --git a/mythplugins/mythmusic/mythmusic/playersettings.cpp b/mythplugins/mythmusic/mythmusic/playersettings.cpp
+index 8b7032d..2f8bc63 100644
+--- a/mythplugins/mythmusic/mythmusic/playersettings.cpp
++++ b/mythplugins/mythmusic/mythmusic/playersettings.cpp
+@@ -44,6 +44,7 @@ bool PlayerSettings::Create()
+     }
+ 
+     new MythUIButtonListItem(m_resumeMode, tr("Off"), qVariantFromValue(QString("off")));
++    new MythUIButtonListItem(m_resumeMode, tr("First"), qVariantFromValue(QString("first")));
+     new MythUIButtonListItem(m_resumeMode, tr("Track"), qVariantFromValue(QString("track")));
+     new MythUIButtonListItem(m_resumeMode, tr("Exact"), qVariantFromValue(QString("exact")));
+     m_resumeMode->SetValueByData(gCoreContext->GetSetting("ResumeMode"));
 diff --git a/mythplugins/mythmusic/mythmusic/playlist.cpp b/mythplugins/mythmusic/mythmusic/playlist.cpp
 index ac2a4d3..4f36b58 100644
 --- a/mythplugins/mythmusic/mythmusic/playlist.cpp
@@ -9136,10 +9206,20 @@ index ac2a4d3..4f36b58 100644
      else
          shuffleTracks(MusicPlayer::SHUFFLE_OFF);
 diff --git a/mythplugins/mythmusic/mythmusic/playlisteditorview.cpp b/mythplugins/mythmusic/mythmusic/playlisteditorview.cpp
-index ce944c5..868628d 100644
+index ce944c5..2cb2a6d 100644
 --- a/mythplugins/mythmusic/mythmusic/playlisteditorview.cpp
 +++ b/mythplugins/mythmusic/mythmusic/playlisteditorview.cpp
-@@ -780,12 +780,12 @@ void PlaylistEditorView::treeItemClicked(MythUIButtonListItem *item)
+@@ -542,7 +542,8 @@ void PlaylistEditorView::updateSonglist(MusicGenericTree *node)
+         MusicGenericTree *allTracksNode = dynamic_cast<MusicGenericTree*>(node->getChildAt(0));
+         if (allTracksNode)
+         {
+-            filterTracks(allTracksNode);
++            if (allTracksNode->childCount() == 0)
++                filterTracks(allTracksNode);
+ 
+             for (int x = 0; x < allTracksNode->childCount(); x++)
+             {
+@@ -780,12 +781,12 @@ void PlaylistEditorView::treeItemClicked(MythUIButtonListItem *item)
      MythGenericTree *node = qVariantValue<MythGenericTree*> (item->GetData());
      MusicGenericTree *mnode = dynamic_cast<MusicGenericTree*>(node);
  
@@ -9154,7 +9234,7 @@ index ce944c5..868628d 100644
          {
              // remove track from the current playlist
              gPlayer->removeTrack(mnode->getInt());
-@@ -1009,7 +1009,7 @@ void PlaylistEditorView::filterTracks(MusicGenericTree *node)
+@@ -1009,7 +1010,7 @@ void PlaylistEditorView::filterTracks(MusicGenericTree *node)
              MusicGenericTree *newnode = new MusicGenericTree(node, i.key(), "trackid");
              newnode->setInt(i.value());
              newnode->setDrawArrow(false);
@@ -9163,7 +9243,7 @@ index ce944c5..868628d 100644
              newnode->setCheck( hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
              ++i;
          }
-@@ -1288,7 +1288,7 @@ void PlaylistEditorView::filterTracks(MusicGenericTree *node)
+@@ -1288,7 +1289,7 @@ void PlaylistEditorView::filterTracks(MusicGenericTree *node)
                  MusicGenericTree *newnode = new MusicGenericTree(node, i.key().mid(7), "trackid");
                  newnode->setInt(i.value()->at(0)->ID());
                  newnode->setDrawArrow(false);
@@ -9172,7 +9252,7 @@ index ce944c5..868628d 100644
                  newnode->setCheck( hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
              }
              ++i;
-@@ -1544,7 +1544,7 @@ void PlaylistEditorView::getSmartPlaylistTracks(MusicGenericTree *node, int play
+@@ -1544,7 +1545,7 @@ void PlaylistEditorView::getSmartPlaylistTracks(MusicGenericTree *node, int play
                  new MusicGenericTree(node, query.value(1).toString(), "trackid");
          newnode->setInt(query.value(0).toInt());
          newnode->setDrawArrow(false);
@@ -9181,7 +9261,7 @@ index ce944c5..868628d 100644
          newnode->setCheck( hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
      }
  
-@@ -1581,7 +1581,7 @@ void PlaylistEditorView::getCDTracks(MusicGenericTree *node)
+@@ -1581,7 +1582,7 @@ void PlaylistEditorView::getCDTracks(MusicGenericTree *node)
          MusicGenericTree *newnode = new MusicGenericTree(node, title, "trackid");
          newnode->setInt(mdata->ID());
          newnode->setDrawArrow(false);
@@ -9190,7 +9270,7 @@ index ce944c5..868628d 100644
          newnode->setCheck(hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
      }
  }
-@@ -1599,7 +1599,7 @@ void PlaylistEditorView::getPlaylistTracks(MusicGenericTree *node, int playlistI
+@@ -1599,7 +1600,7 @@ void PlaylistEditorView::getPlaylistTracks(MusicGenericTree *node, int playlistI
              MusicGenericTree *newnode = new MusicGenericTree(node, mdata->Title(), "trackid");
              newnode->setInt(mdata->ID());
              newnode->setDrawArrow(false);
@@ -9199,7 +9279,7 @@ index ce944c5..868628d 100644
              newnode->setCheck(hasTrack ? MythUIButtonListItem::FullChecked : MythUIButtonListItem::NotChecked);
          }
      }
-@@ -1627,7 +1627,7 @@ void PlaylistEditorView::updateSelectedTracks(MusicGenericTree *node)
+@@ -1627,7 +1628,7 @@ void PlaylistEditorView::updateSelectedTracks(MusicGenericTree *node)
          {
              if (mnode->getAction() == "trackid")
              {
@@ -9281,6 +9361,24 @@ index 9d7f3b5..5cdb56a 100644
          m_started = true;
      }
  
+diff --git a/mythplugins/mythmusic/mythmusic/smartplaylist.cpp b/mythplugins/mythmusic/mythmusic/smartplaylist.cpp
+index d735aea..de952e8 100644
+--- a/mythplugins/mythmusic/mythmusic/smartplaylist.cpp
++++ b/mythplugins/mythmusic/mythmusic/smartplaylist.cpp
+@@ -200,11 +200,11 @@ QString getCriteriaSQL(QString fieldName, QString operatorName,
+     }
+     else if (Operator->name == "starts with")
+     {
+-        result = result + " LIKE " + formattedFieldValue(QString("%") + value1);
++        result = result + " LIKE " + formattedFieldValue(value1 + QString("%"));
+     }
+     else if (Operator->name == "ends with")
+     {
+-        result = result + " LIKE " + formattedFieldValue(value1 + "%");
++        result = result + " LIKE " + formattedFieldValue(QString("%") + value1);
+     }
+     else if (Operator->name == "contains")
+     {
 diff --git a/mythplugins/mythmusic/mythmusic/streamview.cpp b/mythplugins/mythmusic/mythmusic/streamview.cpp
 index 08568cb..46c001d 100644
 --- a/mythplugins/mythmusic/mythmusic/streamview.cpp
@@ -14704,6 +14802,19 @@ index 6ba5241..0000000
 -            #end try
 -        #end while not valid_input
 -	# end selectMovieOrPerson()
+diff --git a/mythtv/bindings/python/MythTV/wikiscripts/wikiscripts.py b/mythtv/bindings/python/MythTV/wikiscripts/wikiscripts.py
+index fab6744..4672f6f 100644
+--- a/mythtv/bindings/python/MythTV/wikiscripts/wikiscripts.py
++++ b/mythtv/bindings/python/MythTV/wikiscripts/wikiscripts.py
+@@ -43,7 +43,7 @@ class Script( object ):
+     _xp_info = lxml.etree.XPath("//span[@id='script-info']/text()")
+     _xp_names = lxml.etree.XPath("//div[@id='bodyContent']/div[@style='background: #EFEFEF; border: 1px dashed black; padding: 5px 5px 5px 5px;']/p/b/text()")
+     _xp_code = lxml.etree.XPath("//div[@id='bodyContent']/div[@style='background: #EFEFEF; border: 1px dashed black; padding: 5px 5px 5px 5px;']/pre/text()")
+-    _xp_cat = lxml.etree.XPath("//div[@id='mw-normal-catlinks']/span/a/text()")
++    _xp_cat = lxml.etree.XPath("//div[@id='mw-normal-catlinks']/ul/li/a/text()")
+ 
+     @classmethod
+     def getAll(cls, refresh=False):
 diff --git a/mythtv/bindings/python/scripts/mythpython b/mythtv/bindings/python/scripts/mythpython
 index dc8edf3..8e52e99 100755
 --- a/mythtv/bindings/python/scripts/mythpython
@@ -57613,8 +57724,33 @@ index 67aac57..9d2714b 100644
  
  # remove when everything is switched to mythui
  inc.files += virtualkeyboard_qt.h xmlparse.h
+diff --git a/mythtv/libs/libmyth/mythconfiggroups.cpp b/mythtv/libs/libmyth/mythconfiggroups.cpp
+index b5679df..042f87a 100644
+--- a/mythtv/libs/libmyth/mythconfiggroups.cpp
++++ b/mythtv/libs/libmyth/mythconfiggroups.cpp
+@@ -142,7 +142,6 @@ QWidget *VerticalConfigurationGroup::configWidget(
+         confgrp = cg;
+     } 
+ 
+-    QWidget *widget = NULL;
+     if (uselabel)
+     {
+         QGroupBox *groupbox = new QGroupBox(parent);
+diff --git a/mythtv/libs/libmyth/mythconfiggroups.h b/mythtv/libs/libmyth/mythconfiggroups.h
+index 52811a76..8f92446 100644
+--- a/mythtv/libs/libmyth/mythconfiggroups.h
++++ b/mythtv/libs/libmyth/mythconfiggroups.h
+@@ -93,7 +93,7 @@ class MPUBLIC VerticalConfigurationGroup : public ConfigurationGroup
+ 
+   private:
+     vector<QWidget*>    childwidget;
+-    QGroupBox          *widget;
++    QWidget            *widget;
+     ConfigurationGroup *confgrp;
+     QVBoxLayout        *layout;
+ };
 diff --git a/mythtv/libs/libmyth/programinfo.cpp b/mythtv/libs/libmyth/programinfo.cpp
-index 7fe0972..7c0bd46 100644
+index 7fe0972..abd183b 100644
 --- a/mythtv/libs/libmyth/programinfo.cpp
 +++ b/mythtv/libs/libmyth/programinfo.cpp
 @@ -520,8 +520,8 @@ ProgramInfo::ProgramInfo(
@@ -57646,7 +57782,36 @@ index 7fe0972..7c0bd46 100644
      }
  }
  
-@@ -3937,6 +3926,274 @@ int64_t ProgramInfo::QueryTotalFrames(void) const
+@@ -3890,11 +3879,17 @@ MarkTypes ProgramInfo::QueryAverageAspectRatio(void ) const
+                 "      recordedmarkup.type      >= :ASPECTSTART AND "
+                 "      recordedmarkup.type      <= :ASPECTEND "
+                 "GROUP BY recordedmarkup.type "
+-                "ORDER BY SUM( ( SELECT IFNULL(rm.mark, recordedmarkup.mark)"
++                "ORDER BY SUM( ( SELECT IFNULL(rm.mark, ( "
++                "                  SELECT MAX(rmmax.mark) "
++                "                  FROM recordedmarkup AS rmmax "
++                "                  WHERE rmmax.chanid    = recordedmarkup.chanid "
++                "                    AND rmmax.starttime = recordedmarkup.starttime "
++                "                ) ) "
+                 "                FROM recordedmarkup AS rm "
+                 "                WHERE rm.chanid    = recordedmarkup.chanid    AND "
+                 "                      rm.starttime = recordedmarkup.starttime AND "
+-                "                      rm.type      = recordedmarkup.type      AND "
++                "                      rm.type      >= :ASPECTSTART2           AND "
++                "                      rm.type      <= :ASPECTEND2             AND "
+                 "                      rm.mark      > recordedmarkup.mark "
+                 "                ORDER BY rm.mark ASC LIMIT 1 "
+                 "              ) - recordedmarkup.mark "
+@@ -3904,6 +3899,8 @@ MarkTypes ProgramInfo::QueryAverageAspectRatio(void ) const
+     query.bindValue(":STARTTIME", recstartts);
+     query.bindValue(":ASPECTSTART", MARK_ASPECT_4_3); // 11
+     query.bindValue(":ASPECTEND", MARK_ASPECT_CUSTOM); // 14
++    query.bindValue(":ASPECTSTART2", MARK_ASPECT_4_3); // 11
++    query.bindValue(":ASPECTEND2", MARK_ASPECT_CUSTOM); // 14
+ 
+     if (!query.exec())
+     {
+@@ -3937,6 +3934,274 @@ int64_t ProgramInfo::QueryTotalFrames(void) const
      return frames;
  }
  
@@ -57975,6 +58140,86 @@ index 7acff6a..4dc6a54 100644
  #include <QStringList>
  #include <QDateTime>
  
+diff --git a/mythtv/libs/libmythbase/bonjourregister.cpp b/mythtv/libs/libmythbase/bonjourregister.cpp
+index dd69969..1c87d4c 100644
+--- a/mythtv/libs/libmythbase/bonjourregister.cpp
++++ b/mythtv/libs/libmythbase/bonjourregister.cpp
+@@ -46,6 +46,7 @@ bool BonjourRegister::Register(uint16_t port, const QByteArray &type,
+     }
+ 
+     m_lock = new QMutexLocker(&g_lock);
++    m_data = txt;
+ 
+     uint16_t qport = qToBigEndian(port);
+     DNSServiceErrorType res =
+@@ -122,3 +123,42 @@ void BonjourRegister::BonjourCallback(DNSServiceRef ref, DNSServiceFlags flags,
+     }
+ }
+ 
++QByteArray BonjourRegister::RandomizeData(void)
++{
++    QByteArray data = m_data;
++    QByteArray rnd;
++
++    data.append(7);
++    data.append("_rnd=");
++    rnd.append((random() % 80) + 33);
++    data.append(rnd.toHex());
++
++    return data;
++}
++
++bool BonjourRegister::ReAnnounceService(void)
++{
++    if (!m_dnssref)
++    {
++        // nothing to refresh
++        return false;
++    }
++
++    QByteArray data = RandomizeData();
++
++    DNSServiceErrorType res =
++        DNSServiceUpdateRecord(m_dnssref,           /* DNSServiceRef sdRef */
++                               NULL,                /* DNSRecordRef RecordRef */
++                               0,                   /* DNSServiceFlags flags */
++                               data.size(),         /* uint16_t rdlen */
++                               (void*)data.data(),  /* const void *rdata */
++                               0);                  /* uint32_t ttl */
++
++    if (kDNSServiceErr_NoError != res)
++    {
++        LOG(VB_GENERAL, LOG_ERR, LOC +
++            QString("Error ReAnnounceService(%1): %2")
++            .arg(m_name.data()).arg(res));
++    }
++    return kDNSServiceErr_NoError != res;
++}
+diff --git a/mythtv/libs/libmythbase/bonjourregister.h b/mythtv/libs/libmythbase/bonjourregister.h
+index 65affe5..3af1b9f 100644
+--- a/mythtv/libs/libmythbase/bonjourregister.h
++++ b/mythtv/libs/libmythbase/bonjourregister.h
+@@ -17,6 +17,7 @@ class MBASE_PUBLIC BonjourRegister : public QObject
+ 
+     bool Register(uint16_t port, const QByteArray &type, const QByteArray &name,
+                   const QByteArray &txt);
++    bool ReAnnounceService(void);
+ 
+     QByteArray       m_name;
+     QByteArray       m_type;
+@@ -30,9 +31,12 @@ class MBASE_PUBLIC BonjourRegister : public QObject
+                                           DNSServiceErrorType errorcode,
+                                           const char *name, const char *type,
+                                           const char *domain, void *object);
++    QByteArray RandomizeData(void);
++
+     DNSServiceRef    m_dnssref;
+     QSocketNotifier *m_socket;
+     QMutexLocker    *m_lock;
+     static QMutex    g_lock;
++    QByteArray       m_data;
+ };
+ #endif
 diff --git a/mythtv/libs/libmythbase/housekeeper.cpp b/mythtv/libs/libmythbase/housekeeper.cpp
 index 53e4642..c7126ae 100644
 --- a/mythtv/libs/libmythbase/housekeeper.cpp
@@ -58572,7 +58817,7 @@ index ac20c5c..6bff6b3 100644
  #include <QDataStream>
  #include <QTextStream>
 diff --git a/mythtv/libs/libmythbase/mythversion.h b/mythtv/libs/libmythbase/mythversion.h
-index 52d12bf..39b4234 100644
+index 52d12bf..c3d4650 100644
 --- a/mythtv/libs/libmythbase/mythversion.h
 +++ b/mythtv/libs/libmythbase/mythversion.h
 @@ -12,7 +12,7 @@
@@ -58580,7 +58825,7 @@ index 52d12bf..39b4234 100644
  /// Including changes in the libmythbase, libmyth, libmythtv, libmythav* and
  /// libmythui class methods in exported headers.
 -#define MYTH_BINARY_VERSION "0.27.20130902-1"
-+#define MYTH_BINARY_VERSION "0.27.20140303-1"
++#define MYTH_BINARY_VERSION "0.27.20140323-1"
  
  /** \brief Increment this whenever the MythTV network protocol changes.
   *
@@ -58758,7 +59003,7 @@ index fee94fa..572cbde 100644
    (vm->state).pgN                = 0;
    (vm->state).cellN              = 0;
 diff --git a/mythtv/libs/libmythmetadata/metadatacommon.cpp b/mythtv/libs/libmythmetadata/metadatacommon.cpp
-index 2c320f5..9c9ae58 100644
+index 2c320f5..8a4c598 100644
 --- a/mythtv/libs/libmythmetadata/metadatacommon.cpp
 +++ b/mythtv/libs/libmythmetadata/metadatacommon.cpp
 @@ -393,14 +393,33 @@ MetadataLookup::~MetadataLookup()
@@ -58796,6 +59041,26 @@ index 2c320f5..9c9ae58 100644
 +
      return ret;
  }
+ 
+@@ -1406,9 +1425,8 @@ QString nearestName(const QString& actual, const QStringList& candidates)
+     QStringList::ConstIterator i = candidates.begin();
+     while ( i != candidates.end() )
+     {
+-        if ( (*i)[0] == actual[0] )
+-        {
+-            int delta = editDistance( actual, *i );
++            QString candidate = *i;
++            int delta = editDistance( actual.toLower(), candidate.toLower() );
+             if ( delta < deltaBest )
+             {
+                 deltaBest = delta;
+@@ -1419,7 +1437,6 @@ QString nearestName(const QString& actual, const QStringList& candidates)
+             {
+                 numBest++;
+             }
+-        }
+         ++i;
+     }
  
 diff --git a/mythtv/libs/libmythmetadata/metadatafactory.cpp b/mythtv/libs/libmythmetadata/metadatafactory.cpp
 index 2bda8a8..0109213 100644
@@ -58906,10 +59171,38 @@ index 38c743a..2a9d2e1 100644
  
      // TLEN - Ignored intentionally, some encoders write bad values
 diff --git a/mythtv/libs/libmythtv/AirPlay/mythairplayserver.cpp b/mythtv/libs/libmythtv/AirPlay/mythairplayserver.cpp
-index ab0f393..f6e1f15 100644
+index ab0f393..0a6c046 100644
 --- a/mythtv/libs/libmythtv/AirPlay/mythairplayserver.cpp
 +++ b/mythtv/libs/libmythtv/AirPlay/mythairplayserver.cpp
-@@ -48,7 +48,7 @@ QMutex*            MythAirplayServer::gMythAirplayServerMutex = new QMutex(QMute
+@@ -8,13 +8,13 @@
+ #include <QCoreApplication>
+ #include <QKeyEvent>
+ #include <QCryptographicHash>
++#include <QTimer>
+ 
+ #include "mthread.h"
+ #include "mythdate.h"
+ #include "mythlogging.h"
+ #include "mythcorecontext.h"
+ #include "mythuiactions.h"
+-#include "mythmainwindow.h"
+ #include "mythuistatetracker.h"
+ #include "plist.h"
+ #include "tv_play.h"
+@@ -33,6 +33,7 @@ QMutex*            MythAirplayServer::gMythAirplayServerMutex = new QMutex(QMute
+ #define HTTP_STATUS_SWITCHING_PROTOCOLS 101
+ #define HTTP_STATUS_NOT_IMPLEMENTED     501
+ #define HTTP_STATUS_UNAUTHORIZED        401
++#define HTTP_STATUS_NOT_FOUND           404
+ 
+ #define AIRPLAY_SERVER_VERSION_STR ""
+ #define SERVER_INFO  QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"\
+@@ -44,11 +45,11 @@ QMutex*            MythAirplayServer::gMythAirplayServerMutex = new QMutex(QMute
+ "<key>features</key>\r\n"\
+ "<integer>119</integer>\r\n"\
+ "<key>model</key>\r\n"\
+-"<string>AppleTV2,1</string>\r\n"\
++"<string>MythTV,1</string>\r\n"\
  "<key>protovers</key>\r\n"\
  "<string>1.0</string>\r\n"\
  "<key>srcvers</key>\r\n"\
@@ -58918,21 +59211,169 @@ index ab0f393..f6e1f15 100644
  "</dict>\r\n"\
  "</plist>\r\n")
  
-@@ -481,9 +481,11 @@ void MythAirplayServer::Start(void)
+@@ -391,7 +392,8 @@ void MythAirplayServer::Cleanup(void)
+ 
+ MythAirplayServer::MythAirplayServer()
+   : ServerPool(), m_name(QString("MythTV")), m_bonjour(NULL), m_valid(false),
+-    m_lock(new QMutex(QMutex::Recursive)), m_setupPort(5100), m_id(-1)
++    m_lock(new QMutex(QMutex::Recursive)), m_setupPort(5100),
++    m_serviceRefresh(NULL)
+ {
+ }
+ 
+@@ -399,11 +401,6 @@ MythAirplayServer::~MythAirplayServer()
+ {
+     delete m_lock;
+     m_lock = NULL;
+-    if (m_id > 0)
+-    {
+-        GetNotificationCenter()->UnRegister(this, m_id);
+-        m_id = -1;
+-    }
+ }
+ 
+ void MythAirplayServer::Teardown(void)
+@@ -413,6 +410,14 @@ void MythAirplayServer::Teardown(void)
+     // invalidate
+     m_valid = false;
+ 
++    // stop Bonjour Service Updater
++    if (m_serviceRefresh)
++    {
++        m_serviceRefresh->stop();
++        delete m_serviceRefresh;
++        m_serviceRefresh = NULL;
++    }
++
+     // disconnect from mDNS
+     delete m_bonjour;
+     m_bonjour = NULL;
+@@ -431,12 +436,6 @@ void MythAirplayServer::Teardown(void)
+         delete request;
+     }
+     m_incoming.clear();
+-
+-    if (m_id > 0)
+-    {
+-        GetNotificationCenter()->UnRegister(this, m_id);
+-        m_id = -1;
+-    }
+ }
+ 
+ void MythAirplayServer::Start(void)
+@@ -481,20 +480,35 @@ void MythAirplayServer::Start(void)
          QByteArray type = "_airplay._tcp";
          QByteArray txt;
          txt.append(26); txt.append("deviceid="); txt.append(GetMacAddress());
 -        txt.append(14); txt.append("features=0x23b");
+-        txt.append(16); txt.append("model=AppleTV2,1");
+-        txt.append(14); txt.append("srcvers=101.28");
 +        // supposed to be: 0: video, 1:Phone, 3: Volume Control, 4: HLS
 +        // 9: Audio, 10: ? (but important without it it fails) 11: Audio redundant
-+        txt.append(14); txt.append("features=0xE1B");
-         txt.append(16); txt.append("model=AppleTV2,1");
--        txt.append(14); txt.append("srcvers=101.28");
++        txt.append(13); txt.append("features=0x77");
++        txt.append(14); txt.append("model=MythTV,1");
 +        txt.append(13); txt.append("srcvers=115.2");
  
          if (!m_bonjour->Register(m_setupPort, type, name, txt))
          {
-@@ -901,10 +903,10 @@ void MythAirplayServer::HandleResponse(APHTTPRequest *req,
+             LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to register service.");
+             return;
+         }
++        if (!m_serviceRefresh)
++        {
++            m_serviceRefresh = new QTimer();
++            connect(m_serviceRefresh, SIGNAL(timeout()), this, SLOT(timeout()));
++        }
++        // Will force a Bonjour refresh in two seconds
++        m_serviceRefresh->start(2000);
+     }
+     m_valid = true;
+     return;
+ }
+ 
++void MythAirplayServer::timeout(void)
++{
++    m_bonjour->ReAnnounceService();
++    m_serviceRefresh->start(10000);
++}
++
+ void MythAirplayServer::Stop(void)
+ {
+     Teardown();
+@@ -558,12 +572,6 @@ void MythAirplayServer::deleteConnection(QTcpSocket *socket)
+             .arg(remove.data()));
+         m_connections.remove(remove);
+ 
+-        if (m_id > 0)
+-        {
+-            // close any photos that could be displayed
+-            GetNotificationCenter()->UnRegister(this, m_id);
+-            m_id = -1;
+-        }
+         MythNotification n(tr("Client disconnected"), tr("AirPlay"),
+                            tr("from %1").arg(socket->peerAddress().toString()));
+         // Don't show it during playback
+@@ -619,6 +627,7 @@ QByteArray MythAirplayServer::StatusToString(int status)
+         case HTTP_STATUS_SWITCHING_PROTOCOLS:   return "Switching Protocols";
+         case HTTP_STATUS_NOT_IMPLEMENTED:       return "Not Implemented";
+         case HTTP_STATUS_UNAUTHORIZED:          return "Unauthorized";
++        case HTTP_STATUS_NOT_FOUND:             return "Not Found";
+     }
+     return "";
+ }
+@@ -830,18 +839,23 @@ void MythAirplayServer::HandleResponse(APHTTPRequest *req,
+                 req->GetBody().size() > 3 && req->GetBody()[1] == 'P' &&
+                 req->GetBody()[2] == 'N' && req->GetBody()[3] == 'G';
+             LOG(VB_GENERAL, LOG_INFO, LOC +
+-                QString("Received %1 photo").arg(png ? "jpeg" : "png"));
++                QString("Received %1x%2 %3 photo")
++                .arg(image.width()).arg(image.height()).
++                arg(png ? "jpeg" : "png"));
+ 
+-            if (m_id < 0)
++            if (m_connections[session].notificationid < 0)
+             {
+-                m_id = GetNotificationCenter()->Register(this);
++                m_connections[session].notificationid =
++                    GetNotificationCenter()->Register(this);
+             }
+             // send full screen display notification
+             MythImageNotification n(MythNotification::New, image);
+-            n.SetId(m_id);
++            n.SetId(m_connections[session].notificationid);
+             n.SetParent(this);
+             n.SetFullScreen(true);
+             GetNotificationCenter()->Queue(n);
++            // This is a photo session
++            m_connections[session].photos = true;
+         }
+     }
+     else if (req->GetURI() == "/slideshow-features")
+@@ -853,6 +867,14 @@ void MythAirplayServer::HandleResponse(APHTTPRequest *req,
+     {
+         LOG(VB_GENERAL, LOG_INFO, LOC + "Ignoring authorize request.");
+     }
++    else if (req->GetURI() == "/setProperty")
++    {
++        status = HTTP_STATUS_NOT_FOUND;
++    }
++    else if (req->GetURI() == "/getProperty")
++    {
++        status = HTTP_STATUS_NOT_FOUND;
++    }  
+     else if (req->GetURI() == "/rate")
+     {
+         float rate = req->GetQueryValue("value").toFloat();
+@@ -873,6 +895,8 @@ void MythAirplayServer::HandleResponse(APHTTPRequest *req,
+                 UnpausePlayback();
+             }
+             SendReverseEvent(session, AP_EVENT_PLAYING);
++            // If there's any photos left displayed, hide them
++            HideAllPhotos();
+         }
+     }
+     else if (req->GetURI() == "/play")
+@@ -901,12 +925,20 @@ void MythAirplayServer::HandleResponse(APHTTPRequest *req,
  
          if (!file.isEmpty())
          {
@@ -58944,10 +59385,202 @@ index ab0f393..f6e1f15 100644
 -            m_connections[session].url = QUrl(file);
 +            m_connections[session].url = QUrl(m_pathname);
              m_connections[session].position = start_pos * duration;
-             SeekPosition(duration * start_pos);
+-            SeekPosition(duration * start_pos);
++            if (TV::IsTVRunning())
++            {
++                HideAllPhotos();
++            }
++            if (duration * start_pos >= .1)
++            {
++                // not point seeking so close to the beginning
++                SeekPosition(duration * start_pos);
++            }
          }
+ 
+         SendReverseEvent(session, AP_EVENT_PLAYING);
+@@ -1075,7 +1107,19 @@ QString MythAirplayServer::GetMacAddress()
+ 
+ void MythAirplayServer::StopSession(const QByteArray &session)
+ {
+-    m_connections[session].stopped = true;
++    AirplayConnection& cnx = m_connections[session];
++
++    if (cnx.photos)
++    {
++        if (cnx.notificationid > 0)
++        {
++            // close any photos that could be displayed
++            GetNotificationCenter()->UnRegister(this, cnx.notificationid, true);
++           cnx.notificationid = -1;
++        }
++        return;
++    }
++    cnx.stopped = true;
+     double position    = 0.0f;
+     double duration    = 0.0f;
+     float  playerspeed = 0.0f;
+@@ -1087,6 +1131,10 @@ void MythAirplayServer::StopSession(const QByteArray &session)
+         // not ours
+         return;
+     }
++    if (!playing)
++    {
++        return;
++    }
+     StopPlayback();
+ }
+ 
+@@ -1094,13 +1142,21 @@ void MythAirplayServer::DisconnectAllClients(const QByteArray &session)
+ {
+     QMutexLocker locker(m_lock);
+     QHash<QByteArray,AirplayConnection>::iterator it = m_connections.begin();
++    AirplayConnection& current_cnx = m_connections[session];
+ 
+     while (it != m_connections.end())
+     {
+         QTcpSocket *socket;
++        AirplayConnection& cnx = it.value();
+ 
+-        if (it.key() == session)
++        if (it.key() == session ||
++            (current_cnx.reverseSocket && cnx.reverseSocket &&
++             current_cnx.reverseSocket->peerAddress() == cnx.reverseSocket->peerAddress()) ||
++            (current_cnx.controlSocket && cnx.controlSocket &&
++             current_cnx.controlSocket->peerAddress() == cnx.controlSocket->peerAddress()))
+         {
++            // ignore if the connection is the currently active one or
++            // from the same IP address
+             ++it;
+             continue;
+         }
+@@ -1108,7 +1164,7 @@ void MythAirplayServer::DisconnectAllClients(const QByteArray &session)
+         {
+             StopSession(it.key());
+         }
+-        socket = it.value().reverseSocket;
++        socket = cnx.reverseSocket;
+         if (socket)
+         {
+             socket->disconnect();
+@@ -1121,7 +1177,7 @@ void MythAirplayServer::DisconnectAllClients(const QByteArray &session)
+                 m_incoming.remove(socket);
+             }
+         }
+-        socket = it.value().controlSocket;
++        socket = cnx.controlSocket;
+         if (socket)
+         {
+             socket->disconnect();
+@@ -1154,12 +1210,6 @@ void MythAirplayServer::StartPlayback(const QString &pathname)
+     gCoreContext->WaitUntilSignals(SIGNAL(TVPlaybackStarted()),
+                                    SIGNAL(TVPlaybackAborted()),
+                                    NULL);
+-    if (TV::IsTVRunning() && m_id > 0)
+-    {
+-        // playback has started, dismiss the photo is we were showing one
+-        GetNotificationCenter()->UnRegister(this, m_id);
+-        m_id = -1;
+-    }
+     LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
+         QString("ACTION_HANDLEMEDIA completed"));
+ }
+@@ -1267,3 +1317,20 @@ void MythAirplayServer::UnpausePlayback(void)
+             QString("Playback not running, nothing to unpause"));
+     }
+ }
++
++void MythAirplayServer::HideAllPhotos(void)
++{
++    // playback has started, dismiss any currently displayed photo
++    QHash<QByteArray,AirplayConnection>::iterator it = m_connections.begin();
++
++    while (it != m_connections.end())
++    {
++        AirplayConnection& cnx = it.value();
++
++        if (cnx.photos)
++        {
++            cnx.UnRegister();
++        }
++        ++it;
++    }
++}
+diff --git a/mythtv/libs/libmythtv/AirPlay/mythairplayserver.h b/mythtv/libs/libmythtv/AirPlay/mythairplayserver.h
+index 4ed2cba..532adc7 100644
+--- a/mythtv/libs/libmythtv/AirPlay/mythairplayserver.h
++++ b/mythtv/libs/libmythtv/AirPlay/mythairplayserver.h
+@@ -7,8 +7,10 @@
+ 
+ #include "serverpool.h"
+ #include "mythtvexp.h"
++#include "mythmainwindow.h"
+ 
+ class QMutex;
++class QTimer;
+ class MThread;
+ class BonjourRegister;
+ 
+@@ -36,8 +38,20 @@ class AirplayConnection
+       : controlSocket(NULL), reverseSocket(NULL), speed(1.0f),
+         position(0.0f), initial_position(-1.0f), url(QUrl()),
+         lastEvent(AP_EVENT_NONE), stopped(false), was_playing(false),
+-        initialized(false)
++        initialized(false), photos(false), notificationid(-1)
+     { }
++    ~AirplayConnection()
++    {
++        UnRegister();
++    }
++    void UnRegister(void)
++    {
++        if (notificationid > 0)
++        {
++            GetNotificationCenter()->UnRegister(this, notificationid);
++            notificationid = -1;
++        }
++    }
+     QTcpSocket  *controlSocket;
+     QTcpSocket  *reverseSocket;
+     float        speed;
+@@ -48,6 +62,9 @@ class AirplayConnection
+     bool         stopped;
+     bool         was_playing;
+     bool         initialized;
++    bool         photos;
++    // Notification
++    int          notificationid;
+ };
+ 
+ class APHTTPRequest;
+@@ -70,6 +87,7 @@ class MTV_PUBLIC MythAirplayServer : public ServerPool
+     void newConnection(QTcpSocket *client);
+     void deleteConnection();
+     void read(void);
++    void timeout(void);
+ 
+   private:
+     virtual ~MythAirplayServer(void);
+@@ -94,6 +112,7 @@ class MTV_PUBLIC MythAirplayServer : public ServerPool
+     void SeekPosition(uint64_t position);
+     void PausePlayback(void);
+     void UnpausePlayback(void);
++    void HideAllPhotos(void);
+ 
+     // Globals
+     static MythAirplayServer *gMythAirplayServer;
+@@ -116,8 +135,8 @@ class MTV_PUBLIC MythAirplayServer : public ServerPool
+     //Incoming data
+     QHash<QTcpSocket*, APHTTPRequest*> m_incoming;
+ 
+-    // Notification
+-    int             m_id;
++    // Bonjour Service re-advertising
++    QTimer         *m_serviceRefresh;
+ };
+ 
+ #endif // MYTHAIRPLAYSERVER_H
 diff --git a/mythtv/libs/libmythtv/AirPlay/mythraopdevice.cpp b/mythtv/libs/libmythtv/AirPlay/mythraopdevice.cpp
-index 06047e0..76fa552 100644
+index 06047e0..49636ef 100644
 --- a/mythtv/libs/libmythtv/AirPlay/mythraopdevice.cpp
 +++ b/mythtv/libs/libmythtv/AirPlay/mythraopdevice.cpp
 @@ -189,8 +189,9 @@ bool MythRAOPDevice::RegisterForBonjour(void)
@@ -58957,7 +59590,7 @@ index 06047e0..76fa552 100644
 -    txt.append(9); txt.append("vs=130.14");
 +    txt.append(8); txt.append("vs=115.2");
      txt.append(7); txt.append("da=true");
-+//    txt.append(13); txt.append("am=AppleTV2,1");
++    txt.append(11); txt.append("am=MythTV,1");
  
      LOG(VB_GENERAL, LOG_INFO, QString("Registering service %1.%2 port %3 TXT %4")
          .arg(QString(name)).arg(QString(type)).arg(m_setupPort).arg(QString(txt)));
@@ -59053,6 +59686,184 @@ index fe65eda..77460fd 100644
              "WHERE recordid = recid",
              "DROP TABLE recordupdate",
          };
+diff --git a/mythtv/libs/libmythtv/eitcache.cpp b/mythtv/libs/libmythtv/eitcache.cpp
+index 79ec796..ffa95df 100644
+--- a/mythtv/libs/libmythtv/eitcache.cpp
++++ b/mythtv/libs/libmythtv/eitcache.cpp
+@@ -19,8 +19,8 @@
+ const uint EITCache::kVersionMax = 31;
+ 
+ EITCache::EITCache()
+-    : accessCnt(0), hitCnt(0),   tblChgCnt(0),   verChgCnt(0),
+-      entryCnt(0), pruneCnt(0), prunedHitCnt(0), wrongChannelHitCnt(0)
++    : accessCnt(0), hitCnt(0), tblChgCnt(0), verChgCnt(0), endChgCnt(0),
++      entryCnt(0), pruneCnt(0), prunedHitCnt(0), futureHitCnt(0), wrongChannelHitCnt(0)
+ {
+     // 24 hours ago
+     lastPruneTime = MythDate::current().toUTC().toTime_t() - 86400;
+@@ -37,9 +37,11 @@ void EITCache::ResetStatistics(void)
+     hitCnt    = 0;
+     tblChgCnt = 0;
+     verChgCnt = 0;
++    endChgCnt = 0;
+     entryCnt  = 0;
+     pruneCnt  = 0;
+     prunedHitCnt = 0;
++    futureHitCnt = 0;
+     wrongChannelHitCnt = 0;
+ }
+ 
+@@ -48,13 +50,13 @@ QString EITCache::GetStatistics(void) const
+     QMutexLocker locker(&eventMapLock);
+     return QString(
+         "EITCache::statistics: Accesses: %1, Hits: %2, "
+-        "Table Upgrades %3, New Versions: %4, Entries: %5 "
+-        "Pruned entries: %6, pruned Hits: %7 Discard channel Hit %8 "
+-        "Hit Ratio %9.")
+-        .arg(accessCnt).arg(hitCnt).arg(tblChgCnt).arg(verChgCnt)
+-        .arg(entryCnt).arg(pruneCnt).arg(prunedHitCnt)
++        "Table Upgrades %3, New Versions: %4, New Endtimes: %5, Entries: %6, "
++        "Pruned Entries: %7, Pruned Hits: %8, Future Hits: %9, Wrong Channel Hits %10, "
++        "Hit Ratio %11.")
++        .arg(accessCnt).arg(hitCnt).arg(tblChgCnt).arg(verChgCnt).arg(endChgCnt)
++        .arg(entryCnt).arg(pruneCnt).arg(prunedHitCnt).arg(futureHitCnt)
+         .arg(wrongChannelHitCnt)
+-        .arg((hitCnt+prunedHitCnt+wrongChannelHitCnt)/(double)accessCnt);
++        .arg((hitCnt+prunedHitCnt+futureHitCnt+wrongChannelHitCnt)/(double)accessCnt);
+ }
+ 
+ static inline uint64_t construct_sig(uint tableid, uint version,
+@@ -125,11 +127,12 @@ static void delete_in_db(uint endtime)
+     return;
+ }
+ 
++
+ #define EITDATA      0
+ #define CHANNEL_LOCK 1
+ #define STATISTIC    2
+ 
+-static bool lock_channel(uint chanid, uint lastPruneTime)
++static bool lock_channel(uint chanid, uint endtime)
+ {
+     int lock = 1;
+     MSqlQuery query(MSqlQuery::InitCon());
+@@ -142,7 +145,7 @@ static bool lock_channel(uint chanid, uint lastPruneTime)
+ 
+     query.prepare(qstr);
+     query.bindValue(":CHANID",   chanid);
+-    query.bindValue(":ENDTIME",  lastPruneTime);
++    query.bindValue(":ENDTIME",  endtime);
+     query.bindValue(":STATUS",   CHANNEL_LOCK);
+ 
+     if (!query.exec() || !query.isActive())
+@@ -235,7 +238,6 @@ event_map_t * EITCache::LoadChannel(uint chanid)
+     query.bindValue(":ENDTIME",  lastPruneTime);
+     query.bindValue(":STATUS",   EITDATA);
+ 
+-
+     if (!query.exec() || !query.isActive())
+     {
+         MythDB::DBError("Error loading eitcache", query);
+@@ -274,15 +276,25 @@ void EITCache::WriteChannelToDB(uint chanid)
+ 
+     uint size    = eventMap->size();
+     uint updated = 0;
++    uint removed = 0;
+ 
+     event_map_t::iterator it = eventMap->begin();
+     while (it != eventMap->end())
+     {
+-        if (modified(*it) && extract_endtime(*it) > lastPruneTime)
++        if (extract_endtime(*it) > lastPruneTime)
+         {
+-            replace_in_db(chanid, it.key(), *it);
+-            updated++;
+-            *it &= ~(uint64_t)0 >> 1; // mark as synced
++            if (modified(*it))
++            {
++                replace_in_db(chanid, it.key(), *it);
++                updated++;
++                *it &= ~(uint64_t)0 >> 1; // mark as synced
++            }
++        }
++        else
++        {
++            // Event is too old; remove from eit cache in memory
++            eventMap->remove(it.key());
++            removed++;
+         }
+         ++it;
+     }
+@@ -292,6 +304,11 @@ void EITCache::WriteChannelToDB(uint chanid)
+         LOG(VB_EIT, LOG_INFO, LOC + QString("Wrote %1 modified entries of %2 "
+                                       "for channel %3 to database.")
+                 .arg(updated).arg(size).arg(chanid));
++    if (removed)
++        LOG(VB_EIT, LOG_INFO, LOC + QString("Removed %1 old entries of %2 "
++                                      "for channel %3 from cache.")
++                .arg(removed).arg(size).arg(chanid));
++    pruneCnt += removed;
+ }
+ 
+ void EITCache::WriteToDB(void)
+@@ -306,8 +323,6 @@ void EITCache::WriteToDB(void)
+     }
+ }
+ 
+-
+-
+ bool EITCache::IsNewEIT(uint chanid,  uint tableid,   uint version,
+                         uint eventid, uint endtime)
+ {
+@@ -319,15 +334,19 @@ bool EITCache::IsNewEIT(uint chanid,  uint tableid,   uint version,
+         WriteToDB();
+     }
+ 
+-    // don't readd pruned entries
++    // don't re-add pruned entries
+     if (endtime < lastPruneTime)
+     {
+         prunedHitCnt++;
+         return false;
+     }
++
+     // validity check, reject events with endtime over 7 weeks in the future
+     if (endtime > lastPruneTime + 50 * 86400)
++    {
++        futureHitCnt++;
+         return false;
++    }
+ 
+     QMutexLocker locker(&eventMapLock);
+     if (!channelMap.contains(chanid))
+@@ -358,6 +377,11 @@ bool EITCache::IsNewEIT(uint chanid,  uint tableid,   uint version,
+             // EIT updated version on current table
+             verChgCnt++;
+         }
++        else if (extract_endtime(*it) != endtime)
++        {
++            // Endtime (starttime + duration) changed
++            endChgCnt++;
++        }
+         else
+         {
+             // EIT data previously seen
+diff --git a/mythtv/libs/libmythtv/eitcache.h b/mythtv/libs/libmythtv/eitcache.h
+index 330b9aa..3e3455f 100644
+--- a/mythtv/libs/libmythtv/eitcache.h
++++ b/mythtv/libs/libmythtv/eitcache.h
+@@ -49,9 +49,11 @@ class EITCache
+     uint        hitCnt;
+     uint        tblChgCnt;
+     uint        verChgCnt;
++    uint        endChgCnt;
+     uint        entryCnt;
+     uint        pruneCnt;
+     uint        prunedHitCnt;
++    uint        futureHitCnt;
+     uint        wrongChannelHitCnt;
+ 
+     static const uint kVersionMax;
 diff --git a/mythtv/libs/libmythtv/fileringbuffer.cpp b/mythtv/libs/libmythtv/fileringbuffer.cpp
 index 2548703..e1f3bcf 100644
 --- a/mythtv/libs/libmythtv/fileringbuffer.cpp
@@ -59141,7 +59952,7 @@ index 2548703..e1f3bcf 100644
              if (tot > 0)
                  break;
 diff --git a/mythtv/libs/libmythtv/libmythtv.pro b/mythtv/libs/libmythtv/libmythtv.pro
-index c74cbce..ae90dc2 100644
+index c74cbce..eb8564c 100644
 --- a/mythtv/libs/libmythtv/libmythtv.pro
 +++ b/mythtv/libs/libmythtv/libmythtv.pro
 @@ -31,6 +31,7 @@ DEPENDPATH  += ./recorders
@@ -59152,7 +59963,15 @@ index c74cbce..ae90dc2 100644
  DEPENDPATH  += ../libmythlivemedia/BasicUsageEnvironment/include
  DEPENDPATH  += ../libmythlivemedia/BasicUsageEnvironment
  DEPENDPATH  += ../libmythlivemedia/groupsock/include
-@@ -654,8 +655,21 @@ using_backend {
+@@ -49,7 +50,6 @@ INCLUDEPATH += $$DEPENDPATH
+ INCLUDEPATH += $$POSTINC
+ 
+ QMAKE_CXXFLAGS += $${FREETYPE_CFLAGS}
+-QMAKE_LFLAGS_SHLIB += $${FREETYPE_LIBS}
+ 
+ macx {
+     # Mac OS X Frameworks
+@@ -654,8 +654,21 @@ using_backend {
      HEADERS += recorders/hlsstreamhandler.h
      SOURCES += recorders/hlsstreamhandler.cpp
  
@@ -59530,7 +60349,7 @@ index b2dda7c..a44c385 100644
      QString m_id;
      QList<LiveTVChainEntry> m_chain;
 diff --git a/mythtv/libs/libmythtv/mpeg/H264Parser.cpp b/mythtv/libs/libmythtv/mpeg/H264Parser.cpp
-index 01a6fc9..d0eebde 100644
+index 01a6fc9..1afe472 100644
 --- a/mythtv/libs/libmythtv/mpeg/H264Parser.cpp
 +++ b/mythtv/libs/libmythtv/mpeg/H264Parser.cpp
 @@ -596,7 +596,7 @@ void H264Parser::processRBSP(bool rbsp_complete)
@@ -59542,6 +60361,18 @@ index 01a6fc9..d0eebde 100644
  
          on_frame = true;
          frame_start_offset = AU_offset;
+@@ -616,9 +616,9 @@ bool H264Parser::decode_Header(GetBitContext *gb)
+ {
+     is_keyframe = false;
+ 
+-    if (log2_max_frame_num == 0 || pic_order_present_flag == -1)
++    if (log2_max_frame_num == 0)
+     {
+-        /* SPS or PPS has not been parsed yet */
++        /* SPS has not been parsed yet */
+         return false;
+     }
+ 
 diff --git a/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp b/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
 index 9c6f127..e295975 100644
 --- a/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
@@ -63422,7 +64253,7 @@ index cbca8a6..1850d24
  {
      rwlock.lockForWrite();
 diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
-index 99d0c1f..5efb78e 100644
+index 99d0c1f..690a51f 100644
 --- a/mythtv/libs/libmythtv/tv_play.cpp
 +++ b/mythtv/libs/libmythtv/tv_play.cpp
 @@ -982,6 +982,7 @@ TV::TV(void)
@@ -63597,6 +64428,15 @@ index 99d0c1f..5efb78e 100644
              cardid  = ctx->GetCardID();
              excluded_cardids.push_back(cardid);
              InfoMap info;
+@@ -12167,7 +12221,7 @@ void TV::PlaybackMenuInit(const MenuBase &menu)
+ 
+     ctx->LockDeletePlayer(__FILE__, __LINE__);
+ 
+-    if (ctx->player)
++    if (ctx->player && ctx->player->GetVideoOutput())
+     {
+         for (int i = kTrackTypeUnknown ; i < kTrackTypeCount ; ++i)
+         {
 diff --git a/mythtv/libs/libmythtv/tv_play.h b/mythtv/libs/libmythtv/tv_play.h
 index c3bc859..8b110c1 100644
 --- a/mythtv/libs/libmythtv/tv_play.h
@@ -63836,6 +64676,29 @@ index 7c49379..a5c4edf 100644
  #ifdef __linux__
  #include <linux/rtc.h>
  #endif
+diff --git a/mythtv/libs/libmythui/AppleRemote.cpp b/mythtv/libs/libmythui/AppleRemote.cpp
+index ac84cb4..49c2903 100644
+--- a/mythtv/libs/libmythui/AppleRemote.cpp
++++ b/mythtv/libs/libmythui/AppleRemote.cpp
+@@ -58,8 +58,18 @@ AppleRemote * AppleRemote::Get()
+ AppleRemote::~AppleRemote()
+ {
+     stopListening();
++
+     if (mUsingNewAtv)
+         delete mCallbackTimer;
++
++    if (isRunning())
++    {
++        exit(0);
++    }
++    if (this == _instance)
++    {
++        _instance = 0;
++    }
+ }
+ 
+ bool AppleRemote::isListeningToRemote()
 diff --git a/mythtv/libs/libmythui/mythgesture.cpp b/mythtv/libs/libmythui/mythgesture.cpp
 index 37846e4..f020f1a 100644
 --- a/mythtv/libs/libmythui/mythgesture.cpp
@@ -63848,6 +64711,124 @@ index 37846e4..f020f1a 100644
  
  #include <QMutex>
  #include <QMap>
+diff --git a/mythtv/libs/libmythui/mythmainwindow.cpp b/mythtv/libs/libmythui/mythmainwindow.cpp
+index c11d6a0..c4794a0 100644
+--- a/mythtv/libs/libmythui/mythmainwindow.cpp
++++ b/mythtv/libs/libmythui/mythmainwindow.cpp
+@@ -264,6 +264,7 @@ class MythMainWindowPrivate
+ 
+     /* compatibility only, FIXME remove */
+     std::vector<QWidget *> widgetList;
++    QMap<QWidget *, bool> enabledWidgets;
+ 
+     QWidget *paintwin;
+ 
+@@ -480,7 +481,17 @@ MythMainWindow::MythMainWindow(const bool useDB)
+     d->appleRemote->setListener(d->appleRemoteListener);
+     d->appleRemote->startListening();
+     if (d->appleRemote->isListeningToRemote())
++    {
+         d->appleRemote->start();
++    }
++    else
++    {
++        // start listening failed, no remote receiver present
++        delete d->appleRemote;
++        delete d->appleRemoteListener;
++        d->appleRemote = NULL;
++        d->appleRemoteListener = NULL;
++    }
+ #endif
+ 
+ #ifdef USING_LIBCEC
+@@ -580,11 +591,7 @@ MythMainWindow::~MythMainWindow()
+ #endif
+ 
+ #ifdef USING_APPLEREMOTE
+-    // We don't delete this, just disable its plumbing. If we create another
+-    // MythMainWindow later, AppleRemote::get() will retrieve the instance.
+-    if (d->appleRemote->isRunning())
+-        d->appleRemote->stopListening();
+-
++    delete d->appleRemote;
+     delete d->appleRemoteListener;
+ #endif
+ 
+@@ -994,6 +1001,11 @@ void MythMainWindow::Init(QString forcedpainter)
+     setFixedSize(QSize(d->screenwidth, d->screenheight));
+ 
+     GetMythUI()->ThemeWidget(this);
++#ifdef Q_OS_MAC
++    // QPalette inheritance appears broken on mac, so there's no point setting the palette
++    // to the top widget each time. Instead we apply the default palette to the whole application
++    qApp->setPalette(palette());
++#endif
+     Show();
+ 
+     if (!GetMythDB()->GetNumSetting("HideMouseCursor", 0))
+@@ -1321,7 +1333,22 @@ void MythMainWindow::attach(QWidget *child)
+             .arg(::GetCurrentThreadId()));
+ #endif
+     if (currentWidget())
+-        currentWidget()->setEnabled(false);
++    {
++        // don't disable the current widget, instead we disable all its children
++        // on mac, disabling the current active widget entirely prevent keyboard to
++        // work on the newly opened widget.
++        QList<QWidget*> list = currentWidget()->findChildren<QWidget *>();
++
++        foreach(QWidget *w, list)
++        {
++            if (w->isEnabled())
++            {
++                w->setEnabled(false);
++                // mark it as previously enabled
++                d->enabledWidgets[w] = true;
++            }
++        }
++    }
+ 
+     d->widgetList.push_back(child);
+     child->winId();
+@@ -1345,9 +1372,25 @@ void MythMainWindow::detach(QWidget *child)
+     d->widgetList.erase(it);
+     QWidget *current = currentWidget();
+     if (!current)
++    {
+         current = this;
++        // We're be to the main window, enable it just in case
++        setEnabled(true);
++    }
++    else
++    {
++        QList<QWidget*> list = current->findChildren<QWidget *>();
+ 
+-    current->setEnabled(true);
++        foreach(QWidget *w, list)
++        {
++            if (d->enabledWidgets.contains(w))
++            {
++                w->setEnabled(true);
++                d->enabledWidgets.remove(w);
++            }
++        }
++    }
++    current->raise();
+     current->setFocus();
+     current->setMouseTracking(true);
+ 
+diff --git a/mythtv/libs/libmythui/mythnotificationcenter.cpp b/mythtv/libs/libmythui/mythnotificationcenter.cpp
+index 07d70db..fcd20dc 100644
+--- a/mythtv/libs/libmythui/mythnotificationcenter.cpp
++++ b/mythtv/libs/libmythui/mythnotificationcenter.cpp
+@@ -141,6 +141,7 @@ MythScreenType *MythNotificationScreenStack::GetTopScreen(void) const
+             // if for whatever reason it's not a notification on our screen
+             // it will be dropped as we don't know how it appears
+             top = s;
++            continue;
+         }
+         if (s->m_fullscreen)
+         {
 diff --git a/mythtv/libs/libmythui/mythpainter.cpp b/mythtv/libs/libmythui/mythpainter.cpp
 index c821a7b..29b063c 100644
 --- a/mythtv/libs/libmythui/mythpainter.cpp
@@ -63859,6 +64840,23 @@ index c821a7b..29b063c 100644
  
  // QT headers
  #include <QRect>
+diff --git a/mythtv/libs/libmythui/mythrender_opengl.cpp b/mythtv/libs/libmythui/mythrender_opengl.cpp
+index 1b3049a..e69fafc 100644
+--- a/mythtv/libs/libmythui/mythrender_opengl.cpp
++++ b/mythtv/libs/libmythui/mythrender_opengl.cpp
+@@ -801,10 +801,12 @@ void* MythRenderOpenGL::GetProcAddress(const QString &proc) const
+     void *result;
+     for (int i = 0; i < 4; i++)
+     {
++#ifdef USING_OPENGLES
+         result = reinterpret_cast<void*>(
+             QLibrary::resolve("libGLESv2", (proc + exts[i]).toLatin1().data()));
+         if (result)
+             break;
++#endif
+         result = reinterpret_cast<void*>(getProcAddress(proc + exts[i]));
+         if (result)
+             break;
 diff --git a/mythtv/libs/libmythui/mythuibuttonlist.cpp b/mythtv/libs/libmythui/mythuibuttonlist.cpp
 index 4f808bb..85a20c8 100644
 --- a/mythtv/libs/libmythui/mythuibuttonlist.cpp
@@ -63924,6 +64922,58 @@ index ad793f9..4bfdd62 100644
  #ifdef _WIN32
  # ifndef _MSC_VER
  #  include <ws2tcpip.h>
+diff --git a/mythtv/libs/libmythupnp/upnpcds.cpp b/mythtv/libs/libmythupnp/upnpcds.cpp
+index 3cb0eb1..a36ef52 100644
+--- a/mythtv/libs/libmythupnp/upnpcds.cpp
++++ b/mythtv/libs/libmythupnp/upnpcds.cpp
+@@ -296,17 +296,17 @@ void UPnpCDS::HandleBrowse( HTTPRequest *pRequest )
+     UPnpCDSRequest           request;
+ 
+     DetermineClient( pRequest, &request );
+-    request.m_sObjectId         = pRequest->m_mapParams[ "ObjectID"      ];
+-    request.m_sContainerID      = pRequest->m_mapParams[ "ContainerID"   ];
++    request.m_sObjectId         = pRequest->m_mapParams[ "objectid"      ];
++    request.m_sContainerID      = pRequest->m_mapParams[ "containerid"   ];
+     request.m_sParentId         = "0";
+     request.m_eBrowseFlag       =
+-        GetBrowseFlag( pRequest->m_mapParams[ "BrowseFlag"    ] );
+-    request.m_sFilter           = pRequest->m_mapParams[ "Filter"        ];
++        GetBrowseFlag( pRequest->m_mapParams[ "browseflag"    ] );
++    request.m_sFilter           = pRequest->m_mapParams[ "filter"        ];
+     request.m_nStartingIndex    =
+-        pRequest->m_mapParams[ "StartingIndex" ].toLong();
++        pRequest->m_mapParams[ "startingindex" ].toLong();
+     request.m_nRequestedCount   =
+-        pRequest->m_mapParams[ "RequestedCount"].toLong();
+-    request.m_sSortCriteria     = pRequest->m_mapParams[ "SortCriteria"  ];
++        pRequest->m_mapParams[ "requestedcount"].toLong();
++    request.m_sSortCriteria     = pRequest->m_mapParams[ "sortcriteria"  ];
+ 
+ #if 0
+     LOG(VB_UPNP, LOG_DEBUG, QString("UPnpCDS::ProcessRequest \n"
+@@ -493,15 +493,15 @@ void UPnpCDS::HandleSearch( HTTPRequest *pRequest )
+     QString       sResultXML;
+ 
+     DetermineClient( pRequest, &request );
+-    request.m_sObjectId         = pRequest->m_mapParams[ "ObjectID"      ];
+-    request.m_sContainerID      = pRequest->m_mapParams[ "ContainerID"   ];
+-    request.m_sFilter           = pRequest->m_mapParams[ "Filter"        ];
++    request.m_sObjectId         = pRequest->m_mapParams[ "objectid"      ];
++    request.m_sContainerID      = pRequest->m_mapParams[ "containerid"   ];
++    request.m_sFilter           = pRequest->m_mapParams[ "filter"        ];
+     request.m_nStartingIndex    =
+-        pRequest->m_mapParams[ "StartingIndex" ].toLong();
++        pRequest->m_mapParams[ "startingIndex" ].toLong();
+     request.m_nRequestedCount   =
+-        pRequest->m_mapParams[ "RequestedCount"].toLong();
+-    request.m_sSortCriteria     = pRequest->m_mapParams[ "SortCriteria"  ];
+-    request.m_sSearchCriteria   = pRequest->m_mapParams[ "SearchCriteria"];
++        pRequest->m_mapParams[ "requestedcount"].toLong();
++    request.m_sSortCriteria     = pRequest->m_mapParams[ "sortcriteria"  ];
++    request.m_sSearchCriteria   = pRequest->m_mapParams[ "searchcriteria"];
+ 
+     LOG(VB_UPNP, LOG_INFO,
+         QString("UPnpCDS::HandleSearch ObjectID=%1, ContainerId=%2")
 diff --git a/mythtv/programs/mythbackend/backendhousekeeper.cpp b/mythtv/programs/mythbackend/backendhousekeeper.cpp
 index e64477e..ac0e5d3 100644
 --- a/mythtv/programs/mythbackend/backendhousekeeper.cpp
@@ -64014,6 +65064,376 @@ index d24efae..12b2a46 100644
      virtual void Terminate(void);
    private:
      MythSystemLegacy *m_msMML;
+diff --git a/mythtv/programs/mythbackend/encoderlink.cpp b/mythtv/programs/mythbackend/encoderlink.cpp
+index ff8724d..feef450 100644
+--- a/mythtv/programs/mythbackend/encoderlink.cpp
++++ b/mythtv/programs/mythbackend/encoderlink.cpp
+@@ -15,6 +15,7 @@ using namespace std;
+ #include "storagegroup.h"
+ #include "backendutil.h"
+ #include "compat.h"
++#include "referencecounter.h"
+ 
+ #define LOC QString("EncoderLink(%1): ").arg(m_capturecardnum)
+ #define LOC_ERR QString("EncoderLink(%1) Error: ").arg(m_capturecardnum)
+@@ -50,8 +51,7 @@ EncoderLink::EncoderLink(int capturecardnum, PlaybackSock *lsock,
+     lastSleepTime   = MythDate::current();
+     lastWakeTime    = MythDate::current();
+ 
+-    if (sock)
+-        sock->IncrRef();
++    HasSockAndIncrRef();
+ }
+ 
+ /** \fn EncoderLink::EncoderLink(int, TVRec *)
+@@ -84,6 +84,34 @@ EncoderLink::~EncoderLink(void)
+     SetSocket(NULL);
+ }
+ 
++/** \fn Encoder::HasSockAndIncrRef()
++ *  \brief Atomicly checks if sock is not null and increases its refcount.
++ */
++bool EncoderLink::HasSockAndIncrRef()
++{
++    QMutexLocker locker(&sockLock);
++    if (sock)
++    {
++        sock->IncrRef();
++        return true;
++    }
++    return false;
++}
++
++/** \fn Encoder::HasSockAndDecrRef()
++ *  \brief Atomicly checks if sock is not null and decreases its refcount.
++ */
++bool EncoderLink::HasSockAndDecrRef()
++{
++    QMutexLocker locker(&sockLock);
++    if (sock)
++    {
++        sock->DecrRef();
++        return true;
++    }
++    return false;
++}
++
+ /** \fn EncoderLink::SetSocket(PlaybackSock *lsock)
+  *  \brief Used to set the socket for a non-local EncoderLink
+  *
+@@ -108,8 +136,7 @@ void EncoderLink::SetSocket(PlaybackSock *lsock)
+             SetSleepStatus(sStatus_Undefined);
+     }
+ 
+-    if (sock)
+-        sock->DecrRef();
++    HasSockAndDecrRef();
+     sock = lsock;
+ }
+ 
+@@ -132,8 +159,11 @@ bool EncoderLink::IsBusy(TunedInputInfo *busy_input, int time_buffer)
+     if (local)
+         return tv->IsBusy(busy_input, time_buffer);
+ 
+-    if (sock)
++    if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         return sock->IsBusy(m_capturecardnum, busy_input, time_buffer);
++    }
+ 
+     return false;
+ }
+@@ -174,8 +204,11 @@ TVState EncoderLink::GetState(void)
+ 
+     if (local)
+         retval = tv->GetState();
+-    else if (sock)
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         retval = (TVState)sock->GetEncoderState(m_capturecardnum);
++    }
+     else
+         LOG(VB_GENERAL, LOG_ERR, QString("Broken for card: %1")
+             .arg(m_capturecardnum));
+@@ -187,7 +220,7 @@ TVState EncoderLink::GetState(void)
+  *  \brief Returns the flag state of the recorder.
+  *  \sa TVRec::GetFlags(void) const, \ref recorder_subsystem
+  */
+-uint EncoderLink::GetFlags(void) const
++uint EncoderLink::GetFlags(void)
+ {
+     uint retval = 0;
+ 
+@@ -196,8 +229,11 @@ uint EncoderLink::GetFlags(void) const
+ 
+     if (local)
+         retval = tv->GetFlags();
+-    else if (sock)
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         retval = sock->GetEncoderState(m_capturecardnum);
++    }
+     else
+         LOG(VB_GENERAL, LOG_ERR, LOC + "GetFlags failed");
+ 
+@@ -244,8 +280,11 @@ bool EncoderLink::MatchesRecording(const ProgramInfo *rec)
+     }
+     else
+     {
+-        if (sock)
++        if (HasSockAndIncrRef())
++        {
++            ReferenceLocker rlocker(sock);
+             retval = sock->EncoderIsRecording(m_capturecardnum, rec);
++        }
+     }
+ 
+     return retval;
+@@ -264,8 +303,11 @@ void EncoderLink::RecordPending(const ProgramInfo *rec, int secsleft,
+ {
+     if (local)
+         tv->RecordPending(rec, secsleft, hasLater);
+-    else if (sock)
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         sock->RecordPending(m_capturecardnum, rec, secsleft, hasLater);
++    }
+ }
+ 
+ /** \fn EncoderLink::WouldConflict(const ProgramInfo*)
+@@ -287,8 +329,11 @@ bool EncoderLink::WouldConflict(const ProgramInfo *rec)
+ /// Checks if program is stored locally
+ bool EncoderLink::CheckFile(ProgramInfo *pginfo)
+ {
+-    if (sock)
++    if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         return sock->CheckFile(pginfo);
++    }
+ 
+     pginfo->SetPathname(GetPlaybackURL(pginfo));
+     return pginfo->IsLocal();
+@@ -301,8 +346,11 @@ bool EncoderLink::CheckFile(ProgramInfo *pginfo)
+  */
+ void EncoderLink::GetDiskSpace(QStringList &o_strlist)
+ {
+-    if (sock)
++    if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         sock->GetDiskSpace(o_strlist);
++    }
+ }
+ 
+ /** \fn EncoderLink::GetMaxBitrate()
+@@ -315,8 +363,11 @@ long long EncoderLink::GetMaxBitrate()
+ {
+     if (local)
+         return tv->GetMaxBitrate();
+-    else if (sock)
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         return sock->GetMaxBitrate(m_capturecardnum);
++    }
+ 
+     return -1;
+ }
+@@ -339,9 +390,12 @@ int EncoderLink::SetSignalMonitoringRate(int rate, int notifyFrontend)
+ {
+     if (local)
+         return tv->SetSignalMonitoringRate(rate, notifyFrontend);
+-    else if (sock)
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         return sock->SetSignalMonitoringRate(m_capturecardnum, rate,
+                                              notifyFrontend);
++    }
+     return -1;
+ }
+ 
+@@ -349,8 +403,9 @@ int EncoderLink::SetSignalMonitoringRate(int rate, int notifyFrontend)
+  */
+ bool EncoderLink::GoToSleep(void)
+ {
+-    if (IsLocal() || !sock)
++    if (IsLocal() || !HasSockAndIncrRef())
+         return false;
++    ReferenceLocker rlocker(sock);
+ 
+     lastSleepTime = MythDate::current();
+ 
+@@ -387,8 +442,11 @@ RecStatusType EncoderLink::StartRecording(const ProgramInfo *rec)
+ 
+     if (local)
+         retval = tv->StartRecording(rec);
+-    else if (sock)
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         retval = sock->StartRecording(m_capturecardnum, rec);
++    }
+     else
+         LOG(VB_GENERAL, LOG_ERR,
+             QString("Wanted to start recording on recorder %1,\n\t\t\t"
+@@ -411,8 +469,11 @@ RecStatusType EncoderLink::GetRecordingStatus(void)
+ 
+     if (local)
+         retval = tv->GetRecordingStatus();
+-    else if (sock)
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         retval = sock->GetRecordingStatus(m_capturecardnum);
++    }
+     else
+         LOG(VB_GENERAL, LOG_ERR,
+             QString("Wanted to get status on recorder %1,\n\t\t\t"
+@@ -441,8 +502,11 @@ ProgramInfo *EncoderLink::GetRecording(void)
+ 
+     if (local)
+         info = tv->GetRecording();
+-    else if (sock)
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         info = sock->GetRecording(m_capturecardnum);
++    }
+ 
+     return info;
+ }
+@@ -610,8 +674,11 @@ void EncoderLink::CancelNextRecording(bool cancel)
+ {
+     if (local)
+         tv->CancelNextRecording(cancel);
+-    else
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         sock->CancelNextRecording(m_capturecardnum, cancel);
++    }
+ }
+ 
+ /** \fn EncoderLink::SpawnLiveTV(LiveTVChain*, bool, QString)
+@@ -693,8 +760,11 @@ void EncoderLink::SetNextLiveTVDir(QString dir)
+ {
+     if (local)
+         tv->SetNextLiveTVDir(dir);
+-    else
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         sock->SetNextLiveTVDir(m_capturecardnum, dir);
++    }
+ }
+ 
+ /** \fn EncoderLink::GetFreeInputs(const vector<uint>&) const
+@@ -703,14 +773,17 @@ void EncoderLink::SetNextLiveTVDir(QString dir)
+  *  \sa TVRec::GetFreeInputs(const vector<uint>&) const
+  */
+ vector<InputInfo> EncoderLink::GetFreeInputs(
+-    const vector<uint> &excluded_cardids) const
++    const vector<uint> &excluded_cardids)
+ {
+     vector<InputInfo> list;
+ 
+     if (local)
+         list = tv->GetFreeInputs(excluded_cardids);
+-    else
++    else if (HasSockAndIncrRef())
++    {
++        ReferenceLocker rlocker(sock);
+         list = sock->GetFreeInputs(m_capturecardnum, excluded_cardids);
++    }
+ 
+     return list;
+ }
+diff --git a/mythtv/programs/mythbackend/encoderlink.h b/mythtv/programs/mythbackend/encoderlink.h
+index 35707c0..77a3e76 100644
+--- a/mythtv/programs/mythbackend/encoderlink.h
++++ b/mythtv/programs/mythbackend/encoderlink.h
+@@ -3,6 +3,7 @@
+ 
+ #include <QString>
+ #include <QMap>
++#include <QMutex>
+ 
+ #include "tv.h"
+ #include "programinfo.h"
+@@ -82,7 +83,7 @@ class EncoderLink
+     bool IsBusyRecording(void);
+ 
+     TVState GetState();
+-    uint GetFlags(void) const;
++    uint GetFlags(void);
+     bool IsRecording(const ProgramInfo *rec); // scheduler call only.
+ 
+     bool MatchesRecording(const ProgramInfo *rec);
+@@ -109,7 +110,7 @@ class EncoderLink
+     void PauseRecorder(void);
+     void SetLiveRecording(int);
+     void SetNextLiveTVDir(QString dir);
+-    vector<InputInfo> GetFreeInputs(const vector<uint> &excluded_cards) const;
++    vector<InputInfo> GetFreeInputs(const vector<uint> &excluded_cards);
+     QString GetInput(void) const;
+     QString SetInput(QString);
+     void ToggleChannelFavorite(QString);
+@@ -137,9 +138,13 @@ class EncoderLink
+                         QString channame, QString xmltv);
+ 
+   private:
++    bool HasSockAndIncrRef();
++    bool HasSockAndDecrRef();
++
+     int m_capturecardnum;
+ 
+     PlaybackSock *sock;
++    QMutex sockLock;
+     QString hostname;
+ 
+     TVRec *tv;
+diff --git a/mythtv/programs/mythbackend/main.cpp b/mythtv/programs/mythbackend/main.cpp
+index f9239a7..754a491 100644
+--- a/mythtv/programs/mythbackend/main.cpp
++++ b/mythtv/programs/mythbackend/main.cpp
+@@ -1,4 +1,5 @@
+ #include <signal.h> // for signal
++#include <stdlib.h>
+ 
+ #ifndef _WIN32
+ #include <QCoreApplication>
+@@ -13,6 +14,9 @@
+ #include <QFile>
+ #include <QDir>
+ #include <QMap>
++#ifdef Q_OS_MAC
++#include <QProcessEnvironment>
++#endif
+ 
+ #include "signalhandling.h"
+ #include "commandlineparser.h"
+@@ -83,6 +87,15 @@ int main(int argc, char **argv)
+ #endif
+     QCoreApplication::setApplicationName(MYTH_APPNAME_MYTHBACKEND);
+ 
++#ifdef Q_OS_MAC
++    QString path = QCoreApplication::applicationDirPath();
++    setenv("PYTHONPATH",
++           QString("%1/../Resources/lib/python2.6/site-packages:%2")
++           .arg(path)
++           .arg(QProcessEnvironment::systemEnvironment().value("PYTHONPATH"))
++           .toUtf8().constData(), 1);
++#endif
++
+     pidfile = cmdline.toString("pidfile");
+     int retval = cmdline.Daemonize();
+     if (retval != GENERIC_EXIT_OK)
 diff --git a/mythtv/programs/mythbackend/mainserver.cpp b/mythtv/programs/mythbackend/mainserver.cpp
 index 11332e3..d6bf8a6 100644
 --- a/mythtv/programs/mythbackend/mainserver.cpp
@@ -64738,6 +66158,80 @@ index 6515794..d936e9b 100644
  
          if (sourceid != -1)
          {
+diff --git a/mythtv/programs/mythfilldatabase/xmltvparser.cpp b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
+index 9b89535..d05649d 100644
+--- a/mythtv/programs/mythfilldatabase/xmltvparser.cpp
++++ b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
+@@ -487,11 +487,13 @@ ProgInfo *XMLTVParser::parseProgram(QDomElement &element)
+                         }
+                     }
+                 }
+-                else if (info.attribute("system") == "onscreen" &&
+-                        pginfo->subtitle.isEmpty())
++                else if (info.attribute("system") == "onscreen")
+                 {
+                     pginfo->categoryType = ProgramInfo::kCategorySeries;
+-                    pginfo->subtitle = getFirstText(info);
++                    if (pginfo->subtitle.isEmpty())
++                    {
++                        pginfo->subtitle = getFirstText(info);
++                    }
+                 }
+             }
+         }
+diff --git a/mythtv/programs/mythfrontend/globalsettings.cpp b/mythtv/programs/mythfrontend/globalsettings.cpp
+index a891995..e2779ff 100644
+--- a/mythtv/programs/mythfrontend/globalsettings.cpp
++++ b/mythtv/programs/mythfrontend/globalsettings.cpp
+@@ -1079,10 +1079,14 @@ void PlaybackProfileConfig::pressed(QString cmd)
+         PlaybackProfileItemConfig itemcfg(items[i]);
+ 
+         if (itemcfg.exec() != kDialogCodeAccepted)
++        {
+             LOG(VB_GENERAL, LOG_ERR, QString("edit #%1").arg(i) + " rejected");
+-
+-        InitLabel(i);
+-        needs_save = true;
++        }
++        else
++        {
++            InitLabel(i);
++            needs_save = true;
++        }
+     }
+     else if (cmd.startsWith("del"))
+     {
+@@ -1099,11 +1103,15 @@ void PlaybackProfileConfig::pressed(QString cmd)
+         PlaybackProfileItemConfig itemcfg(item);
+ 
+         if (itemcfg.exec() != kDialogCodeAccepted)
++        {
+             LOG(VB_GENERAL, LOG_ERR, "addentry rejected");
+-
+-        items.push_back(item);
+-        InitUI();
+-        needs_save = true;
++        }
++        else
++        {
++            items.push_back(item);
++            InitUI();
++            needs_save = true;
++        }
+     }
+ 
+     repaint();
+@@ -1335,6 +1343,10 @@ void PlaybackProfileConfigs::btnPress(QString cmd)
+             removeTarget(name);
+             VideoDisplayProfile::DeleteProfileGroup(
+                 name, gCoreContext->GetHostName());
++            // This would be better done in TriggeredConfigurationGroup::removeTarget
++            // however, as removeTarget is used elsewhere, limit the changes to this
++            // case only
++            grouptrigger->setValue(grouptrigger->getSelectionLabel());
+         }
+     }
+ 
 diff --git a/mythtv/programs/mythfrontend/grabbersettings.cpp b/mythtv/programs/mythfrontend/grabbersettings.cpp
 index 1d526cc..146c32f 100644
 --- a/mythtv/programs/mythfrontend/grabbersettings.cpp
@@ -65523,6 +67017,66 @@ index fd11d27..94dbd8c 100644
      int               m_changrpid;
      ChannelGroupList  m_changrplist;
  
+diff --git a/mythtv/programs/mythfrontend/main.cpp b/mythtv/programs/mythfrontend/main.cpp
+index 5204303..f416a99 100644
+--- a/mythtv/programs/mythfrontend/main.cpp
++++ b/mythtv/programs/mythfrontend/main.cpp
+@@ -2,6 +2,7 @@
+ #include <fcntl.h>
+ #include <signal.h>
+ #include <cerrno>
++#include <stdlib.h>
+ 
+ #include <iostream>
+ using namespace std;
+@@ -16,6 +17,9 @@ using namespace std;
+ #include <QWidget>
+ #include <QApplication>
+ #include <QTimer>
++#ifdef Q_OS_MAC
++#include <QProcessEnvironment>
++#endif
+ 
+ #include "previewgeneratorqueue.h"
+ #include "referencecounter.h"
+@@ -795,7 +799,7 @@ static void TVMenuCallback(void *data, QString &selection)
+     (void)data;
+     QString sel = selection.toLower();
+ 
+-    if (sel.startsWith("settings "))
++    if (sel.startsWith("settings ") || sel == "video_settings_general")
+     {
+         GetMythUI()->AddCurrentLocation("Setup");
+         gCoreContext->ActivateSettingsCache(false);
+@@ -1485,6 +1489,15 @@ int main(int argc, char **argv)
+     new QApplication(argc, argv);
+     QCoreApplication::setApplicationName(MYTH_APPNAME_MYTHFRONTEND);
+ 
++#ifdef Q_OS_MAC
++    QString path = QCoreApplication::applicationDirPath();
++    setenv("PYTHONPATH",
++           QString("%1/../Resources/lib/python2.6/site-packages:%2")
++           .arg(path)
++           .arg(QProcessEnvironment::systemEnvironment().value("PYTHONPATH"))
++           .toUtf8().constData(), 1);
++#endif
++
+ #ifndef _WIN32
+     QList<int> signallist;
+     signallist << SIGINT << SIGTERM << SIGSEGV << SIGABRT << SIGBUS << SIGFPE
+@@ -1636,11 +1649,11 @@ int main(int argc, char **argv)
+ #ifdef USING_AIRPLAY
+     if (gCoreContext->GetNumSetting("AirPlayEnabled", true))
+     {
++        MythRAOPDevice::Create();
+         if (!gCoreContext->GetNumSetting("AirPlayAudioOnly", false))
+         {
+             MythAirplayServer::Create();
+         }
+-        MythRAOPDevice::Create();
+     }
+ #endif
+ 
 diff --git a/mythtv/programs/mythfrontend/scheduleeditor.cpp b/mythtv/programs/mythfrontend/scheduleeditor.cpp
 index d8013b7..725c12c 100644
 --- a/mythtv/programs/mythfrontend/scheduleeditor.cpp
@@ -65596,6 +67150,20 @@ index ff1e236..43ad43e
              (m_showAll ||
               recstatus <= rsWillRecord ||
               recstatus == rsDontRecord ||
+diff --git a/mythtv/programs/mythtranscode/commandlineparser.cpp b/mythtv/programs/mythtranscode/commandlineparser.cpp
+index 70d313b..4528341 100644
+--- a/mythtv/programs/mythtranscode/commandlineparser.cpp
++++ b/mythtv/programs/mythtranscode/commandlineparser.cpp
+@@ -57,7 +57,8 @@ void MythTranscodeCommandLineParser::LoadArguments(void)
+         ->SetRequires("fifodir");
+ 
+     add(QStringList( QStringList() << "-l" << "--honorcutlist" ), "usecutlist",
+-            "", "Specifies whether to use the cutlist.",
++            "", "Specifies whether to use the cutlist. "
++            "(Takes an optional cutlist as argument when used with -i)",
+             "Specifies whether transcode should honor the cutlist and "
+             "remove the marked off commercials. Optionally takes a "
+             "a cutlist as an argument when used with --infile.")
 diff --git a/mythtv/programs/mythtranscode/main.cpp b/mythtv/programs/mythtranscode/main.cpp
 index 8993042..de5c2e9 100644
 --- a/mythtv/programs/mythtranscode/main.cpp
@@ -66993,7 +68561,7 @@ index 9ad4fbc..0000000
 -if __name__ == '__main__':
 -    main()
 diff --git a/mythtv/programs/scripts/metadata/Movie/tmdb3.py b/mythtv/programs/scripts/metadata/Movie/tmdb3.py
-index 9e4edcb..5374ab1 100755
+index 9e4edcb..0b5cbff 100755
 --- a/mythtv/programs/scripts/metadata/Movie/tmdb3.py
 +++ b/mythtv/programs/scripts/metadata/Movie/tmdb3.py
 @@ -11,7 +11,7 @@
@@ -67044,7 +68612,7 @@ index 9e4edcb..5374ab1 100755
              continue
  
          m = VideoMetadata()
-@@ -254,7 +267,19 @@ def main():
+@@ -254,7 +267,16 @@ def main():
          MythTV.tmdb3.request.DEBUG = True
          set_cache(engine='null')
      else:
@@ -67058,13 +68626,42 @@ index 9e4edcb..5374ab1 100755
 +                sys.exit(1)
 +            confdir = os.path.join(confdir, '.mythtv')
 +        confpath = os.path.join(confdir, 'pytmdb3.cache')
-+        if not os.access(confpath, os.F_OK|os.W_OK|os.R_OK):
-+            print "Unable to access cache file: "+confpath
-+            sys.exit(1)
 +        set_cache(engine='file', filename=confpath)
  
      if opts.language:
          set_locale(language=opts.language, fallthrough=True)
+diff --git a/mythtv/settings.pro b/mythtv/settings.pro
+index ae47ca6..4a68831 100644
+--- a/mythtv/settings.pro
++++ b/mythtv/settings.pro
+@@ -158,7 +158,6 @@ QMAKE_LIBDIR_OPENGL =
+ }
+ EXTRA_LIBS  = $$EXTRALIBS
+ 
+-EXTRA_LIBS += $$FREETYPE_LIBS
+ EXTRA_LIBS += $$CONFIG_FIREWIRE_LIBS
+ 
+ EXTRA_LIBS += $$LOCAL_LIBDIR_OGL
+diff --git a/mythtv/themes/MythCenter-wide/music-base.xml b/mythtv/themes/MythCenter-wide/music-base.xml
+index fab0157..ee46aee 100644
+--- a/mythtv/themes/MythCenter-wide/music-base.xml
++++ b/mythtv/themes/MythCenter-wide/music-base.xml
+@@ -759,6 +759,7 @@
+     </group>
+ 
+     <group name="baseplayliststatusgroup">
++        <area>0,0,1280,60</area>
+         <textarea name="playlistposition" from="basetextarea">
+             <area>40,0,170,30</area>
+             <font>basesmall</font>
+@@ -785,6 +786,7 @@
+     </group>
+ 
+     <group name="basesmallinfopanel">
++        <area>0,0,1260,50</area>
+         <shape name="trackinfo_background" from="basebackground">
+             <area>15,0,1250,50</area>
+             <fill color="#000000" alpha="50" />
 diff --git a/mythtv/themes/MythCenter-wide/notification-ui.xml b/mythtv/themes/MythCenter-wide/notification-ui.xml
 index 5afeab6..49b60af 100644
 --- a/mythtv/themes/MythCenter-wide/notification-ui.xml
