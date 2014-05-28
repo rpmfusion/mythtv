@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27-222-g583f448
+%define vers_string v0.27.1
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -72,14 +72,13 @@
 Name:           mythtv
 Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
-Group:          Applications/Multimedia
 
 # Version/Release info
-Version:        0.27
+Version:        0.27.1
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        7%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -143,8 +142,6 @@ Patch1:    mythtv-0.26.0-types_h.patch
 # http://code.mythtv.org/trac/ticket/11338
 # Offset required for 0.27, patch was for 0.26.1
 Patch2:    mythtv-0.27-libcec2.patch
-# Patch to fix ffmpeg build for arm.
-Patch3:    mythtv-0.27-ffmpeg.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -401,7 +398,6 @@ unified graphical interface:
 
 %package docs
 Summary:   MythTV documentation
-Group:     Documentation
 BuildArch: noarch
 
 %description docs
@@ -412,7 +408,6 @@ and miscellaneous other bits and pieces.
 
 %package libs
 Summary:   Library providing mythtv support
-Group:     System Environment/Libraries
 Provides:  libmyth = %{version}-%{release}
 Obsoletes: libmyth < %{version}-%{release}
 
@@ -430,7 +425,6 @@ television programs.  Refer to the mythtv package for more information.
 
 %package devel
 Summary:   Development files for mythtv
-Group:     Development/Libraries
 Provides:  libmyth-devel = %{version}-%{release}
 Obsoletes: libmyth-devel < %{version}-%{release}
 
@@ -513,7 +507,6 @@ add-ons for mythtv.
 
 %package base-themes
 Summary: Core user interface themes for mythtv
-Group:   Applications/Multimedia
 
 # Replace an old ATRMS package
 Provides:   mythtv-theme-gant
@@ -529,7 +522,6 @@ This package contains the base themes for the mythtv user interface.
 
 %package frontend
 Summary:   Client component of mythtv (a DVR)
-Group:     Applications/Multimedia
 Requires:  freetype, lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
@@ -552,7 +544,6 @@ reachable via the network.
 
 %package backend
 Summary:    Server component of mythtv (a DVR)
-Group:      Applications/Multimedia
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
 Requires(pre): shadow-utils
@@ -571,7 +562,6 @@ one reachable via the network.
 
 %package setup
 Summary:   Setup the mythtv backend
-Group:     Applications/Multimedia
 Requires:  freetype
 Requires:  mythtv-backend = %{version}-%{release}
 Requires:  mythtv-base-themes = %{version}
@@ -587,7 +577,6 @@ mythtv backend.
 
 %package common
 Summary: Common components needed by multiple other MythTV components
-Group: Applications/Multimedia
 # mythpmovies is now DOA, but we need this for upgrade path preservation.
 Provides: mythmovies = %{version}-%{release}
 Obsoletes: mythmovies < %{version}-%{release}
@@ -603,7 +592,6 @@ This package contains components needed by multiple other MythTV components.
 
 %package -n mythffmpeg
 Summary: MythTV build of FFmpeg
-Group: Applications/Multimedia
 
 %description -n mythffmpeg
 Several MythTV utilities interact with FFmpeg, which changes its parameters
@@ -617,7 +605,6 @@ can interact with a known verion.
 
 %package -n perl-MythTV
 Summary:        Perl bindings for MythTV
-Group:          Development/Languages
 BuildArch:      noarch
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -636,7 +623,6 @@ Provides a perl-based interface to interacting with MythTV.
 
 %package -n php-MythTV
 Summary:        PHP bindings for MythTV
-Group:          Development/Languages
 BuildArch:      noarch
 
 %description -n php-MythTV
@@ -650,7 +636,6 @@ Provides a PHP-based interface to interacting with MythTV.
 
 %package -n python-MythTV
 Summary:        Python bindings for MythTV
-Group:          Development/Languages
 BuildArch:      noarch
 
 Requires:       MySQL-python
@@ -669,7 +654,6 @@ Provides a python-based interface to interacting with MythTV.
 %package -n mythplugins
 
 Summary:  Main MythTV plugins
-Group:    Applications/Multimedia
 
 Requires:  mythmusic      = %{version}-%{release}
 Requires:  mythweather    = %{version}-%{release}
@@ -690,7 +674,6 @@ distributed as separate downloads from mythtv.org.
 
 %package -n mytharchive
 Summary:   A module for MythTV for creating and burning DVDs
-Group:     Applications/Multimedia
 
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  MySQL-python
@@ -716,7 +699,6 @@ your system.
 
 %package -n mythbrowser
 Summary:   A small web browser module for MythTV
-Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythbrowser
@@ -734,7 +716,6 @@ links in a simple mythplugin.
 
 %package -n mythgallery
 Summary:   A gallery/slideshow module for MythTV
-Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythgallery
@@ -746,7 +727,6 @@ A gallery/slideshow module for MythTV.
 
 %package -n mythgame
 Summary:   A game frontend (xmame, nes, snes, pc) for MythTV
-Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythgame
@@ -758,7 +738,6 @@ A game frontend (xmame, nes, snes, pc) for MythTV.
 
 %package -n mythmusic
 Summary:   The music player add-on module for MythTV
-Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythmusic
@@ -770,7 +749,6 @@ Music add-on for mythtv.
 
 %package -n mythnews
 Summary:   An RSS news feed plugin for MythTV
-Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythnews
@@ -782,7 +760,6 @@ An RSS news feed reader plugin for MythTV.
 
 %package -n mythweather
 Summary:   A MythTV module that displays a weather forecast
-Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  perl(XML::SAX::Base)
 
@@ -795,7 +772,6 @@ A MythTV module that displays a weather forecast.
 
 %package -n mythzoneminder
 Summary:   A module for MythTV for camera security and surveillance
-Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 
 %description -n mythzoneminder
@@ -810,7 +786,6 @@ and replay recorded events.
 
 %package -n mythnetvision
 Summary:   A MythTV module for Internet video on demand
-Group:     Applications/Multimedia
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mythbrowser = %{version}-%{release}
 Requires:  python-MythTV = %{version}-%{release}
@@ -841,10 +816,9 @@ on demand content.
          find \( -name 'configure' -o -name '*pro' -o -name 'Makefile' \) -exec sed -r -i -e 's,/lib\b,/%{_lib},g' {} \+
     fi
 
-%patch0 -p1 -b .mythtv
+#patch0 -p1 -b .mythtv
 %patch1 -p1 -b .types_h
 %patch2 -p1 -b .libcec2
-%patch3 -p1 -b .ffmpeg
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -904,7 +878,7 @@ pushd mythtv
     --disable-mythlogserver                     \
     --enable-ffmpeg-pthreads                    \
     --enable-joystick-menu                      \
-    --x11-path=%{_includedir}      \
+    --x11-path=%{_includedir}                   \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
@@ -1461,6 +1435,9 @@ fi
 
 
 %changelog
+* Mon May 26 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.1-1
+- Update to new upstream release.
+
 * Wed May  7 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27-7
 - Update to latest fixes, v0.27-222-g583f448.
 
