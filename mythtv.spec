@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27.1
+%define vers_string v0.27.3-109-g0dd5ab3
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -74,7 +74,7 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.27.1
+Version:        0.27.3
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
@@ -468,7 +468,7 @@ Requires:  libtheora-devel
 Requires:  libvorbis-devel >= 1.0
 Requires:  mjpegtools-devel >= 1.6.1
 Requires:  taglib-devel >= 1.5
-Requires:  transcode >= 0.6.8
+#Requires:  transcode >= 0.6.8
 Requires:  x264-devel
 Requires:  xvidcore-devel >= 0.9.1
 
@@ -1435,6 +1435,9 @@ fi
 
 
 %changelog
+* Sun Jul 27 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.3-1
+- Update to new upstream release.
+
 * Mon May 26 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.1-1
 - Update to new upstream release.
 
