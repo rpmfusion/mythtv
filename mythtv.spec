@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27.3-109-g0dd5ab3
+%define vers_string v0.27.3-164-g629f711
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -78,7 +78,7 @@ Version:        0.27.3
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -101,7 +101,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
 %define with_vaapi         %{?_without_vaapi:      0} %{?!_without_vaapi:      1}
 
-%if 0%{?rhel}
+%if 0%{?rhel} < 7
 %define with_crystalhd     %{?_without_crystalhd:  1} %{?!_without_crystalhd:  0}
 %define with_systemd       %{?_without_systemd:    1} %{?!_without_systemd:    0}
 
@@ -142,6 +142,7 @@ Patch1:    mythtv-0.26.0-types_h.patch
 # http://code.mythtv.org/trac/ticket/11338
 # Offset required for 0.27, patch was for 0.26.1
 Patch2:    mythtv-0.27-libcec2.patch
+Patch3:    mythtv-sd_fix.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -176,7 +177,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  libpng-devel
 BuildRequires:  gcc-c++
-%if 0%{?fedora} >= 19
+%if ! 0%{?rhel} <= 6
 BuildRequires:  mariadb-devel >= 5
 %else
 BuildRequires:  mysql-devel >= 5
@@ -359,13 +360,17 @@ Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
-%if 0%{?fedora} >= 19
+%if ! 0%{?rhel} <= 6
 Requires:  mariadb-server >= 5, mariadb >= 5
 %else
 Requires:  mysql-server >= 5, mysql >= 5
 %endif
 Requires:  xmltv
+%if 0%{?rhel} >= 7
+Requires:  udisks2
+%else
 Requires:  udisks
+%endif
 
 # Generate the required mythtv-frontend-api version string here so we only
 # have to do it once.
@@ -685,7 +690,7 @@ Requires:  mjpegtools >= 1.6.2
 Requires:  mkisofs >= 2.01
 Requires:  python >= 2.3.5
 Requires:  python-imaging
-Requires:  transcode >= 1.0.2
+#Requires:  transcode >= 1.0.2
 Requires:  pmount
 
 %description -n mytharchive
@@ -819,6 +824,7 @@ on demand content.
 #patch0 -p1 -b .mythtv
 %patch1 -p1 -b .types_h
 %patch2 -p1 -b .libcec2
+%patch3 -p0 -b .sd_fix
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -875,10 +881,8 @@ pushd mythtv
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
-    --disable-mythlogserver                     \
-    --enable-ffmpeg-pthreads                    \
-    --enable-joystick-menu                      \
     --x11-path=%{_includedir}                   \
+    --disable-mythlogserver                     \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
@@ -893,8 +897,8 @@ pushd mythtv
 %if %{with_vaapi}
     --enable-vaapi				\
 %endif
-%if %{with_crystalhd}
-    --enable-crystalhd				\
+%if !%{with_crystalhd}
+    --disable-crystalhd				\
 %endif
 %if !%{with_perl}
     --without-bindings=perl                     \
@@ -1435,6 +1439,10 @@ fi
 
 
 %changelog
+* Mon Oct 13 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.3-2
+- Update to latest fixes.
+- Add patch for schedules direct service change.
+
 * Sun Jul 27 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.3-1
 - Update to new upstream release.
 

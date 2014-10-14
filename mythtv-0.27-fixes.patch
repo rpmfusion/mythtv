@@ -1,5 +1,6 @@
  mythplugins/mythmusic/mythmusic/importmusic.cpp    |    2 +-
  mythplugins/mythmusic/mythmusic/musicplayer.cpp    |    6 +
+ mythplugins/mythmusic/mythmusic/smartplaylist.cpp  |   13 +-
  mythtv/external/FFmpeg/README.sync                 |    3 +-
  mythtv/external/FFmpeg/RELEASE                     |    2 +-
  mythtv/external/FFmpeg/VERSION                     |    2 +-
@@ -55,27 +56,47 @@
  mythtv/libs/libmyth/mediamonitor-darwin.cpp        |   10 +
  mythtv/libs/libmythbase/mythcorecontext.cpp        |    3 +-
  mythtv/libs/libmythbase/mythversion.h              |    2 +-
+ mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c          |    2 +-
+ mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h          |    2 +-
+ mythtv/libs/libmythdvdnav/dvdnav/remap.c           |    1 +
+ mythtv/libs/libmythdvdnav/dvdnav/searching.c       |   32 +-
+ mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c           |    6 +-
+ mythtv/libs/libmythdvdnav/dvdread/dvd_input.c      |   44 +-
+ mythtv/libs/libmythdvdnav/dvdread/dvd_reader.c     |    1 +
+ mythtv/libs/libmythdvdnav/dvdread/dvd_udf.c        |    5 +-
+ mythtv/libs/libmythdvdnav/dvdread/ifo_print.c      |    4 +-
+ mythtv/libs/libmythdvdnav/dvdread/ifo_read.c       |   23 +-
  mythtv/libs/libmythmetadata/libmythmetadata.pro    |    4 +-
  mythtv/libs/libmythmetadata/metadatacommon.cpp     |   95 +-
- mythtv/libs/libmythmetadata/metadatacommon.h       |   51 +-
- mythtv/libs/libmythmetadata/metadatadownload.cpp   |  211 +-
- mythtv/libs/libmythmetadata/metadatafactory.cpp    |    2 +-
- mythtv/libs/libmythmetadata/metadatagrabber.cpp    |  584 +++
+ mythtv/libs/libmythmetadata/metadatacommon.h       |   52 +-
+ mythtv/libs/libmythmetadata/metadatadownload.cpp   |  339 +-
+ mythtv/libs/libmythmetadata/metadatafactory.cpp    |   69 +-
+ mythtv/libs/libmythmetadata/metadatafactory.h      |    2 +
+ mythtv/libs/libmythmetadata/metadatagrabber.cpp    |  595 +++
  mythtv/libs/libmythmetadata/metadatagrabber.h      |  100 +
- .../libs/libmythmetadata/metadataimagedownload.cpp |  148 +-
+ .../libs/libmythmetadata/metadataimagedownload.cpp |  150 +-
  .../libs/libmythmetadata/metadataimagedownload.h   |    1 +
  mythtv/libs/libmythmetadata/videometadata.cpp      |   17 +-
  .../requesthandler/fileserverhandler.cpp           |    3 +-
- mythtv/libs/libmythtv/avformatdecoder.cpp          |   12 +
+ mythtv/libs/libmythtv/avformatdecoder.cpp          |   48 +-
  mythtv/libs/libmythtv/cc608decoder.cpp             |    2 +-
+ mythtv/libs/libmythtv/cc708reader.cpp              |    2 +-
+ .../libs/libmythtv/channelscan/channelscan_sm.cpp  |   19 +-
+ mythtv/libs/libmythtv/channelscan/channelscan_sm.h |    2 +
+ mythtv/libs/libmythtv/eitcache.cpp                 |    4 +-
+ mythtv/libs/libmythtv/eitfixup.cpp                 |    4 +-
  mythtv/libs/libmythtv/lzoconf.h                    |  219 +-
  mythtv/libs/libmythtv/lzodefs.h                    | 2527 ++++++++----
+ mythtv/libs/libmythtv/metadataimagehelper.cpp      |    3 +
  mythtv/libs/libmythtv/minilzo.cpp                  | 4191 ++++++++++++++------
  mythtv/libs/libmythtv/minilzo.h                    |   20 +-
- mythtv/libs/libmythtv/mythplayer.cpp               |   10 +-
+ mythtv/libs/libmythtv/mpeg/dvbstreamdata.cpp       |    8 +
+ mythtv/libs/libmythtv/mythplayer.cpp               |  141 +-
  mythtv/libs/libmythtv/openglvideo.cpp              |    2 +-
- mythtv/libs/libmythtv/ringbuffer.cpp               |    7 +-
+ mythtv/libs/libmythtv/programdata.cpp              |   41 +-
+ mythtv/libs/libmythtv/ringbuffer.cpp               |   19 +-
  mythtv/libs/libmythtv/subtitlescreen.cpp           |   58 +-
+ mythtv/libs/libmythtv/tv_play.cpp                  |    8 +-
  mythtv/libs/libmythtv/videobuffers.cpp             |    6 +
  mythtv/libs/libmythtv/videoout_nullvdpau.cpp       |    4 +-
  mythtv/libs/libmythtv/videoout_opengl.cpp          |    6 +-
@@ -84,13 +105,23 @@
  mythtv/libs/libmythupnp/upnpcmgr.h                 |    2 +-
  mythtv/programs/mythbackend/main_helpers.cpp       |    9 +-
  mythtv/programs/mythbackend/mainserver.cpp         |   20 +-
+ mythtv/programs/mythbackend/upnpcdstv.cpp          |   27 +-
+ mythtv/programs/mythbackend/upnpcdsvideo.cpp       |    2 +-
+ mythtv/programs/mythfrontend/editvideometadata.cpp |   10 +-
  mythtv/programs/mythfrontend/grabbersettings.cpp   |  125 +-
  mythtv/programs/mythfrontend/grabbersettings.h     |    7 +-
+ mythtv/programs/mythfrontend/playbackbox.cpp       |  158 +-
+ mythtv/programs/mythfrontend/playbackbox.h         |   13 +-
+ mythtv/programs/mythfrontend/scheduleeditor.cpp    |   76 +-
+ mythtv/programs/mythfrontend/scheduleeditor.h      |    1 +
+ mythtv/programs/mythmetadatalookup/lookup.cpp      |   12 +-
  mythtv/programs/mythmetadatalookup/main.cpp        |   12 +
- mythtv/programs/mythtranscode/mpeg2fix.cpp         |   17 +-
+ mythtv/programs/mythtranscode/mpeg2fix.cpp         |   23 +-
  mythtv/programs/mythtranscode/mpeg2fix.h           |    4 +
+ .../programs/mythtranscode/videodecodebuffer.cpp   |   36 +-
+ mythtv/programs/mythtranscode/videodecodebuffer.h  |   25 +-
  mythtv/themes/classic/tv_schedule.xml              |    2 +-
- 92 files changed, 6321 insertions(+), 2577 deletions(-)
+ 123 files changed, 7006 insertions(+), 2872 deletions(-)
 
 diff --git a/mythplugins/mythmusic/mythmusic/importmusic.cpp b/mythplugins/mythmusic/mythmusic/importmusic.cpp
 index d0faf12..31a89da 100644
@@ -122,6 +153,51 @@ index ea46a3d..867c765 100644
      m_isPlaying = false;
  
      if (stopAll && getDecoder())
+diff --git a/mythplugins/mythmusic/mythmusic/smartplaylist.cpp b/mythplugins/mythmusic/mythmusic/smartplaylist.cpp
+index de952e8..0fc546d 100644
+--- a/mythplugins/mythmusic/mythmusic/smartplaylist.cpp
++++ b/mythplugins/mythmusic/mythmusic/smartplaylist.cpp
+@@ -52,10 +52,8 @@ static SmartPLField SmartPLFields[] =
+     { "Play Count",    "music_songs.numplays",           ftNumeric,  0,    9999, 0 },
+     { "Compilation",   "music_albums.compilation",       ftBoolean,  0,    0,    0 },
+     { "Comp. Artist",  "music_comp_artists.artist_name", ftString,   0,    0,    0 },
+-    { "Last Play",     "FROM_DAYS(TO_DAYS(music_songs.lastplay))",
+-                                                         ftDate,     0,    0,    0 },
+-    { "Date Imported", "FROM_DAYS(TO_DAYS(music_songs.date_entered))",
+-                                                         ftDate,     0,    0,    0 },
++    { "Last Play",     "music_songs.lastplay",           ftDate,     0,    0,    0 },
++    { "Date Imported", "music_songs.date_entered",       ftDate,     0,    0,    0 },
+ };
+ 
+ struct SmartPLOperator
+@@ -334,7 +332,7 @@ bool SmartPLCriteriaRow::saveToDatabase(int smartPlaylistID)
+     query.bindValue(":FIELD", Field);
+     query.bindValue(":OPERATOR", Operator);
+     query.bindValue(":VALUE1", Value1);
+-    query.bindValue(":VALUE2", Value2);
++    query.bindValue(":VALUE2", Value2.isNull() ? "" : Value2);
+ 
+     if (!query.exec())
+     {
+@@ -750,7 +748,7 @@ void SmartPlaylistEditor::updateMatches(void)
+ 
+     m_matchesText->SetText(QString::number(m_matchesCount));
+ 
+-    m_playlistIsValid = (m_matchesCount > 0);
++    m_playlistIsValid = (m_criteriaRows.size() > 0);
+     m_showResultsButton->SetEnabled((m_matchesCount > 0));
+     titleChanged();
+ }
+@@ -1015,6 +1013,9 @@ QString SmartPlaylistEditor::getOrderByClause(void)
+ 
+ QString SmartPlaylistEditor::getWhereClause(void)
+ {
++    if (m_criteriaRows.size() == 0)
++        return QString();
++
+     bool bFirst = true;
+     QString sql = "WHERE ";
+ 
 diff --git a/mythtv/external/FFmpeg/README.sync b/mythtv/external/FFmpeg/README.sync
 index a91b793..2bf19c5 100644
 --- a/mythtv/external/FFmpeg/README.sync
@@ -1537,7 +1613,7 @@ index c97c1e8..c610df2 100644
  
  bool MythCoreContext::IsFrontendOnly(void)
 diff --git a/mythtv/libs/libmythbase/mythversion.h b/mythtv/libs/libmythbase/mythversion.h
-index c189c40..85d6ecd 100644
+index c189c40..b097b21 100644
 --- a/mythtv/libs/libmythbase/mythversion.h
 +++ b/mythtv/libs/libmythbase/mythversion.h
 @@ -12,7 +12,7 @@
@@ -1545,10 +1621,369 @@ index c189c40..85d6ecd 100644
  /// Including changes in the libmythbase, libmyth, libmythtv, libmythav* and
  /// libmythui class methods in exported headers.
 -#define MYTH_BINARY_VERSION "0.27.20140702-1"
-+#define MYTH_BINARY_VERSION "0.27.20140718-1"
++#define MYTH_BINARY_VERSION "0.27.20140719-1"
  
  /** \brief Increment this whenever the MythTV network protocol changes.
   *
+diff --git a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c
+index 3a7952e..f4b5ecb 100644
+--- a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c
++++ b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.c
+@@ -203,7 +203,7 @@ int64_t dvdnav_convert_time(dvd_time_t *time) {
+   int64_t result;
+   int64_t frames;
+ 
+-  result  = (time->hour    >> 4  ) * 10 * 60 * 60 * 90000;
++  result  = (time->hour    >> 4  ) * 10 * 60 * 60 * 90000ull;
+   result += (time->hour    & 0x0f)      * 60 * 60 * 90000;
+   result += (time->minute  >> 4  )      * 10 * 60 * 90000;
+   result += (time->minute  & 0x0f)           * 60 * 90000;
+diff --git a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h
+index 1e7fa08..a5a76de 100644
+--- a/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h
++++ b/mythtv/libs/libmythdvdnav/dvdnav/dvdnav.h
+@@ -29,7 +29,7 @@
+ #define MP_DVDNAV 1
+ 
+ // Change this only when syncing to mplayer dvdnav trunk
+-#define DVDNAV_SVN_REV "svnR1251"
++#define DVDNAV_SVN_REV "svnR1294"
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/mythtv/libs/libmythdvdnav/dvdnav/remap.c b/mythtv/libs/libmythdvdnav/dvdnav/remap.c
+index f1dea93..4632a49 100644
+--- a/mythtv/libs/libmythdvdnav/dvdnav/remap.c
++++ b/mythtv/libs/libmythdvdnav/dvdnav/remap.c
+@@ -22,6 +22,7 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
++#include <strings.h>
+ #include <stdio.h>
+ 
+ #ifndef _MSC_VER
+diff --git a/mythtv/libs/libmythdvdnav/dvdnav/searching.c b/mythtv/libs/libmythdvdnav/dvdnav/searching.c
+index 8a6f403..839c7a5 100644
+--- a/mythtv/libs/libmythdvdnav/dvdnav/searching.c
++++ b/mythtv/libs/libmythdvdnav/dvdnav/searching.c
+@@ -787,13 +787,41 @@ uint32_t dvdnav_describe_title_chapters(dvdnav_t *this, int32_t title, uint64_t
+   length = 0;
+   for(i=0; i<parts; i++) {
+     uint32_t cellnr, endcellnr;
++    if (ptt[i].pgcn == 0 || ptt[i].pgcn > ifo->vts_pgcit->nr_of_pgci_srp) {
++      printerr("PGCN out of bounds.");
++      continue;
++    }
++    if (ifo->vts_pgcit->pgci_srp[ptt[i].pgcn-1].pgc_start_byte >= ifo->vts_pgcit->last_byte) {
++      printerr("PGC start out of bounds");
++      continue;
++    }
+     pgc = ifo->vts_pgcit->pgci_srp[ptt[i].pgcn-1].pgc;
+-    if(ptt[i].pgn > pgc->nr_of_programs) {
++    if (pgc == NULL) {
++      printerr("PGC missing.");
++      continue;
++    }
++    if (pgc->program_map == NULL) {
++      printerr("Program map missing.");
++      continue;
++    }
++    if(ptt[i].pgn == 0 || ptt[i].pgn > pgc->nr_of_programs) {
+       printerr("WRONG part number.");
+       goto fail;
+     }
+ 
+-    cellnr = pgc->program_map[ptt[i].pgn-1];
++    if (pgc->nr_of_cells == 0) {
++      printerr("Number of cells cannot be 0");
++      continue;
++    }
++    if ((cellnr = pgc->program_map[ptt[i].pgn-1]) == 0) {
++      printerr("Cell new row cannot be 0");
++      continue;
++    }
++    if (pgc->cell_playback == NULL) {
++      printerr("Cell missing");
++      continue;
++    }
++
+     if(ptt[i].pgn < pgc->nr_of_programs)
+       endcellnr = pgc->program_map[ptt[i].pgn];
+     else
+diff --git a/mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c b/mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c
+index 572cbde..ccdea87 100644
+--- a/mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c
++++ b/mythtv/libs/libmythdvdnav/dvdnav/vm/vm.c
+@@ -62,7 +62,7 @@
+ #include "mythiowrapper.h"
+ 
+ /*
+-#define STRICT
++#define DVDNAV_STRICT
+ */
+ 
+ /* Local prototypes */
+@@ -266,7 +266,7 @@ static int ifoOpenNewVTSI(vm_t *vm, dvd_reader_t *dvd, int vtsN) {
+ /* Initialisation & Destruction */
+ 
+ vm_t* vm_new_vm() {
+-  return (vm_t*)calloc(sizeof(vm_t), sizeof(char));
++  return (vm_t*)calloc(1, sizeof(vm_t));
+ }
+ 
+ void vm_free_vm(vm_t *vm) {
+@@ -1155,7 +1155,7 @@ static link_t play_Cell(vm_t *vm) {
+     case 1: /*  Angle block */
+       /* Loop and check each cell instead? So we don't get outside the block? */
+       (vm->state).cellN += (vm->state).AGL_REG - 1;
+-#ifdef STRICT
++#ifdef DVDNAV_STRICT
+       assert((vm->state).cellN <= (vm->state).pgc->nr_of_cells);
+       assert((vm->state).pgc->cell_playback[(vm->state).cellN - 1].block_mode != 0);
+       assert((vm->state).pgc->cell_playback[(vm->state).cellN - 1].block_type == 1);
+diff --git a/mythtv/libs/libmythdvdnav/dvdread/dvd_input.c b/mythtv/libs/libmythdvdnav/dvdread/dvd_input.c
+index 99cb76f..92292d3 100644
+--- a/mythtv/libs/libmythdvdnav/dvdread/dvd_input.c
++++ b/mythtv/libs/libmythdvdnav/dvdread/dvd_input.c
+@@ -44,7 +44,6 @@ char *      (*dvdinput_error) (dvd_input_t);
+ #define DVDcss_open(a) dvdcss_open((char*)(a))
+ #define DVDcss_close   dvdcss_close
+ #define DVDcss_seek    dvdcss_seek
+-#define DVDcss_title   dvdcss_title
+ #define DVDcss_read    dvdcss_read
+ #define DVDcss_error   dvdcss_error
+ #else
+@@ -61,19 +60,19 @@ char *      (*dvdinput_error) (dvd_input_t);
+ #include <CoreFoundation/CFBundle.h>
+ #endif
+ 
+-typedef struct dvdcss_s *dvdcss_handle;
+-static dvdcss_handle (*DVDcss_open)  (const char *);
+-static int           (*DVDcss_close) (dvdcss_handle);
+-static int           (*DVDcss_seek)  (dvdcss_handle, int, int);
+-static int           (*DVDcss_title) (dvdcss_handle, int);
+-static int           (*DVDcss_read)  (dvdcss_handle, void *, int, int);
+-static char *        (*DVDcss_error) (dvdcss_handle);
++typedef struct dvdcss_s *dvdcss_t;
++static dvdcss_t (*DVDcss_open)  (const char *);
++static int      (*DVDcss_close) (dvdcss_t);
++static int      (*DVDcss_seek)  (dvdcss_t, int, int);
++static int      (*DVDcss_read)  (dvdcss_t, void *, int, int);
++static char *   (*DVDcss_error) (dvdcss_t);
++#define DVDCSS_SEEK_KEY (1 << 1)
+ #endif
+ 
+ /* The DVDinput handle, add stuff here for new input methods. */
+ struct dvd_input_s {
+   /* libdvdcss handle */
+-  dvdcss_handle dvdcss;
++  dvdcss_t dvdcss;
+ 
+   /* dummy file input */
+   int fd;
+@@ -127,7 +126,7 @@ static int css_seek(dvd_input_t dev, int blocks)
+  */
+ static int css_title(dvd_input_t dev, int block)
+ {
+-  return DVDcss_title(dev->dvdcss, block);
++  return DVDcss_seek(dev->dvdcss, block, DVDCSS_SEEK_KEY);
+ }
+ 
+ /**
+@@ -277,13 +276,10 @@ static int file_close(dvd_input_t dev)
+ int dvdinput_setup(const char *path)
+ {
+   void *dvdcss_library = NULL;
+-  char **dvdcss_version = NULL;
+ 
+ #ifdef HAVE_DVDCSS_DVDCSS_H
+   /* linking to libdvdcss */
+   dvdcss_library = &dvdcss_library;  /* Give it some value != NULL */
+-  /* the DVDcss_* functions have been #defined at the top */
+-  dvdcss_version = &dvdcss_interface_2;
+ 
+ #else
+   /* dlopening libdvdcss */
+@@ -291,7 +287,7 @@ int dvdinput_setup(const char *path)
+ #ifdef __APPLE__
+   #define CSS_LIB "libdvdcss.2.dylib"
+ #elif defined(WIN32)
+-  #define CSS_LIB "libdvdcss.dll"
++  #define CSS_LIB "libdvdcss-2.dll"
+ #elif defined(__OS2__)
+   #define CSS_LIB "dvdcss.dll"
+ #else
+@@ -332,21 +328,17 @@ int dvdinput_setup(const char *path)
+ #else
+ #define U_S
+ #endif
+-    DVDcss_open = (dvdcss_handle (*)(const char*))
++    DVDcss_open = (dvdcss_t (*)(const char*))
+       dlsym(dvdcss_library, U_S "dvdcss_open");
+-    DVDcss_close = (int (*)(dvdcss_handle))
++    DVDcss_close = (int (*)(dvdcss_t))
+       dlsym(dvdcss_library, U_S "dvdcss_close");
+-    DVDcss_title = (int (*)(dvdcss_handle, int))
+-      dlsym(dvdcss_library, U_S "dvdcss_title");
+-    DVDcss_seek = (int (*)(dvdcss_handle, int, int))
++    DVDcss_seek = (int (*)(dvdcss_t, int, int))
+       dlsym(dvdcss_library, U_S "dvdcss_seek");
+-    DVDcss_read = (int (*)(dvdcss_handle, void*, int, int))
++    DVDcss_read = (int (*)(dvdcss_t, void*, int, int))
+       dlsym(dvdcss_library, U_S "dvdcss_read");
+-    DVDcss_error = (char* (*)(dvdcss_handle))
++    DVDcss_error = (char* (*)(dvdcss_t))
+       dlsym(dvdcss_library, U_S "dvdcss_error");
+ 
+-    dvdcss_version = (char **)dlsym(dvdcss_library, U_S "dvdcss_interface_2");
+-
+     if(dlsym(dvdcss_library, U_S "dvdcss_crack")) {
+       fprintf(stderr,
+               "libdvdread: Old (pre-0.0.2) version of libdvdcss found.\n"
+@@ -354,8 +346,8 @@ int dvdinput_setup(const char *path)
+               "http://www.videolan.org/\n" );
+       dlclose(dvdcss_library);
+       dvdcss_library = NULL;
+-    } else if(!DVDcss_open  || !DVDcss_close || !DVDcss_title || !DVDcss_seek
+-              || !DVDcss_read || !DVDcss_error || !dvdcss_version) {
++    } else if(!DVDcss_open  || !DVDcss_close || !DVDcss_seek
++              || !DVDcss_read || !DVDcss_error) {
+       fprintf(stderr,  "libdvdread: Missing symbols in %s, "
+               "this shouldn't happen !\n", CSS_LIB);
+       dlclose(dvdcss_library);
+@@ -371,8 +363,6 @@ int dvdinput_setup(const char *path)
+     fprintf(stderr, "DVDCSS_METHOD %s\n", psz_method);
+     fprintf(stderr, "DVDCSS_VERBOSE %s\n", psz_verbose);
+     */
+-    fprintf(stderr, "libdvdread: Using libdvdcss version %s for DVD access\n",
+-            dvdcss_version ? *dvdcss_version : "");
+ 
+     /* libdvdcss wrapper functions */
+     dvdinput_open  = css_open;
+diff --git a/mythtv/libs/libmythdvdnav/dvdread/dvd_reader.c b/mythtv/libs/libmythdvdnav/dvdread/dvd_reader.c
+index fd00d6c..fb6e79e 100644
+--- a/mythtv/libs/libmythdvdnav/dvdread/dvd_reader.c
++++ b/mythtv/libs/libmythdvdnav/dvdread/dvd_reader.c
+@@ -28,6 +28,7 @@
+ #include <stdio.h>
+ #include <errno.h>
+ #include <string.h>
++#include <strings.h>
+ #include <ctype.h>
+ #include <unistd.h>
+ #include <limits.h>
+diff --git a/mythtv/libs/libmythdvdnav/dvdread/dvd_udf.c b/mythtv/libs/libmythdvdnav/dvdread/dvd_udf.c
+index fb932b6..78eb4c8 100644
+--- a/mythtv/libs/libmythdvdnav/dvdread/dvd_udf.c
++++ b/mythtv/libs/libmythdvdnav/dvdread/dvd_udf.c
+@@ -31,6 +31,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <strings.h>
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -593,8 +594,10 @@ static int UDFScanDir( dvd_reader_t *device, struct AD Dir, char *FileName,
+     } else
+       in_cache = 1;
+ 
+-    if(cached_dir == NULL)
++    if(cached_dir == NULL) {
++      free(cached_dir_base);
+       return 0;
++    }
+ 
+     p = 0;
+ 
+diff --git a/mythtv/libs/libmythdvdnav/dvdread/ifo_print.c b/mythtv/libs/libmythdvdnav/dvdread/ifo_print.c
+index 976f68b..531ffb8 100644
+--- a/mythtv/libs/libmythdvdnav/dvdread/ifo_print.c
++++ b/mythtv/libs/libmythdvdnav/dvdread/ifo_print.c
+@@ -1189,10 +1189,10 @@ void ifo_print(dvd_reader_t *dvd, int title) {
+     if(ifohandle->menu_vobu_admap) {
+       ifoPrint_VOBU_ADMAP(ifohandle->menu_vobu_admap);
+     } else {
+-      printf("No Menu VOBU address map present\n");
++      printf("No Menu VOBU Address map present\n");
+     }
+ 
+-    printf("\nCell Adress table\n");
++    printf("\nCell Address table\n");
+     printf(  "-----------------\n");
+     ifoPrint_C_ADT(ifohandle->vts_c_adt);
+ 
+diff --git a/mythtv/libs/libmythdvdnav/dvdread/ifo_read.c b/mythtv/libs/libmythdvdnav/dvdread/ifo_read.c
+index 464b8ff..2ce917b 100644
+--- a/mythtv/libs/libmythdvdnav/dvdread/ifo_read.c
++++ b/mythtv/libs/libmythdvdnav/dvdread/ifo_read.c
+@@ -568,6 +568,8 @@ static int ifoRead_VMG(ifo_handle_t *ifofile) {
+ 
+   CHECK_ZERO(vmgi_mat->zero_1);
+   CHECK_ZERO(vmgi_mat->zero_2);
++  /* DVDs created by VDR-to-DVD device LG RC590M violate the following check with
++   * vmgi_mat->zero_3 = 0x00000000010000000000000000000000000000. */
+   CHECK_ZERO(vmgi_mat->zero_3);
+   CHECK_ZERO(vmgi_mat->zero_4);
+   CHECK_ZERO(vmgi_mat->zero_5);
+@@ -1184,8 +1186,22 @@ int ifoRead_VTS_PTT_SRPT(ifo_handle_t *ifofile) {
+     fprintf(stderr, "libdvdread: PTT search table too small.\n");
+     goto fail;
+   }
++
++  if(vts_ptt_srpt->nr_of_srpts == 0) {
++    fprintf(stderr, "libdvdread: Zero entries in PTT search table.\n");
++    goto fail;
++  }
++
+   for(i = 0; i < vts_ptt_srpt->nr_of_srpts; i++) {
+-    B2N_32(data[i]);
++    /* Transformers 3 has PTT start bytes that point outside the SRPT PTT */
++    uint32_t start = data[i];
++    B2N_32(start);
++    if(start + sizeof(ptt_info_t) > vts_ptt_srpt->last_byte + 1) {
++      /* don't mess with any bytes beyond the end of the allocation */
++      vts_ptt_srpt->nr_of_srpts = i;
++      break;
++    }
++    data[i] = start;
+     /* assert(data[i] + sizeof(ptt_info_t) <= vts_ptt_srpt->last_byte + 1);
+        Magic Knight Rayearth Daybreak is mastered very strange and has
+        Titles with 0 PTTs. They all have a data[i] offsets beyond the end of
+@@ -1211,6 +1227,7 @@ int ifoRead_VTS_PTT_SRPT(ifo_handle_t *ifofile) {
+        Titles with 0 PTTs. */
+     if(n < 0) n = 0;
+ 
++    /* DVDs created by the VDR-to-DVD device LG RC590M violate the following requirement */
+     CHECK_VALUE(n % 4 == 0);
+ 
+     vts_ptt_srpt->title[i].nr_of_ptts = n / 4;
+@@ -1293,7 +1310,7 @@ int ifoRead_PTL_MAIT(ifo_handle_t *ifofile) {
+   if(!ifofile->vmgi_mat)
+     return 0;
+ 
+-  if(ifofile->vmgi_mat->ptl_mait == NULL)
++  if(ifofile->vmgi_mat->ptl_mait == 0)
+     return 1;
+ 
+   if(!DVDFileSeek_(ifofile->file, ifofile->vmgi_mat->ptl_mait * DVD_BLOCK_LEN))
+@@ -1374,6 +1391,7 @@ int ifoRead_PTL_MAIT(ifo_handle_t *ifofile) {
+       ifofile->ptl_mait = NULL;
+       return 0;
+     }
++    memset(pf_temp, 0, info_length);
+     if(!(DVDReadBytes(ifofile->file, pf_temp, info_length))) {
+       fprintf(stderr, "libdvdread: Unable to read PTL_MAIT table at index %d.\n",i);
+       free(pf_temp);
+@@ -1436,6 +1454,7 @@ int ifoRead_VTS_TMAPT(ifo_handle_t *ifofile) {
+ 
+   if(ifofile->vtsi_mat->vts_tmapt == 0) { /* optional(?) */
+     ifofile->vts_tmapt = NULL;
++    fprintf(stderr,"libdvdread: No VTS_TMAPT available - skipping.\n");
+     return 1;
+   }
+ 
 diff --git a/mythtv/libs/libmythmetadata/libmythmetadata.pro b/mythtv/libs/libmythmetadata/libmythmetadata.pro
 index 54cb344..8fa8ff3 100644
 --- a/mythtv/libs/libmythmetadata/libmythmetadata.pro
@@ -1579,48 +2014,84 @@ index 54cb344..8fa8ff3 100644
  inc.files += metaio.h metaiotaglib.h
  inc.files += metaioflacvorbis.h metaioavfcomment.h metaiomp4.h
 diff --git a/mythtv/libs/libmythmetadata/metadatacommon.cpp b/mythtv/libs/libmythmetadata/metadatacommon.cpp
-index 8a4c598..02e889b 100644
+index 8a4c598..ea3716f 100644
 --- a/mythtv/libs/libmythmetadata/metadatacommon.cpp
 +++ b/mythtv/libs/libmythmetadata/metadatacommon.cpp
-@@ -423,6 +423,37 @@ ArtworkList MetadataLookup::GetArtwork(VideoArtworkType type) const
-     return ret;
- }
- 
-+LookupType MetadataLookup::GetSubtype() const
-+{
-+    if (m_inetref.isEmpty() ||
-+        m_inetref == MetaGrabberScript::CleanedInetref(m_inetref) ||
-+        (m_subtype != kProbableMovie && m_subtype != kProbableTelevision &&
-+         m_subtype != kProbableGenericTelevision))
-+    {
-+        // can't determine subtype from inetref
-+        return m_subtype;
-+    }
-+
-+    MetaGrabberScript grabber =
-+        MetaGrabberScript::GetGrabber(m_subtype == kProbableMovie ?
-+                                        kGrabberMovie : kGrabberTelevision,
-+                                      this);
-+
-+    if (!grabber.IsValid())
-+    {
-+        return m_subtype;
-+    }
-+    switch (grabber.GetType())
-+    {
-+        case kGrabberMovie:
-+            return kProbableMovie;
-+        case kGrabberTelevision:
-+            return kProbableTelevision;
-+        default:
-+            return m_subtype;
-+    }
-+}
-+
- void MetadataLookup::toMap(InfoMap &metadataMap)
+@@ -75,6 +75,7 @@ MetadataLookup::MetadataLookup(void) :
+     m_collectionref(),
+     m_tmsref(),
+     m_imdb(),
++    m_iscollection(false),
+     m_people(),
+     m_studios(),
+     m_homepage(),
+@@ -210,6 +211,7 @@ MetadataLookup::MetadataLookup(
+     m_collectionref(collectionref),
+     m_tmsref(tmsref),
+     m_imdb(imdb),
++    m_iscollection(false),
+     m_people(people),
+     m_studios(studios),
+     m_homepage(homepage),
+@@ -303,7 +305,8 @@ MetadataLookup::MetadataLookup(
+     m_releasedate(releasedate),
+     m_lastupdated(lastupdated),
+     m_runtime(runtime),
+-    m_runtimesecs(runtimesecs)
++    m_runtimesecs(runtimesecs),
++    m_iscollection(false)
  {
-     metadataMap["filename"] = m_filename;
-@@ -1496,68 +1527,4 @@ QDateTime RFC822TimeToQDateTime(const QString& t)
+     m_tracknum = 0;
+     m_popularity = 0;
+@@ -379,6 +382,7 @@ MetadataLookup::MetadataLookup(
+     m_runtime(runtime),
+     m_runtimesecs(runtimesecs),
+     m_inetref(inetref),
++    m_iscollection(false),
+     m_people(people),
+     m_trailerURL(trailerURL),
+     m_artwork(artwork),
+@@ -1159,23 +1163,30 @@ MetadataLookup* ParseMetadataItem(const QDomElement& item,
+         season = lookup->GetSeason();
+         episode = lookup->GetEpisode();
+     }
+-    else
++
++    if (lookup->GetPreferDVDOrdering())
+     {
+-        if (lookup->GetPreferDVDOrdering())
++        if (!season)
+         {
+             season = item.firstChildElement("dvdseason").text().toUInt();
+-            episode = item.firstChildElement("dvdepisode").text().toUInt();
+         }
+-
+-        if ((season == 0) && (episode == 0))
++        if (!episode)
+         {
+-            season = item.firstChildElement("season").text().toUInt();
+-            episode = item.firstChildElement("episode").text().toUInt();
++            episode = item.firstChildElement("dvdepisode").text().toUInt();
+         }
+-        LOG(VB_GENERAL, LOG_INFO, QString("Result Found, Season %1 Episode %2")
+-            .arg(season).arg(episode));
+     }
+ 
++    if (!season)
++    {
++        season = item.firstChildElement("season").text().toUInt();
++    }
++    if (!episode)
++    {
++        episode = item.firstChildElement("episode").text().toUInt();
++    }
++    LOG(VB_GENERAL, LOG_INFO, QString("Result Found, Season %1 Episode %2")
++        .arg(season).arg(episode));
++
+     return new MetadataLookup(lookup->GetType(), lookup->GetSubtype(),
+         lookup->GetData(), lookup->GetStep(), lookup->GetAutomatic(),
+         lookup->GetHandleImages(), lookup->GetAllowOverwrites(),
+@@ -1496,68 +1507,4 @@ QDateTime RFC822TimeToQDateTime(const QString& t)
      return result;
  }
  
@@ -1690,7 +2161,7 @@ index 8a4c598..02e889b 100644
 -    metadataMap["type"] = m_typestring;
 -}
 diff --git a/mythtv/libs/libmythmetadata/metadatacommon.h b/mythtv/libs/libmythmetadata/metadatacommon.h
-index 05e90c0..604ba08 100644
+index 05e90c0..21f5ec8 100644
 --- a/mythtv/libs/libmythmetadata/metadatacommon.h
 +++ b/mythtv/libs/libmythmetadata/metadatacommon.h
 @@ -15,6 +15,7 @@
@@ -1701,16 +2172,31 @@ index 05e90c0..604ba08 100644
  
  class ProgramInfo;
  
-@@ -272,7 +273,7 @@ class META_PUBLIC MetadataLookup : public QObject, public ReferenceCounter
-     // GETS
+@@ -259,6 +260,7 @@ class META_PUBLIC MetadataLookup : public QObject, public ReferenceCounter
+     void SetCollectionref(const QString &collectionref)
+                              { m_collectionref = collectionref; };
+     void SetTMSref(const QString &tmsref) { m_tmsref = tmsref; };
++    void SetIsCollection(bool collection) { m_iscollection = collection; };
+     void SetPreferDVDOrdering(bool preferdvdorder)
+                              { m_dvdorder = preferdvdorder; };
  
-     MetadataType GetType() const { return m_type; };
--    LookupType GetSubtype() const { return m_subtype; };
-+    LookupType GetSubtype() const;
-     QVariant GetData() const { return m_data; };
-     LookupStep GetStep() const { return m_step; };
-     bool GetAutomatic() const { return m_automatic; };
-@@ -482,54 +483,6 @@ META_PUBLIC QString nearestName(const QString &actual,
+@@ -344,6 +346,7 @@ class META_PUBLIC MetadataLookup : public QObject, public ReferenceCounter
+     QString GetCollectionref() const { return m_collectionref; };
+     QString GetIMDB() const { return m_imdb; };
+     QString GetTMSref() const { return m_tmsref; };
++    bool    GetIsCollection() const { return m_iscollection; };
+ 
+     // People
+     QList<PersonInfo> GetPeople(PeopleType type) const;
+@@ -429,6 +432,7 @@ class META_PUBLIC MetadataLookup : public QObject, public ReferenceCounter
+     QString m_collectionref;
+     QString m_tmsref;
+     QString m_imdb;
++    bool    m_iscollection;
+ 
+     // People - Video
+     const PeopleMap m_people;
+@@ -482,54 +486,6 @@ META_PUBLIC QString nearestName(const QString &actual,
  
  META_PUBLIC QDateTime RFC822TimeToQDateTime(const QString &t);
  
@@ -1766,43 +2252,91 @@ index 05e90c0..604ba08 100644
  Q_DECLARE_METATYPE(RefCountHandler<MetadataLookup>)
  
 diff --git a/mythtv/libs/libmythmetadata/metadatadownload.cpp b/mythtv/libs/libmythmetadata/metadatadownload.cpp
-index a2cca15..3bc7c92 100644
+index a2cca15..78d0543 100644
 --- a/mythtv/libs/libmythmetadata/metadatadownload.cpp
 +++ b/mythtv/libs/libmythmetadata/metadatadownload.cpp
-@@ -113,10 +113,10 @@ void MetadataDownload::run()
+@@ -11,6 +11,7 @@
+ #include "mythsystemlegacy.h"
+ #include "storagegroup.h"
+ #include "metadatadownload.h"
++#include "metadatafactory.h"
+ #include "mythmiscutil.h"
+ #include "remotefile.h"
+ #include "mythlogging.h"
+@@ -92,44 +93,30 @@ void MetadataDownload::run()
+         MetadataLookupList list;
+ 
+         // Go go gadget Metadata Lookup
+-        if (lookup->GetType() == kMetadataVideo)
++        if (lookup->GetType() == kMetadataVideo ||
++            lookup->GetType() == kMetadataRecording)
+         {
+             if (lookup->GetSubtype() == kProbableTelevision)
+                 list = handleTelevision(lookup);
+             else if (lookup->GetSubtype() == kProbableMovie)
+                 list = handleMovie(lookup);
+             else
+-                list = handleVideoUndetermined(lookup);
+-
+-            if (list.isEmpty() &&
+-                lookup->GetSubtype() == kUnknownVideo)
              {
-                 if (lookup->GetSeason() > 0 || lookup->GetEpisode() > 0)
-                     list = handleTelevision(lookup);
+-                list = handleMovie(lookup);
++                // will try both movie and TV
++                list = handleVideoUndetermined(lookup);
+             }
+-        }
+-        else if (lookup->GetType() == kMetadataRecording)
+-        {
+-            if (lookup->GetSubtype() == kProbableTelevision)
+-            {
+-                if (lookup->GetSeason() > 0 || lookup->GetEpisode() > 0)
+-                    list = handleTelevision(lookup);
 -                else if (!lookup->GetSubtitle().isEmpty())
-+                else
-                     list = handleVideoUndetermined(lookup);
+-                    list = handleVideoUndetermined(lookup);
  
 -                if (list.isEmpty())
-+                if (list.isEmpty() && lookup->GetStep() != kLookupData)
-                     list = handleRecordingGeneric(lookup);
+-                    list = handleRecordingGeneric(lookup);
+-            }
+-            else if (lookup->GetSubtype() == kProbableMovie)
++            if ((list.isEmpty() ||
++                 (list.size() > 1 && !lookup->GetAutomatic())) &&
++                lookup->GetSubtype() == kProbableTelevision)
+             {
+-                list = handleMovie(lookup);
+-                if (lookup->GetInetref().isEmpty())
+-                    list.append(handleRecordingGeneric(lookup));
++                list.append(handleMovie(lookup));
              }
-             else if (lookup->GetSubtype() == kProbableMovie)
-@@ -127,9 +127,9 @@ void MetadataDownload::run()
-             }
-             else
+-            else
++            else if ((list.isEmpty() ||
++                      (list.size() > 1 && !lookup->GetAutomatic())) &&
++                     lookup->GetSubtype() == kProbableMovie)
              {
 -                list = handleRecordingGeneric(lookup);
-+                list = handleVideoUndetermined(lookup);
-                 if (lookup->GetInetref().isEmpty())
+-                if (lookup->GetInetref().isEmpty())
 -                    list.append(handleMovie(lookup));
-+                    list.append(handleRecordingGeneric(lookup));
++                list.append(handleTelevision(lookup));
              }
          }
          else if (lookup->GetType() == kMetadataGame)
-@@ -144,6 +144,7 @@ void MetadataDownload::run()
+@@ -144,8 +131,15 @@ void MetadataDownload::run()
              if (list.count() == 1 && list[0]->GetStep() == kLookupSearch)
              {
                  MetadataLookup *newlookup = list.takeFirst();
 +
                  newlookup->SetStep(kLookupData);
                  prependLookup(newlookup);
++                // Type may have changed
++                LookupType ret = GuessLookupType(newlookup);
++                if (ret != kUnknownVideo)
++                {
++                    newlookup->SetSubtype(ret);
++                }
                  continue;
-@@ -158,6 +159,7 @@ void MetadataDownload::run()
+             }
+ 
+@@ -158,9 +152,16 @@ void MetadataDownload::run()
                  if (bestLookup)
                  {
                      MetadataLookup *newlookup = bestLookup;
@@ -1810,7 +2344,16 @@ index a2cca15..3bc7c92 100644
                      // bestlookup is owned by list, we need an extra reference
                      newlookup->IncrRef();
                      newlookup->SetStep(kLookupData);
-@@ -256,8 +258,8 @@ MetadataLookup* MetadataDownload::findBestMatch(MetadataLookupList list,
++                    // Type may have changed
++                    LookupType ret = GuessLookupType(newlookup);
++                    if (ret != kUnknownVideo)
++                    {
++                        newlookup->SetSubtype(ret);
++                    }
+                     prependLookup(newlookup);
+                     continue;
+                 }
+@@ -256,8 +257,8 @@ MetadataLookup* MetadataDownload::findBestMatch(MetadataLookupList list,
                      .arg(originaltitle).arg(bestTitle));
  
      // Grab the one item that matches the besttitle (IMPERFECT)
@@ -1821,7 +2364,7 @@ index a2cca15..3bc7c92 100644
      {
          if ((*i)->GetTitle() == bestTitle)
          {
-@@ -291,8 +293,7 @@ MetadataLookupList MetadataDownload::runGrabber(QString cmd, QStringList args,
+@@ -291,8 +292,7 @@ MetadataLookupList MetadataDownload::runGrabber(QString cmd, QStringList args,
  
          while (!item.isNull())
          {
@@ -1831,7 +2374,7 @@ index a2cca15..3bc7c92 100644
              list.append(tmp);
              // MetadataLookup is to be owned by list
              tmp->DecrRef();
-@@ -304,48 +305,22 @@ MetadataLookupList MetadataDownload::runGrabber(QString cmd, QStringList args,
+@@ -304,48 +304,22 @@ MetadataLookupList MetadataDownload::runGrabber(QString cmd, QStringList args,
  
  QString MetadataDownload::GetMovieGrabber()
  {
@@ -1884,7 +2427,7 @@ index a2cca15..3bc7c92 100644
  }
  
  bool MetadataDownload::MovieGrabberWorks()
-@@ -440,9 +415,11 @@ MetadataLookupList MetadataDownload::readNFO(QString NFOpath,
+@@ -440,9 +414,11 @@ MetadataLookupList MetadataDownload::readNFO(QString NFOpath,
          if (rf->isOpen())
          {
              bool loaded = rf->SaveAs(nforaw);
@@ -1896,7 +2439,7 @@ index a2cca15..3bc7c92 100644
                  if (doc.setContent(nforaw, true))
                  {
                      lookup->SetStep(kLookupData);
-@@ -463,6 +440,7 @@ MetadataLookupList MetadataDownload::readNFO(QString NFOpath,
+@@ -463,6 +439,7 @@ MetadataLookupList MetadataDownload::readNFO(QString NFOpath,
          if (!error)
          {
              MetadataLookup *tmp = ParseMetadataMovieNFO(item, lookup);
@@ -1904,7 +2447,7 @@ index a2cca15..3bc7c92 100644
              list.append(tmp);
              // MetadataLookup is owned by the MetadataLookupList returned
              tmp->DecrRef();
-@@ -475,34 +453,28 @@ MetadataLookupList MetadataDownload::readNFO(QString NFOpath,
+@@ -475,38 +452,45 @@ MetadataLookupList MetadataDownload::readNFO(QString NFOpath,
  MetadataLookupList MetadataDownload::handleGame(MetadataLookup *lookup)
  {
      MetadataLookupList list;
@@ -1933,6 +2476,11 @@ index a2cca15..3bc7c92 100644
 -        args.append(QString("-M"));
 -        QString title = lookup->GetTitle();
 -        args.append(title);
++        if (lookup->GetTitle().isEmpty())
++        {
++            // no point searching on nothing...
++            return list;
++        }
 +        // we're searching
 +        list = grabber.Search(lookup->GetTitle(), lookup);
      }
@@ -1947,10 +2495,24 @@ index a2cca15..3bc7c92 100644
  
      return list;
  }
-@@ -527,34 +499,27 @@ MetadataLookupList MetadataDownload::handleMovie(MetadataLookup *lookup)
  
-     if (list.isEmpty())
-     {
++/**
++ * handleMovie:
++ * attempt to find movie data via the following (in order)
++ * 1- Local MXML
++ * 2- Local NFO
++ * 3- By title
++ * 4- By inetref (if present)
++ */
+ MetadataLookupList MetadataDownload::handleMovie(MetadataLookup *lookup)
+ {
+     MetadataLookupList list;
+@@ -525,98 +509,125 @@ MetadataLookupList MetadataDownload::handleMovie(MetadataLookup *lookup)
+     else if (!nfo.isEmpty())
+         list = readNFO(nfo, lookup);
+ 
+-    if (list.isEmpty())
+-    {
 -        QString cmd = GetMovieGrabber();
 -
 -        QStringList args;
@@ -1959,43 +2521,65 @@ index a2cca15..3bc7c92 100644
 -
 -        args.append(QString("-a"));
 -        args.append(gCoreContext->GetLocale()->GetCountryCode());
--
-         // If the inetref is populated, even in kLookupSearch mode,
-         // become a kLookupData grab and use that.
-         if (lookup->GetStep() == kLookupSearch &&
-             (!lookup->GetInetref().isEmpty() &&
-              lookup->GetInetref() != "00000000"))
-+        {
-             lookup->SetStep(kLookupData);
-+        }
-+
-+        MetaGrabberScript grabber =
-+            MetaGrabberScript::GetGrabber(kGrabberMovie, lookup);
++    if (!list.isEmpty())
++        return list;
  
-         if (lookup->GetStep() == kLookupSearch)
-         {
+-        // If the inetref is populated, even in kLookupSearch mode,
+-        // become a kLookupData grab and use that.
+-        if (lookup->GetStep() == kLookupSearch &&
+-            (!lookup->GetInetref().isEmpty() &&
+-             lookup->GetInetref() != "00000000"))
+-            lookup->SetStep(kLookupData);
++    MetaGrabberScript grabber =
++        MetaGrabberScript::GetGrabber(kGrabberMovie, lookup);
+ 
+-        if (lookup->GetStep() == kLookupSearch)
+-        {
 -            args.append(QString("-M"));
 -            QString title = lookup->GetTitle();
 -            args.append(title);
-+            list = grabber.Search(lookup->GetTitle(), lookup);
-         }
-         else if (lookup->GetStep() == kLookupData)
+-        }
+-        else if (lookup->GetStep() == kLookupData)
++    // initial search mode
++    if (!lookup->GetInetref().isEmpty() && lookup->GetInetref() != "00000000" &&
++        (lookup->GetStep() == kLookupSearch || lookup->GetStep() == kLookupData))
++    {
++        // with inetref
++        lookup->SetStep(kLookupData);
++        // we're just grabbing data
++        list = grabber.LookupData(lookup->GetInetref(), lookup);
++    }
++    else if (lookup->GetStep() == kLookupSearch)
++    {
++        if (lookup->GetTitle().isEmpty())
          {
 -            args.append(QString("-D"));
 -            args.append(lookup->GetInetref());
-+            // we're just grabbing data
-+            list = grabber.LookupData(lookup->GetInetref(), lookup);
++            // no point searching on nothing...
++            return list;
          }
 -        list = runGrabber(cmd, args, lookup);
++        list = grabber.Search(lookup->GetTitle(), lookup);
      }
  
      return list;
-@@ -563,50 +528,36 @@ MetadataLookupList MetadataDownload::handleMovie(MetadataLookup *lookup)
+ }
+ 
++/**
++ * handleTelevision
++ * attempt to find television data via the following (in order)
++ * 1- By inetref with subtitle
++ * 2- By inetref with season and episode
++ * 3- By inetref
++ * 4- By title and subtitle
++ * 5- By title
++ */
  MetadataLookupList MetadataDownload::handleTelevision(MetadataLookup *lookup)
  {
      MetadataLookupList list;
 +    MetaGrabberScript grabber =
 +        MetaGrabberScript::GetGrabber(kGrabberTelevision, lookup);
++    bool searchcollection = false;
  
 -    QString cmd = GetTelevisionGrabber();
 -
@@ -2010,39 +2594,70 @@ index a2cca15..3bc7c92 100644
 -    if (lookup->GetStep() == kLookupSearch &&
 -        (!lookup->GetInetref().isEmpty() &&
 -         lookup->GetInetref() != "00000000"))
--        lookup->SetStep(kLookupData);
--
-+    // there's some special logic going on with searches
-     if (lookup->GetStep() == kLookupSearch)
-     {
++    // initial search mode
++    if (!lookup->GetInetref().isEmpty() && lookup->GetInetref() != "00000000" &&
++        (lookup->GetStep() == kLookupSearch || lookup->GetStep() == kLookupData))
++    {
++        // with inetref
+         lookup->SetStep(kLookupData);
++        if (!lookup->GetSubtitle().isEmpty())
++        {
++            list = grabber.SearchSubtitle(lookup->GetInetref(),
++                                          lookup->GetTitle() /* unused */,
++                                          lookup->GetSubtitle(), lookup, false);
++        }
+ 
+-    if (lookup->GetStep() == kLookupSearch)
+-    {
 -        args.append(QString("-M"));
-+        // initial search mode
-         if (lookup->GetInetref().isEmpty() ||
-             lookup->GetInetref() == "00000000")
+-        if (lookup->GetInetref().isEmpty() ||
+-            lookup->GetInetref() == "00000000")
++        if (list.isEmpty() && lookup->GetSeason() && lookup->GetEpisode())
          {
 -            QString title = lookup->GetTitle();
 -            args.append(title);
-+            // no inetref given, use the title
-+            list = grabber.Search(lookup->GetTitle(), lookup);
-         }
-         else
-         {
--            QString inetref = lookup->GetInetref();
--            args.append(inetref);
-+            lookup->SetStep(kLookupData);
 +            list = grabber.LookupData(lookup->GetInetref(), lookup->GetSeason(),
 +                                      lookup->GetEpisode(), lookup);
          }
+-        else
++
++        if (list.isEmpty() && !lookup->GetCollectionref().isEmpty())
++        {
++            list = grabber.LookupCollection(lookup->GetCollectionref(), lookup);
++            searchcollection = true;
++        }
++        else if (list.isEmpty())
+         {
+-            QString inetref = lookup->GetInetref();
+-            args.append(inetref);
++            // We do not store CollectionRef in our database
++            // so try with the inetref, for all purposes with TVDB, they are
++            // always identical
++            list = grabber.LookupCollection(lookup->GetInetref(), lookup);
++            searchcollection = true;
+         }
      }
-     else if (lookup->GetStep() == kLookupData)
+-    else if (lookup->GetStep() == kLookupData)
++    else if (lookup->GetStep() == kLookupSearch)
      {
 -        args.append(QString("-D"));
 -        args.append(lookup->GetInetref());
 -        args.append(QString::number(lookup->GetSeason()));
 -        args.append(QString::number(lookup->GetEpisode()));
-+        // we have an inetref, pull data
-+        list = grabber.LookupData(lookup->GetInetref(), lookup->GetSeason(),
-+                                  lookup->GetEpisode(), lookup);
++        if (lookup->GetTitle().isEmpty())
++        {
++            // no point searching on nothing...
++            return list;
++        }
++        if (!lookup->GetSubtitle().isEmpty())
++        {
++            list = grabber.SearchSubtitle(lookup->GetTitle(),
++                                          lookup->GetSubtitle(), lookup, false);
++        }
++        if (list.isEmpty())
++        {
++            list = grabber.Search(lookup->GetTitle(), lookup);
++        }
      }
      else if (lookup->GetStep() == kLookupCollection)
      {
@@ -2054,16 +2669,32 @@ index a2cca15..3bc7c92 100644
  
      // Collection Fallback
      // If the lookup allows generic metadata, and the specific
-@@ -616,7 +567,7 @@ MetadataLookupList MetadataDownload::handleTelevision(MetadataLookup *lookup)
-         lookup->GetStep() == kLookupData)
+     // season and episode are not available, try for series metadata.
+-    if (list.isEmpty() &&
+-        lookup->GetAllowGeneric() &&
+-        lookup->GetStep() == kLookupData)
++    if (!searchcollection && list.isEmpty() &&
++        !lookup->GetCollectionref().isEmpty() &&
++        lookup->GetAllowGeneric() && lookup->GetStep() == kLookupData)
      {
          lookup->SetStep(kLookupCollection);
 -        list = handleTelevision(lookup);
 +        list = grabber.LookupCollection(lookup->GetCollectionref(), lookup);
++    }
++
++    if (!list.isEmpty())
++    {
++        // mark all results so that search collection is properly handled later
++        lookup->SetIsCollection(searchcollection);
++        for (MetadataLookupList::iterator it = list.begin();
++             it != list.end(); ++it)
++        {
++            (*it)->SetIsCollection(searchcollection);
++        }
      }
  
      return list;
-@@ -626,36 +577,39 @@ MetadataLookupList MetadataDownload::handleVideoUndetermined(MetadataLookup *loo
+@@ -626,36 +637,21 @@ MetadataLookupList MetadataDownload::handleVideoUndetermined(MetadataLookup *loo
  {
      MetadataLookupList list;
  
@@ -2085,38 +2716,21 @@ index a2cca15..3bc7c92 100644
      {
 -        QString inetref = lookup->GetInetref();
 -        args.append(inetref);
-+        MetaGrabberScript grabber =
-+            MetaGrabberScript::GetGrabber(kGrabberTelevision, lookup);
-+
-+        if (lookup->GetInetref().isEmpty() || lookup->GetInetref() == "00000000")
-+        {
-+            list = grabber.SearchSubtitle(lookup->GetTitle(),
-+                                          lookup->GetSubtitle(), lookup, false);
-+        }
-+        else
-+        {
-+            list = grabber.SearchSubtitle(lookup->GetInetref(),
-+                                          lookup->GetTitle(),
-+                                          lookup->GetSubtitle(), lookup, false);
-+        }
++        list.append(handleTelevision(lookup));
      }
 -    else
-+    if (lookup->GetSubtype() != kProbableMovie &&
-+        (lookup->GetSeason() > 0 || lookup->GetEpisode() > 0))
++
++    if (lookup->GetSubtype() != kProbableTelevision)
      {
 -        QString title = lookup->GetTitle();
 -        args.append(title);
-+        list.append(handleTelevision(lookup));
++        list.append(handleMovie(lookup));
      }
 -    QString subtitle = lookup->GetSubtitle();
 -    args.append(subtitle);
- 
+-
 -    // Try to do a title/subtitle lookup
 -    list = runGrabber(cmd, args, lookup, false);
-+    if (lookup->GetSubtype() != kProbableTelevision)
-+    {
-+        list.append(handleMovie(lookup));
-+    }
  
      if (list.count() == 1)
 +    {
@@ -2125,14 +2739,12 @@ index a2cca15..3bc7c92 100644
  
      return list;
  }
-@@ -669,36 +623,25 @@ MetadataLookupList MetadataDownload::handleRecordingGeneric(MetadataLookup *look
+@@ -669,36 +665,31 @@ MetadataLookupList MetadataDownload::handleRecordingGeneric(MetadataLookup *look
  
      MetadataLookupList list;
  
 -    QString cmd = GetTelevisionGrabber();
-+    // no inetref known, just pull the default grabber
-+    MetaGrabberScript grabber = MetaGrabberScript::GetType(kGrabberTelevision);
- 
+-
 -    QStringList args;
 -
 -    args.append(QString("-l")); // Language Flag
@@ -2140,8 +2752,15 @@ index a2cca15..3bc7c92 100644
 -
 -    args.append(QString("-a"));
 -    args.append(gCoreContext->GetLocale()->GetCountryCode());
--
--
++    if (lookup->GetTitle().isEmpty())
++    {
++        // no point searching on nothing...
++        return list;
++    }
+ 
++    // no inetref known, just pull the default grabber
++    MetaGrabberScript grabber = MetaGrabberScript::GetType(kGrabberTelevision);
+ 
 -    args.append("-M");
 -    QString title = lookup->GetTitle();
 -    args.append(title);
@@ -2167,7 +2786,7 @@ index a2cca15..3bc7c92 100644
          lookup->SetInetref(list[0]->GetInetref());
          lookup->SetCollectionref(list[0]->GetCollectionref());
          list = handleTelevision(lookup);
-@@ -732,6 +675,7 @@ QString MetadataDownload::getMXMLPath(QString filename)
+@@ -732,6 +723,7 @@ QString MetadataDownload::getMXMLPath(QString filename)
      {
          StorageGroup sg;
          QString fn = sg.FindFile(xurl.path());
@@ -2175,7 +2794,7 @@ index a2cca15..3bc7c92 100644
          if (!fn.isEmpty() && QFile::exists(fn))
              ret = xmlname;
      }
-@@ -760,6 +704,7 @@ QString MetadataDownload::getNFOPath(QString filename)
+@@ -760,6 +752,7 @@ QString MetadataDownload::getNFOPath(QString filename)
      {
          StorageGroup sg;
          QString fn = sg.FindFile(nurl.path());
@@ -2184,10 +2803,33 @@ index a2cca15..3bc7c92 100644
              ret = nfoname;
      }
 diff --git a/mythtv/libs/libmythmetadata/metadatafactory.cpp b/mythtv/libs/libmythmetadata/metadatafactory.cpp
-index 0109213..d24c233 100644
+index 0109213..5c66bef 100644
 --- a/mythtv/libs/libmythmetadata/metadatafactory.cpp
 +++ b/mythtv/libs/libmythmetadata/metadatafactory.cpp
-@@ -313,7 +313,7 @@ void MetadataFactory::OnSingleResult(MetadataLookup *lookup)
+@@ -135,12 +135,7 @@ void MetadataFactory::Lookup(VideoMetadata *metadata, bool automatic,
+ 
+     lookup->SetStep(kLookupSearch);
+     lookup->SetType(kMetadataVideo);
+-    if (metadata->GetSeason() > 0 || metadata->GetEpisode() > 0)
+-        lookup->SetSubtype(kProbableTelevision);
+-    else if (metadata->GetSubtitle().isEmpty())
+-        lookup->SetSubtype(kProbableMovie);
+-    else
+-        lookup->SetSubtype(kUnknownVideo);
++    lookup->SetSubtype(GuessLookupType(metadata));
+     lookup->SetData(qVariantFromValue(metadata));
+     lookup->SetAutomatic(automatic);
+     lookup->SetHandleImages(getimages);
+@@ -296,7 +291,7 @@ void MetadataFactory::OnSingleResult(MetadataLookup *lookup)
+         {
+             ArtworkInfo info;
+             int index = fanartlist.size();
+-            int season = (int)lookup->GetSeason();
++            int season = lookup->GetIsCollection() ? 0 : (int)lookup->GetSeason();
+             if (season > 0)
+                 index = max(0, index-season);
+             else
+@@ -313,7 +308,7 @@ void MetadataFactory::OnSingleResult(MetadataLookup *lookup)
              map.insert(kArtworkBanner, info);
          }
  
@@ -2196,12 +2838,111 @@ index 0109213..d24c233 100644
          {
              ArtworkList screenshotlist = lookup->GetArtwork(kArtworkScreenshot);
              if (screenshotlist.size())
+@@ -627,7 +622,10 @@ void MetadataFactory::customEvent(QEvent *levent)
+ 
+ LookupType GuessLookupType(ProgramInfo *pginfo)
+ {
+-    LookupType ret = kUnknownVideo;
++    LookupType ret = GuessLookupType(pginfo->GetInetRef());
++
++    if (ret != kUnknownVideo)
++        return ret;
+ 
+     ProgramInfo::CategoryType catType = pginfo->GetCategoryType();
+     if (catType == ProgramInfo::kCategoryNone)
+@@ -672,7 +670,10 @@ LookupType GuessLookupType(ProgramInfo *pginfo)
+ 
+ LookupType GuessLookupType(MetadataLookup *lookup)
+ {
+-    LookupType ret = kUnknownVideo;
++    LookupType ret = GuessLookupType(lookup->GetInetref());
++
++    if (ret != kUnknownVideo)
++        return ret;
+ 
+     if (lookup->GetSeason() > 0 || lookup->GetEpisode() > 0 ||
+         !lookup->GetSubtitle().isEmpty())
+@@ -683,10 +684,28 @@ LookupType GuessLookupType(MetadataLookup *lookup)
+     return ret;
+ }
+ 
++LookupType GuessLookupType(VideoMetadata *metadata)
++{
++    LookupType ret = GuessLookupType(metadata->GetInetRef());
++
++    if (ret != kUnknownVideo)
++        return ret;
++
++    if (metadata->GetSeason() > 0 || metadata->GetEpisode() > 0 ||
++        !metadata->GetSubtitle().isEmpty())
++        ret = kProbableTelevision;
++    else
++        ret = kProbableMovie;
++
++    return ret;
++}
+ 
+ LookupType GuessLookupType(RecordingRule *recrule)
+ {
+-    LookupType ret = kUnknownVideo;
++    LookupType ret = GuessLookupType(recrule->m_inetref);
++
++    if (ret != kUnknownVideo)
++        return ret;
+ 
+     if (recrule->m_season > 0 || recrule->m_episode > 0 ||
+         !recrule->m_subtitle.isEmpty())
+@@ -697,3 +716,31 @@ LookupType GuessLookupType(RecordingRule *recrule)
+     return ret;
+ }
+ 
++LookupType GuessLookupType(const QString &inetref)
++{
++    if (inetref.isEmpty() || inetref == "00000000" ||
++        inetref == MetaGrabberScript::CleanedInetref(inetref))
++    {
++        // can't determine subtype from inetref
++        return kUnknownVideo;
++    }
++
++    // inetref is defined, see if we have a pre-defined grabber
++    MetaGrabberScript grabber =
++        MetaGrabberScript::FromInetref(inetref);
++
++    if (!grabber.IsValid())
++    {
++        return kUnknownVideo;
++    }
++
++    switch (grabber.GetType())
++    {
++        case kGrabberMovie:
++            return kProbableMovie;
++        case kGrabberTelevision:
++            return kProbableTelevision;
++        default:
++            return kUnknownVideo;
++    }
++}
+diff --git a/mythtv/libs/libmythmetadata/metadatafactory.h b/mythtv/libs/libmythmetadata/metadatafactory.h
+index 54de5d2..ec13335 100644
+--- a/mythtv/libs/libmythmetadata/metadatafactory.h
++++ b/mythtv/libs/libmythmetadata/metadatafactory.h
+@@ -152,6 +152,8 @@ class META_PUBLIC MetadataFactory : public QObject
+ 
+ META_PUBLIC LookupType GuessLookupType(ProgramInfo *pginfo);
+ META_PUBLIC LookupType GuessLookupType(MetadataLookup *lookup);
++META_PUBLIC LookupType GuessLookupType(VideoMetadata *metadata);
+ META_PUBLIC LookupType GuessLookupType(RecordingRule *recrule);
++META_PUBLIC LookupType GuessLookupType(const QString& inetref);
+ 
+ #endif
 diff --git a/mythtv/libs/libmythmetadata/metadatagrabber.cpp b/mythtv/libs/libmythmetadata/metadatagrabber.cpp
 new file mode 100644
-index 0000000..130645d
+index 0000000..64050ea
 --- /dev/null
 +++ b/mythtv/libs/libmythmetadata/metadatagrabber.cpp
-@@ -0,0 +1,584 @@
+@@ -0,0 +1,595 @@
 +// Qt headers
 +#include <QMap>
 +#include <QDir>
@@ -2241,6 +2982,17 @@ index 0000000..130645d
 +static bool initialized = false;
 +static QMutex typeLock;
 +
++static GrabberOpts GrabberOptsMaker (const QString &thepath, const QString &thesetting, const QString &thedefault)
++{
++    GrabberOpts opts;
++
++    opts.path = thepath;
++    opts.setting = thesetting;
++    opts.def = thedefault;
++
++    return opts;
++}
++
 +void InitializeStaticMaps(void)
 +{
 +    if (!initialized)
@@ -2252,21 +3004,21 @@ index 0000000..130645d
 +            return;
 +
 +        grabberTypes[kGrabberMovie] =
-+                (GrabberOpts) { "%1metadata/Movie/",
++              GrabberOptsMaker ("%1metadata/Movie/",
 +                                "MovieGrabber",
-+                                "metadata/Movie/tmdb3.py"};
++                                "metadata/Movie/tmdb3.py" );
 +        grabberTypes[kGrabberTelevision] =
-+                (GrabberOpts) { "%1metadata/Television/",
++             GrabberOptsMaker ( "%1metadata/Television/",
 +                                "TelevisionGrabber",
-+                                "metadata/Television/ttvdb.py" };
++                                "metadata/Television/ttvdb.py" );
 +        grabberTypes[kGrabberGame]       =
-+                (GrabberOpts) { "%1metadata/Game/",
++             GrabberOptsMaker ( "%1metadata/Game/",
 +                                "mythgame.MetadataGrabber",
-+                                "metadata/Game/giantbomb.py" };
++                                "metadata/Game/giantbomb.py" );
 +        grabberTypes[kGrabberMusic]      =
-+                (GrabberOpts) { "%1metadata/Music",
++             GrabberOptsMaker ( "%1metadata/Music",
 +                                "",
-+                                "" };
++                                "" );
 +
 +        grabberTypeStrings["movie"]      = kGrabberMovie;
 +        grabberTypeStrings["television"] = kGrabberTelevision;
@@ -2893,7 +3645,7 @@ index 0000000..0a54d39
 +
 +#endif // METADATAGRABBER_H_
 diff --git a/mythtv/libs/libmythmetadata/metadataimagedownload.cpp b/mythtv/libs/libmythmetadata/metadataimagedownload.cpp
-index fb31810..d188181 100644
+index fb31810..96410c9 100644
 --- a/mythtv/libs/libmythmetadata/metadataimagedownload.cpp
 +++ b/mythtv/libs/libmythmetadata/metadataimagedownload.cpp
 @@ -143,14 +143,16 @@ void MetadataImageDownload::run()
@@ -3116,6 +3868,15 @@ index fb31810..d188181 100644
          }
          lookup->SetDownloads(downloaded);
          QCoreApplication::postEvent(m_parent, new ImageDLEvent(lookup));
+@@ -388,7 +377,7 @@ QString getDownloadFilename(VideoArtworkType type, MetadataLookup *lookup,
+     uint season = lookup->GetSeason();
+     uint episode = lookup->GetEpisode();
+     QString system = lookup->GetSystem();
+-    if (season > 0 || episode > 0)
++    if (!lookup->GetIsCollection() && (season > 0 || episode > 0))
+     {
+         title = lookup->GetTitle();
+         if (title.contains("/"))
 @@ -472,21 +461,10 @@ QString getLocalWritePath(MetadataType metadatatype, VideoArtworkType type)
  
  QString getStorageGroupURL(VideoArtworkType type, QString host)
@@ -3242,7 +4003,7 @@ index a5cfa9d..02753fb 100644
          // looking for file on me, return directly
          StorageGroup sgroup(storageGroup, gCoreContext->GetHostName());
 diff --git a/mythtv/libs/libmythtv/avformatdecoder.cpp b/mythtv/libs/libmythtv/avformatdecoder.cpp
-index 3129536..5a3003c 100644
+index 3129536..6a975af 100644
 --- a/mythtv/libs/libmythtv/avformatdecoder.cpp
 +++ b/mythtv/libs/libmythtv/avformatdecoder.cpp
 @@ -10,6 +10,7 @@
@@ -3253,7 +4014,55 @@ index 3129536..5a3003c 100644
  
  // MythTV headers
  #include "mythtvexp.h"
-@@ -1214,6 +1215,17 @@ int AvFormatDecoder::OpenFile(RingBuffer *rbuffer, bool novideo,
+@@ -845,7 +846,26 @@ void AvFormatDecoder::SeekReset(long long newKey, uint skipFrames,
+     }
+ 
+     // Skip all the desired number of skipFrames
+-    for (;skipFrames > 0 && !ateof; skipFrames--)
++
++    // Some seeks can be very slow.  The most common example comes
++    // from HD-PVR recordings, where keyframes are 128 frames apart
++    // and decoding (even hardware decoding) may not be much faster
++    // than realtime, causing some exact seeks to take 2-4 seconds.
++    // If exact seeking is not required, we take some shortcuts.
++    // First, we impose an absolute maximum time we are willing to
++    // spend (maxSeekTimeMs) on the forward frame-by-frame skip.
++    // After that much time has elapsed, we give up and stop the
++    // frame-by-frame seeking.  Second, after skipping a few frames,
++    // we predict whether the situation is hopeless, i.e. the total
++    // skipping would take longer than giveUpPredictionMs, and if so,
++    // stop skipping right away.
++    bool exactSeeks = !GetSeekSnap();
++    const int maxSeekTimeMs = 200;
++    int profileFrames = 0;
++    MythTimer begin(MythTimer::kStartRunning);
++    for (; (skipFrames > 0 && !ateof &&
++            (exactSeeks || begin.elapsed() < maxSeekTimeMs));
++         --skipFrames, ++profileFrames)
+     {
+         GetFrame(kDecodeVideo);
+         if (decoded_video_frame)
+@@ -853,6 +873,19 @@ void AvFormatDecoder::SeekReset(long long newKey, uint skipFrames,
+             m_parent->DiscardVideoFrame(decoded_video_frame);
+             decoded_video_frame = NULL;
+         }
++        if (!exactSeeks && profileFrames >= 5 && profileFrames < 10)
++        {
++            const int giveUpPredictionMs = 400;
++            int remainingTimeMs =
++                skipFrames * (float)begin.elapsed() / profileFrames;
++            if (remainingTimeMs > giveUpPredictionMs)
++            {
++              LOG(VB_PLAYBACK, LOG_DEBUG,
++                  QString("Frame-by-frame seeking would take "
++                          "%1 ms to finish, skipping.").arg(remainingTimeMs));
++              break;
++            }
++        }
+     }
+ 
+     if (doflush)
+@@ -1214,6 +1247,17 @@ int AvFormatDecoder::OpenFile(RingBuffer *rbuffer, bool novideo,
          av_update_stream_timings_video(ic);
      }
  
@@ -3271,6 +4080,15 @@ index 3129536..5a3003c 100644
      // Scan for the initial A/V streams
      int ret = ScanStreams(novideo);
      if (-1 == ret)
+@@ -3430,6 +3474,8 @@ int AvFormatDecoder::H264PreProcessPkt(AVStream *stream, AVPacket *pkt)
+                     (enc->codec) && (enc->thread_count>1))
+                 {
+                     QMutexLocker locker(avcodeclock);
++                    // flush all buffers
++                    avcodec_flush_buffers(enc);
+                     const AVCodec *codec = enc->codec;
+                     avcodec_close(enc);
+                     int open_val = avcodec_open2(enc, codec, NULL);
 diff --git a/mythtv/libs/libmythtv/cc608decoder.cpp b/mythtv/libs/libmythtv/cc608decoder.cpp
 index e055718..f9768c1 100644
 --- a/mythtv/libs/libmythtv/cc608decoder.cpp
@@ -3284,6 +4102,127 @@ index e055718..f9768c1 100644
      for (int x = 0; x < limit; x++)
      {
          ccbuf[mode] += ' ';
+diff --git a/mythtv/libs/libmythtv/cc708reader.cpp b/mythtv/libs/libmythtv/cc708reader.cpp
+index 877930d..8f645f0 100644
+--- a/mythtv/libs/libmythtv/cc708reader.cpp
++++ b/mythtv/libs/libmythtv/cc708reader.cpp
+@@ -276,7 +276,7 @@ void CC708Reader::Reset(uint service_num)
+ {
+     CHECKENABLED;
+     LOG(VB_VBI, LOG_INFO, LOC + QString("Reset(%1)").arg(service_num));
+-    DeleteWindows(service_num, 0x7);
++    DeleteWindows(service_num, 0xff);
+     DelayCancel(service_num);
+ }
+ 
+diff --git a/mythtv/libs/libmythtv/channelscan/channelscan_sm.cpp b/mythtv/libs/libmythtv/channelscan/channelscan_sm.cpp
+index 3f02209..568246a 100644
+--- a/mythtv/libs/libmythtv/channelscan/channelscan_sm.cpp
++++ b/mythtv/libs/libmythtv/channelscan/channelscan_sm.cpp
+@@ -36,6 +36,7 @@ using namespace std;
+ 
+ // Qt includes
+ #include <QObject>
++#include <QMutexLocker>
+ 
+ // MythTV includes - General
+ #include "channelscan_sm.h"
+@@ -741,6 +742,8 @@ void ChannelScanSM::UpdateScanTransports(const NetworkInformationTable *nit)
+ 
+ bool ChannelScanSM::UpdateChannelInfo(bool wait_until_complete)
+ {
++    QMutexLocker locker(&m_mutex);
++
+     if (current == scanTransports.end())
+         return true;
+ 
+@@ -1044,10 +1047,20 @@ static void update_info(ChannelInsertInfo &info,
+                         const ServiceDescriptionTable *sdt, uint i,
+                         const QMap<uint64_t, QString> &defAuthorities)
+ {
+-    // HACK beg -- special exception for this network
++    // HACK beg -- special exception for these networks
++    // this enables useonairguide by default for all matching channels
+     //             (dbver == "1067")
+-    bool force_guide_present = (sdt->OriginalNetworkID() == 70);
+-    // HACK end -- special exception for this network
++    bool force_guide_present = (
++        // Telenor (NO)
++        (sdt->OriginalNetworkID() ==    70) ||
++#if 0 // #9592#comment:23 - meanwhile my provider changed his signaling
++        // Kabelplus (AT) formerly Kabelsignal, registered to NDS, see #9592
++        (sdt->OriginalNetworkID() ==   222) ||
++#endif
++        // ERT (GR) from the private temporary allocation, see #9592:comment:17
++        (sdt->OriginalNetworkID() == 65330)
++    );
++    // HACK end -- special exception for these networks
+ 
+     // Figure out best service name and callsign...
+     ServiceDescriptor *desc = sdt->GetServiceDescriptor(i);
+diff --git a/mythtv/libs/libmythtv/channelscan/channelscan_sm.h b/mythtv/libs/libmythtv/channelscan/channelscan_sm.h
+index 813113a..5504fa2 100644
+--- a/mythtv/libs/libmythtv/channelscan/channelscan_sm.h
++++ b/mythtv/libs/libmythtv/channelscan/channelscan_sm.h
+@@ -37,6 +37,7 @@
+ #include <QPair>
+ #include <QMap>
+ #include <QSet>
++#include <QMutex>
+ 
+ // MythTV includes
+ #include "frequencytables.h"
+@@ -248,6 +249,7 @@ class ChannelScanSM : public MPEGStreamListener,
+ 
+     /// Scanner thread, runs ChannelScanSM::run()
+     MThread          *scannerThread;
++    QMutex           m_mutex;
+ };
+ 
+ inline void ChannelScanSM::UpdateScanPercentCompleted(void)
+diff --git a/mythtv/libs/libmythtv/eitcache.cpp b/mythtv/libs/libmythtv/eitcache.cpp
+index c087d9c..ae7c98d 100644
+--- a/mythtv/libs/libmythtv/eitcache.cpp
++++ b/mythtv/libs/libmythtv/eitcache.cpp
+@@ -274,14 +274,14 @@ void EITCache::WriteChannelToDB(QStringList &value_clauses, uint chanid)
+                 updated++;
+                 *it &= ~(uint64_t)0 >> 1; // mark as synced
+             }
++            ++it;
+         }
+         else
+         {
+             // Event is too old; remove from eit cache in memory
+-            eventMap->remove(it.key());
++            it = eventMap->erase(it);
+             removed++;
+         }
+-        ++it;
+     }
+     unlock_channel(chanid, updated);
+ 
+diff --git a/mythtv/libs/libmythtv/eitfixup.cpp b/mythtv/libs/libmythtv/eitfixup.cpp
+index 7ed15b2..78a20ac 100644
+--- a/mythtv/libs/libmythtv/eitfixup.cpp
++++ b/mythtv/libs/libmythtv/eitfixup.cpp
+@@ -42,7 +42,7 @@ EITFixUp::EITFixUp()
+       m_ukSpaceColonStart("^[ |:]*"),
+       m_ukSpaceStart("^ "),
+       m_ukSeries("\\s*\\(?\\s*(?:Episode|Part|Pt)?\\s*(\\d{1,2})\\s*(?:of|/)\\s*(\\d{1,2})\\s*\\)?\\s*(?:\\.|:)?", Qt::CaseInsensitive),
+-      m_ukCC("\\[(?:(AD|SL|S|W),?)+\\]"),
++      m_ukCC("\\[(?:(AD|SL|S|W|HD),?)+\\]"),
+       m_ukYear("[\\[\\(]([\\d]{4})[\\)\\]]"),
+       m_uk24ep("^\\d{1,2}:00[ap]m to \\d{1,2}:00[ap]m: "),
+       m_ukStarring("(?:Western\\s)?[Ss]tarring ([\\w\\s\\-']+)[Aa]nd\\s([\\w\\s\\-']+)[\\.|,](?:\\s)*(\\d{4})?(?:\\.\\s)?"),
+@@ -740,6 +740,8 @@ void EITFixUp::FixUK(DBEventEIT &event) const
+         QStringList tmpCCitems = tmpCC.cap(0).remove("[").remove("]").split(",");
+         if (tmpCCitems.contains("AD"))
+             event.audioProps |= AUD_VISUALIMPAIR;
++        if (tmpCCitems.contains("HD"))
++            event.videoProps |= VID_HDTV;
+         if (tmpCCitems.contains("S"))
+             event.subtitleType |= SUB_NORMAL;
+         if (tmpCCitems.contains("SL"))
 diff --git a/mythtv/libs/libmythtv/lzoconf.h b/mythtv/libs/libmythtv/lzoconf.h
 index cc437f1..02fb202 100644
 --- a/mythtv/libs/libmythtv/lzoconf.h
@@ -6743,6 +7682,20 @@ index 18056372..f4ae948 100644
  
 -/* vim:set ts=4 et: */
 +/* vim:set ts=4 sw=4 et: */
+diff --git a/mythtv/libs/libmythtv/metadataimagehelper.cpp b/mythtv/libs/libmythtv/metadataimagehelper.cpp
+index 1323775..1e0037f 100644
+--- a/mythtv/libs/libmythtv/metadataimagehelper.cpp
++++ b/mythtv/libs/libmythtv/metadataimagehelper.cpp
+@@ -11,6 +11,9 @@ ArtworkMap GetArtwork(QString inetref,
+ {
+     ArtworkMap map;
+ 
++    if (inetref.isEmpty())
++        return map;
++
+     MSqlQuery query(MSqlQuery::InitCon());
+ 
+     QString querystring = "SELECT host, coverart, fanart, banner "
 diff --git a/mythtv/libs/libmythtv/minilzo.cpp b/mythtv/libs/libmythtv/minilzo.cpp
 index d0df7c3..2651317 100644
 --- a/mythtv/libs/libmythtv/minilzo.cpp
@@ -12463,11 +13416,69 @@ index 0aff50e..fd2fb32 100644
  #define LZO1X_MEM_DECOMPRESS    (0)
  
  
+diff --git a/mythtv/libs/libmythtv/mpeg/dvbstreamdata.cpp b/mythtv/libs/libmythtv/mpeg/dvbstreamdata.cpp
+index 40d056d..5ecc052 100644
+--- a/mythtv/libs/libmythtv/mpeg/dvbstreamdata.cpp
++++ b/mythtv/libs/libmythtv/mpeg/dvbstreamdata.cpp
+@@ -436,7 +436,15 @@ void DVBStreamData::ProcessSDT(uint tsid, const ServiceDescriptionTable *sdt)
+ 
+     for (uint i = 0; i < sdt->ServiceCount(); i++)
+     {
++        /*
++         * FIXME always signal EIT presence. We filter later. To many
++         * networks set these flags wrong.
++         * This allows the user to simply set useonairguide on a
++         * channel manually.
++         */
++#if 0
+         if (sdt->HasEITSchedule(i) || sdt->HasEITPresentFollowing(i))
++#endif
+             _dvb_has_eit[sdt->ServiceID(i)] = true;
+     }
+ 
 diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
-index 5dbcac0..61fe8b9 100644
+index 5dbcac0..33d4f9d 100644
 --- a/mythtv/libs/libmythtv/mythplayer.cpp
 +++ b/mythtv/libs/libmythtv/mythplayer.cpp
-@@ -928,7 +928,7 @@ int MythPlayer::OpenFile(uint retries)
+@@ -372,6 +372,8 @@ bool MythPlayer::Pause(void)
+     audio.Pause(true);
+     PauseDecoder();
+     PauseBuffer();
++    if (!decoderPaused)
++        PauseDecoder(); // Retry in case audio only stream
+     allpaused = decoderPaused && videoPaused && bufferPaused;
+     {
+         if (FlagIsSet(kVideoIsNull) && decoder)
+@@ -385,7 +387,7 @@ bool MythPlayer::Pause(void)
+ 
+ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
+ {
+-    pauseLock.lock();
++    QMutexLocker locker(&pauseLock);
+     LOG(VB_PLAYBACK, LOG_INFO, LOC +
+         QString("Play(%1, normal %2, unpause audio %3)")
+             .arg(speed,5,'f',1).arg(normal).arg(unpauseaudio));
+@@ -393,10 +395,10 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
+     if (deleteMap.IsEditing())
+     {
+         LOG(VB_GENERAL, LOG_ERR, LOC + "Ignoring Play(), in edit mode.");
+-        pauseLock.unlock();
+         return false;
+     }
+ 
++    SetEof(kEofStateNone);
+     UnpauseBuffer();
+     UnpauseDecoder();
+     if (unpauseaudio)
+@@ -405,7 +407,6 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
+     allpaused = false;
+     next_play_speed   = speed;
+     next_normal_speed = normal;
+-    pauseLock.unlock();
+     return true;
+ }
+ 
+@@ -928,7 +929,7 @@ int MythPlayer::OpenFile(uint retries)
      int testreadsize = 2048;
  
      MythTimer bigTimer; bigTimer.start();
@@ -12476,7 +13487,16 @@ index 5dbcac0..61fe8b9 100644
      while (testreadsize <= kDecoderProbeBufferSize)
      {
          MythTimer peekTimer; peekTimer.start();
-@@ -2189,6 +2189,10 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
+@@ -945,7 +946,7 @@ int MythPlayer::OpenFile(uint retries)
+                 return -1;
+             }
+             LOG(VB_GENERAL, LOG_WARNING, LOC + "OpenFile() waiting on data");
+-            usleep(50 * 1000);
++            usleep(150 * 1000);
+         }
+ 
+         player_ctx->LockPlayingInfo(__FILE__, __LINE__);
+@@ -2189,8 +2190,15 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
      // clear the buffering state
      SetBuffering(false);
  
@@ -12485,19 +13505,290 @@ index 5dbcac0..61fe8b9 100644
 +        videoOutput->DoneDisplayingFrame(videoOutput->GetLastShownFrame());
 +
      // retrieve the next frame
-     videoOutput->StartDisplayingFrame();
+-    videoOutput->StartDisplayingFrame();
++    bool const bDisplayFrame = videoOutput->ValidVideoFrames() > 0;
++    if (bDisplayFrame)
++        videoOutput->StartDisplayingFrame();
++
      VideoFrame *frame = videoOutput->GetLastShownFrame();
-@@ -2214,7 +2218,9 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
+ 
+     // Check aspect ratio
+@@ -2199,9 +2207,12 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
+     // Player specific processing (dvd, bd, mheg etc)
+     PreProcessNormalFrame();
+ 
+-    // handle scan type changes
+-    AutoDeint(frame);
+-    detect_letter_box->SwitchTo(frame);
++    if (GetTrackCount(kTrackTypeVideo))
++    {
++        // handle scan type changes
++        AutoDeint(frame);
++        detect_letter_box->SwitchTo(frame);
++    }
+ 
+     FrameScanType ps = m_scan;
+     if (kScan_Detect == m_scan || kScan_Ignore == m_scan)
+@@ -2214,7 +2225,11 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
      osdLock.unlock();
  
      AVSync(frame, 0);
 -    videoOutput->DoneDisplayingFrame(frame);
 +    // If PiP then keep this frame for MythPlayer::GetCurrentFrame
-+    if (!player_ctx->IsPIP())
++    if (player_ctx->IsPIP())
++        return;
++    if (bDisplayFrame)
 +        videoOutput->DoneDisplayingFrame(frame);
  }
  
  void MythPlayer::PreProcessNormalFrame(void)
+@@ -2223,10 +2238,12 @@ void MythPlayer::PreProcessNormalFrame(void)
+     // handle Interactive TV
+     if (GetInteractiveTV())
+     {
+-        osdLock.lock();
+-        itvLock.lock();
++        QMutexLocker lk1(&osdLock);
++
+         if (osd && videoOutput->GetOSDPainter())
+         {
++            QMutexLocker lk2(&itvLock);
++
+             InteractiveScreen *window =
+                 (InteractiveScreen*)osd->GetWindow(OSD_WIN_INTERACT);
+             if ((interactiveTV->ImageHasChanged() || !itvVisible) && window)
+@@ -2235,8 +2252,6 @@ void MythPlayer::PreProcessNormalFrame(void)
+                 itvVisible = true;
+             }
+         }
+-        itvLock.unlock();
+-        osdLock.unlock();
+     }
+ #endif // USING_MHEG
+ }
+@@ -2404,7 +2419,7 @@ bool MythPlayer::VideoLoop(void)
+         DisplayPauseFrame();
+     }
+     else
+-        DisplayNormalFrame();
++        DisplayNormalFrame(GetTrackCount(kTrackTypeVideo));
+ 
+     if (FlagIsSet(kVideoIsNull) && decoder)
+         decoder->UpdateFramesPlayed();
+@@ -2534,7 +2549,10 @@ void MythPlayer::SwitchToProgram(void)
+     ProgramInfo *pginfo = player_ctx->tvchain->GetSwitchProgram(
+         discontinuity, newtype, newid);
+     if (!pginfo)
++    {
++        LOG(VB_GENERAL, LOG_ERR, LOC + "SwitchToProgram - No ProgramInfo");
+         return;
++    }
+ 
+     bool newIsDummy = player_ctx->tvchain->GetCardType(newid) == "DUMMY";
+ 
+@@ -2669,7 +2687,10 @@ void MythPlayer::JumpToProgram(void)
+     ProgramInfo *pginfo = player_ctx->tvchain->GetSwitchProgram(
+         discontinuity, newtype, newid);
+     if (!pginfo)
++    {
++        LOG(VB_GENERAL, LOG_ERR, LOC + "JumpToProgram - No ProgramInfo");
+         return;
++    }
+ 
+     inJumpToProgramPause = true;
+ 
+@@ -2677,7 +2698,6 @@ void MythPlayer::JumpToProgram(void)
+     SetPlayingInfo(*pginfo);
+ 
+     Pause();
+-    ChangeSpeed();
+     ResetCaptions();
+     player_ctx->tvchain->SetProgram(*pginfo);
+     player_ctx->buffer->Reset(true);
+@@ -2915,12 +2935,11 @@ void MythPlayer::EventLoop(void)
+         JumpToProgram();
+     }
+     else if ((!allpaused || GetEof() != kEofStateNone) &&
+-             player_ctx->tvchain &&
+-             (decoder && !decoder->GetWaitForChange()))
++             decoder && !decoder->GetWaitForChange() &&
++             player_ctx->tvchain && player_ctx->tvchain->NeedsToSwitch())
+     {
+         // Switch to the next program in livetv
+-        if (player_ctx->tvchain->NeedsToSwitch())
+-            SwitchToProgram();
++        SwitchToProgram();
+     }
+ 
+     // Jump to the next program in livetv
+@@ -3114,36 +3133,35 @@ void MythPlayer::AudioEnd(void)
+ 
+ bool MythPlayer::PauseDecoder(void)
+ {
+-    decoderPauseLock.lock();
++    QMutexLocker locker(&decoderPauseLock);
+     if (is_current_thread(decoderThread))
+     {
++        pauseDecoder = false;
+         decoderPaused = true;
+         decoderThreadPause.wakeAll();
+-        decoderPauseLock.unlock();
+-        return decoderPaused;
++        return true;
+     }
+ 
+-    int tries = 0;
+     pauseDecoder = true;
+-    while (decoderThread && !killdecoder && (tries++ < 100) &&
+-           !decoderThreadPause.wait(&decoderPauseLock, 100))
++    int tries = 0;
++    while (!decoderPaused && decoderThread && !killdecoder && (tries++ < 10) &&
++          !decoderThreadPause.wait(locker.mutex(), 100))
+     {
+         LOG(VB_GENERAL, LOG_WARNING, LOC + "Waited 100ms for decoder to pause");
+     }
+     pauseDecoder = false;
+-    decoderPauseLock.unlock();
+     return decoderPaused;
+-}
++ }
+ 
+ void MythPlayer::UnpauseDecoder(void)
+ {
+-    decoderPauseLock.lock();
++    QMutexLocker locker(&decoderPauseLock);
+ 
+     if (is_current_thread(decoderThread))
+     {
++        unpauseDecoder = false;
+         decoderPaused = false;
+         decoderThreadUnpause.wakeAll();
+-        decoderPauseLock.unlock();
+         return;
+     }
+ 
+@@ -3151,15 +3169,14 @@ void MythPlayer::UnpauseDecoder(void)
+     {
+         int tries = 0;
+         unpauseDecoder = true;
+-        while (decoderThread && !killdecoder && (tries++ < 100) &&
+-              !decoderThreadUnpause.wait(&decoderPauseLock, 100))
++        while (decoderPaused && decoderThread && !killdecoder && (tries++ < 10) &&
++              !decoderThreadUnpause.wait(locker.mutex(), 100))
+         {
+             LOG(VB_GENERAL, LOG_WARNING, LOC +
+                 "Waited 100ms for decoder to unpause");
+         }
+         unpauseDecoder = false;
+     }
+-    decoderPauseLock.unlock();
+ }
+ 
+ void MythPlayer::DecoderStart(bool start_paused)
+@@ -3185,7 +3202,7 @@ void MythPlayer::DecoderEnd(void)
+     SetPlaying(false);
+     killdecoder = true;
+     int tries = 0;
+-    while (decoderThread && !decoderThread->wait(100) && (tries++ < 50))
++    while (decoderThread && !decoderThread->wait(100) && (tries++ < 20))
+         LOG(VB_PLAYBACK, LOG_INFO, LOC +
+             "Waited 100ms for decoder loop to stop");
+ 
+@@ -3198,12 +3215,23 @@ void MythPlayer::DecoderEnd(void)
+ 
+ void MythPlayer::DecoderPauseCheck(void)
+ {
+-    if (is_current_thread(decoderThread))
++    if (!is_current_thread(decoderThread))
++        return;
++
++    QMutexLocker locker(&decoderPauseLock);
++
++    if (pauseDecoder)
++    {
++        pauseDecoder = false;
++        decoderPaused = true;
++        decoderThreadPause.wakeAll();
++    }
++
++    if (unpauseDecoder)
+     {
+-        if (pauseDecoder)
+-            PauseDecoder();
+-        if (unpauseDecoder)
+-            UnpauseDecoder();
++        unpauseDecoder = false;
++        decoderPaused = false;
++        decoderThreadUnpause.wakeAll();
+     }
+ }
+ 
+@@ -3760,19 +3788,21 @@ long long MythPlayer::CalcMaxFFTime(long long ffframes, bool setjump) const
+         if (behind < maxtime * 3)
+             limitKeyRepeat = true;
+     }
++    else if (IsPaused())
++    {
++        uint64_t lastFrame  = deleteMap.IsEmpty() ? totalFrames
++                                                 : deleteMap.GetLastFrame();
++        if (framesPlayed + ffframes >= lastFrame)
++            ret = lastFrame - 1 - framesPlayed;
++    }
+     else
+     {
+-        if (totalFrames > 0)
+-        {
+-            float behind = secsWritten - secsPlayed;
+-            if (behind < maxtime)
+-                ret = 0;
+-            else if (behind - ff <= maxtime * 2)
+-            {
+-                uint64_t ms = 1000 * (secsWritten - maxtime * 2);
+-                ret = TranslatePositionMsToFrame(ms, true) - framesPlayed;
+-            }
+-        }
++        float secsMax = secsWritten - 2.f * maxtime;
++        if (secsMax <= 0.f)
++            ret = 0;
++        else if (secsMax < secsPlayed + ff)
++            ret = TranslatePositionMsToFrame(1000 * secsMax, true)
++                    - framesPlayed;
+     }
+ 
+     return ret;
+@@ -4072,7 +4102,9 @@ bool MythPlayer::HandleProgramEditorActions(QStringList &actions)
+             if (seekamount == 0) // 1 frame
+                 DoRewind(1, kInaccuracyNone);
+             else if (seekamount > 0)
+-                DoRewindSecs(seekamount, kInaccuracyEditor, false);
++                // Use fully-accurate seeks for less than 1 second.
++                DoRewindSecs(seekamount, seekamount < 1.0 ? kInaccuracyNone :
++                             kInaccuracyEditor, false);
+             else
+                 HandleArbSeek(false);
+         }
+@@ -4081,7 +4113,9 @@ bool MythPlayer::HandleProgramEditorActions(QStringList &actions)
+             if (seekamount == 0) // 1 frame
+                 DoFastForward(1, kInaccuracyNone);
+             else if (seekamount > 0)
+-                DoFastForwardSecs(seekamount, kInaccuracyEditor, false);
++                // Use fully-accurate seeks for less than 1 second.
++                DoFastForwardSecs(seekamount, seekamount < 1.0 ? kInaccuracyNone :
++                             kInaccuracyEditor, false);
+             else
+                 HandleArbSeek(true);
+         }
+@@ -4650,7 +4684,10 @@ bool MythPlayer::TranscodeGetNextFrame(
+                 QString("Fast-Forwarding from %1 to %2")
+                     .arg(lastDecodedFrameNumber).arg(jumpto));
+             if (jumpto >= totalFrames)
++            {
++                SetEof(kEofStateDelayed);
+                 return false;
++            }
+ 
+             // For 0.25, move this to DoJumpToFrame(jumpto)
+             WaitForSeek(jumpto, 0);
 diff --git a/mythtv/libs/libmythtv/openglvideo.cpp b/mythtv/libs/libmythtv/openglvideo.cpp
 index dbd39e2..2de7d4c 100644
 --- a/mythtv/libs/libmythtv/openglvideo.cpp
@@ -12511,11 +13802,122 @@ index dbd39e2..2de7d4c 100644
      frameBufferRect       = QRect(QPoint(0,0), video_disp_dim);
      softwareDeinterlacer  = "";
      hardwareDeinterlacing = false;
+diff --git a/mythtv/libs/libmythtv/programdata.cpp b/mythtv/libs/libmythtv/programdata.cpp
+index b182d1e..9368517 100644
+--- a/mythtv/libs/libmythtv/programdata.cpp
++++ b/mythtv/libs/libmythtv/programdata.cpp
+@@ -28,6 +28,11 @@ static QString denullify(const QString &str)
+     return str.isNull() ? "" : str;
+ }
+ 
++static QVariant denullify(const QDateTime &dt)
++{
++    return dt.isNull() ? QVariant("0000-00-00 00:00:00") : QVariant(dt);
++}
++
+ DBPerson::DBPerson(const DBPerson &other) :
+     role(other.role), name(other.name)
+ {
+@@ -858,7 +863,7 @@ uint ProgInfo::InsertDB(MSqlQuery &query, uint chanid) const
+     query.bindValue(":CATEGORY",    denullify(category));
+     query.bindValue(":CATTYPE",     cattype);
+     query.bindValue(":STARTTIME",   starttime);
+-    query.bindValue(":ENDTIME",     endtime);
++    query.bindValue(":ENDTIME",     denullify(endtime));
+     query.bindValue(":CC",
+                     subtitleType & SUB_HARDHEAR ? true : false);
+     query.bindValue(":STEREO",
+@@ -998,25 +1003,9 @@ void ProgramData::FixProgramList(QList<ProgInfo*> &fixlist)
+                 (*cur)->endts   = (*it)->startts;
+                 (*cur)->endtime = (*it)->starttime;
+             }
+-            else
+-            {
+-                (*cur)->endtime = (*cur)->starttime;
+-                if ((*cur)->endtime < QDateTime(
+-                        (*cur)->endtime.date(), QTime(6, 0), Qt::UTC))
+-                {
+-                    (*cur)->endtime = QDateTime(
+-                        (*cur)->endtime.date(), QTime(6, 0), Qt::UTC);
+-                }
+-                else
+-                {
+-                    (*cur)->endtime = QDateTime(
+-                        (*cur)->endtime.date().addDays(1),
+-                        QTime(0, 0), Qt::UTC);
+-                }
+-
+-                (*cur)->endts =
+-                    MythDate::toString((*cur)->endtime, MythDate::kFilename);
+-            }
++            /* if its the last programme in the file then leave its
++               endtime as 0000-00-00 00:00:00 so we can find it easily in
++               fix_end_times() */
+         }
+ 
+         if (it == fixlist.end())
+@@ -1153,7 +1142,7 @@ int ProgramData::fix_end_times(void)
+     MSqlQuery query1(MSqlQuery::InitCon()), query2(MSqlQuery::InitCon());
+ 
+     querystr = "SELECT chanid, starttime, endtime FROM program "
+-               "WHERE (DATE_FORMAT(endtime,'%H%i') = '0000') "
++               "WHERE endtime = '0000-00-00 00:00:00' "
+                "ORDER BY chanid, starttime;";
+ 
+     if (!query1.exec(querystr))
+@@ -1170,11 +1159,10 @@ int ProgramData::fix_end_times(void)
+         endtime = query1.value(2).toString();
+ 
+         querystr = QString("SELECT chanid, starttime, endtime FROM program "
+-                           "WHERE starttime BETWEEN '%1 00:00:00'"
+-                           "AND '%2 23:59:59' AND chanid = '%3' "
++                           "WHERE starttime > '%1' "
++                           "AND chanid = '%2' "
+                            "ORDER BY starttime LIMIT 1;")
+-                           .arg(endtime.left(10))
+-                           .arg(endtime.left(10))
++                           .arg(starttime)
+                            .arg(chanid);
+ 
+         if (!query2.exec(querystr))
+@@ -1188,10 +1176,9 @@ int ProgramData::fix_end_times(void)
+         {
+             count++;
+             endtime = query2.value(1).toString();
+-            querystr = QString("UPDATE program SET starttime = '%1', "
++            querystr = QString("UPDATE program SET "
+                                "endtime = '%2' WHERE (chanid = '%3' AND "
+                                "starttime = '%4');")
+-                               .arg(starttime)
+                                .arg(endtime)
+                                .arg(chanid)
+                                .arg(starttime);
 diff --git a/mythtv/libs/libmythtv/ringbuffer.cpp b/mythtv/libs/libmythtv/ringbuffer.cpp
-index 3a11b26..494c4a0 100644
+index 3a11b26..5e0e775 100644
 --- a/mythtv/libs/libmythtv/ringbuffer.cpp
 +++ b/mythtv/libs/libmythtv/ringbuffer.cpp
-@@ -532,6 +532,8 @@ long long RingBuffer::Seek(long long pos, int whence, bool has_lock)
+@@ -312,6 +312,12 @@ void RingBuffer::UpdateRawBitrate(uint raw_bitrate)
+             QString("Bitrate too low - setting to 64Kb"));
+         raw_bitrate = 64;
+     }
++    else if (raw_bitrate > 100000)
++    {
++        LOG(VB_FILE, LOG_INFO, LOC +
++            QString("Bitrate too high - setting to 100Mb"));
++        raw_bitrate = 100000;
++    }
+ 
+     rwlock.lockForWrite();
+     rawbitrate = raw_bitrate;
+@@ -407,6 +413,7 @@ void RingBuffer::CalcReadAheadThresh(void)
+         }
+         low_buffers = false;
+         fill_min = ((fill_min / CHUNK) + 1) * CHUNK;
++        fill_min = min((uint)fill_min, bufferSize / 2);
+     }
+     else
+     {
+@@ -532,6 +539,8 @@ long long RingBuffer::Seek(long long pos, int whence, bool has_lock)
          ret = SeekInternal(pos, whence);
      }
  
@@ -12524,7 +13926,16 @@ index 3a11b26..494c4a0 100644
      if (!has_lock)
      {
          rwlock.unlock();
-@@ -927,7 +929,7 @@ void RingBuffer::run(void)
+@@ -666,7 +675,7 @@ void RingBuffer::Start(void)
+ 
+     MThread::start();
+ 
+-    while (readaheadrunning && !reallyrunning)
++    while (!readaheadrunning && !reallyrunning)
+         generalWait.wait(&rwlock);
+ 
+     rwlock.unlock();
+@@ -927,7 +936,7 @@ void RingBuffer::run(void)
  
          // These are conditions where we want to sleep to allow
          // other threads to do stuff.
@@ -12533,7 +13944,7 @@ index 3a11b26..494c4a0 100644
          {
              ignore_for_read_timing = true;
              generalWait.wait(&rwlock, 1000);
-@@ -1236,7 +1238,7 @@ bool RingBuffer::WaitForReadsAllowed(void)
+@@ -1236,7 +1245,7 @@ bool RingBuffer::WaitForReadsAllowed(void)
             !request_pause && !commserror && readaheadrunning)
      {
          generalWait.wait(&rwlock, clamp(timeout_ms - t.elapsed(), 10, 100));
@@ -12542,7 +13953,17 @@ index 3a11b26..494c4a0 100644
          {
              LOG(VB_GENERAL, LOG_WARNING, LOC +
                  "Taking too long to be allowed to read..");
-@@ -1472,6 +1474,7 @@ int RingBuffer::ReadPriv(void *buf, int count, bool peek)
+@@ -1383,8 +1392,7 @@ int RingBuffer::ReadPriv(void *buf, int count, bool peek)
+         return -1;
+     }
+ 
+-    if (!readInternalMode &&
+-        (request_pause || stopreads || !readaheadrunning || (ignorereadpos>=0)))
++    if (request_pause || stopreads || !readaheadrunning || (ignorereadpos>=0))
+     {
+         rwlock.unlock();
+         rwlock.lockForWrite();
+@@ -1472,6 +1480,7 @@ int RingBuffer::ReadPriv(void *buf, int count, bool peek)
          rwlock.lockForWrite();
          ateof = true;
          wanttoread = 0;
@@ -12625,6 +14046,46 @@ index 893724c..a3863f6 100644
  
              LOG(VB_VBI, LOG_INFO,
                  QString("Drawing chunk at (%1,%2): %3")
+diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
+index e193a53..33cf6ac 100644
+--- a/mythtv/libs/libmythtv/tv_play.cpp
++++ b/mythtv/libs/libmythtv/tv_play.cpp
+@@ -438,6 +438,7 @@ bool TV::StartTV(ProgramInfo *tvrec, uint flags,
+             mctx->UnlockDeletePlayer(__FILE__, __LINE__);
+         }
+         tv->ReturnPlayerLock(mctx);
++        quitAll |= !playerError.isEmpty();
+     }
+ 
+     LOG(VB_PLAYBACK, LOG_INFO, LOC + "StartTV -- process events 2 begin");
+@@ -5854,7 +5855,8 @@ void TV::PxPToggleType(PlayerContext *mctx, bool wantPBP)
+     if (wantPBP)
+     {
+         GetPlayer(mctx, 0)->SetPIPState(kPBPLeft);
+-        GetPlayer(mctx, 1)->SetPIPState(kPBPRight);
++        if (player.size() > 1)
++            GetPlayer(mctx, 1)->SetPIPState(kPBPRight);
+     }
+     else
+     {
+@@ -7750,7 +7752,8 @@ void TV::ChangeChannel(PlayerContext *ctx, uint chanid, const QString &chan)
+     if (ctx->prevChan.empty())
+         ctx->PushPreviousChannel();
+ 
+-    PauseAudioUntilBuffered(ctx);
++    if (ctx->player)
++        ctx->player->GetAudio()->Pause(true);
+     PauseLiveTV(ctx);
+ 
+     ctx->LockDeletePlayer(__FILE__, __LINE__);
+@@ -7767,6 +7770,7 @@ void TV::ChangeChannel(PlayerContext *ctx, uint chanid, const QString &chan)
+         ctx->player->GetAudio()->Reset();
+ 
+     UnpauseLiveTV(ctx, chanid && GetQueuedChanID());
++    PauseAudioUntilBuffered(ctx);
+ 
+     if (oldinputname != ctx->recorder->GetInput())
+         UpdateOSDInput(ctx);
 diff --git a/mythtv/libs/libmythtv/videobuffers.cpp b/mythtv/libs/libmythtv/videobuffers.cpp
 index 3987de0..34bd0df 100644
 --- a/mythtv/libs/libmythtv/videobuffers.cpp
@@ -12798,6 +14259,107 @@ index 2b8dd39..7227f52 100644
      {
          LOG(VB_FILE, LOG_INFO, "HandleSGFileQuery: Getting local info");
          StorageGroup sg(groupname, gCoreContext->GetHostName());
+diff --git a/mythtv/programs/mythbackend/upnpcdstv.cpp b/mythtv/programs/mythbackend/upnpcdstv.cpp
+index 7b72969..6bf753f 100644
+--- a/mythtv/programs/mythbackend/upnpcdstv.cpp
++++ b/mythtv/programs/mythbackend/upnpcdstv.cpp
+@@ -72,15 +72,15 @@ UPnpCDSRootInfo UPnpCDSTv::g_RootNodes[] =
+         "WHERE category=:KEY", "category" },
+ 
+     {   "By Date",
+-        "DATE_FORMAT(starttime, '%Y-%m-%d')",
+-        "SELECT  DATE_FORMAT(starttime, '%Y-%m-%d') as id, "
+-          "DATE_FORMAT(starttime, '%Y-%m-%d %W') as name, "
+-          "count( DATE_FORMAT(starttime, '%Y-%m-%d %W') ) as children "
++        "DATE_FORMAT(CONVERT_TZ(starttime, 'UTC', 'SYSTEM'), '%Y-%m-%d')",
++        "SELECT  DATE_FORMAT(CONVERT_TZ(starttime, 'UTC', 'SYSTEM'), '%Y-%m-%d') as id, "
++          "DATE_FORMAT(CONVERT_TZ(starttime, 'UTC', 'SYSTEM'), '%Y-%m-%d %W') as name, "
++          "count( starttime ) as children "
+             "FROM recorded "
+             "%1 "
+             "GROUP BY name "
+             "ORDER BY starttime DESC",
+-        "WHERE DATE_FORMAT(starttime, '%Y-%m-%d') =:KEY", "starttime DESC" },
++        "WHERE DATE_FORMAT(CONVERT_TZ(starttime, 'UTC', 'SYSTEM'), '%Y-%m-%d') =:KEY", "starttime DESC" },
+ 
+     {   "By Channel",
+         "chanid",
+@@ -367,7 +367,7 @@ void UPnpCDSTv::AddItem( const UPnpCDSRequest    *pRequest,
+     pItem->SetPropValue( "artist"        , "[Unknown Author]" );
+     pItem->SetPropValue( "album"         , "[Unknown Series]" );
+     pItem->SetPropValue( "actor"         , "[Unknown Author]" );
+-    pItem->SetPropValue( "date"          , dtStartTime.toString(Qt::ISODate));
++    pItem->SetPropValue( "date"          , dtStartTime.toLocalTime().toString(Qt::ISODate));
+ 
+     pResults->Add( pItem );
+ 
+@@ -401,18 +401,17 @@ void UPnpCDSTv::AddItem( const UPnpCDSRequest    *pRequest,
+         sMimeType = "video/avi";
+     }
+ 
+-
+-    // DLNA string below is temp fix for ps3 seeking.
+-    QString sProtocol = QString( "http-get:*:%1:DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000" ).arg( sMimeType  );
+-    QString sURI      = QString( "%1GetRecording%2").arg( sURIBase   )
+-                                                    .arg( sURIParams );
+-
+-    // Sony BDPS370 requires a DLNA Profile Name
++    // NOTE: Sony BDPS370 requires a DLNA Profile Name
++    // NOTE: DLNA string below is temp fix for ps3 seeking.
+     // FIXME: detection to determine the correct DLNA Profile Name
++    QString sFourthField = "*";
+     if (sMimeType == "video/mpeg")
+     {
+-        sProtocol += ";DLNA.ORG_PN=MPEG_TS_SD_NA_ISO";
++        sFourthField = "DLNA.ORG_PN=MPEG_TS_SD_NA_ISO;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000";
+     }
++    QString sProtocol = QString( "http-get:*:%1:%2" ).arg( sMimeType ).arg( sFourthField );
++    QString sURI      = QString( "%1GetRecording%2").arg( sURIBase   )
++                                                    .arg( sURIParams );
+ 
+     Resource *pRes = pItem->AddResource( sProtocol, sURI );
+ 
+diff --git a/mythtv/programs/mythbackend/upnpcdsvideo.cpp b/mythtv/programs/mythbackend/upnpcdsvideo.cpp
+index a80b9b9..b986e56 100644
+--- a/mythtv/programs/mythbackend/upnpcdsvideo.cpp
++++ b/mythtv/programs/mythbackend/upnpcdsvideo.cpp
+@@ -358,7 +358,7 @@ void UPnpCDSVideo::AddItem( const UPnpCDSRequest    *pRequest,
+     }
+     QFileInfo fInfo( sFullFileName );
+ 
+-    pItem->SetPropValue( "date", dtInsertDate.toString("yyyy-MM-dd"));
++    pItem->SetPropValue( "date", dtInsertDate.toLocalTime().toString(Qt::ISODate));
+     pResults->Add( pItem );
+ 
+     // ----------------------------------------------------------------------
+diff --git a/mythtv/programs/mythfrontend/editvideometadata.cpp b/mythtv/programs/mythfrontend/editvideometadata.cpp
+index 7d93190..8aa4ce0 100644
+--- a/mythtv/programs/mythfrontend/editvideometadata.cpp
++++ b/mythtv/programs/mythfrontend/editvideometadata.cpp
+@@ -26,6 +26,7 @@
+ #include "videoutils.h"
+ 
+ #include "editvideometadata.h"
++#include "metadatafactory.h"
+ 
+ static const QString _Location = QObject::tr("Metadata Editor");
+ 
+@@ -682,13 +683,8 @@ void EditMetadataDialog::OnSearchListSelection(ArtworkInfo info, VideoArtworkTyp
+ 
+     MetadataLookup *lookup = new MetadataLookup();
+     lookup->SetType(kMetadataVideo);
+-    if (m_workingMetadata->GetSeason() > 0 ||
+-            m_workingMetadata->GetEpisode() > 0)
+-        lookup->SetSubtype(kProbableTelevision);
+-    else if (m_workingMetadata->GetSubtitle().isEmpty())
+-        lookup->SetSubtype(kProbableMovie);
+-    else
+-        lookup->SetSubtype(kUnknownVideo);
++
++    lookup->SetSubtype(GuessLookupType(m_workingMetadata));
+     lookup->SetHost(m_workingMetadata->GetHost());
+     lookup->SetAutomatic(true);
+     lookup->SetData(qVariantFromValue<VideoArtworkType>(type));
 diff --git a/mythtv/programs/mythfrontend/grabbersettings.cpp b/mythtv/programs/mythfrontend/grabbersettings.cpp
 index 146c32f..e43c91e 100644
 --- a/mythtv/programs/mythfrontend/grabbersettings.cpp
@@ -12990,6 +14552,426 @@ index a908b96..06b9e5d 100644
  
      MythUIButtonList   *m_movieGrabberButtonList;
      MythUIButtonList   *m_tvGrabberButtonList;
+diff --git a/mythtv/programs/mythfrontend/playbackbox.cpp b/mythtv/programs/mythfrontend/playbackbox.cpp
+index 709cf37..d01293f 100644
+--- a/mythtv/programs/mythfrontend/playbackbox.cpp
++++ b/mythtv/programs/mythfrontend/playbackbox.cpp
+@@ -20,6 +20,8 @@
+ #include "mythuitextedit.h"
+ #include "mythuispinbox.h"
+ #include "mythdialogbox.h"
++#include "mythprogressdialog.h"
++#include "mythuimetadataresults.h"
+ #include "recordinginfo.h"
+ #include "recordingrule.h"
+ #include "mythuihelper.h"
+@@ -5251,11 +5253,14 @@ void PasswordChange::SendResult()
+ ////////////////////////////////////////////////////////
+ 
+ RecMetadataEdit::RecMetadataEdit(MythScreenStack *lparent, ProgramInfo *pginfo)
+-                : MythScreenType(lparent, "recmetadataedit"),
+-                    m_progInfo(pginfo)
++  : MythScreenType(lparent, "recmetadataedit"),
++    m_titleEdit(NULL),      m_subtitleEdit(NULL),   m_descriptionEdit(NULL),
++    m_inetrefEdit(NULL),    m_seasonSpin(NULL),     m_episodeSpin(NULL),
++    m_busyPopup(NULL),      m_queryButton(NULL),
++    m_progInfo(pginfo)
+ {
+-    m_titleEdit = m_subtitleEdit = m_descriptionEdit = m_inetrefEdit = NULL;
+-    m_seasonSpin = m_episodeSpin = NULL;
++    m_popupStack = GetMythMainWindow()->GetStack("popup stack");
++    m_metadataFactory = new MetadataFactory(this);
+ }
+ 
+ bool RecMetadataEdit::Create()
+@@ -5270,6 +5275,7 @@ bool RecMetadataEdit::Create()
+     m_seasonSpin = dynamic_cast<MythUISpinBox*>(GetChild("season"));
+     m_episodeSpin = dynamic_cast<MythUISpinBox*>(GetChild("episode"));
+     MythUIButton *okButton = dynamic_cast<MythUIButton*>(GetChild("ok"));
++    m_queryButton = dynamic_cast<MythUIButton*>(GetChild("query_button"));
+ 
+     if (!m_titleEdit || !m_subtitleEdit || !m_inetrefEdit || !m_seasonSpin ||
+         !m_episodeSpin || !okButton)
+@@ -5296,6 +5302,10 @@ bool RecMetadataEdit::Create()
+     m_episodeSpin->SetValue(m_progInfo->GetEpisode());
+ 
+     connect(okButton, SIGNAL(Clicked()), SLOT(SaveChanges()));
++    if (m_queryButton)
++    {
++        connect(m_queryButton, SIGNAL(Clicked()), SLOT(PerformQuery()));
++    }
+ 
+     BuildFocusList();
+ 
+@@ -5323,6 +5333,146 @@ void RecMetadataEdit::SaveChanges()
+     Close();
+ }
+ 
++void RecMetadataEdit::PerformQuery()
++{
++    if (m_busyPopup)
++        return;
++
++    m_busyPopup = new MythUIBusyDialog(tr("Trying to manually find this "
++                                          "recording online..."),
++                                       m_popupStack,
++                                       "metaoptsdialog");
++
++    if (m_busyPopup->Create())
++        m_popupStack->AddScreen(m_busyPopup);
++
++    MetadataLookup *lookup = new MetadataLookup();
++    lookup->SetStep(kLookupSearch);
++    lookup->SetType(kMetadataRecording);
++    LookupType type = GuessLookupType(m_inetrefEdit->GetText());
++
++    if (type == kUnknownVideo)
++    {
++        if (m_seasonSpin->GetIntValue() == 0 &&
++            m_episodeSpin->GetIntValue() == 0 &&
++            m_subtitleEdit->GetText().isEmpty())
++        {
++            lookup->SetSubtype(kProbableMovie);
++        }
++        else
++        {
++            lookup->SetSubtype(kProbableTelevision);
++        }
++    }
++    else
++    {
++        // we could determine the type from the inetref
++        lookup->SetSubtype(type);
++    }
++    lookup->SetAllowGeneric(true);
++    lookup->SetHandleImages(false);
++    lookup->SetHost(gCoreContext->GetMasterHostName());
++    lookup->SetTitle(m_titleEdit->GetText());
++    lookup->SetSubtitle(m_subtitleEdit->GetText());
++    lookup->SetInetref(m_inetrefEdit->GetText());
++    lookup->SetCollectionref(m_inetrefEdit->GetText());
++    lookup->SetSeason(m_seasonSpin->GetIntValue());
++    lookup->SetEpisode(m_episodeSpin->GetIntValue());
++    lookup->SetAutomatic(false);
++
++    m_metadataFactory->Lookup(lookup);
++}
++
++void RecMetadataEdit::QueryComplete(MetadataLookup *lookup)
++{
++    if (!lookup)
++        return;
++
++    m_inetrefEdit->SetText(lookup->GetInetref());
++    m_seasonSpin->SetValue(lookup->GetSeason());
++    m_episodeSpin->SetValue(lookup->GetEpisode());
++    if (!lookup->GetSubtitle().isEmpty())
++    {
++        m_descriptionEdit->SetText(lookup->GetSubtitle());
++    }
++    if (!lookup->GetDescription().isEmpty())
++    {
++        m_descriptionEdit->SetText(lookup->GetDescription());
++    }
++}
++
++void RecMetadataEdit::OnSearchListSelection(RefCountHandler<MetadataLookup> lookup)
++{
++    QueryComplete(lookup);
++}
++
++void RecMetadataEdit::customEvent(QEvent *levent)
++{
++    if (levent->type() == MetadataFactoryMultiResult::kEventType)
++    {
++        if (m_busyPopup)
++        {
++            m_busyPopup->Close();
++            m_busyPopup = NULL;
++        }
++
++        MetadataFactoryMultiResult *mfmr = dynamic_cast<MetadataFactoryMultiResult*>(levent);
++
++        if (!mfmr)
++            return;
++
++        MetadataLookupList list = mfmr->results;
++
++        MetadataResultsDialog *resultsdialog =
++            new MetadataResultsDialog(m_popupStack, list);
++
++        connect(resultsdialog, SIGNAL(haveResult(RefCountHandler<MetadataLookup>)),
++                SLOT(OnSearchListSelection(RefCountHandler<MetadataLookup>)),
++                Qt::QueuedConnection);
++
++        if (resultsdialog->Create())
++            m_popupStack->AddScreen(resultsdialog);
++    }
++    else if (levent->type() == MetadataFactorySingleResult::kEventType)
++    {
++        if (m_busyPopup)
++        {
++            m_busyPopup->Close();
++            m_busyPopup = NULL;
++        }
++
++        MetadataFactorySingleResult *mfsr = dynamic_cast<MetadataFactorySingleResult*>(levent);
++
++        if (!mfsr && !mfsr->result)
++            return;
++
++        QueryComplete(mfsr->result);
++    }
++    else if (levent->type() == MetadataFactoryNoResult::kEventType)
++    {
++        if (m_busyPopup)
++        {
++            m_busyPopup->Close();
++            m_busyPopup = NULL;
++        }
++
++        MetadataFactoryNoResult *mfnr = dynamic_cast<MetadataFactoryNoResult*>(levent);
++
++        if (!mfnr)
++            return;
++
++        QString title = tr("No match found for this recording. You can "
++                           "try entering a TVDB/TMDB number, season, and "
++                           "episode manually.");
++
++        MythConfirmationDialog *okPopup =
++            new MythConfirmationDialog(m_popupStack, title, false);
++
++        if (okPopup->Create())
++            m_popupStack->AddScreen(okPopup);
++    }
++}
++
+ //////////////////////////////////////////
+ 
+ HelpPopup::HelpPopup(MythScreenStack *lparent)
+diff --git a/mythtv/programs/mythfrontend/playbackbox.h b/mythtv/programs/mythfrontend/playbackbox.h
+index 16a06b7..836c433 100644
+--- a/mythtv/programs/mythfrontend/playbackbox.h
++++ b/mythtv/programs/mythfrontend/playbackbox.h
+@@ -22,6 +22,7 @@ using namespace std;
+ #include "tv_play.h"
+ 
+ #include "mythscreentype.h"
++#include "metadatafactory.h"
+ 
+ // mythfrontend
+ #include "schedulecommon.h"
+@@ -44,6 +45,7 @@ class MythUITextEdit;
+ class MythUIButton;
+ class MythDialogBox;
+ class MythMenu;
++class MythUIBusyDialog;
+ 
+ typedef QMap<QString,ProgramList>       ProgramMap;
+ typedef QMap<QString,QString>           Str2StrMap;
+@@ -530,16 +532,25 @@ class RecMetadataEdit : public MythScreenType
+ 
+   protected slots:
+     void SaveChanges(void);
++    void PerformQuery(void);
++    void OnSearchListSelection(RefCountHandler<MetadataLookup> lookup);
+ 
+   private:
++    void customEvent(QEvent *event);
++    void QueryComplete(MetadataLookup *lookup);
++
+     MythUITextEdit     *m_titleEdit;
+     MythUITextEdit     *m_subtitleEdit;
+     MythUITextEdit     *m_descriptionEdit;
+     MythUITextEdit     *m_inetrefEdit;
+     MythUISpinBox      *m_seasonSpin;
+     MythUISpinBox      *m_episodeSpin;
++    MythUIBusyDialog   *m_busyPopup;
++    MythUIButton       *m_queryButton;
+ 
+-    ProgramInfo *m_progInfo;
++    ProgramInfo        *m_progInfo;
++    MythScreenStack    *m_popupStack;
++    MetadataFactory    *m_metadataFactory;
+ };
+ 
+ class HelpPopup : public MythScreenType
+diff --git a/mythtv/programs/mythfrontend/scheduleeditor.cpp b/mythtv/programs/mythfrontend/scheduleeditor.cpp
+index b89b711..bc70f7e 100644
+--- a/mythtv/programs/mythfrontend/scheduleeditor.cpp
++++ b/mythtv/programs/mythfrontend/scheduleeditor.cpp
+@@ -1421,30 +1421,12 @@ void MetadataOptions::CreateBusyDialog(QString title)
+ 
+ void MetadataOptions::PerformQuery()
+ {
+-    MetadataLookup *lookup = new MetadataLookup();
+-
+     CreateBusyDialog(tr("Trying to manually find this "
+                         "recording online..."));
+ 
+-    lookup->SetStep(kLookupSearch);
+-    lookup->SetType(kMetadataRecording);
+-    if ((m_recInfo && m_recInfo->GetCategoryType() == ProgramInfo::kCategoryMovie) ||
+-        (m_seasonSpin->GetIntValue() == 0 &&
+-         m_episodeSpin->GetIntValue() == 0))
+-         lookup->SetSubtype(kProbableMovie);
+-    else
+-        lookup->SetSubtype(kProbableTelevision);
+-    lookup->SetAllowGeneric(true);
+-    lookup->SetAutomatic(false);
+-    lookup->SetHandleImages(false);
+-    lookup->SetHost(gCoreContext->GetMasterHostName());
+-    lookup->SetTitle(m_recordingRule->m_title);
+-    lookup->SetSubtitle(m_recordingRule->m_subtitle);
+-    lookup->SetInetref(m_inetrefEdit->GetText());
+-    lookup->SetCollectionref(m_inetrefEdit->GetText());
+-    lookup->SetSeason(m_seasonSpin->GetIntValue());
+-    lookup->SetEpisode(m_episodeSpin->GetIntValue());
++    MetadataLookup *lookup = CreateLookup(kMetadataRecording);
+ 
++    lookup->SetAutomatic(false);
+     m_metadataFactory->Lookup(lookup);
+ }
+ 
+@@ -1614,28 +1596,33 @@ bool MetadataOptions::CanSetArtwork()
+     return true;
+ }
+ 
+-void MetadataOptions::FindNetArt(VideoArtworkType type)
++MetadataLookup *MetadataOptions::CreateLookup(MetadataType mtype)
+ {
+-    if (!CanSetArtwork())
+-        return;
+-
+     MetadataLookup *lookup = new MetadataLookup();
+-
+-    QString msg = tr("Searching for available artwork...");
+-    CreateBusyDialog(msg);
+-
+     lookup->SetStep(kLookupSearch);
+-    lookup->SetType(kMetadataVideo);
+-    lookup->SetAutomatic(true);
+-    lookup->SetHandleImages(false);
+-    if ((m_recInfo && m_recInfo->GetCategoryType() == ProgramInfo::kCategoryMovie) ||
+-        (m_seasonSpin->GetIntValue() == 0 &&
+-         m_episodeSpin->GetIntValue() == 0))
+-         lookup->SetSubtype(kProbableMovie);
++    lookup->SetType(mtype);
++    LookupType type = GuessLookupType(m_inetrefEdit->GetText());
++
++    if (type == kUnknownVideo)
++    {
++        if ((m_recInfo && m_recInfo->GetCategoryType() == ProgramInfo::kCategoryMovie) ||
++            (m_seasonSpin->GetIntValue() == 0 &&
++             m_episodeSpin->GetIntValue() == 0))
++        {
++            lookup->SetSubtype(kProbableMovie);
++        }
++        else
++        {
++            lookup->SetSubtype(kProbableTelevision);
++        }
++    }
+     else
+-        lookup->SetSubtype(kProbableTelevision);
++    {
++        // we could determine the type from the inetref
++        lookup->SetSubtype(type);
++    }
+     lookup->SetAllowGeneric(true);
+-    lookup->SetData(qVariantFromValue<VideoArtworkType>(type));
++    lookup->SetHandleImages(false);
+     lookup->SetHost(gCoreContext->GetMasterHostName());
+     lookup->SetTitle(m_recordingRule->m_title);
+     lookup->SetSubtitle(m_recordingRule->m_subtitle);
+@@ -1644,6 +1631,21 @@ void MetadataOptions::FindNetArt(VideoArtworkType type)
+     lookup->SetSeason(m_seasonSpin->GetIntValue());
+     lookup->SetEpisode(m_episodeSpin->GetIntValue());
+ 
++    return lookup;
++}
++
++void MetadataOptions::FindNetArt(VideoArtworkType type)
++{
++    if (!CanSetArtwork())
++        return;
++
++    QString msg = tr("Searching for available artwork...");
++    CreateBusyDialog(msg);
++
++    MetadataLookup *lookup = CreateLookup(kMetadataVideo);
++
++    lookup->SetAutomatic(true);
++    lookup->SetData(qVariantFromValue<VideoArtworkType>(type));
+     m_imageLookup->addLookup(lookup);
+ }
+ 
+diff --git a/mythtv/programs/mythfrontend/scheduleeditor.h b/mythtv/programs/mythfrontend/scheduleeditor.h
+index cae67b5..dbb1ae5 100644
+--- a/mythtv/programs/mythfrontend/scheduleeditor.h
++++ b/mythtv/programs/mythfrontend/scheduleeditor.h
+@@ -383,6 +383,7 @@ class MetadataOptions : public SchedEditChild
+     QStringList GetSupportedImageExtensionFilter();
+ 
+     void HandleDownloadedImages(MetadataLookup *lookup);
++    MetadataLookup *CreateLookup(MetadataType mtype);
+ 
+     bool CanSetArtwork(void);
+ 
+diff --git a/mythtv/programs/mythmetadatalookup/lookup.cpp b/mythtv/programs/mythmetadatalookup/lookup.cpp
+index 1925c7d..cd18d02 100644
+--- a/mythtv/programs/mythmetadatalookup/lookup.cpp
++++ b/mythtv/programs/mythmetadatalookup/lookup.cpp
+@@ -50,9 +50,10 @@ void LookerUpper::HandleSingleRecording(const uint chanid,
+     }
+ 
+     m_updaterules = updaterules;
++    m_updateartwork = true;
+ 
+     m_busyRecList.append(pginfo);
+-    m_metadataFactory->Lookup(pginfo, true, false, false);
++    m_metadataFactory->Lookup(pginfo, true, m_updateartwork, false);
+ }
+ 
+ void LookerUpper::HandleAllRecordings(bool updaterules)
+@@ -252,7 +253,7 @@ void LookerUpper::customEvent(QEvent *levent)
+                     pginfo->GetSeriesID() == (list[p])->GetTMSref())
+                 {
+                     MetadataLookup *lookup = list[p];
+-                    if (!lookup->GetSubtype() == kProbableGenericTelevision)
++                    if (lookup->GetSubtype() != kProbableGenericTelevision)
+                         pginfo->SaveSeasonEpisode(lookup->GetSeason(), lookup->GetEpisode());
+                     pginfo->SaveInetRef(lookup->GetInetref());
+                     m_busyRecList.removeAll(pginfo);
+@@ -281,7 +282,7 @@ void LookerUpper::customEvent(QEvent *levent)
+             {
+                 MetadataLookup *lookup = list[yearindex];
+                 ProgramInfo *pginfo = qVariantValue<ProgramInfo *>(lookup->GetData());
+-                if (!lookup->GetSubtype() == kProbableGenericTelevision)
++                if (lookup->GetSubtype() != kProbableGenericTelevision)
+                     pginfo->SaveSeasonEpisode(lookup->GetSeason(), lookup->GetEpisode());
+                 pginfo->SaveInetRef(lookup->GetInetref());
+                 m_busyRecList.removeAll(pginfo);
+@@ -338,7 +339,7 @@ void LookerUpper::customEvent(QEvent *levent)
+         LOG(VB_GENERAL, LOG_DEBUG,
+             QString("        User Rating: %1").arg(lookup->GetUserRating()));
+ 
+-        if (!lookup->GetSubtype() == kProbableGenericTelevision)
++        if (lookup->GetSubtype() != kProbableGenericTelevision)
+             pginfo->SaveSeasonEpisode(lookup->GetSeason(), lookup->GetEpisode());
+         pginfo->SaveInetRef(lookup->GetInetref());
+ 
+@@ -364,7 +365,8 @@ void LookerUpper::customEvent(QEvent *levent)
+         if (m_updateartwork)
+         {
+             ArtworkMap map = lookup->GetDownloads();
+-            SetArtwork(lookup->GetInetref(), lookup->GetSeason(),
++            SetArtwork(lookup->GetInetref(),
++                       lookup->GetIsCollection() ? 0 : lookup->GetSeason(),
+                        gCoreContext->GetMasterHostName(), map);
+         }
+ 
 diff --git a/mythtv/programs/mythmetadatalookup/main.cpp b/mythtv/programs/mythmetadatalookup/main.cpp
 index 0878925..1da7dfa 100644
 --- a/mythtv/programs/mythmetadatalookup/main.cpp
@@ -13021,7 +15003,7 @@ index 0878925..1da7dfa 100644
      if ((retval = cmdline.ConfigureLogging()) != GENERIC_EXIT_OK)
          return retval;
 diff --git a/mythtv/programs/mythtranscode/mpeg2fix.cpp b/mythtv/programs/mythtranscode/mpeg2fix.cpp
-index 8ba085c..3cf92b9 100644
+index 8ba085c..c7214d3 100644
 --- a/mythtv/programs/mythtranscode/mpeg2fix.cpp
 +++ b/mythtv/programs/mythtranscode/mpeg2fix.cpp
 @@ -576,18 +576,21 @@ void MPEG2fixup::InitReplex()
@@ -13050,7 +15032,22 @@ index 8ba085c..3cf92b9 100644
          {
              case AV_CODEC_ID_MP2:
              case AV_CODEC_ID_MP3:
-@@ -1376,6 +1379,7 @@ int MPEG2fixup::GetFrame(AVPacket *pkt)
+@@ -803,10 +806,12 @@ bool MPEG2fixup::InitAV(QString inputfile, const char *type, int64_t offset)
+                 break;
+ 
+             case AVMEDIA_TYPE_AUDIO:
+-                if (!allaudio && inputFC->streams[i]->codec->channels == 0)
++                if (!allaudio && ext_count > 0 &&
++                    inputFC->streams[i]->codec->channels < 2 &&
++                    inputFC->streams[i]->codec->sample_rate < 100000)
+                 {
+                     LOG(VB_GENERAL, LOG_ERR,
+-                        QString("Skipping invalid audio stream: %1").arg(i));
++                        QString("Skipping audio stream: %1").arg(i));
+                     break;
+                 }
+                 if (inputFC->streams[i]->codec->codec_id == AV_CODEC_ID_AC3 ||
+@@ -1376,6 +1381,7 @@ int MPEG2fixup::GetFrame(AVPacket *pkt)
                  {
                      LOG(VB_GENERAL, LOG_DEBUG,
                          QString("Invalid stream ID %1, ignoring").arg(pkt->stream_index));
@@ -13058,7 +15055,7 @@ index 8ba085c..3cf92b9 100644
                  }
                  av_free_packet(pkt);
                  return 0;
-@@ -2398,6 +2402,11 @@ int MPEG2fixup::Start()
+@@ -2398,6 +2404,11 @@ int MPEG2fixup::Start()
  
              while (af->count())
              {
@@ -13089,6 +15086,154 @@ index 58fe5ca..d430ad4 100644
          return inputFC->streams[id]->parser;
      }
  
+diff --git a/mythtv/programs/mythtranscode/videodecodebuffer.cpp b/mythtv/programs/mythtranscode/videodecodebuffer.cpp
+index 73d23e0..b6bbdf9 100644
+--- a/mythtv/programs/mythtranscode/videodecodebuffer.cpp
++++ b/mythtv/programs/mythtranscode/videodecodebuffer.cpp
+@@ -1,11 +1,14 @@
+ #include "videodecodebuffer.h"
+ 
++#include "mythplayer.h"
++#include "videooutbase.h"
++
+ VideoDecodeBuffer::VideoDecodeBuffer(MythPlayer *player, VideoOutput *videoout,
+                                      bool cutlist, int size)
+   : m_player(player),         m_videoOutput(videoout),
+-    m_honorCutlist(cutlist),
+-    m_eof(false),             m_maxFrames(size),
+-    m_runThread(true),        m_isRunning(false)
++    m_honorCutlist(cutlist),  m_maxFrames(size),
++    m_runThread(true),        m_isRunning(false),
++    m_eof(false)
+ {
+ 
+ }
+@@ -35,8 +38,12 @@ void VideoDecodeBuffer::run()
+     m_isRunning = true;
+     while (m_runThread)
+     {
++        QMutexLocker locker(&m_queueLock);
++
+         if (m_frameList.size() < m_maxFrames && !m_eof)
+         {
++            locker.unlock();
++
+             DecodedFrameInfo tfInfo;
+             tfInfo.frame = NULL;
+             tfInfo.didFF = 0;
+@@ -47,21 +54,22 @@ void VideoDecodeBuffer::run()
+             {
+                 tfInfo.frame = m_videoOutput->GetLastDecodedFrame();
+ 
+-                QMutexLocker locker(&m_queueLock);
++                locker.relock();
+                 m_frameList.append(tfInfo);
+             }
+-            else
++            else if (m_player->GetEof() != kEofStateNone)
+             {
++                locker.relock();
+                 m_eof = true;
+             }
++            else
++                continue;
+ 
+             m_frameWaitCond.wakeAll();
+         }
+         else
+         {
+-            m_frameWaitLock.lock();
+-            m_frameWaitCond.wait(&m_frameWaitLock);
+-            m_frameWaitLock.unlock();
++            m_frameWaitCond.wait(locker.mutex());
+         }
+     }
+     m_isRunning = false;
+@@ -69,27 +77,21 @@ void VideoDecodeBuffer::run()
+ 
+ VideoFrame *VideoDecodeBuffer::GetFrame(int &didFF, bool &isKey)
+ {
+-    m_queueLock.lock();
++    QMutexLocker locker(&m_queueLock);
+ 
+     if (m_frameList.isEmpty())
+     {
+-        m_queueLock.unlock();
+-
+         if (m_eof)
+             return NULL;
+ 
+-        m_frameWaitLock.lock();
+-        m_frameWaitCond.wait(&m_frameWaitLock);
+-        m_frameWaitLock.unlock();
++        m_frameWaitCond.wait(locker.mutex());
+ 
+         if (m_frameList.isEmpty())
+             return NULL;
+-
+-        m_queueLock.lock();
+     }
+ 
+     DecodedFrameInfo tfInfo = m_frameList.takeFirst();
+-    m_queueLock.unlock();
++    locker.unlock();
+     m_frameWaitCond.wakeAll();
+ 
+     didFF = tfInfo.didFF;
+diff --git a/mythtv/programs/mythtranscode/videodecodebuffer.h b/mythtv/programs/mythtranscode/videodecodebuffer.h
+index 50c33d0..b4e241a 100644
+--- a/mythtv/programs/mythtranscode/videodecodebuffer.h
++++ b/mythtv/programs/mythtranscode/videodecodebuffer.h
+@@ -6,18 +6,20 @@
+ #include <QMutex>
+ #include <QRunnable>
+ 
+-#include "mythplayer.h"
+ #include "videooutbase.h"
+ 
++class MythPlayer;
++class VideoOutput;
++
+ class VideoDecodeBuffer : public QRunnable
+ {
+   public:
+     VideoDecodeBuffer(MythPlayer *player, VideoOutput *videoout,
+         bool cutlist, int size = 5);
+-    ~VideoDecodeBuffer();
++    virtual ~VideoDecodeBuffer();
+ 
+-    void        stop(void);
+-    void        run();
++    void          stop(void);
++    virtual void run();
+     VideoFrame *GetFrame(int &didFF, bool &isKey);
+ 
+   private:
+@@ -28,17 +30,16 @@ class VideoDecodeBuffer : public QRunnable
+         bool        isKey;
+     } DecodedFrameInfo;
+ 
+-    MythPlayer             *m_player;
+-    VideoOutput            *m_videoOutput;
+-    bool                    m_honorCutlist;
++    MythPlayer * const      m_player;
++    VideoOutput * const     m_videoOutput;
++    bool const              m_honorCutlist;
++    int const               m_maxFrames;
++    bool volatile           m_runThread;
++    bool volatile           m_isRunning;
++    QMutex mutable          m_queueLock; // Guards the following...
+     bool                    m_eof;
+-    int                     m_maxFrames;
+-    bool                    m_runThread;
+-    bool                    m_isRunning;
+-    QMutex                  m_queueLock;
+     QList<DecodedFrameInfo> m_frameList;
+     QWaitCondition          m_frameWaitCond;
+-    QMutex                  m_frameWaitLock;
+ };
+ 
+ #endif
 diff --git a/mythtv/themes/classic/tv_schedule.xml b/mythtv/themes/classic/tv_schedule.xml
 index c517e3a..6559d45 100644
 --- a/mythtv/themes/classic/tv_schedule.xml
