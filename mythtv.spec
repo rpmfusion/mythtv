@@ -78,7 +78,7 @@ Version:        0.27.3
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        2.1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -101,14 +101,8 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
 %define with_vaapi         %{?_without_vaapi:      0} %{?!_without_vaapi:      1}
 
-%if 0%{?rhel} < 7
-%define with_crystalhd     %{?_without_crystalhd:  1} %{?!_without_crystalhd:  0}
-%define with_systemd       %{?_without_systemd:    1} %{?!_without_systemd:    0}
-
-%else
 %define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
 %define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
-%endif
 
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
 %define with_php           %{?_without_php:        0} %{!?_without_php:        1}
@@ -177,11 +171,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  libpng-devel
 BuildRequires:  gcc-c++
-%if ! 0%{?rhel} <= 6
 BuildRequires:  mariadb-devel >= 5
-%else
-BuildRequires:  mysql-devel >= 5
-%endif
 BuildRequires:  qt-webkit-devel
 BuildRequires:  qt-devel >= 4.6
 BuildRequires:  phonon-devel phonon-backend-gstreamer
@@ -360,11 +350,7 @@ Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
-%if ! 0%{?rhel} <= 6
 Requires:  mariadb-server >= 5, mariadb >= 5
-%else
-Requires:  mysql-server >= 5, mysql >= 5
-%endif
 Requires:  xmltv
 %if 0%{?rhel} >= 7
 Requires:  udisks2
@@ -1439,9 +1425,10 @@ fi
 
 
 %changelog
-* Mon Oct 13 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.3-2
+* Mon Oct 13 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.3-2.1
 - Update to latest fixes.
 - Add patch for schedules direct service change.
+- Fix systemd conditional in spec file.
 
 * Sun Jul 27 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.3-1
 - Update to new upstream release.
