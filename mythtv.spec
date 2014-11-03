@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27.3-164-g629f711
+%define vers_string v0.27.4-6-ge0b0027
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -74,11 +74,11 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.27.3
+Version:        0.27.4
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        2.1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -136,7 +136,6 @@ Patch1:    mythtv-0.26.0-types_h.patch
 # http://code.mythtv.org/trac/ticket/11338
 # Offset required for 0.27, patch was for 0.26.1
 Patch2:    mythtv-0.27-libcec2.patch
-Patch3:    mythtv-sd_fix.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -807,10 +806,9 @@ on demand content.
          find \( -name 'configure' -o -name '*pro' -o -name 'Makefile' \) -exec sed -r -i -e 's,/lib\b,/%{_lib},g' {} \+
     fi
 
-#patch0 -p1 -b .mythtv
+%patch0 -p1 -b .mythtv
 %patch1 -p1 -b .types_h
 %patch2 -p1 -b .libcec2
-%patch3 -p0 -b .sd_fix
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -1425,6 +1423,9 @@ fi
 
 
 %changelog
+* Mon Nov  3 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-2
+- Update to latest bugfix release, 0.27.4.
+
 * Mon Oct 13 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.3-2.1
 - Update to latest fixes.
 - Add patch for schedules direct service change.
