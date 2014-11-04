@@ -76,7 +76,7 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        0.27.4
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 %else
 Release:        2%{?dist}
 %endif
@@ -1423,6 +1423,9 @@ fi
 
 
 %changelog
+* Tue Nov 04 2014 Nicolas Chauvet <kwizart@gmail.com> - 0.27.4-2
+- Rebuilt for vaapi 0.36
+
 * Mon Nov  3 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-2
 - Update to latest bugfix release, 0.27.4.
 
