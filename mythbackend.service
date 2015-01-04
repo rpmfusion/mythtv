@@ -30,7 +30,7 @@
 
 [Unit]
 Description=MythTV backend service
-After=network.target mariadb.service mysqld.service time-sync.target
+After=network-online.target mariadb.service mysqld.service time-sync.target
 # Uncomment the following line if you will be using the mythweb plugin on the
 # same system as mythbackend.
 #Wants=httpd.service
@@ -60,6 +60,13 @@ ExecStart=/usr/bin/mythbackend --logpath /var/log/mythtv
 
 # Whether systemd will continue over-watch and restart on any halt
 #Restart=always
+
+# MariaDB seems to have a systemd related bug and tells systemd that it is
+# ready to accept connections before it really is. If you have this problem
+# try uncommenting the following lines:
+# Restart=on-failure
+# StartLimitBurst=5
+# StartLimitInterval=1
 
 [Install]
 WantedBy=multi-user.target

@@ -1,3 +1,237 @@
+commit 40506c2ba7d81fa8e65bf8bb783c998ffe65c7af
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Dec 11 15:49:35 2014 +0000
+
+    SSDP: Missed changes when reverting [52cb0b5]
+    
+    Fixes #12333
+    
+    (cherry picked from commit 3461b407b0dd0f4188108395709eb129ec32e652)
+
+commit ea73ed3989d210efbaf822d3cee029b0c8d6b553
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Tue Dec 9 20:50:00 2014 +0000
+
+    MythUIImage: extend the random image feature to reload if a delay is used
+    
+    If the <filename> is set to a directory and the <delay> is set to a value > 0
+    then keep reloading a random image from the directory after <delay>
+    milliseconds has passed.
+    
+    For example this will display a random image from the themes 'background'
+    directory changing the image every minute (60000ms) :-
+    
+    <imagetype name="background">
+        <area>0,0,1280,720</area>
+        <filename>backgrounds/</filename>
+        <delay>60000</delay>
+    </imagetype>
+    
+    (cherry picked from commit 78a827b8fdbf0d4fab4525a8007c2c8c7deb4cc1)
+
+commit 86ff53a7a178f5da5e2858f0ffd889cf2eab301b
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Fri Apr 25 15:49:24 2014 +0200
+
+    draft patch to add support for private data specifiers and upc private data
+    
+    Fixes #12091
+    (cherry picked from commit 30df98ce5d11b69d0b5c5114a9007cdfc79a7e9b)
+    
+    Conflicts:
+    
+    	mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h
+
+commit c32f254cd6aefdc5138e504afdf829c290878437
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Thu Jul 10 00:41:00 2014 +0200
+
+    Don't use the CRIDs from the authority eventis.nl
+    
+    they are not fit for our scheduler (multiple IDs per series/episode
+    and multiple series/episodes per ID)
+    (cherry picked from commit 494dfa6eef01aabe1ed7bf3d0f3139f20a8b7678)
+
+commit 141b4f3e0ac970a185be60a81bc64f88f0ccd563
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Thu Dec 4 23:16:54 2014 +0000
+
+    MythDownloadManager: unlock m_infoLock before continuing after an error condition
+    
+    Problem spotted by nouglywires on the forums.
+    
+    (cherry picked from commit 8e6678a00f81fffcd8a3bf71947066db1fffbd30)
+
+commit 70653f18a203680d5bff5b8d6ceff12b5e39fd4c
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Sun Nov 30 23:41:58 2014 +0100
+
+    fix braino in c12af87
+    (cherry picked from commit 0f7d7ff0660a12022b76cdb8d6d6bceda032f540)
+
+commit 6fdb2d1a02e0867483e9025a8ab9477f2444af06
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Nov 29 22:53:27 2014 +0000
+
+    SSDP: Disable reflection attack mitigation for now, it's triggering false positives.
+    
+    (cherry picked from commit 02e92a265c1e9825bb58806156fbf31bd740515a)
+
+commit bd762efd166f3969e5acc0ac0f7a11770a44a9d3
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Tue Nov 25 23:37:30 2014 +0100
+
+    Properly translate star ratings in XMLTV parser.
+    
+    Convert from zero based star-ratings in XMLTV to one based star-ratings
+    in MythTV.
+    (cherry picked from commit c12af87629629295975fdb1ede28072ad2fc1247)
+
+commit 65d92fd36ecf796d8e8a18b3196286d31b28501e
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Nov 19 12:32:59 2014 +0000
+
+    SSDP: Check that the peer address is available before doing the local network check.
+    
+    Refs #12305
+    
+    (cherry picked from commit d20c163ee82c38f9d8fe4652b7a811af61925de7)
+
+commit 9a72d02cb7e9a89135b5044e9179f148a45b0cf6
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed Nov 19 12:47:47 2014 +0000
+
+    Revert "Prevent --syslog, --logpath and --enable-dblog if --nologserver is used"
+    
+    Seems those options are valid for --nologserver. That option just means don't run
+    the external mythlogserver but do the logging internally.
+    
+    Refs #11992.
+    
+    This reverts commit ec06dfba8e22008ac97af81f997e9b521eca62ae.
+
+commit 4572a55538303df215d28c02dae24bde757a7fde
+Author: David Engel <dengel@mythtv.org>
+Date:   Tue Nov 18 13:27:45 2014 -0600
+
+    Fix missed cases in earlier channel-specific rules change.
+    
+    Refs #12267
+    
+    (cherry picked from commit d3f5031e08c0a9e0fa783310afa4d293bacf6ce0)
+
+commit 99688ed2df3e17b2776fc951dc1bc33c12e1a359
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Thu Nov 13 16:17:36 2014 +0000
+
+    Add support for explicitly recognising QAM-256 with DVB-T2. This _may_ help with scanning on devices that don't support 'auto' modulation detection.
+    
+    (cherry picked from commit 864d985786a6f0f0fe2b93b4539c12ee2b0e09e2)
+    (cherry picked from commit 376955a091dbf69f7cc233fa1bf3255401e80367)
+
+commit 76da983bb8aec8a91e8d897150e85d3a5256596d
+Author: David Engel <dengel@mythtv.org>
+Date:   Tue Nov 11 16:18:37 2014 -0600
+
+    Properly identify channel-specific rules in Recording Rules.
+    
+    This was broken when channel rules were converted to all rules using
+    the this channel filter.  Based on a patch from lomion@aon.at.
+    
+    Refs #12267
+    
+    (cherry picked from commit a397b94ffb5cf201aef4fdd9ccd2b28780713bed)
+
+commit ec06dfba8e22008ac97af81f997e9b521eca62ae
+Author: Bill Meek <keemllib@gmail.com>
+Date:   Tue Nov 11 00:07:53 2014 +0000
+
+    Prevent --syslog, --logpath and --enable-dblog if --nologserver is used
+    
+    Fixes #11992.
+    
+    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
+    (cherry picked from commit be72636b9e34b1b9fb032a1da578a742d562d0b9)
+
+commit be0005e12cd65ee5e3311c3511a80e7e2a8159f0
+Author: Rebecca Sutton Koeser <rlskoeser@gmail.com>
+Date:   Mon Nov 10 22:31:07 2014 +0000
+
+    Python bindings: fix typo in MythXML getPreviewImage()
+    
+    Fixes #11515.
+    
+    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
+    (cherry picked from commit e42e1d8351703798e3dc08cb01597577794bab32)
+
+commit 6eb4afbd48652a99a2ec4cddd774de2101aacc83
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Mon Nov 10 15:17:57 2014 +0000
+
+    Fix using ##x## for season and episode in templated text
+    
+    Fixes #12003.
+    
+    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
+    (cherry picked from commit acdc9f86988379b842f56b89089f4e8d029dec37)
+
+commit 4cea476f411f5a2f146398ca20bd0b1046cb1f72
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Mon Nov 10 12:41:52 2014 +0000
+
+    mythfilldatabase: remove the redundant assign to userid
+    
+    Refs #12300.
+    
+    (cherry picked from commit 2f2261d6e3bb78f029dbb38e4746314d6ca0a2b6)
+
+commit ee025527aec0f1bed588664d3061c69fb97a642b
+Author: Bill Meek <keemllib@gmail.com>
+Date:   Mon Nov 10 12:03:41 2014 +0000
+
+    mythfilldatabase: remove Schedules Direct userid from temporary file names
+    
+    This removes the userid from the file name so it wont be exposed in any logs.
+    
+    Fixes #12300.
+    
+    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
+    (cherry picked from commit 6750b358ec33c09bd651507ed57eb993ae5e5a39)
+
+commit a1096aa9fa4177a66a0cc45196c9e8179944efbd
+Author: faginbagin <mythtv@hbuus.com>
+Date:   Mon Nov 10 11:33:22 2014 +0000
+
+    DTVRecorder: Fix 32 to 64 bit integer arithmetic in FindPSKeyFrames()
+    
+    This is reported to fix commercial flagging of PVR-150/300/500 recordings
+    possibly only affecting 32 bit O/Ss due to a bad conversion from a 32 bit
+    unsigned int to a 64 bit signed int.
+    
+    Fixes #12313.
+    
+    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
+    (cherry picked from commit eb0e5050a4af098b9c9dd392c324e1993b2c590e)
+
+commit 0f0e67871b38abc9de21e588a1a9670d7d7603e5
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Thu Oct 30 22:43:05 2014 +0100
+
+    Make PID filtering work properly by removing the streams and not just the entries from the PAT.
+    (cherry picked from commit 61f9ac9a8d7f6eb5cf1fac74376245e8b82e42f1)
+
+commit f01bd1d9607bfcad8049515592b4fda0f7a9274c
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sat Sep 7 17:02:32 2013 +0100
+
+    Add a setting to control MHEG interaction channel, patch by Lawrence Rust
+    
+    This also disables the interaction channel (and iplayer) by default as
+    it appears that this is currently broken, possibly by an upstream
+    change at the BBC.
+    
+    (cherry picked from commit 03c11f466a9cd8960a17e5d2d2c2c54b6bf42cc9)
+
 commit e0b002787e32d2e21ec57d9686ec4a8411c0fa60
 Author: lomion <lomion@aon.at>
 Date:   Sun Oct 26 17:50:57 2014 -0400
