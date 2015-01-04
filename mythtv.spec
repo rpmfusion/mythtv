@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27.4-6-ge0b0027
+%define vers_string v0.27.4-27-g40506c2
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -76,9 +76,9 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        0.27.4
 %if "%{branch}" == "master"
-Release:        0.2.git.%{_gitrev}%{?dist}
+Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1423,11 +1423,13 @@ fi
 
 
 %changelog
+* Sun Jan  4 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-3
+- Update to latest bugfix release.
+- Change systemd dependency from network.target to network-online.target, fixes
+  BZ#3482.
+
 * Tue Nov 04 2014 Nicolas Chauvet <kwizart@gmail.com> - 0.27.4-2
 - Rebuilt for vaapi 0.36
-
-* Mon Nov  3 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-2
-- Update to latest bugfix release, 0.27.4.
 
 * Mon Oct 13 2014 Richard Shaw <hobbes1069@gmail.com> - 0.27.3-2.1
 - Update to latest fixes.
