@@ -1,12 +1,57 @@
- mythtv/libs/libmythbase/mythversion.h    |   2 +-
- mythtv/libs/libmythtv/datadirect.cpp     |  52 +++-
- mythtv/libs/libmythtv/datadirect.h       |   2 +
- mythtv/libs/libmythupnp/ssdp.cpp         |  30 ++-
- mythtv/locales/de_at.xml                 |  37 +++
- mythtv/themes/default/keyboard/el.xml    | 270 ++++++++++++++++++++
- mythtv/themes/default/keyboard/el_ui.xml | 410 +++++++++++++++++++++++++++++++
- 7 files changed, 792 insertions(+), 11 deletions(-)
+ mythtv/bindings/python/MythTV/methodheap.py        |   2 +-
+ mythtv/libs/libmythbase/mythdownloadmanager.cpp    |   3 +
+ mythtv/libs/libmythbase/mythversion.h              |   2 +-
+ mythtv/libs/libmythtv/datadirect.cpp               |  56 ++-
+ mythtv/libs/libmythtv/datadirect.h                 |   2 +
+ mythtv/libs/libmythtv/eithelper.cpp                |  36 +-
+ mythtv/libs/libmythtv/mhegic.cpp                   |   9 +-
+ mythtv/libs/libmythtv/mpeg/dvbdescriptors.h        |  50 ++-
+ mythtv/libs/libmythtv/mpeg/mpegdescriptors.h       |  16 +
+ mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp      |   9 +-
+ mythtv/libs/libmythtv/recorders/dtvrecorder.cpp    |   7 +-
+ .../test/test_mpegtables/test_mpegtables.h         |  52 +++
+ .../test/test_mpegtables/test_mpegtables.pro       |   4 +
+ mythtv/libs/libmythui/mythuibuttonlist.cpp         |   2 +-
+ mythtv/libs/libmythui/mythuiimage.cpp              | 122 +++---
+ mythtv/libs/libmythui/mythuiimage.h                |   5 +
+ mythtv/libs/libmythui/mythuitext.cpp               |   2 +-
+ mythtv/libs/libmythupnp/ssdp.cpp                   |   2 +-
+ mythtv/locales/de_at.xml                           |  37 ++
+ mythtv/programs/mythfilldatabase/xmltvparser.cpp   |  19 +-
+ mythtv/programs/mythfrontend/globalsettings.cpp    |  13 +
+ .../programs/mythfrontend/programrecpriority.cpp   |  69 ++--
+ mythtv/themes/default/keyboard/el.xml              | 270 ++++++++++++++
+ mythtv/themes/default/keyboard/el_ui.xml           | 410 +++++++++++++++++++++
+ 24 files changed, 1081 insertions(+), 118 deletions(-)
 
+diff --git a/mythtv/bindings/python/MythTV/methodheap.py b/mythtv/bindings/python/MythTV/methodheap.py
+index d598b2f..b41b2da 100644
+--- a/mythtv/bindings/python/MythTV/methodheap.py
++++ b/mythtv/bindings/python/MythTV/methodheap.py
+@@ -1202,7 +1202,7 @@ class MythXML( XMLConnection ):
+         if height: args['Height'] = height
+         if secsin: args['SecsIn'] = secsin
+ 
+-        return self._result('Content/GetPreviewImage', **args).read()
++        return self._request('Content/GetPreviewImage', **args).read()
+ 
+ class MythMusic( MusicSchema, DBCache ):
+     """
+diff --git a/mythtv/libs/libmythbase/mythdownloadmanager.cpp b/mythtv/libs/libmythbase/mythdownloadmanager.cpp
+index 02d27a0..63e2e51 100644
+--- a/mythtv/libs/libmythbase/mythdownloadmanager.cpp
++++ b/mythtv/libs/libmythbase/mythdownloadmanager.cpp
+@@ -312,7 +312,10 @@ void MythDownloadManager::run(void)
+             m_downloadQueue.pop_front();
+ 
+             if (!dlInfo)
++            {
++                m_infoLock->unlock();
+                 continue;
++            }
+ 
+             QUrl qurl(dlInfo->m_url);
+             if (m_downloadInfos.contains(qurl.toString()))
 diff --git a/mythtv/libs/libmythbase/mythversion.h b/mythtv/libs/libmythbase/mythversion.h
 index b097b21..26d37ff 100644
 --- a/mythtv/libs/libmythbase/mythversion.h
@@ -21,7 +66,7 @@ index b097b21..26d37ff 100644
  /** \brief Increment this whenever the MythTV network protocol changes.
   *
 diff --git a/mythtv/libs/libmythtv/datadirect.cpp b/mythtv/libs/libmythtv/datadirect.cpp
-index 77cdef5..714a0c1 100644
+index 77cdef5..4ec9f92 100644
 --- a/mythtv/libs/libmythtv/datadirect.cpp
 +++ b/mythtv/libs/libmythtv/datadirect.cpp
 @@ -539,8 +539,8 @@ DataDirectProcessor::DataDirectProcessor(uint lp, QString user, QString pass) :
@@ -93,7 +138,20 @@ index 77cdef5..714a0c1 100644
      file.write(postdata);
      file.close();
  
-@@ -1833,6 +1855,18 @@ QString DataDirectProcessor::GetCookieFilename(bool &ok) const
+@@ -1161,11 +1183,9 @@ bool DataDirectProcessor::GrabData(const QDateTime &pstartDate,
+ 
+     if (m_cacheData)
+     {
+-        QByteArray userid = GetUserID().toLatin1();
+         cache_dd_data = m_tmpDir +
+-            QString("/mythtv_dd_cache_%1_%2_UTC_%3_to_%4")
++            QString("/mythtv_dd_cache_%1_UTC_%2_to_%3")
+             .arg(GetListingsProvider())
+-            .arg(userid.constData())
+             .arg(MythDate::toString(pstartDate, MythDate::kFilename))
+             .arg(MythDate::toString(pendDate, MythDate::kFilename));
+ 
+@@ -1833,6 +1853,18 @@ QString DataDirectProcessor::GetCookieFilename(bool &ok) const
      return m_cookieFile;
  }
  
@@ -112,7 +170,7 @@ index 77cdef5..714a0c1 100644
  void DataDirectProcessor::SetUserID(const QString &uid)
  {
      m_userid = uid;
-@@ -1877,7 +1911,11 @@ bool DataDirectProcessor::Post(QString url, const PostList &list,
+@@ -1877,7 +1909,11 @@ bool DataDirectProcessor::Post(QString url, const PostList &list,
          return true;
  
      QFile file(documentFile);
@@ -145,51 +203,577 @@ index 1cc84a1..83a6c53 100644
      mutable QString m_cookieFile;
      QDateTime       m_cookieFileDT;
  
-diff --git a/mythtv/libs/libmythupnp/ssdp.cpp b/mythtv/libs/libmythupnp/ssdp.cpp
-index 9e503eb..ebe3bcb 100644
---- a/mythtv/libs/libmythupnp/ssdp.cpp
-+++ b/mythtv/libs/libmythupnp/ssdp.cpp
-@@ -314,6 +314,33 @@ void SSDP::run()
+diff --git a/mythtv/libs/libmythtv/eithelper.cpp b/mythtv/libs/libmythtv/eithelper.cpp
+index bf980ed..e34714f 100644
+--- a/mythtv/libs/libmythtv/eithelper.cpp
++++ b/mythtv/libs/libmythtv/eithelper.cpp
+@@ -566,17 +566,49 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
+                     // The CRID is a URI.  It could contain UTF8 sequences encoded
+                     // as %XX but there's no advantage in decoding them.
+                     // The BBC currently uses private types 0x31 and 0x32.
++                    // IDs from the authority eventis.nl are not fit for our scheduler
+                     if (desc.ContentType(k) == 0x01 || desc.ContentType(k) == 0x31)
+-                        programId = desc.ContentId(k);
++                    {
++                        if (!desc.ContentId(k).startsWith ("eventis.nl/"))
++                        {
++                            programId = desc.ContentId(k);
++                        }
++                    }
+                     else if (desc.ContentType(k) == 0x02 || desc.ContentType(k) == 0x32)
+                     {
+-                        seriesId = desc.ContentId(k);
++                        if (!desc.ContentId(k).startsWith ("eventis.nl/"))
++                        {
++                            seriesId = desc.ContentId(k);
++                        }
+                         category_type = ProgramInfo::kCategorySeries;
+                     }
+                 }
+             }
+         }
  
- void SSDP::ProcessData( MSocketDevice *pSocket )
- {
-+    QHostAddress  peerAddress = pSocket->peerAddress();
-+    quint16       peerPort    = pSocket->peerPort   ();
++        /* if we don't have a subtitle, try to parse one from private descriptors */
++        if (subtitle.isEmpty()) {
++            bool isUPC = false;
++            /* is this event carrying UPC private data? */
++            desc_list_t private_data_specifiers = MPEGDescriptor::FindAll(list, DescriptorID::private_data_specifier);
++            for (uint j = 0; j < private_data_specifiers.size(); j++) {
++                PrivateDataSpecifierDescriptor desc(private_data_specifiers[j]);
++                if (desc.PrivateDataSpecifier() == PrivateDataSpecifierID::UPC1) {
++                    isUPC = true;
++                }
++            }
 +
-+    // Mitigate against SSDP Reflection DDOS attacks
-+    // Disallow device discovery from non-local addresses
-+    // Security Advisory (Akamai):
-+    // https://www.prolexic.com/kcresources/prolexic-threat-advisories/prolexic-threat-advisory-ssdp-reflection-ddos-attacks/ssdp-reflection-attacks-cybersecurity-locked.html
-+    // https://www.prolexic.com/knowledge-center-ddos-threat-advisory-ssdp-reflection-ddos-attacks.html
-+    //
-+    // TODO: We may want to restrict this to the same subnet as the server
-+    //       for added security
-+    if (((peerAddress.protocol() == QAbstractSocket::IPv4Protocol) &&
-+            (!peerAddress.isInSubnet(QHostAddress("172.16.0.0"), 12) &&
-+            !peerAddress.isInSubnet(QHostAddress("192.168.0.0"), 16) &&
-+            !peerAddress.isInSubnet(QHostAddress("10.0.0.0"), 8))) ||
-+        ((peerAddress.protocol() == QAbstractSocket::IPv6Protocol) &&
-+            !peerAddress.isInSubnet(pSocket->address(), 64))) // default subnet size is assumed to be /64
++            if (isUPC) {
++                desc_list_t subtitles = MPEGDescriptor::FindAll(list, PrivateDescriptorID::upc_event_episode_title);
++                for (uint j = 0; j < subtitles.size(); j++) {
++                    PrivateUPCCablecomEpisodeTitleDescriptor desc(subtitles[j]);
++
++                    subtitle = desc.Text();
++                }
++            }
++        }
++
++
+         QDateTime starttime = eit->StartTimeUTC(i);
+         // fix starttime only if the duration is a multiple of a minute
+         if (!(eit->DurationInSeconds(i) % 60))
+diff --git a/mythtv/libs/libmythtv/mhegic.cpp b/mythtv/libs/libmythtv/mhegic.cpp
+index d8a5fbb..31456c1 100644
+--- a/mythtv/libs/libmythtv/mhegic.cpp
++++ b/mythtv/libs/libmythtv/mhegic.cpp
+@@ -18,6 +18,7 @@ using std::getenv;
+ // Myth
+ #include "netstream.h"
+ #include "mythlogging.h"
++#include "mythcorecontext.h"
+ 
+ #define LOC QString("[mhegic] ")
+ 
+@@ -48,14 +49,16 @@ MHInteractionChannel::EStatus MHInteractionChannel::status()
+         return kInactive;
+     }
+ 
+-    // TODO get this from mythdb
++    if (!gCoreContext->GetNumSetting("EnableMHEG", 0))
++        return kDisabled;
++
+     QStringList opts = QString(getenv("MYTHMHEG")).split(':');
+     if (opts.contains("noice", Qt::CaseInsensitive))
+         return kDisabled;
+     else if (opts.contains("ice", Qt::CaseInsensitive))
+         return kActive;
+-    else // Default
+-        return kActive;
++
++    return gCoreContext->GetNumSetting("EnableMHEGic", 1) ? kActive : kDisabled;
+ }
+ 
+ static inline bool isCached(const QString& csPath)
+diff --git a/mythtv/libs/libmythtv/mpeg/dvbdescriptors.h b/mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
+index 682e5b5..f5a74bf 100644
+--- a/mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
++++ b/mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
+@@ -926,12 +926,13 @@ class TerrestrialDeliverySystemDescriptor : public MPEGDescriptor
+         kConstellationQPSK  = 0x0,
+         kConstellationQAM16 = 0x1,
+         kConstellationQAM64 = 0x2,
++        kConstellationQAM256 = 0x3,
+     };
+     uint Constellation(void) const { return _data[7]>>6; }
+     QString ConstellationString(void) const
+     {
+-        static QString cs[] = { "qpsk", "qam_16", "qam_64" };
+-        return (Constellation() <= kConstellationQAM64) ?
++        static QString cs[] = { "qpsk", "qam_16", "qam_64", "qam_256" };
++        return (Constellation() <= kConstellationQAM256) ?
+             cs[Constellation()] : "auto";
+     }
+     // hierarchy_information    3   7.2
+@@ -1357,6 +1358,10 @@ class PrivateDataSpecifierDescriptor : public MPEGDescriptor
+     // descriptor_length        8   1.0
+ 
+     // private_data_specifier  32   2.0
++    uint32_t PrivateDataSpecifier (void) const
 +    {
-+        LOG(VB_GENERAL, LOG_CRIT, QString("SSDP Request from WAN IP "
-+                                            "address (%1). Possible SSDP "
-+                                            "Reflection attempt. Ignoring as "
-+                                            "security risk.")
-+                                                .arg(peerAddress.toString()));
-+        pSocket->readAll(); // Discard the data in the socket buffer
-+        return;
++        return (_data[2] << 24 | _data[3] << 16 | _data[4] << 8 | _data[5]);
++    }
+ };
+ 
+ // DVB Bluebook A038 (Sept 2011) p 79
+@@ -2070,4 +2075,45 @@ class DefaultAuthorityDescriptor : public MPEGDescriptor
+     }
+ };
+ 
++/*
++ * private UPC Cablecom (Austria) episode descriptor for Horizon middleware
++ */
++class PrivateUPCCablecomEpisodeTitleDescriptor : public MPEGDescriptor
++{
++    public:
++     PrivateUPCCablecomEpisodeTitleDescriptor(const unsigned char *data, int len = 300) :
++         MPEGDescriptor(data, len, PrivateDescriptorID::upc_event_episode_title) { }
++    //       Name             bits  loc  expected value
++    // descriptor_tag           8   0.0       0xa7
++    // descriptor_length        8   1.0
++
++    // ISO_639_language_code   24   2.0
++    int LanguageKey(void) const
++    {
++        return iso639_str3_to_key(&_data[2]);
++    }
++    QString LanguageString(void) const
++    {
++        return iso639_key_to_str3(LanguageKey());
++    }
++    int CanonicalLanguageKey(void) const
++    {
++        return iso639_key_to_canonical_key(LanguageKey());
++    }
++    QString CanonicalLanguageString(void) const
++    {
++        return iso639_key_to_str3(CanonicalLanguageKey());
 +    }
 +
-     QByteArray buffer;
-     long nBytes = 0;
-     int retries = 0;
-@@ -365,9 +392,6 @@ void SSDP::ProcessData( MSocketDevice *pSocket )
-         if (buffer.isEmpty())
-             continue;
++    uint TextLength(void) const
++    {
++        return _data[1] - 3;
++    }
++
++    QString Text(void) const
++    {
++        return dvb_decode_text(&_data[5], TextLength());
++    }
++};
++
+ #endif
+diff --git a/mythtv/libs/libmythtv/mpeg/mpegdescriptors.h b/mythtv/libs/libmythtv/mpeg/mpegdescriptors.h
+index 1efd30a..626bc5a 100644
+--- a/mythtv/libs/libmythtv/mpeg/mpegdescriptors.h
++++ b/mythtv/libs/libmythtv/mpeg/mpegdescriptors.h
+@@ -191,6 +191,9 @@ class PrivateDescriptorID
+         dish_event_vchip            = 0x95, /* implemented */
+         dish_event_tags             = 0x96, /* implemented */
  
--        QHostAddress  peerAddress = pSocket->peerAddress();
--        quint16       peerPort    = pSocket->peerPort   ();
++        // Private -- CH UPC Cablecom
++        upc_event_episode_title     = 0xA7,
++
+         // Private -- premiere.de
+         premiere_content_order        = 0xF0,
+         premiere_parental_information = 0xF1,
+@@ -198,6 +201,19 @@ class PrivateDescriptorID
+     };
+ };
+ 
++/*
++ * Private_Data_Specifier_ID from http://www.dvbservices.com/identifiers/private_data_spec_id
++ */
++class PrivateDataSpecifierID
++{
++  public:
++    enum
++    {
++        /* UPC Cablecom */
++        UPC1 = 0x00000600,
++    };
++};
++
+ class MTV_PUBLIC MPEGDescriptor
+ {
+   public:
+diff --git a/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp b/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
+index e295975..9738c7f 100644
+--- a/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
++++ b/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
+@@ -147,9 +147,8 @@ void MPEGStreamData::SetRecordingType(const QString &recording_type)
+ {
+     _recording_type = recording_type;
+     _recording_type.detach();
+-    uint neededVideo = (_recording_type == "tv")    ? 1 : 0;
+     uint neededAudio = (_recording_type == "audio") ? 1 : 0;
+-    SetVideoStreamsRequired(neededVideo);
++    SetVideoStreamsRequired(0);
+     SetAudioStreamsRequired(neededAudio);
+ }
+ 
+@@ -578,6 +577,12 @@ bool MPEGStreamData::CreatePMTSingleProgram(const ProgramMapTable &pmt)
+             audio_cnt++;
+             audioPIDs.push_back(pid);
+         }
++        else if (_recording_type == "audio" )
++        {
++            // If not an audio PID but we only want audio,
++            // ignore this PID.
++            continue;
++        }
+ 
+ #ifdef DEBUG_MPEG_RADIO
+         if (is_video)
+diff --git a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
+index 099f8a6..df05491 100644
+--- a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
++++ b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
+@@ -1135,7 +1135,7 @@ void DTVRecorder::FindPSKeyFrames(const uint8_t *buffer, uint len)
+         if (hasKeyFrame)
+         {
+             _last_keyframe_seen = _frames_seen_count;
+-            HandleKeyframe(_payload_buffer.size() - (bufptr - bufstart));
++            HandleKeyframe((int64_t)_payload_buffer.size() - (bufptr - bufstart));
+         }
+ 
+         if ((aspectRatio > 0) && (aspectRatio != m_videoAspect))
+@@ -1336,6 +1336,11 @@ bool DTVRecorder::ProcessTSPacket(const TSPacket &tspacket)
+         FindOtherKeyframes(&tspacket);
+         _buffer_packets = false;
+     }
++    else if (_stream_id[pid] == 0)
++    {
++        // Ignore this packet if the PID should be stripped
++        return true;
++    }
+     else
+     {
+         // There are audio/video streams. Only write the packet
+diff --git a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h b/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h
+index fa1412b..84e9a6d 100644
+--- a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h
++++ b/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h
+@@ -204,4 +204,56 @@ class TestMPEGTables: public QObject
+         QCOMPARE (descriptor2.ContentId(), QString("eventis.nl/00000000-0000-1000-0608-000000003F9C"));
+         QCOMPARE (descriptor.ContentId(1), QString("eventis.nl/00000000-0000-1000-0608-000000003F9C"));
+     }
++
++    /* test for coverity 1047220: Incorrect deallocator used:
++     * Calling "PSIPTable::~PSIPTable()" frees "(&psip)->_fullbuffer"
++     * using "free" but it should have been freed using "operator delete[]".
++     *
++     * _allocSize should be 0 thus we are not freeing something we didn't
++     * allocate in the first place (false positive)
++     */
++    void clone_test(void)
++    {
++        unsigned char *si_data = new unsigned char[8];
++        si_data[0] = 0x70; /* pp....37 */
++        si_data[1] = 0x70;
++        si_data[2] = 0x05;
++        si_data[3] = 0xdc;
++        si_data[4] = 0xa9;
++        si_data[5] = 0x12;
++        si_data[6] = 0x33;
++        si_data[7] = 0x37;
++
++        const PSIPTable si_table(si_data);
++
++        QVERIFY (!si_table.IsClone());
++    }
++
++    /* test PrivateDataSpecifierDescriptor */
++    void PrivateDataSpecifierDescriptor_test (void)
++    {
++        /* from https://code.mythtv.org/trac/ticket/12091 */
++        const unsigned char si_data[] = { 
++            0x5f, 0x04, 0x00, 0x00, 0x06, 0x00
++        };
++        PrivateDataSpecifierDescriptor desc(si_data);
++        QCOMPARE (desc.PrivateDataSpecifier(), (uint32_t) PrivateDataSpecifierID::UPC1);
++    }
++
++    /* test for https://code.mythtv.org/trac/ticket/12091
++     * UPC Cablecom switched from standard DVB key/value set to
++     * custom descriptors
++     */
++    void PrivateUPCCablecomEpisodetitleDescriptor_test (void)
++    {
++        const unsigned char si_data[] = {
++            0xa7, 0x13, 0x67, 0x65, 0x72, 0x05, 0x4b, 0x72,  0x61, 0x6e, 0x6b, 0x20, 0x76, 0x6f, 0x72, 0x20,  /* ..ger.Krank vor  */
++            0x4c, 0x69, 0x65, 0x62, 0x65                                                                      /* Liebe            */
++        };
++
++        PrivateUPCCablecomEpisodeTitleDescriptor descriptor(si_data);
++        QCOMPARE (descriptor.CanonicalLanguageString(), QString("ger"));
++        QCOMPARE (descriptor.TextLength(), (uint) 16);
++        QCOMPARE (descriptor.Text(), QString("Krank vor Liebe"));
++    }
+ };
+diff --git a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.pro b/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.pro
+index 2ed5ac6..b33b3fd 100644
+--- a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.pro
++++ b/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.pro
+@@ -14,6 +14,10 @@ TARGET = test_mpegtables
+ DEPENDPATH += . ../..
+ INCLUDEPATH += . ../.. ../../mpeg ../../../libmythui ../../../libmyth ../../../libmythbase
+ 
++LIBS += ../../dvbdescriptors.o
++LIBS += ../../iso6937tables.o
++LIBS += ../../freesat_huffman.o
++
+ LIBS += -L../../../libmythbase -lmythbase-$$LIBVERSION
+ LIBS += -L../../../libmythui -lmythui-$$LIBVERSION
+ LIBS += -L../../../libmythupnp -lmythupnp-$$LIBVERSION
+diff --git a/mythtv/libs/libmythui/mythuibuttonlist.cpp b/mythtv/libs/libmythui/mythuibuttonlist.cpp
+index 95966a5..24669b5 100644
+--- a/mythtv/libs/libmythui/mythuibuttonlist.cpp
++++ b/mythtv/libs/libmythui/mythuibuttonlist.cpp
+@@ -3508,7 +3508,7 @@ void MythUIButtonListItem::SetToRealButton(MythUIStateType *button, bool selecte
+ 
+             QString newText = text->GetTemplateText();
+ 
+-            QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?(\\w+)(\\|(.+))?%");
++            QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?(\\S+)(\\|(.+))?%");
+             regexp.setMinimal(true);
+ 
+             if (!newText.isEmpty() && newText.contains(regexp))
+diff --git a/mythtv/libs/libmythui/mythuiimage.cpp b/mythtv/libs/libmythui/mythuiimage.cpp
+index 4707f01..5674bf1 100644
+--- a/mythtv/libs/libmythui/mythuiimage.cpp
++++ b/mythtv/libs/libmythui/mythuiimage.cpp
+@@ -654,6 +654,8 @@ void MythUIImage::Init(void)
+     m_animatedImage = false;
+ 
+     m_runningThreads = 0;
++
++    m_showingRandomImage = false;
+ }
+ 
+ /**
+@@ -1103,7 +1105,7 @@ bool MythUIImage::Load(bool allowLoadInBackground, bool forceStat)
+  */
+ void MythUIImage::Pulse(void)
+ {
+-    QWriteLocker updateLocker(&d->m_UpdateLock);
++    d->m_UpdateLock.lockForWrite();
+ 
+     int delay = -1;
+ 
+@@ -1115,39 +1117,51 @@ void MythUIImage::Pulse(void)
+     if (delay > 0 &&
+         abs(m_LastDisplay.msecsTo(QTime::currentTime())) > delay)
+     {
+-        m_ImagesLock.lock();
 -
+-        if (m_animationCycle == kCycleStart)
++        if (m_showingRandomImage)
+         {
+-            ++m_CurPos;
+-
+-            if (m_CurPos >= (uint)m_Images.size())
+-                m_CurPos = 0;
++            FindRandomImage();
++            d->m_UpdateLock.unlock();
++            Load();
++            d->m_UpdateLock.lockForWrite();
+         }
+-        else if (m_animationCycle == kCycleReverse)
++        else
+         {
+-            if ((m_CurPos + 1) >= (uint)m_Images.size())
++            m_ImagesLock.lock();
++
++            if (m_animationCycle == kCycleStart)
+             {
+-                m_animationReverse = true;
++                ++m_CurPos;
++
++                if (m_CurPos >= (uint)m_Images.size())
++                    m_CurPos = 0;
+             }
+-            else if (m_CurPos == 0)
++            else if (m_animationCycle == kCycleReverse)
+             {
+-                m_animationReverse = false;
++                if ((m_CurPos + 1) >= (uint)m_Images.size())
++                {
++                    m_animationReverse = true;
++                }
++                else if (m_CurPos == 0)
++                {
++                    m_animationReverse = false;
++                }
++
++                if (m_animationReverse)
++                    --m_CurPos;
++                else
++                    ++m_CurPos;
+             }
+ 
+-            if (m_animationReverse)
+-                --m_CurPos;
+-            else
+-                ++m_CurPos;
++            m_ImagesLock.unlock();
+         }
+ 
+-        m_ImagesLock.unlock();
+-
+         SetRedraw();
+         m_LastDisplay = QTime::currentTime();
+     }
+ 
+     MythUIType::Pulse();
++
++    d->m_UpdateLock.unlock();
+ }
+ 
+ /**
+@@ -1245,34 +1259,10 @@ bool MythUIImage::ParseElement(
+ 
+         if (m_imageProperties.filename.endsWith('/'))
+         {
+-            QDir imageDir(m_imageProperties.filename);
++            m_showingRandomImage = true;
++            m_imageDirectory = m_imageProperties.filename;
+ 
+-            if (!imageDir.exists())
+-            {
+-                QString themeDir = GetMythUI()->GetThemeDir() + '/';
+-                imageDir = themeDir + m_imageProperties.filename;
+-            }
+-
+-            QStringList imageTypes;
+-
+-            QList< QByteArray > exts = QImageReader::supportedImageFormats();
+-            QList< QByteArray >::Iterator it = exts.begin();
+-
+-            for (; it != exts.end(); ++it)
+-            {
+-                imageTypes.append(QString("*.").append(*it));
+-            }
+-
+-            imageDir.setNameFilters(imageTypes);
+-
+-            QStringList imageList = imageDir.entryList();
+-            QString randFile;
+-
+-            if (imageList.size())
+-                randFile = QString("%1%2").arg(m_imageProperties.filename)
+-                           .arg(imageList.takeAt(random() % imageList.size()));
+-
+-            m_OrigFilename = m_imageProperties.filename = randFile;
++            FindRandomImage();
+         }
+     }
+     else if (element.tagName() == "filepattern")
+@@ -1432,6 +1422,9 @@ void MythUIImage::CopyFrom(MythUIType *base)
+     m_animationCycle = im->m_animationCycle;
+     m_animatedImage = im->m_animatedImage;
+ 
++    m_showingRandomImage = im->m_showingRandomImage;
++    m_imageDirectory = im->m_imageDirectory;
++
+     MythUIType::CopyFrom(base);
+ 
+     // We need to update forceSize in case the parent area has changed
+@@ -1621,6 +1614,43 @@ void MythUIImage::customEvent(QEvent *event)
+         // No Images were loaded, so trigger Reset to default
+         Reset();
+     }
++}
++
++void MythUIImage::FindRandomImage(void)
++{
++    QDir imageDir(m_imageDirectory);
++
++    if (!imageDir.exists())
++    {
++        QString themeDir = GetMythUI()->GetThemeDir() + '/';
++        imageDir = themeDir + m_imageDirectory;
++    }
++
++    QStringList imageTypes;
++
++    QList< QByteArray > exts = QImageReader::supportedImageFormats();
++    QList< QByteArray >::Iterator it = exts.begin();
++
++    for (; it != exts.end(); ++it)
++    {
++        imageTypes.append(QString("*.").append(*it));
++    }
++
++    imageDir.setNameFilters(imageTypes);
+ 
++    QStringList imageList = imageDir.entryList();
++    QString randFile;
++
++    if (imageList.size())
++    {
++        // try to find a different image
++        do
++        {
++            randFile = QString("%1%2").arg(m_imageDirectory)
++                                      .arg(imageList.takeAt(random() % imageList.size()));
++
++        } while (imageList.size() > 1 && randFile == m_OrigFilename);
++    }
+ 
++    m_OrigFilename = m_imageProperties.filename = randFile;
+ }
+diff --git a/mythtv/libs/libmythui/mythuiimage.h b/mythtv/libs/libmythui/mythuiimage.h
+index 90901d3..a90ee3f 100644
+--- a/mythtv/libs/libmythui/mythuiimage.h
++++ b/mythtv/libs/libmythui/mythuiimage.h
+@@ -142,6 +142,8 @@ class MUI_PUBLIC MythUIImage : public MythUIType
+     void SetCropRect(int x, int y, int width, int height);
+     void SetCropRect(const MythRect &rect);
+ 
++    void FindRandomImage(void);
++
+     QString m_Filename;
+     QString m_OrigFilename;
+ 
+@@ -162,6 +164,9 @@ class MUI_PUBLIC MythUIImage : public MythUIType
+ 
+     int m_runningThreads;
+ 
++    bool m_showingRandomImage;
++    QString m_imageDirectory;
++
+     MythUIImagePrivate *d;
+ 
+     enum AnimationCycle {kCycleStart, kCycleReverse};
+diff --git a/mythtv/libs/libmythui/mythuitext.cpp b/mythtv/libs/libmythui/mythuitext.cpp
+index 0f7a6f6..60fa71f 100644
+--- a/mythtv/libs/libmythui/mythuitext.cpp
++++ b/mythtv/libs/libmythui/mythuitext.cpp
+@@ -196,7 +196,7 @@ void MythUIText::SetTextFromMap(const InfoMap &map)
+     if (newText.isEmpty())
+         newText = GetDefaultText();
+ 
+-    QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?(\\w+)(\\|(.+))?%");
++    QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?(\\S+)(\\|(.+))?%");
+     regexp.setMinimal(true);
+ 
+     if (!newText.isEmpty() && newText.contains(regexp))
+diff --git a/mythtv/libs/libmythupnp/ssdp.cpp b/mythtv/libs/libmythupnp/ssdp.cpp
+index 9e503eb..b1a4ba0 100644
+--- a/mythtv/libs/libmythupnp/ssdp.cpp
++++ b/mythtv/libs/libmythupnp/ssdp.cpp
+@@ -367,7 +367,7 @@ void SSDP::ProcessData( MSocketDevice *pSocket )
+ 
+         QHostAddress  peerAddress = pSocket->peerAddress();
+         quint16       peerPort    = pSocket->peerPort   ();
+-
++        
          // ------------------------------------------------------------------
          QString     str          = QString(buffer.constData());
          QStringList lines        = str.split("\r\n", QString::SkipEmptyParts);
@@ -236,6 +820,173 @@ index 0000000..a11af26
 +    <!-- MythArchive -->
 +    <setting name="MythArchiveVideoFormat">PAL</setting>
 +</mythlocale>
+diff --git a/mythtv/programs/mythfilldatabase/xmltvparser.cpp b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
+index d05649d..b843acb 100644
+--- a/mythtv/programs/mythfilldatabase/xmltvparser.cpp
++++ b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
+@@ -359,7 +359,8 @@ ProgInfo *XMLTVParser::parseProgram(QDomElement &element)
+             {
+                 QDomNodeList values = info.elementsByTagName("value");
+                 QDomElement item;
+-                QString stars, num, den;
++                QString stars;
++                float num, den;
+                 float rating = 0.0;
+ 
+                 // Use the first rating to appear in the xml, this should be
+@@ -371,14 +372,22 @@ ProgInfo *XMLTVParser::parseProgram(QDomElement &element)
+                 // In the case of uk_rt it's not unknown for a recommendation
+                 // to be given to programmes which are 'so bad, you have to
+                 // watch!'
++                //
++                // XMLTV uses zero based ratings and signals no rating by absence.
++                // A rating from 1 to 5 is encoded as 0/4 to 4/4.
++                // MythTV uses zero to signal no rating!
++                // The same rating is encoded as 0.2 to 1.0 with steps of 0.2, it
++                // is not encoded as 0.0 to 1.0 with steps of 0.25 because
++                // 0 signals no rating!
++                // See http://xmltv.cvs.sourceforge.net/viewvc/xmltv/xmltv/xmltv.dtd?revision=1.47&view=markup#l539
+                 item = values.item(0).toElement();
+                 if (!item.isNull())
+                 {
+                     stars = getFirstText(item);
+-                    num = stars.section('/', 0, 0);
+-                    den = stars.section('/', 1, 1);
+-                    if (0.0 < den.toFloat())
+-                        rating = num.toFloat()/den.toFloat();
++                    num = stars.section('/', 0, 0).toFloat() + 1;
++                    den = stars.section('/', 1, 1).toFloat() + 1;
++                    if (0.0 < den)
++                        rating = num/den;
+                 }
+ 
+                 pginfo->stars.setNum(rating);
+diff --git a/mythtv/programs/mythfrontend/globalsettings.cpp b/mythtv/programs/mythfrontend/globalsettings.cpp
+index a487a49..ad99e0b 100644
+--- a/mythtv/programs/mythfrontend/globalsettings.cpp
++++ b/mythtv/programs/mythfrontend/globalsettings.cpp
+@@ -1604,6 +1604,18 @@ static HostCheckBox *EnableMHEG()
+     return gc;
+ }
+ 
++static HostCheckBox *EnableMHEGic()
++{
++    HostCheckBox *gc = new HostCheckBox("EnableMHEGic");
++    gc->setLabel(QObject::tr("Enable network access for interactive TV"));
++    gc->setValue(false);
++    gc->setHelpText(QObject::tr(
++                        "If enabled, interactive TV applications (MHEG) will "
++                        "be able to access interactive content over the "
++                        "internet. This is used for BBC iPlayer."));
++    return gc;
++}
++
+ static HostCheckBox *PersistentBrowseMode()
+ {
+     HostCheckBox *gc = new HostCheckBox("PersistentBrowseMode");
+@@ -4051,6 +4063,7 @@ OSDSettings::OSDSettings()
+     osd->setLabel(tr("On-screen Display"));
+ 
+     osd->addChild(EnableMHEG());
++    osd->addChild(EnableMHEGic());
+     osd->addChild(PersistentBrowseMode());
+     osd->addChild(BrowseAllTuners());
+     osd->addChild(DefaultCCMode());
+diff --git a/mythtv/programs/mythfrontend/programrecpriority.cpp b/mythtv/programs/mythfrontend/programrecpriority.cpp
+index 22e561a..ea6914b 100644
+--- a/mythtv/programs/mythfrontend/programrecpriority.cpp
++++ b/mythtv/programs/mythfrontend/programrecpriority.cpp
+@@ -1483,25 +1483,20 @@ void ProgramRecPriority::UpdateList()
+         item->SetText(tempTime, "lastrecordedtime", state);
+ 
+         QString channame = progInfo->channame;
+-        if ((progInfo->recType == kAllRecord) ||
+-            (progInfo->recType == kOneRecord) ||
+-            (progInfo->recType == kDailyRecord) ||
+-            (progInfo->recType == kWeeklyRecord))
+-            channame = tr("Any");
+-        item->SetText(channame, "channel", state);
+         QString channum = progInfo->chanstr;
+-        if ((progInfo->recType == kAllRecord) ||
+-            (progInfo->recType == kOneRecord) ||
+-            (progInfo->recType == kDailyRecord) ||
+-            (progInfo->recType == kWeeklyRecord))
+-            channum = tr("Any");
+-        item->SetText(channum, "channum", state);
+         QString callsign = progInfo->chansign;
+-        if ((progInfo->recType == kAllRecord) ||
+-            (progInfo->recType == kOneRecord) ||
+-            (progInfo->recType == kDailyRecord) ||
+-            (progInfo->recType == kWeeklyRecord))
++        if (progInfo->recType != kSingleRecord &&
++            progInfo->recType != kOverrideRecord &&
++            progInfo->recType != kDontRecord &&
++            !(progInfo->GetRecordingRule()->m_filter & 1024) &&
++            progInfo->GetRecordingRule()->m_searchType != kManualSearch)
++        {
++            channame = tr("Any");
++            channum = tr("Any");
+             callsign = tr("Any");
++        }
++        item->SetText(channame, "channel", state);
++        item->SetText(channum, "channum", state);
+         item->SetText(callsign, "callsign", state);
+ 
+         QString profile = progInfo->profile;
+@@ -1600,37 +1595,27 @@ void ProgramRecPriority::updateInfo(MythUIButtonListItem *item)
+         m_lastRecordedTimeText->SetText(tempTime);
+     }
+ 
+-    if (m_channameText)
++    if (m_channameText || m_channumText || m_callsignText)
+     {
+         QString channame = pgRecInfo->channame;
+-        if ((pgRecInfo->rectype == kAllRecord) ||
+-            (pgRecInfo->rectype == kOneRecord) ||
+-            (pgRecInfo->rectype == kDailyRecord) ||
+-            (pgRecInfo->rectype == kWeeklyRecord))
+-            channame = tr("Any");
+-        m_channameText->SetText(channame);
+-    }
+-
+-    if (m_channumText)
+-    {
+         QString channum = pgRecInfo->chanstr;
+-        if ((pgRecInfo->rectype == kAllRecord) ||
+-            (pgRecInfo->rectype == kOneRecord) ||
+-            (pgRecInfo->rectype == kDailyRecord) ||
+-            (pgRecInfo->rectype == kWeeklyRecord))
+-            channum = tr("Any");
+-        m_channumText->SetText(channum);
+-    }
+-
+-    if (m_callsignText)
+-    {
+         QString callsign = pgRecInfo->chansign;
+-        if ((pgRecInfo->rectype == kAllRecord) ||
+-            (pgRecInfo->rectype == kOneRecord) ||
+-            (pgRecInfo->rectype == kDailyRecord) ||
+-            (pgRecInfo->rectype == kWeeklyRecord))
++        if (pgRecInfo->recType != kSingleRecord &&
++            pgRecInfo->recType != kOverrideRecord &&
++            pgRecInfo->recType != kDontRecord &&
++            !(pgRecInfo->GetRecordingRule()->m_filter & 1024) &&
++            pgRecInfo->GetRecordingRule()->m_searchType != kManualSearch)
++        {
++            channame = tr("Any");
++            channum = tr("Any");
+             callsign = tr("Any");
+-        m_callsignText->SetText(callsign);
++        }
++        if (m_channameText)
++            m_channameText->SetText(channame);
++        if (m_channumText)
++            m_channumText->SetText(channum);
++        if (m_callsignText)
++            m_callsignText->SetText(callsign);
+     }
+ 
+     if (m_recProfileText)
 diff --git a/mythtv/themes/default/keyboard/el.xml b/mythtv/themes/default/keyboard/el.xml
 new file mode 100644
 index 0000000..da192cf
