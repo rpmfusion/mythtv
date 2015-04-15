@@ -1,3 +1,139 @@
+commit 628183a01b66a010e9cf510b9d1d08a348ed5889
+Author: Warren Falk <warren@warrenfalk.com>
+Date:   Tue Mar 3 12:57:58 2015 -0500
+
+    fix SSDP thread using 100% CPU on zero byte datagrams
+    
+    Refs #12395
+    
+    Signed-off-by: Stuart Morgan <smorgan@mythtv.org>
+
+commit f1115fcd2b5cef93e870f926f53bf32cf546da9d
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Wed Mar 4 21:44:19 2015 +0000
+
+    Try to use qmake-qt4 in preference to qmake-qt5
+
+commit 6b550fcf084aba085909efc2d4e0b2fac465a28a
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Mon Mar 2 14:21:08 2015 +0000
+
+    Fix a segfault in the EIT cache
+    
+    (cherry picked from commit 2e8c5f84c63e806272b474e08c2de4c8c10c13d1)
+
+commit 56acf7cb6d2b891f1ed11dc8aff818528dfc6e34
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sun Mar 1 08:26:16 2015 +0000
+
+    Don't try to listen on addresses which are no longer available.
+    
+    (cherry picked from commit 5f64cabf8fdf21026212c17a64275e92601a8385)
+
+commit a2563e13062298467480cd8465153cdc7e851f05
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Feb 25 23:49:31 2015 +0000
+
+    Revert "Fix metadata fanart selection."
+    
+    The fix for this issue was addressed at a lower level in another
+    commit as a result this code path was reversing the list again.
+    
+    Fixes #12246
+    
+    This reverts commit da8ac305c3dbe955459a6a12e646b81109552836.
+    
+    Conflicts:
+    	mythtv/libs/libmythmetadata/metadatafactory.cpp
+    
+    (cherry picked from commit 09422c5508a74c0d052a78ee14fb4a20ce9ca058)
+
+commit 4e4a78541d9ab632552eafb35dce827f86994d88
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Mon Feb 23 16:42:45 2015 +0000
+
+    Add 29.5Msys/s to the preset list of possible symbol rates. Found on several dvb-s2 multiplexes across Europe
+    
+    (cherry picked from commit e26980483f392e7f13c614201a757a74af25112c)
+
+commit 6b8357105da9c84385b43102a76055ca0ae628f1
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Apr 30 11:36:21 2014 +0100
+
+    Add 23Msys/s to the preset list of possible symbol rates. This one is used for several DVB-S2 multiplexes in the UK.
+    
+    (cherry picked from commit 8d11d72f570aa52d7cd8a102e7ac4fa90c77ab16)
+
+commit 5aeccac88f424f000a11d1a648a8b9b6b659fef2
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Mon Feb 23 15:54:39 2015 +0000
+
+    Fixes #12221. When setting a dvb_tuning_delay, save the value the user enters
+    
+    (cherry picked from commit 267c890baf1d06cb0ed7e2454da6784881b65b99)
+
+commit ca4a2d68aab8723e4424cd808d6865bad2b950f1
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Fri Feb 13 12:15:38 2015 +0000
+
+    Fix mythtranscode segfault
+    
+    (cherry picked from commit cce890a85ba0a06575a287d67ba53539fd496517)
+
+commit 05dbcee65c501f4fc669e7d97f14ae3dda7491f6
+Merge: 7c48b79 aa256d1
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Thu Feb 12 18:14:45 2015 +0000
+
+    Merge branch 'fixes/0.27' of code.mythtv.org:mythtv into fixes/0.27
+
+commit 7c48b799e92e0e0a8160e4ab1da146afc583b97c
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Wed Feb 11 16:58:49 2015 +0000
+
+    Enable pic by default on linux systems.
+    Should fix building on 32bit based systems with Qt5
+    
+    (cherry picked from commit 0e5961e41dd6867772b74c051a96dc219181c6a5)
+
+commit aa256d1f7f96aa8afadd5bb070adfb8a9b2cb6b8
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Sun Feb 8 19:43:26 2015 +0100
+
+    Added missing support for JUMPTODVDCHAPTERMENU and JUMPTODVDTITLEMENU actions.
+    (cherry picked from commit 19e8d7fb65a766f16881d0143fcd09f7691c5818)
+
+commit 3b4390396bf09dfe3741508ecf7fc71a004abd01
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Fri Jan 2 11:52:58 2015 +0000
+
+    Add missing QObject include. Should resolve Qt5 build error
+    
+    (cherry picked from commit f063b19facd153c2b2844e9643d570b9466b4b6f)
+
+commit 03eaf3b9bdf7ce04f1285d08ee74af63ca8fd46b
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Jan 14 23:10:58 2015 +0000
+
+    Icon Downloader: Fix improper escaping of search string that broke proper matching and sorting with some searches
+    
+    (cherry picked from commit 93f4b96128c454aac728301282259df6734eb771)
+
+commit edc162bdfcdc95a68b4dc49d778dfedd3adcff8f
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Mon Jan 12 12:08:00 2015 +0000
+
+    Null pointer check in MainServer::customEvent.
+    
+    There are a few backtraces from ubuntu users appearing to show a crash here with
+    a null event pointer. It's not possible to work backwards and see how a null
+    event managed to end up being posted in the first place, and this
+    change won't necessarily prevent all variations of this crash but it's
+    the best I can do for now without a full audit of all code using the
+    events system.
+    
+    (cherry picked from commit 84619a0c3c2e043a61317836362bd0e31ae989c4)
+
 commit 40506c2ba7d81fa8e65bf8bb783c998ffe65c7af
 Author: Stuart Morgan <smorgan@mythtv.org>
 Date:   Thu Dec 11 15:49:35 2014 +0000
