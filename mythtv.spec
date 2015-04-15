@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27.4-27-g40506c2
+%define vers_string v0.27.4-42-g628183a
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -78,7 +78,7 @@ Version:        0.27.4
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -149,15 +149,16 @@ Source107: mythfrontend.desktop
 Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
 Source111: 99-mythbackend.rules
+Source112: mythjobqueue.service
 
 # Global MythTV and Shared Build Requirements
 
 %if %{with_systemd}
 # Use systemd
-BuildRequires:  systemd-units
-Requires(post): systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units
+BuildRequires:  systemd
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 %else
 # Use SysV
 Requires(post): chkconfig
@@ -517,9 +518,8 @@ Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Requires:  python-MythTV
+Requires:  mesa-vdpau-drivers
 Provides:  mythtv-frontend-api = %{mythfeapiver}
-Obsoletes: mythvideo           < %{version}-%{release}
-Provides:  mythvideo           = %{version}-%{release}
 
 %description frontend
 MythTV provides a unified graphical interface for recording and viewing
@@ -1039,6 +1039,9 @@ pushd mythtv
     mkdir -p %{buildroot}/lib/udev/rules.d/
     install -p -m 0644 %{SOURCE111} %{buildroot}/lib/udev/rules.d/
 
+    # Systemd unit file for mythjobqueue only backends.
+    install -p -m 0644 %{SOURCE112} %{buildroot}%{_unitdir}/
+
     ### SysV based setup. ###
     %else
     install -p -m 0755 %{SOURCE102} %{buildroot}%{_sysconfdir}/init.d/mythbackend
@@ -1142,22 +1145,17 @@ exit 0
 
 %post backend
 %if %{with_systemd}
-if [ $1 -eq 1 ] ; then 
-    # Initial installation 
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
+    %systemd_post mythbackend.service
+    %systemd_post mythjobqueue.service
 %else
-/sbin/chkconfig --add mythbackend
+    /sbin/chkconfig --add mythbackend
 %endif
 
 
 %preun backend
 %if %{with_systemd}
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /bin/systemctl --no-reload disable mythbackend.service > /dev/null 2>&1 || :
-    /bin/systemctl stop mythbackend.service > /dev/null 2>&1 || :
-fi
+    %systemd_preun mythbackend.service
+    %systemd_preun mythjobqueue.service
 %else
 if [ $1 = 0 ]; then
     /sbin/service mythbackend stop > /dev/null 2>&1
@@ -1167,11 +1165,8 @@ fi
 
 %postun backend
 %if %{with_systemd}
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart mythbackend.service >/dev/null 2>&1 || :
-fi
+    %systemd_postun_with_restart mythbackend.service
+    %systemd_postun_with_restart mythjobqueue.service
 %else
 if [ "$1" -ge "1" ] ; then
     /sbin/service mythbackend condrestart >/dev/null 2>&1 || :
@@ -1209,9 +1204,8 @@ fi
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
 %{_datadir}/mythtv/hardwareprofile/
-%attr(-,mythtv,mythtv)
-%dir %{_sysconfdir}/mythtv
-%config(noreplace) %{_sysconfdir}/mythtv/config.xml
+%attr(-,mythtv,mythtv) %dir %{_sysconfdir}/mythtv
+%attr(0664,mythtv,mythtv) %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 
 %files backend
 %{_bindir}/mythbackend
@@ -1226,6 +1220,7 @@ fi
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
 %if %{with_systemd}
 %{_unitdir}/mythbackend.service
+%{_unitdir}/mythjobqueue.service
 /lib/udev/rules.d/99-mythbackend.rules
 %else
 %{_sysconfdir}/init.d/mythbackend
@@ -1280,7 +1275,6 @@ fi
 %files devel
 %{_includedir}/*
 %{_libdir}/*.so
-%exclude %{_libdir}/*.a
 %dir %{_datadir}/mythtv/build
 %{_datadir}/mythtv/build/settings.pro
 
@@ -1423,6 +1417,15 @@ fi
 
 
 %changelog
+* Tue Apr  7 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-5
+- Update to latest bugfix release.
+- Fix owner on /etc/mythtv (BZ#3558).
+- Add systemd unit file for mythjobqueue only backends (BZ#3571).
+
+* Mon Mar  2 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-4
+- Update to latest bugfix release.
+- Add mesa-vdpau-drivers to requirements as it is usable on ATI/AMD video cards.
+
 * Sun Jan  4 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-3
 - Update to latest bugfix release.
 - Change systemd dependency from network.target to network-online.target, fixes

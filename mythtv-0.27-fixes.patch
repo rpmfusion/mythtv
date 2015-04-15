@@ -1,8 +1,16 @@
+ mythplugins/configure                              |  10 +-
  mythtv/bindings/python/MythTV/methodheap.py        |   2 +-
+ mythtv/configure                                   |  11 +-
+ mythtv/libs/libmyth/programtypes.cpp               |   1 +
  mythtv/libs/libmythbase/mythdownloadmanager.cpp    |   3 +
  mythtv/libs/libmythbase/mythversion.h              |   2 +-
+ mythtv/libs/libmythbase/serverpool.cpp             |   3 +-
+ mythtv/libs/libmythmetadata/metadatafactory.cpp    |   8 +-
+ .../channelscan/channelscanmiscsettings.h          |   2 +
  mythtv/libs/libmythtv/datadirect.cpp               |  56 ++-
  mythtv/libs/libmythtv/datadirect.h                 |   2 +
+ mythtv/libs/libmythtv/eitcache.cpp                 |  15 +-
+ mythtv/libs/libmythtv/eitcache.h                   |   2 +-
  mythtv/libs/libmythtv/eithelper.cpp                |  36 +-
  mythtv/libs/libmythtv/mhegic.cpp                   |   9 +-
  mythtv/libs/libmythtv/mpeg/dvbdescriptors.h        |  50 ++-
@@ -11,19 +19,51 @@
  mythtv/libs/libmythtv/recorders/dtvrecorder.cpp    |   7 +-
  .../test/test_mpegtables/test_mpegtables.h         |  52 +++
  .../test/test_mpegtables/test_mpegtables.pro       |   4 +
+ mythtv/libs/libmythtv/transporteditor.cpp          |   2 +
+ mythtv/libs/libmythtv/tv_play.cpp                  |  14 +
+ mythtv/libs/libmythtv/videosource.cpp              |   1 +
  mythtv/libs/libmythui/mythuibuttonlist.cpp         |   2 +-
  mythtv/libs/libmythui/mythuiimage.cpp              | 122 +++---
  mythtv/libs/libmythui/mythuiimage.h                |   5 +
  mythtv/libs/libmythui/mythuitext.cpp               |   2 +-
- mythtv/libs/libmythupnp/ssdp.cpp                   |   2 +-
+ mythtv/libs/libmythupnp/msocketdevice.h            |   4 +-
+ mythtv/libs/libmythupnp/msocketdevice_unix.cpp     |  27 +-
+ mythtv/libs/libmythupnp/ssdp.cpp                   |  28 +-
  mythtv/locales/de_at.xml                           |  37 ++
+ mythtv/programs/mythbackend/mainserver.cpp         |   3 +
  mythtv/programs/mythfilldatabase/xmltvparser.cpp   |  19 +-
  mythtv/programs/mythfrontend/globalsettings.cpp    |  13 +
  .../programs/mythfrontend/programrecpriority.cpp   |  69 ++--
+ mythtv/programs/mythtranscode/transcode.cpp        |   2 +-
+ mythtv/programs/mythtv-setup/importicons.cpp       |   6 +-
  mythtv/themes/default/keyboard/el.xml              | 270 ++++++++++++++
  mythtv/themes/default/keyboard/el_ui.xml           | 410 +++++++++++++++++++++
- 24 files changed, 1081 insertions(+), 118 deletions(-)
+ 40 files changed, 1177 insertions(+), 159 deletions(-)
 
+diff --git a/mythplugins/configure b/mythplugins/configure
+index b9086ba..f14a405 100755
+--- a/mythplugins/configure
++++ b/mythplugins/configure
+@@ -561,14 +561,14 @@ OPENGLV=$(cat mythconfig.mak | grep -e "^CONFIG_OPENGL_VIDEO=yes")
+ EXTRALIBS=$(cat mythconfig.mak | grep -e "^EXTRALIBS=")
+ EXTRALIBS=${EXTRALIBS#EXTRALIBS=}
+ 
+-if is_qmake5 $qmake || is_qmake5 qmake-qt5; then
+-    if is_qmake5 qmake-qt5; then
+-        qmake=qmake-qt5
+-    fi
+-elif is_qmake4 $qmake || is_qmake4 qmake-qt4; then
++if is_qmake4 $qmake || is_qmake4 qmake-qt4; then
+     if is_qmake4 qmake-qt4; then
+         qmake=qmake-qt4
+     fi
++elif is_qmake5 $qmake || is_qmake5 qmake-qt5; then
++    if is_qmake5 qmake-qt5; then
++        qmake=qmake-qt5
++    fi
+ else
+     die "qmake for Qt4.8 or newer not found.\nPlease specify the correct qmake with --qmake="
+ fi
 diff --git a/mythtv/bindings/python/MythTV/methodheap.py b/mythtv/bindings/python/MythTV/methodheap.py
 index d598b2f..b41b2da 100644
 --- a/mythtv/bindings/python/MythTV/methodheap.py
@@ -37,6 +77,51 @@ index d598b2f..b41b2da 100644
  
  class MythMusic( MusicSchema, DBCache ):
      """
+diff --git a/mythtv/configure b/mythtv/configure
+index f8c1f2f..d95a3a3 100755
+--- a/mythtv/configure
++++ b/mythtv/configure
+@@ -4250,6 +4250,7 @@ case $target_os in
+         ! disabled joystick_menu && enable joystick_menu
+         enable libudev
+         enable libuuid
++        enable pic
+         ;;
+     irix*)
+         target_os=irix
+@@ -4467,15 +4468,15 @@ is_qmake4(){
+     $1 --version 2>&1 | egrep -q -e "Qt version 4\.[8-9]\.[0-9]"
+ }
+ 
+-if is_qmake5 $qmake || is_qmake5 qmake-qt5; then
++if is_qmake4 $qmake || is_qmake4 qmake-qt4; then
++    if is_qmake4 qmake-qt4; then
++        qmake=qmake-qt4
++    fi
++elif is_qmake5 $qmake || is_qmake5 qmake-qt5; then
+     if is_qmake5 qmake-qt5; then
+         qmake=qmake-qt5
+     fi
+     check_cxxflags -DQT_DISABLE_DEPRECATED_BEFORE
+-elif is_qmake4 $qmake || is_qmake4 qmake-qt4; then
+-    if is_qmake4 qmake-qt4; then
+-        qmake=qmake-qt4
+-    fi
+ else
+     die "qmake for Qt4.8 or newer not found.\nPlease specify the correct qmake with --qmake="
+ fi
+diff --git a/mythtv/libs/libmyth/programtypes.cpp b/mythtv/libs/libmyth/programtypes.cpp
+index 3167e81..c1253c5 100644
+--- a/mythtv/libs/libmyth/programtypes.cpp
++++ b/mythtv/libs/libmyth/programtypes.cpp
+@@ -2,6 +2,7 @@
+ 
+ #include <QDateTime>
+ #include <QMutex>
++#include <QObject>
+ 
+ #include "programtypes.h"
+ #include "mythdate.h"
 diff --git a/mythtv/libs/libmythbase/mythdownloadmanager.cpp b/mythtv/libs/libmythbase/mythdownloadmanager.cpp
 index 02d27a0..63e2e51 100644
 --- a/mythtv/libs/libmythbase/mythdownloadmanager.cpp
@@ -65,6 +150,56 @@ index b097b21..26d37ff 100644
  
  /** \brief Increment this whenever the MythTV network protocol changes.
   *
+diff --git a/mythtv/libs/libmythbase/serverpool.cpp b/mythtv/libs/libmythbase/serverpool.cpp
+index 11694b3..e13c331 100644
+--- a/mythtv/libs/libmythbase/serverpool.cpp
++++ b/mythtv/libs/libmythbase/serverpool.cpp
+@@ -417,7 +417,8 @@ bool ServerPool::listen(QList<QHostAddress> addrs, quint16 port,
+             server->disconnect();
+             server->deleteLater();
+ 
+-            if (server->serverError() == QAbstractSocket::HostNotFoundError)
++            if (server->serverError() == QAbstractSocket::HostNotFoundError ||
++                server->serverError() == QAbstractSocket::SocketAddressNotAvailableError)
+             {
+                 LOG(VB_GENERAL, LOG_ERR,
+                     QString("Address %1 no longer exists - ignoring")
+diff --git a/mythtv/libs/libmythmetadata/metadatafactory.cpp b/mythtv/libs/libmythmetadata/metadatafactory.cpp
+index 5c66bef..bc385d8 100644
+--- a/mythtv/libs/libmythmetadata/metadatafactory.cpp
++++ b/mythtv/libs/libmythmetadata/metadatafactory.cpp
+@@ -290,12 +290,10 @@ void MetadataFactory::OnSingleResult(MetadataLookup *lookup)
+         if (fanartlist.size())
+         {
+             ArtworkInfo info;
+-            int index = fanartlist.size();
++            int index = 0;
+             int season = lookup->GetIsCollection() ? 0 : (int)lookup->GetSeason();
+-            if (season > 0)
+-                index = max(0, index-season);
+-            else
+-                index--;
++            if (season > 0 && season <= fanartlist.count())
++                index = season - 1;
+             info.url = fanartlist.takeAt(index).url;
+             map.insert(kArtworkFanart, info);
+         }
+diff --git a/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h b/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
+index 8a81f07..6a167b7 100644
+--- a/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
++++ b/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
+@@ -170,9 +170,11 @@ class ScanSymbolRateDVBS: public ComboBoxSetting, public TransientStorage
+                 "million symbols per second."));
+         addSelection("3333000");
+         addSelection("22000000");
++        addSelection("23000000");
+         addSelection("27500000", "27500000", true);
+         addSelection("28000000");
+         addSelection("28500000");
++        addSelection("29500000");
+         addSelection("29900000");
+     }
+ };
 diff --git a/mythtv/libs/libmythtv/datadirect.cpp b/mythtv/libs/libmythtv/datadirect.cpp
 index 77cdef5..4ec9f92 100644
 --- a/mythtv/libs/libmythtv/datadirect.cpp
@@ -203,6 +338,63 @@ index 1cc84a1..83a6c53 100644
      mutable QString m_cookieFile;
      QDateTime       m_cookieFileDT;
  
+diff --git a/mythtv/libs/libmythtv/eitcache.cpp b/mythtv/libs/libmythtv/eitcache.cpp
+index ae7c98d..a855443 100644
+--- a/mythtv/libs/libmythtv/eitcache.cpp
++++ b/mythtv/libs/libmythtv/eitcache.cpp
+@@ -249,15 +249,12 @@ event_map_t * EITCache::LoadChannel(uint chanid)
+     return eventMap;
+ }
+ 
+-void EITCache::WriteChannelToDB(QStringList &value_clauses, uint chanid)
++bool EITCache::WriteChannelToDB(QStringList &value_clauses, uint chanid)
+ {
+     event_map_t * eventMap = channelMap[chanid];
+ 
+     if (!eventMap)
+-    {
+-        channelMap.remove(chanid);
+-        return;
+-    }
++        return false;
+ 
+     uint size    = eventMap->size();
+     uint updated = 0;
+@@ -294,6 +291,8 @@ void EITCache::WriteChannelToDB(QStringList &value_clauses, uint chanid)
+                                       "for channel %3 from cache.")
+                 .arg(removed).arg(size).arg(chanid));
+     pruneCnt += removed;
++
++    return true;
+ }
+ 
+ void EITCache::WriteToDB(void)
+@@ -304,8 +303,10 @@ void EITCache::WriteToDB(void)
+     key_map_t::iterator it = channelMap.begin();
+     while (it != channelMap.end())
+     {
+-        WriteChannelToDB(value_clauses, it.key());
+-        ++it;
++        if (!WriteChannelToDB(value_clauses, it.key()))
++            it = channelMap.erase(it);
++        else
++            ++it;
+     }
+ 
+     if(value_clauses.isEmpty())
+diff --git a/mythtv/libs/libmythtv/eitcache.h b/mythtv/libs/libmythtv/eitcache.h
+index 92e2e9a..aa62916 100644
+--- a/mythtv/libs/libmythtv/eitcache.h
++++ b/mythtv/libs/libmythtv/eitcache.h
+@@ -36,7 +36,7 @@ class EITCache
+ 
+   private:
+     event_map_t * LoadChannel(uint chanid);
+-    void WriteChannelToDB(QStringList &value_clauses, uint chanid);
++    bool WriteChannelToDB(QStringList &value_clauses, uint chanid);
+ 
+     // event key cache
+     key_map_t   channelMap;
 diff --git a/mythtv/libs/libmythtv/eithelper.cpp b/mythtv/libs/libmythtv/eithelper.cpp
 index bf980ed..e34714f 100644
 --- a/mythtv/libs/libmythtv/eithelper.cpp
@@ -531,6 +723,59 @@ index 2ed5ac6..b33b3fd 100644
  LIBS += -L../../../libmythbase -lmythbase-$$LIBVERSION
  LIBS += -L../../../libmythui -lmythui-$$LIBVERSION
  LIBS += -L../../../libmythupnp -lmythupnp-$$LIBVERSION
+diff --git a/mythtv/libs/libmythtv/transporteditor.cpp b/mythtv/libs/libmythtv/transporteditor.cpp
+index 2582133..de9b07b 100644
+--- a/mythtv/libs/libmythtv/transporteditor.cpp
++++ b/mythtv/libs/libmythtv/transporteditor.cpp
+@@ -470,9 +470,11 @@ class DVBSymbolRate : public ComboBoxSetting, public MuxDBStorage
+                 "million symbols per second."));
+         addSelection("3333000");
+         addSelection("22000000");
++        addSelection("23000000");
+         addSelection("27500000", "27500000", true);
+         addSelection("28000000");
+         addSelection("28500000");
++        addSelection("29500000");
+         addSelection("29900000");
+     };
+ };
+diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
+index ae43970..fb799fb 100644
+--- a/mythtv/libs/libmythtv/tv_play.cpp
++++ b/mythtv/libs/libmythtv/tv_play.cpp
+@@ -4865,6 +4865,20 @@ bool TV::ActivePostQHandleAction(PlayerContext *ctx, const QStringList &actions)
+             ctx->player->GoToMenu("root");
+         ctx->UnlockDeletePlayer(__FILE__, __LINE__);
+     }
++    else if (has_action(ACTION_JUMPTODVDCHAPTERMENU, actions) && isdisc)
++    {
++        ctx->LockDeletePlayer(__FILE__, __LINE__);
++        if (ctx->player)
++            ctx->player->GoToMenu("chapter");
++        ctx->UnlockDeletePlayer(__FILE__, __LINE__);
++    }
++    else if (has_action(ACTION_JUMPTODVDTITLEMENU, actions) && isdisc)
++    {
++        ctx->LockDeletePlayer(__FILE__, __LINE__);
++        if (ctx->player)
++            ctx->player->GoToMenu("title");
++        ctx->UnlockDeletePlayer(__FILE__, __LINE__);
++    }
+     else if (has_action(ACTION_JUMPTOPOPUPMENU, actions) && isdisc)
+     {
+         ctx->LockDeletePlayer(__FILE__, __LINE__);
+diff --git a/mythtv/libs/libmythtv/videosource.cpp b/mythtv/libs/libmythtv/videosource.cpp
+index 3f5b595..132b023 100644
+--- a/mythtv/libs/libmythtv/videosource.cpp
++++ b/mythtv/libs/libmythtv/videosource.cpp
+@@ -1144,6 +1144,7 @@ class DVBTuningDelay : public SpinBoxSetting, public CaptureCardDBStorage
+         CaptureCardDBStorage(this, parent, "dvb_tuning_delay")
+     {
+         setLabel(QObject::tr("DVB tuning delay (ms)"));
++        setValue(true);
+         setHelpText(
+             QObject::tr("Some Linux DVB drivers, in particular for the "
+                         "Hauppauge Nova-T, require that we slow down "
 diff --git a/mythtv/libs/libmythui/mythuibuttonlist.cpp b/mythtv/libs/libmythui/mythuibuttonlist.cpp
 index 95966a5..24669b5 100644
 --- a/mythtv/libs/libmythui/mythuibuttonlist.cpp
@@ -764,11 +1009,135 @@ index 0f7a6f6..60fa71f 100644
      regexp.setMinimal(true);
  
      if (!newText.isEmpty() && newText.contains(regexp))
+diff --git a/mythtv/libs/libmythupnp/msocketdevice.h b/mythtv/libs/libmythupnp/msocketdevice.h
+index 3e40fa7..cbee01d 100644
+--- a/mythtv/libs/libmythupnp/msocketdevice.h
++++ b/mythtv/libs/libmythupnp/msocketdevice.h
+@@ -121,7 +121,9 @@ public:
+ 
+     inline qint64 readBlock(char *data, quint64 maxlen)
+     {
+-        return qint64(read(data, qint64(maxlen)));
++        // read() does not correctly handle zero-byte udp packets
++        // so call readData() directly which does
++        return maxlen ? qint64(read(data, qint64(maxlen))) : qint64(readData(data, qint64(maxlen)));
+     }
+ 
+     virtual quint16  port() const;
+diff --git a/mythtv/libs/libmythupnp/msocketdevice_unix.cpp b/mythtv/libs/libmythupnp/msocketdevice_unix.cpp
+index 5a80aa6..0741eed 100644
+--- a/mythtv/libs/libmythupnp/msocketdevice_unix.cpp
++++ b/mythtv/libs/libmythupnp/msocketdevice_unix.cpp
+@@ -983,8 +983,28 @@ qint64 MSocketDevice::waitForMore(int msecs, bool *timeout) const
+ */
+ qint64 MSocketDevice::readData(char *data, qint64 maxlen)
+ {
++#if !defined(QT_NO_IPV6)
++
++    struct sockaddr_storage aa;
++#else
++
++    struct sockaddr_in aa;
++#endif
++
+     if (maxlen == 0)
++    {
++        // Cannot short circuit on zero bytes for datagram because zero-
++        // byte datagrams are a real thing and if you don't issue a read
++        // then select() will keep falling through
++        if (t == Datagram)
++        {
++            QT_SOCKLEN_T sz;
++            sz = sizeof(aa);
++            ::recvfrom(fd, data, 0, 0, (struct sockaddr *) & aa, &sz);
++            qt_socket_getportaddr((struct sockaddr *)&aa, &pp, &pa);
++        }
+         return 0;
++    }
+ 
+     if (data == 0)
+     {
+@@ -1022,13 +1042,6 @@ qint64 MSocketDevice::readData(char *data, qint64 maxlen)
+     {
+         if (t == Datagram)
+         {
+-#if !defined(QT_NO_IPV6)
+-
+-            struct sockaddr_storage aa;
+-#else
+-
+-            struct sockaddr_in aa;
+-#endif
+             memset(&aa, 0, sizeof(aa));
+             QT_SOCKLEN_T sz;
+             sz = sizeof(aa);
 diff --git a/mythtv/libs/libmythupnp/ssdp.cpp b/mythtv/libs/libmythupnp/ssdp.cpp
-index 9e503eb..b1a4ba0 100644
+index 9e503eb..c375f79 100644
 --- a/mythtv/libs/libmythupnp/ssdp.cpp
 +++ b/mythtv/libs/libmythupnp/ssdp.cpp
-@@ -367,7 +367,7 @@ void SSDP::ProcessData( MSocketDevice *pSocket )
+@@ -291,14 +291,19 @@ void SSDP::run()
+ 
+         int count;
+         count = select(nMaxSocket + 1, &read_set, NULL, NULL, &timeout);
++
+         for (int nIdx = 0; count && nIdx < (int)NumberOfSockets; nIdx++ )
+         {
+-            if (m_Sockets[nIdx] != NULL && m_Sockets[nIdx]->socket() >= 0 &&
+-                FD_ISSET(m_Sockets[nIdx]->socket(), &read_set))
++            bool cond1 = m_Sockets[nIdx] != NULL;
++            bool cond2 = cond1 && m_Sockets[nIdx]->socket() >= 0;
++            bool cond3 = cond2 && FD_ISSET(m_Sockets[nIdx]->socket(), &read_set);
++
++            if (cond3)
+             {
+ #if 0
+                 LOG(VB_GENERAL, LOG_DEBUG, QString("FD_ISSET( %1 )").arg(nIdx));
+ #endif
++
+                 ProcessData(m_Sockets[nIdx]);
+                 count--;
+             }
+@@ -315,10 +320,20 @@ void SSDP::run()
+ void SSDP::ProcessData( MSocketDevice *pSocket )
+ {
+     QByteArray buffer;
+-    long nBytes = 0;
++    long nBytes = pSocket->bytesAvailable();
+     int retries = 0;
++    // Note: this function MUST do a read even if someone sends a zero byte UDP message
++    // Otherwise the select() will continue to signal data ready, so to prevent using 100%
++    // CPU, we need to call a recv function to make select() block again
++    bool didDoRead = 0;
++
++    // UDP message of zero length? OK, "recv" it and move on
++    if (nBytes == 0)
++    {
++        LOG(VB_UPNP, LOG_WARNING, QString("SSDP: Received 0 byte UDP message"));
++    }
+ 
+-    while ((nBytes = pSocket->bytesAvailable()) > 0)
++    while ((nBytes = pSocket->bytesAvailable()) > 0 || (nBytes == 0 && !didDoRead))
+     {
+         buffer.resize(nBytes);
+ 
+@@ -326,6 +341,7 @@ void SSDP::ProcessData( MSocketDevice *pSocket )
+         do
+         {
+             long ret = pSocket->readBlock( buffer.data() + nRead, nBytes - nRead );
++            didDoRead = 1;
+             if (ret < 0)
+             {
+                 if (errno == EAGAIN || errno == EWOULDBLOCK)
+@@ -349,7 +365,7 @@ void SSDP::ProcessData( MSocketDevice *pSocket )
+ 
+             nRead += ret;
+ 
+-            if (0 == ret)
++            if (0 == ret && nBytes != 0)
+             {
+                 LOG(VB_SOCKET, LOG_WARNING,
+                     QString("%1 bytes reported available, "
+@@ -367,7 +383,7 @@ void SSDP::ProcessData( MSocketDevice *pSocket )
  
          QHostAddress  peerAddress = pSocket->peerAddress();
          quint16       peerPort    = pSocket->peerPort   ();
@@ -820,6 +1189,20 @@ index 0000000..a11af26
 +    <!-- MythArchive -->
 +    <setting name="MythArchiveVideoFormat">PAL</setting>
 +</mythlocale>
+diff --git a/mythtv/programs/mythbackend/mainserver.cpp b/mythtv/programs/mythbackend/mainserver.cpp
+index 6fc25d4..8813652 100644
+--- a/mythtv/programs/mythbackend/mainserver.cpp
++++ b/mythtv/programs/mythbackend/mainserver.cpp
+@@ -898,6 +898,9 @@ void MainServer::ProcessRequestWork(MythSocket *sock)
+ 
+ void MainServer::customEvent(QEvent *e)
+ {
++    if (!e)
++        return;
++
+     QStringList broadcast;
+     QSet<QString> receivers;
+ 
 diff --git a/mythtv/programs/mythfilldatabase/xmltvparser.cpp b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
 index d05649d..b843acb 100644
 --- a/mythtv/programs/mythfilldatabase/xmltvparser.cpp
@@ -987,6 +1370,43 @@ index 22e561a..ea6914b 100644
      }
  
      if (m_recProfileText)
+diff --git a/mythtv/programs/mythtranscode/transcode.cpp b/mythtv/programs/mythtranscode/transcode.cpp
+index 343834b..50f9e22 100644
+--- a/mythtv/programs/mythtranscode/transcode.cpp
++++ b/mythtv/programs/mythtranscode/transcode.cpp
+@@ -267,7 +267,7 @@ int Transcode::TranscodeFile(const QString &inputname,
+         return REENCODE_ERROR;
+     }
+     player_ctx->SetRingBuffer(rb);
+-    player_ctx->SetPlayer(new MythPlayer(kVideoIsNull));
++    player_ctx->SetPlayer(new MythPlayer((PlayerFlags)(kVideoIsNull | kNoITV)));
+     SetPlayerContext(player_ctx);
+     GetPlayer()->SetPlayerInfo(NULL, NULL, GetPlayerContext());
+     if (m_proginfo->GetRecordingEndTime() > curtime)
+diff --git a/mythtv/programs/mythtv-setup/importicons.cpp b/mythtv/programs/mythtv-setup/importicons.cpp
+index 6cceb04..ec8e506 100644
+--- a/mythtv/programs/mythtv-setup/importicons.cpp
++++ b/mythtv/programs/mythtv-setup/importicons.cpp
+@@ -165,8 +165,8 @@ void ImportIconsWizard::enableControls(dialogState state, bool selectEnabled)
+ void ImportIconsWizard::manualSearch()
+ {
+     QString str = m_manualEdit->GetText();
+-    if (!search(escape_csv(str)))
+-        m_statusText->SetText(tr("No matches found for %1") .arg(str));
++    if (!search(str))
++        m_statusText->SetText(tr("No matches found for \"%1\"").arg(str));
+     else
+         m_statusText->Reset();
+ }
+@@ -476,7 +476,7 @@ bool ImportIconsWizard::doLoad()
+     m_nameText->SetText(tr("Choose icon for channel %1")
+                         .arg((*m_missingIter).strName));
+     m_manualEdit->SetText((*m_missingIter).strName);
+-    if (!search((*m_missingIter).strNameCSV))
++    if (!search((*m_missingIter).strName))
+         m_statusText->SetText(tr("No matches found for %1")
+                               .arg((*m_missingIter).strName));
+     else
 diff --git a/mythtv/themes/default/keyboard/el.xml b/mythtv/themes/default/keyboard/el.xml
 new file mode 100644
 index 0000000..da192cf
