@@ -1,3 +1,287 @@
+commit 8fd277bb1ecab938e57059dc9472b6f922d5fca7
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed May 20 23:40:17 2015 +0100
+
+    MythDownloadManager: fix a bug when downloading URL's with percent encoding
+    
+    This avoids converting a url to a QUrl only to later use its toString() method
+    which was causing problems with percent encoded URL's not being removed from the
+    download queue because we ended up comparing a human readable URL with a percent
+    encoded one.
+    
+    Refs #12356
+    
+    (cherry picked from commit d620cb9e1b19a5fa1e693a91d9ea6271e03640b4)
+
+commit e7af3a08c6b6f385d9d4b93948c812a394110a4a
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed May 20 23:30:13 2015 +0100
+
+    MythDownloadManager: put the lock around m_downloadInfos when removing a url
+    
+    Also log an error if we fail to remove a download url from m_downloadInfos after
+    a download completes.
+    
+    Refs #12356
+    
+    (cherry picked from commit 58694eb41a528467c7d54b85c211479204ee24ac)
+
+commit 8332919c43b51ab06db9516150a2762498713c86
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Tue May 19 12:17:34 2015 +0200
+
+    Make sure the PCR PID is not discarded if it is not listed in the PMT (i.e. the PCR PID contains only PCR packets).
+    
+    Fixes #12422
+    (cherry picked from commit 98c47b5c70014e741d4a9fd964ef1d0f5fe2a4f3)
+
+commit 1983b6b97983619a2e0c9905fb1da9a6ce4f63e1
+Author: David Matthews <dm@prolingua.co.uk>
+Date:   Mon Jan 5 18:22:14 2015 +0000
+
+    Apply UK EIT fix-up on additional transports.
+    
+    (cherry picked from commit 7ee28ce83d9cf41b797f40f095a1572c89f36fa2)
+    (cherry picked from commit ef2895ea02197c1cce4026203387bd9bb17107de)
+
+commit a14b34bf706f11ba5d2af11bc92d1f9a5e82c550
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Wed Jan 7 23:02:13 2015 +0000
+
+    Fix PCR packets being stripped from transport stream following [0f0e6787]
+    
+    (cherry picked from commit d947e91eedf73a43dde79446b87e0095e54bf628)
+    
+    Refs #12422
+
+commit 6b7397699b5a356ecfb78497a26094b0fbbd334e
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed May 13 10:43:41 2015 +0100
+
+    MythDownloadManager: add some logging to try to track down the 100% cpu bug
+    
+    This also allows the theme checker to be run once a minute rather than the
+    usual once an hour to try to trigger the bug quicker. Setting the
+    MYTHTV_DEBUGMDM environment variable will run the checker every minute.
+    
+    So for 0.27.4-fixes use :-
+    MYTHTV_DEBUGMDM="1" mythfrontend -v file --loglevel=debug
+    
+    Refs #12356
+    
+    (cherry picked from commit 7e0441c38166ded77b3a1b3a869e40a5af389fa0)
+
+commit 45d2d5173aa1cd27ef15180b4afe3e4779d26019
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Tue May 5 21:12:59 2015 -0700
+
+    Subtitles: Fix cc608 preamble indents.  Fixes #12051.
+    
+    Cherry-picked from 366c428708682420bbf53a301d145ca441aedbdd .
+    
+    Thanks to Helen (faginbagin) for the analysis and patch.
+    
+    As Helen points out in the ticket, it would be all-around better if we
+    took an approach like the cc708 captions and rendered everything onto
+    an internal grid of characters and then converted that to strings to
+    draw on the screen, but that's a lot of work for a mostly deprecated
+    caption format.
+
+commit 8b6d4da2a185e7b07c432267dc9fb80075f9565c
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Sun Apr 19 23:41:00 2015 +0200
+
+    Video output: Fix OpenGL 1 output after b9971146
+    
+    (cherry picked from commit 2b01ed3894be8374b6c143449fa563fbd945da5a)
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+    
+    Refs #12421
+
+commit a848edd7a4450db1c0eb839cc41ebdd6c6b2dbb6
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Mon Mar 23 23:46:13 2015 +0100
+
+    Video output: Add default fragment shader for OpenGL 2
+    
+    When there were no color conversions with the YUV->RGB shader, there was no
+    other fragment shader active and because of that the video was black.
+    
+    (cherry picked from commit b997114683759562dbaf6b80a651070d099195ac)
+    Signed-off-by: Stuart Auchterlonie <stuarta@squashedfrog.net>
+    
+    Refs #12421
+
+commit 974d1ae9b6fe2f12b8cfc48aafcf10fc730e414e
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Mon May 4 22:38:58 2015 -0700
+
+    Reduce "Watch Recordings" sluggishness by caching jobqueue state.
+    
+    Refs #8962, refs #7990.
+    
+    This is essentially a cherry-pick of b43b11ca.
+
+commit d7e08d2d228809e47e8b40c42dfc966b6a17ba6d
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Mon Nov 10 11:19:09 2014 +0000
+
+    UI: Optimize updates to MythUIButtonList when an item's state changes
+    
+    This patch checks if a MythUIButtonListItem is visible and only calls
+    the parent's Update() if it is visible thus speeding up the update
+    and also reduces flicker when updating buttonlists with a large number of
+    items.
+    
+    Based on a patch by Lawrence Rust.
+    
+    (cherry picked from commit 4e5ce7fe25faf3df617b4f633b0e6c58afa34912)
+
+commit 7962008be23de99d3bd69e1603d69749f4678a3c
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sat Apr 25 06:56:51 2015 -0700
+
+    Subtitles: Yet another state calculation fix.
+    
+    0925cc05806a057b6549a3471ee043d68948d0bd doesn't count AV subtitles as
+    "text" subtitles, but it should.
+    
+    (cherry picked from commit 017cc5c8bb66109500e2c4ff771abcac4f87c034)
+
+commit 74dba3599fd7fa042b253dce1a6742d553c0e54c
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Thu Apr 23 17:35:29 2015 -0700
+
+    Subtitles: Fix state calculation in EnableCaptions/DisableCaptions.
+    
+    26f6437b874d84c87a52df6d33e449c0d5d9a4bc was too aggressive in
+    assuming that EnableCaptions would actually enable text subtitles, and
+    DisableCaptions would actually disable text subtitles.  They only
+    enable/disable a particular type of subtitles (which may have already
+    been enabled/disabled), so we need to check the overall state after
+    the operation is performed.
+    
+    (cherry picked from commit 0925cc05806a057b6549a3471ee043d68948d0bd)
+
+commit bcdaa8865ef8700ccbb7214ec39dcbcd8392b2af
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Wed Apr 22 05:19:14 2015 -0700
+
+    Subtitles: Allow transitions between ATSC and SCTE captions.
+    
+    In changeset d526385aa4c1466b064e9544cdb663f357007e35 (refs #9829),
+    code was added such that the first time ATSC caption data is seen, any
+    future SCTE caption data is explicitly ignored.  This was to deal with
+    broadcasts containing duplicate caption data.
+    
+    This policy causes problems when the recording switches back and forth
+    between the two sources of caption data, such as when the broadcaster
+    splices in commercials.
+    
+    The updated solution continues to favor ATSC data, but allows a switch
+    back to SCTE after SCTE data is seen 10 times in a row (a somewhat
+    arbitrarily chosen number) without intervening ATSC data.
+    
+    Refs #12054.
+    
+    (cherry picked from commit 68bd03ffe5b7bb6456519639caac77486ea0941c)
+
+commit 8f14d3d1e8c798f8a45b3338a33bb71aec877dc7
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Wed Apr 22 15:05:18 2015 -0700
+
+    Send REC_STARTED_WRITING event for NuppelVideoRecorder.
+    
+    This recorder doesn't go through the usual path of the other
+    recorders, where keyframes are identified (and where frames prior to
+    the first keyframe are discarded) and the event is sent after the
+    first keyframe is found.
+    
+    Refs #12328.
+    
+    (cherry picked from commit c07c21e6c5b7f1380cf7e36e7cbcc8763a5cb225)
+
+commit 5d5eb048e9356ed43bcbb87294c0c1030ddc8c8e
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Sat Apr 18 13:02:34 2015 +0200
+
+    Make MythWelcome spawn MythFrontend in the UI thread again due to problems with LIRC but allow events to be processed.  This prevents extra key presses being queued and allows them to be ignored until MythFrontend has returned.
+
+commit 554046a5ccdf81e66d6cf3a8be2a080bf7505ffe
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Apr 19 12:10:29 2015 -0700
+
+    Subtitles: Don't reset subtitle state after seeking.
+    
+    After a seek, ac3a988 caused the subtitle-enabled state to be reset to
+    the desired state at playback start, rather than left unchanged.
+    
+    (cherry picked from commit 26f6437b874d84c87a52df6d33e449c0d5d9a4bc)
+
+commit 7860e917d2c264f160f14b56b0d49530467d31dc
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Thu Apr 16 20:33:25 2015 -0700
+
+    Network control: Handle "space" key properly.
+    
+    Fixes #12361.
+    
+    (cherry picked from commit 72c4abdc6a80add3035be8bdb1f31e20c4cc3b28)
+
+commit 65ada0cff0b1a5c8c06846303cf2dad51980d1aa
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Tue Apr 14 23:44:53 2015 +0200
+
+    Spawn MythFrontend from a separate thread in MythWelcome to avoid multiple key events being queued and restarting MythFrontend as soon as it exits.
+    
+    Problem discussed here: http://www.gossamer-threads.com/lists/mythtv/users/585218
+    (cherry picked from commit 72de5f444fa094564ec6c2a136ef79c74bf2650b with a minor change to an include file to compile with QT4)
+
+commit e4c6d162627be8bc30548f9b59f719d4f645c057
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Mon Apr 13 20:14:06 2015 +0200
+
+    Don't show the miniplayer in MythMusic when starting the next track if we're not playing any more.
+    
+    This makes playback stop correctly when 'Repeat mode' is off and we've reached the end of the playlist.  Otherwise showing the miniplayer causes playback to start again.
+    (cherry picked from commit bc1ffba7e48db13db589082968422d02ba0c1fda)
+
+commit bcf888fdd4034997c2f2a5d0d877da0e1f463c2e
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Apr 12 07:30:55 2015 -0700
+
+    Subtitles: Fix automatic display of captions/subtitles.
+    
+    There was something of a race condition in the previous code.  At
+    startup of playback, the decoder thread runs ahead and updates track
+    lists as it encounters them, including audio, cc608, cc708, etc.  If
+    no subtitle tracks are found before the UI thread gets to a certain
+    point, the UI thread commits to keeping subtitles disabled, regardless
+    of the "automatically display subtitles" setting.
+    
+    In the new version, at startup of playback, the UI thread keeps the
+    original intention alive so that subtitles will automatically start
+    displaying when they eventually arrive.
+    
+    Note that this fix doesn't address the problem where the player ought
+    to switch to a "better" subtitle track type when it comes along, such
+    as switching from cc608 to cc708.
+    
+    Refs #10740 (only because this fixes a fix with that ref)
+    
+    (cherry picked from commit ac3a988f2e9140322b1a15c34d6ac87071c69d7e)
+
+commit 483f8dd5674acd127bcf342900ea18230b9c2ce3
+Author: Jim Stichnoth <jstichnoth@mythtv.org>
+Date:   Sun Jul 13 08:38:30 2014 -0700
+
+    Subtitles: Avoid changing subtitle state in the decoder thread.
+    
+    This addresses the clearing of stale subtitles after a seek.
+    Refs #10740.
+    
+    (cherry picked from commit 438d29a4a64b38ac239f61208262e35a3e486d91)
+
 commit 628183a01b66a010e9cf510b9d1d08a348ed5889
 Author: Warren Falk <warren@warrenfalk.com>
 Date:   Tue Mar 3 12:57:58 2015 -0500
