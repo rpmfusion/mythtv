@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27.4-42-g628183a
+%define vers_string v0.27.4-64-g8fd277b
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -78,7 +78,7 @@ Version:        0.27.4
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        5%{?dist}
+Release:        6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -352,7 +352,7 @@ Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
 Requires:  mariadb-server >= 5, mariadb >= 5
 Requires:  xmltv
-%if 0%{?rhel} >= 7
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 22
 Requires:  udisks2
 %else
 Requires:  udisks
@@ -1417,6 +1417,10 @@ fi
 
 
 %changelog
+* Tue May 26 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-6
+- Update to latest bugfix release.
+- Add conditional for udisks for Fedora 22+ (BZ#3660).
+
 * Tue Apr  7 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-5
 - Update to latest bugfix release.
 - Fix owner on /etc/mythtv (BZ#3558).

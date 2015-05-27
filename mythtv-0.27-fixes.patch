@@ -1,28 +1,40 @@
  mythplugins/configure                              |  10 +-
+ mythplugins/mythmusic/mythmusic/musicplayer.cpp    |   2 +-
  mythtv/bindings/python/MythTV/methodheap.py        |   2 +-
  mythtv/configure                                   |  11 +-
  mythtv/libs/libmyth/programtypes.cpp               |   1 +
- mythtv/libs/libmythbase/mythdownloadmanager.cpp    |   3 +
+ mythtv/libs/libmythbase/mythdownloadmanager.cpp    |  26 +-
  mythtv/libs/libmythbase/mythversion.h              |   2 +-
  mythtv/libs/libmythbase/serverpool.cpp             |   3 +-
  mythtv/libs/libmythmetadata/metadatafactory.cpp    |   8 +-
+ mythtv/libs/libmythtv/avformatdecoder.cpp          |  18 +-
+ mythtv/libs/libmythtv/avformatdecoder.h            |   2 +-
+ mythtv/libs/libmythtv/cc608decoder.cpp             |   4 +-
  .../channelscan/channelscanmiscsettings.h          |   2 +
  mythtv/libs/libmythtv/datadirect.cpp               |  56 ++-
  mythtv/libs/libmythtv/datadirect.h                 |   2 +
  mythtv/libs/libmythtv/eitcache.cpp                 |  15 +-
  mythtv/libs/libmythtv/eitcache.h                   |   2 +-
- mythtv/libs/libmythtv/eithelper.cpp                |  36 +-
+ mythtv/libs/libmythtv/eithelper.cpp                |  40 +-
+ mythtv/libs/libmythtv/jobqueue.cpp                 |  26 +-
+ mythtv/libs/libmythtv/jobqueue.h                   |   2 +
  mythtv/libs/libmythtv/mhegic.cpp                   |   9 +-
  mythtv/libs/libmythtv/mpeg/dvbdescriptors.h        |  50 ++-
  mythtv/libs/libmythtv/mpeg/mpegdescriptors.h       |  16 +
- mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp      |   9 +-
- mythtv/libs/libmythtv/recorders/dtvrecorder.cpp    |   7 +-
+ mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp      |  14 +-
+ mythtv/libs/libmythtv/mythplayer.cpp               |  12 +-
+ mythtv/libs/libmythtv/mythplayer.h                 |   2 +
+ mythtv/libs/libmythtv/openglvideo.cpp              |  19 +-
+ .../libmythtv/recorders/NuppelVideoRecorder.cpp    |   4 +
+ mythtv/libs/libmythtv/recorders/dtvrecorder.cpp    |  13 +-
+ mythtv/libs/libmythtv/subtitlescreen.cpp           |   7 -
  .../test/test_mpegtables/test_mpegtables.h         |  52 +++
  .../test/test_mpegtables/test_mpegtables.pro       |   4 +
  mythtv/libs/libmythtv/transporteditor.cpp          |   2 +
  mythtv/libs/libmythtv/tv_play.cpp                  |  14 +
  mythtv/libs/libmythtv/videosource.cpp              |   1 +
- mythtv/libs/libmythui/mythuibuttonlist.cpp         |   2 +-
+ mythtv/libs/libmythui/mythuibuttonlist.cpp         |  28 +-
+ mythtv/libs/libmythui/mythuibuttonlist.h           |   4 +
  mythtv/libs/libmythui/mythuiimage.cpp              | 122 +++---
  mythtv/libs/libmythui/mythuiimage.h                |   5 +
  mythtv/libs/libmythui/mythuitext.cpp               |   2 +-
@@ -33,12 +45,17 @@
  mythtv/programs/mythbackend/mainserver.cpp         |   3 +
  mythtv/programs/mythfilldatabase/xmltvparser.cpp   |  19 +-
  mythtv/programs/mythfrontend/globalsettings.cpp    |  13 +
+ mythtv/programs/mythfrontend/networkcontrol.cpp    |   1 +
+ mythtv/programs/mythfrontend/playbackbox.cpp       |  68 +++-
+ mythtv/programs/mythfrontend/playbackbox.h         |  27 ++
  .../programs/mythfrontend/programrecpriority.cpp   |  69 ++--
+ mythtv/programs/mythfrontend/themechooser.cpp      |  12 +-
  mythtv/programs/mythtranscode/transcode.cpp        |   2 +-
  mythtv/programs/mythtv-setup/importicons.cpp       |   6 +-
+ mythtv/programs/mythwelcome/welcomedialog.cpp      |   2 +-
  mythtv/themes/default/keyboard/el.xml              | 270 ++++++++++++++
  mythtv/themes/default/keyboard/el_ui.xml           | 410 +++++++++++++++++++++
- 40 files changed, 1177 insertions(+), 159 deletions(-)
+ 57 files changed, 1398 insertions(+), 214 deletions(-)
 
 diff --git a/mythplugins/configure b/mythplugins/configure
 index b9086ba..f14a405 100755
@@ -64,6 +81,19 @@ index b9086ba..f14a405 100755
  else
      die "qmake for Qt4.8 or newer not found.\nPlease specify the correct qmake with --qmake="
  fi
+diff --git a/mythplugins/mythmusic/mythmusic/musicplayer.cpp b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
+index 867c765..713408d 100644
+--- a/mythplugins/mythmusic/mythmusic/musicplayer.cpp
++++ b/mythplugins/mythmusic/mythmusic/musicplayer.cpp
+@@ -504,7 +504,7 @@ void MusicPlayer::nextAuto(void)
+     }
+ 
+     // if we don't already have a gui attached show the miniplayer if configured to do so
+-    if (m_isAutoplay && m_canShowPlayer && m_autoShowPlayer)
++    if (m_isAutoplay && m_canShowPlayer && m_autoShowPlayer && m_isPlaying)
+     {
+         MythScreenStack *popupStack =
+                             GetMythMainWindow()->GetStack("popup stack");
 diff --git a/mythtv/bindings/python/MythTV/methodheap.py b/mythtv/bindings/python/MythTV/methodheap.py
 index d598b2f..b41b2da 100644
 --- a/mythtv/bindings/python/MythTV/methodheap.py
@@ -123,10 +153,51 @@ index 3167e81..c1253c5 100644
  #include "programtypes.h"
  #include "mythdate.h"
 diff --git a/mythtv/libs/libmythbase/mythdownloadmanager.cpp b/mythtv/libs/libmythbase/mythdownloadmanager.cpp
-index 02d27a0..63e2e51 100644
+index 02d27a0..dbf061f 100644
 --- a/mythtv/libs/libmythbase/mythdownloadmanager.cpp
 +++ b/mythtv/libs/libmythbase/mythdownloadmanager.cpp
-@@ -312,7 +312,10 @@ void MythDownloadManager::run(void)
+@@ -11,6 +11,7 @@
+ #include <QTextStream>
+ #include <QNetworkProxy>
+ #include <QMutexLocker>
++#include <QUrl>
+ 
+ #include "stdlib.h"
+ 
+@@ -27,7 +28,6 @@
+ 
+ #include "mythdownloadmanager.h"
+ #include "mythlogging.h"
+-#include <QUrl>
+ 
+ using namespace std;
+ 
+@@ -276,6 +276,8 @@ void MythDownloadManager::run(void)
+             updateCookieJar();
+         }
+         m_infoLock->lock();
++        LOG(VB_FILE, LOG_DEBUG, LOC + QString("items downloading %1").arg(m_downloadInfos.count()));
++        LOG(VB_FILE, LOG_DEBUG, LOC + QString("items queued %1").arg(m_downloadQueue.count()));
+         downloading = !m_downloadInfos.isEmpty();
+         itemsInCancellationQueue = !m_cancellationQueue.isEmpty();
+         m_infoLock->unlock();
+@@ -297,9 +299,15 @@ void MythDownloadManager::run(void)
+             m_queueWaitLock.lock();
+ 
+             if (downloading)
++            {
++                LOG(VB_FILE, LOG_DEBUG, LOC + QString("waiting 200ms"));
+                 m_queueWaitCond.wait(&m_queueWaitLock, 200);
++            }
+             else
++            {
++                LOG(VB_FILE, LOG_DEBUG, LOC + QString("waiting for more items to download"));
+                 m_queueWaitCond.wait(&m_queueWaitLock);
++            }
+ 
+             m_queueWaitLock.unlock();
+         }
+@@ -312,10 +320,12 @@ void MythDownloadManager::run(void)
              m_downloadQueue.pop_front();
  
              if (!dlInfo)
@@ -135,8 +206,38 @@ index 02d27a0..63e2e51 100644
                  continue;
 +            }
  
-             QUrl qurl(dlInfo->m_url);
-             if (m_downloadInfos.contains(qurl.toString()))
+-            QUrl qurl(dlInfo->m_url);
+-            if (m_downloadInfos.contains(qurl.toString()))
++            if (m_downloadInfos.contains(dlInfo->m_url))
+             {
+                 // Push request to the end of the queue to let others process.
+                 // If this is the only item in the queue, force the loop to
+@@ -335,7 +345,7 @@ void MythDownloadManager::run(void)
+                 downloadQNetworkRequest(dlInfo);
+             }
+ 
+-            m_downloadInfos[qurl.toString()] = dlInfo;
++            m_downloadInfos[dlInfo->m_url] = dlInfo;
+         }
+         m_infoLock->unlock();
+     }
+@@ -1210,9 +1220,15 @@ void MythDownloadManager::downloadFinished(MythDownloadInfo *dlInfo)
+         // else we downloaded via QNetworkAccessManager
+         // AND the caller is handling the reply
+ 
+-        m_downloadInfos.remove(dlInfo->m_url);
++        m_infoLock->lock();
++        if (!m_downloadInfos.remove(dlInfo->m_url))
++            LOG(VB_GENERAL, LOG_ERR, LOC +
++                QString("ERROR download finished but failed to remove url: %1")
++                        .arg(dlInfo->m_url));
++
+         if (reply)
+             m_downloadReplies.remove(reply);
++        m_infoLock->unlock();
+ 
+         dlInfo->SetDone(true);
+ 
 diff --git a/mythtv/libs/libmythbase/mythversion.h b/mythtv/libs/libmythbase/mythversion.h
 index b097b21..26d37ff 100644
 --- a/mythtv/libs/libmythbase/mythversion.h
@@ -184,6 +285,94 @@ index 5c66bef..bc385d8 100644
              info.url = fanartlist.takeAt(index).url;
              map.insert(kArtworkFanart, info);
          }
+diff --git a/mythtv/libs/libmythtv/avformatdecoder.cpp b/mythtv/libs/libmythtv/avformatdecoder.cpp
+index 8507d6b..e35e675 100644
+--- a/mythtv/libs/libmythtv/avformatdecoder.cpp
++++ b/mythtv/libs/libmythtv/avformatdecoder.cpp
+@@ -410,7 +410,7 @@ AvFormatDecoder::AvFormatDecoder(MythPlayer *parent,
+       video_codec_id(kCodec_NONE),
+       maxkeyframedist(-1),
+       // Closed Caption & Teletext decoders
+-      ignore_scte(false),
++      ignore_scte(0),
+       invert_scte_field(0),
+       last_scte_field(0),
+       ccd608(new CC608Decoder(parent->GetCC608Reader())),
+@@ -3676,17 +3676,31 @@ bool AvFormatDecoder::ProcessVideoFrame(AVStream *stream, AVFrame *mpa_pic)
+ {
+     AVCodecContext *context = stream->codec;
+ 
++    // We need to mediate between ATSC and SCTE data when both are present.  If
++    // both are present, we generally want to prefer ATSC.  However, there may
++    // be large sections of the recording where ATSC is used and other sections
++    // where SCTE is used.  In that case, we want to allow a natural transition
++    // from ATSC back to SCTE.  We do this by allowing 10 consecutive SCTE
++    // frames, without an intervening ATSC frame, to cause a switch back to
++    // considering SCTE frames.  The number 10 is somewhat arbitrarily chosen.
++
+     uint cc_len = (uint) max(mpa_pic->scte_cc_len,0);
+     uint8_t *cc_buf = mpa_pic->scte_cc_buf;
+     bool scte = true;
+ 
++    // If we saw SCTE, then decrement a nonzero ignore_scte count.
++    if (cc_len > 0 && ignore_scte)
++        --ignore_scte;
++
+     // If both ATSC and SCTE caption data are available, prefer ATSC
+     if ((mpa_pic->atsc_cc_len > 0) || ignore_scte)
+     {
+-        ignore_scte = true;
+         cc_len = (uint) max(mpa_pic->atsc_cc_len, 0);
+         cc_buf = mpa_pic->atsc_cc_buf;
+         scte = false;
++        // If we explicitly saw ATSC, then reset ignore_scte count.
++        if (cc_len > 0)
++            ignore_scte = 10;
+     }
+ 
+     // Decode CEA-608 and CEA-708 captions
+diff --git a/mythtv/libs/libmythtv/avformatdecoder.h b/mythtv/libs/libmythtv/avformatdecoder.h
+index 36e2714..70c8991 100644
+--- a/mythtv/libs/libmythtv/avformatdecoder.h
++++ b/mythtv/libs/libmythtv/avformatdecoder.h
+@@ -328,7 +328,7 @@ class AvFormatDecoder : public DecoderBase
+     int maxkeyframedist;
+ 
+     // Caption/Subtitle/Teletext decoders
+-    bool             ignore_scte;
++    uint             ignore_scte;
+     uint             invert_scte_field;
+     uint             last_scte_field;
+     CC608Decoder     *ccd608;
+diff --git a/mythtv/libs/libmythtv/cc608decoder.cpp b/mythtv/libs/libmythtv/cc608decoder.cpp
+index f9768c1..035ea42 100644
+--- a/mythtv/libs/libmythtv/cc608decoder.cpp
++++ b/mythtv/libs/libmythtv/cc608decoder.cpp
+@@ -323,6 +323,7 @@ void CC608Decoder::FormatCCField(int tc, int field, int data)
+                                     .arg(b2, 2, 16));
+                             // Encode as 0x7000 through 0x700f for the
+                             // 16 possible values of b2.
++                            ccbuf[mode] += ' ';
+                             ccbuf[mode] += QChar(0x7000 + (b2 & 0xf));
+                             len = ccbuf[mode].length();
+                             col[mode]++;
+@@ -690,7 +691,7 @@ QString CC608Decoder::ToASCII(const QString &cc608str, bool suppress_unknown)
+                 if (cpu >= 0x7000 && cpu < 0x7000 + 0x30)
+                 {
+                     if (!suppress_unknown)
+-                        ret += QString("[%1]").arg(cpu - 0x7000, 2, 16);
++                        ret += QString("[%1]").arg(cpu, 2, 16);
+                 }
+                 else if (cpu <= 0x80)
+                     ret += QString(cp.toLatin1());
+@@ -856,7 +857,6 @@ int CC608Decoder::NewRowCC(int mode, int len)
+     {
+         ccbuf[mode] += QChar(newattr[mode] + 0x7000);
+         len++;
+-        col[mode]++;
+     }
+ 
+     newcol[mode] = 0;
 diff --git a/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h b/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
 index 8a81f07..6a167b7 100644
 --- a/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
@@ -396,7 +585,7 @@ index 92e2e9a..aa62916 100644
      // event key cache
      key_map_t   channelMap;
 diff --git a/mythtv/libs/libmythtv/eithelper.cpp b/mythtv/libs/libmythtv/eithelper.cpp
-index bf980ed..e34714f 100644
+index bf980ed..ab14a71 100644
 --- a/mythtv/libs/libmythtv/eithelper.cpp
 +++ b/mythtv/libs/libmythtv/eithelper.cpp
 @@ -566,17 +566,49 @@ void EITHelper::AddEIT(const DVBEventInformationTable *eit)
@@ -451,6 +640,84 @@ index bf980ed..e34714f 100644
          QDateTime starttime = eit->StartTimeUTC(i);
          // fix starttime only if the duration is a multiple of a minute
          if (!(eit->DurationInSeconds(i) % 60))
+@@ -989,6 +1021,8 @@ static void init_fixup(QMap<uint64_t,uint> &fix)
+     fix[ 2057LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2061LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2063LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2064LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2066LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2068LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2301LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2302LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+@@ -1014,6 +1048,8 @@ static void init_fixup(QMap<uint64_t,uint> &fix)
+     fix[ 2052LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2055LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2056LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2076LL << 32 | 2U << 16] = EITFixUp::kFixUK;
++    fix[ 2081LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2315LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     fix[ 2316LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+     for (int i = 2402; i <= 2412; ++i)
+diff --git a/mythtv/libs/libmythtv/jobqueue.cpp b/mythtv/libs/libmythtv/jobqueue.cpp
+index f426309..ff79a47 100644
+--- a/mythtv/libs/libmythtv/jobqueue.cpp
++++ b/mythtv/libs/libmythtv/jobqueue.cpp
+@@ -1062,16 +1062,21 @@ int JobQueue::GetRunningJobID(uint chanid, const QDateTime &recstartts)
+     return 0;
+ }
+ 
+-bool JobQueue::IsJobRunning(int jobType,
+-                            uint chanid, const QDateTime &recstartts)
++bool JobQueue::IsJobStatusQueued(int status)
+ {
+-    int tmpStatus = GetJobStatus(jobType, chanid, recstartts);
++    return (status == JOB_QUEUED);
++}
+ 
+-    if ((tmpStatus != JOB_UNKNOWN) && (tmpStatus != JOB_QUEUED) &&
+-        (!(tmpStatus & JOB_DONE)))
+-        return true;
++bool JobQueue::IsJobStatusRunning(int status)
++{
++    return ((status != JOB_UNKNOWN) && (status != JOB_QUEUED) &&
++            (!(status & JOB_DONE)));
++}
+ 
+-    return false;
++bool JobQueue::IsJobRunning(int jobType,
++                            uint chanid, const QDateTime &recstartts)
++{
++    return IsJobStatusRunning(GetJobStatus(jobType, chanid, recstartts));
+ }
+ 
+ bool JobQueue::IsJobRunning(int jobType, const ProgramInfo &pginfo)
+@@ -1094,12 +1099,7 @@ bool JobQueue::IsJobQueuedOrRunning(
+ bool JobQueue::IsJobQueued(
+     int jobType, uint chanid, const QDateTime &recstartts)
+ {
+-    int tmpStatus = GetJobStatus(jobType, chanid, recstartts);
+-
+-    if (tmpStatus & JOB_QUEUED)
+-        return true;
+-
+-    return false;
++    return IsJobStatusQueued(GetJobStatus(jobType, chanid, recstartts));
+ }
+ 
+ QString JobQueue::JobText(int jobType)
+diff --git a/mythtv/libs/libmythtv/jobqueue.h b/mythtv/libs/libmythtv/jobqueue.h
+index e799912..ee7dcaa 100644
+--- a/mythtv/libs/libmythtv/jobqueue.h
++++ b/mythtv/libs/libmythtv/jobqueue.h
+@@ -161,6 +161,8 @@ class MTV_PUBLIC JobQueue : public QObject, public QRunnable
+     static bool IsJobRunning(int jobType, const ProgramInfo &pginfo);
+     static bool IsJobQueued(int jobType,
+                             uint chanid, const QDateTime &recstartts);
++    static bool IsJobStatusQueued(int status);
++    static bool IsJobStatusRunning(int status);
+     static bool PauseJob(int jobID);
+     static bool ResumeJob(int jobID);
+     static bool RestartJob(int jobID);
 diff --git a/mythtv/libs/libmythtv/mhegic.cpp b/mythtv/libs/libmythtv/mhegic.cpp
 index d8a5fbb..31456c1 100644
 --- a/mythtv/libs/libmythtv/mhegic.cpp
@@ -595,7 +862,7 @@ index 1efd30a..626bc5a 100644
  {
    public:
 diff --git a/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp b/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
-index e295975..9738c7f 100644
+index e295975..cc293e8 100644
 --- a/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
 +++ b/mythtv/libs/libmythtv/mpeg/mpegstreamdata.cpp
 @@ -147,9 +147,8 @@ void MPEGStreamData::SetRecordingType(const QString &recording_type)
@@ -622,8 +889,156 @@ index e295975..9738c7f 100644
  
  #ifdef DEBUG_MPEG_RADIO
          if (is_video)
+@@ -596,12 +601,13 @@ bool MPEGStreamData::CreatePMTSingleProgram(const ProgramMapTable &pmt)
+         // Filter out streams not used for basic television
+         if (_recording_type == "tv" && !is_audio && !is_video &&
+             !MPEGDescriptor::Find(desc, DescriptorID::teletext) &&
+-            !MPEGDescriptor::Find(desc, DescriptorID::subtitling))
++            !MPEGDescriptor::Find(desc, DescriptorID::subtitling) &&
++            pid != pmt.PCRPID()) // We must not strip the PCR!
+         {
+             continue;
+         }
+ 
+-        if (!is_audio && !is_video)
++        if (!is_audio && !is_video) //NOTE: Anything which isn't audio or video is data
+             dataPIDs.push_back(pid);
+ 
+         pdesc.push_back(desc);
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index 0381063..59ebd1b 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -1377,6 +1377,7 @@ void MythPlayer::DisableCaptions(uint mode, bool osd_msg)
+ 
+     QMutexLocker locker(&osdLock);
+ 
++    textDesired = textDisplayMode & kDisplayAllTextCaptions;
+     QString msg = "";
+     if (kDisplayNUVTeletextCaptions & mode)
+         msg += tr("TXT CAP");
+@@ -1413,7 +1414,8 @@ void MythPlayer::DisableCaptions(uint mode, bool osd_msg)
+ void MythPlayer::EnableCaptions(uint mode, bool osd_msg)
+ {
+     QMutexLocker locker(&osdLock);
+-    QString msg;
++    textDesired = mode & kDisplayAllTextCaptions;
++    QString msg = "";
+     if ((kDisplayCC608 & mode) || (kDisplayCC708 & mode) ||
+         (kDisplayAVSubtitle & mode) || kDisplayRawTextSubtitle & mode)
+     {
+@@ -1510,8 +1512,8 @@ void MythPlayer::SetCaptionsEnabled(bool enable, bool osd_msg)
+         {
+             EnableCaptions(mode, osd_msg);
+         }
+-        ResetCaptions();
+     }
++    ResetCaptions();
+ }
+ 
+ bool MythPlayer::GetCaptionsEnabled(void)
+@@ -3975,7 +3977,11 @@ void MythPlayer::ClearAfterSeek(bool clearvideobuffers)
+     tc_wrap[TC_AUDIO] = savedAudioTimecodeOffset;
+ 
+     audio.Reset();
+-    ResetCaptions();
++    // Reenable (or re-disable) subtitles, which ultimately does
++    // nothing except to call ResetCaptions() to erase any captions
++    // currently on-screen.  The key is that the erasing is done in
++    // the UI thread, not the decoder thread.
++    EnableSubtitles(textDesired);
+     deleteMap.TrackerReset(framesPlayed);
+     commBreakMap.SetTracker(framesPlayed);
+     commBreakMap.ResetLastSkip();
+diff --git a/mythtv/libs/libmythtv/mythplayer.h b/mythtv/libs/libmythtv/mythplayer.h
+index 541a0d5..a1df5f2 100644
+--- a/mythtv/libs/libmythtv/mythplayer.h
++++ b/mythtv/libs/libmythtv/mythplayer.h
+@@ -77,6 +77,8 @@ enum
+     kDisplayRawTextSubtitle     = 0x080,
+     kDisplayAllCaptions         = 0x0FF,
+     kDisplayTeletextMenu        = 0x100,
++    kDisplayAllTextCaptions     = ~kDisplayDVDButton &
++                                   kDisplayAllCaptions,
+ };
+ 
+ enum PlayerFlags
+diff --git a/mythtv/libs/libmythtv/openglvideo.cpp b/mythtv/libs/libmythtv/openglvideo.cpp
+index 2de7d4c..e16af76 100644
+--- a/mythtv/libs/libmythtv/openglvideo.cpp
++++ b/mythtv/libs/libmythtv/openglvideo.cpp
+@@ -469,7 +469,9 @@ bool OpenGLVideo::AddFilter(OpenGLFilterType filter)
+             success = false;
+     }
+ 
+-    if (success && (filter != kGLFilterNone) && (filter != kGLFilterResize))
++    if (success &&
++        (((filter != kGLFilterNone) && (filter != kGLFilterResize)) ||
++         ((gl_features & kGLSL) && (filter == kGLFilterResize))))
+     {
+         program = AddFragmentProgram(filter);
+         if (!program)
+@@ -1040,7 +1042,8 @@ void OpenGLVideo::PrepareFrame(bool topfieldfirst, FrameScanType scan,
+ 
+         // enable fragment program and set any environment variables
+         GLuint program = 0;
+-        if ((type != kGLFilterNone) && (type != kGLFilterResize))
++        if (((type != kGLFilterNone) && (type != kGLFilterResize)) ||
++            ((gl_features & kGLSL) && (type == kGLFilterResize)))
+         {
+             GLuint prog_ref = 0;
+ 
+@@ -1575,6 +1578,16 @@ static const QString BicubicShader =
+ "    gl_FragColor = mix(tex00, tex10, parmx.z);\n"
+ "}\n";
+ 
++static const QString DefaultFragmentShader =
++"GLSL_DEFINES"
++"uniform GLSL_SAMPLER s_texture0;\n"
++"varying vec2 v_texcoord0;\n"
++"void main(void)\n"
++"{\n"
++"    vec4 color   = GLSL_TEXTURE(s_texture0, v_texcoord0);\n"
++"    gl_FragColor = vec4(color.xyz, 1.0);\n"
++"}\n";
++
+ void OpenGLVideo::GetProgramStrings(QString &vertex, QString &fragment,
+                                     OpenGLFilterType filter,
+                                     QString deint, FrameScanType field)
+@@ -1601,7 +1614,9 @@ void OpenGLVideo::GetProgramStrings(QString &vertex, QString &fragment,
+             break;
+         }
+         case kGLFilterNone:
++            break;
+         case kGLFilterResize:
++            fragment = DefaultFragmentShader;
+             break;
+         case kGLFilterBicubic:
+             fragment = BicubicShader;
+diff --git a/mythtv/libs/libmythtv/recorders/NuppelVideoRecorder.cpp b/mythtv/libs/libmythtv/recorders/NuppelVideoRecorder.cpp
+index ed57a6b..323729f 100644
+--- a/mythtv/libs/libmythtv/recorders/NuppelVideoRecorder.cpp
++++ b/mythtv/libs/libmythtv/recorders/NuppelVideoRecorder.cpp
+@@ -64,6 +64,7 @@ extern "C" {
+ #include "RTjpegN.h"
+ 
+ #include "programinfo.h"
++#include "mythsystemevent.h"
+ 
+ #define LOC QString("NVR(%1): ").arg(videodevice)
+ 
+@@ -3076,6 +3077,9 @@ void NuppelVideoRecorder::WriteVideo(VideoFrame *frame, bool skipsync,
+         ringBuffer->Write(out, out_len);
+     }
+ 
++    if (framesWritten == 0)
++        SendMythSystemRecEvent("REC_STARTED_WRITING", curRecording);
++
+     frameofgop++;
+     framesWritten++;
+ 
 diff --git a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
-index 099f8a6..df05491 100644
+index 099f8a6..9b627ff 100644
 --- a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
 +++ b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
 @@ -1135,7 +1135,7 @@ void DTVRecorder::FindPSKeyFrames(const uint8_t *buffer, uint len)
@@ -635,7 +1050,20 @@ index 099f8a6..df05491 100644
          }
  
          if ((aspectRatio > 0) && (aspectRatio != m_videoAspect))
-@@ -1336,6 +1336,11 @@ bool DTVRecorder::ProcessTSPacket(const TSPacket &tspacket)
+@@ -1299,6 +1299,12 @@ void DTVRecorder::HandleSingleProgramPMT(ProgramMapTable *pmt, bool insert)
+     for (uint i = 0; i < pmt->StreamCount(); ++i)
+         _stream_id[pmt->StreamPID(i)] = pmt->StreamType(i);
+ 
++    // If the PCRPID is valid and the PCR is not contained
++    // in another stream, make sure the PCR stream is not
++    // discarded (use PrivSec type as dummy 'valid' value)
++    if(pmt->PCRPID() != 0x1fff && pmt->FindPID(pmt->PCRPID()) == -1)
++        _stream_id[pmt->PCRPID()] = StreamID::PrivSec;
++
+     if (!ringBuffer)
+         return;
+ 
+@@ -1336,6 +1342,11 @@ bool DTVRecorder::ProcessTSPacket(const TSPacket &tspacket)
          FindOtherKeyframes(&tspacket);
          _buffer_packets = false;
      }
@@ -647,6 +1075,24 @@ index 099f8a6..df05491 100644
      else
      {
          // There are audio/video streams. Only write the packet
+diff --git a/mythtv/libs/libmythtv/subtitlescreen.cpp b/mythtv/libs/libmythtv/subtitlescreen.cpp
+index a3863f6..b48fb9c 100644
+--- a/mythtv/libs/libmythtv/subtitlescreen.cpp
++++ b/mythtv/libs/libmythtv/subtitlescreen.cpp
+@@ -1311,13 +1311,6 @@ static QString extract_cc608(QString &text, int &color,
+     else
+     {
+         result = text.left(nextControl);
+-        // Print the space character before handling the next control
+-        // character, otherwise the space character will be lost due
+-        // to the text.trimmed() operation in the MythUISimpleText
+-        // constructor, combined with the left-justification of
+-        // captions.
+-        if (text[nextControl] < (0x7000 + 0x10))
+-            result += " ";
+         text = text.mid(nextControl);
+     }
+ 
 diff --git a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h b/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h
 index fa1412b..84e9a6d 100644
 --- a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h
@@ -777,10 +1223,120 @@ index 3f5b595..132b023 100644
              QObject::tr("Some Linux DVB drivers, in particular for the "
                          "Hauppauge Nova-T, require that we slow down "
 diff --git a/mythtv/libs/libmythui/mythuibuttonlist.cpp b/mythtv/libs/libmythui/mythuibuttonlist.cpp
-index 95966a5..24669b5 100644
+index 95966a5..ea0d634 100644
 --- a/mythtv/libs/libmythui/mythuibuttonlist.cpp
 +++ b/mythtv/libs/libmythui/mythuibuttonlist.cpp
-@@ -3508,7 +3508,7 @@ void MythUIButtonListItem::SetToRealButton(MythUIStateType *button, bool selecte
+@@ -1408,7 +1408,6 @@ void MythUIButtonList::CalculateButtonPositions(void)
+ 
+     for (; button < (int)m_itemsVisible; button++)
+         m_ButtonList[button]->SetVisible(false);
+-
+ }
+ 
+ void MythUIButtonList::SanitizePosition(void)
+@@ -1432,6 +1431,14 @@ void MythUIButtonList::CalculateArrowStates()
+ 
+     m_needsUpdate = false;
+ 
++    // mark the visible buttons as invisible
++    QMap<int, MythUIButtonListItem*>::const_iterator i = m_ButtonToItem.constBegin();
++    while (i != m_ButtonToItem.constEnd())
++    {
++        i.value()->setVisible(false);
++        ++i;
++    }
++
+     // set topitem, top position
+     SanitizePosition();
+     m_ButtonToItem.clear();
+@@ -3042,6 +3049,7 @@ MythUIButtonListItem::MythUIButtonListItem(MythUIButtonList *lbtype,
+     m_state     = state;
+     m_showArrow = showArrow;
+     m_data      = 0;
++    m_isVisible = false;
+ 
+     if (state >= NotChecked)
+         m_checkable = true;
+@@ -3066,6 +3074,7 @@ MythUIButtonListItem::MythUIButtonListItem(MythUIButtonList *lbtype,
+     m_checkable = false;
+     m_state     = CantCheck;
+     m_showArrow = false;
++    m_isVisible = false;
+ 
+     if (m_parent)
+         m_parent->InsertItem(this, listPosition);
+@@ -3101,7 +3110,7 @@ void MythUIButtonListItem::SetText(const QString &text, const QString &name,
+     else
+         m_text = text;
+ 
+-    if (m_parent)
++    if (m_parent && m_isVisible)
+         m_parent->Update();
+ }
+ 
+@@ -3119,7 +3128,7 @@ void MythUIButtonListItem::SetTextFromMap(const InfoMap &infoMap,
+         ++map_it;
+     }
+ 
+-    if (m_parent)
++    if (m_parent && m_isVisible)
+         m_parent->Update();
+ }
+ 
+@@ -3216,7 +3225,7 @@ void MythUIButtonListItem::SetFontState(const QString &state,
+     else
+         m_fontState = state;
+ 
+-    if (m_parent)
++    if (m_parent && m_isVisible)
+         m_parent->Update();
+ }
+ 
+@@ -3248,7 +3257,7 @@ void MythUIButtonListItem::SetImage(MythImage *image, const QString &name)
+         m_image = image;
+     }
+ 
+-    if (m_parent)
++    if (m_parent && m_isVisible)
+         m_parent->Update();
+ }
+ 
+@@ -3304,7 +3313,7 @@ void MythUIButtonListItem::SetImage(
+         do_update = true;
+     }
+ 
+-    if (m_parent && do_update)
++    if (m_parent && do_update && m_isVisible)
+         m_parent->Update();
+ }
+ 
+@@ -3341,7 +3350,7 @@ void MythUIButtonListItem::DisplayState(const QString &state,
+         do_update = true;
+     }
+ 
+-    if (m_parent && do_update)
++    if (m_parent && do_update && m_isVisible)
+         m_parent->Update();
+ }
+ 
+@@ -3373,7 +3382,7 @@ void MythUIButtonListItem::setChecked(MythUIButtonListItem::CheckState state)
+ 
+     m_state = state;
+ 
+-    if (m_parent)
++    if (m_parent && m_isVisible)
+         m_parent->Update();
+ }
+ 
+@@ -3411,6 +3420,7 @@ void MythUIButtonListItem::SetToRealButton(MythUIStateType *button, bool selecte
+         return;
+ 
+     m_parent->ItemVisible(this);
++    m_isVisible = true;
+ 
+     QString state;
+ 
+@@ -3508,7 +3518,7 @@ void MythUIButtonListItem::SetToRealButton(MythUIStateType *button, bool selecte
  
              QString newText = text->GetTemplateText();
  
@@ -789,6 +1345,28 @@ index 95966a5..24669b5 100644
              regexp.setMinimal(true);
  
              if (!newText.isEmpty() && newText.contains(regexp))
+diff --git a/mythtv/libs/libmythui/mythuibuttonlist.h b/mythtv/libs/libmythui/mythuibuttonlist.h
+index c62862c..de27a79 100644
+--- a/mythtv/libs/libmythui/mythuibuttonlist.h
++++ b/mythtv/libs/libmythui/mythuibuttonlist.h
+@@ -85,6 +85,9 @@ class MUI_PUBLIC MythUIButtonListItem
+     void DisplayState(const QString &state, const QString &name);
+     void SetStatesFromMap(const InfoMap &stateMap);
+ 
++    bool isVisible() const { return m_isVisible; }
++    void setVisible(bool flag) { m_isVisible = flag; }
++
+     bool checkable() const;
+     void setCheckable(bool flag);
+ 
+@@ -110,6 +113,7 @@ class MUI_PUBLIC MythUIButtonListItem
+     CheckState      m_state;
+     QVariant        m_data;
+     bool            m_showArrow;
++    bool            m_isVisible;
+ 
+     QMap<QString, TextProperties> m_strings;
+     QMap<QString, MythImage*> m_images;
 diff --git a/mythtv/libs/libmythui/mythuiimage.cpp b/mythtv/libs/libmythui/mythuiimage.cpp
 index 4707f01..5674bf1 100644
 --- a/mythtv/libs/libmythui/mythuiimage.cpp
@@ -1275,6 +1853,174 @@ index a487a49..ad99e0b 100644
      osd->addChild(PersistentBrowseMode());
      osd->addChild(BrowseAllTuners());
      osd->addChild(DefaultCCMode());
+diff --git a/mythtv/programs/mythfrontend/networkcontrol.cpp b/mythtv/programs/mythfrontend/networkcontrol.cpp
+index eb147ed..d71ac0d 100644
+--- a/mythtv/programs/mythfrontend/networkcontrol.cpp
++++ b/mythtv/programs/mythfrontend/networkcontrol.cpp
+@@ -187,6 +187,7 @@ NetworkControl::NetworkControl() :
+     keyMap["f23"]                    = Qt::Key_F23;
+     keyMap["f24"]                    = Qt::Key_F24;
+ 
++    keyTextMap[Qt::Key_Space]           = " ";
+     keyTextMap[Qt::Key_Plus]            = "+";
+     keyTextMap[Qt::Key_Comma]           = ",";
+     keyTextMap[Qt::Key_Minus]           = "-";
+diff --git a/mythtv/programs/mythfrontend/playbackbox.cpp b/mythtv/programs/mythfrontend/playbackbox.cpp
+index d01293f..18ba2ac 100644
+--- a/mythtv/programs/mythfrontend/playbackbox.cpp
++++ b/mythtv/programs/mythfrontend/playbackbox.cpp
+@@ -280,17 +280,17 @@ static QString extract_main_state(const ProgramInfo &pginfo, const TV *player)
+     return state;
+ }
+ 
+-static QString extract_job_state(const ProgramInfo &pginfo)
++QString PlaybackBox::extract_job_state(const ProgramInfo &pginfo)
+ {
+     QString job = "default";
+ 
+     if (pginfo.GetRecordingStatus() == rsRecording)
+         job = "recording";
+-    else if (JobQueue::IsJobQueuedOrRunning(
++    else if (m_jobQueue.IsJobQueuedOrRunning(
+                  JOB_TRANSCODE, pginfo.GetChanID(),
+                  pginfo.GetRecordingStartTime()))
+         job = "transcoding";
+-    else if (JobQueue::IsJobQueuedOrRunning(
++    else if (m_jobQueue.IsJobQueuedOrRunning(
+                  JOB_COMMFLAG,  pginfo.GetChanID(),
+                  pginfo.GetRecordingStartTime()))
+         job = "commflagging";
+@@ -298,15 +298,16 @@ static QString extract_job_state(const ProgramInfo &pginfo)
+     return job;
+ }
+ 
+-static QString extract_commflag_state(const ProgramInfo &pginfo)
++QString PlaybackBox::extract_commflag_state(const ProgramInfo &pginfo)
+ {
+     QString job = "default";
+ 
+     // commflagged can be yes, no or processing
+-    if (JobQueue::IsJobRunning(JOB_COMMFLAG, pginfo))
++    if (m_jobQueue.IsJobRunning(JOB_COMMFLAG, pginfo.GetChanID(),
++                                pginfo.GetRecordingStartTime()))
+         return "running";
+-    if (JobQueue::IsJobQueued(JOB_COMMFLAG, pginfo.GetChanID(),
+-                              pginfo.GetRecordingStartTime()))
++    if (m_jobQueue.IsJobQueued(JOB_COMMFLAG, pginfo.GetChanID(),
++                               pginfo.GetRecordingStartTime()))
+         return "queued";
+ 
+     return (pginfo.GetProgramFlags() & FL_COMMFLAG ? "yes" : "no");
+@@ -5535,4 +5536,57 @@ void HelpPopup::addItem(const QString &state, const QString &text)
+     item->DisplayState(state, "icons");
+ }
+ 
++void PlaybackBox::PbbJobQueue::Update()
++{
++    QDateTime now = QDateTime::currentDateTime();
++    if (!m_lastUpdated.isValid() ||
++        m_lastUpdated.msecsTo(now) >= kInvalidateTimeMs)
++    {
++        QMap<int, JobQueueEntry> jobs;
++        JobQueue::GetJobsInQueue(jobs, JOB_LIST_ALL);
++        m_jobs.clear();
++        for (int i = 0; i < jobs.size(); ++i)
++        {
++            JobQueueEntry &entry = jobs[i];
++            m_jobs.insert(qMakePair(entry.chanid, entry.recstartts), entry);
++        }
++        m_lastUpdated = now;
++    }
++}
++
++bool PlaybackBox::PbbJobQueue::IsJobQueued(int jobType, uint chanid,
++                                           const QDateTime &recstartts)
++{
++    Update();
++    QList<JobQueueEntry> values = m_jobs.values(qMakePair(chanid, recstartts));
++    QList<JobQueueEntry>::const_iterator iter, end = values.end();
++    for (iter = values.begin(); iter != end; ++iter)
++    {
++        if (iter->type == jobType)
++            return JobQueue::IsJobStatusQueued(iter->status);
++    }
++    return false;
++}
++
++bool PlaybackBox::PbbJobQueue::IsJobRunning(int jobType, uint chanid,
++                                            const QDateTime &recstartts)
++{
++    Update();
++    QList<JobQueueEntry> values = m_jobs.values(qMakePair(chanid, recstartts));
++    QList<JobQueueEntry>::const_iterator iter, end = values.end();
++    for (iter = values.begin(); iter != end; ++iter)
++    {
++        if (iter->type == jobType)
++            return JobQueue::IsJobStatusRunning(iter->status);
++    }
++    return false;
++}
++
++bool PlaybackBox::PbbJobQueue::IsJobQueuedOrRunning(int jobType, uint chanid,
++                                                    const QDateTime &recstartts)
++{
++    return IsJobQueued(jobType, chanid, recstartts) ||
++        IsJobRunning(jobType, chanid, recstartts);
++}
++
+ /* vim: set expandtab tabstop=4 shiftwidth=4: */
+diff --git a/mythtv/programs/mythfrontend/playbackbox.h b/mythtv/programs/mythfrontend/playbackbox.h
+index 836c433..444ab75 100644
+--- a/mythtv/programs/mythfrontend/playbackbox.h
++++ b/mythtv/programs/mythfrontend/playbackbox.h
+@@ -13,6 +13,7 @@ using namespace std;
+ 
+ #include <QStringList>
+ #include <QDateTime>
++#include <QMultiMap>
+ #include <QObject>
+ #include <QMutex>
+ #include <QMap>
+@@ -336,6 +337,9 @@ class PlaybackBox : public ScheduleCommon
+ 
+     QString CreateProgramInfoString(const ProgramInfo &program) const;
+ 
++    QString extract_job_state(const ProgramInfo &pginfo);
++    QString extract_commflag_state(const ProgramInfo &pginfo);
++
+ 
+     QRegExp m_prefixes;   ///< prefixes to be ignored when sorting
+     QRegExp m_titleChaff; ///< stuff to remove for search rules
+@@ -444,6 +448,29 @@ class PlaybackBox : public ScheduleCommon
+     bool                m_usingGroupSelector;
+     bool                m_groupSelected;
+     bool                m_passwordEntered;
++
++    // This class caches the contents of the jobqueue table to avoid excessive
++    // DB queries each time the PBB selection changes (currently 4 queries per
++    // displayed item).  The cache remains valid for 15 seconds
++    // (kInvalidateTimeMs).
++    class PbbJobQueue
++    {
++    public:
++        PbbJobQueue() { Update(); }
++        bool IsJobQueued(int jobType, uint chanid,
++                         const QDateTime &recstartts);
++        bool IsJobRunning(int jobType, uint chanid,
++                          const QDateTime &recstartts);
++        bool IsJobQueuedOrRunning(int jobType, uint chanid,
++                                  const QDateTime &recstartts);
++    private:
++        static const qint64 kInvalidateTimeMs = 15000;
++        void Update();
++        QDateTime m_lastUpdated;
++        // Maps <chanid, recstartts> to a set of JobQueueEntry values.
++        typedef QMultiMap<QPair<uint, QDateTime>, JobQueueEntry> MapType;
++        MapType m_jobs;
++    } m_jobQueue;
+ };
+ 
+ class GroupSelector : public MythScreenType
 diff --git a/mythtv/programs/mythfrontend/programrecpriority.cpp b/mythtv/programs/mythfrontend/programrecpriority.cpp
 index 22e561a..ea6914b 100644
 --- a/mythtv/programs/mythfrontend/programrecpriority.cpp
@@ -1370,6 +2116,29 @@ index 22e561a..ea6914b 100644
      }
  
      if (m_recProfileText)
+diff --git a/mythtv/programs/mythfrontend/themechooser.cpp b/mythtv/programs/mythfrontend/themechooser.cpp
+index a14beb0..b5950bc 100644
+--- a/mythtv/programs/mythfrontend/themechooser.cpp
++++ b/mythtv/programs/mythfrontend/themechooser.cpp
+@@ -1027,7 +1027,17 @@ ThemeUpdateChecker::ThemeUpdateChecker(void) :
+     gCoreContext->SaveSetting("ThemeUpdateStatus", "");
+ 
+     connect(m_updateTimer, SIGNAL(timeout()), SLOT(checkForUpdate()));
+-    m_updateTimer->start(60 * 60 * 1000); // Run once an hour
++
++    if (getenv("MYTHTV_DEBUGMDM"))
++    {
++        LOG(VB_GENERAL, LOG_INFO, "Checking for theme updates every minute");
++        m_updateTimer->start(60 * 1000); // Run once a minute
++    }
++    else
++    {
++        LOG(VB_GENERAL, LOG_INFO, "Checking for theme updates every hour");
++        m_updateTimer->start(60 * 60 * 1000); // Run once an hour
++    }
+ 
+     // Run once 15 seconds from now
+     QTimer::singleShot(15 * 1000, this, SLOT(checkForUpdate()));
 diff --git a/mythtv/programs/mythtranscode/transcode.cpp b/mythtv/programs/mythtranscode/transcode.cpp
 index 343834b..50f9e22 100644
 --- a/mythtv/programs/mythtranscode/transcode.cpp
@@ -1407,6 +2176,19 @@ index 6cceb04..ec8e506 100644
          m_statusText->SetText(tr("No matches found for %1")
                                .arg((*m_missingIter).strName));
      else
+diff --git a/mythtv/programs/mythwelcome/welcomedialog.cpp b/mythtv/programs/mythwelcome/welcomedialog.cpp
+index 5b88219..fec68ef 100644
+--- a/mythtv/programs/mythwelcome/welcomedialog.cpp
++++ b/mythtv/programs/mythwelcome/welcomedialog.cpp
+@@ -107,7 +107,7 @@ void WelcomeDialog::startFrontend(void)
+     QString startFECmd = gCoreContext->GetSetting("MythWelcomeStartFECmd",
+                          m_installDir + "/bin/mythfrontend");
+ 
+-    myth_system(startFECmd, kMSDisableUDPListener);
++    myth_system(startFECmd, kMSDisableUDPListener | kMSProcessEvents);
+     updateAll();
+     m_frontendIsRunning = false;
+ }
 diff --git a/mythtv/themes/default/keyboard/el.xml b/mythtv/themes/default/keyboard/el.xml
 new file mode 100644
 index 0000000..da192cf
