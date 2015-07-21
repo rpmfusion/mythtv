@@ -2,6 +2,7 @@
 #
 # by:   Chris Petersen <cpetersen@mythtv.org>
 #       Jarod Wilson <jarod@wilsonet.com>
+#       Richard Shaw <hobbes1069@gmail.com>
 #
 #  Modified/Extended from the great work of:
 #     Axel Thimm <Axel.Thimm@ATrpms.net>
@@ -59,12 +60,15 @@
 # The vendor name we should attribute the aforementioned entries to
 %define desktop_vendor RPMFusion
 
-# MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27.4-64-g8fd277b
+# MythTV Version string -- preferably the output from git describe
+%define vers_string v0.27.5-3-g9498257
 %define branch fixes/0.27
 
 # Git revision and branch ID
 %define _gitrev g5b917e8
+
+# Harden build as mythbackend is long running.
+%global _hardened_build 1
 
 #
 # Basic descriptive tags for this package:
@@ -74,11 +78,11 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.27.4
+Version:        0.27.5
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        6%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -150,6 +154,8 @@ Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
 Source111: 99-mythbackend.rules
 Source112: mythjobqueue.service
+Source113: mythdb-optimize.service
+Source114: mythdb-optimize.timer
 
 # Global MythTV and Shared Build Requirements
 
@@ -352,11 +358,6 @@ Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
 Requires:  mariadb-server >= 5, mariadb >= 5
 Requires:  xmltv
-%if 0%{?rhel} >= 7 || 0%{?fedora} >= 22
-Requires:  udisks2
-%else
-Requires:  udisks
-%endif
 
 # Generate the required mythtv-frontend-api version string here so we only
 # have to do it once.
@@ -399,13 +400,16 @@ and miscellaneous other bits and pieces.
 
 %package libs
 Summary:   Library providing mythtv support
-Provides:  libmyth = %{version}-%{release}
-Obsoletes: libmyth < %{version}-%{release}
 
 Requires:  freetype >= 2
 Requires:  lame
 Requires:  qt4 >= 4.6
 Requires:  qt4-MySQL
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 22
+Requires:  udisks2
+%else
+Requires:  udisks
+%endif
 
 %description libs
 Common library code for MythTV and add-on modules (development)
@@ -416,8 +420,6 @@ television programs.  Refer to the mythtv package for more information.
 
 %package devel
 Summary:   Development files for mythtv
-Provides:  libmyth-devel = %{version}-%{release}
-Obsoletes: libmyth-devel < %{version}-%{release}
 
 Requires:  mythtv-libs = %{version}-%{release}
 
@@ -499,10 +501,6 @@ add-ons for mythtv.
 %package base-themes
 Summary: Core user interface themes for mythtv
 
-# Replace an old ATRMS package
-Provides:   mythtv-theme-gant
-Obsoletes:  mythtv-theme-gant
-
 %description base-themes
 MythTV provides a unified graphical interface for recording and viewing
 television programs.  Refer to the mythtv-docs package for more information.
@@ -567,9 +565,6 @@ mythtv backend.
 
 %package common
 Summary: Common components needed by multiple other MythTV components
-# mythpmovies is now DOA, but we need this for upgrade path preservation.
-Provides: mythmovies = %{version}-%{release}
-Obsoletes: mythmovies < %{version}-%{release}
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -805,6 +800,9 @@ on demand content.
     if [ "%{_lib}" != "lib" ]; then
          find \( -name 'configure' -o -name '*pro' -o -name 'Makefile' \) -exec sed -r -i -e 's,/lib\b,/%{_lib},g' {} \+
     fi
+
+# Remove compiled python file
+find -name *.pyc -exec rm -f {} \;
 
 %patch0 -p1 -b .mythtv
 %patch1 -p1 -b .types_h
@@ -1042,6 +1040,12 @@ pushd mythtv
     # Systemd unit file for mythjobqueue only backends.
     install -p -m 0644 %{SOURCE112} %{buildroot}%{_unitdir}/
 
+    # Systemd unit files for database optimization
+    install -p -m 0644 %{SOURCE113} %{buildroot}%{_unitdir}/
+    install -p -m 0644 %{SOURCE114} %{buildroot}%{_unitdir}/
+    install -p -m 0755 contrib/maintenance/optimize_mythdb.pl \
+        %{buildroot}%{_bindir}/optimize_mythdb
+
     ### SysV based setup. ###
     %else
     install -p -m 0755 %{SOURCE102} %{buildroot}%{_sysconfdir}/init.d/mythbackend
@@ -1147,6 +1151,7 @@ exit 0
 %if %{with_systemd}
     %systemd_post mythbackend.service
     %systemd_post mythjobqueue.service
+    %systemd_post mythdb-optimize.service
 %else
     /sbin/chkconfig --add mythbackend
 %endif
@@ -1156,6 +1161,7 @@ exit 0
 %if %{with_systemd}
     %systemd_preun mythbackend.service
     %systemd_preun mythjobqueue.service
+    %systemd_preun mythdb-optimize.service
 %else
 if [ $1 = 0 ]; then
     /sbin/service mythbackend stop > /dev/null 2>&1
@@ -1167,6 +1173,7 @@ fi
 %if %{with_systemd}
     %systemd_postun_with_restart mythbackend.service
     %systemd_postun_with_restart mythjobqueue.service
+    %systemd_postun_with_restart mythdb-optimize.service
 %else
 if [ "$1" -ge "1" ] ; then
     /sbin/service mythbackend condrestart >/dev/null 2>&1 || :
@@ -1199,7 +1206,6 @@ fi
 %{_bindir}/mythwikiscripts
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
-#{_bindir}/mythlogserver
 %{_datadir}/mythtv/mythconverg*.pl
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
@@ -1214,6 +1220,7 @@ fi
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
 %{_bindir}/mythhdhomerun_config
+%{_bindir}/mythdb_optimize
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
@@ -1221,6 +1228,8 @@ fi
 %if %{with_systemd}
 %{_unitdir}/mythbackend.service
 %{_unitdir}/mythjobqueue.service
+%{_unitdir}/mythdb-optimize.service
+%{_unitdir}/mythdb-optimize.timer
 /lib/udev/rules.d/99-mythbackend.rules
 %else
 %{_sysconfdir}/init.d/mythbackend
@@ -1417,6 +1426,11 @@ fi
 
 
 %changelog
+* Mon Jul  6 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.5-1
+- Update to latest upstream release.
+- Move udisks requirement to the libs package where it's actually used.
+- Add systemd mythtv database optimization service and timer.
+
 * Tue May 26 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-6
 - Update to latest bugfix release.
 - Add conditional for udisks for Fedora 22+ (BZ#3660).
