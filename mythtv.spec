@@ -1297,8 +1297,8 @@ fi
 %{perl_vendorlib}/MythTV.pm
 %dir %{perl_vendorlib}/MythTV
 %{perl_vendorlib}/MythTV/*.pm
-#%dir %{perl_vendorlib}/IO/Socket
-#%dir %{perl_vendorlib}/IO/Socket/INET
+#dir {perl_vendorlib}/IO/Socket
+#dir {perl_vendorlib}/IO/Socket/INET
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 %endif
