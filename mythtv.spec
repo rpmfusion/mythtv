@@ -61,7 +61,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v0.27.5-3-g9498257
+%define vers_string v0.27.5-28-g3682a9a
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -82,7 +82,7 @@ Version:        0.27.5
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -131,7 +131,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 ################################################################################
 
 # https://github.com/MythTV/mythtv/tarball/v0.26
-Source0:   %{name}-%{version}.tar.gz
+Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 
 # From the mythtv git repository with the appropriate branch checked out:
 # git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
@@ -795,7 +795,7 @@ on demand content.
 %prep
 %setup -q -n %{name}-%{version}
 
-# Replace static lib paths with %{_lib} so we build properly on x86_64
+# Replace static lib paths with %%{_lib} so we build properly on x86_64
 # systems, where the libs are actually in lib64.
     if [ "%{_lib}" != "lib" ]; then
          find \( -name 'configure' -o -name '*pro' -o -name 'Makefile' \) -exec sed -r -i -e 's,/lib\b,/%{_lib},g' {} \+
@@ -820,7 +820,7 @@ SOURCE_VERSION=%{vers_string}
 BRANCH=%{branch}
 EOF
 
-# Drop execute permissions on contrib bits, since they'll be %doc
+# Drop execute permissions on contrib bits, since they'll be %%doc
     find contrib/ -type f -exec chmod -x "{}" \;
 # And drop execute bit on theme html files
     chmod -x themes/default/htmls/*.html
@@ -877,10 +877,10 @@ pushd mythtv
     --enable-vdpau                              \
 %endif
 %if %{with_vaapi}
-    --enable-vaapi				\
+    --enable-vaapi                              \
 %endif
 %if !%{with_crystalhd}
-    --disable-crystalhd				\
+    --disable-crystalhd                         \
 %endif
 %if !%{with_perl}
     --without-bindings=perl                     \
@@ -1022,9 +1022,6 @@ pushd mythtv
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
 
 
-# Fix permissions on executable python bindings
-#    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
-
 # config/init files
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
 
@@ -1093,7 +1090,6 @@ pushd mythplugins
 %if %{with_mythgame}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/nes/{roms,screens}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/snes/{roms,screens}
-#   mkdir -p %{buildroot}%{_datadir}/mythtv/games/mame/{roms,screens,flyers,cabs}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/PC/screens
     mkdir -p %{buildroot}%{_datadir}/mame
     ln -s ../../mame %{buildroot}%{_datadir}/mythtv/games/xmame
@@ -1193,8 +1189,8 @@ fi
 %doc mythtv/FAQ
 %doc mythtv/database mythtv/keys.txt
 # Do we really need the API documentation?
-#%doc mythtv/docs/*.html mythtv/docs/*.png
-#%doc mythtv/docs/*.txt
+#%%doc mythtv/docs/*.html mythtv/docs/*.png
+#%%doc mythtv/docs/*.txt
 %doc mythtv/contrib
 
 %files common
@@ -1220,7 +1216,7 @@ fi
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
 %{_bindir}/mythhdhomerun_config
-%{_bindir}/mythdb_optimize
+%{_bindir}/optimize_mythdb
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
@@ -1297,8 +1293,6 @@ fi
 %{perl_vendorlib}/MythTV.pm
 %dir %{perl_vendorlib}/MythTV
 %{perl_vendorlib}/MythTV/*.pm
-#dir {perl_vendorlib}/IO/Socket
-#dir {perl_vendorlib}/IO/Socket/INET
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 %endif

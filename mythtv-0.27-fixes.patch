@@ -2,10 +2,26 @@
  .../mythnetvision/mythnetvision/netcommon.h        |   2 +-
  .../mythnetvision/mythnetvision/netsearch.cpp      |  23 +-
  .../mythnetvision/mythnetvision/netsearch.h        |   3 +
+ mythtv/external/FFmpeg/libavcodec/aacdec.c         |   2 +-
  mythtv/libs/libmyth/netgrabbermanager.cpp          |  26 +-
  mythtv/libs/libmyth/netgrabbermanager.h            |   7 +-
  mythtv/libs/libmythbase/mythversion.h              |   2 +-
+ mythtv/libs/libmythtv/profilegroup.cpp             |   3 +-
+ .../libs/libmythtv/recorders/rtp/rtpdatapacket.h   |   8 +-
+ .../libs/libmythtv/recorders/rtp/rtptsdatapacket.h |   2 +-
+ mythtv/libs/libmythui/libmythui.pro                |   7 +
+ mythtv/libs/libmythui/mythuibuttonlist.cpp         |   2 +-
+ mythtv/libs/libmythui/mythuihelper.cpp             |   2 +-
+ mythtv/libs/libmythui/mythuitext.cpp               |   4 +-
+ mythtv/libs/libmythui/screensaver-dbus.cpp         | 171 +++++
+ mythtv/libs/libmythui/screensaver-dbus.h           |  25 +
+ mythtv/libs/libmythui/screensaver-null.h           |   2 +-
+ mythtv/libs/libmythui/screensaver-osx.h            |   2 +-
+ mythtv/libs/libmythui/screensaver-x11.h            |   2 +-
+ mythtv/libs/libmythui/screensaver.cpp              |  68 +-
+ mythtv/libs/libmythui/screensaver.h                |  27 +-
  mythtv/programs/mythbackend/internetContent.cpp    |  10 +-
+ mythtv/programs/mythfilldatabase/main.cpp          |  44 +-
  .../nv_python_libs/common/common_api.py            |   9 +-
  .../configs/XML/defaultUserPrefs/youtube.xml       |  10 +
  .../internetcontent/nv_python_libs/mainProcess.py  |  17 +-
@@ -13,7 +29,7 @@
  .../nv_python_libs/youtube/youtube_api.py          | 734 +++++++--------------
  .../nv_python_libs/youtube/youtube_data.py         |  20 +
  mythtv/programs/scripts/internetcontent/youtube.py |  31 +-
- 16 files changed, 349 insertions(+), 570 deletions(-)
+ 32 files changed, 666 insertions(+), 624 deletions(-)
 
 diff --git a/mythplugins/mythnetvision/mythnetvision/netcommon.cpp b/mythplugins/mythnetvision/mythnetvision/netcommon.cpp
 index 1397347..296d923 100644
@@ -114,6 +130,19 @@ index 140bce0..360658c 100644
    private slots:
      void streamWebVideo(void);
      void showWebVideo(void);
+diff --git a/mythtv/external/FFmpeg/libavcodec/aacdec.c b/mythtv/external/FFmpeg/libavcodec/aacdec.c
+index c9eb798..66c7b3b 100644
+--- a/mythtv/external/FFmpeg/libavcodec/aacdec.c
++++ b/mythtv/external/FFmpeg/libavcodec/aacdec.c
+@@ -399,7 +399,7 @@ static uint64_t sniff_channel_order(uint8_t (*layout_map)[3], int tags)
+  * Save current output configuration if and only if it has been locked.
+  */
+ static void push_output_configuration(AACContext *ac) {
+-    if (ac->oc[1].status == OC_LOCKED) {
++    if (ac->oc[1].status == OC_LOCKED || ac->oc[0].status == OC_NONE) {
+         ac->oc[0] = ac->oc[1];
+     }
+     ac->oc[1].status = OC_NONE;
 diff --git a/mythtv/libs/libmyth/netgrabbermanager.cpp b/mythtv/libs/libmyth/netgrabbermanager.cpp
 index 15d876a..6b1b38d 100644
 --- a/mythtv/libs/libmyth/netgrabbermanager.cpp
@@ -218,6 +247,513 @@ index 26d37ff..a3661a9 100644
  
  /** \brief Increment this whenever the MythTV network protocol changes.
   *
+diff --git a/mythtv/libs/libmythtv/profilegroup.cpp b/mythtv/libs/libmythtv/profilegroup.cpp
+index 72e8d33..f6b0f06 100644
+--- a/mythtv/libs/libmythtv/profilegroup.cpp
++++ b/mythtv/libs/libmythtv/profilegroup.cpp
+@@ -86,7 +86,8 @@ void ProfileGroup::fillSelections(SelectSetting* setting)
+         QString cardtype   = result.value(4).toString();
+ 
+         // Only show default profiles that match installed cards
+-        bool have_cardtype = cardtypes.contains(cardtype);
++        // Workaround for #12481 in fixes/0.27
++        bool have_cardtype = cardtypes.contains(cardtype, Qt::CaseInsensitive);
+         if (is_default && (cardtype == "TRANSCODE") && !have_cardtype)
+         {
+             tid = id;
+diff --git a/mythtv/libs/libmythtv/recorders/rtp/rtpdatapacket.h b/mythtv/libs/libmythtv/recorders/rtp/rtpdatapacket.h
+index 6586cc0..e8b8d94 100644
+--- a/mythtv/libs/libmythtv/recorders/rtp/rtpdatapacket.h
++++ b/mythtv/libs/libmythtv/recorders/rtp/rtpdatapacket.h
+@@ -43,12 +43,6 @@ class RTPDataPacket : public UDPPacket
+                 .arg(GetVersion()));
+             return false;
+         }
+-        if (HasPadding() && (m_data.size() < 1328))
+-        {
+-            LOG(VB_GENERAL, LOG_INFO, QString("HasPadding && %1 < 1328")
+-                .arg(m_data.size()));
+-            return false;
+-        }
+ 
+         int off = 12 + 4 * GetCSRCCount();
+         if (off > m_data.size())
+@@ -120,7 +114,7 @@ class RTPDataPacket : public UDPPacket
+     {
+         if (!HasPadding())
+             return 0;
+-        return m_data[1328];
++        return m_data[m_data.size()-1];
+     }
+ 
+   protected:
+diff --git a/mythtv/libs/libmythtv/recorders/rtp/rtptsdatapacket.h b/mythtv/libs/libmythtv/recorders/rtp/rtptsdatapacket.h
+index 95cf684..ead472d 100644
+--- a/mythtv/libs/libmythtv/recorders/rtp/rtptsdatapacket.h
++++ b/mythtv/libs/libmythtv/recorders/rtp/rtptsdatapacket.h
+@@ -29,7 +29,7 @@ class RTPTSDataPacket : public RTPDataPacket
+ 
+     unsigned int GetTSDataSize(void) const
+     {
+-        return max(1328 - (int)GetTSOffset() - (int)GetPaddingSize(), 0);
++        return max(m_data.size() - (int)GetTSOffset() - (int)GetPaddingSize(), 0);
+     }
+ 
+   private:
+diff --git a/mythtv/libs/libmythui/libmythui.pro b/mythtv/libs/libmythui/libmythui.pro
+index 589639c..8143126 100644
+--- a/mythtv/libs/libmythui/libmythui.pro
++++ b/mythtv/libs/libmythui/libmythui.pro
+@@ -112,6 +112,13 @@ using_x11 {
+     POST_TARGETDEPS += ../libmythnvctrl/libmythnvctrl-$${MYTH_LIB_EXT}
+ }
+ 
++using_qtdbus {
++    QT      += dbus
++    DEFINES += USING_DBUS
++    HEADERS += screensaver-dbus.h
++    SOURCES += screensaver-dbus.cpp
++}
++
+ macx {
+     HEADERS += screensaver-osx.h   DisplayResOSX.h   util-osx.h
+     SOURCES += screensaver-osx.cpp DisplayResOSX.cpp util-osx.cpp
+diff --git a/mythtv/libs/libmythui/mythuibuttonlist.cpp b/mythtv/libs/libmythui/mythuibuttonlist.cpp
+index ea0d634..8b13eef 100644
+--- a/mythtv/libs/libmythui/mythuibuttonlist.cpp
++++ b/mythtv/libs/libmythui/mythuibuttonlist.cpp
+@@ -3518,7 +3518,7 @@ void MythUIButtonListItem::SetToRealButton(MythUIStateType *button, bool selecte
+ 
+             QString newText = text->GetTemplateText();
+ 
+-            QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?(\\S+)(\\|(.+))?%");
++            QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?([\\w#]+)(\\|(.+))?%");
+             regexp.setMinimal(true);
+ 
+             if (!newText.isEmpty() && newText.contains(regexp))
+diff --git a/mythtv/libs/libmythui/mythuihelper.cpp b/mythtv/libs/libmythui/mythuihelper.cpp
+index 19fcde4..0520be5 100644
+--- a/mythtv/libs/libmythui/mythuihelper.cpp
++++ b/mythtv/libs/libmythui/mythuihelper.cpp
+@@ -197,7 +197,7 @@ MythUIHelperPrivate::~MythUIHelperPrivate()
+ 
+ void MythUIHelperPrivate::Init(void)
+ {
+-    screensaver = ScreenSaverControl::get();
++    screensaver = new ScreenSaverControl();
+     GetScreenBounds();
+     StoreGUIsettings();
+     screenSetup = true;
+diff --git a/mythtv/libs/libmythui/mythuitext.cpp b/mythtv/libs/libmythui/mythuitext.cpp
+index 60fa71f..b6fcfcb 100644
+--- a/mythtv/libs/libmythui/mythuitext.cpp
++++ b/mythtv/libs/libmythui/mythuitext.cpp
+@@ -132,7 +132,7 @@ void MythUIText::ResetMap(const InfoMap &map)
+     if (newText.isEmpty())
+         newText = GetDefaultText();
+ 
+-    QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?(\\w+)(\\|(.+))?%");
++    QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?([\\w#]+)(\\|(.+))?%");
+     regexp.setMinimal(true);
+ 
+     bool replaced = map.contains(objectName());
+@@ -196,7 +196,7 @@ void MythUIText::SetTextFromMap(const InfoMap &map)
+     if (newText.isEmpty())
+         newText = GetDefaultText();
+ 
+-    QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?(\\S+)(\\|(.+))?%");
++    QRegExp regexp("%(([^\\|%]+)?\\||\\|(.))?([\\w#]+)(\\|(.+))?%");
+     regexp.setMinimal(true);
+ 
+     if (!newText.isEmpty() && newText.contains(regexp))
+diff --git a/mythtv/libs/libmythui/screensaver-dbus.cpp b/mythtv/libs/libmythui/screensaver-dbus.cpp
+new file mode 100644
+index 0000000..b099c46
+--- /dev/null
++++ b/mythtv/libs/libmythui/screensaver-dbus.cpp
+@@ -0,0 +1,171 @@
++#include <stdint.h>
++#include "screensaver-dbus.h"
++#include <QDBusConnection>
++#include <QDBusInterface>
++#include <QDBusReply>
++#include <QString>
++
++#include "mythlogging.h"
++
++#define LOC                 QString("ScreenSaverDBus: ")
++
++const char m_app[]         = "MythTV";
++const char m_reason[]      = "Watching TV";
++const char m_dbusInhibit[] = "Inhibit";
++
++#define NUM_DBUS_METHODS 4
++// Thanks to vlc for the set of dbus services to use.
++const char m_dbusService[][40] = {
++    "org.freedesktop.ScreenSaver", /**< KDE >= 4 and GNOME >= 3.10 */
++    "org.freedesktop.PowerManagement.Inhibit", /**< KDE and GNOME <= 2.26 */
++    "org.mate.SessionManager", /**< >= 1.0 */
++    "org.gnome.SessionManager", /**< GNOME 2.26..3.4 */
++};
++
++const char m_dbusPath[][33] = {
++    "/ScreenSaver",
++    "/org/freedesktop/PowerManagement",
++    "/org/mate/SessionManager",
++    "/org/gnome/SessionManager",
++};
++
++// Service name is also the interface name in all cases
++
++const char m_dbusUnInhibit[][10] = {
++    "UnInhibit",
++    "UnInhibit",
++    "Uninhibit",
++    "Uninhibit",
++};
++
++class ScreenSaverDBusPrivate
++{
++    friend class    ScreenSaverDBus;
++
++  public:
++    ScreenSaverDBusPrivate(QString dbusService, QString dbusPath, QString dbusInterface, QDBusConnection *bus) :
++        m_inhibited(false),
++        m_cookie(0),
++        m_bus(bus),
++        m_interface(new QDBusInterface(dbusService, dbusPath , dbusInterface, *m_bus)),
++        m_unInhibit(""),
++        m_serviceUsed(dbusService)
++    {
++        if (!m_interface->isValid())
++        {
++            LOG(VB_GENERAL, LOG_WARNING, LOC + "Could not connect to dbus: " +
++                m_interface->lastError().message());
++        }
++        else
++        {
++            LOG(VB_GENERAL, LOG_INFO, LOC + "Created for DBus service: " + dbusService);
++        }
++    }
++    ~ScreenSaverDBusPrivate()
++    {
++        delete m_interface;
++    }
++    void Inhibit(void)
++    {
++        if (m_interface->isValid())
++        {
++            // method uint org.freedesktop.ScreenSaver.Inhibit(QString application_name, QString reason_for_inhibit)
++            QDBusMessage msg = m_interface->call(QDBus::Block, m_dbusInhibit , m_app, m_reason);
++            if (msg.type() == QDBusMessage::ReplyMessage)
++            {
++                QList<QVariant> replylist = msg.arguments();
++                QVariant reply = replylist.first();
++                m_cookie = reply.toUInt();
++                m_inhibited = true;
++                LOG(VB_GENERAL, LOG_INFO, LOC +
++                    QString("Successfully inhibited screensaver via %1. cookie %2. nom nom")
++                    .arg(m_serviceUsed).arg(m_cookie));
++            }
++            else // msg.type() == QDBusMessage::ErrorMessage
++            {
++                LOG(VB_GENERAL, LOG_WARNING, LOC + "Failed to disable screensaver: " +
++                    msg.errorMessage());
++            }
++        }
++    }
++    void UnInhibit(void)
++    {
++        if (m_interface->isValid())
++        {
++            // Don't block waiting for the reply, there isn't one
++            // method void org.freedesktop.ScreenSaver.UnInhibit(uint cookie) (or equivalent)
++            if (m_cookie != 0) {
++                m_interface->call(QDBus::NoBlock, m_unInhibit , m_cookie);
++                m_cookie = 0;
++                m_inhibited = false;
++                LOG(VB_GENERAL, LOG_INFO, LOC + QString("Screensaver uninhibited via %1")
++                    .arg(m_serviceUsed));
++            }
++        }
++    }
++    void SetUnInhibit(QString method) { m_unInhibit = method; }
++
++  protected:
++    bool            m_inhibited;
++    uint32_t        m_cookie;
++    QDBusConnection *m_bus;
++    QDBusInterface  *m_interface;
++  private:
++    QString         m_unInhibit;
++    QString         m_serviceUsed;
++};
++
++ScreenSaverDBus::ScreenSaverDBus() :
++    m_bus(QDBusConnection::sessionBus()),
++    d(NULL),
++    m_dbusPrivateInterfaces(QList<ScreenSaverDBusPrivate *>())
++{
++    // service, path, interface, bus - note that interface = service, hence it is used twice
++    for (uint i=0; i < NUM_DBUS_METHODS; i++) {
++        ScreenSaverDBusPrivate *ssdbp =
++            new ScreenSaverDBusPrivate(m_dbusService[i], m_dbusPath[i], m_dbusService[i], &m_bus);
++        ssdbp->SetUnInhibit(m_dbusUnInhibit[i]);
++        m_dbusPrivateInterfaces.push_back(ssdbp);
++    }
++}
++
++ScreenSaverDBus::~ScreenSaverDBus()
++{
++    ScreenSaverDBus::Restore();
++    while (!m_dbusPrivateInterfaces.isEmpty()) {
++        ScreenSaverDBusPrivate *ssdbp = m_dbusPrivateInterfaces.takeLast();
++        delete ssdbp;
++    }
++}
++
++void ScreenSaverDBus::Disable(void)
++{
++    QList<ScreenSaverDBusPrivate *>::iterator i;
++    for (i = m_dbusPrivateInterfaces.begin(); i != m_dbusPrivateInterfaces.end(); ++i) {
++        (*i)->Inhibit();
++    }
++}
++
++void ScreenSaverDBus::Restore(void)
++{
++    QList<ScreenSaverDBusPrivate *>::iterator i;
++    for (i = m_dbusPrivateInterfaces.begin(); i != m_dbusPrivateInterfaces.end(); ++i) {
++        (*i)->UnInhibit();
++    }
++}
++
++void ScreenSaverDBus::Reset(void)
++{
++    Restore();
++}
++
++bool ScreenSaverDBus::Asleep(void)
++{
++    QList<ScreenSaverDBusPrivate *>::iterator i;
++    for (i = m_dbusPrivateInterfaces.begin(); i != m_dbusPrivateInterfaces.end(); ++i) {
++        if((*i)->m_inhibited) {
++            return true;
++        }
++    }
++    return false;
++}
+diff --git a/mythtv/libs/libmythui/screensaver-dbus.h b/mythtv/libs/libmythui/screensaver-dbus.h
+new file mode 100644
+index 0000000..f22252b
+--- /dev/null
++++ b/mythtv/libs/libmythui/screensaver-dbus.h
+@@ -0,0 +1,25 @@
++#ifndef MYTH_SCREENSAVER_DBUS_H
++#define MYTH_SCREENSAVER_DBUS_H
++
++#include "screensaver.h"
++#include "QDBusConnection"
++
++class ScreenSaverDBus : public ScreenSaver
++{
++  public:
++    ScreenSaverDBus();
++    ~ScreenSaverDBus();
++
++    void Disable(void);
++    void Restore(void);
++    void Reset(void);
++
++    bool Asleep(void);
++  protected:
++    QDBusConnection m_bus;
++    class ScreenSaverDBusPrivate *d;
++    QList<ScreenSaverDBusPrivate *> m_dbusPrivateInterfaces;
++};
++
++#endif // MYTH_SCREENSAVER_DBUS_H
++
+diff --git a/mythtv/libs/libmythui/screensaver-null.h b/mythtv/libs/libmythui/screensaver-null.h
+index 60119dd..1267324 100644
+--- a/mythtv/libs/libmythui/screensaver-null.h
++++ b/mythtv/libs/libmythui/screensaver-null.h
+@@ -3,7 +3,7 @@
+ 
+ #include "screensaver.h"
+ 
+-class ScreenSaverNull : public ScreenSaverControl
++class ScreenSaverNull : public ScreenSaver
+ {
+ public:
+     ScreenSaverNull();
+diff --git a/mythtv/libs/libmythui/screensaver-osx.h b/mythtv/libs/libmythui/screensaver-osx.h
+index dae5622..69413a7 100644
+--- a/mythtv/libs/libmythui/screensaver-osx.h
++++ b/mythtv/libs/libmythui/screensaver-osx.h
+@@ -3,7 +3,7 @@
+ 
+ #include "screensaver.h"
+ 
+-class ScreenSaverOSX : public ScreenSaverControl
++class ScreenSaverOSX : public ScreenSaver
+ {
+ public:
+     ScreenSaverOSX();
+diff --git a/mythtv/libs/libmythui/screensaver-x11.h b/mythtv/libs/libmythui/screensaver-x11.h
+index 0fa7956..5945f9e 100644
+--- a/mythtv/libs/libmythui/screensaver-x11.h
++++ b/mythtv/libs/libmythui/screensaver-x11.h
+@@ -5,7 +5,7 @@
+ 
+ #include "screensaver.h"
+ 
+-class ScreenSaverX11 : public QObject, public ScreenSaverControl
++class ScreenSaverX11 : public QObject, public ScreenSaver
+ {
+     Q_OBJECT
+ 
+diff --git a/mythtv/libs/libmythui/screensaver.cpp b/mythtv/libs/libmythui/screensaver.cpp
+index a9e480a..de4d148 100644
+--- a/mythtv/libs/libmythui/screensaver.cpp
++++ b/mythtv/libs/libmythui/screensaver.cpp
+@@ -2,6 +2,10 @@
+ #include "screensaver.h"
+ #include "screensaver-null.h"
+ 
++#ifdef USING_DBUS
++#include "screensaver-dbus.h"
++#endif // USING_DBUS
++
+ #ifdef USING_X11
+ #include "screensaver-x11.h"
+ #endif // USING_X11
+@@ -13,21 +17,61 @@
+ QEvent::Type ScreenSaverEvent::kEventType =
+     (QEvent::Type) QEvent::registerEventType();
+ 
+-ScreenSaverControl* ScreenSaverSingleton = NULL;
+-
+-ScreenSaverControl* ScreenSaverControl::get(void)
++ScreenSaverControl::ScreenSaverControl() :
++    m_screenSavers(QList<ScreenSaver *>())
+ {
+-    if (!ScreenSaverSingleton)
+-    {
+-  
++    ScreenSaver * tmp;
++#if defined(USING_DBUS)
++    tmp = new ScreenSaverDBus();
++    m_screenSavers.push_back(tmp);
++#endif
+ #if defined(USING_X11)
+-        ScreenSaverSingleton = new ScreenSaverX11();
++    tmp = new ScreenSaverX11();
++    m_screenSavers.push_back(tmp);
+ #elif CONFIG_DARWIN
+-        ScreenSaverSingleton = new ScreenSaverOSX();
+-#else
+-        ScreenSaverSingleton = new ScreenSaverNull();
++    tmp = new ScreenSaverOSX();
++    m_screenSavers.push_back(tmp);
+ #endif
++#if not (defined(USING_DBUS) || defined(USING_X11) || CONFIG_DARWIN)
++    tmp = new ScreenSaverNull();
++    m_screenSavers.push_back(tmp);
++#endif
++}
++
++ScreenSaverControl::~ScreenSaverControl() {
++    while (!m_screenSavers.isEmpty()) {
++        ScreenSaver *tmp = m_screenSavers.takeLast();
++        delete tmp;
++    }
++}
++
++void ScreenSaverControl::Disable(void) {
++    QList<ScreenSaver *>::iterator i;
++    for (i = m_screenSavers.begin(); i != m_screenSavers.end(); ++i) {
++        (*i)->Disable();
++    }
++}
++
++void ScreenSaverControl::Restore(void) {
++    QList<ScreenSaver *>::iterator i;
++    for (i = m_screenSavers.begin(); i != m_screenSavers.end(); ++i) {
++        (*i)->Restore();
++    }
++}
++
++void ScreenSaverControl::Reset(void) {
++    QList<ScreenSaver *>::iterator i;
++    for (i = m_screenSavers.begin(); i != m_screenSavers.end(); ++i) {
++        (*i)->Reset();
++    }
++}
++
++bool ScreenSaverControl::Asleep(void) {
++    QList<ScreenSaver *>::iterator i;
++    for (i = m_screenSavers.begin(); i != m_screenSavers.end(); ++i) {
++        if((*i)->Asleep()) {
++            return true;
++        }
+     }
+-    
+-    return ScreenSaverSingleton;
++    return false;
+ }
+diff --git a/mythtv/libs/libmythui/screensaver.h b/mythtv/libs/libmythui/screensaver.h
+index 018ff06..0c45e16 100644
+--- a/mythtv/libs/libmythui/screensaver.h
++++ b/mythtv/libs/libmythui/screensaver.h
+@@ -2,6 +2,7 @@
+ #define MYTH_SCREENSAVER_H
+ 
+ #include <QEvent>
++#include <QList>
+ 
+ class ScreenSaverEvent : public QEvent
+ {
+@@ -24,20 +25,32 @@ protected:
+     ScreenSaverEventKind sset;
+ };
+ 
+-class ScreenSaverControl
++/// Base Class for screensavers
++class ScreenSaver
+ {
+   public:
+-    // creates one of the concrete subsclasses
+-    static ScreenSaverControl* get(void);
+-
+-    ScreenSaverControl() { };
+-    virtual ~ScreenSaverControl() { };
++    ScreenSaver() { };
++    virtual ~ScreenSaver() { };
+ 
+     virtual void Disable(void) = 0;
+     virtual void Restore(void) = 0;
+     virtual void Reset(void) = 0;
+-
+     virtual bool Asleep(void) = 0;
+ };
+ 
++/// Controls all instances of the screensaver
++class ScreenSaverControl
++{
++  public:
++    ScreenSaverControl();
++    ~ScreenSaverControl();
++
++    void Disable(void);
++    void Restore(void);
++    void Reset(void);
++    bool Asleep(void);
++  private:
++    QList<ScreenSaver *> m_screenSavers;
++};
++
+ #endif // MYTH_SCREENSAVER_H
 diff --git a/mythtv/programs/mythbackend/internetContent.cpp b/mythtv/programs/mythbackend/internetContent.cpp
 index 0701cc8..cbfa278 100644
 --- a/mythtv/programs/mythbackend/internetContent.cpp
@@ -255,6 +791,82 @@ index 0701cc8..cbfa278 100644
      loop.exec();
  
      search->process();
+diff --git a/mythtv/programs/mythfilldatabase/main.cpp b/mythtv/programs/mythfilldatabase/main.cpp
+index d936e9b..e5f9874 100644
+--- a/mythtv/programs/mythfilldatabase/main.cpp
++++ b/mythtv/programs/mythfilldatabase/main.cpp
+@@ -607,10 +607,12 @@ int main(int argc, char *argv[])
+ 
+     LOG(VB_GENERAL, LOG_INFO, "Marking episode first showings.");
+     updt.prepare("UPDATE program "
+-                    "JOIN (SELECT MIN(starttime) AS starttime, programid "
+-                    "      FROM program "
+-                    "      WHERE programid <> '' "
+-                    "      GROUP BY programid "
++                    "JOIN (SELECT MIN(p.starttime) AS starttime, p.programid "
++                    "      FROM program p, channel c "
++                    "      WHERE p.programid <> '' "
++                    "            AND p.chanid = c.chanid "
++                    "            AND c.visible = 1 "
++                    "      GROUP BY p.programid "
+                     "     ) AS firsts "
+                     "ON program.programid = firsts.programid "
+                     "  AND program.starttime = firsts.starttime "
+@@ -620,11 +622,13 @@ int main(int argc, char *argv[])
+     found = updt.numRowsAffected();
+ 
+     updt.prepare("UPDATE program "
+-                    "JOIN (SELECT MIN(starttime) AS starttime, title, subtitle,"
+-                    "           LEFT(description, 1024) AS partdesc "
+-                    "      FROM program "
+-                    "      WHERE programid = '' "
+-                    "      GROUP BY title, subtitle, partdesc "
++                    "JOIN (SELECT MIN(p.starttime) AS starttime, p.title, p.subtitle, "
++                    "           LEFT(p.description, 1024) AS partdesc "
++                    "      FROM program p, channel c "
++                    "      WHERE p.programid = '' "
++                    "            AND p.chanid = c.chanid "
++                    "            AND c.visible = 1 "
++                    "      GROUP BY p.title, p.subtitle, partdesc "
+                     "     ) AS firsts "
+                     "ON program.starttime = firsts.starttime "
+                     "  AND program.title = firsts.title "
+@@ -639,10 +643,12 @@ int main(int argc, char *argv[])
+ 
+     LOG(VB_GENERAL, LOG_INFO, "Marking episode last showings.");
+     updt.prepare("UPDATE program "
+-                    "JOIN (SELECT MAX(starttime) AS starttime, programid "
+-                    "      FROM program "
+-                    "      WHERE programid <> '' "
+-                    "      GROUP BY programid "
++                    "JOIN (SELECT MAX(p.starttime) AS starttime, p.programid "
++                    "      FROM program p, channel c "
++                    "      WHERE p.programid <> '' "
++                    "            AND p.chanid = c.chanid "
++                    "            AND c.visible = 1 "
++                    "      GROUP BY p.programid "
+                     "     ) AS lasts "
+                     "ON program.programid = lasts.programid "
+                     "  AND program.starttime = lasts.starttime "
+@@ -652,11 +658,13 @@ int main(int argc, char *argv[])
+     found = updt.numRowsAffected();
+ 
+     updt.prepare("UPDATE program "
+-                    "JOIN (SELECT MAX(starttime) AS starttime, title, subtitle,"
+-                    "           LEFT(description, 1024) AS partdesc "
+-                    "      FROM program "
+-                    "      WHERE programid = '' "
+-                    "      GROUP BY title, subtitle, partdesc "
++                    "JOIN (SELECT MAX(p.starttime) AS starttime, p.title, p.subtitle, "
++                    "           LEFT(p.description, 1024) AS partdesc "
++                    "      FROM program p, channel c "
++                    "      WHERE p.programid = '' "
++                    "            AND p.chanid = c.chanid "
++                    "            AND c.visible = 1 "
++                    "      GROUP BY p.title, p.subtitle, partdesc "
+                     "     ) AS lasts "
+                     "ON program.starttime = lasts.starttime "
+                     "  AND program.title = lasts.title "
 diff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/common/common_api.py b/mythtv/programs/scripts/internetcontent/nv_python_libs/common/common_api.py
 index 643fcb1..0334124 100644
 --- a/mythtv/programs/scripts/internetcontent/nv_python_libs/common/common_api.py
@@ -370,7 +982,7 @@ index 0000000..4eb1fdf
 +                total.append(char)
 +        return "".join(total)
 diff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py b/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py
-index f6f967f..f8b3121 100644
+index f6f967f..62fde93 100644
 --- a/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py
 +++ b/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py
 @@ -19,7 +19,7 @@ meta data, video and image URLs from youtube. These routines are based on the ap
@@ -600,7 +1212,7 @@ index f6f967f..f8b3121 100644
 -            }
 +        # Read region code from user preferences, used by tree view
 +        region = self.userPrefs.find("region")
-+        if region != None:
++        if region != None and region.text:
 +            self.config['region'] = region.text
 +        else:
 +            self.config['region'] = u'us'
