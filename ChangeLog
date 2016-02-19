@@ -1,322 +1,65 @@
-commit 3682a9a14783e81685af1f838ba7f3c9916e1746
-Merge: e5e095b 9ac80fb
+commit 332aa34b1dda5dbfe7db548aa8c12818aa8f78de
 Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Fri Oct 9 11:16:34 2015 +0200
+Date:   Fri Feb 12 23:17:31 2016 +0100
 
-    Merge branch 'devel/027candidates' into fixes/0.27
+    Add special case for specials / season 0 to Perl bindings
+    
+    Based on patch by Michael <mythtv@blandford.net>
+    Refs #11919
+    Fixes #12649
+    
+    (cherry picked from commit 4517c1284c273f779b6e378dcd2df219645a9f09)
 
-commit e5e095bcb6d03f1edd107c04a8cd14c90145c079
+commit a8a37608e02f0434727166439552a3f058078238
+Author: Walter Cheuk <wwycheuk@gmail.com>
+Date:   Mon Feb 8 21:39:33 2016 -0500
+
+    Updated Chinese (HK) locale file from Walter Cheuk
+    
+    Thank you Walter!
+    
+    Close #12645
+    
+    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
+
+commit 5071dae6a5157c862ecd007950d1955c7fa790cc
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Mon Feb 8 23:17:51 2016 +0000
+
+    Correctly handle title 'The X-Files'
+    
+    (cherry picked from commit 17dcf2c2379692ce74c62a7f2a8028cd833aedcd)
+
+commit 0216edd1238d351926f2a5fb83920c60b7d2eca1
+Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
+Date:   Fri Feb 5 15:01:30 2016 +0000
+
+    Fixes #12639 Fix check for python3
+    
+    (cherry picked from commit daef5cd6d0e1c0af7062170cc3f9f51fb053fcfc)
+
+commit f4eddfa3000649ede1398c61d00cd4a4644a759b
 Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Sat Oct 3 12:48:34 2015 +0200
+Date:   Fri Feb 5 14:23:36 2016 +0100
 
-    Fiddle with the theme template regular expression for #12003
+    Add "Law & Order: UK" to the exceptions
     
-    It appears that \w worked for a long time. But does not match #
-    so it was changed to \S which matches everything but white space.
+    Refs #12633
     
-    Now try with \w and explicit #.
-    
-    The regexp is tested with online tools.
-    (I couldn't get QRegExp-Editor to build and refactoring to suit unit
-    tests didn't look easy)
-    
-    Fixes #12003
-    
-    (cherry picked from commit bb6fe50f70e47b836bcc9752af32996fd114a15e)
+    (cherry picked from commit 4651f99e8edb177359aadec6d6b74733276697ce)
 
-commit 2ad315894af9a7770b29dbec5d0ca56a84534f49
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Fri May 1 18:09:57 2015 +0100
-
-    Re-Enable screensaver-x11 after the dbus screensaver support was added.
-    
-    This now utilizes the dbus screensaver first, and then the previously
-    existing screensaver methods. This should resolve the issues seen by
-    those using only DPMS or xscreensaver.
-    
-    (cherry picked from commit 8ea5911f066fe406deeddb8ba92b629be4f47cd1)
-    
-    Backport to fixes/0.27. Fixes #12511
-
-commit 156c30034f6d0c2c22c3b61f59da075f50938269
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Fri May 1 18:09:30 2015 +0100
-
-    Move failure to connect to the different dbus services to LOG_WARNING level #2
-    
-    (cherry picked from commit e731ebc0d31d20afa29a95a3934be0149c2e0383)
-    
-    Backport to fixes/0.27. Refs #12511
-
-commit 05016ef186d113a0058babe4002a429ffc2f035e
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Fri May 1 16:03:36 2015 +0100
-
-    Move failure to connect to the different dbus services to LOG_WARNING level
-    
-    (cherry picked from commit 348ed663810ffa6860f380733a677e0aa6d729d1)
-    
-    Backport to fixes/0.27. Refs #12511
-
-commit 43312ef43893b0a720b9c49c6b1d1112c34c79e9
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Fri May 1 11:44:04 2015 +0100
-
-    Separate the ScreenSaver base class from the ScreenSaverController.
-    
-    This is a preliminary step to allow multiple screen saver control
-    methods to be utilized at the same time.
-    
-    (cherry picked from commit b1c3c35a99fbd3498a01dc06888801b553604927)
-    
-    Backport to fixes/0.27. Refs #12511
-
-commit 1b02deb1b9fd89ed27d2f98bb00137ff48d60bf7
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Wed Apr 29 22:28:00 2015 +0100
-
-    Fix lirc being ignored after dbus screen saver changes.
-    
-    If the Screensaver is Asleep() we ignore all keypresses
-    generated via the remote. This is clearly so that a button
-    pressed on the remote while the screen is asleep only wakes
-    up the screen, rather than triggering an action.
-    
-    This swaps the logic around in the dbus screensaver so that
-    it satisfies the Asleep() check.
-    
-    We may need to revist this in the future if we find that
-    when using the dbus screensaver we are not ignoring the
-    remote keypress which is used to bring us out of screensave.
-    
-    (cherry picked from commit 70ae25deab026238250cbe0ca108fb6ceb41e188)
-    
-    Backport to fixes/0.27. Refs #12511
-
-commit 42939f201a653b8e66876ba88b2bcbc4b57511a2
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Tue Apr 21 09:04:10 2015 +0100
-
-    Refs #12414. Removes some old commented out code
-    
-    (cherry picked from commit 7c18c182e693302915bfcdd483f95192c95c04f1)
-    
-    Backport to fixes/0.27. Refs #12511
-
-commit 31bd913580153c7b7ab4ce32850d8bc0c4298634
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Tue Apr 21 00:11:12 2015 +0100
-
-    lost a void along the way
-    
-    (cherry picked from commit b316010a65a70561852f34ae2891825c8189d76b)
-    
-    Backport to fixes/0.27. Refs #12511
-
-commit 7c7c4e5dd0ea7795414e44da5170662d283c81a5
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Mon Apr 20 23:41:14 2015 +0100
-
-    Attempt to use 4 different known screensaver dbus services
-    
-    (cherry picked from commit eb68676d8ea4dae3cc2d823d2ba10183b00a4680)
-    
-    Backport to fixes/0.27. Refs #12511
-
-commit ac595a7e69cb8cb13d9d43cab0cb2fef36ec8dbf
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Thu Mar 19 21:07:47 2015 +0000
-
-    Initial version of dbus based screensaver
-    
-    (cherry picked from commit 35564d70e71ee0fe3ccea7dfa53a1ffa21117057)
-    
-    Backport to fixes/0.27. Refs #12511
-
-commit fbd5ef3122abff438d4d706b4ccc046213f47f22
+commit 1a93f3dfc464bae9f6e07696c38d327839c245ef
 Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Tue Sep 15 12:00:00 2015 +0200
+Date:   Fri Feb 5 14:07:27 2016 +0100
 
-    handle RTP packets with header extensions and/or less then 7 TS packets
+    special case for Law & Order in UK Fixups
     
-    1328 is a magic number of 12 (minimum RTP header size) plus
-    7 times 188 (length of a plain TS packet)
+    based on a patch by lomion
     
-    Fix handling of padding length calculation while here.
-    from RFC 1889, page 11:
-        The last octet of the padding contains a count of how many padding
-        octets should be ignored.
+    Fixes #12633
     
-    Refs #11852
+    (cherry picked from commit df43327e55367d8d50413a4ac8a3b3e66ef2a493)
     
-    (cherry picked from commit 90b98524e04e5a37112e038bd9c5da6958fbf4f1)
-
-commit ec7116540f7bca2007f3d74cbd30321d5123993d
-Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Sat Sep 19 23:07:15 2015 +0200
-
-    Make the comparison of magic card type strings case insensitive
-    
-    Fixes #12481
-    
-    (cherry picked from commit 7126654f1ae8cdec1708cb20088362d6c9c87b27)
-
-commit e9b577d3e9865fd51ffb385c3317448ac3771124
-Author: Michael Niedermayer <michaelni@gmx.at>
-Date:   Wed Sep 9 18:10:51 2015 +0100
-
-    avcodec/aacdec: Fix storing state before PCE decode
-    
-    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
-    (cherry picked from commit fdbe56014caac49e617736b18bf0ffc27bad7386)
-
-commit 32fd3968acea905d71d9769996487eff280233ea
-Author: David Engel <dengel@mythtv.org>
-Date:   Fri Sep 4 09:58:37 2015 -0500
-
-    Only use visible channels to mark first/last showings.
-    
-    If a first or last showing is only on an invisible channel, it will
-    cause a recording rule using that feature to miss a showing on another
-    visible channel.
-    
-    Cherry picked from commit 97aface5.
-
-commit e2a11c915058c6876a25d8188f02bc1d99fdad02
-Author: Hika van den Hoven <hikavdh@gmail.com>
-Date:   Sun Aug 2 12:32:37 2015 +0200
-
-    Internet Content: Only use the YouTube region preference if it is nonempty
-    
-    Fixes #12475
-    
-    Signed-off-by: Jonatan Lindblad <jlindblad@mythtv.org>
-    (cherry picked from commit a8dcf35fe25dfd9f0501b8f0bd4d08e770f415e0)
-
-commit 9498257571e8158926b60a0eefc74568c4436823
-Author: Mario Limonciello <superm1@ubuntu.com>
-Date:   Wed Oct 9 07:21:38 2013 -0500
-
-    Internet Content: Replace precompiled vimeo_data.pyc with the source vimeo_data.py.
-    
-    vimeo_data.pyc was byte-compiled for python 2.6 and didn't work with any other
-    python versions.
-    
-    vimeo_data.py holds the API key for connecting to vimeo.  It it obfuscated,
-    however other projects do keep their key in the open.
-    
-    discussion:
-    http://irc.mythtv.org/ircLog/channel/4/2013-10-08:21:50:00/2013-10-08:22:09:00
-    
-    Fixes #11907
-    
-    Signed-off-by: Jonatan Lindblad <jlindblad@mythtv.org>
-    (cherry picked from commit 6fb78ae1c77c7ad29a68fcf5c27b771eb92f8739)
-
-commit 2142e0813ca8af41f848317d2a275d1fcd2a4fcf
-Author: Jonatan Lindblad <jlindblad@mythtv.org>
-Date:   Sun Jun 21 23:45:52 2015 +0200
-
-    Internet Content: Tidy up some formatting in the YouTube grabber
-    
-    (cherry picked from commit 8e8aabb5d3f0e051e6b6812726f62aa1115c9206)
-
-commit 26bb9cb71fb134ffb96d9330d837e7abc355328e
-Author: Jonatan Lindblad <jlindblad@mythtv.org>
-Date:   Sat Jun 20 14:27:27 2015 +0200
-
-    Internet Content: Adapt the YouTube grabber to the v3 API
-    
-    It is possible to set two optional parameters in ~/.mythtv/MythNetvision/userGrabberPrefs/youtube.xml:
-    * API key
-    * Region code used for retrieving the categories in the tree view
-    
-    Some changes were also required in libmyth and MythNetvision due to the way
-    paging is handled.
-    
-    This bumps the ABI version.
-    
-    (cherry picked from commit 9527d3d0c9b71bb088b3869319a11f5c1ea9bb57)
-
-commit 9ac80fbb52a5c8022d5cb4374cf6b455785a3990
-Author: Jonatan Lindblad <jlindblad@mythtv.org>
-Date:   Sun Apr 19 23:41:00 2015 +0200
-
-    Video output: Fix OpenGL 1 output after b9971146
-    
-    (cherry picked from commit 2b01ed3894be8374b6c143449fa563fbd945da5a)
-    
-    Refs #12421
-
-commit cd9762c6acaa1fa26f4c5e29f2bc83d4e7e2353e
-Author: Jonatan Lindblad <jlindblad@mythtv.org>
-Date:   Mon Mar 23 23:46:13 2015 +0100
-
-    Video output: Add default fragment shader for OpenGL 2
-    
-    When there were no color conversions with the YUV->RGB shader, there was no
-    other fragment shader active and because of that the video was black.
-    
-    (cherry picked from commit b997114683759562dbaf6b80a651070d099195ac)
-    
-    Refs #12421
-
-commit fbe2c3c1215a4fa0e9aa4df815e86d7d7a42ef4b
-Merge: fd0f283 7962008
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Mon May 4 21:52:03 2015 +0100
-
-    Merge remote-tracking branch 'origin/fixes/0.27' into devel/027candidates
-
-commit fd0f2831f936b55512d9ff68f70aa3032f20d451
-Merge: c4bbf71 628183a
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Fri Apr 10 11:36:41 2015 +0100
-
-    Merge branch 'fixes/0.27' into devel/027candidates
-    
-    Pull in various fixes that have been pushed to 0.27,
-    but aren't in devel/027candidates
-
-commit c4bbf713ac4c4b51fd9125d1c57a4aa0e70b0c44
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Wed Feb 11 16:58:49 2015 +0000
-
-    Enable pic by default on linux systems.
-    Should fix building on 32bit based systems with Qt5
-    
-    (cherry picked from commit 0e5961e41dd6867772b74c051a96dc219181c6a5)
-
-commit 920097d8a8ad8a7fdcfc8357ee0a9744a29976e4
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Fri Jan 2 11:52:58 2015 +0000
-
-    Add missing QObject include. Should resolve Qt5 build error
-    
-    (cherry picked from commit f063b19facd153c2b2844e9643d570b9466b4b6f)
-
-commit f88acbe3648495f211ad22e9dbf90ecc3ae99a69
-Merge: 2fb2643 b97ea66
-Author: Jean-Yves Avenard <jyavenard@mythtv.org>
-Date:   Tue Oct 14 19:28:45 2014 +1100
-
-    Merge branch 'fixes/0.27' into devel/027candidates
-
-commit 2fb26439867aea9bbd2f2b4808f780c6fd477e41
-Author: John Poet <jpoet@mythtv.org>
-Date:   Tue Sep 23 12:58:15 2014 -0600
-
-    MythMainWindow::Norm: With very small values of x, scaling down can cause
-    the 'normalized' value to go to zero.  Rounding the result fixes this, and
-    is probably more desireable anyway.
-    
-    (cherry picked from commit 42bae47be8794eac2dadff3b4fd1a7fa3c547b82)
-
-commit 4c29a5e2d79f180a0684c91f4867793ed561e9ed
-Author: John Poet <jpoet@mythtv.org>
-Date:   Fri Sep 19 16:15:09 2014 -0600
-
-    MythUIScrollBar: Initialize maximum to zero until it is actually known,
-    otherwise the scrollbar is drawn prematurely.
-    
-    (cherry picked from commit 899f3d3185c994715c86cd42bf56e011266e4c9c)
+    Conflicts:
+    	mythtv/libs/libmythtv/test/test_eitfixups/test_eitfixups.cpp
+    	mythtv/libs/libmythtv/test/test_eitfixups/test_eitfixups.h

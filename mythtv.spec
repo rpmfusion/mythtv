@@ -61,7 +61,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v0.27.5-28-g3682a9a
+%define vers_string v0.27.6-6-g332aa34
 %define branch fixes/0.27
 
 # Git revision and branch ID
@@ -78,7 +78,7 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.27.5
+Version:        0.27.6
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
@@ -1420,6 +1420,18 @@ fi
 
 
 %changelog
+* Fri Feb 19 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.6-2
+- Update to latst upstream release.
+
+* Tue Feb  2 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.6-1
+- Update to latest upstream release.
+
+* Thu Jan 14 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.5-4
+- Update to latest upstream release.
+
+* Mon Nov 16 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.5-3
+- Update to latest upstream release.
+
 * Mon Jul  6 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.5-1
 - Update to latest upstream release.
 - Move udisks requirement to the libs package where it's actually used.
