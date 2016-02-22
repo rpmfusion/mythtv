@@ -804,7 +804,7 @@ on demand content.
 # Remove compiled python file
 find -name *.pyc -exec rm -f {} \;
 
-%patch0 -p1 -b .mythtv
+%patch0 -p1
 %patch1 -p1 -b .types_h
 %patch2 -p1 -b .libcec2
 
