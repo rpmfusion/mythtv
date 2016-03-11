@@ -82,7 +82,7 @@ Version:        0.27.6
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1420,6 +1420,9 @@ fi
 
 
 %changelog
+* Fri Mar 11 2016 Nicolas Chauvet <kwizart@gmail.com> - 0.27.6-3
+- Bump for rebuild
+
 * Fri Feb 19 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.6-2
 - Update to latst upstream release.
 
