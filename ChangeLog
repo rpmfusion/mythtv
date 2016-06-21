@@ -1,65 +1,334 @@
-commit 332aa34b1dda5dbfe7db548aa8c12818aa8f78de
-Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Fri Feb 12 23:17:31 2016 +0100
+commit 812ec085711266220817426443fd899faac16363
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Wed Jun 8 20:17:13 2016 +0100
 
-    Add special case for specials / season 0 to Perl bindings
+    Fixes #12764 - compilation of abs function with latest gcc/libstdc++
     
-    Based on patch by Michael <mythtv@blandford.net>
-    Refs #11919
-    Fixes #12649
-    
-    (cherry picked from commit 4517c1284c273f779b6e378dcd2df219645a9f09)
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
+    (cherry picked from commit e4f6e011b6748d1ba3ee5d09c1ffe2a382f2fe8b)
 
-commit a8a37608e02f0434727166439552a3f058078238
-Author: Walter Cheuk <wwycheuk@gmail.com>
-Date:   Mon Feb 8 21:39:33 2016 -0500
+commit 22d3a1c3d75461393a9eb867b642dc4bdffb920a
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Fri Jun 3 13:51:44 2016 +0100
 
-    Updated Chinese (HK) locale file from Walter Cheuk
+    Revert "Refs #12784. Properly url encode channel icon search requests, part 2"
     
-    Thank you Walter!
+    This reverts commit 23eba051c66de40375528718f8eb74ff72f625ca.
     
-    Close #12645
-    
-    Signed-off-by: Nicolas Riendeau <nriendeau@mythtv.org>
+    This didn't actually do what it was meant to do.
 
-commit 5071dae6a5157c862ecd007950d1955c7fa790cc
+commit 23eba051c66de40375528718f8eb74ff72f625ca
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Thu Jun 2 08:52:23 2016 +0100
+
+    Refs #12784. Properly url encode channel icon search requests, part 2
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
+
+commit 28e95d81fc8a923e54b690ea93e0eea548ac5b51
 Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Mon Feb 8 23:17:51 2016 +0000
+Date:   Wed May 25 23:24:58 2016 +0100
 
-    Correctly handle title 'The X-Files'
+    Refs #12784. Properly url encode channel icon search requests
     
-    (cherry picked from commit 17dcf2c2379692ce74c62a7f2a8028cd833aedcd)
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
 
-commit 0216edd1238d351926f2a5fb83920c60b7d2eca1
-Author: Stuart Auchterlonie <stuarta@squashedfrog.net>
-Date:   Fri Feb 5 15:01:30 2016 +0000
+commit 36280c53140007666b45219faec4e807d83e5265
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Thu May 26 14:35:54 2016 -0400
 
-    Fixes #12639 Fix check for python3
+    Prevent "VBox: Found possible VBox at Ceton InfiniTV Ethernet" and similar messages by changing them from Info to Debug level.
     
-    (cherry picked from commit daef5cd6d0e1c0af7062170cc3f9f51fb053fcfc)
+    (cherry picked from commit 90249b42ac2695a162024cfe962982d7017e21a0)
 
-commit f4eddfa3000649ede1398c61d00cd4a4644a759b
+commit 104b104fa5db7604d5e525c04d9a65d650dc6e33
+Author: Peter Bennett <pgbennett@comcast.net>
+Date:   Sun May 8 18:55:09 2016 -0400
+
+    configure - fix so that build for raspberry pi does not need a bunch of overrides to get openmax enabled
+    
+    Fixes #12762
+    
+    (cherry picked from commit 92b1f3981df7b65f3f05207e180216eccc20dfec)
+
+commit a40a63be116126034fc245f9713d1e84035f4f2d
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Thu May 26 13:52:29 2016 -0400
+
+    Fix CEC bugs and add raspberry pi support for CEC
+    
+    Fixes #12746
+    
+    (cherry picked from commit c5e27122bd5cd1b1c673e38cc78af0e9d8e63521)
+
+commit 282f0e08a65bbd39a381317b477c3ee033085f05
+Author: Peter Bennett <pgbennett@comcast.net>
+Date:   Thu Mar 24 19:45:13 2016 -0400
+
+    Change OpenMAX Normal profile to allow 4 CPUs for decoding, to allow for fallback to ffmpeg.
+    
+    Fixes #12697
+    
+    (cherry picked from commit 77359a03b9109b32e5b684e6a8e95e740f97c7c5)
+
+commit 2008b9756a17e80008e28606c4dde253e10754f5
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed May 25 12:59:35 2016 -0400
+
+    Fix intermittent pixelation caused by timeout waiting for input buffers
+    
+    Fixes #12730
+    
+    (cherry picked from commit 1691a428f43b8a22e78873518e1271cba4d7bb9d)
+
+commit f58b100dedc4335cca399e8ae78e3129211c206c
 Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Fri Feb 5 14:23:36 2016 +0100
+Date:   Sun May 15 11:52:41 2016 +0200
 
-    Add "Law & Order: UK" to the exceptions
+    fix automatic detection of systemd on Arch
     
-    Refs #12633
+    Patch by Gary Buhrmaster
     
-    (cherry picked from commit 4651f99e8edb177359aadec6d6b74733276697ce)
+    Fixes #12704
+    
+    (cherry picked from commit d120ae8f995b2a0852f1c2261308572560a2040a)
 
-commit 1a93f3dfc464bae9f6e07696c38d327839c245ef
+commit 194e0bc1ee2ce019cca11de981420a49ee8e1cd0
 Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Fri Feb 5 14:07:27 2016 +0100
+Date:   Sun May 15 11:49:44 2016 +0200
 
-    special case for Law & Order in UK Fixups
+    use 4 space indenting
     
-    based on a patch by lomion
+    (cherry picked from commit 34013d351c9b4da451e54cafc3f0fcbd1a7368a2)
+
+commit 2fbd9638aa878bc3c0f3bcf80330ff5049fb8a21
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Fri May 13 21:48:33 2016 +0200
+
+    fix libcec include path detection issue
     
-    Fixes #12633
+    Fixes #12769
     
-    (cherry picked from commit df43327e55367d8d50413a4ac8a3b3e66ef2a493)
+    (cherry picked from commit c11433676b6cf3dd0dee55b87d5b0d3eb26cbdd3)
+
+commit 370dd71fa4a6affb09f989c6000c9dea7097bb15
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Wed May 11 15:51:12 2016 +0200
+
+    fix parsing of version numbers in theme updater
     
-    Conflicts:
-    	mythtv/libs/libmythtv/test/test_eitfixups/test_eitfixups.cpp
-    	mythtv/libs/libmythtv/test/test_eitfixups/test_eitfixups.h
+    the separator between the parts of the version number is a literal
+    period (\\.), not any character (.)
+    
+    Refs #12763
+    
+    (cherry picked from commit f4a8cf1673dcbaa649e3879b8716d3942474f2dd)
+
+commit 6386f31c93103dc9e5093cc5a7aae876bce0a7f2
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun May 8 13:58:31 2016 +0100
+
+    VBOX: don't ignore channels using T2/S2 if the tuner can handle them
+    
+    Refs #12759.
+    
+    (cherry picked from commit 0bfcd20950f093fbcd2647021d9c53aa421a5d7f)
+
+commit c9d119a657a07064990ab18176368aa5bf9b0a43
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun May 8 13:47:53 2016 +0100
+
+    VBOX: bump the minimum firmware version to 2.50
+    
+    Refs #12759.
+    
+    (cherry picked from commit bb5daa92807096c4f6fef8b6e55a296c7e9b8bc7)
+
+commit 0b08cb422fc0a85faaa846689e5ca3cd68e88696
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Thu May 5 09:52:25 2016 +0100
+
+    Move failure to connect to dbus screensaver services down to debug
+    
+    (cherry picked from commit ad7be506fd4726f88a93b73ed79371767126b536)
+
+commit db9eea65dcd82cec9235a61c3a67b803961c0f86
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Tue May 3 13:20:08 2016 +0100
+
+    Gallery: Reset theme widgets correctly
+    
+    Some theme widgets aren't being reset correctly leading to theme issues (Steppes & Blue Abstract)
+    
+    (cherry picked from commit ed7473fd79d4abd333415daea103fa809aefe5dc)
+
+commit fa0789d56d3f3fa9955a268f849ad989a0166423
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Sun May 1 10:10:59 2016 -0500
+
+    Coverity: Fixes CID 1358509, solution from Roger Siddons
+    
+    (cherry picked from commit 11a7be62c7f7afe73e5c45a07dedbfb0334ee9d1)
+
+commit 4f6f75df4d4290cb82aae9ae01c3426db4d4f74b
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Mon Apr 11 12:27:42 2016 +0100
+
+    Revert 20b621e5733 MediaMon: UI to select preferred media handler
+    
+    The pop-ups don't cater for multiple media, nor respect the autoplay settings
+    
+    Fixes #12689
+    
+    (cherry picked from commit 24c5575980e5342e50d1354b7c11e6272463e93f)
+
+commit e4b5e87426afde209ac46cbca27f4113fdf140ce
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Wed Feb 3 13:45:27 2016 +0000
+
+    Gallery: Add slideshow jump forward/back
+    
+    Up/Down jumps forward/back 10 slides in slideshow view
+    
+    (cherry picked from commit c41c6e715e481111fa05ff771bd4f5d8bfe1514d)
+
+commit cedb1be5548e87df80c2642f81b6ba17f8dd5d16
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Wed Feb 3 11:13:12 2016 +0000
+
+    Gallery: Add status delay
+    
+    When images are slow to load the "Loading" status can be irritating.
+    This patch adds a user setting to delay the "Loading" & "Playing" status.
+    
+    (cherry picked from commit 75a698e0bf4027c1d2cb9816ee85a4d3e7da4e9b)
+
+commit 9508acdf01ac86a4dadbc21ae074152fbc325807
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Wed Feb 3 13:58:11 2016 +0000
+
+    Gallery: Add keybinding to set covers
+    
+    Keybinding Images:"COVER" (default 'C') will set the parent dir cover of the selected image.
+    Or clear the the cover when the parent dir is selected.
+    
+    (cherry picked from commit 4e70774d4ad5abf158ce3060b0adc26a9008aabf)
+
+commit 42a76f551f69b942ba10a8c83a13ab62ae35e7d1
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Wed Feb 3 11:24:55 2016 +0000
+
+    Gallery: Change crumb separator
+    
+    Feedback suggests "Dir1 > Dir2 > Image" is preferable to "Dir1 : Dir2 : Image"
+    
+    (cherry picked from commit 336193d0f824bfd692958741d69204ebe96d6edc)
+
+commit 6693f33b23acbc60c52c35e37887ac044e1565de
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Wed Feb 3 11:24:17 2016 +0000
+
+    Gallery: Add European caption date formats
+    
+    (cherry picked from commit e7b50cdb55b552e925c08fe4aca37698f6d55cfa)
+
+commit 2ead1a6c9ebc7c39d868c6baeb5f209cd937c087
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Fri Apr 29 12:56:05 2016 +0100
+
+    Python: Restore chanId/startTime API for recordings
+    
+    Exisiting python scripts depend on the Recorded class taking the chanid/starttime instead of the recordedid as the primary key.
+    This patch updates the Recorded class to continue using the chanid/starttime pair.
+    A future patch can add recordedid as a second option so as not to break backwards compatibility.
+    
+    Fixes: #12260
+    (cherry picked from commit ce1935b0ebc0918391f05893be82cd275cbd3969)
+
+commit 57c1afbf7c498ac3b09d782ce3f3b76382b64fd7
+Author: Mitch Capper <mitch.capper@gmail.com>
+Date:   Sun Apr 10 20:30:25 2016 -0700
+
+    Added dvr services call for setting and getting bookmark position
+    
+    changed version
+    
+    (cherry picked from commit c4831026eb157c3ede860a12e7c86fd0bd14b9ee)
+
+commit 1bec90bcf03e9dfd60514c95e1e3872d4ee643bf
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Wed Apr 27 22:46:46 2016 +0200
+
+    MythNews: Fix the menu handling when no sites have been added
+    
+    (cherry picked from commit 14b636ee60ad14f574dda2c971ce920d97942289)
+
+commit 6956ff00feb1e8a1ce137ccbbf6d32354714018b
+Author: Stuart Morgan <smorgan@mythtv.org>
+Date:   Sun Apr 24 09:08:22 2016 +0100
+
+    Fix backend status page
+    
+    (cherry picked from commit f11f32c642ca35610565c25322862b7373ff4c06)
+
+commit f3632b4c16f2e25184c3c6871807e5ddfb83e5ee
+Merge: c9dd335 eeac182
+Author: Nicolas Riendeau <nriendeau@mythtv.org>
+Date:   Sun Apr 24 20:35:17 2016 -0400
+
+    Merge branch 'fixes/0.28' of code.mythtv.org:mythtv into fixes/0.28
+
+commit c9dd335513b3369381bdcab40f5a1ea50e56883e
+Author: Petr Srsen <srsen75@seznam.cz>
+Date:   Sun Apr 24 20:33:33 2016 -0400
+
+    Updated Czech MythFrontend translation
+    from Petr Srsen
+    
+    Thank you Petr!
+    
+    Closes #12726
+
+commit eeac18224b60a52cc9045e92d3f50d140b337955
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Fri Apr 22 15:09:53 2016 +0100
+
+    Update some urls for email list signup
+    
+    (cherry picked from commit 5fb019c69e40d368b94ec104af584038702fee71)
+
+commit b4e03c8d87c18f499f573ec7af5ee5b59ef653f6
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Apr 17 11:47:59 2016 +0100
+
+    mythzmserver: prevent a segfault if we fail to find a monitors shared memory
+    
+    (cherry picked from commit d78749316250400b376640d8a3536558ab7b0212)
+
+commit 91de44c42d02068682074e76eb569391e8b6d87f
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Sat Apr 16 23:34:29 2016 +0200
+
+    Rewrite of the EIT Fixup for Sky Germany
+    
+    Patch by lomion
+    
+    Fixes #12702
+    
+    (cherry picked from commit 6569cff98d77e315414780ed71f8ad5d11fc6e00)
+
+commit 15cf421af9d86bffc3b34aa1d9e45adaa5065a29
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Wed Apr 13 00:25:53 2016 +0200
+
+    fix typo in german translation
+    
+    (cherry picked from commit 00af0f533d1d076c526863c1b0d9731179e11c9b)
+
+commit 4260de4eef72583c261caa66352187e1bdfa6cf4
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Tue Apr 12 15:59:44 2016 +0100
+
+    EIT: Refs #12548. Add several more multiplexes
+    
+    (cherry picked from commit 6865940761d0b6058720ce1d02b5fa684a6c159e)

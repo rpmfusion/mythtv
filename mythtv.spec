@@ -61,8 +61,8 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v0.27.6-6-g332aa34
-%define branch fixes/0.27
+%define vers_string v28.0-35-g812ec08
+%define branch fixes/0.28
 
 # Git revision and branch ID
 %define _gitrev g5b917e8
@@ -78,7 +78,7 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.27.6
+Version:        0.28
 %if "%{branch}" == "master"
 Release:        0.1.git.%{_gitrev}%{?dist}
 %else
@@ -100,14 +100,12 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # Set "--with debug" to enable MythTV debug compile mode
 %define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
 
-
 # The following options are enabled by default.  Use --without to disable them
 %define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
 %define with_vaapi         %{?_without_vaapi:      0} %{?!_without_vaapi:      1}
-
 %define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
 %define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
-
+%define with_sdnotify      %{?_without_sdnotify:   0} %{?!_without_sdnotify:   1}
 %define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
 %define with_php           %{?_without_php:        0} %{!?_without_php:        1}
 %define with_python        %{?_without_python:     0} %{!?_without_python:     1}
@@ -130,16 +128,11 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 ################################################################################
 
-# https://github.com/MythTV/mythtv/tarball/v0.26
 Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 
 # From the mythtv git repository with the appropriate branch checked out:
-# git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
-Patch0:    mythtv-0.27-fixes.patch
-Patch1:    mythtv-0.26.0-types_h.patch
-# http://code.mythtv.org/trac/ticket/11338
-# Offset required for 0.27, patch was for 0.26.1
-Patch2:    mythtv-0.27-libcec2.patch
+# Example: git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
+Patch0:    mythtv-0.28-fixes.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -173,20 +166,17 @@ Requires(preun): initscripts
 Requires(postun): initscripts
 %endif
 
-BuildRequires:  desktop-file-utils
-BuildRequires:  freetype-devel >= 2
-BuildRequires:  libpng-devel
 BuildRequires:  gcc-c++
+BuildRequires:  desktop-file-utils
+BuildRequires:  qt5-qtbase-devel >= 5.2
+BuildRequires:  qt5-qtscript-devel >= 5.2
+BuildRequires:  qt5-qtwebkit-devel >= 5.2
+BuildRequires:  freetype-devel >= 2
 BuildRequires:  mariadb-devel >= 5
-BuildRequires:  qt-webkit-devel
-BuildRequires:  qt-devel >= 4.6
-BuildRequires:  phonon-devel phonon-backend-gstreamer
-BuildRequires:  libuuid-devel
 %if 0%{?fedora}
-BuildRequires:  libcec-devel
+BuildRequires:  libcec-devel >= 1.7
 %endif
 BuildRequires:  libvpx-devel
-
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
 BuildRequires:  nasm, yasm-devel
@@ -196,6 +186,8 @@ BuildRequires:  libXmu-devel
 BuildRequires:  libXv-devel
 BuildRequires:  libXvMC-devel
 BuildRequires:  libXxf86vm-devel
+BuildRequires:  libXinerama-devel
+BuildRequires:  libXrandr-devel
 BuildRequires:  mesa-libGLU-devel
 %ifarch %arm
 BuildRequires:  mesa-libGLES-devel
@@ -215,18 +207,15 @@ BuildRequires:  faac-devel
 %endif
 BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
-BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
-BuildRequires:  libdca-devel
 BuildRequires:  libcdio-devel libcdio-paranoia-devel
-# nb: libdvdcss will be dynamically loaded if installed
-#BuildRequires:  libfame-devel >= 0.9.0
 BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
-BuildRequires:  taglib-devel >= 1.6
+BuildRequires:  taglib-devel >= 1.7
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
+BuildRequires:  exiv2-devel
 
 # Audio framework support
 BuildRequires:  sox-devel
@@ -245,7 +234,7 @@ BuildRequires:  libxml2-devel
 BuildRequires:  libass-devel
 
 # Need dvb headers to build in dvb support
-BuildRequires: kernel-headers
+BuildRequires:  kernel-headers
 
 # FireWire cable box support
 BuildRequires:  libavc1394-devel
@@ -253,15 +242,19 @@ BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
 
 %if %{with_vdpau}
-BuildRequires: libvdpau-devel
+BuildRequires:  libvdpau-devel
 %endif
 
 %if %{with_vaapi}
-BuildRequires: libva-devel
+BuildRequires:  libva-devel
 %endif
 
 %if %{with_crystalhd}
-BuildRequires: libcrystalhd-devel
+BuildRequires:  libcrystalhd-devel
+%endif
+
+%if %{with_sdnotify}
+BuildRequires:  systemd-devel
 %endif
 
 # API Build Requirements
@@ -287,8 +280,8 @@ BuildRequires:  perl(IO::Socket::INET6)
 %endif
 
 %if %{with_python}
-BuildRequires:  python-devel
-BuildRequires:  MySQL-python
+BuildRequires:  python2-devel
+BuildRequires:  python2-mysql
 BuildRequires:  python-urlgrabber
 %endif
 
@@ -403,8 +396,7 @@ Summary:   Library providing mythtv support
 
 Requires:  freetype >= 2
 Requires:  lame
-Requires:  qt4 >= 4.6
-Requires:  qt4-MySQL
+Requires:  qt5-qtbase-mysql
 %if 0%{?rhel} >= 7 || 0%{?fedora} >= 22
 Requires:  udisks2
 %else
@@ -424,12 +416,10 @@ Summary:   Development files for mythtv
 Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
-%if 0%{?fedora} >= 19
 Requires:  mariadb-devel >= 5
-%else
-Requires:  mysql-devel >= 5
-%endif
-Requires:  qt4-devel >= 4.6
+Requires:  qt5-qtbase-devel >= 5.2
+Requires:  qt5-qtscript-devel >= 5.2
+Requires:  qt5-qtwebkit-devel >= 5.2
 Requires:  lm_sensors-devel
 Requires:  lirc-devel
 
@@ -461,7 +451,6 @@ Requires:  libtheora-devel
 Requires:  libvorbis-devel >= 1.0
 Requires:  mjpegtools-devel >= 1.6.1
 Requires:  taglib-devel >= 1.5
-#Requires:  transcode >= 0.6.8
 Requires:  x264-devel
 Requires:  xvidcore-devel >= 0.9.1
 
@@ -670,7 +659,6 @@ Requires:  mjpegtools >= 1.6.2
 Requires:  mkisofs >= 2.01
 Requires:  python >= 2.3.5
 Requires:  python-imaging
-#Requires:  transcode >= 1.0.2
 Requires:  pmount
 
 %description -n mytharchive
@@ -795,24 +783,15 @@ on demand content.
 %prep
 %setup -q -n %{name}-%{version}
 
-# Replace static lib paths with %%{_lib} so we build properly on x86_64
-# systems, where the libs are actually in lib64.
-    if [ "%{_lib}" != "lib" ]; then
-         find \( -name 'configure' -o -name '*pro' -o -name 'Makefile' \) -exec sed -r -i -e 's,/lib\b,/%{_lib},g' {} \+
-    fi
-
 # Remove compiled python file
-find -name *.pyc -exec rm -f {} \;
+#find -name *.pyc -exec rm -f {} \;
 
 %patch0 -p1
-%patch1 -p1 -b .types_h
-%patch2 -p1 -b .libcec2
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
 
 pushd mythtv
-
 
 # Set the mythtv --version string
 cat > EXPORTED_VERSION <<EOF
@@ -839,11 +818,6 @@ EOF
 # Make sure we use -O2 and not -O3
     sed -i '/speed_cflags=/d' configure
 
-# Prevent all of those nasty installs to ../../../../../bin/whatever
-#    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
-#    echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
-#    chmod 644 settings.pro
-
 popd
 
 
@@ -859,29 +833,28 @@ pushd mythtv
 # {_exec_prefix} etc... MythTV no longer accepts the parameters that the
 # configure macro passes, so we do this manually.
 ./configure \
+    --qmake=%{_bindir}/qmake-qt5                \
     --prefix=%{_prefix}                         \
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
-    --x11-path=%{_includedir}                   \
-    --disable-mythlogserver                     \
+%if ! %{with_vdpau}
+    --disable-vdpau                             \
+%endif
+%if ! %{with_crystalhd}
+    --disable-crystalhd                         \
+%endif
+%if ! %{with_vaapi}
+    --disable-vaapi                             \
+%endif
     --enable-libmp3lame                         \
+%if %{with_faac}
+    --enable-libfaac                            \
+%endif
     --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
     --enable-libxvid                            \
-%if %{with_faac}
-    --enable-libfaac --enable-nonfree           \
-%endif
     --enable-libvpx                             \
-%if %{with_vdpau}
-    --enable-vdpau                              \
-%endif
-%if %{with_vaapi}
-    --enable-vaapi                              \
-%endif
-%if !%{with_crystalhd}
-    --disable-crystalhd                         \
-%endif
 %if !%{with_perl}
     --without-bindings=perl                     \
 %endif
@@ -935,7 +908,7 @@ pushd mythplugins
     echo "INCLUDEPATH -= \$\${SYSROOT}/\$\${PREFIX}/include" >> settings.pro
     echo "INCLUDEPATH -= %{_includedir}"       >> settings.pro
     echo "INCLUDEPATH += $temp%{_includedir}"  >> settings.pro
-    echo "INCLUDEPATH += %{_includedir}"       >> settings.pro
+    #echo "INCLUDEPATH += %{_includedir}"       >> settings.pro
     echo "LIBS *= -L$temp%{_libdir}"           >> settings.pro
     echo "QMAKE_LIBDIR += $temp%{_libdir}"     >> targetdep.pro
 
@@ -1212,6 +1185,7 @@ fi
 %files backend
 %{_bindir}/mythbackend
 %{_bindir}/mythfilldatabase
+%{_bindir}/mythfilerecorder
 %{_bindir}/mythjobqueue
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
@@ -1366,7 +1340,7 @@ fi
 %doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
 %attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythmusic
-%{_datadir}/mythtv/mythmusic/
+#%{_datadir}/mythtv/mythmusic/
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
@@ -1420,8 +1394,17 @@ fi
 
 
 %changelog
-* Fri Mar 11 2016 Nicolas Chauvet <kwizart@gmail.com> - 0.27.6-3
-- Bump for rebuild
+* Mon Jun 13 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-3
+- Update to lastest fixes/0.28 from git.
+
+* Mon May 23 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-2
+- Update to lastest fixes/0.28 from git.
+
+* Tue Apr 12 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-1
+- Update to latst upstream release.
+
+* Mon Apr  4 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.6-3
+- Update to latst upstream release.
 
 * Fri Feb 19 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.6-2
 - Update to latst upstream release.

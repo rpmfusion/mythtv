@@ -26,8 +26,7 @@ Environment=MYTHCONFDIR=/etc/mythtv
 # systemd changes execution from the calling user (possibly root) to this user
 # if you have permissions problems or obscure errors try logging in as mythtv
 User=mythtv
-ExecStart=/bin/optimizie_mythdb
-
+ExecStart=/bin/optimize_mythdb
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=basic.target
