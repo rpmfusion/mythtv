@@ -80,9 +80,9 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        0.28
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.2.git.%{_gitrev}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1394,6 +1394,10 @@ fi
 
 
 %changelog
+* Mon Aug 01 2016 Sérgio Basto <sergio@serjux.com> - 0.28-4
+-
+  https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
 * Mon Jun 13 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-3
 - Update to lastest fixes/0.28 from git.
 
