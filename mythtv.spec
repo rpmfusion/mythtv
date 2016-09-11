@@ -61,7 +61,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v28.0-35-g812ec08
+%define vers_string v0.28-52-ge6a60f7
 %define branch fixes/0.28
 
 # Git revision and branch ID
@@ -132,6 +132,8 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 
 # From the mythtv git repository with the appropriate branch checked out:
 # Example: git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
+# Also update ChangeLog with git log v0.28..HEAD > ChangeLog
+# and update define vers_string to v0.28-52-ge6a60f7 with git describe
 Patch0:    mythtv-0.28-fixes.patch
 
 Source10:  PACKAGE-LICENSING

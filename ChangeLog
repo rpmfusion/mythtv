@@ -1,3 +1,227 @@
+commit e6a60f7d11ce05b7c7c56e0f889d11f213d8c495
+Author: John Poet <jpoet@mythtv.org>
+Date:   Fri Sep 9 18:48:27 2016 -0600
+
+    Do ASI part of [792e89ed5]
+    
+    (cherry picked from commit 2dfb3caaad9706a642914dd05439561855be3450)
+
+commit 880d3a3a0e72c26d4a241f1c51f91498747430e3
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Fri Sep 2 09:51:35 2016 -0400
+
+    Fix paint problem with QT dynamic button lists. This affected Steppes theme, maybe others.
+    
+    Fixes #12864
+    
+    (cherry picked from commit 88910460184e73fe203a90b6c45e3e5b26e56153)
+
+commit d9182ff1b3efdcad978eee6cc42e28e09ab3e0cd
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Mon Aug 22 23:26:00 2016 +0100
+
+    Fix crash when frontend can't find the database
+    
+    e845eae introduced a duplicate class name that
+    corrupts Qt moc processing of signals, resulting in a segfault when the frontend
+    tries to invoke the Database Settings dialog.
+    
+    All credit to StuartA for his dogged sleuthing.
+    
+    Fixes #12735
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
+
+commit 0fe2fc1bc46f294a69e5ec9f0e618bd1cca8c77c
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Aug 21 11:32:07 2016 +0100
+
+    VBox: Relax the firmware version check to allow for VJ.x.xx versions
+    
+    It looks like the new 3rd generation boxes are using a new VJ kernel and
+    firmware. Fixes #12855.
+    
+    (cherry picked from commit 74230a2e0fe16164ff767d343e05ee734a9b45ee)
+
+commit da908d5316415651de71fd1c007ba0098c41e188
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Aug 15 13:03:45 2016 -0400
+
+    Fix "always display subtitles" not activating subtitles in certain cases.
+    
+    Fixes #12456
+    
+    (cherry picked from commit 346011cfcd21e5cdb88bdcd775a344c804160520)
+
+commit 29d70677afcd13a3e5041c4d4f373b203bd672f8
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Aug 7 14:10:21 2016 +0100
+
+    mythwikiscripts: fix after the wiki switched to using https
+    
+    * Change the URL
+    * Switch to using urlopen from urllib since lxml does not support https
+    
+    (cherry picked from commit e829c964d9fd0539a1cc01999742361a39e687b3)
+
+commit e5ce2730b1a62c2e36906c7cd4ac2fa8043eedcf
+Author: Jean-Yves Avenard <jyavenard@mythtv.org>
+Date:   Mon Oct 13 13:12:24 2014 +1100
+
+    Revert "Player: Improve low bit rate / high latency stream playback"
+    
+    This reverts commit f307a3d5e60b0054e1833127d417c6acfada3213.
+    
+    Cause stutter until channel changes
+    
+    (cherry picked from commit b97ea66199bce8394637d33f33d99b25906caa23)
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    
+    Fixes #12717
+
+commit 6cda2125d47c7f699ac80ef039bfe342cead11eb
+Author: David Engel <dengel@mythtv.org>
+Date:   Wed Jul 13 22:58:46 2016 -0500
+
+    Change AutoExpire::Update() to use a proper queue.
+    
+    Previously, it essentially acted as if it had a one entry queue.
+    Consequently, if multiple recordings started at the same time, all but
+    the first would have to wait causing them to be delayed, sometimes by
+    several seconds.  Now, none of them have to wait.
+    
+    (cherry picked from commit 6e36814a2d0dd17dd26589fb251943c26508c133)
+
+commit 20cdafa9cba9784547778d75d91a8ae74e36e33e
+Author: David Engel <dengel@mythtv.org>
+Date:   Wed Jul 20 09:31:45 2016 -0500
+
+    Fix scheduler affinity calculation for back to back recordings.
+    
+    This is a backport of commit 8b2d79d4 from master.
+
+commit 04650e04a9ac8b549ec14fde2bee325cec5f8d78
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Jul 11 21:12:48 2016 -0500
+
+    Work around a suspected Qt bug affecting some settings.
+    
+    There is a suspected bug in some versions of Qt, notably in version
+    5.6.1 in Debian, where calling QVariant::toString() returns garbage if
+    the MySQL type is TINYINT.  Because MythTV does this for all settings,
+    it is possible for a setting to lose its previous value when a
+    settings dialog is entered.  The work around is to have MySQL cast the
+    value to a string type before it gets to MythTV.  Thanks to Karl Dietz
+    for suggesting this fix.
+    
+    (cherry picked from commit b113943461bb26dd411bfe625082fab44b1390ed)
+
+commit 63477ef1192dfab2a53e2988f3717668892d309a
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sat Jul 9 11:21:40 2016 -0400
+
+    Fix bug where "OpenMax High Quality" profile was not added.
+    
+    (cherry picked from commit 7f9587dafc3376874a59e496581f9764827c9271)
+
+commit 5f200bf4b6a85da0c2a6a659312667de1e5ac4e8
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Jul 5 11:34:19 2016 -0400
+
+    Improve OSD on Raspberry Pi.
+    OpenGL support for OSD on Raspbian.
+    
+    Fixes #12799
+    
+    (cherry picked from commit 4852d9c9374990c98c95422e9daca8d9cee97179)
+
+commit 7a4e9ab1138b9743a4217f7538d789777fdc59d0
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Thu Jun 23 17:54:29 2016 +0200
+
+    Allow the backend to shut down if the frontend is in standby mode.
+    
+    This handles the scenario of a combined BE/FE waking up for a recording but being prevented from shutting down afterwards because the FE started before the BE.
+    (cherry picked from commit b222e7d7b578b9db7a665953ff1bb5ec49282fb0)
+
+commit 35dce940d84eaedf475f1126d541d5fd3f3b490a
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Fri Jun 24 12:47:31 2016 -0500
+
+    HTTP Server: Change HOST_NAME_MAX to 1024 for some buildbots
+    
+    I missed the 2nd place where this was used in my initial commit.
+    
+    (cherry picked from commit 4453e98283b33aa9e9e90c582ee5ddbaddcb3ebb)
+
+commit 778ded0a3ff5c24e02bb764c09651501adb96189
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Fri Jun 24 12:04:21 2016 -0500
+
+    HTTP Server: Provide additional CORS support
+    
+    This commit adds a new AllowedOriginsList setting that
+    stores a comma separated list of Origins. If the setting
+    is missing, the list defaults to:
+    
+        https://chromecast.mythtv.org
+        http://chromecast.mythtvcast.com
+    
+    Access-Control-Allow -Credentials and -Headers were also
+    added to the response to support Chromecast.
+    
+    A TODO item is closed by adding the hostname to
+    the existing list of IP addresses (no change in
+    the ports checked.)
+    
+    Note that previously, if ResponseTypeFile was found, the
+    CORS header wasn't being added. This caused the Chromecast
+    feature to fail.
+    
+    There is no GUI. Clients have the ability to change the value
+    with the Services API. May need to rethink using settings as
+    this is a security risk.
+    
+    For example, it a valid Origin exists in the request, the
+    following will appear in the response:
+    
+        Access-Control-Allow-Origin: https://example.com
+        Access-Control-Allow-Credentials: true
+        Access-Control-Allow-Headers: Content-Type
+    
+    If there is no match, an existing critical log will fire:
+    
+        Cross-origin request received with origin (https://example.net)
+    
+    Missing http://, https:// or a '*' character in list entries will
+    be ignored, and the following will be logged:
+    
+        Illegal AllowedOriginsList entry '*'. Must start with http[s]:// and not be *
+    
+    (cherry picked from commit 5292483764357d86f6dc2b155b262c2c072748da)
+
+commit 59808a8c71e2aa0f7654305caa8a224c8487c5ee
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Jun 21 19:49:29 2016 -0400
+
+    Fixes "Could not open decoder" error playing a recording
+    
+    Fixes #12787
+    
+    (cherry picked from commit 68e133ca61b0e2f61e96b32c9cb62735426c21cb)
+
+commit d5b82a76a494f3122dd7a653b2ef571780afa664
+Author: David Engel <dengel@mythtv.org>
+Date:   Sun Jun 19 13:29:58 2016 -0500
+
+    Tweak the finsl sorting in the scheduler to be slightly more stable.
+    
+    Demote sorting by recording end time to after by scheduling ID (aka
+    callsign).  The common action of adding an override to extend a
+    recording will no longer change the ordering in ViewSceduled.
+    
+    (cherry picked from commit be3f83579e71cbbcfe2e7a9fe70e558fa7b662d1)
+
 commit 812ec085711266220817426443fd899faac16363
 Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Date:   Wed Jun 8 20:17:13 2016 +0100
