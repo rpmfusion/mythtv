@@ -80,9 +80,9 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        0.28
 %if "%{branch}" == "master"
-Release:        0.3.git.%{_gitrev}%{?dist}
+Release:        0.4.git.%{_gitrev}%{?dist}
 %else
-Release:        5%{?dist}
+Release:        6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -95,36 +95,36 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # processor-specific optimizations.  It seems to cause compile problems on many
 # systems (particularly x86_64), so it is classified by the MythTV developers
 # as "use at your own risk."
-%define with_proc_opt      %{?_with_proc_opt:      1} %{!?_with_proc_opt:      0}
+%bcond_with proc_opt
 
 # Set "--with debug" to enable MythTV debug compile mode
-%define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
+%bcond_with debug
 
 # The following options are enabled by default.  Use --without to disable them
-%define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
-%define with_vaapi         %{?_without_vaapi:      0} %{?!_without_vaapi:      1}
-%define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
-%define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
-%define with_sdnotify      %{?_without_sdnotify:   0} %{?!_without_sdnotify:   1}
-%define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
-%define with_php           %{?_without_php:        0} %{!?_without_php:        1}
-%define with_python        %{?_without_python:     0} %{!?_without_python:     1}
-%define with_pulseaudio    %{?_without_pulseaudio: 0} %{!?_without_pulseaudio: 1}
+%bcond_without vdpau
+%bcond_without vaapi
+%bcond_without crystalhd
+%bcond_without systemd
+%bcond_without sdnotify
+%bcond_without perl
+%bcond_without php
+%bcond_without python
+%bcond_without pulseaudio
 
 # FAAC is non-free, so we disable it by default
-%define with_faac          %{?_with_faac:          1} %{?!_with_faac:          0}
+%bcond_with faac
 
 # All plugins get built by default, but you can disable them as you wish
-%define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
-%define with_mytharchive    %{?_without_mytharchive:    0} %{!?_without_mytharchive:     1}
-%define with_mythbrowser    %{?_without_mythbrowser:    0} %{!?_without_mythbrowser:     1}
-%define with_mythgallery    %{?_without_mythgallery:    0} %{!?_without_mythgallery:     1}
-%define with_mythgame       %{?_without_mythgame:       0} %{!?_without_mythgame:        1}
-%define with_mythmusic      %{?_without_mythmusic:      0} %{!?_without_mythmusic:       1}
-%define with_mythnews       %{?_without_mythnews:       0} %{!?_without_mythnews:        1}
-%define with_mythweather    %{?_without_mythweather:    0} %{!?_without_mythweather:     1}
-%define with_mythzoneminder %{?_without_mythzoneminder: 0} %{!?_without_mythzoneminder:  1}
-%define with_mythnetvision  %{?_without_mythnetvision:  0} %{!?_without_mythnetvision:   1}
+%bcond_without plugins
+%bcond_without mytharchive
+%bcond_without mythbrowser
+%bcond_without mythgallery
+%bcond_without mythgame
+%bcond_without mythmusic
+%bcond_without mythnews
+%bcond_without mythweather
+%bcond_without mythzoneminder
+%bcond_without mythnetvision
 
 ################################################################################
 
@@ -152,7 +152,7 @@ Source114: mythdb-optimize.timer
 
 # Global MythTV and Shared Build Requirements
 
-%if %{with_systemd}
+%if %{with systemd}
 # Use systemd
 BuildRequires:  systemd
 Requires(post): systemd
@@ -166,6 +166,7 @@ Requires(preun): initscripts
 Requires(postun): initscripts
 %endif
 
+BuildRequires:  perl-generators
 BuildRequires:  gcc-c++
 BuildRequires:  desktop-file-utils
 BuildRequires:  qt5-qtbase-devel >= 5.2
@@ -202,7 +203,7 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-%if %{with_faac}
+%if %{with faac}
 BuildRequires:  faac-devel
 %endif
 BuildRequires:  fftw-devel >= 3
@@ -221,7 +222,7 @@ BuildRequires:  exiv2-devel
 BuildRequires:  sox-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  jack-audio-connection-kit-devel
-%if %{with_pulseaudio}
+%if %{with pulseaudio}
 BuildRequires:  pulseaudio-libs-devel
 %endif
 BuildRequires:  avahi-compat-libdns_sd-devel
@@ -241,25 +242,25 @@ BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
 
-%if %{with_vdpau}
+%if %{with vdpau}
 BuildRequires:  libvdpau-devel
 %endif
 
-%if %{with_vaapi}
+%if %{with vaapi}
 BuildRequires:  libva-devel
 %endif
 
-%if %{with_crystalhd}
+%if %{with crystalhd}
 BuildRequires:  libcrystalhd-devel
 %endif
 
-%if %{with_sdnotify}
+%if %{with sdnotify}
 BuildRequires:  systemd-devel
 %endif
 
 # API Build Requirements
 
-%if %{with_perl}
+%if %{with perl}
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Config)
@@ -275,11 +276,11 @@ BuildRequires:  perl(DBD::mysql)
 BuildRequires:  perl(IO::Socket::INET6)
 %endif
 
-%if %{with_php}
+%if %{with php}
 # No php specific requirements yet.
 %endif
 
-%if %{with_python}
+%if %{with python}
 BuildRequires:  python2-devel
 BuildRequires:  python2-mysql
 BuildRequires:  python-urlgrabber
@@ -287,23 +288,23 @@ BuildRequires:  python-urlgrabber
 
 # Plugin Build Requirements
 
-%if %{with_plugins}
+%if %{with plugins}
 
-%if %{with_mythgallery}
+%if %{with mythgallery}
 BuildRequires:  libexif-devel >= 0.6.9
 %endif
 
-%if %{with_mythgame}
+%if %{with mythgame}
 BuildRequires:  zlib-devel
 %endif
 
-%if %{with_mythnews}
+%if %{with mythnews}
 %endif
 
 BuildRequires: ncurses-devel
 
 
-%if %{with_mythweather}
+%if %{with mythweather}
 Requires:       mythweather      >= %{version}
 BuildRequires:  perl(XML::Simple)
 Requires:       perl(XML::Simple)
@@ -322,10 +323,10 @@ BuildRequires:  perl(JSON)
 Requires:       perl(JSON)
 %endif
 
-%if %{with_mythzoneminder}
+%if %{with mythzoneminder}
 %endif
 
-%if %{with_mythnetvision}
+%if %{with mythnetvision}
 BuildRequires:  python-pycurl
 BuildRequires:  python-lxml
 BuildRequires:  python-oauth
@@ -435,7 +436,7 @@ Requires:  xorg-x11-proto-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-%if %{with_faac}
+%if %{with faac}
 Requires:  faac-devel
 %endif
 Requires:  fftw-devel >= 3
@@ -457,7 +458,7 @@ Requires:  xvidcore-devel >= 0.9.1
 # Audio framework support
 Requires:  alsa-lib-devel
 Requires:  jack-audio-connection-kit-devel
-%if %{with_pulseaudio}
+%if %{with pulseaudio}
 Requires:  pulseaudio-libs-devel
 %endif
 
@@ -469,15 +470,15 @@ Requires:  libavc1394-devel
 Requires:  libiec61883-devel
 Requires:  libraw1394-devel
 
-%if %{with_vdpau}
+%if %{with vdpau}
 Requires: libvdpau-devel
 %endif
 
-%if %{with_vaapi}
+%if %{with vaapi}
 Requires: libva-devel
 %endif
 
-%if %{with_crystalhd}
+%if %{with crystalhd}
 Requires: libcrystalhd-devel
 %endif
 
@@ -575,7 +576,7 @@ can interact with a known verion.
 
 ################################################################################
 
-%if %{with_perl}
+%if %{with perl}
 
 %package -n perl-MythTV
 Summary:        Perl bindings for MythTV
@@ -593,7 +594,7 @@ Provides a perl-based interface to interacting with MythTV.
 
 ################################################################################
 
-%if %{with_php}
+%if %{with php}
 
 %package -n php-MythTV
 Summary:        PHP bindings for MythTV
@@ -606,7 +607,7 @@ Provides a PHP-based interface to interacting with MythTV.
 
 ################################################################################
 
-%if %{with_python}
+%if %{with python}
 
 %package -n python-MythTV
 Summary:        Python bindings for MythTV
@@ -622,7 +623,7 @@ Provides a python-based interface to interacting with MythTV.
 
 ################################################################################
 
-%if %{with_plugins}
+%if %{with plugins}
 
 # Meta package for all mythtv plugins
 %package -n mythplugins
@@ -644,7 +645,7 @@ This is a consolidation of all the official MythTV plugins that used to be
 distributed as separate downloads from mythtv.org.
 
 ################################################################################
-%if %{with_mytharchive}
+%if %{with mytharchive}
 
 %package -n mytharchive
 Summary:   A module for MythTV for creating and burning DVDs
@@ -668,7 +669,7 @@ your system.
 
 %endif
 ################################################################################
-%if %{with_mythbrowser}
+%if %{with mythbrowser}
 
 %package -n mythbrowser
 Summary:   A small web browser module for MythTV
@@ -685,7 +686,7 @@ links in a simple mythplugin.
 
 %endif
 ################################################################################
-%if %{with_mythgallery}
+%if %{with mythgallery}
 
 %package -n mythgallery
 Summary:   A gallery/slideshow module for MythTV
@@ -696,7 +697,7 @@ A gallery/slideshow module for MythTV.
 
 %endif
 ################################################################################
-%if %{with_mythgame}
+%if %{with mythgame}
 
 %package -n mythgame
 Summary:   A game frontend (xmame, nes, snes, pc) for MythTV
@@ -707,7 +708,7 @@ A game frontend (xmame, nes, snes, pc) for MythTV.
 
 %endif
 ################################################################################
-%if %{with_mythmusic}
+%if %{with mythmusic}
 
 %package -n mythmusic
 Summary:   The music player add-on module for MythTV
@@ -718,7 +719,7 @@ Music add-on for mythtv.
 
 %endif
 ################################################################################
-%if %{with_mythnews}
+%if %{with mythnews}
 
 %package -n mythnews
 Summary:   An RSS news feed plugin for MythTV
@@ -729,7 +730,7 @@ An RSS news feed reader plugin for MythTV.
 
 %endif
 ################################################################################
-%if %{with_mythweather}
+%if %{with mythweather}
 
 %package -n mythweather
 Summary:   A MythTV module that displays a weather forecast
@@ -741,7 +742,7 @@ A MythTV module that displays a weather forecast.
 
 %endif
 ################################################################################
-%if %{with_mythzoneminder}
+%if %{with mythzoneminder}
 
 %package -n mythzoneminder
 Summary:   A module for MythTV for camera security and surveillance
@@ -755,7 +756,7 @@ and replay recorded events.
 
 %endif
 ################################################################################
-%if %{with_mythnetvision}
+%if %{with mythnetvision}
 
 %package -n mythnetvision
 Summary:   A MythTV module for Internet video on demand
@@ -838,30 +839,30 @@ pushd mythtv
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
-%if ! %{with_vdpau}
+%if ! %{with vdpau}
     --disable-vdpau                             \
 %endif
-%if ! %{with_crystalhd}
+%if ! %{with crystalhd}
     --disable-crystalhd                         \
 %endif
-%if ! %{with_vaapi}
+%if ! %{with vaapi}
     --disable-vaapi                             \
 %endif
     --enable-libmp3lame                         \
-%if %{with_faac}
+%if %{with faac}
     --enable-libfaac                            \
 %endif
     --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
     --enable-libxvid                            \
     --enable-libvpx                             \
-%if !%{with_perl}
+%if !%{with perl}
     --without-bindings=perl                     \
 %endif
-%if !%{with_php}
+%if !%{with php}
     --without-bindings=php                      \
 %endif
-%if !%{with_python}
+%if !%{with python}
     --without-bindings=python                   \
 %endif
 %ifarch ppc
@@ -874,10 +875,10 @@ pushd mythtv
 %ifarch %{ix86}
     --cpu=i686 --tune=i686 --enable-mmx \
 %endif
-%if %{with_proc_opt}
+%if %{with proc_opt}
     --enable-proc-opt \
 %endif
-%if %{with_debug}
+%if %{with debug}
     --compile-type=debug                        \
 %else
     --compile-type=release                      \
@@ -895,7 +896,7 @@ pushd mythtv
     export LD_LIBRARY_PATH=$temp%{_libdir}:$LD_LIBRARY_PATH
 
 # Next, we build the plugins
-%if %{with_plugins}
+%if %{with plugins}
 pushd mythplugins
 
 # Fix things up so they can find our "temp" install location for mythtv-libs
@@ -916,49 +917,49 @@ pushd mythplugins
         --prefix=${temp}%{_prefix} \
         --libdir=%{_libdir} \
         --libdir-name=%{_lib} \
-    %if %{with_mytharchive}
+    %if %{with mytharchive}
         --enable-mytharchive \
     %else
         --disable-mytharchive \
     %endif
-    %if %{with_mythbrowser}
+    %if %{with mythbrowser}
         --enable-mythbrowser \
     %else
         --disable-mythbrowser \
     %endif
-    %if %{with_mythgallery}
+    %if %{with mythgallery}
         --enable-mythgallery \
         --enable-exif \
         --enable-new-exif \
     %else
         --disable-mythgallery \
     %endif
-    %if %{with_mythgame}
+    %if %{with mythgame}
         --enable-mythgame \
     %else
         --disable-mythgame \
     %endif
-    %if %{with_mythmusic}
+    %if %{with mythmusic}
         --enable-mythmusic \
     %else
         --disable-mythmusic \
     %endif
-    %if %{with_mythnews}
+    %if %{with mythnews}
         --enable-mythnews \
     %else
         --disable-mythnews \
     %endif
-    %if %{with_mythweather}
+    %if %{with mythweather}
         --enable-mythweather \
     %else
         --disable-mythweather \
     %endif
-    %if %{with_mythzoneminder}
+    %if %{with mythzoneminder}
         --enable-mythzoneminder \
     %else
         --disable-mythzoneminder \
     %endif
-    %if %{with_mythnetvision}
+    %if %{with mythnetvision}
         --enable-mythnetvision \
     %else
         --disable-mythnetvision \
@@ -986,7 +987,7 @@ pushd mythtv
     mkdir -p %{buildroot}%{_localstatedir}/cache/mythtv
     mkdir -p %{buildroot}%{_localstatedir}/log/mythtv
     mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
-    %if %{with_systemd}
+    %if %{with systemd}
     mkdir -p %{buildroot}%{_unitdir}
     %else
     mkdir -p %{buildroot}%{_sysconfdir}/init.d
@@ -999,7 +1000,7 @@ pushd mythtv
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
 
     ### SystemD based setup. ###
-    %if %{with_systemd}
+    %if %{with systemd}
     install -p -m 0644 %{SOURCE105} %{buildroot}%{_unitdir}/
     install -p -m 0644 %{SOURCE104} %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
     # Install udev rules for devices that may initialize late in the boot
@@ -1049,18 +1050,18 @@ rm -f %{buildroot}%{_libdir}/libmythqjson.prl \
       %{buildroot}%{_libdir}/pkgconfig/libmythzmq.pc
 
 # MythPlugins
-%if %{with_plugins}
+%if %{with plugins}
 pushd mythplugins
 
     make install INSTALL_ROOT=%{buildroot}
 
-%if %{with_mythmusic}
+%if %{with mythmusic}
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythmusic
 %endif
-%if %{with_mythgallery}
+%if %{with mythgallery}
     mkdir -p %{buildroot}%{_localstatedir}/lib/pictures
 %endif
-%if %{with_mythgame}
+%if %{with mythgame}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/nes/{roms,screens}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/snes/{roms,screens}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/PC/screens
@@ -1117,7 +1118,7 @@ usermod -a -G audio,video mythtv
 exit 0
 
 %post backend
-%if %{with_systemd}
+%if %{with systemd}
     %systemd_post mythbackend.service
     %systemd_post mythjobqueue.service
     %systemd_post mythdb-optimize.service
@@ -1127,7 +1128,7 @@ exit 0
 
 
 %preun backend
-%if %{with_systemd}
+%if %{with systemd}
     %systemd_preun mythbackend.service
     %systemd_preun mythjobqueue.service
     %systemd_preun mythdb-optimize.service
@@ -1139,7 +1140,7 @@ fi
 %endif
 
 %postun backend
-%if %{with_systemd}
+%if %{with systemd}
     %systemd_postun_with_restart mythbackend.service
     %systemd_postun_with_restart mythjobqueue.service
     %systemd_postun_with_restart mythdb-optimize.service
@@ -1195,7 +1196,7 @@ fi
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
-%if %{with_systemd}
+%if %{with systemd}
 %{_unitdir}/mythbackend.service
 %{_unitdir}/mythjobqueue.service
 %{_unitdir}/mythdb-optimize.service
@@ -1262,7 +1263,7 @@ fi
 %{_bindir}/mythffprobe
 %{_bindir}/mythffserver
 
-%if %{with_perl}
+%if %{with perl}
 %files -n perl-MythTV
 %{perl_vendorlib}/MythTV.pm
 %dir %{perl_vendorlib}/MythTV
@@ -1271,23 +1272,23 @@ fi
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 %endif
 
-%if %{with_php}
+%if %{with php}
 %files -n php-MythTV
 %{_datadir}/mythtv/bindings/php/*
 %endif
 
-%if %{with_python}
+%if %{with python}
 %files -n python-MythTV
 %{_bindir}/mythpython
 %{python_sitelib}/MythTV/
 %{python_sitelib}/MythTV-*.egg-info
 %endif
 
-%if %{with_plugins}
+%if %{with plugins}
 %files -n mythplugins
 %doc mythplugins/COPYING
 
-%if %{with_mytharchive}
+%if %{with mytharchive}
 %files -n mytharchive
 %doc mythplugins/mytharchive/AUTHORS
 %doc mythplugins/mytharchive/COPYING
@@ -1301,7 +1302,7 @@ fi
 %{_datadir}/mythtv/i18n/mytharchive_*.qm
 %endif
 
-%if %{with_mythbrowser}
+%if %{with mythbrowser}
 %files -n mythbrowser
 %doc mythplugins/mythbrowser/AUTHORS
 %doc mythplugins/mythbrowser/COPYING
@@ -1310,7 +1311,7 @@ fi
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 %endif
 
-%if %{with_mythgallery}
+%if %{with mythgallery}
 %files -n mythgallery
 %doc mythplugins/mythgallery/AUTHORS
 %doc mythplugins/mythgallery/COPYING
@@ -1320,7 +1321,7 @@ fi
 %attr(0775,mythtv,mythtv) %{_localstatedir}/lib/pictures
 %endif
 
-%if %{with_mythgame}
+%if %{with mythgame}
 %files -n mythgame
 %dir %{_sysconfdir}/mythgame
 %config(noreplace) %{_sysconfdir}/mythgame/gamelist.xml
@@ -1333,7 +1334,7 @@ fi
 %{_datadir}/mythtv/i18n/mythgame_*.qm
 %endif
 
-%if %{with_mythmusic}
+%if %{with mythmusic}
 %files -n mythmusic
 %doc mythplugins/mythmusic/AUTHORS
 %doc mythplugins/mythmusic/COPYING
@@ -1346,7 +1347,7 @@ fi
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
 %endif
 
-%if %{with_mythnews}
+%if %{with mythnews}
 %files -n mythnews
 %doc mythplugins/mythnews/AUTHORS
 %doc mythplugins/mythnews/COPYING
@@ -1356,7 +1357,7 @@ fi
 %{_datadir}/mythtv/i18n/mythnews_*.qm
 %endif
 
-%if %{with_mythweather}
+%if %{with mythweather}
 %files -n mythweather
 %doc mythplugins/mythweather/AUTHORS
 %doc mythplugins/mythweather/COPYING
@@ -1368,7 +1369,7 @@ fi
 %{_datadir}/mythtv/mythweather/*
 %endif
 
-%if %{with_mythzoneminder}
+%if %{with mythzoneminder}
 %files -n mythzoneminder
 %{_libdir}/mythtv/plugins/libmythzoneminder.so
 %{_datadir}/mythtv/zonemindermenu.xml
@@ -1376,7 +1377,7 @@ fi
 %{_datadir}/mythtv/i18n/mythzoneminder_*.qm
 %endif
 
-%if %{with_mythnetvision}
+%if %{with mythnetvision}
 %files -n mythnetvision
 %doc mythplugins/mythnetvision/AUTHORS
 %doc mythplugins/mythnetvision/ChangeLog
@@ -1394,6 +1395,10 @@ fi
 
 
 %changelog
+* Sun Sep 11 2016 Sérgio Basto <sergio@serjux.com> - 0.28-6
+- Change mythtv.spec to use %%bcond
+- Add BuildRequires: perl-generators, since F25 we have buildroot without Perl
+
 * Thu Sep 08 2016 Sérgio Basto <sergio@serjux.com> - 0.28-5
 - Rebuild again, previous perl-MythTV-0.28-4 does not provide perl(MythTV) !
 
