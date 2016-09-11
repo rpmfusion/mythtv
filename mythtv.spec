@@ -80,9 +80,9 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        0.28
 %if "%{branch}" == "master"
-Release:        0.4.git.%{_gitrev}%{?dist}
+Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        6%{?dist}
+Release:        7%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1395,6 +1395,9 @@ fi
 
 
 %changelog
+* Sun Sep 11 2016 Sérgio Basto <sergio@serjux.com> - 0.28-7
+- Update to latest fixes/0.28, rfbz#4241
+
 * Sun Sep 11 2016 Sérgio Basto <sergio@serjux.com> - 0.28-6
 - Change mythtv.spec to use %%bcond
 - Add BuildRequires: perl-generators, since F25 we have buildroot without Perl

@@ -4,7 +4,8 @@
  .../mythzoneminder/mythzmserver/zmserver.cpp       |    20 +-
  mythtv/README                                      |     8 +-
  mythtv/bindings/python/MythTV/dataheap.py          |     1 +
- mythtv/configure                                   |    29 +-
+ .../python/MythTV/wikiscripts/wikiscripts.py       |     4 +-
+ mythtv/configure                                   |    34 +-
  mythtv/html/css/Status.css                         |    13 +
  mythtv/html/menu.qsp                               |     2 +-
  mythtv/i18n/mythfrontend_cs.qm                     |   Bin 599995 -> 726083 bytes
@@ -15,35 +16,59 @@
  mythtv/libs/libmyth/programinfo.cpp                |   178 +-
  mythtv/libs/libmyth/programinfo.h                  |    18 +-
  mythtv/libs/libmythbase/mythmedia.cpp              |     2 +-
+ mythtv/libs/libmythbase/mythstorage.cpp            |     4 +-
  mythtv/libs/libmythmetadata/imagemanager.cpp       |     2 +-
  .../libmythservicecontracts/services/dvrServices.h |    14 +-
+ mythtv/libs/libmythtv/avformatdecoder.cpp          |     6 +
  .../libmythtv/channelscan/vboxchannelfetcher.cpp   |    30 +-
  .../libmythtv/channelscan/vboxchannelfetcher.h     |     1 +
  mythtv/libs/libmythtv/eitfixup.cpp                 |    33 +-
  mythtv/libs/libmythtv/eitfixup.h                   |     4 +-
  mythtv/libs/libmythtv/eithelper.cpp                |     5 +
+ mythtv/libs/libmythtv/mythplayer.cpp               |   109 +-
  mythtv/libs/libmythtv/privatedecoder_omx.cpp       |     4 +-
- mythtv/libs/libmythtv/recorders/vboxutils.cpp      |     8 +-
+ mythtv/libs/libmythtv/recorders/asichannel.cpp     |     6 +-
+ mythtv/libs/libmythtv/recorders/vboxutils.cpp      |    10 +-
  mythtv/libs/libmythtv/recorders/vboxutils.h        |     2 +-
  .../test/test_eitfixups/test_eitfixups.cpp         |    28 +
- mythtv/libs/libmythtv/videodisplayprofile.cpp      |     2 +-
+ mythtv/libs/libmythtv/tv_play.cpp                  |     4 +-
+ mythtv/libs/libmythtv/videodisplayprofile.cpp      |    33 +-
+ mythtv/libs/libmythtv/videodisplayprofile.h        |     2 +-
+ mythtv/libs/libmythtv/videoout_omx.cpp             |   251 +-
+ mythtv/libs/libmythtv/videoout_omx.h               |    11 +-
  .../visualisations/videovisualcircles.cpp          |     2 +-
  mythtv/libs/libmythui/cecadapter.cpp               |    41 +-
+ mythtv/libs/libmythui/libmythui.pro                |     4 +-
+ mythtv/libs/libmythui/mythdialogbox.cpp            |    10 +
+ mythtv/libs/libmythui/mythmainwindow.cpp           |     7 +
+ mythtv/libs/libmythui/mythpainter_ogl.h            |     2 +-
+ mythtv/libs/libmythui/mythrender_opengl.cpp        |     4 +-
+ mythtv/libs/libmythui/mythrender_opengl.h          |     4 +
  mythtv/libs/libmythui/screensaver-dbus.cpp         |     2 +-
+ mythtv/libs/libmythupnp/httprequest.cpp            |   172 +-
+ mythtv/libs/libmythupnp/httprequest.h              |    55 +-
+ mythtv/programs/mythbackend/autoexpire.cpp         |    75 +-
+ mythtv/programs/mythbackend/autoexpire.h           |    20 +-
  mythtv/programs/mythbackend/backendhousekeeper.cpp |     2 +-
+ mythtv/programs/mythbackend/scheduler.cpp          |    26 +-
  mythtv/programs/mythbackend/services/dvr.cpp       |    71 +
  mythtv/programs/mythbackend/services/dvr.h         |    12 +
  mythtv/programs/mythbackend/services/video.cpp     |     3 +-
- mythtv/programs/mythfrontend/galleryconfig.cpp     |    11 +
+ mythtv/programs/mythfrontend/galleryconfig.cpp     |    13 +-
+ mythtv/programs/mythfrontend/galleryconfig.h       |    10 +-
  mythtv/programs/mythfrontend/galleryslideview.cpp  |    93 +-
  mythtv/programs/mythfrontend/galleryslideview.h    |    11 +-
  mythtv/programs/mythfrontend/gallerythumbview.cpp  |    22 +
  mythtv/programs/mythfrontend/galleryviews.cpp      |    80 +-
  mythtv/programs/mythfrontend/galleryviews.h        |     8 +-
+ mythtv/programs/mythfrontend/globalsettings.cpp    |    12 +-
  mythtv/programs/mythfrontend/main.cpp              |    11 +-
+ mythtv/programs/mythfrontend/mythfrontend.pro      |    24 +
  mythtv/programs/mythfrontend/themechooser.cpp      |     2 +-
  mythtv/programs/mythtv-setup/importicons.cpp       |     6 +-
- 45 files changed, 30819 insertions(+), 18423 deletions(-)
+ mythtv/programs/mythtv-setup/mythtv-setup.pro      |    12 +
+ mythtv/programs/mythwelcome/mythwelcome.pro        |    11 +
+ 70 files changed, 31433 insertions(+), 18694 deletions(-)
 
 diff --git a/mythplugins/mythgallery/mythgallery/main.cpp b/mythplugins/mythgallery/mythgallery/main.cpp
 index 3237dfe..3aab56b 100644
@@ -243,11 +268,65 @@ index 3506878..859e060 100644
      _defaults = {'title':u'Unknown', 'subtitle':'',          'description':'',
                   'category':'',      'hostname':'',          'bookmark':0,
                   'editing':0,        'cutlist':0,            'autoexpire':0,
+diff --git a/mythtv/bindings/python/MythTV/wikiscripts/wikiscripts.py b/mythtv/bindings/python/MythTV/wikiscripts/wikiscripts.py
+index 22d4730..2bc7017 100644
+--- a/mythtv/bindings/python/MythTV/wikiscripts/wikiscripts.py
++++ b/mythtv/bindings/python/MythTV/wikiscripts/wikiscripts.py
+@@ -15,7 +15,7 @@ import lxml.html
+ import os
+ import stat
+ 
+-BASEURL = 'http://mythtv.org/wiki'
++BASEURL = 'https://www.mythtv.org/wiki'
+ 
+ def getScripts():
+     return Script.getAll()
+@@ -23,7 +23,7 @@ def getScripts():
+ def getPage(**kwargs):
+     url = "{0}?{1}".format(BASEURL,
+             '&'.join(['{0}={1}'.format(k,v) for k,v in kwargs.items()]))
+-    return lxml.html.parse(url).getroot()
++    return lxml.html.parse(urlopen(url)).getroot()
+ 
+ def getWhatLinksHere(page):
+     root = getPage(title='Special:WhatLinksHere',
 diff --git a/mythtv/configure b/mythtv/configure
-index 17d42d6..ba2fc6e 100755
+index 17d42d6..af0d6a6 100755
 --- a/mythtv/configure
 +++ b/mythtv/configure
-@@ -6521,19 +6521,28 @@ check_type "vdpau/vdpau.h" "VdpPictureInfoHEVC"
+@@ -136,6 +136,7 @@ Advanced options (experts only):
+   --disable-openmax        disable OpenMAX hardware accelerated video decoding
+   --disable-dxva2          disable hardware accelerated decoding on windows
+   --disable-opengl-video   disable OpenGL based video display
++  --disable-opengl-themepainter disable OpenGL based theme painting
+   --disable-libass         disable libass SSA/ASS subtitle support
+   --disable-systemd_notify disable systemd notify support
+ 
+@@ -2344,6 +2345,7 @@ MYTHTV_CONFIG_LIST='
+     mheg
+     opengl
+     opengl_video
++    opengl_themepainter
+     qtwebkit
+     qtscript
+     qtdbus
+@@ -3365,6 +3367,7 @@ mythtranscode_deps="backend frontend"
+ opengl_deps_any="agl_h GL_gl_h EGL_egl_h GLES2_gl2_h darwin windows x11"
+ opengles_deps="GLES2_gl2_h"
+ opengl_video_deps="opengl"
++opengl_themepainter_deps="opengl"
+ v4l2_deps="backend linux_videodev2_h"
+ v4l1_deps="backend v4l2 linux_videodev_h"
+ xrandr_deps="x11"
+@@ -3538,6 +3541,7 @@ enable mythtranscode
+ enable opengl
+ enable opengles
+ enable opengl_video
++enable opengl_themepainter
+ enable symbol_visibility
+ enable v4l1
+ enable v4l2
+@@ -6521,19 +6525,28 @@ check_type "vdpau/vdpau.h" "VdpPictureInfoHEVC"
  check_cpp_condition windows.h "!WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)" && enable winrt || disable winrt
  
  # check for OpenMAX header & lib
@@ -279,7 +358,7 @@ index 17d42d6..ba2fc6e 100755
  if ! disabled w32threads && ! enabled pthreads; then
      check_func_headers "windows.h process.h" _beginthreadex &&
          enable w32threads || disable w32threads
-@@ -7242,11 +7251,13 @@ int main(void) { return 1; }
+@@ -7242,11 +7255,13 @@ int main(void) { return 1; }
  EOF
  
  if enabled systemd_notify ; then
@@ -296,7 +375,7 @@ index 17d42d6..ba2fc6e 100755
  fi
  
  # Check that all MythTV build "requirements" are met:
-@@ -7349,7 +7360,7 @@ enabled libass && check_lib2 ass/ass.h ass_flush_events -lass || disable libass
+@@ -7349,7 +7364,7 @@ enabled libass && check_lib2 ass/ass.h ass_flush_events -lass || disable libass
  
  if enabled libcec ; then
      if pkg-config --exists libcec; then
@@ -305,7 +384,7 @@ index 17d42d6..ba2fc6e 100755
      else
          check_cxx -I"$libcec_path" <<EOF || { disable libcec; }
  #include <libcec/cec.h>
-@@ -8028,6 +8039,10 @@ if enabled x11 ; then
+@@ -8028,8 +8043,13 @@ if enabled x11 ; then
    echo "VAAPI support             ${vaapi-no}"
    echo "CrystalHD support         ${crystalhd-no}"
    echo "OpenMAX support           ${openmax-no}"
@@ -315,7 +394,10 @@ index 17d42d6..ba2fc6e 100755
 +  fi
  fi
    echo "OpenGL video              ${opengl_video-no}"
++  echo "OpenGL ThemePainter       ${opengl_themepainter-no}"
    if test x"$target_os" = x"darwin" ; then
+     echo "VDA support               ${vda-no}"
+   fi
 diff --git a/mythtv/html/css/Status.css b/mythtv/html/css/Status.css
 index 43ede02..a50fca0 100644
 --- a/mythtv/html/css/Status.css
@@ -61081,6 +61163,21 @@ index 527c7af..9f5da10 100644
                  .arg(quintptr(this),0,16).arg(it.key()));
          }
      }
+diff --git a/mythtv/libs/libmythbase/mythstorage.cpp b/mythtv/libs/libmythbase/mythstorage.cpp
+index a56c492..63a2905 100644
+--- a/mythtv/libs/libmythbase/mythstorage.cpp
++++ b/mythtv/libs/libmythbase/mythstorage.cpp
+@@ -9,8 +9,8 @@ void SimpleDBStorage::Load(void)
+     MSqlQuery query(MSqlQuery::InitCon());
+     MSqlBindings bindings;
+     query.prepare(
+-        "SELECT " + GetColumnName() +
+-        "  FROM " + GetTableName() +
++        "SELECT CAST(" + GetColumnName() + " AS CHAR)"
++        " FROM " + GetTableName() +
+         " WHERE " + GetWhereClause(bindings));
+     query.bindValues(bindings);
+ 
 diff --git a/mythtv/libs/libmythmetadata/imagemanager.cpp b/mythtv/libs/libmythmetadata/imagemanager.cpp
 index a9c802f..e0e72d9 100644
 --- a/mythtv/libs/libmythmetadata/imagemanager.cpp
@@ -61130,6 +61227,23 @@ index 3fde9d0..44fd2f3 100644
          virtual DTC::CutList*      GetRecordedCutList    ( int              RecordedId,
                                                             int              ChanId,
                                                             const QDateTime &StartTime,
+diff --git a/mythtv/libs/libmythtv/avformatdecoder.cpp b/mythtv/libs/libmythtv/avformatdecoder.cpp
+index fb7d793..f02af21 100644
+--- a/mythtv/libs/libmythtv/avformatdecoder.cpp
++++ b/mythtv/libs/libmythtv/avformatdecoder.cpp
+@@ -1021,6 +1021,12 @@ int AvFormatDecoder::FindStreamInfo(void)
+         silence_ffmpeg_logging = true;
+     int retval = avformat_find_stream_info(ic, NULL);
+     silence_ffmpeg_logging = false;
++    // ffmpeg 3.0 is returning -1 code when there is a channel
++    // change or some encoding error just after the start
++    // of the file, but is has found the correct stream info
++    // Set rc to 0 so that playing can continue.
++    if (retval == -1)
++        retval = 0;
+     return retval;
+ }
+ 
 diff --git a/mythtv/libs/libmythtv/channelscan/vboxchannelfetcher.cpp b/mythtv/libs/libmythtv/channelscan/vboxchannelfetcher.cpp
 index 1100a1b..b811646 100644
 --- a/mythtv/libs/libmythtv/channelscan/vboxchannelfetcher.cpp
@@ -61296,6 +61410,299 @@ index b0e493c..5b66988 100644
      fix[ 2301LL << 32 | 2U << 16] = EITFixUp::kFixUK | EITFixUp::kFixHTML;
      fix[ 2302LL << 32 | 2U << 16] = EITFixUp::kFixUK;
      fix[ 2303LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index f953e11..4ddde4d 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -383,7 +383,7 @@ bool MythPlayer::Pause(void)
+ 
+ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
+ {
+-    QMutexLocker locker(&pauseLock);
++    pauseLock.lock();
+     LOG(VB_PLAYBACK, LOG_INFO, LOC +
+         QString("Play(%1, normal %2, unpause audio %3)")
+             .arg(speed,5,'f',1).arg(normal).arg(unpauseaudio));
+@@ -391,6 +391,7 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
+     if (deleteMap.IsEditing())
+     {
+         LOG(VB_GENERAL, LOG_ERR, LOC + "Ignoring Play(), in edit mode.");
++        pauseLock.unlock();
+         return false;
+     }
+ 
+@@ -403,6 +404,7 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
+     allpaused = false;
+     next_play_speed   = speed;
+     next_normal_speed = normal;
++    pauseLock.unlock();
+     return true;
+ }
+ 
+@@ -949,7 +951,7 @@ int MythPlayer::OpenFile(uint retries)
+                 return -1;
+             }
+             LOG(VB_GENERAL, LOG_WARNING, LOC + "OpenFile() waiting on data");
+-            usleep(150 * 1000);
++            usleep(50 * 1000);
+         }
+ 
+         player_ctx->LockPlayingInfo(__FILE__, __LINE__);
+@@ -1385,7 +1387,10 @@ void MythPlayer::DisableCaptions(uint mode, bool osd_msg)
+ 
+     QMutexLocker locker(&osdLock);
+ 
+-    textDesired = textDisplayMode & kDisplayAllTextCaptions;
++    bool newTextDesired = textDisplayMode & kDisplayAllTextCaptions;
++    // Only turn off textDesired if the Operator requested it.
++    if (osd_msg || newTextDesired)
++        textDesired = newTextDesired;
+     QString msg = "";
+     if (kDisplayNUVTeletextCaptions & mode)
+         msg += tr("TXT CAP");
+@@ -1422,7 +1427,10 @@ void MythPlayer::DisableCaptions(uint mode, bool osd_msg)
+ void MythPlayer::EnableCaptions(uint mode, bool osd_msg)
+ {
+     QMutexLocker locker(&osdLock);
+-    textDesired = mode & kDisplayAllTextCaptions;
++    bool newTextDesired = mode & kDisplayAllTextCaptions;
++    // Only turn off textDesired if the Operator requested it.
++    if (osd_msg || newTextDesired)
++        textDesired = newTextDesired;
+     QString msg = "";
+     if ((kDisplayCC608 & mode) || (kDisplayCC708 & mode) ||
+         (kDisplayAVSubtitle & mode) || kDisplayRawTextSubtitle & mode)
+@@ -1492,7 +1500,9 @@ void MythPlayer::SetCaptionsEnabled(bool enable, bool osd_msg)
+     enableCaptions = disableCaptions = false;
+     uint origMode = textDisplayMode;
+ 
+-    textDesired = enable;
++    // Only turn off textDesired if the Operator requested it.
++    if (osd_msg || enable)
++        textDesired = enable;
+ 
+     if (!enable)
+     {
+@@ -2240,10 +2250,7 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
+         videoOutput->DoneDisplayingFrame(videoOutput->GetLastShownFrame());
+ 
+     // retrieve the next frame
+-    bool const bDisplayFrame = videoOutput->ValidVideoFrames() > 0;
+-    if (bDisplayFrame)
+-        videoOutput->StartDisplayingFrame();
+-
++    videoOutput->StartDisplayingFrame();
+     VideoFrame *frame = videoOutput->GetLastShownFrame();
+ 
+     // Check aspect ratio
+@@ -2252,12 +2259,9 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
+     // Player specific processing (dvd, bd, mheg etc)
+     PreProcessNormalFrame();
+ 
+-    if (GetTrackCount(kTrackTypeVideo))
+-    {
+-        // handle scan type changes
+-        AutoDeint(frame);
+-        detect_letter_box->SwitchTo(frame);
+-    }
++    // handle scan type changes
++    AutoDeint(frame);
++    detect_letter_box->SwitchTo(frame);
+ 
+     FrameScanType ps = m_scan;
+     if (kScan_Detect == m_scan || kScan_Ignore == m_scan)
+@@ -2265,9 +2269,7 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
+ 
+     AVSync(frame, 0);
+     // If PiP then keep this frame for MythPlayer::GetCurrentFrame
+-    if (player_ctx->IsPIP())
+-        return;
+-    if (bDisplayFrame)
++    if (!player_ctx->IsPIP())
+         videoOutput->DoneDisplayingFrame(frame);
+ }
+ 
+@@ -2277,12 +2279,10 @@ void MythPlayer::PreProcessNormalFrame(void)
+     // handle Interactive TV
+     if (GetInteractiveTV())
+     {
+-        QMutexLocker lk1(&osdLock);
+-
++        osdLock.lock();
++        itvLock.lock();
+         if (osd && videoOutput->GetOSDPainter())
+         {
+-            QMutexLocker lk2(&itvLock);
+-
+             InteractiveScreen *window =
+                 (InteractiveScreen*)osd->GetWindow(OSD_WIN_INTERACT);
+             if ((interactiveTV->ImageHasChanged() || !itvVisible) && window)
+@@ -2291,6 +2291,8 @@ void MythPlayer::PreProcessNormalFrame(void)
+                 itvVisible = true;
+             }
+         }
++        itvLock.unlock();
++        osdLock.unlock();
+     }
+ #endif // USING_MHEG
+ }
+@@ -2467,7 +2469,7 @@ bool MythPlayer::VideoLoop(void)
+         DisplayPauseFrame();
+     }
+     else
+-        DisplayNormalFrame(GetTrackCount(kTrackTypeVideo));
++        DisplayNormalFrame();
+ 
+     if (FlagIsSet(kVideoIsNull) && decoder)
+         decoder->UpdateFramesPlayed();
+@@ -2597,10 +2599,7 @@ void MythPlayer::SwitchToProgram(void)
+     ProgramInfo *pginfo = player_ctx->tvchain->GetSwitchProgram(
+         discontinuity, newtype, newid);
+     if (!pginfo)
+-    {
+-        LOG(VB_GENERAL, LOG_ERR, LOC + "SwitchToProgram - No ProgramInfo");
+         return;
+-    }
+ 
+     bool newIsDummy = player_ctx->tvchain->GetInputType(newid) == "DUMMY";
+ 
+@@ -2735,10 +2734,7 @@ void MythPlayer::JumpToProgram(void)
+     ProgramInfo *pginfo = player_ctx->tvchain->GetSwitchProgram(
+         discontinuity, newtype, newid);
+     if (!pginfo)
+-    {
+-        LOG(VB_GENERAL, LOG_ERR, LOC + "JumpToProgram - No ProgramInfo");
+         return;
+-    }
+ 
+     inJumpToProgramPause = true;
+ 
+@@ -2746,6 +2742,7 @@ void MythPlayer::JumpToProgram(void)
+     SetPlayingInfo(*pginfo);
+ 
+     Pause();
++    ChangeSpeed();
+     ResetCaptions();
+     player_ctx->tvchain->SetProgram(*pginfo);
+     player_ctx->buffer->Reset(true);
+@@ -2996,11 +2993,12 @@ void MythPlayer::EventLoop(void)
+         JumpToProgram();
+     }
+     else if ((!allpaused || GetEof() != kEofStateNone) &&
+-             decoder && !decoder->GetWaitForChange() &&
+-             player_ctx->tvchain && player_ctx->tvchain->NeedsToSwitch())
++             player_ctx->tvchain &&
++             (decoder && !decoder->GetWaitForChange()))
+     {
+         // Switch to the next program in livetv
+-        SwitchToProgram();
++        if (player_ctx->tvchain->NeedsToSwitch())
++            SwitchToProgram();
+     }
+ 
+     // Jump to the next program in livetv
+@@ -3201,35 +3199,36 @@ void MythPlayer::AudioEnd(void)
+ 
+ bool MythPlayer::PauseDecoder(void)
+ {
+-    QMutexLocker locker(&decoderPauseLock);
++    decoderPauseLock.lock();
+     if (is_current_thread(decoderThread))
+     {
+-        pauseDecoder = false;
+         decoderPaused = true;
+         decoderThreadPause.wakeAll();
+-        return true;
++        decoderPauseLock.unlock();
++        return decoderPaused;
+     }
+ 
+-    pauseDecoder = true;
+     int tries = 0;
+-    while (!decoderPaused && decoderThread && !killdecoder && (tries++ < 10) &&
+-          !decoderThreadPause.wait(locker.mutex(), 100))
++    pauseDecoder = true;
++    while (decoderThread && !killdecoder && (tries++ < 100) &&
++           !decoderThreadPause.wait(&decoderPauseLock, 100))
+     {
+         LOG(VB_GENERAL, LOG_WARNING, LOC + "Waited 100ms for decoder to pause");
+     }
+     pauseDecoder = false;
++    decoderPauseLock.unlock();
+     return decoderPaused;
+- }
++}
+ 
+ void MythPlayer::UnpauseDecoder(void)
+ {
+-    QMutexLocker locker(&decoderPauseLock);
++    decoderPauseLock.lock();
+ 
+     if (is_current_thread(decoderThread))
+     {
+-        unpauseDecoder = false;
+         decoderPaused = false;
+         decoderThreadUnpause.wakeAll();
++        decoderPauseLock.unlock();
+         return;
+     }
+ 
+@@ -3237,14 +3236,15 @@ void MythPlayer::UnpauseDecoder(void)
+     {
+         int tries = 0;
+         unpauseDecoder = true;
+-        while (decoderPaused && decoderThread && !killdecoder && (tries++ < 10) &&
+-              !decoderThreadUnpause.wait(locker.mutex(), 100))
++        while (decoderThread && !killdecoder && (tries++ < 100) &&
++              !decoderThreadUnpause.wait(&decoderPauseLock, 100))
+         {
+             LOG(VB_GENERAL, LOG_WARNING, LOC +
+                 "Waited 100ms for decoder to unpause");
+         }
+         unpauseDecoder = false;
+     }
++    decoderPauseLock.unlock();
+ }
+ 
+ void MythPlayer::DecoderStart(bool start_paused)
+@@ -3271,7 +3271,7 @@ void MythPlayer::DecoderEnd(void)
+     SetPlaying(false);
+     killdecoder = true;
+     int tries = 0;
+-    while (decoderThread && !decoderThread->wait(100) && (tries++ < 20))
++    while (decoderThread && !decoderThread->wait(100) && (tries++ < 50))
+         LOG(VB_PLAYBACK, LOG_INFO, LOC +
+             "Waited 100ms for decoder loop to stop");
+ 
+@@ -3284,23 +3284,12 @@ void MythPlayer::DecoderEnd(void)
+ 
+ void MythPlayer::DecoderPauseCheck(void)
+ {
+-    if (!is_current_thread(decoderThread))
+-        return;
+-
+-    QMutexLocker locker(&decoderPauseLock);
+-
+-    if (pauseDecoder)
+-    {
+-        pauseDecoder = false;
+-        decoderPaused = true;
+-        decoderThreadPause.wakeAll();
+-    }
+-
+-    if (unpauseDecoder)
++    if (is_current_thread(decoderThread))
+     {
+-        unpauseDecoder = false;
+-        decoderPaused = false;
+-        decoderThreadUnpause.wakeAll();
++        if (pauseDecoder)
++            PauseDecoder();
++        if (unpauseDecoder)
++            UnpauseDecoder();
+     }
+ }
+ 
 diff --git a/mythtv/libs/libmythtv/privatedecoder_omx.cpp b/mythtv/libs/libmythtv/privatedecoder_omx.cpp
 index a7ce174..b2999ad 100644
 --- a/mythtv/libs/libmythtv/privatedecoder_omx.cpp
@@ -61312,8 +61719,34 @@ index a7ce174..b2999ad 100644
              ret = 0;
              break;
          }
+diff --git a/mythtv/libs/libmythtv/recorders/asichannel.cpp b/mythtv/libs/libmythtv/recorders/asichannel.cpp
+index 6956b20..94cba8d 100644
+--- a/mythtv/libs/libmythtv/recorders/asichannel.cpp
++++ b/mythtv/libs/libmythtv/recorders/asichannel.cpp
+@@ -7,7 +7,7 @@
+ #include "mpegtables.h"
+ #include "asichannel.h"
+ 
+-#define LOC     QString("ASIChan[%1](%2): ").arg(GetCardID()).arg(GetDevice())
++#define LOC     QString("ASIChan[%1](%2): ").arg(GetInputID()).arg(GetDevice())
+ 
+ ASIChannel::ASIChannel(TVRec *parent, const QString &device) :
+     DTVChannel(parent), m_device(device), m_isopen(false)
+@@ -31,10 +31,10 @@ bool ASIChannel::Open(void)
+     if (m_isopen)
+         return true;
+ 
+-    if (!InitializeInputs())
++    if (!InitializeInput())
+         return false;
+ 
+-    if (!m_input.inputid)
++    if (!m_inputid)
+         return false;
+ 
+     m_isopen = true;
 diff --git a/mythtv/libs/libmythtv/recorders/vboxutils.cpp b/mythtv/libs/libmythtv/recorders/vboxutils.cpp
-index f1fc301..f1c417e 100644
+index f1fc301..629e276 100644
 --- a/mythtv/libs/libmythtv/recorders/vboxutils.cpp
 +++ b/mythtv/libs/libmythtv/recorders/vboxutils.cpp
 @@ -77,14 +77,14 @@ QStringList VBox::doUPNPSearch(void)
@@ -61342,6 +61775,15 @@ index f1fc301..f1c417e 100644
  
          if (friendlyName.startsWith("VBox"))
          {
+@@ -246,7 +246,7 @@ bool VBox::checkVersion(QString &version)
+         sList = version.split('.');
+ 
+         // sanity check this looks like a VBox version string
+-        if (sList.count() != 3 || !version.startsWith("VB."))
++        if (sList.count() != 3 || !(version.startsWith("VB.") || version.startsWith("VJ.")))
+         {
+             LOG(VB_GENERAL, LOG_INFO, LOC + QString("Failed to parse version from %1").arg(version));
+             delete xmlDoc;
 @@ -433,4 +433,4 @@ QString VBox::getFirstText(QDomElement &element)
              return t.data();
      }
@@ -61401,19 +61843,508 @@ index 77f85e1..80b7d1d 100644
  }
  
  void TestEITFixups::testUnitymedia()
+diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
+index 9b9511b..f397506 100644
+--- a/mythtv/libs/libmythtv/tv_play.cpp
++++ b/mythtv/libs/libmythtv/tv_play.cpp
+@@ -7870,8 +7870,7 @@ void TV::ChangeChannel(PlayerContext *ctx, uint chanid, const QString &chan)
+     if (ctx->prevChan.empty())
+         ctx->PushPreviousChannel();
+ 
+-    if (ctx->player)
+-        ctx->player->GetAudio()->Pause(true);
++    PauseAudioUntilBuffered(ctx);
+     PauseLiveTV(ctx);
+ 
+     ctx->LockDeletePlayer(__FILE__, __LINE__);
+@@ -7888,7 +7887,6 @@ void TV::ChangeChannel(PlayerContext *ctx, uint chanid, const QString &chan)
+         ctx->player->GetAudio()->Reset();
+ 
+     UnpauseLiveTV(ctx, chanid && GetQueuedChanID());
+-    PauseAudioUntilBuffered(ctx);
+ 
+     if (oldinputname != ctx->recorder->GetInput())
+         UpdateOSDInput(ctx);
 diff --git a/mythtv/libs/libmythtv/videodisplayprofile.cpp b/mythtv/libs/libmythtv/videodisplayprofile.cpp
-index 4d10fe3..e93499c 100644
+index 4d10fe3..083ea98 100644
 --- a/mythtv/libs/libmythtv/videodisplayprofile.cpp
 +++ b/mythtv/libs/libmythtv/videodisplayprofile.cpp
-@@ -1179,7 +1179,7 @@ void VideoDisplayProfile::CreateOpenMAXProfiles(const QString &hostname)
-     DeleteProfileGroup("OpenMAX Normal", hostname);
-     uint groupid = CreateProfileGroup("OpenMAX Normal", hostname);
-     CreateProfile(groupid, 1, ">", 0, 0, "", 0, 0,
--                  "openmax", 1, true, "openmax", "softblend", false,
-+                  "openmax", 4, true, "openmax", "softblend", false,
-                   "openmaxadvanced", "onefield",
+@@ -695,6 +695,11 @@ QString VideoDisplayProfile::GetDecoderHelp(QString decoder)
+             "accelerate video decoding. "
+             "(H264 only, requires Mac OS 10.6.3)");
+ 
++    if (decoder == "openmax")
++        msg += QObject::tr(
++            "Openmax will use the graphics hardware to "
++            "accelerate video decoding on Raspberry Pi. ");
++
+     return msg;
+ }
+ 
+@@ -1173,15 +1178,27 @@ void VideoDisplayProfile::CreateVAAPIProfiles(const QString &hostname)
                    "");
  }
+ 
+-void VideoDisplayProfile::CreateOpenMAXProfiles(const QString &hostname)
++// upgrade = 1 means adding high quality
++void VideoDisplayProfile::CreateOpenMAXProfiles(const QString &hostname, int upgrade)
+ {
+-    (void) QObject::tr("OpenMAX Normal", "Sample: OpenMAX Normal");
+-    DeleteProfileGroup("OpenMAX Normal", hostname);
+-    uint groupid = CreateProfileGroup("OpenMAX Normal", hostname);
++#ifdef USING_OPENGLES
++    (void) QObject::tr("OpenMAX High Quality", "Sample: OpenMAX High Quality");
++    DeleteProfileGroup("OpenMAX High Quality", hostname);
++    uint groupid = CreateProfileGroup("OpenMAX High Quality", hostname);
+     CreateProfile(groupid, 1, ">", 0, 0, "", 0, 0,
+-                  "openmax", 1, true, "openmax", "softblend", false,
++                  "openmax", 4, true, "openmax", "opengl", true,
+                   "openmaxadvanced", "onefield",
+                   "");
++#endif
++    if (!upgrade) {
++        (void) QObject::tr("OpenMAX Normal", "Sample: OpenMAX Normal");
++        DeleteProfileGroup("OpenMAX Normal", hostname);
++        uint groupid = CreateProfileGroup("OpenMAX Normal", hostname);
++        CreateProfile(groupid, 1, ">", 0, 0, "", 0, 0,
++                      "openmax", 4, true, "openmax", "softblend", false,
++                      "openmaxadvanced", "onefield",
++                      "");
++    }
+ }
+ 
+ void VideoDisplayProfile::CreateProfiles(const QString &hostname)
+@@ -1451,6 +1468,12 @@ QString VideoDisplayProfile::GetOSDHelp(const QString &osd)
+             "Uses OpenGL to alpha blend the OSD onto the video.");
+     }
+ 
++    if (osd =="threaded")
++    {
++        msg = QObject::tr(
++            "Uses OpenGL in a separate thread to overlay the OSD onto the video.");
++    }
++
+ #ifdef USING_OPENMAX
+     if (osd.contains("openmax"))
+     {
+diff --git a/mythtv/libs/libmythtv/videodisplayprofile.h b/mythtv/libs/libmythtv/videodisplayprofile.h
+index 61119bb..c148861 100644
+--- a/mythtv/libs/libmythtv/videodisplayprofile.h
++++ b/mythtv/libs/libmythtv/videodisplayprofile.h
+@@ -153,7 +153,7 @@ class MTV_PUBLIC VideoDisplayProfile
+     static void        CreateVDAProfiles(const QString &hostname);
+     static void        CreateOpenGLProfiles(const QString &hostname);
+     static void        CreateVAAPIProfiles(const QString &hostname);
+-    static void        CreateOpenMAXProfiles(const QString &hostname);
++    static void        CreateOpenMAXProfiles(const QString &hostname, int upgrade = 0);
+ 
+     static QStringList GetVideoRenderers(const QString &decoder);
+     static QString     GetVideoRendererHelp(const QString &renderer);
+diff --git a/mythtv/libs/libmythtv/videoout_omx.cpp b/mythtv/libs/libmythtv/videoout_omx.cpp
+index 1b90ceb..2af88f9 100644
+--- a/mythtv/libs/libmythtv/videoout_omx.cpp
++++ b/mythtv/libs/libmythtv/videoout_omx.cpp
+@@ -4,6 +4,7 @@
+ 
+ #ifdef OSD_EGL /* includes QJson with enum value named Bool, must go before EGL/egl.h */
+ # include "mythpainter_ogl.h"
++# include "mythpainter_qimage.h"
+ #endif //def OSD_EGL
+ 
+ /* must go before X11/X.h due to #define None 0L */
+@@ -57,7 +58,7 @@ using namespace omxcontext;
+ /*
+  * Macros
+  */
+-#define LOC QString("VOMX:%1 ").arg(m_render.Id())
++#define LOC QString("VideoOutputOMX: ")
+ 
+ // Roundup a value: y = ROUNDUP(x,4)
+ #define ROUNDUP( _x,_z) ((_x) + ((-(int)(_x)) & ((_z) -1)) )
+@@ -118,8 +119,110 @@ private:
+     DISPMANX_DISPLAY_HANDLE_T m_dispman_display;
+ #endif
+ };
+-#endif //def OSD_EGL
+ 
++class GlOsdThread : public MThread
++{
++    public:
++        GlOsdThread() :
++            MThread("GlOsdThread")
++        {
++            isRunning = true;
++            m_osdImage = 0;
++            m_EGLRender = 0;
++            m_Painter = 0;
++            rectsChanged = false;
++            m_lock.lock();
++        }
++        virtual void run()
++        {
++            RunProlog();
++            m_EGLRender = new MythRenderEGL();
++            if (m_EGLRender->create())
++            {
++                m_EGLRender->Init();
++                m_Painter = new MythOpenGLPainter(m_EGLRender);
++                m_Painter->SetSwapControl(false);
++                LOG(VB_GENERAL, LOG_INFO, LOC + __func__ +
++                ": OSD display uses threaded opengl");
++
++            }
++            else
++            {
++                LOG(VB_GENERAL, LOG_ERR, LOC + __func__ +
++                    ": failed to create MythRenderEGL for OSD");
++                m_EGLRender = 0;
++                m_Painter = 0;
++                isRunning = false;
++            }
++            m_lock.unlock();
++            while (isRunning)
++            {
++                m_lock.lock();
++                m_wait.wait(&m_lock);
++                if (!isRunning) {
++                    m_lock.unlock();
++                    break;
++                }
++
++                if (rectsChanged)
++                {
++                    m_EGLRender->SetViewPort(m_displayRect);
++                    m_EGLRender->SetViewPort(m_glRect,true);
++                    rectsChanged = false;
++                }
++                m_EGLRender->makeCurrent();
++                m_EGLRender->BindFramebuffer(0);
++                m_Painter->DrawImage(m_bounds, m_osdImage,
++                                  m_bounds, 255);
++                m_EGLRender->swapBuffers();
++                m_EGLRender->SetBackground(0, 0, 0, 0);
++                m_EGLRender->ClearFramebuffer();
++                m_Painter->DeleteTextures();
++                m_EGLRender->doneCurrent();
++
++                m_lock.unlock();
++            }
++            if (m_osdImage)
++                m_osdImage->DecrRef(), m_osdImage = 0;
++            if (m_Painter)
++                delete m_Painter, m_Painter = 0;
++            if (m_EGLRender)
++                m_EGLRender->DecrRef(), m_EGLRender = 0;
++            RunEpilog();
++        }
++        // All of the below methods are called from another thread
++        void shutdown()
++        {
++            isRunning=false;
++            m_lock.tryLock(2000);
++            m_wait.wakeAll();
++            m_lock.unlock();
++            wait(2000);
++        }
++        bool isValid() {
++            return isRunning;
++        }
++        void setRects(const QRect &displayRect,const QRect &glRect)
++        {
++            m_displayRect = displayRect;
++            m_glRect = glRect;
++            rectsChanged = true;
++        }
++    private:
++        MythRenderEGL *m_EGLRender;
++        MythOpenGLPainter *m_Painter;
++        bool isRunning;
++        QRect m_displayRect;
++        QRect m_glRect;
++        bool rectsChanged;
++    public:
++        QMutex  m_lock;
++        QWaitCondition m_wait;
++        MythImage *m_osdImage;
++        QRect m_bounds;
++};
++
++#endif //def OSD_EGL
+ 
+ /*
+  * Constants
+@@ -150,7 +253,8 @@ void VideoOutputOMX::GetRenderOptions(render_opts &opts,
+     (*opts.deints)[kName].append(kName + "linedouble");
+ #endif
+ #ifdef OSD_EGL
+-    (*opts.osds)[kName].append("opengl2");
++    (*opts.osds)[kName].append("opengl");
++    (*opts.osds)[kName].append("threaded");
+ #endif
+     (*opts.osds)[kName].append("softblend");
+ 
+@@ -180,8 +284,13 @@ QStringList VideoOutputOMX::GetAllowedRenderers(
+ VideoOutputOMX::VideoOutputOMX() :
+     m_render(gCoreContext->GetSetting("OMXVideoRender", VIDEO_RENDER), *this),
+     m_imagefx(gCoreContext->GetSetting("OMXVideoFilter", IMAGE_FX), *this),
+-    m_context(0), m_osdpainter(0), m_backgroundscreen(0)
++    m_context(0),   
++    m_backgroundscreen(0), m_glOsdThread(0), m_changed(false)
+ {
++#ifdef OSD_EGL
++      m_osdpainter = 0;
++      m_threaded_osdpainter = 0;
++#endif
+     init(&av_pause_frame, FMT_YV12, NULL, 0, 0, 0);
+ 
+     if (gCoreContext->GetNumSetting("UseVideoModes", 0))
+@@ -225,9 +334,18 @@ VideoOutputOMX::~VideoOutputOMX()
+     DeleteBuffers();
+ 
+ #ifdef OSD_EGL
+-    delete m_osdpainter, m_osdpainter = 0;
++    if (m_osdpainter)
++        delete m_osdpainter, m_osdpainter = 0;
+     if (m_context)
+         m_context->DecrRef(), m_context = 0;
++    if (m_glOsdThread)
++    {
++        m_glOsdThread->shutdown();
++        delete m_glOsdThread;
++        m_glOsdThread = 0;
++    }
++    if (m_threaded_osdpainter)
++        delete m_threaded_osdpainter, m_threaded_osdpainter = 0;
+ #endif
+ 
+     if (m_backgroundscreen)
+@@ -309,8 +427,9 @@ bool VideoOutputOMX::Init(          // Return true if successful
+     if (!CreateBuffers(video_dim_buf, video_dim_disp, winid))
+         return false;
+ 
++    bool osdIsSet = false;
+ #ifdef OSD_EGL
+-    if (GetOSDRenderer() == "opengl2")
++    if (GetOSDRenderer() == "opengl")
+     {
+         MythRenderEGL *render = new MythRenderEGL();
+         if (render->create())
+@@ -320,16 +439,35 @@ bool VideoOutputOMX::Init(          // Return true if successful
+             MythOpenGLPainter *p = new MythOpenGLPainter(m_context);
+             p->SetSwapControl(false);
+             m_osdpainter = p;
++            LOG(VB_GENERAL, LOG_INFO, LOC + __func__ +
++                ": OSD display uses opengl");
++            osdIsSet = true;
+         }
+         else
+         {
+             LOG(VB_GENERAL, LOG_ERR, LOC + __func__ +
+-                " failed to create MythRenderEGL");
++                ": failed to create MythRenderEGL");
+             render->DecrRef();
++            m_context = 0;
++            m_osdpainter = 0;
+         }
+     }
++    if (GetOSDRenderer() == "threaded")
++    {
++        m_glOsdThread = new GlOsdThread();
++        m_glOsdThread->start();
++        // Wait until set up
++        m_glOsdThread->m_lock.lock();
++        m_glOsdThread->m_lock.unlock();
++        if (m_glOsdThread->isValid())
++            osdIsSet = true;
++    }
+ #endif
+ 
++    if (!osdIsSet)
++        LOG(VB_GENERAL, LOG_INFO, LOC + __func__ +
++                ": OSD display uses softblend");
++
+     MoveResize();
+ 
+     m_disp_rect = m_vid_rect = QRect();
+@@ -756,7 +894,11 @@ void VideoOutputOMX::MoveResizeWindow(QRect)
+ bool VideoOutputOMX::hasFullScreenOSD(void) const
+ {
+ #ifdef OSD_EGL
+-    if (m_context && m_osdpainter)
++    if (GetOSDRenderer() == "opengl"
++        && m_context && m_osdpainter)
++        return true;
++    if (GetOSDRenderer() == "threaded"
++        && m_glOsdThread && m_glOsdThread->isValid())
+         return true;
+ #endif
+     return VideoOutput::hasFullScreenOSD();
+@@ -765,17 +907,23 @@ bool VideoOutputOMX::hasFullScreenOSD(void) const
+ // virtual
+ MythPainter *VideoOutputOMX::GetOSDPainter(void)
+ {
+-    return m_osdpainter ? m_osdpainter : VideoOutput::GetOSDPainter();
++#ifdef OSD_EGL
++    if (GetOSDRenderer() == "opengl")
++        return m_osdpainter;
++    if (GetOSDRenderer() == "threaded")
++        return m_threaded_osdpainter;
++#endif
++    return VideoOutput::GetOSDPainter();
+ }
+ 
+ // virtual
+ bool VideoOutputOMX::DisplayOSD(VideoFrame *frame, OSD *osd)
+ {
+ #ifdef OSD_EGL
+-    if (m_context && m_osdpainter)
++    if (GetOSDRenderer() == "opengl"
++        && m_context && m_osdpainter)
+     {
+         m_context->makeCurrent();
+-
+         m_context->BindFramebuffer(0);
+ 
+         QRect bounds = GetTotalOSDBounds();
+@@ -799,6 +947,61 @@ bool VideoOutputOMX::DisplayOSD(VideoFrame *frame, OSD *osd)
+         m_context->doneCurrent();
+         return true;
+     }
++
++    if (GetOSDRenderer() == "threaded"
++        && m_glOsdThread && m_glOsdThread->isValid())
++    {
++        if (!m_threaded_osdpainter)
++        {
++            m_threaded_osdpainter = new MythQImagePainter();
++            if (!m_threaded_osdpainter)
++                return false;
++        }
++        QSize osd_size = GetTotalOSDBounds().size();
++        if (m_glOsdThread->m_osdImage && (m_glOsdThread->m_osdImage->size() != osd_size))
++        {
++            LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("OSD size changed."));
++            m_glOsdThread->m_osdImage->DecrRef();
++            m_glOsdThread->m_osdImage = 0;
++        }
++        if (!m_glOsdThread->m_osdImage)
++        {
++            m_glOsdThread->m_osdImage = m_threaded_osdpainter->GetFormatImage();
++            if (m_glOsdThread->m_osdImage)
++            {
++                QImage blank = QImage(osd_size,
++                    QImage::Format_ARGB32_Premultiplied);
++                m_glOsdThread->m_osdImage->Assign(blank);
++                m_threaded_osdpainter->Clear(m_glOsdThread->m_osdImage,
++                                   QRegion(QRect(QPoint(0,0), osd_size)));
++                LOG(VB_GENERAL, LOG_INFO, LOC + QString("Created OSD QImage."));
++            }
++            else {
++                LOG(VB_GENERAL, LOG_ERR, LOC + QString("Unable to create OSD QImage."));
++                return false;
++            }
++        }
++        if (m_visual)
++        {
++            LOG(VB_GENERAL, LOG_ERR, LOC + "Visualiser not supported here");
++            m_visual->Draw(QRect(), NULL, NULL);
++        }
++
++        if (m_glOsdThread->m_lock.tryLock(0)) {
++            QRegion dirty   = QRegion();
++            QRegion visible = osd->Draw(m_threaded_osdpainter,
++                m_glOsdThread->m_osdImage, osd_size, dirty);
++            m_changed = m_changed || !dirty.isEmpty();
++            m_glOsdThread->m_osdImage->SetChanged(m_changed);
++            m_glOsdThread->m_bounds = GetTotalOSDBounds();
++            m_glOsdThread->m_lock.unlock();
++            if (m_changed) {
++                m_glOsdThread->m_wait.wakeAll();
++                m_changed = false;
++            }
++        }
++        return true;
++    }
+ #endif
+     return VideoOutput::DisplayOSD(frame, osd);
+ }
+@@ -1072,8 +1275,27 @@ bool VideoOutputOMX::SetVideoRect(const QRect &d_rect, const QRect &vid_rect)
+ #endif // USING_BROADCOM
+ 
+ #ifdef OSD_EGL
+-    if (m_context)
+-        m_context->SetViewPort(window.GetDisplayVisibleRect());
++    if (m_context
++        || ( m_glOsdThread && m_glOsdThread->isValid() ) )
++    {
++        QRect displayRect = window.GetDisplayVisibleRect();
++        QRect mainRect = GetMythMainWindow()->geometry();
++        uint32_t maxwidth = 0, maxheight = 0;
++        graphics_get_display_size(DISPMANX_ID_MAIN_LCD, &maxwidth, &maxheight);
++        QRect glRect(mainRect.x(),        // left
++            maxheight-mainRect.bottom(),  // top
++            0,0);
++        glRect.setRight(mainRect.right());
++        glRect.setBottom(glRect.top()+mainRect.height());
++        if (m_context)
++        {
++            m_context->SetViewPort(displayRect);
++            m_context->SetViewPort(glRect,true);
++        }
++        if (m_glOsdThread && m_glOsdThread->isValid()) {
++            m_glOsdThread->setRects(displayRect,glRect);
++        }
++    }
+ #endif
+ 
+     m_disp_rect = disp_rect;
+@@ -1193,6 +1415,8 @@ MythRenderEGL::MythRenderEGL() :
+     m_window(0),
+     m_surface(EGL_NO_SURFACE)
+ {
++    // Disable flush to get performance improvement
++    m_flushEnabled = false;
+     // get an EGL display connection
+     m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+     if (m_display == EGL_NO_DISPLAY)
+@@ -1320,6 +1544,7 @@ MythRenderEGL::~MythRenderEGL()
+     assert(b == EGL_TRUE);
+ #endif
+     m_display = EGL_NO_DISPLAY;
++    DeleteOpenGLResources();
+ }
+ 
+ EGLNativeWindowType MythRenderEGL::createNativeWindow()
+diff --git a/mythtv/libs/libmythtv/videoout_omx.h b/mythtv/libs/libmythtv/videoout_omx.h
+index 4760377..fb162d1 100644
+--- a/mythtv/libs/libmythtv/videoout_omx.h
++++ b/mythtv/libs/libmythtv/videoout_omx.h
+@@ -12,6 +12,10 @@
+ #include "omxcontext.h"
+ 
+ class MythRenderEGL;
++class GlOsdThread;
++#ifdef OSD_EGL
++class MythOpenGLPainter;
++#endif
+ 
+ class VideoOutputOMX : public VideoOutput, private OMXComponentCtx
+ {
+@@ -77,8 +81,13 @@ class VideoOutputOMX : public VideoOutput, private OMXComponentCtx
+     QRect m_disp_rect, m_vid_rect;
+     QVector<void*> m_bufs;
+     MythRenderEGL *m_context;
+-    MythPainter *m_osdpainter;
++#ifdef OSD_EGL   
++    MythOpenGLPainter *m_osdpainter;
++    MythPainter *m_threaded_osdpainter;
++#endif
+     MythScreenType *m_backgroundscreen;
++    GlOsdThread *m_glOsdThread;
++    bool m_changed;
+ };
+ 
+ #endif // ndef VIDEOOUT_OMX_H
 diff --git a/mythtv/libs/libmythtv/visualisations/videovisualcircles.cpp b/mythtv/libs/libmythtv/visualisations/videovisualcircles.cpp
 index 1140372..e9cbf8f 100644
 --- a/mythtv/libs/libmythtv/visualisations/videovisualcircles.cpp
@@ -61536,6 +62467,130 @@ index 00a8c73..a761e32 100644
      return m_priv->valid;
  }
  
+diff --git a/mythtv/libs/libmythui/libmythui.pro b/mythtv/libs/libmythui/libmythui.pro
+index 47e46e1..321e9a3 100644
+--- a/mythtv/libs/libmythui/libmythui.pro
++++ b/mythtv/libs/libmythui/libmythui.pro
+@@ -175,8 +175,8 @@ mingw | win32-msvc*{
+ }
+ 
+ using_opengl {
+-    DEFINES += USE_OPENGL_PAINTER
+-    SOURCES += mythpainter_ogl.cpp    mythrender_opengl.cpp
++    using_opengl_themepainter:DEFINES += USE_OPENGL_PAINTER
++    SOURCES += mythpainter_ogl.cpp  mythrender_opengl.cpp
+     SOURCES += mythrender_opengl2.cpp
+     HEADERS += mythpainter_ogl.h    mythrender_opengl.h mythrender_opengl_defs.h
+     HEADERS += mythrender_opengl2.h mythrender_opengl_defs2.h
+diff --git a/mythtv/libs/libmythui/mythdialogbox.cpp b/mythtv/libs/libmythui/mythdialogbox.cpp
+index c5fa698..4467e4a 100644
+--- a/mythtv/libs/libmythui/mythdialogbox.cpp
++++ b/mythtv/libs/libmythui/mythdialogbox.cpp
+@@ -274,6 +274,10 @@ void MythDialogBox::updateMenu(void)
+         if (m_currentMenu->m_selectedItem == x)
+             m_buttonList->SetItemCurrent(button);
+     }
++    // GetVisibleCount here makes sure that the dialog size is
++    // calculated correctly
++    m_buttonList->GetVisibleCount();
++    GetMythMainWindow()->GetMainStack()->GetTopScreen()->SetRedraw();
+ }
+ 
+ void MythDialogBox::Select(MythUIButtonListItem* item)
+@@ -354,6 +358,9 @@ void MythDialogBox::AddButton(const QString &title, QVariant data, bool newMenu,
+ 
+     if (setCurrent)
+         m_buttonList->SetItemCurrent(button);
++    // GetVisibleCount here makes sure that the dialog size is
++    // calculated correctly
++    m_buttonList->GetVisibleCount();
+ }
+ 
+ void MythDialogBox::AddButton(const QString &title, const char *slot,
+@@ -369,6 +376,9 @@ void MythDialogBox::AddButton(const QString &title, const char *slot,
+ 
+     if (setCurrent)
+         m_buttonList->SetItemCurrent(button);
++    // GetVisibleCount here makes sure that the dialog size is
++    // calculated correctly
++    m_buttonList->GetVisibleCount();
+ }
+ 
+ bool MythDialogBox::keyPressEvent(QKeyEvent *event)
+diff --git a/mythtv/libs/libmythui/mythmainwindow.cpp b/mythtv/libs/libmythui/mythmainwindow.cpp
+index 56b8dfb..8a903c6 100644
+--- a/mythtv/libs/libmythui/mythmainwindow.cpp
++++ b/mythtv/libs/libmythui/mythmainwindow.cpp
+@@ -2711,6 +2711,13 @@ void MythMainWindow::customEvent(QEvent *ce)
+             MythNotificationCenter::GetInstance()->Queue(mn);
+             return;
+         }
++        else if (message == "RECONNECT_SUCCESS" && d->standby == true)
++        {
++            // If the connection to the master backend has just been (re-)established
++            // but we're in standby, make sure the backend is not blocked from
++            // shutting down.
++            gCoreContext->AllowShutdown();
++        }
+     }
+     else if ((MythEvent::Type)(ce->type()) == MythEvent::MythUserMessage)
+     {
+diff --git a/mythtv/libs/libmythui/mythpainter_ogl.h b/mythtv/libs/libmythui/mythpainter_ogl.h
+index 629dca7..13af273 100644
+--- a/mythtv/libs/libmythui/mythpainter_ogl.h
++++ b/mythtv/libs/libmythui/mythpainter_ogl.h
+@@ -37,13 +37,13 @@ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
+ 
+     virtual void PushTransformation(const UIEffects &fx, QPointF center = QPointF());
+     virtual void PopTransformation(void);
++    void       DeleteTextures(void);
+ 
+   protected:
+     virtual MythImage* GetFormatImagePriv(void) { return new MythImage(this); }
+     virtual void DeleteFormatImagePriv(MythImage *im);
+ 
+     void       ClearCache(void);
+-    void       DeleteTextures(void);
+     int        GetTextureFromCache(MythImage *im);
+ 
+     QWidget          *realParent;
+diff --git a/mythtv/libs/libmythui/mythrender_opengl.cpp b/mythtv/libs/libmythui/mythrender_opengl.cpp
+index 8884190..b376008 100644
+--- a/mythtv/libs/libmythui/mythrender_opengl.cpp
++++ b/mythtv/libs/libmythui/mythrender_opengl.cpp
+@@ -365,7 +365,8 @@ void MythRenderOpenGL::Flush(bool use_fence)
+     }
+     else
+     {
+-        glFlush();
++        if (m_flushEnabled)
++            glFlush();
+     }
+ 
+     doneCurrent();
+@@ -1136,6 +1137,7 @@ void MythRenderOpenGL::ResetVars(void)
+     m_active_fb       = 0;
+     m_blend           = false;
+     m_background      = 0x00000000;
++    m_flushEnabled    = true;
+ }
+ 
+ void MythRenderOpenGL::ResetProcs(void)
+diff --git a/mythtv/libs/libmythui/mythrender_opengl.h b/mythtv/libs/libmythui/mythrender_opengl.h
+index 3543fa9..adaf302 100644
+--- a/mythtv/libs/libmythui/mythrender_opengl.h
++++ b/mythtv/libs/libmythui/mythrender_opengl.h
+@@ -271,6 +271,10 @@ class MUI_PUBLIC MythRenderOpenGL : protected MythRenderContext, public MythRend
+     QMap<uint64_t,GLuint>   m_cachedVBOS;
+     QList<uint64_t>         m_vboExpiry;
+ 
++    // For Performance improvement set false to disable glFlush.
++    // Needed for Raspberry pi
++    bool    m_flushEnabled;
++
+     // 1D Textures (not available on GL ES 2.0)
+     MYTH_GLTEXIMAGE1DPROC                m_glTexImage1D;
+ 
 diff --git a/mythtv/libs/libmythui/screensaver-dbus.cpp b/mythtv/libs/libmythui/screensaver-dbus.cpp
 index b099c46..af41c91 100644
 --- a/mythtv/libs/libmythui/screensaver-dbus.cpp
@@ -61549,6 +62604,640 @@ index b099c46..af41c91 100644
                  m_interface->lastError().message());
          }
          else
+diff --git a/mythtv/libs/libmythupnp/httprequest.cpp b/mythtv/libs/libmythupnp/httprequest.cpp
+index 12acb04..c32e1d9 100644
+--- a/mythtv/libs/libmythupnp/httprequest.cpp
++++ b/mythtv/libs/libmythupnp/httprequest.cpp
+@@ -3,10 +3,10 @@
+ // Created     : Oct. 21, 2005
+ //
+ // Purpose     : Http Request/Response
+-//                                                                            
++//
+ // Copyright (c) 2005 David Blain <dblain@mythtv.org>
+-//                                          
+-// Licensed under the GPL v2 or later, see COPYING for details                    
++//
++// Licensed under the GPL v2 or later, see COPYING for details
+ //
+ //////////////////////////////////////////////////////////////////////////////
+ 
+@@ -52,6 +52,8 @@
+ #include "serializers/jsonSerializer.h"
+ #include "serializers/xmlplistSerializer.h"
+ 
++#include <unistd.h> // for gethostname
++
+ #ifndef O_LARGEFILE
+ #define O_LARGEFILE 0
+ #endif
+@@ -289,7 +291,8 @@ QString HTTPRequest::BuildResponseHeader( long long nSize )
+             SetResponseHeader("contentFeatures.dlna.org", "DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000");
+     }
+ 
+-    // ----------------------------------------------------------------------
++    if (!m_mapHeaders[ "origin" ].isEmpty())
++        AddCORSHeaders(m_mapHeaders[ "origin" ]);
+ 
+     if (getenv("HTTPREQUEST_DEBUG"))
+     {
+@@ -435,54 +438,6 @@ qint64 HTTPRequest::SendResponse( void )
+     }
+ 
+     // ----------------------------------------------------------------------
+-    // SECURITY: Access-Control-Allow-Origin Wildcard
+-    //
+-    // This is a REALLY bad idea, so bad in fact that I'm including it here but
+-    // commented out in the hope that anyone thinking of adding it in the future
+-    // will see it and then read this comment.
+-    //
+-    // Browsers do not verify that the origin is on the same network. This means
+-    // that a malicious script embedded or included into ANY webpage you visit
+-    // could then access servers on your local network including MythTV. They
+-    // can grab data, delete data including recordings and videos, schedule
+-    // recordings and generally ruin your day.
+-    //
+-    // This might seem paranoid and a remote possibility, but then that's how
+-    // a lot of exploits are born. Do NOT allow wildcards.
+-    //
+-    //m_mapRespHeaders[ "Access-Control-Allow-Origin" ] = "*";
+-    // ----------------------------------------------------------------------
+-
+-    // ----------------------------------------------------------------------
+-    // SECURITY: Allow the WebFrontend on the Master backend and ONLY this
+-    // machine to access resources on a frontend or slave web server
+-    //
+-    // TODO: Add hostname:port combo as well as ip:port
+-    //
+-    // http://www.w3.org/TR/cors/#introduction
+-    // ----------------------------------------------------------------------
+-    QString masterAddrPort = QString("%1:%2").arg(gCoreContext->GetMasterServerIP())
+-                                             .arg(gCoreContext->GetMasterServerStatusPort());
+-    QString masterTLSAddrPort = QString("%1:%2").arg(gCoreContext->GetMasterServerIP())
+-                                                .arg(gCoreContext->GetSetting( "BackendSSLPort",
+-                                                QString(gCoreContext->GetMasterServerStatusPort() + 10)));
+-
+-    QStringList allowedOrigins;
+-    allowedOrigins << QString("http://%1").arg(masterAddrPort);
+-    allowedOrigins << QString("https://%2").arg(masterTLSAddrPort);
+-
+-    if (!m_mapHeaders[ "origin" ].isEmpty())
+-    {
+-        if (allowedOrigins.contains(m_mapHeaders[ "origin" ]))
+-            SetResponseHeader( "Access-Control-Allow-Origin" ,
+-                               m_mapHeaders[ "origin" ]);
+-        else
+-            LOG(VB_GENERAL, LOG_CRIT, QString("HTTPRequest: Cross-origin request "
+-                                              "received with origin (%1)")
+-                                                 .arg(m_mapHeaders[ "origin" ]));
+-    }
+-
+-    // ----------------------------------------------------------------------
+     // Write out Header.
+     // ----------------------------------------------------------------------
+ 
+@@ -590,10 +545,10 @@ qint64 HTTPRequest::SendResponseFile( QString sFileName )
+         {
+             bRange = ParseRange( sRange, llSize, &llStart, &llEnd );
+ 
+-            // Adjust ranges that are too long.  
++            // Adjust ranges that are too long.
+ 
+-            if (llEnd >= llSize) 
+-                llEnd = llSize-1; 
++            if (llEnd >= llSize)
++                llEnd = llSize-1;
+ 
+             if ((llSize > llStart) && (llSize > llEnd) && (llEnd > llStart))
+             {
+@@ -741,7 +696,7 @@ qint64 HTTPRequest::SendData( QIODevice *pDevice, qint64 llStart, qint64 llBytes
+     while ((sent < llBytes) && !pDevice->atEnd())
+     {
+         llBytesToRead  = std::min( (qint64)SENDFILE_BUFFER_SIZE, llBytesRemaining );
+-        
++
+         if (( llBytesRead = pDevice->read( aBuffer, llBytesToRead )) != -1 )
+         {
+             if (( llBytesWritten = WriteBlock( aBuffer, llBytesRead )) == -1)
+@@ -761,7 +716,7 @@ qint64 HTTPRequest::SendData( QIODevice *pDevice, qint64 llStart, qint64 llBytes
+ }
+ 
+ /////////////////////////////////////////////////////////////////////////////
+-// 
++//
+ /////////////////////////////////////////////////////////////////////////////
+ 
+ qint64 HTTPRequest::SendFile( QFile &file, qint64 llStart, qint64 llBytes )
+@@ -1570,7 +1525,7 @@ bool HTTPRequest::ParseRange( QString sRange,
+                               long long *pllEnd   )
+ {
+     // ----------------------------------------------------------------------
+-    // -=>TODO: Only handle 1 range at this time... 
++    // -=>TODO: Only handle 1 range at this time...
+     //          should make work with full spec.
+     // ----------------------------------------------------------------------
+ 
+@@ -1753,7 +1708,7 @@ bool HTTPRequest::ProcessSOAPPayload( const QString &sSOAPAction )
+     QDomNodeList oNodeList = doc.elementsByTagNameNS( m_sNameSpace, m_sMethod );
+ 
+     if (oNodeList.count() == 0)
+-        oNodeList = 
++        oNodeList =
+             doc.elementsByTagNameNS("http://schemas.xmlsoap.org/soap/envelope/",
+                                     "Body");
+ 
+@@ -1802,17 +1757,17 @@ Serializer *HTTPRequest::GetSerializer()
+ {
+     Serializer *pSerializer = NULL;
+ 
+-    if (m_bSOAPRequest) 
++    if (m_bSOAPRequest)
+         pSerializer = (Serializer *)new SoapSerializer(&m_response,
+                                                        m_sNameSpace, m_sMethod);
+     else
+     {
+         QString sAccept = GetRequestHeader( "Accept", "*/*" );
+-        
+-        if (sAccept.contains( "application/json", Qt::CaseInsensitive ))    
++
++        if (sAccept.contains( "application/json", Qt::CaseInsensitive ))
+             pSerializer = (Serializer *)new JSONSerializer(&m_response,
+                                                            m_sMethod);
+-        else if (sAccept.contains( "text/javascript", Qt::CaseInsensitive ))    
++        else if (sAccept.contains( "text/javascript", Qt::CaseInsensitive ))
+             pSerializer = (Serializer *)new JSONSerializer(&m_response,
+                                                            m_sMethod);
+         else if (sAccept.contains( "text/x-apple-plist+xml", Qt::CaseInsensitive ))
+@@ -2303,6 +2258,97 @@ QString HTTPRequest::GetRequestType( ) const
+     return type;
+ }
+ 
++void HTTPRequest::AddCORSHeaders( const QString &sOrigin )
++{
++    // ----------------------------------------------------------------------
++    // SECURITY: Access-Control-Allow-Origin Wildcard
++    //
++    // This is a REALLY bad idea, so bad in fact that I'm including it here but
++    // commented out in the hope that anyone thinking of adding it in the future
++    // will see it and then read this comment.
++    //
++    // Browsers do not verify that the origin is on the same network. This means
++    // that a malicious script embedded or included into ANY webpage you visit
++    // could then access servers on your local network including MythTV. They
++    // can grab data, delete data including recordings and videos, schedule
++    // recordings and generally ruin your day.
++    //
++    // This might seem paranoid and a remote possibility, but then that's how
++    // a lot of exploits are born. Do NOT allow wildcards.
++    //
++    //m_mapRespHeaders[ "Access-Control-Allow-Origin" ] = "*";
++    // ----------------------------------------------------------------------
++
++    // ----------------------------------------------------------------------
++    // SECURITY: Allow the WebFrontend on the Master backend and ONLY this
++    // machine to access resources on a frontend or slave web server
++    //
++    // http://www.w3.org/TR/cors/#introduction
++    // ----------------------------------------------------------------------
++
++    QStringList allowedOrigins;
++    char localhostname[1024]; // about HOST_NAME_MAX * 4
++
++    int serverStatusPort = gCoreContext->GetMasterServerStatusPort();
++    int backendSSLPort = gCoreContext->GetNumSetting( "BackendSSLPort",
++                         serverStatusPort + 10);
++
++    QString masterAddrPort = QString("%1:%2")
++        .arg(gCoreContext->GetMasterServerIP())
++        .arg(serverStatusPort);
++    QString masterTLSAddrPort = QString("%1:%2")
++        .arg(gCoreContext->GetMasterServerIP())
++        .arg(backendSSLPort);
++
++    allowedOrigins << QString("http://%1").arg(masterAddrPort);
++    allowedOrigins << QString("https://%2").arg(masterTLSAddrPort);
++
++    if (!gethostname(localhostname, 1024))
++    {
++        allowedOrigins << QString("http://%1:%2")
++            .arg(localhostname).arg(serverStatusPort);
++        allowedOrigins << QString("https://%1:%2")
++            .arg(localhostname).arg(backendSSLPort);
++    }
++
++    QStringList allowedOriginsList =
++        gCoreContext->GetSetting("AllowedOriginsList", QString(
++            "https://chromecast.mythtv.org,"
++            "http://chromecast.mythtvcast.com"
++            )).split(",");
++
++    for (QStringList::const_iterator it = allowedOriginsList.begin();
++                                     it != allowedOriginsList.end(); it++)
++    {
++         if ((*it).isEmpty())
++            continue;
++
++        if (*it == "*" || (!(*it).startsWith("http://") &&
++            !(*it).startsWith("https://")))
++            LOG(VB_GENERAL, LOG_ERR, QString("Illegal AllowedOriginsList"
++                " entry '%1'. Must start with http[s]:// and not be *")
++                .arg(*it));
++        else
++            allowedOrigins << *it;
++    }
++
++    if (VERBOSE_LEVEL_CHECK(VB_HTTP, LOG_DEBUG))
++        for (QStringList::const_iterator it = allowedOrigins.begin();
++                                         it != allowedOrigins.end(); it++)
++            LOG(VB_HTTP, LOG_DEBUG, QString("Will allow Origin: %1").arg(*it));
++
++    if (allowedOrigins.contains(sOrigin))
++    {
++        SetResponseHeader( "Access-Control-Allow-Origin" , sOrigin);
++        SetResponseHeader( "Access-Control-Allow-Credentials" , "true");
++        SetResponseHeader( "Access-Control-Allow-Headers" , "Content-Type");
++        LOG(VB_HTTP, LOG_DEBUG, QString("Allow-Origin: %1)").arg(sOrigin));
++    }
++    else
++        LOG(VB_GENERAL, LOG_CRIT, QString("HTTPRequest: Cross-origin request "
++                                          "received with origin (%1)")
++                                          .arg(sOrigin));
++}
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/mythtv/libs/libmythupnp/httprequest.h b/mythtv/libs/libmythupnp/httprequest.h
+index c52ae07..c3a9eb7 100644
+--- a/mythtv/libs/libmythupnp/httprequest.h
++++ b/mythtv/libs/libmythupnp/httprequest.h
+@@ -3,10 +3,10 @@
+ // Created     : Oct. 21, 2005
+ //
+ // Purpose     : Http Request/Response
+-//                                                                            
++//
+ // Copyright (c) 2005 David Blain <dblain@mythtv.org>
+-//                                          
+-// Licensed under the GPL v2 or later, see COPYING for details                    
++//
++// Licensed under the GPL v2 or later, see COPYING for details
+ //
+ //////////////////////////////////////////////////////////////////////////////
+ 
+@@ -36,7 +36,7 @@
+ // Typedefs / Defines
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-typedef enum 
++typedef enum
+ {
+     RequestTypeUnknown      = 0x0000,
+     // HTTP 1.1
+@@ -56,9 +56,9 @@ typedef enum
+     // Not a request type
+     RequestTypeResponse     = 0x1000
+ 
+-} RequestType;                
++} RequestType;
+ 
+-typedef enum 
++typedef enum
+ {
+     ContentType_Unknown    = 0,
+     ContentType_Urlencoded = 1,
+@@ -66,7 +66,7 @@ typedef enum
+ 
+ } ContentType;
+ 
+-typedef enum 
++typedef enum
+ {
+     ResponseTypeNone     = -1,
+     ResponseTypeUnknown  =  0,
+@@ -99,7 +99,7 @@ class IPostProcess
+ };
+ 
+ /////////////////////////////////////////////////////////////////////////////
+-// 
++//
+ /////////////////////////////////////////////////////////////////////////////
+ 
+ class UPNP_PUBLIC HTTPRequest
+@@ -111,8 +111,8 @@ class UPNP_PUBLIC HTTPRequest
+         QRegExp             m_procReqLineExp;
+         QRegExp             m_parseRangeExp;
+ 
+-    public:    
+-        
++    public:
++
+         RequestType         m_eType;
+         ContentType         m_eContentType;
+ 
+@@ -175,9 +175,9 @@ class UPNP_PUBLIC HTTPRequest
+         QString         GetResponseType     ( void );
+         QString         GetResponseHeaders  ( void );
+ 
+-        bool            ParseRange          ( QString sRange, 
+-                                              long long   llSize, 
+-                                              long long *pllStart, 
++        bool            ParseRange          ( QString sRange,
++                                              long long   llSize,
++                                              long long *pllStart,
+                                               long long *pllEnd   );
+ 
+         bool            ParseKeepAlive      ( void );
+@@ -198,16 +198,17 @@ class UPNP_PUBLIC HTTPRequest
+ 
+         bool            BasicAuthentication ();
+         bool            DigestAuthentication ();
++        void            AddCORSHeaders ( const QString &sOrigin );
+ 
+     public:
+-        
++
+                         HTTPRequest     ();
+         virtual        ~HTTPRequest     () {};
+ 
+         bool            ParseRequest    ();
+ 
+-        void            FormatErrorResponse ( bool  bServerError, 
+-                                              const QString &sFaultString, 
++        void            FormatErrorResponse ( bool  bServerError,
++                                              const QString &sFaultString,
+                                               const QString &sDetails );
+ 
+         void            FormatActionResponse( Serializer *ser );
+@@ -265,17 +266,17 @@ class UPNP_PUBLIC HTTPRequest
+ };
+ 
+ /////////////////////////////////////////////////////////////////////////////
+-// 
++//
+ /////////////////////////////////////////////////////////////////////////////
+ 
+ class BufferedSocketDeviceRequest : public HTTPRequest
+ {
+-    public:    
++    public:
+ 
+         QTcpSocket    *m_pSocket;
+ 
+     public:
+-        
++
+         explicit BufferedSocketDeviceRequest( QTcpSocket *pSocket );
+         virtual ~BufferedSocketDeviceRequest() {};
+ 
+@@ -290,7 +291,7 @@ class BufferedSocketDeviceRequest : public HTTPRequest
+ };
+ 
+ /////////////////////////////////////////////////////////////////////////////
+-// 
++//
+ /////////////////////////////////////////////////////////////////////////////
+ 
+ class UPNP_PUBLIC HttpException
+@@ -299,12 +300,12 @@ class UPNP_PUBLIC HttpException
+         int     code;
+         QString msg;
+ 
+-        HttpException( int nCode = -1, const QString &sMsg = "") 
+-               : code( nCode ), msg ( sMsg  ) 
++        HttpException( int nCode = -1, const QString &sMsg = "")
++               : code( nCode ), msg ( sMsg  )
+         {}
+ 
+         // Needed to force a v-table.
+-        virtual ~HttpException() 
++        virtual ~HttpException()
+         {}
+ };
+ 
+@@ -315,13 +316,13 @@ class UPNP_PUBLIC HttpRedirectException : public HttpException
+         QString hostName;
+       //int     port;
+ 
+-        HttpRedirectException( const QString &sHostName = "", 
+-                                     int      nCode     = -1, 
+-                               const QString &sMsg      = "" ) 
++        HttpRedirectException( const QString &sHostName = "",
++                                     int      nCode     = -1,
++                               const QString &sMsg      = "" )
+                : HttpException( nCode, sMsg ), hostName( sHostName )
+         {}
+ 
+-        virtual ~HttpRedirectException() 
++        virtual ~HttpRedirectException()
+         {}
+ 
+ };
+diff --git a/mythtv/programs/mythbackend/autoexpire.cpp b/mythtv/programs/mythbackend/autoexpire.cpp
+index eb63ea4..0c1b9e8 100644
+--- a/mythtv/programs/mythbackend/autoexpire.cpp
++++ b/mythtv/programs/mythbackend/autoexpire.cpp
+@@ -59,14 +59,6 @@ void ExpireThread::run(void)
+     RunEpilog();
+ }
+ 
+-/// \brief This calls AutoExpire::RunUpdate() from within a new thread.
+-void UpdateThread::run(void)
+-{
+-    RunProlog();
+-    m_parent->RunUpdate();
+-    RunEpilog();
+-}
+-
+ /** \class AutoExpire
+  *  \brief Used to expire recordings to make space for new recordings.
+  */
+@@ -81,9 +73,7 @@ AutoExpire::AutoExpire(QMap<int, EncoderLink *> *tvList) :
+     expire_thread(new ExpireThread(this)),
+     desired_freq(15),
+     expire_thread_run(true),
+-    main_server(NULL),
+-    update_pending(false),
+-    update_thread(NULL)
++    main_server(NULL)
+ {
+     expire_thread->start();
+     gCoreContext->addListener(this);
+@@ -97,9 +87,7 @@ AutoExpire::AutoExpire() :
+     expire_thread(NULL),
+     desired_freq(15),
+     expire_thread_run(false),
+-    main_server(NULL),
+-    update_pending(false),
+-    update_thread(NULL)
++    main_server(NULL)
+ {
+ }
+ 
+@@ -115,9 +103,8 @@ AutoExpire::~AutoExpire()
+     }
+ 
+     {
+-        QMutexLocker locker(&instance_lock);
+-        while (update_pending)
+-            instance_cond.wait(&instance_lock);
++        QMutexLocker locker(&update_lock);
++        update_queue.clear();
+     }
+ 
+     if (expire_thread)
+@@ -303,6 +290,15 @@ void AutoExpire::RunExpirer(void)
+         // recalculate auto expire parameters
+         if (curTime >= next_expire)
+         {
++            update_lock.lock();
++            while (!update_queue.empty())
++            {
++                UpdateEntry ue = update_queue.dequeue();
++                if (ue.encoder > 0)
++                    used_encoders[ue.encoder] = ue.fsID;
++            }
++            update_lock.unlock();
++
+             locker.unlock();
+             CalcParams();
+             locker.relock();
+@@ -1032,24 +1028,6 @@ void AutoExpire::FillDBOrdered(pginfolist_t &expireList, int expMethod)
+     }
+ }
+ 
+-/** \brief This is used by Update(QMap<int, EncoderLink*> *, bool)
+- *         to run CalcParams(vector<EncoderLink*>).
+- *
+- *  \param autoExpireInstance AutoExpire instance on which to call CalcParams.
+- */
+-void AutoExpire::RunUpdate(void)
+-{
+-    QMutexLocker locker(&instance_lock);
+-    Sleep(5 * 1000);
+-    locker.unlock();
+-    CalcParams();
+-    locker.relock();
+-    update_pending = false;
+-    update_thread->deleteLater();
+-    update_thread = NULL;
+-    instance_cond.wakeAll();
+-}
+-
+ /**
+  *  \brief This is used to update the global AutoExpire instance "expirer".
+  *
+@@ -1066,12 +1044,6 @@ void AutoExpire::Update(int encoder, int fsID, bool immediately)
+     if (!expirer)
+         return;
+ 
+-    // make sure there is only one update pending
+-    QMutexLocker locker(&expirer->instance_lock);
+-    while (expirer->update_pending)
+-        expirer->instance_cond.wait(&expirer->instance_lock);
+-    expirer->update_pending = true;
+-
+     if (encoder > 0)
+     {
+         QString msg = QString("Cardid %1: is starting a recording on")
+@@ -1080,28 +1052,25 @@ void AutoExpire::Update(int encoder, int fsID, bool immediately)
+             msg.append(" an unknown fsID soon.");
+         else
+             msg.append(QString(" fsID %2 soon.").arg(fsID));
+-
+         LOG(VB_FILE, LOG_INFO, LOC + msg);
+-        expirer->used_encoders[encoder] = fsID;
+     }
+ 
+-    // do it..
+     if (immediately)
+     {
+-        locker.unlock();
++        if (encoder > 0)
++        {
++            expirer->instance_lock.lock();
++            expirer->used_encoders[encoder] = fsID;
++            expirer->instance_lock.unlock();
++        }
+         expirer->CalcParams();
+-        locker.relock();
+-        expirer->update_pending = false;
+         expirer->instance_cond.wakeAll();
+     }
+     else
+     {
+-        // create thread to do work, unless one is running still
+-        if (!expirer->update_thread)
+-        {
+-            expirer->update_thread = new UpdateThread(expirer);
+-            expirer->update_thread->start();
+-        }
++        expirer->update_lock.lock();
++        expirer->update_queue.append(UpdateEntry(encoder, fsID));
++        expirer->update_lock.unlock();
+     }
+ }
+ 
+diff --git a/mythtv/programs/mythbackend/autoexpire.h b/mythtv/programs/mythbackend/autoexpire.h
+index 59c6ede..a8646d7 100644
+--- a/mythtv/programs/mythbackend/autoexpire.h
++++ b/mythtv/programs/mythbackend/autoexpire.h
+@@ -12,6 +12,7 @@ using namespace std;
+ #include <QObject>
+ #include <QString>
+ #include <QMutex>
++#include <QQueue>
+ #include <QSet>
+ #include <QMap>
+ 
+@@ -48,15 +49,14 @@ class ExpireThread : public MThread
+     QPointer<AutoExpire> m_parent;
+ };
+ 
+-class UpdateThread : public QObject, public MThread
++class UpdateEntry
+ {
+-    Q_OBJECT
+   public:
+-    explicit UpdateThread(AutoExpire *p) : MThread("Update"), m_parent(p) {}
+-    virtual ~UpdateThread() { wait(); }
+-    virtual void run(void);
+-  private:
+-    QPointer<AutoExpire> m_parent;
++    UpdateEntry(int _encoder, int _fsID)
++        : encoder(_encoder), fsID(_fsID) {};
++
++    int encoder;
++    int fsID;
+ };
+ 
+ class AutoExpire : public QObject
+@@ -64,7 +64,6 @@ class AutoExpire : public QObject
+     Q_OBJECT
+ 
+     friend class ExpireThread;
+-    friend class UpdateThread;
+   public:
+     explicit AutoExpire(QMap<int, EncoderLink *> *encoderList);
+     AutoExpire(void);
+@@ -92,7 +91,6 @@ class AutoExpire : public QObject
+ 
+   protected:
+     void RunExpirer(void);
+-    void RunUpdate(void);
+ 
+   private:
+     void ExpireLiveTV(int type);
+@@ -126,8 +124,8 @@ class AutoExpire : public QObject
+     MainServer   *main_server;    // protected by instance_lock
+ 
+     // update info
+-    bool          update_pending; // protected by instance_lock
+-    UpdateThread *update_thread;
++    QMutex              update_lock;
++    QQueue<UpdateEntry> update_queue; // protected by update_lock
+ };
+ 
+ #endif
 diff --git a/mythtv/programs/mythbackend/backendhousekeeper.cpp b/mythtv/programs/mythbackend/backendhousekeeper.cpp
 index 3d7296e..7c3ed2e 100644
 --- a/mythtv/programs/mythbackend/backendhousekeeper.cpp
@@ -61562,6 +63251,71 @@ index 3d7296e..7c3ed2e 100644
          int pos = subexp.indexIn(MYTH_SOURCE_VERSION);
          if (pos > -1)
          {
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index 287b41b..9642eb4 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -306,12 +306,12 @@ static bool comp_recstart(RecordingInfo *a, RecordingInfo *b)
+ {
+     if (a->GetRecordingStartTime() != b->GetRecordingStartTime())
+         return a->GetRecordingStartTime() < b->GetRecordingStartTime();
+-    if (a->GetRecordingEndTime() != b->GetRecordingEndTime())
+-        return a->GetRecordingEndTime() < b->GetRecordingEndTime();
+     int cmp = a->GetChannelSchedulingID().compare(b->GetChannelSchedulingID(),
+                                                   Qt::CaseInsensitive);
+     if (cmp != 0)
+         return cmp < 0;
++    if (a->GetRecordingEndTime() != b->GetRecordingEndTime())
++        return a->GetRecordingEndTime() < b->GetRecordingEndTime();
+     if (a->GetRecordingStatus() != b->GetRecordingStatus())
+         return a->GetRecordingStatus() < b->GetRecordingStatus();
+     if (a->GetChanNum() != b->GetChanNum())
+@@ -1090,6 +1090,11 @@ bool Scheduler::FindNextConflict(
+             continue;
+         }
+ 
++        bool mplexid_ok =
++            p->GetInputID() != q->GetInputID() &&
++            ((p->mplexid && p->mplexid == q->mplexid) ||
++             (!p->mplexid && p->GetChanID() == q->GetChanID()));
++
+         if (p->GetRecordingEndTime() == q->GetRecordingStartTime() ||
+             p->GetRecordingStartTime() == q->GetRecordingEndTime())
+         {
+@@ -1097,19 +1102,12 @@ bool Scheduler::FindNextConflict(
+                 (openEnd == openEndDiffChannel &&
+                  p->GetChanID() == q->GetChanID()) ||
+                 (openEnd == openEndAlways &&
+-                 p->GetInputID() != q->GetInputID() &&
+-                 ((p->mplexid && p->mplexid == q->mplexid) ||
+-                  (!p->mplexid && p->GetChanID() == q->GetChanID()))))
++                 mplexid_ok))
+             {
+                 if (debugConflicts)
+                     msg += "  no-overlap ";
+-                if ((m_openEnd == openEndDiffChannel &&
+-                     p->GetChanID() == q->GetChanID()) ||
+-                    (m_openEnd == openEndAlways &&
+-                     p->GetInputID() != q->GetInputID() &&
+-                     ((p->mplexid && p->mplexid == q->mplexid) ||
+-                      (!p->mplexid && p->GetChanID() == q->GetChanID()))))
+-                      ++affinity;
++                if (mplexid_ok)
++                    ++affinity;
+                 continue;
+             }
+         }
+@@ -1128,9 +1126,7 @@ bool Scheduler::FindNextConflict(
+ 
+         // if two inputs are in the same input group we have a conflict
+         // unless the programs are on the same multiplex.
+-        if (p->GetInputID() != q->GetInputID() &&
+-            ((p->mplexid && p->mplexid == q->mplexid) ||
+-             (!p->mplexid && p->GetChanID() == q->GetChanID())))
++        if (mplexid_ok)
+         {
+             ++affinity;
+             continue;
 diff --git a/mythtv/programs/mythbackend/services/dvr.cpp b/mythtv/programs/mythbackend/services/dvr.cpp
 index b699f29..3868136 100644
 --- a/mythtv/programs/mythbackend/services/dvr.cpp
@@ -61689,7 +63443,7 @@ index 049c189..7f977c2 100644
  }
  
 diff --git a/mythtv/programs/mythfrontend/galleryconfig.cpp b/mythtv/programs/mythfrontend/galleryconfig.cpp
-index 00c451e..79f9ed8 100644
+index 00c451e..45cdd79 100644
 --- a/mythtv/programs/mythfrontend/galleryconfig.cpp
 +++ b/mythtv/programs/mythfrontend/galleryconfig.cpp
 @@ -46,14 +46,19 @@ ThumbSettings::ThumbSettings() : VerticalConfigurationGroup()
@@ -61725,6 +63479,51 @@ index 00c451e..79f9ed8 100644
      HostCheckBox *browseTran = new HostCheckBox("GalleryBrowseTransition");
      browseTran->setLabel(tr("Use transitions when browsing"));
      browseTran->setHelpText(tr("When cleared, transitions will only be used "
+@@ -138,7 +149,7 @@ ImportSettings::ImportSettings(bool enable) : VerticalConfigurationGroup()
+  \brief Settings Page 2
+  \param enable True if password has been entered
+ */
+-DatabaseSettings::DatabaseSettings(bool enable)
++GalleryDbSettings::GalleryDbSettings(bool enable)
+     : VerticalConfigurationGroup(false)
+ {
+     setLabel(tr("Database Settings") + (enable ? "" : tr(" (Requires edit privileges)")));
+diff --git a/mythtv/programs/mythfrontend/galleryconfig.h b/mythtv/programs/mythfrontend/galleryconfig.h
+index 300eac1..536773d 100644
+--- a/mythtv/programs/mythfrontend/galleryconfig.h
++++ b/mythtv/programs/mythfrontend/galleryconfig.h
+@@ -18,11 +18,11 @@ public:
+ 
+ 
+ //! Settings page 2
+-class DatabaseSettings : public VerticalConfigurationGroup
++class GalleryDbSettings : public VerticalConfigurationGroup
+ {
+     Q_OBJECT
+ public:
+-    explicit DatabaseSettings(bool enable);
++    explicit GalleryDbSettings(bool enable);
+ 
+ signals:
+     void ClearDbPressed();
+@@ -36,14 +36,14 @@ public:
+     explicit GalleryConfig(bool editMode)
+     {
+         addChild(new GallerySettings());
+-        m_dbGroup = new DatabaseSettings(editMode);
++        m_dbGroup = new GalleryDbSettings(editMode);
+         addChild(m_dbGroup);
+     }
+ 
+-    DatabaseSettings *GetClearPage() { return m_dbGroup; }
++    GalleryDbSettings *GetClearPage() { return m_dbGroup; }
+ 
+ private:
+-    DatabaseSettings *m_dbGroup;
++    GalleryDbSettings *m_dbGroup;
+ };
+ 
+ 
 diff --git a/mythtv/programs/mythfrontend/galleryslideview.cpp b/mythtv/programs/mythfrontend/galleryslideview.cpp
 index 8006a6e..fb24c84 100644
 --- a/mythtv/programs/mythfrontend/galleryslideview.cpp
@@ -62154,6 +63953,40 @@ index 28e1767..52042e1 100644
      QString      GetPosition() const;
      bool         Select(int id, int fallback = 0);
      virtual bool LoadFromDb(int parentId);
+diff --git a/mythtv/programs/mythfrontend/globalsettings.cpp b/mythtv/programs/mythfrontend/globalsettings.cpp
+index f07e4fe..b90d080 100644
+--- a/mythtv/programs/mythfrontend/globalsettings.cpp
++++ b/mythtv/programs/mythfrontend/globalsettings.cpp
+@@ -1247,11 +1247,19 @@ PlaybackProfileConfigs::PlaybackProfileConfigs(const QString &str) :
+ #endif
+ 
+ #ifdef USING_OPENMAX
+-    if (!profiles.contains("OpenMAX Normal"))
++    if (!profiles.contains("OpenMAX Normal") &&
++        !profiles.contains("OpenMAX High Quality"))
+     {
+         VideoDisplayProfile::CreateOpenMAXProfiles(host);
+         profiles = VideoDisplayProfile::GetProfiles(host);
+     }
++    // Special case for user upgrading from version that only
++    // has OpenMAX Normal
++    else if (!profiles.contains("OpenMAX High Quality"))
++    {
++        VideoDisplayProfile::CreateOpenMAXProfiles(host,1);
++        profiles = VideoDisplayProfile::GetProfiles(host);
++    }
+ #endif
+ 
+ 
+@@ -2608,7 +2616,7 @@ static HostComboBox *ThemePainter()
+     gc->addSelection(QCoreApplication::translate("(Common)", "Qt"), QT_PAINTER);
+     gc->addSelection(QCoreApplication::translate("(Common)", "Auto", "Automatic"),
+                      AUTO_PAINTER);
+-#ifdef USING_OPENGL
++#if defined USING_OPENGL && ! defined USING_OPENGLES
+     gc->addSelection(QCoreApplication::translate("(Common)", "OpenGL 2"),
+                      OPENGL2_PAINTER);
+     gc->addSelection(QCoreApplication::translate("(Common)", "OpenGL 1"),
 diff --git a/mythtv/programs/mythfrontend/main.cpp b/mythtv/programs/mythfrontend/main.cpp
 index f8d7dd1..62ba4b2 100644
 --- a/mythtv/programs/mythfrontend/main.cpp
@@ -62183,6 +64016,38 @@ index f8d7dd1..62ba4b2 100644
      REG_MEDIA_HANDLER(QT_TRANSLATE_NOOP("MythControls",
          "MythImage Media Handler 1/2"), "", "", handleGalleryMedia,
          MEDIATYPE_DATA | MEDIATYPE_MIXED, QString::null);
+diff --git a/mythtv/programs/mythfrontend/mythfrontend.pro b/mythtv/programs/mythfrontend/mythfrontend.pro
+index fcab29e..ed69b93 100644
+--- a/mythtv/programs/mythfrontend/mythfrontend.pro
++++ b/mythtv/programs/mythfrontend/mythfrontend.pro
+@@ -154,3 +154,27 @@ android {
+ 
+     ANDROID_PACKAGE_SOURCE_DIR += $$(MYTHPACKAGEBASE)/android-package-source
+ }
++
++using_openmax {
++    contains( HAVE_OPENMAX_BROADCOM, yes ) {
++        using_opengl {
++            # For raspberry Pi Raspbian
++            exists(/opt/vc/lib/libEGL.so) {
++                DEFINES += USING_OPENGLES
++                # For raspberry pi raspbian
++                QMAKE_RPATHDIR += $${RUNPREFIX}/share/mythtv/lib
++                createlinks.path = $${PREFIX}/share/mythtv/lib
++                createlinks.extra = ln -fs /opt/vc/lib/libEGL.so $(INSTALL_ROOT)/$${PREFIX}/share/mythtv/lib/libEGL.so.1.0.0 ;
++                createlinks.extra += ln -fs /opt/vc/lib/libEGL.so $(INSTALL_ROOT)/$${PREFIX}/share/mythtv/lib/libEGL.so.1 ;
++                createlinks.extra += ln -fs /opt/vc/lib/libGLESv2.so $(INSTALL_ROOT)/$${PREFIX}/share/mythtv/lib/libGLESv2.so.2.0.0 ;
++                createlinks.extra += ln -fs /opt/vc/lib/libGLESv2.so $(INSTALL_ROOT)/$${PREFIX}/share/mythtv/lib/libGLESv2.so.2 ;
++                INSTALLS += createlinks
++            }
++        } else {
++            # For raspberry pi ubuntu
++            exists(/usr/lib/arm-linux-gnueabihf/mesa-egl/libEGL.so) {
++                QMAKE_RPATHDIR += /usr/lib/arm-linux-gnueabihf/mesa-egl
++            }
++        }
++    }
++}
 diff --git a/mythtv/programs/mythfrontend/themechooser.cpp b/mythtv/programs/mythfrontend/themechooser.cpp
 index d090a3e..f0f4ea1 100644
 --- a/mythtv/programs/mythfrontend/themechooser.cpp
@@ -62213,3 +64078,42 @@ index 26a2850..66945d1 100644
                                  .arg(escape_csv(entry2.strTransportId))
                                  .arg(escape_csv(entry2.strAtscMajorChan))
                                  .arg(escape_csv(entry2.strAtscMinorChan))
+diff --git a/mythtv/programs/mythtv-setup/mythtv-setup.pro b/mythtv/programs/mythtv-setup/mythtv-setup.pro
+index 2145358..24a9255 100644
+--- a/mythtv/programs/mythtv-setup/mythtv-setup.pro
++++ b/mythtv/programs/mythtv-setup/mythtv-setup.pro
+@@ -44,3 +44,15 @@ macx {
+ }
+ 
+ using_x11:DEFINES += USING_X11
++
++using_openmax {
++    contains( HAVE_OPENMAX_BROADCOM, yes ) {
++        ! using_opengl {
++            # For raspberry pi ubuntu
++            exists(/usr/lib/arm-linux-gnueabihf/mesa-egl/libEGL.so) {
++                QMAKE_RPATHDIR += /usr/lib/arm-linux-gnueabihf/mesa-egl
++            }
++        }
++    }
++}
++
+diff --git a/mythtv/programs/mythwelcome/mythwelcome.pro b/mythtv/programs/mythwelcome/mythwelcome.pro
+index 2be37ed..edddbf1 100644
+--- a/mythtv/programs/mythwelcome/mythwelcome.pro
++++ b/mythtv/programs/mythwelcome/mythwelcome.pro
+@@ -33,3 +33,14 @@ win32 : !debug {
+     CONFIG -= console
+     DEFINES += WINDOWS_CLOSE_CONSOLE
+ }
++
++using_openmax {
++    contains( HAVE_OPENMAX_BROADCOM, yes ) {
++        ! using_opengl {
++            # For raspberry pi ubuntu
++            exists(/usr/lib/arm-linux-gnueabihf/mesa-egl/libEGL.so) {
++                QMAKE_RPATHDIR += /usr/lib/arm-linux-gnueabihf/mesa-egl
++            }
++        }
++    }
++}
