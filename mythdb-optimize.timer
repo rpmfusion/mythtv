@@ -25,4 +25,4 @@ Requires=mariadb.service
 OnCalendar=daily
 
 [Install]
-WantedBy=basic.target
+WantedBy=timer.target
