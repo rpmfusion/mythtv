@@ -1,3 +1,207 @@
+commit 228b05bd7a8103192957a9abfc0a5baa551e8ba6
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Wed Oct 12 16:02:04 2016 +0100
+
+    Some http -> https changes
+    
+    (cherry picked from commit 98b5662598807e819111e4a7423818a961a3d24e)
+
+commit 7c91ab6bc635c0299c029e6a0c148b290396b695
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Fri Aug 12 21:34:39 2016 -0500
+
+    Serialization Implementation for XML: gcc6/Qt5.{6,7} SEGVs
+    
+    Missed one (actually, there are at least 2 more.) The author
+    is trying to carve out some time to look for the actual fix.
+    
+    Thanks to PlanetEater for catching this.
+    
+    Refs #12782
+    
+    (cherry picked from commit eaf81bc3438e71f9623b59199b9ad1e7683db780)
+
+commit 8eb43db5ba274c6105f61a5fe91f94ea62ac10fe
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Thu Aug 4 09:49:18 2016 -0500
+
+    Serialization Implementation for XML: gcc6/Qt5.{6,7} SEGVs
+    
+    This isn't a MythTV bug, rather an issue with Qt5.{6,7,??}
+    and gcc version 6. This will get Arch users with the above
+    combinations working until a proper solution is developed.
+    
+    In XmlSerializer::GetContentName when pMetaObject is NULL,
+    a SEGV fires rather that getting a -1 return from
+    pMetaObject->indexOfClassInfo().
+    
+    Examples: <be>:6544/Myth/version and <be>:6544/Myth/GetHostName.
+    Both fail on Arch linux with the above combinations.
+    
+    Thanks for the research on: bbs.archlinux.org/viewtopic.php?pid=1631996,
+    testing on the ticket, and the reference to:
+    http://lists.qt-project.org/pipermail/development/2016-March/025153.html
+    
+    Refs #12782
+    
+    (cherry picked from commit 38de43efa92603e2ac524b9a72951c15caf2af4e)
+
+commit 8580a41b71ca24f1900103cc696d246cbac8a769
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Oct 4 16:43:44 2016 -0400
+
+    Fix scrolling at and of grid style button list.
+    
+    Fixes #12892
+    
+    (cherry picked from commit 9a5b4116ae506d4c7f77e88d3b67c368262694ef)
+
+commit 07a52a0b421b20b32716d5cb10a22c7a2bef4116
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Fri Sep 30 13:42:18 2016 -0400
+
+    Fix time stretch on Raspberry Pi.
+    
+    Fixes #12819
+    
+    (cherry picked from commit 8b49d6cb407f827a1a19dff5c96773556f25dcd3)
+
+commit 7a1f690e2f156a946cd308b893cb7f98476ca8d5
+Author: MIke Bibbings <mike.bibbings@gmail.com>
+Date:   Fri Sep 30 10:17:26 2016 -0500
+
+    Fix multiplex restriction determination in Live TV.
+    
+    Signed-off-by: David Engel <dengel@mythtv.org>
+    
+    Refs #12891
+    
+    (cherry picked from commit 17e2f7344368a24ab4bca73bbf799224e15b1a71)
+
+commit b36ab879cf7c69e649eecfe7dbed9a92854f510c
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Sep 27 09:44:19 2016 -0400
+
+    Fix for frontend control socket not working on openmax playback.
+    
+    Fixes #12863
+    
+    (cherry picked from commit 61b0a26fb2fbaf1503488afc4bc560498160702b)
+
+commit 45f608999904c4f97dc1ef5c0e92f8db2b5e4b5b
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Sep 25 16:04:15 2016 -0400
+
+    Fix: OSD notification flash on again after fading due to negative "time left" calculation.
+    
+    (cherry picked from commit a6300a778d1a76123c09ef22875c3149d1c8a77b)
+
+commit 0c63edefcc93f07f7742aa31f8e49e4a39d7f90d
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Sep 25 15:53:50 2016 -0400
+
+    Fix: OSD notifications remain on screen forever with OpenMAX and OpenGL.
+    
+    (cherry picked from commit e94e5a1c4790e246326181a54b2b92cf26b6cf6f)
+
+commit 3adc5555602524ba9aa0d697675a6740c7375518
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Mon Sep 26 21:07:13 2016 +0200
+
+    MythFrontend: Allow playback of streamed https:// files
+    
+    (cherry picked from commit 45b8725a8d262d7b69515e30f3e01538a51349fe)
+
+commit 0f005f4be5487e3b4859723e64e9313534cd40ca
+Author: John Poet <jpoet@mythtv.org>
+Date:   Thu Sep 22 13:40:33 2016 -0600
+
+    ServicesAPI: Add ability to Stop/Reactivate a recording.
+    
+    (cherry picked from commit 38d9ba259110e6495759897d4a3f25d961347eb0)
+
+commit 0fa7674c3815dd025f9dcfdfb4324ca79a881926
+Author: John Poet <jpoet@mythtv.org>
+Date:   Thu Sep 22 16:46:41 2016 -0600
+
+    TVRec::TuningNewRecorder: On failure, make sure scheduler knows about it.
+    
+    (cherry picked from commit fe296d93b34360c26301abeb3108a5b5513ba21f)
+
+commit 6a9d7b5131f36f257fb7b622ff1b1568b213f39a
+Author: John Poet <jpoet@mythtv.org>
+Date:   Thu Sep 22 19:36:39 2016 -0600
+
+    Scheduler::FillRecordingDir: Fix a race condition trying to start a
+    recording before being fulling initialized.
+    
+    If a recording is 'in progress' when mythbackend starts up, it could fail to
+    record because the scheduler tries to start it up before it knows what
+    directory to store it in.
+    
+    (cherry picked from commit 96415b4c7ce110e59080f3cf4fa8461308117fad)
+
+commit 75587f08e7da9c86a3f781ccefb3860786018686
+Author: John Poet <jpoet@mythtv.org>
+Date:   Thu Sep 22 13:30:42 2016 -0600
+
+    ServicesAPI: Add RecodIdForFilename()
+    
+    (cherry picked from commit 359a20a5ec7310715ffa79754c45554744e01b63)
+
+commit b575f9e1fd6149590ba2b78235a7b7b31f022fff
+Author: John Poet <jpoet@mythtv.org>
+Date:   Thu Sep 22 13:30:42 2016 -0600
+
+    Add a Service API method for returning seektable information.
+    
+    (cherry picked from commit 98f7b5dd5ea5c9781600ef1389f95639c6b20be9)
+
+commit 44cf853213184e6ce75d7f40e590b70058395343
+Author: John Poet <jpoet@mythtv.org>
+Date:   Thu Sep 22 13:30:41 2016 -0600
+
+    Cleanup whitespace in some of the Services API files.
+    
+    (cherry picked from commit 1c32299486693355c18ecd14901e522d3dbe341f)
+
+commit 5c18d3f91b3d30ca70f8b98de6117429c4cb9c8e
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Sep 20 12:51:37 2016 -0400
+
+    Fix mythfilldatabase incorrectly populating airdate for TV series.
+    
+    Fixes #12882
+    
+    (cherry picked from commit 1b0f7fb9f42561d20241d56c2dd575afbd10be30)
+
+commit 2faf5fe2b70080500088c88b9d3af8ce95e2fd5b
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Fri Sep 16 15:07:41 2016 -0400
+
+    Fix OpenMAX hdmi audio 5.1 channel PCM crackling noise.
+    Caused by misalignment of samples due to incorrect audio fragment size.
+    
+    (cherry picked from commit 14177228e1493c8faf66aa8fcc2a342225647680)
+
+commit 851a33ec36efa53fe13fa9825f5c2dc815455ea2
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Aug 17 10:19:29 2016 -0400
+
+    Fix Raspberry Pi digital audio AC-3 passthrough.
+    
+    Fixes #12827
+    
+    (cherry picked from commit 5ddf67e34abeac606fb9bcaf5c4550894d201226)
+
+commit 5861a1da48dc970b02e475f4ebd7eee41bb7f4a0
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sat Aug 6 10:28:07 2016 -0400
+
+    Delete unused and untested class AudioDecoderOMX from OMX Audio output code.
+    
+    (cherry picked from commit a115dfb0226b98d85b9c82b305494fb38f52f77e)
+
 commit e6a60f7d11ce05b7c7c56e0f889d11f213d8c495
 Author: John Poet <jpoet@mythtv.org>
 Date:   Fri Sep 9 18:48:27 2016 -0600

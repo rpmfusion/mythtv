@@ -61,7 +61,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v0.28-52-ge6a60f7
+%define vers_string v28.0-72-g228b05b
 %define branch fixes/0.28
 
 # Git revision and branch ID
@@ -82,7 +82,7 @@ Version:        0.28
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        7%{?dist}
+Release:        8%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1397,6 +1397,9 @@ fi
 
 
 %changelog
+* Wed Oct 19 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-8
+- Update to lastest fixes/0.28 from git.
+ 
 * Sun Sep 11 2016 Sérgio Basto <sergio@serjux.com> - 0.28-7
 - Update to latest fixes/0.28, rfbz#4241
 
