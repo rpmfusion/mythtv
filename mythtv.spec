@@ -82,7 +82,7 @@ Version:        0.28
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        8%{?dist}
+Release:        9%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1397,9 +1397,12 @@ fi
 
 
 %changelog
+* Thu Nov 17 2016 Adrian Reber <adrian@lisas.de> - 0.28-9
+- Rebuilt for libcdio-0.94
+
 * Wed Oct 19 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-8
 - Update to lastest fixes/0.28 from git.
- 
+
 * Sun Sep 11 2016 Sérgio Basto <sergio@serjux.com> - 0.28-7
 - Update to latest fixes/0.28, rfbz#4241
 
