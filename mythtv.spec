@@ -82,7 +82,7 @@ Version:        0.28
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        9%{?dist}
+Release:        10%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1397,6 +1397,10 @@ fi
 
 
 %changelog
+* Sun Nov 27 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-10
+- Update to latest fixes/0.28 from git.
+- Add patch for libcec 4, fixes RFBZ#4345.
+
 * Thu Nov 17 2016 Adrian Reber <adrian@lisas.de> - 0.28-9
 - Rebuilt for libcdio-0.94
 

@@ -3,25 +3,26 @@
  mythplugins/mythmusic/mythmusic/main.cpp           |    14 +-
  mythplugins/mythnews/mythnews/mythnews.cpp         |    22 +-
  .../mythzoneminder/mythzmserver/zmserver.cpp       |    20 +-
- mythtv/README                                      |     8 +-
+ mythtv/README                                      |    12 +-
  mythtv/bindings/python/MythTV/dataheap.py          |     1 +
  .../python/MythTV/wikiscripts/wikiscripts.py       |     4 +-
  mythtv/configure                                   |    34 +-
  mythtv/html/css/Status.css                         |    13 +
- mythtv/html/menu.qsp                               |     2 +-
+ mythtv/html/menu.qsp                               |    10 +-
  mythtv/i18n/mythfrontend_cs.qm                     |   Bin 599995 -> 726083 bytes
  mythtv/i18n/mythfrontend_cs.ts                     | 48373 ++++++++++++-------
  mythtv/i18n/mythfrontend_de.qm                     |   Bin 734286 -> 734286 bytes
  mythtv/i18n/mythfrontend_de.ts                     |     2 +-
  mythtv/libs/libmyth/audio/audiooutput_omx.cpp      |   906 +-
  mythtv/libs/libmyth/audio/audiooutput_omx.h        |     8 -
- mythtv/libs/libmyth/audio/audiooutputbase.cpp      |    52 +-
- mythtv/libs/libmyth/audio/audiooutputbase.h        |     4 +-
+ mythtv/libs/libmyth/audio/audiooutputbase.cpp      |    54 +-
+ mythtv/libs/libmyth/audio/audiooutputbase.h        |     7 +-
  mythtv/libs/libmyth/mythmediamonitor.cpp           |    29 +-
  mythtv/libs/libmyth/programinfo.cpp                |   200 +-
  mythtv/libs/libmyth/programinfo.h                  |    22 +-
  mythtv/libs/libmythbase/mythmedia.cpp              |     2 +-
  mythtv/libs/libmythbase/mythstorage.cpp            |     4 +-
+ mythtv/libs/libmythbase/mythversion.h              |     2 +-
  mythtv/libs/libmythmetadata/imagemanager.cpp       |     2 +-
  .../services/captureServices.h                     |     1 -
  .../services/channelServices.h                     |     1 -
@@ -31,37 +32,63 @@
  .../services/mythServices.h                        |     5 +-
  .../services/rttiServices.h                        |     5 +-
  .../services/videoServices.h                       |     1 -
- mythtv/libs/libmythtv/avformatdecoder.cpp          |    11 +
+ mythtv/libs/libmythtv/audioplayer.cpp              |     2 +-
+ mythtv/libs/libmythtv/avformatdecoder.cpp          |    35 +-
+ mythtv/libs/libmythtv/avformatdecoder.h            |     1 +
+ mythtv/libs/libmythtv/avformatwriter.cpp           |    18 +-
  .../libmythtv/channelscan/vboxchannelfetcher.cpp   |    30 +-
  .../libmythtv/channelscan/vboxchannelfetcher.h     |     1 +
+ mythtv/libs/libmythtv/decoderbase.cpp              |     2 +-
  mythtv/libs/libmythtv/eitfixup.cpp                 |    33 +-
  mythtv/libs/libmythtv/eitfixup.h                   |     4 +-
  mythtv/libs/libmythtv/eithelper.cpp                |     5 +
- mythtv/libs/libmythtv/mythplayer.cpp               |   162 +-
- mythtv/libs/libmythtv/mythplayer.h                 |     5 +
- mythtv/libs/libmythtv/osd.cpp                      |     9 +-
+ mythtv/libs/libmythtv/iptvtuningdata.h             |     4 +-
+ mythtv/libs/libmythtv/libmythtv.pro                |     2 +-
+ mythtv/libs/libmythtv/mpeg/dvbdescriptors.cpp      |     2 +
+ mythtv/libs/libmythtv/mpeg/dvbdescriptors.h        |     8 +-
+ mythtv/libs/libmythtv/mythavutil.cpp               |     4 +-
+ mythtv/libs/libmythtv/mythavutil.h                 |     9 +-
+ mythtv/libs/libmythtv/mythframe.h                  |     4 +-
+ mythtv/libs/libmythtv/mythplayer.cpp               |   197 +-
+ mythtv/libs/libmythtv/mythplayer.h                 |     8 +
+ mythtv/libs/libmythtv/osd.cpp                      |    12 +-
  mythtv/libs/libmythtv/osd.h                        |     1 +
  mythtv/libs/libmythtv/privatedecoder_omx.cpp       |     4 +-
+ .../libmythtv/recorders/NuppelVideoRecorder.cpp    |    55 +-
  mythtv/libs/libmythtv/recorders/asichannel.cpp     |     6 +-
  mythtv/libs/libmythtv/recorders/channelbase.cpp    |     7 +-
+ mythtv/libs/libmythtv/recorders/dtvrecorder.cpp    |    16 +-
+ mythtv/libs/libmythtv/recorders/dtvrecorder.h      |     4 +
  mythtv/libs/libmythtv/recorders/vboxutils.cpp      |    10 +-
  mythtv/libs/libmythtv/recorders/vboxutils.h        |     2 +-
+ mythtv/libs/libmythtv/ringbuffer.cpp               |     8 +-
  .../test/test_eitfixups/test_eitfixups.cpp         |    28 +
+ .../test/test_iptvrecorder/test_iptvrecorder.h     |     5 +
  mythtv/libs/libmythtv/tv_play.cpp                  |     4 +-
  mythtv/libs/libmythtv/tv_rec.cpp                   |    20 +-
  mythtv/libs/libmythtv/videodisplayprofile.cpp      |    33 +-
  mythtv/libs/libmythtv/videodisplayprofile.h        |     2 +-
+ mythtv/libs/libmythtv/videoout_d3d.cpp             |    13 +-
  mythtv/libs/libmythtv/videoout_omx.cpp             |   254 +-
  mythtv/libs/libmythtv/videoout_omx.h               |    11 +-
+ mythtv/libs/libmythtv/videoout_opengl.cpp          |    10 +-
+ mythtv/libs/libmythtv/videoout_vdpau.cpp           |    10 +-
+ mythtv/libs/libmythtv/videooutbase.cpp             |     4 +
+ mythtv/libs/libmythtv/videooutbase.h               |     2 +
+ mythtv/libs/libmythtv/videosource.cpp              |    35 +
+ mythtv/libs/libmythtv/videosource.h                |     5 +
  .../visualisations/videovisualcircles.cpp          |     2 +-
  mythtv/libs/libmythui/cecadapter.cpp               |    41 +-
  mythtv/libs/libmythui/libmythui.pro                |     4 +-
  mythtv/libs/libmythui/mythdialogbox.cpp            |    10 +
  mythtv/libs/libmythui/mythmainwindow.cpp           |     7 +
- mythtv/libs/libmythui/mythpainter_ogl.h            |     2 +-
+ mythtv/libs/libmythui/mythpainter_d3d9.h           |     1 +
+ mythtv/libs/libmythui/mythpainter_ogl.h            |     3 +-
+ mythtv/libs/libmythui/mythpainter_vdpau.h          |     1 +
  mythtv/libs/libmythui/mythrender_opengl.cpp        |     4 +-
  mythtv/libs/libmythui/mythrender_opengl.h          |     4 +
  mythtv/libs/libmythui/mythuibuttonlist.cpp         |     5 +-
+ mythtv/libs/libmythui/mythuiwebbrowser.cpp         |     5 +
  mythtv/libs/libmythui/screensaver-dbus.cpp         |     2 +-
  mythtv/libs/libmythupnp/httprequest.cpp            |   172 +-
  mythtv/libs/libmythupnp/httprequest.h              |    55 +-
@@ -96,11 +123,15 @@
  mythtv/programs/mythfrontend/globalsettings.cpp    |    12 +-
  mythtv/programs/mythfrontend/main.cpp              |    14 +-
  mythtv/programs/mythfrontend/mythfrontend.pro      |    24 +
+ mythtv/programs/mythfrontend/playbackboxhelper.cpp |     1 +
  mythtv/programs/mythfrontend/themechooser.cpp      |     2 +-
+ .../programs/mythtranscode/commandlineparser.cpp   |     4 +-
+ mythtv/programs/mythtranscode/main.cpp             |    12 +-
+ mythtv/programs/mythtranscode/transcode.cpp        |   177 +-
  mythtv/programs/mythtv-setup/importicons.cpp       |     6 +-
  mythtv/programs/mythtv-setup/mythtv-setup.pro      |    12 +
  mythtv/programs/mythwelcome/mythwelcome.pro        |    11 +
- 102 files changed, 31832 insertions(+), 19706 deletions(-)
+ 133 files changed, 32178 insertions(+), 19869 deletions(-)
 
 diff --git a/README.rst b/README.rst
 index 8b8014d..ec3fa1f 100644
@@ -284,10 +315,19 @@ index 6749a47..5511df2 100644
  
  ///////////////////////////////////////////////////////////////////////
 diff --git a/mythtv/README b/mythtv/README
-index 6fe1eee..448695c 100644
+index 6fe1eee..cc990dc 100644
 --- a/mythtv/README
 +++ b/mythtv/README
-@@ -60,18 +60,18 @@ keys.txt has a listing of all the various default key bindings.  All
+@@ -53,25 +53,25 @@ version 1.0.17.
+ 
+ See the UPGRADING file for information on upgrading between releases.
+ 
+-Compiling and setup instructions are all in the documentation in the docs/
+-subdir (or at http://www.mythtv.org/docs/ ) these days.  Read those carefully.
++Compiling and setup instructions are all in the wiki these day
++https://www.mythtv.org/wiki/MythTV-HOWTO
+ 
+ keys.txt has a listing of all the various default key bindings.  All
  keybindings can be changed via MythWeb.
  
  If you want to check out the theme format, and perhaps make your own,
@@ -481,9 +521,18 @@ index 43ede02..a50fca0 100644
  
    div.schedule a {
 diff --git a/mythtv/html/menu.qsp b/mythtv/html/menu.qsp
-index 5a2137f..48331c8 100644
+index 5a2137f..0839c5a 100644
 --- a/mythtv/html/menu.qsp
 +++ b/mythtv/html/menu.qsp
+@@ -29,7 +29,7 @@
+                 <li><a href='#' onClick="hideMainMenu();loadSetupPage('channeleditor')"><i18n>Channel Editor</i18n></a></li>
+               </ul>
+             </li>
+-            <li><a href='#' onClick="hideMainMenu();loadContent('/misc/placeholder.html')"><i18n>Recording Devices</i18n></a></li>
++            <li><a href='#' onClick="hideMainMenu();loadFrontendContent('/misc/placeholder.html')"><i18n>Recording Devices</i18n></a></li>
+             <li><a href='#' onClick="hideMainMenu();loadSetupPage('storagegroups')"><i18n>Storage Groups</i18n></a></li>
+             <li><a href='#' onClick="hideMainMenu();loadSetupPage('jobqueue')"><i18n>Job Queue</i18n></a></li>
+             <li><a href='#' onClick="hideMainMenu();loadSetupPage('systemevents')"><i18n>System Events</i18n></a></li>
 @@ -49,7 +49,7 @@
      <li><a href='#'><i18n>Information</i18n></a>
        <ul class="acitem collapsible">
@@ -493,6 +542,26 @@ index 5a2137f..48331c8 100644
          <li><a class='menuitem' href='#' onClick="hideMainMenu();loadMiscPage('viewlogs')"><i18n>View Logs</i18n></a></li>
        </ul>
      </li>
+@@ -85,8 +85,8 @@
+ %>
+         <li><a href='#'><i18n>Server Side Scripting</i18n></a>
+           <ul class="acitem">
+-            <li><a href='#' onClick="hideMainMenu();loadContent('/samples/serverside.qsp', '/samples/js/samples.js')"><i18n>Overview</i18n></a></li>
+-            <li><a href='#' onClick="hideMainMenu();loadContent('/samples/storagegroups.qsp', '/samples/js/samples.js')"><i18n>GetStorageGroups()</i18n></a></li>
++            <li><a href='#' onClick="hideMainMenu();loadFrontendContent('/samples/serverside.qsp', '/samples/js/samples.js')"><i18n>Overview</i18n></a></li>
++            <li><a href='#' onClick="hideMainMenu();loadFrontendContent('/samples/storagegroups.qsp', '/samples/js/samples.js')"><i18n>GetStorageGroups()</i18n></a></li>
+           </ul>
+         </li>
+ <%
+@@ -96,7 +96,7 @@
+     </li>
+     <li><a href='#'><i18n>3rd Party Software</i18n></a>
+       <ul class="acitem collapsible">
+-        <li><a class='menuitem' href='#' onClick="hideMainMenu();loadContent('/3rdParty/jwplayer.qsp')"><i18n>JW Player&trade;</i18n></a></li>
++        <li><a class='menuitem' href='#' onClick="hideMainMenu();loadFrontendContent('/3rdParty/jwplayer.qsp')"><i18n>JW Player&trade;</i18n></a></li>
+       </ul>
+     </li>
+   </ul>
 diff --git a/mythtv/i18n/mythfrontend_cs.qm b/mythtv/i18n/mythfrontend_cs.qm
 index 80dd5d1..a688c2c 100644
 Binary files a/mythtv/i18n/mythfrontend_cs.qm and b/mythtv/i18n/mythfrontend_cs.qm differ
@@ -61886,7 +61955,7 @@ index 94966b6..1903d37 100644
      QSemaphore m_ibufs_sema;    // EmptyBufferDone signal
      QMutex mutable m_lock;      // Protects data following
 diff --git a/mythtv/libs/libmyth/audio/audiooutputbase.cpp b/mythtv/libs/libmyth/audio/audiooutputbase.cpp
-index 833dff6..4dcc49b 100644
+index 833dff6..a93b608 100644
 --- a/mythtv/libs/libmyth/audio/audiooutputbase.cpp
 +++ b/mythtv/libs/libmyth/audio/audiooutputbase.cpp
 @@ -24,6 +24,7 @@ using namespace std;
@@ -62006,11 +62075,30 @@ index 833dff6..4dcc49b 100644
                );
  
      return audiotime;
+@@ -1448,7 +1464,7 @@ bool AudioOutputBase::AddData(void *in_buffer, int in_len,
+ 
+     if (len > afree)
+     {
+-        VBAUDIOTS("Buffer is full, AddData returning false");
++        VBERROR("Buffer is full, AddData returning false");
+         return false; // would overflow
+     }
+ 
 diff --git a/mythtv/libs/libmyth/audio/audiooutputbase.h b/mythtv/libs/libmyth/audio/audiooutputbase.h
-index 6ed5b60..634823e 100644
+index 6ed5b60..e7fc7e4 100644
 --- a/mythtv/libs/libmyth/audio/audiooutputbase.h
 +++ b/mythtv/libs/libmyth/audio/audiooutputbase.h
-@@ -201,6 +201,8 @@ class AudioOutputBase : public AudioOutput, public MThread
+@@ -119,7 +119,8 @@ class AudioOutputBase : public AudioOutput, public MThread
+     static const uint kAudioSRCInputSize = 16384;
+ 
+     /// Audio Buffer Size -- should be divisible by 32,24,16,12,10,8,6,4,2..
+-    static const uint kAudioRingBufferSize   = 3072000u;
++    // In other words, divisible by 96.
++    static const uint kAudioRingBufferSize   = 10239936u;
+ 
+  protected:
+     // Following function must be called from subclass constructor
+@@ -201,6 +202,8 @@ class AudioOutputBase : public AudioOutput, public MThread
          QUALITY_HIGH     =  2,
      };
      int src_quality;
@@ -62019,7 +62107,7 @@ index 6ed5b60..634823e 100644
  
   private:
      bool SetupPassthrough(int codec, int codec_profile,
-@@ -219,7 +221,6 @@ class AudioOutputBase : public AudioOutput, public MThread
+@@ -219,7 +222,6 @@ class AudioOutputBase : public AudioOutput, public MThread
      FreeSurround              *upmixer;
  
      int source_channels;
@@ -62027,7 +62115,7 @@ index 6ed5b60..634823e 100644
      int source_bytes_per_frame;
      bool upmix_default;
      bool needs_upmix;
-@@ -265,7 +266,6 @@ class AudioOutputBase : public AudioOutput, public MThread
+@@ -265,7 +267,6 @@ class AudioOutputBase : public AudioOutput, public MThread
      QMutex killAudioLock;
  
      long current_seconds;
@@ -62443,6 +62531,19 @@ index a56c492..63a2905 100644
          " WHERE " + GetWhereClause(bindings));
      query.bindValues(bindings);
  
+diff --git a/mythtv/libs/libmythbase/mythversion.h b/mythtv/libs/libmythbase/mythversion.h
+index 024f09b..91c9b7f 100644
+--- a/mythtv/libs/libmythbase/mythversion.h
++++ b/mythtv/libs/libmythbase/mythversion.h
+@@ -12,7 +12,7 @@
+ /// Update this whenever the plug-in ABI changes.
+ /// Including changes in the libmythbase, libmyth, libmythtv, libmythav* and
+ /// libmythui class methods in exported headers.
+-#define MYTH_BINARY_VERSION "0.28.20160309-1"
++#define MYTH_BINARY_VERSION "0.28.20161120-1"
+ 
+ /** \brief Increment this whenever the MythTV network protocol changes.
+  *   Note that the token currently cannot contain spaces.
 diff --git a/mythtv/libs/libmythmetadata/imagemanager.cpp b/mythtv/libs/libmythmetadata/imagemanager.cpp
 index a9c802f..e0e72d9 100644
 --- a/mythtv/libs/libmythmetadata/imagemanager.cpp
@@ -62675,8 +62776,21 @@ index f2b5bd9..511b6ee 100644
  
  #endif
 -
+diff --git a/mythtv/libs/libmythtv/audioplayer.cpp b/mythtv/libs/libmythtv/audioplayer.cpp
+index d634209..01fdbbb 100644
+--- a/mythtv/libs/libmythtv/audioplayer.cpp
++++ b/mythtv/libs/libmythtv/audioplayer.cpp
+@@ -514,7 +514,7 @@ bool AudioPlayer::IsBufferAlmostFull(void)
+         othresh =  ((ototal>>1) + (ototal>>2));
+         if (ofill > othresh)
+             return true;
+-        return GetAudioBufferedTime() > 2000;
++        return GetAudioBufferedTime() > 8000;
+     }
+     return false;
+ }
 diff --git a/mythtv/libs/libmythtv/avformatdecoder.cpp b/mythtv/libs/libmythtv/avformatdecoder.cpp
-index fb7d793..218f68a 100644
+index fb7d793..a62cf59 100644
 --- a/mythtv/libs/libmythtv/avformatdecoder.cpp
 +++ b/mythtv/libs/libmythtv/avformatdecoder.cpp
 @@ -42,6 +42,8 @@ using namespace std;
@@ -62701,7 +62815,49 @@ index fb7d793..218f68a 100644
      return retval;
  }
  
-@@ -5325,6 +5333,9 @@ bool AvFormatDecoder::SetupAudioStream(void)
+@@ -2989,14 +2997,22 @@ void AvFormatDecoder::DecodeDTVCC(const uint8_t *buf, uint len, bool scte)
+     if (len < 2+(3*cc_count))
+         return;
+ 
++    DecodeCCx08(buf+2, cc_count*3, scte);
++}
++
++void AvFormatDecoder::DecodeCCx08(const uint8_t *buf, uint len, bool scte)
++{
++    if (len < 3)
++        return;
++
+     bool had_608 = false, had_708 = false;
+-    for (uint cur = 0; cur < cc_count; cur++)
++    for (uint cur = 0; cur + 3 < len; cur += 3)
+     {
+-        uint cc_code  = buf[2+(cur*3)];
++        uint cc_code  = buf[cur];
+         bool cc_valid = cc_code & 0x04;
+ 
+-        uint data1    = buf[3+(cur*3)];
+-        uint data2    = buf[4+(cur*3)];
++        uint data1    = buf[cur+1];
++        uint data2    = buf[cur+2];
+         uint data     = (data2 << 8) | data1;
+         uint cc_type  = cc_code & 0x03;
+         uint field;
+@@ -3669,6 +3685,14 @@ bool AvFormatDecoder::ProcessVideoFrame(AVStream *stream, AVFrame *mpa_pic)
+     for (uint i = 0; i < cc_len; i += ((cc_buf[i] & 0x1f) * 3) + 2)
+         DecodeDTVCC(cc_buf + i, cc_len - i, scte);
+ 
++    if (cc_len == 0) {
++        // look for A53 captions
++        AVFrameSideData *side_data = av_frame_get_side_data(mpa_pic, AV_FRAME_DATA_A53_CC);
++        if (side_data && (side_data->size > 0)) {
++            DecodeCCx08(side_data->data, side_data->size, false);
++        }
++    }
++
+     VideoFrame *picframe = (VideoFrame *)(mpa_pic->opaque);
+ 
+     if (FlagIsSet(kDecodeNoDecode))
+@@ -5325,6 +5349,9 @@ bool AvFormatDecoder::SetupAudioStream(void)
                              audioOut.codec_id, audioOut.sample_rate,
                              audioOut.do_passthru, audioOut.codec_profile);
      m_audio->ReinitAudio();
@@ -62711,6 +62867,64 @@ index fb7d793..218f68a 100644
  
      if (LCD *lcd = LCD::Get())
      {
+diff --git a/mythtv/libs/libmythtv/avformatdecoder.h b/mythtv/libs/libmythtv/avformatdecoder.h
+index 46e93d9..2a796b4 100644
+--- a/mythtv/libs/libmythtv/avformatdecoder.h
++++ b/mythtv/libs/libmythtv/avformatdecoder.h
+@@ -216,6 +216,7 @@ class AvFormatDecoder : public DecoderBase
+     friend int close_avf(URLContext *h);
+ 
+     void DecodeDTVCC(const uint8_t *buf, uint buf_size, bool scte);
++    void DecodeCCx08(const uint8_t *buf, uint buf_size, bool scte);
+     void InitByteContext(bool forceseek = false);
+     void InitVideoCodec(AVStream *stream, AVCodecContext *enc,
+                         bool selectedStream = false);
+diff --git a/mythtv/libs/libmythtv/avformatwriter.cpp b/mythtv/libs/libmythtv/avformatwriter.cpp
+index bfe197b..1aa17f7 100644
+--- a/mythtv/libs/libmythtv/avformatwriter.cpp
++++ b/mythtv/libs/libmythtv/avformatwriter.cpp
+@@ -24,6 +24,7 @@
+ //#include "NuppelVideoRecorder.h"
+ #include "avformatwriter.h"
+ #include "audiooutpututil.h"
++#include "mythavutil.h"
+ 
+ extern "C" {
+ #if HAVE_BIGENDIAN
+@@ -31,7 +32,6 @@ extern "C" {
+ #endif
+ #include "libavutil/opt.h"
+ #include "libavutil/samplefmt.h"
+-#include "libavutil/mem.h" // for av_free
+ }
+ 
+ #define LOC QString("AVFW(%1): ").arg(m_filename)
+@@ -235,24 +235,10 @@ bool AVFormatWriter::NextFrameIsKeyFrame(void)
+ 
+ int AVFormatWriter::WriteVideoFrame(VideoFrame *frame)
+ {
+-    //AVCodecContext *c = m_videoStream->codec;
+-
+-    uint8_t *planes[3];
+-    unsigned char *buf = frame->buf;
+     int framesEncoded = m_framesWritten + m_bufferedVideoFrameTimes.size();
+ 
+-    planes[0] = buf;
+-    planes[1] = planes[0] + frame->width * frame->height;
+-    planes[2] = planes[1] + (frame->width * frame->height) /
+-        4; // (pictureFormat == AV_PIX_FMT_YUV422P ? 2 : 4);
+-
+     av_frame_unref(m_picture);
+-    m_picture->data[0] = planes[0];
+-    m_picture->data[1] = planes[1];
+-    m_picture->data[2] = planes[2];
+-    m_picture->linesize[0] = frame->width;
+-    m_picture->linesize[1] = frame->width / 2;
+-    m_picture->linesize[2] = frame->width / 2;
++    AVPictureFill(reinterpret_cast<AVPicture*>(m_picture), frame);
+     m_picture->pts = framesEncoded + 1;
+ 
+     if ((framesEncoded % m_keyFrameDist) == 0)
 diff --git a/mythtv/libs/libmythtv/channelscan/vboxchannelfetcher.cpp b/mythtv/libs/libmythtv/channelscan/vboxchannelfetcher.cpp
 index 1100a1b..b811646 100644
 --- a/mythtv/libs/libmythtv/channelscan/vboxchannelfetcher.cpp
@@ -62777,6 +62991,19 @@ index 7f970f4..01a372f 100644
  
    protected:
      virtual void run(void); // QRunnable
+diff --git a/mythtv/libs/libmythtv/decoderbase.cpp b/mythtv/libs/libmythtv/decoderbase.cpp
+index 51b42dd..89cc826 100644
+--- a/mythtv/libs/libmythtv/decoderbase.cpp
++++ b/mythtv/libs/libmythtv/decoderbase.cpp
+@@ -508,7 +508,7 @@ bool DecoderBase::FindPosition(long long desired_value, bool search_adjusted,
+         QString(" --> \n\t\t\t[%1:%2(%3),%4:%5(%6)]")
+             .arg(lower_bound)
+             .arg(empty ? -1 : GetKey(m_positionMap[lower_bound]))
+-            .arg(m_positionMap[lower_bound].pos)
++            .arg(empty ? -1 : m_positionMap[lower_bound].pos)
+             .arg(upper_bound)
+             .arg(empty ? -1 : GetKey(m_positionMap[upper_bound]))
+             .arg(empty ? -1 : m_positionMap[upper_bound].pos));
 diff --git a/mythtv/libs/libmythtv/eitfixup.cpp b/mythtv/libs/libmythtv/eitfixup.cpp
 index 13fa264..6c664c9 100644
 --- a/mythtv/libs/libmythtv/eitfixup.cpp
@@ -62877,11 +63104,157 @@ index b0e493c..5b66988 100644
      fix[ 2301LL << 32 | 2U << 16] = EITFixUp::kFixUK | EITFixUp::kFixHTML;
      fix[ 2302LL << 32 | 2U << 16] = EITFixUp::kFixUK;
      fix[ 2303LL << 32 | 2U << 16] = EITFixUp::kFixUK;
+diff --git a/mythtv/libs/libmythtv/iptvtuningdata.h b/mythtv/libs/libmythtv/iptvtuningdata.h
+index 43b4456..c5a3c2e 100644
+--- a/mythtv/libs/libmythtv/iptvtuningdata.h
++++ b/mythtv/libs/libmythtv/iptvtuningdata.h
+@@ -209,9 +209,9 @@ class MTV_PUBLIC IPTVTuningData
+             m_protocol = IPTVTuningData::rtp;
+         else if (m_data_url.scheme() == "rtsp")
+             m_protocol = IPTVTuningData::rtsp;
+-        else if ((m_data_url.scheme() == "http") && IsHLSPlaylist())
++        else if (((m_data_url.scheme() == "http") || (m_data_url.scheme() == "https")) && IsHLSPlaylist())
+             m_protocol = IPTVTuningData::http_hls;
+-        else if (m_data_url.scheme() == "http")
++        else if ((m_data_url.scheme() == "http") || (m_data_url.scheme() == "https"))
+             m_protocol = IPTVTuningData::http_ts;
+         else
+             m_protocol = IPTVTuningData::inValid;
+diff --git a/mythtv/libs/libmythtv/libmythtv.pro b/mythtv/libs/libmythtv/libmythtv.pro
+index 4c72eab..5c29520 100644
+--- a/mythtv/libs/libmythtv/libmythtv.pro
++++ b/mythtv/libs/libmythtv/libmythtv.pro
+@@ -251,7 +251,7 @@ SOURCES += srtwriter.cpp
+ inc.path = $${PREFIX}/include/mythtv/
+ inc.files  = playgroup.h
+ inc.files += mythtvexp.h            metadataimagehelper.h
+-inc.files += mythavutil.h
++inc.files += mythavutil.h           mythframe.h
+ 
+ INSTALLS += inc
+ 
+diff --git a/mythtv/libs/libmythtv/mpeg/dvbdescriptors.cpp b/mythtv/libs/libmythtv/mpeg/dvbdescriptors.cpp
+index 4d75c95..b7cc2ec 100644
+--- a/mythtv/libs/libmythtv/mpeg/dvbdescriptors.cpp
++++ b/mythtv/libs/libmythtv/mpeg/dvbdescriptors.cpp
+@@ -510,6 +510,8 @@ QString ServiceDescriptorMapping::toString() const
+         str.append(" (Radio)");
+     else if (IsHDTV())
+         str.append(" (HDTV)");
++    else if (IsUHDTV())
++        str.append(" (UHDTV)");
+     else if (IsTeletext())
+         str.append(" (Teletext)");
+     else
+diff --git a/mythtv/libs/libmythtv/mpeg/dvbdescriptors.h b/mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
+index 5a6fd55..f583f67 100644
+--- a/mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
++++ b/mythtv/libs/libmythtv/mpeg/dvbdescriptors.h
+@@ -1467,6 +1467,7 @@ class ServiceDescriptorMapping
+         kServiceTypeAdvancedCodecSDDigitalTelevision       = 0x16,
+         kServiceTypeAdvancedCodecHDDigitalTelevision       = 0x19,
+         kServiceTypeAdvancedCodecFrameCompatiblePlanoStereoscopicHDTelevisionService = 0x1c,
++        kServiceTypeUltraHD                  = 0x1f,
+         kServiceTypeEchoStarTV1              = 0x91,
+         kServiceTypeEchoStarTV2              = 0x9a,
+         kServiceTypeEchoStarTV3              = 0xa4,
+@@ -1488,7 +1489,7 @@ class ServiceDescriptorMapping
+         return ((ServiceType() == kServiceTypeDigitalTelevision) ||
+                 (ServiceType() ==
+                  kServiceTypeAdvancedCodecSDDigitalTelevision) ||
+-                IsHDTV() ||
++                IsHDTV() || IsUHDTV() ||
+                 (ServiceType() == kServiceTypeEchoStarTV1) ||
+                 (ServiceType() == kServiceTypeEchoStarTV2) ||
+                 (ServiceType() == kServiceTypeEchoStarTV3) ||
+@@ -1515,6 +1516,11 @@ class ServiceDescriptorMapping
+             (ServiceType() == kServiceTypeAdvancedCodecHDDigitalTelevision) ||
+             (ServiceType() == kServiceTypeAdvancedCodecFrameCompatiblePlanoStereoscopicHDTelevisionService);
+     }
++    bool IsUHDTV(void) const
++    {
++        return
++            (ServiceType() == kServiceTypeUltraHD);
++    }
+     bool IsTeletext(void) const
+     {
+         return ServiceType() == kServiceTypeDataBroadcast;
+diff --git a/mythtv/libs/libmythtv/mythavutil.cpp b/mythtv/libs/libmythtv/mythavutil.cpp
+index 48d5c7e..afed323 100644
+--- a/mythtv/libs/libmythtv/mythavutil.cpp
++++ b/mythtv/libs/libmythtv/mythavutil.cpp
+@@ -17,7 +17,7 @@ extern "C" {
+ #include "libavfilter/buffersink.h"
+ }
+ 
+-static AVPixelFormat FrameTypeToPixelFormat(VideoFrameType type)
++AVPixelFormat FrameTypeToPixelFormat(VideoFrameType type)
+ {
+     switch (type)
+     {
+@@ -38,7 +38,7 @@ static AVPixelFormat FrameTypeToPixelFormat(VideoFrameType type)
+     }
+ }
+ 
+-static VideoFrameType PixelFormatToFrameType(AVPixelFormat fmt)
++VideoFrameType PixelFormatToFrameType(AVPixelFormat fmt)
+ {
+     switch (fmt)
+     {
+diff --git a/mythtv/libs/libmythtv/mythavutil.h b/mythtv/libs/libmythtv/mythavutil.h
+index ccda602..4a4d3a9 100644
+--- a/mythtv/libs/libmythtv/mythavutil.h
++++ b/mythtv/libs/libmythtv/mythavutil.h
+@@ -10,6 +10,7 @@
+ #define MythTV_mythavutil_h
+ 
+ #include "mythtvexp.h" // for MUNUSED
++#include "mythframe.h"
+ extern "C" {
+ #include "libavcodec/avcodec.h"
+ }
+@@ -78,7 +79,6 @@ private:
+     AVFrame *m_frame;
+ };
+ 
+-typedef struct VideoFrame_ VideoFrame;
+ class MythAVCopyPrivate;
+ 
+ /**
+@@ -128,6 +128,13 @@ int MTV_PUBLIC AVPictureFill(AVPicture *pic, const VideoFrame *frame,
+                              AVPixelFormat fmt = AV_PIX_FMT_NONE);
+ 
+ /**
++ * Convert VideoFrameType into FFmpeg's PixelFormat equivalent and
++ * vice-versa.
++ */
++MTV_PUBLIC AVPixelFormat FrameTypeToPixelFormat(VideoFrameType type);
++MTV_PUBLIC VideoFrameType PixelFormatToFrameType(AVPixelFormat fmt);
++
++/**
+  * MythPictureDeinterlacer
+  * simple deinterlacer based on FFmpeg's yadif filter.
+  * Yadif requires 3 frames before starting to return a deinterlaced frame.
+diff --git a/mythtv/libs/libmythtv/mythframe.h b/mythtv/libs/libmythtv/mythframe.h
+index 444b676..3d3ad3d 100644
+--- a/mythtv/libs/libmythtv/mythframe.h
++++ b/mythtv/libs/libmythtv/mythframe.h
+@@ -305,7 +305,9 @@ static inline uint buffersize(VideoFrameType type, int width, int height,
+     {
+         adj_w = (width  + _aligned - 1) & ~(_aligned - 1);
+     }
+-    return (adj_w * height * bpp + 4/* to round up */) / bpb;
++    // Calculate rounding as necessary.
++    uint remainder = (adj_w * height * bpp) % bpb;
++    return (adj_w * height * bpp) / bpb + (remainder ? 1 : 0);
+ }
+ 
+ static inline void copybuffer(VideoFrame *dst, uint8_t *buffer,
 diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
-index f953e11..23f70b4 100644
+index f953e11..3db086f 100644
 --- a/mythtv/libs/libmythtv/mythplayer.cpp
 +++ b/mythtv/libs/libmythtv/mythplayer.cpp
-@@ -211,6 +211,10 @@ MythPlayer::MythPlayer(PlayerFlags flags)
+@@ -211,17 +211,27 @@ MythPlayer::MythPlayer(PlayerFlags flags)
        refreshrate(0),
        lastsync(false),              repeat_delay(0),
        disp_timecode(0),             avsync_audiopaused(false),
@@ -62892,7 +63265,13 @@ index f953e11..23f70b4 100644
        // Time Code stuff
        prevtc(0),                    prevrp(0),
        savedAudioTimecodeOffset(0),
-@@ -222,6 +226,10 @@ MythPlayer::MythPlayer(PlayerFlags flags)
+       // LiveTVChain stuff
+       m_tv(NULL),                   isDummy(false),
++      // Counter for buffering messages
++      bufferingCounter(0),
+       // Debugging variables
+       output_jmeter(new Jitterometer(LOC)),
+       disable_passthrough(false)
  {
      memset(&tc_lastval, 0, sizeof(tc_lastval));
      memset(&tc_wrap,    0, sizeof(tc_wrap));
@@ -62903,7 +63282,7 @@ index f953e11..23f70b4 100644
  
      playerThread = QThread::currentThread();
  #ifdef Q_OS_ANDROID
-@@ -383,7 +391,7 @@ bool MythPlayer::Pause(void)
+@@ -383,7 +393,7 @@ bool MythPlayer::Pause(void)
  
  bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
  {
@@ -62912,7 +63291,7 @@ index f953e11..23f70b4 100644
      LOG(VB_PLAYBACK, LOG_INFO, LOC +
          QString("Play(%1, normal %2, unpause audio %3)")
              .arg(speed,5,'f',1).arg(normal).arg(unpauseaudio));
-@@ -391,6 +399,7 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
+@@ -391,6 +401,7 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
      if (deleteMap.IsEditing())
      {
          LOG(VB_GENERAL, LOG_ERR, LOC + "Ignoring Play(), in edit mode.");
@@ -62920,7 +63299,7 @@ index f953e11..23f70b4 100644
          return false;
      }
  
-@@ -403,6 +412,7 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
+@@ -403,6 +414,7 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
      allpaused = false;
      next_play_speed   = speed;
      next_normal_speed = normal;
@@ -62928,7 +63307,25 @@ index f953e11..23f70b4 100644
      return true;
  }
  
-@@ -949,7 +959,7 @@ int MythPlayer::OpenFile(uint retries)
+@@ -931,14 +943,15 @@ int MythPlayer::OpenFile(uint retries)
+     int testreadsize = 2048;
+ 
+     MythTimer bigTimer; bigTimer.start();
+-    int timeout = max((retries + 1) * 500, 15000U);
++    int timeout = max((retries + 1) * 500, 30000U);
+     while (testreadsize <= kDecoderProbeBufferSize)
+     {
+         MythTimer peekTimer; peekTimer.start();
+         while (player_ctx->buffer->Peek(testbuf, testreadsize) != testreadsize)
+         {
+             // NB need to allow for streams encountering network congestion
+-            if (peekTimer.elapsed() > 30000 || bigTimer.elapsed() > timeout)
++            if (peekTimer.elapsed() > 30000 || bigTimer.elapsed() > timeout
++                || player_ctx->buffer->GetStopReads())
+             {
+                 LOG(VB_GENERAL, LOG_ERR, LOC +
+                     QString("OpenFile(): Could not read first %1 bytes of '%2'")
+@@ -949,7 +962,7 @@ int MythPlayer::OpenFile(uint retries)
                  return -1;
              }
              LOG(VB_GENERAL, LOG_WARNING, LOC + "OpenFile() waiting on data");
@@ -62937,7 +63334,7 @@ index f953e11..23f70b4 100644
          }
  
          player_ctx->LockPlayingInfo(__FILE__, __LINE__);
-@@ -1385,7 +1395,10 @@ void MythPlayer::DisableCaptions(uint mode, bool osd_msg)
+@@ -1385,7 +1398,10 @@ void MythPlayer::DisableCaptions(uint mode, bool osd_msg)
  
      QMutexLocker locker(&osdLock);
  
@@ -62949,7 +63346,7 @@ index f953e11..23f70b4 100644
      QString msg = "";
      if (kDisplayNUVTeletextCaptions & mode)
          msg += tr("TXT CAP");
-@@ -1422,7 +1435,10 @@ void MythPlayer::DisableCaptions(uint mode, bool osd_msg)
+@@ -1422,7 +1438,10 @@ void MythPlayer::DisableCaptions(uint mode, bool osd_msg)
  void MythPlayer::EnableCaptions(uint mode, bool osd_msg)
  {
      QMutexLocker locker(&osdLock);
@@ -62961,7 +63358,7 @@ index f953e11..23f70b4 100644
      QString msg = "";
      if ((kDisplayCC608 & mode) || (kDisplayCC708 & mode) ||
          (kDisplayAVSubtitle & mode) || kDisplayRawTextSubtitle & mode)
-@@ -1492,7 +1508,9 @@ void MythPlayer::SetCaptionsEnabled(bool enable, bool osd_msg)
+@@ -1492,7 +1511,9 @@ void MythPlayer::SetCaptionsEnabled(bool enable, bool osd_msg)
      enableCaptions = disableCaptions = false;
      uint origMode = textDisplayMode;
  
@@ -62972,7 +63369,7 @@ index f953e11..23f70b4 100644
  
      if (!enable)
      {
-@@ -1772,6 +1790,7 @@ void MythPlayer::ResetAVSync(void)
+@@ -1772,6 +1793,7 @@ void MythPlayer::ResetAVSync(void)
      if (!avsync_predictor_enabled || avsync_predictor >= refreshrate)
          avsync_predictor = 0;
      prevtc = 0;
@@ -62980,7 +63377,7 @@ index f953e11..23f70b4 100644
      LOG(VB_PLAYBACK | VB_TIMESTAMP, LOG_INFO, LOC + "A/V sync reset");
  }
  
-@@ -1785,6 +1804,24 @@ void MythPlayer::InitAVSync(void)
+@@ -1785,6 +1807,24 @@ void MythPlayer::InitAVSync(void)
  
      refreshrate = MythDisplay::GetDisplayInfo(frame_interval).Rate();
  
@@ -63005,7 +63402,7 @@ index f953e11..23f70b4 100644
      if (!FlagIsSet(kVideoIsNull))
      {
          QString timing_type = videosync->getName();
-@@ -1813,8 +1850,6 @@ int64_t MythPlayer::AVSyncGetAudiotime(void)
+@@ -1813,8 +1853,6 @@ int64_t MythPlayer::AVSyncGetAudiotime(void)
      return currentaudiotime;
  }
  
@@ -63014,7 +63411,7 @@ index f953e11..23f70b4 100644
  void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
  {
      int repeat_pict  = 0;
-@@ -1840,18 +1875,25 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
+@@ -1840,18 +1878,25 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
          return;
      }
  
@@ -63044,7 +63441,7 @@ index f953e11..23f70b4 100644
      bool dropframe = false;
      QString dbg;
  
-@@ -1988,7 +2030,7 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
+@@ -1988,7 +2033,7 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
  
      avsync_adjustment = 0;
  
@@ -63053,7 +63450,7 @@ index f953e11..23f70b4 100644
      {
          // If audio is way behind of video, adjust for it...
          // by cutting the frame rate in half for the length of this frame
-@@ -2006,7 +2048,8 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
+@@ -2006,7 +2051,8 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
          int64_t currentaudiotime = audio.GetAudioTime();
          LOG(VB_PLAYBACK | VB_TIMESTAMP, LOG_INFO, LOC +
              QString("A/V timecodes audio %1 video %2 frameinterval %3 "
@@ -63063,7 +63460,7 @@ index f953e11..23f70b4 100644
                  .arg(currentaudiotime)
                  .arg(timecode)
                  .arg(frame_interval)
-@@ -2017,6 +2060,7 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
+@@ -2017,6 +2063,7 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
                  .arg(avsync_predictor)
                  .arg(avsync_predictor_enabled)
                  .arg(vsync_delay_clock)
@@ -63071,7 +63468,7 @@ index f953e11..23f70b4 100644
                   );
          if (currentaudiotime != 0 && timecode != 0)
          { // currentaudiotime == 0 after a seek
-@@ -2054,7 +2098,7 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
+@@ -2054,7 +2101,7 @@ void MythPlayer::AVSync(VideoFrame *buffer, bool limit_delay)
              // prevents major jitter when pts resets during dvd title
              if (avsync_delay > 2000000 && limit_delay)
                  avsync_delay = 90000;
@@ -63080,7 +63477,47 @@ index f953e11..23f70b4 100644
  
              int avsync_used = avsync_avg;
              if (labs(avsync_used) > labs(avsync_delay))
-@@ -2240,10 +2284,7 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
+@@ -2171,17 +2218,34 @@ bool MythPlayer::PrebufferEnoughFrames(int min_buffers)
+         int last_msg = buffering_last_msg.msecsTo(QTime::currentTime());
+         if (last_msg > 100)
+         {
+-            LOG(VB_GENERAL, LOG_NOTICE, LOC +
+-                QString("Waited %1ms for video buffers %2")
+-                    .arg(waited_for).arg(videoOutput->GetFrameStatus()));
++            if (++bufferingCounter == 10)
++                LOG(VB_GENERAL, LOG_NOTICE, LOC +
++                    "To see more buffering messages use -v playback");
++            if (bufferingCounter >= 10)
++                LOG(VB_PLAYBACK, LOG_NOTICE, LOC +
++                    QString("Waited %1ms for video buffers %2")
++                    .arg(waited_for).arg(videoOutput->GetFrameStatus())); 
++            else
++                LOG(VB_GENERAL, LOG_NOTICE, LOC +
++                    QString("Waited %1ms for video buffers %2")
++                        .arg(waited_for).arg(videoOutput->GetFrameStatus()));
+             buffering_last_msg = QTime::currentTime();
+-            if (audio.IsBufferAlmostFull())
++            // music choice only sends a frame every 6 seconds
++            // so wait 7 seconds before doing this reset
++            if (waited_for > 7000 && audio.IsBufferAlmostFull())
+             {
+                 // We are likely to enter this condition
+                 // if the audio buffer was too full during GetFrame in AVFD
+-                LOG(VB_AUDIO, LOG_INFO, LOC + "Resetting audio buffer");
++                LOG(VB_GENERAL, LOG_NOTICE, LOC + "Resetting audio buffer");
+                 audio.Reset();
+             }
++            // Finish audio pause for sync after 1 second
++            // in case of infrequent video frames (e.g. music choice)
++            if (avsync_audiopaused && waited_for > 1000)
++            {
++                avsync_audiopaused = false;
++                audio.Pause(false);
++            }
+         }
+         if ((waited_for > 500) && !videoOutput->EnoughFreeFrames())
+         {
+@@ -2240,10 +2304,7 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
          videoOutput->DoneDisplayingFrame(videoOutput->GetLastShownFrame());
  
      // retrieve the next frame
@@ -63092,7 +63529,7 @@ index f953e11..23f70b4 100644
      VideoFrame *frame = videoOutput->GetLastShownFrame();
  
      // Check aspect ratio
-@@ -2252,12 +2293,9 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
+@@ -2252,12 +2313,9 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
      // Player specific processing (dvd, bd, mheg etc)
      PreProcessNormalFrame();
  
@@ -63108,7 +63545,7 @@ index f953e11..23f70b4 100644
  
      FrameScanType ps = m_scan;
      if (kScan_Detect == m_scan || kScan_Ignore == m_scan)
-@@ -2265,9 +2303,7 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
+@@ -2265,9 +2323,7 @@ void MythPlayer::DisplayNormalFrame(bool check_prebuffer)
  
      AVSync(frame, 0);
      // If PiP then keep this frame for MythPlayer::GetCurrentFrame
@@ -63119,7 +63556,7 @@ index f953e11..23f70b4 100644
          videoOutput->DoneDisplayingFrame(frame);
  }
  
-@@ -2277,12 +2313,10 @@ void MythPlayer::PreProcessNormalFrame(void)
+@@ -2277,12 +2333,10 @@ void MythPlayer::PreProcessNormalFrame(void)
      // handle Interactive TV
      if (GetInteractiveTV())
      {
@@ -63134,7 +63571,7 @@ index f953e11..23f70b4 100644
              InteractiveScreen *window =
                  (InteractiveScreen*)osd->GetWindow(OSD_WIN_INTERACT);
              if ((interactiveTV->ImageHasChanged() || !itvVisible) && window)
-@@ -2291,6 +2325,8 @@ void MythPlayer::PreProcessNormalFrame(void)
+@@ -2291,6 +2345,8 @@ void MythPlayer::PreProcessNormalFrame(void)
                  itvVisible = true;
              }
          }
@@ -63143,7 +63580,7 @@ index f953e11..23f70b4 100644
      }
  #endif // USING_MHEG
  }
-@@ -2388,6 +2424,7 @@ void MythPlayer::VideoStart(void)
+@@ -2388,6 +2444,7 @@ void MythPlayer::VideoStart(void)
  
      avsync_delay = 0;
      avsync_avg = 0;
@@ -63151,7 +63588,7 @@ index f953e11..23f70b4 100644
      refreshrate = 0;
      lastsync = false;
  
-@@ -2467,7 +2504,7 @@ bool MythPlayer::VideoLoop(void)
+@@ -2467,7 +2524,7 @@ bool MythPlayer::VideoLoop(void)
          DisplayPauseFrame();
      }
      else
@@ -63160,7 +63597,7 @@ index f953e11..23f70b4 100644
  
      if (FlagIsSet(kVideoIsNull) && decoder)
          decoder->UpdateFramesPlayed();
-@@ -2597,10 +2634,7 @@ void MythPlayer::SwitchToProgram(void)
+@@ -2597,10 +2654,7 @@ void MythPlayer::SwitchToProgram(void)
      ProgramInfo *pginfo = player_ctx->tvchain->GetSwitchProgram(
          discontinuity, newtype, newid);
      if (!pginfo)
@@ -63171,7 +63608,7 @@ index f953e11..23f70b4 100644
  
      bool newIsDummy = player_ctx->tvchain->GetInputType(newid) == "DUMMY";
  
-@@ -2735,10 +2769,7 @@ void MythPlayer::JumpToProgram(void)
+@@ -2735,10 +2789,7 @@ void MythPlayer::JumpToProgram(void)
      ProgramInfo *pginfo = player_ctx->tvchain->GetSwitchProgram(
          discontinuity, newtype, newid);
      if (!pginfo)
@@ -63182,7 +63619,7 @@ index f953e11..23f70b4 100644
  
      inJumpToProgramPause = true;
  
-@@ -2746,6 +2777,7 @@ void MythPlayer::JumpToProgram(void)
+@@ -2746,6 +2797,7 @@ void MythPlayer::JumpToProgram(void)
      SetPlayingInfo(*pginfo);
  
      Pause();
@@ -63190,7 +63627,15 @@ index f953e11..23f70b4 100644
      ResetCaptions();
      player_ctx->tvchain->SetProgram(*pginfo);
      player_ctx->buffer->Reset(true);
-@@ -2996,11 +3028,12 @@ void MythPlayer::EventLoop(void)
+@@ -2872,6 +2924,7 @@ bool MythPlayer::StartPlaying(void)
+     next_play_speed = audio.GetStretchFactor();
+     jumpchapter = 0;
+     commBreakMap.SkipCommercials(0);
++    bufferingCounter=0;
+ 
+     if (!InitVideo())
+     {
+@@ -2996,11 +3049,12 @@ void MythPlayer::EventLoop(void)
          JumpToProgram();
      }
      else if ((!allpaused || GetEof() != kEofStateNone) &&
@@ -63206,7 +63651,7 @@ index f953e11..23f70b4 100644
      }
  
      // Jump to the next program in livetv
-@@ -3201,35 +3234,36 @@ void MythPlayer::AudioEnd(void)
+@@ -3201,35 +3255,36 @@ void MythPlayer::AudioEnd(void)
  
  bool MythPlayer::PauseDecoder(void)
  {
@@ -63252,7 +63697,7 @@ index f953e11..23f70b4 100644
          return;
      }
  
-@@ -3237,14 +3271,15 @@ void MythPlayer::UnpauseDecoder(void)
+@@ -3237,14 +3292,15 @@ void MythPlayer::UnpauseDecoder(void)
      {
          int tries = 0;
          unpauseDecoder = true;
@@ -63270,7 +63715,7 @@ index f953e11..23f70b4 100644
  }
  
  void MythPlayer::DecoderStart(bool start_paused)
-@@ -3271,7 +3306,7 @@ void MythPlayer::DecoderEnd(void)
+@@ -3271,7 +3327,7 @@ void MythPlayer::DecoderEnd(void)
      SetPlaying(false);
      killdecoder = true;
      int tries = 0;
@@ -63279,7 +63724,7 @@ index f953e11..23f70b4 100644
          LOG(VB_PLAYBACK, LOG_INFO, LOC +
              "Waited 100ms for decoder loop to stop");
  
-@@ -3284,23 +3319,12 @@ void MythPlayer::DecoderEnd(void)
+@@ -3284,23 +3340,12 @@ void MythPlayer::DecoderEnd(void)
  
  void MythPlayer::DecoderPauseCheck(void)
  {
@@ -63309,7 +63754,7 @@ index f953e11..23f70b4 100644
  }
  
 diff --git a/mythtv/libs/libmythtv/mythplayer.h b/mythtv/libs/libmythtv/mythplayer.h
-index bfdac87..140c6a0 100644
+index bfdac87..3123a95 100644
 --- a/mythtv/libs/libmythtv/mythplayer.h
 +++ b/mythtv/libs/libmythtv/mythplayer.h
 @@ -826,6 +826,11 @@ class MTV_PUBLIC MythPlayer
@@ -63324,8 +63769,18 @@ index bfdac87..140c6a0 100644
  
      // Time Code stuff
      int        prevtc;        ///< 32 bit timecode if last VideoFrame shown
+@@ -838,6 +843,9 @@ class MTV_PUBLIC MythPlayer
+     TV *m_tv;
+     bool isDummy;
+ 
++    // Counter for buffering messages
++    int  bufferingCounter;
++
+     // Debugging variables
+     Jitterometer *output_jmeter;
+ 
 diff --git a/mythtv/libs/libmythtv/osd.cpp b/mythtv/libs/libmythtv/osd.cpp
-index df59b70..098cc00 100644
+index df59b70..abca78b 100644
 --- a/mythtv/libs/libmythtv/osd.cpp
 +++ b/mythtv/libs/libmythtv/osd.cpp
 @@ -152,7 +152,7 @@ OSD::OSD(MythPlayer *player, QObject *parent, MythPainter *painter)
@@ -63337,7 +63792,17 @@ index df59b70..098cc00 100644
      m_SavedWMult(1.0f), m_SavedHMult(1.0f),   m_SavedUIRect(QRect()),
      m_fontStretch(100), m_savedFontStretch(100),
      m_FunctionalType(kOSDFunctionalType_Default), m_FunctionalWindow(QString())
-@@ -704,6 +704,8 @@ bool OSD::DrawDirect(MythPainter* painter, QSize size, bool repaint)
+@@ -696,6 +696,9 @@ bool OSD::DrawDirect(MythPainter* painter, QSize size, bool repaint)
+             {
+                 OverrideUIScale(false);
+             }
++
++            (*it2)->SetPainter(m_CurrentPainter);
++
+             nc->UpdateScreen(*it2);
+ 
+             visible = true;
+@@ -704,6 +707,8 @@ bool OSD::DrawDirect(MythPainter* painter, QSize size, bool repaint)
              {
                  QTime expires = nc->ScreenExpiryTime(*it2).time();
                  int left = now.msecsTo(expires);
@@ -63346,7 +63811,7 @@ index df59b70..098cc00 100644
                  if (expires.isValid() && left < m_FadeTime)
                      (*it2)->SetAlpha((255 * left) / m_FadeTime);
              }
-@@ -741,6 +743,11 @@ bool OSD::DrawDirect(MythPainter* painter, QSize size, bool repaint)
+@@ -741,6 +746,11 @@ bool OSD::DrawDirect(MythPainter* painter, QSize size, bool repaint)
          painter->End();
      }
  
@@ -63386,6 +63851,132 @@ index a7ce174..b2999ad 100644
              ret = 0;
              break;
          }
+diff --git a/mythtv/libs/libmythtv/recorders/NuppelVideoRecorder.cpp b/mythtv/libs/libmythtv/recorders/NuppelVideoRecorder.cpp
+index 919f790..b1598a7 100644
+--- a/mythtv/libs/libmythtv/recorders/NuppelVideoRecorder.cpp
++++ b/mythtv/libs/libmythtv/recorders/NuppelVideoRecorder.cpp
+@@ -930,10 +930,9 @@ void NuppelVideoRecorder::InitBuffers(void)
+ 
+     if (!video_buffer_size)
+     {
+-        if (picture_format == AV_PIX_FMT_YUV422P)
+-            video_buffer_size = w_out * h_out * 2;
+-        else
+-            video_buffer_size = w_out * h_out * 3 / 2;
++        video_buffer_size =
++            buffersize(picture_format == AV_PIX_FMT_YUV422P ? FMT_YUV422P : FMT_YV12,
++                       w_out, h_out);
+     }
+ 
+     if (width >= 480 || height > 288)
+@@ -2878,19 +2877,15 @@ void NuppelVideoRecorder::WriteVideo(VideoFrame *frame, bool skipsync,
+     lzo_uint out_len = OUT_LEN;
+     struct rtframeheader frameheader;
+     int raw = 0, compressthis = compression;
+-    uint8_t *planes[3];
+-    int len = frame->size;
++    uint8_t *planes[3] = {
++        frame->buf + frame->offsets[0],
++        frame->buf + frame->offsets[1],
++        frame->buf + frame->offsets[2] };
+     int fnum = frame->frameNumber;
+     long long timecode = frame->timecode;
+-    unsigned char *buf = frame->buf;
+ 
+     memset(&frameheader, 0, sizeof(frameheader));
+ 
+-    planes[0] = buf;
+-    planes[1] = planes[0] + frame->width * frame->height;
+-    planes[2] = planes[1] + (frame->width * frame->height) /
+-                            (picture_format == AV_PIX_FMT_YUV422P ? 2 : 4);
+-
+     if (lf == 0)
+     {   // this will be triggered every new file
+         lf = fnum;
+@@ -2949,23 +2944,7 @@ void NuppelVideoRecorder::WriteVideo(VideoFrame *frame, bool skipsync,
+     if (useavcodec)
+     {
+         MythAVFrame mpa_picture;
+-
+-        switch (picture_format)
+-        {
+-            case AV_PIX_FMT_YUV420P:
+-            case AV_PIX_FMT_YUV422P:
+-            case AV_PIX_FMT_YUVJ420P:
+-                mpa_picture->linesize[0] = w_out;
+-                mpa_picture->linesize[1] = w_out / 2;
+-                mpa_picture->linesize[2] = w_out / 2;
+-                break;
+-        }
+-        mpa_picture->data[0] = planes[0];
+-        mpa_picture->data[1] = planes[1];
+-        mpa_picture->data[2] = planes[2];
+-        mpa_picture->linesize[0] = frame->width;
+-        mpa_picture->linesize[1] = frame->width / 2;
+-        mpa_picture->linesize[2] = frame->width / 2;
++        AVPictureFill(mpa_picture, frame);
+ 
+         if (wantkeyframe)
+             mpa_picture->pict_type = AV_PICTURE_TYPE_I;
+@@ -2977,7 +2956,7 @@ void NuppelVideoRecorder::WriteVideo(VideoFrame *frame, bool skipsync,
+             AVPacket packet;
+             av_init_packet(&packet);
+             packet.data = (uint8_t *)strm;
+-            packet.size = len;
++            packet.size = frame->size;
+ 
+             int got_packet = 0;
+ 
+@@ -3021,14 +3000,14 @@ void NuppelVideoRecorder::WriteVideo(VideoFrame *frame, bool skipsync,
+             tmp = rtjc->Compress(strm, planes);
+         }
+         else
+-            tmp = len;
++            tmp = frame->size;
+ 
+         // here is lzo compression afterwards
+         if (compressthis)
+         {
+             int r = 0;
+             if (raw)
+-                r = lzo1x_1_compress((unsigned char*)buf, len,
++                r = lzo1x_1_compress((unsigned char*)frame->buf, frame->size,
+                                      out, &out_len, wrkmem);
+             else
+                 r = lzo1x_1_compress((unsigned char *)strm, tmp, out,
+@@ -3052,16 +3031,16 @@ void NuppelVideoRecorder::WriteVideo(VideoFrame *frame, bool skipsync,
+         if (mpa_vidcodec->id == AV_CODEC_ID_RAWVIDEO)
+         {
+             frameheader.comptype = '0';
+-            frameheader.packetlength = len;
++            frameheader.packetlength = frame->size;
+             WriteFrameheader(&frameheader);
+-            ringBuffer->Write(buf, len);
++            ringBuffer->Write(frame->buf, frame->size);
+         }
+         else if (hardware_encode)
+         {
+             frameheader.comptype = '4';
+-            frameheader.packetlength = len;
++            frameheader.packetlength = frame->size;
+             WriteFrameheader(&frameheader);
+-            ringBuffer->Write(buf, len);
++            ringBuffer->Write(frame->buf, frame->size);
+         }
+         else
+         {
+@@ -3083,9 +3062,9 @@ void NuppelVideoRecorder::WriteVideo(VideoFrame *frame, bool skipsync,
+         else
+         {
+             frameheader.comptype  = '0'; // raw YUV420
+-            frameheader.packetlength = len;
++            frameheader.packetlength = frame->size;
+             WriteFrameheader(&frameheader);
+-            ringBuffer->Write(buf, len); // we write buf directly
++            ringBuffer->Write(frame->buf, frame->size); // we write buf directly
+         }
+     }
+     else
 diff --git a/mythtv/libs/libmythtv/recorders/asichannel.cpp b/mythtv/libs/libmythtv/recorders/asichannel.cpp
 index 6956b20..94cba8d 100644
 --- a/mythtv/libs/libmythtv/recorders/asichannel.cpp
@@ -63437,6 +64028,69 @@ index c629ec5..f10ae6a 100644
      {
          LOG(VB_GENERAL, LOG_ERR, loc + " " +
              QString("Channel is valid, but tuner is busy "
+diff --git a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
+index 7e60f1d..3f13aa5 100644
+--- a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
++++ b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
+@@ -88,7 +88,8 @@ DTVRecorder::DTVRecorder(TVRec *rec) :
+     _total_duration(0),
+     _td_base(0),
+     _td_tick_count(0),
+-    _td_tick_framerate(0)
++    _td_tick_framerate(0),
++    music_choice(false)
+ {
+     SetPositionMapType(MARK_GOP_BYFRAME);
+     _payload_buffer.reserve(TSPacket::kSize * (50 + 1));
+@@ -538,6 +539,14 @@ bool DTVRecorder::FindMPEG2Keyframes(const TSPacket* tspacket)
+                 int64_t dts = extract_timestamp(
+                     bufptr, bytes_left, kExtractPTS);
+                 HandleTimestamps(stream_id, pts, dts);
++                // Detect music choice program (very slow frame rate and audio)
++                if (_first_keyframe < 0
++                    &&  _ts_last[stream_id] - _ts_first[stream_id] > 3*90000)
++                {
++                    hasKeyFrame = true;
++                    music_choice = true;
++                    LOG(VB_GENERAL, LOG_INFO, LOC + "Music Choice program detected");
++                }
+             }
+         }
+     }
+@@ -636,6 +645,9 @@ void DTVRecorder::HandleTimestamps(int stream_id, int64_t pts, int64_t dts)
+         gap_threshold = 2*90000; // two seconds, compensate for GOP ordering
+     }
+ 
++    if (music_choice)
++        gap_threshold = 8*90000; // music choice uses frames every 6 seconds
++
+     if (_ts_last[stream_id] >= 0)
+     {
+         int64_t diff = ts - _ts_last[stream_id];
+@@ -649,7 +661,7 @@ void DTVRecorder::HandleTimestamps(int stream_id, int64_t pts, int64_t dts)
+         if (diff < 0)
+             diff = -diff;
+ 
+-        if (diff > gap_threshold)
++        if (diff > gap_threshold && _first_keyframe >= 0)
+         {
+             QMutexLocker locker(&statisticsLock);
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/dtvrecorder.h b/mythtv/libs/libmythtv/recorders/dtvrecorder.h
+index e657722..51c81f5 100644
+--- a/mythtv/libs/libmythtv/recorders/dtvrecorder.h
++++ b/mythtv/libs/libmythtv/recorders/dtvrecorder.h
+@@ -195,6 +195,10 @@ class DTVRecorder :
+     uint64_t _td_tick_count;
+     FrameRate _td_tick_framerate;
+ 
++    // Music Choice
++    // Comcast Music Choice uses 3 frames every 6 seconds and no key frames
++    bool music_choice;
++
+     // constants
+     /// If the number of regular frames detected since the last
+     /// detected keyframe exceeds this value, then we begin marking
 diff --git a/mythtv/libs/libmythtv/recorders/vboxutils.cpp b/mythtv/libs/libmythtv/recorders/vboxutils.cpp
 index f1fc301..629e276 100644
 --- a/mythtv/libs/libmythtv/recorders/vboxutils.cpp
@@ -63496,6 +64150,41 @@ index 3481837..676d643 100644
  
  class VBox
  {
+diff --git a/mythtv/libs/libmythtv/ringbuffer.cpp b/mythtv/libs/libmythtv/ringbuffer.cpp
+index 2ca7dd7..9316267 100644
+--- a/mythtv/libs/libmythtv/ringbuffer.cpp
++++ b/mythtv/libs/libmythtv/ringbuffer.cpp
+@@ -1297,10 +1297,10 @@ int RingBuffer::Peek(void *buf, int count)
+ 
+ bool RingBuffer::WaitForReadsAllowed(void)
+ {
+-    // Wait up to 10000 ms for reads allowed (or readsdesired if post seek/open)
++    // Wait up to 30000 ms for reads allowed (or readsdesired if post seek/open)
+     bool &check = (recentseek || readInternalMode) ? readsdesired : readsallowed;
+     recentseek = false;
+-    int timeout_ms = 10000;
++    int timeout_ms = 30000;
+     int count = 0;
+     MythTimer t;
+     t.start();
+@@ -1309,7 +1309,7 @@ bool RingBuffer::WaitForReadsAllowed(void)
+            !request_pause && !commserror && readaheadrunning)
+     {
+         generalWait.wait(&rwlock, clamp(timeout_ms - t.elapsed(), 10, 100));
+-        if (!check && t.elapsed() > 1000 && (count % 10) == 0)
++        if (!check && t.elapsed() > 1000 && (count % 100) == 0)
+         {
+             LOG(VB_GENERAL, LOG_WARNING, LOC +
+                 "Taking too long to be allowed to read..");
+@@ -1517,7 +1517,7 @@ int RingBuffer::ReadPriv(void *buf, int count, bool peek)
+         if (avail > 0)
+             break;
+     }
+-    if (t.elapsed() > 2000)
++    if (t.elapsed() > 6000)
+     {
+         LOG(VB_GENERAL, LOG_WARNING, LOC + loc_desc +
+             QString(" -- waited %1 ms for avail(%2) > count(%3)")
 diff --git a/mythtv/libs/libmythtv/test/test_eitfixups/test_eitfixups.cpp b/mythtv/libs/libmythtv/test/test_eitfixups/test_eitfixups.cpp
 index 77f85e1..80b7d1d 100644
 --- a/mythtv/libs/libmythtv/test/test_eitfixups/test_eitfixups.cpp
@@ -63535,6 +64224,22 @@ index 77f85e1..80b7d1d 100644
  }
  
  void TestEITFixups::testUnitymedia()
+diff --git a/mythtv/libs/libmythtv/test/test_iptvrecorder/test_iptvrecorder.h b/mythtv/libs/libmythtv/test/test_iptvrecorder/test_iptvrecorder.h
+index c2bd423..c3d8709 100644
+--- a/mythtv/libs/libmythtv/test/test_iptvrecorder/test_iptvrecorder.h
++++ b/mythtv/libs/libmythtv/test/test_iptvrecorder/test_iptvrecorder.h
+@@ -67,6 +67,11 @@ class TestIPTVRecorder: public QObject
+         tuning.SetDataURL(QUrl(QString("http://yourdreambox:8001/1:0:1:488:3FE:22F1:EEEE0000:0:0:0:")));
+         QVERIFY (tuning.IsValid());
+         QVERIFY (tuning.IsHTTPTS());
++
++        /* test url from #12820 with https protocol */
++        tuning.SetDataURL(QUrl(QString("https://svt10-lh.akamaihd.net/i/svt10_0@77505/master.m3u8")));
++        QVERIFY (tuning.IsValid());
++        QVERIFY (tuning.IsHTTPTS());
+     }
+ 
+ 
 diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
 index 9b9511b..f397506 100644
 --- a/mythtv/libs/libmythtv/tv_play.cpp
@@ -63670,6 +64375,30 @@ index 61119bb..c148861 100644
  
      static QStringList GetVideoRenderers(const QString &decoder);
      static QString     GetVideoRendererHelp(const QString &renderer);
+diff --git a/mythtv/libs/libmythtv/videoout_d3d.cpp b/mythtv/libs/libmythtv/videoout_d3d.cpp
+index 983bcd9..f8af475 100644
+--- a/mythtv/libs/libmythtv/videoout_d3d.cpp
++++ b/mythtv/libs/libmythtv/videoout_d3d.cpp
+@@ -81,8 +81,17 @@ void VideoOutputD3D::TearDown(void)
+         m_pauseFrame.buf = NULL;
+     }
+ 
+-    delete m_osd_painter;
+-    m_osd_painter = NULL;
++    if (m_osd_painter)
++    {
++        // Hack to ensure that the osd painter is not
++        // deleted while image load thread is still busy
++        // loading images with that painter
++        m_osd_painter->Teardown();
++        if (invalid_osd_painter)
++            delete invalid_osd_painter;
++        invalid_osd_painter = m_osd_painter;
++        m_osd_painter = NULL;
++    }
+ 
+     DeleteDecoder();
+     DestroyContext();
 diff --git a/mythtv/libs/libmythtv/videoout_omx.cpp b/mythtv/libs/libmythtv/videoout_omx.cpp
 index 1b90ceb..3c5c448 100644
 --- a/mythtv/libs/libmythtv/videoout_omx.cpp
@@ -64098,6 +64827,164 @@ index 4760377..fb162d1 100644
  };
  
  #endif // ndef VIDEOOUT_OMX_H
+diff --git a/mythtv/libs/libmythtv/videoout_opengl.cpp b/mythtv/libs/libmythtv/videoout_opengl.cpp
+index 5621e31..7a13935 100644
+--- a/mythtv/libs/libmythtv/videoout_opengl.cpp
++++ b/mythtv/libs/libmythtv/videoout_opengl.cpp
+@@ -152,7 +152,15 @@ void VideoOutputOpenGL::DestroyGPUResources(void)
+ #endif
+ 
+     if (gl_created_painter)
+-        delete gl_painter;
++    {
++        // Hack to ensure that the osd painter is not
++        // deleted while image load thread is still busy
++        // loading images with that painter
++        gl_painter->Teardown();
++        if (invalid_osd_painter)
++            delete invalid_osd_painter;
++        invalid_osd_painter = gl_painter;
++    }
+     else if (gl_painter)
+         gl_painter->SetSwapControl(true);
+ 
+diff --git a/mythtv/libs/libmythtv/videoout_vdpau.cpp b/mythtv/libs/libmythtv/videoout_vdpau.cpp
+index 3eb6398..3b2153e 100644
+--- a/mythtv/libs/libmythtv/videoout_vdpau.cpp
++++ b/mythtv/libs/libmythtv/videoout_vdpau.cpp
+@@ -158,7 +158,15 @@ void VideoOutputVDPAU::DeleteRender(void)
+     QMutexLocker locker(&m_lock);
+ 
+     if (m_osd_painter)
+-        delete m_osd_painter;
++    {
++        // Hack to ensure that the osd painter is not
++        // deleted while image load thread is still busy
++        // loading images with that painter
++        m_osd_painter->Teardown();
++        if (invalid_osd_painter)
++            delete invalid_osd_painter;
++        invalid_osd_painter = m_osd_painter;
++    }
+ 
+     if (m_render)
+     {
+diff --git a/mythtv/libs/libmythtv/videooutbase.cpp b/mythtv/libs/libmythtv/videooutbase.cpp
+index 5d60efe..6ddbbaa 100644
+--- a/mythtv/libs/libmythtv/videooutbase.cpp
++++ b/mythtv/libs/libmythtv/videooutbase.cpp
+@@ -427,6 +427,7 @@ VideoOutput::VideoOutput() :
+ 
+     // OSD
+     osd_painter(NULL),                  osd_image(NULL),
++    invalid_osd_painter(0),
+ 
+     // Visualisation
+     m_visual(NULL),
+@@ -459,6 +460,9 @@ VideoOutput::~VideoOutput()
+         osd_image->DecrRef();
+     if (osd_painter)
+         delete osd_painter;
++    if (invalid_osd_painter)
++        delete invalid_osd_painter;
++    invalid_osd_painter = 0;
+ 
+     ShutdownPipResize();
+ 
+diff --git a/mythtv/libs/libmythtv/videooutbase.h b/mythtv/libs/libmythtv/videooutbase.h
+index c8ca444..afc7abf 100644
+--- a/mythtv/libs/libmythtv/videooutbase.h
++++ b/mythtv/libs/libmythtv/videooutbase.h
+@@ -355,6 +355,8 @@ class VideoOutput
+     // OSD painter and surface
+     MythYUVAPainter *osd_painter;
+     MythImage       *osd_image;
++    // Hack to ensure osd painter not deleted to soon
++    MythPainter     *invalid_osd_painter;
+ 
+     // Visualisation
+     VideoVisual     *m_visual;
+diff --git a/mythtv/libs/libmythtv/videosource.cpp b/mythtv/libs/libmythtv/videosource.cpp
+index fd2d496..97618ad 100644
+--- a/mythtv/libs/libmythtv/videosource.cpp
++++ b/mythtv/libs/libmythtv/videosource.cpp
+@@ -2415,6 +2415,25 @@ void CetonDeviceID::UpdateValues(void)
+         emit LoadedInstances((int)_parent.GetInstanceCount());
+ }
+ 
++class CetonExtra : public ConfigurationWizard
++{
++  public:
++    CetonExtra(CetonConfigurationGroup &parent);
++};
++
++CetonExtra::CetonExtra(CetonConfigurationGroup &parent)
++{
++    VerticalConfigurationGroup* rec = new VerticalConfigurationGroup(false);
++    rec->setLabel(QObject::tr("Recorder Options"));
++    rec->setUseLabel(false);
++
++    rec->addChild(new SignalTimeout(parent.parent, 1000, 250));
++    rec->addChild(new ChannelTimeout(parent.parent, 3000, 1750));
++
++    addChild(rec);
++}
++
++
+ CetonConfigurationGroup::CetonConfigurationGroup(CaptureCard& a_parent) :
+     VerticalConfigurationGroup(false, true, false, false),
+     parent(a_parent), instances(new InstanceCount(parent))
+@@ -2437,6 +2456,10 @@ CetonConfigurationGroup::CetonConfigurationGroup(CaptureCard& a_parent) :
+     addChild(desc);
+     addChild(instances);
+ 
++    TransButtonSetting *buttonRecOpt = new TransButtonSetting();
++    buttonRecOpt->setLabel(tr("Recording Options"));
++    addChild(buttonRecOpt);
++
+     connect(ip,       SIGNAL(NewValue(const QString&)),
+             deviceid, SLOT(  SetIP(const QString&)));
+     connect(tuner,    SIGNAL(NewValue(const QString&)),
+@@ -2451,8 +2474,20 @@ CetonConfigurationGroup::CetonConfigurationGroup(CaptureCard& a_parent) :
+     connect(instances, SIGNAL(valueChanged(int)),
+             &parent,   SLOT(  SetInstanceCount(int)));
+ 
++    connect(buttonRecOpt, SIGNAL(pressed()),
++            this,         SLOT(  CetonExtraPanel()));
++
+ };
+ 
++void CetonConfigurationGroup::CetonExtraPanel(void)
++{
++    parent.reload(); // ensure card id is valid
++
++    CetonExtra acw(*this);
++    acw.exec();
++}
++
++
+ V4LConfigurationGroup::V4LConfigurationGroup(CaptureCard& a_parent) :
+     VerticalConfigurationGroup(false, true, false, false),
+     parent(a_parent),
+diff --git a/mythtv/libs/libmythtv/videosource.h b/mythtv/libs/libmythtv/videosource.h
+index b97e9c8..8bd135f 100644
+--- a/mythtv/libs/libmythtv/videosource.h
++++ b/mythtv/libs/libmythtv/videosource.h
+@@ -463,9 +463,14 @@ class CetonConfigurationGroup : public VerticalConfigurationGroup
+ {
+     Q_OBJECT
+ 
++    friend class CetonExtra;
++
+   public:
+     CetonConfigurationGroup(CaptureCard &parent);
+ 
++  public slots:
++    void CetonExtraPanel(void);
++
+   private:
+     CaptureCard         &parent;
+     TransLabelSetting   *desc;
 diff --git a/mythtv/libs/libmythtv/visualisations/videovisualcircles.cpp b/mythtv/libs/libmythtv/visualisations/videovisualcircles.cpp
 index 1140372..e9cbf8f 100644
 --- a/mythtv/libs/libmythtv/visualisations/videovisualcircles.cpp
@@ -64288,11 +65175,31 @@ index 56b8dfb..8a903c6 100644
      }
      else if ((MythEvent::Type)(ce->type()) == MythEvent::MythUserMessage)
      {
+diff --git a/mythtv/libs/libmythui/mythpainter_d3d9.h b/mythtv/libs/libmythui/mythpainter_d3d9.h
+index d548ed4..52f458c 100644
+--- a/mythtv/libs/libmythui/mythpainter_d3d9.h
++++ b/mythtv/libs/libmythui/mythpainter_d3d9.h
+@@ -12,6 +12,7 @@ class MythRenderD3D9;
+ 
+ class MUI_PUBLIC MythD3D9Painter : public MythPainter
+ {
++    friend class VideoOutputD3D;
+   public:
+     explicit MythD3D9Painter(MythRenderD3D9 *render = NULL);
+    ~MythD3D9Painter();
 diff --git a/mythtv/libs/libmythui/mythpainter_ogl.h b/mythtv/libs/libmythui/mythpainter_ogl.h
-index 629dca7..13af273 100644
+index 629dca7..2ae8ee0 100644
 --- a/mythtv/libs/libmythui/mythpainter_ogl.h
 +++ b/mythtv/libs/libmythui/mythpainter_ogl.h
-@@ -37,13 +37,13 @@ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
+@@ -13,6 +13,7 @@ class MythRenderOpenGL;
+ 
+ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
+ {
++    friend class VideoOutputOpenGL;
+   public:
+     MythOpenGLPainter(MythRenderOpenGL *render =  NULL, QWidget *parent = NULL);
+    ~MythOpenGLPainter();
+@@ -37,13 +38,13 @@ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
  
      virtual void PushTransformation(const UIEffects &fx, QPointF center = QPointF());
      virtual void PopTransformation(void);
@@ -64307,6 +65214,18 @@ index 629dca7..13af273 100644
      int        GetTextureFromCache(MythImage *im);
  
      QWidget          *realParent;
+diff --git a/mythtv/libs/libmythui/mythpainter_vdpau.h b/mythtv/libs/libmythui/mythpainter_vdpau.h
+index dd64ffe..238f47f 100644
+--- a/mythtv/libs/libmythui/mythpainter_vdpau.h
++++ b/mythtv/libs/libmythui/mythpainter_vdpau.h
+@@ -12,6 +12,7 @@ class MythRenderVDPAU;
+ 
+ class MUI_PUBLIC MythVDPAUPainter : public MythPainter
+ {
++    friend class VideoOutputVDPAU;
+   public:
+     explicit MythVDPAUPainter(MythRenderVDPAU *render = NULL);
+    ~MythVDPAUPainter();
 diff --git a/mythtv/libs/libmythui/mythrender_opengl.cpp b/mythtv/libs/libmythui/mythrender_opengl.cpp
 index 8884190..b376008 100644
 --- a/mythtv/libs/libmythui/mythrender_opengl.cpp
@@ -64363,6 +65282,29 @@ index 9c25ff4..d87f419 100644
                  m_topPosition = m_selPosition -
                                  (static_cast<int>(m_itemsVisible) - 1);
  
+diff --git a/mythtv/libs/libmythui/mythuiwebbrowser.cpp b/mythtv/libs/libmythui/mythuiwebbrowser.cpp
+index 803f238..489e5d9 100644
+--- a/mythtv/libs/libmythui/mythuiwebbrowser.cpp
++++ b/mythtv/libs/libmythui/mythuiwebbrowser.cpp
+@@ -35,6 +35,7 @@
+ #include <QKeyEvent>
+ #include <QDomDocument>
+ #include <QNetworkCookieJar>
++#include <QNetworkConfiguration>
+ 
+ #include <unistd.h> // for usleep()
+ 
+@@ -108,6 +109,10 @@ static QNetworkAccessManager *GetNetworkAccessManager(void)
+         return networkManager;
+ 
+     networkManager = new MythNetworkAccessManager();
++//  This next line prevents seg fault at program exit in
++//  QNetworkConfiguration::~QNetworkConfiguration()
++//  when destructor is called by DestroyNetworkAccessManager
++    networkManager->setConfiguration(networkManager->configuration());
+     LOG(VB_GENERAL, LOG_DEBUG, "Copying DLManager's Cookie Jar");
+     GetMythDownloadManager()->loadCookieJar(GetConfDir() + "/MythBrowser/cookiejar.txt");
+     networkManager->setCookieJar(GetMythDownloadManager()->copyCookieJar());
 diff --git a/mythtv/libs/libmythui/screensaver-dbus.cpp b/mythtv/libs/libmythui/screensaver-dbus.cpp
 index b099c46..af41c91 100644
 --- a/mythtv/libs/libmythui/screensaver-dbus.cpp
@@ -66375,6 +67317,18 @@ index fcab29e..ed69b93 100644
 +        }
 +    }
 +}
+diff --git a/mythtv/programs/mythfrontend/playbackboxhelper.cpp b/mythtv/programs/mythfrontend/playbackboxhelper.cpp
+index f16276d..8fbb966 100644
+--- a/mythtv/programs/mythfrontend/playbackboxhelper.cpp
++++ b/mythtv/programs/mythfrontend/playbackboxhelper.cpp
+@@ -217,6 +217,7 @@ bool PBHEventHandler::event(QEvent *e)
+                 QStringList &res = (ok) ? successes : failures;
+ 
+                 res.push_back(QString::number(recordingID));
++                list.pop_front();
+             }
+             if (!successes.empty())
+             {
 diff --git a/mythtv/programs/mythfrontend/themechooser.cpp b/mythtv/programs/mythfrontend/themechooser.cpp
 index d090a3e..f0f4ea1 100644
 --- a/mythtv/programs/mythfrontend/themechooser.cpp
@@ -66388,6 +67342,407 @@ index d090a3e..f0f4ea1 100644
          int pos = subexp.indexIn(MYTH_SOURCE_VERSION);
          if (pos > -1)
          {
+diff --git a/mythtv/programs/mythtranscode/commandlineparser.cpp b/mythtv/programs/mythtranscode/commandlineparser.cpp
+index 7410f88..56b97bd 100644
+--- a/mythtv/programs/mythtranscode/commandlineparser.cpp
++++ b/mythtv/programs/mythtranscode/commandlineparser.cpp
+@@ -113,5 +113,7 @@ void MythTranscodeCommandLineParser::LoadArguments(void)
+         ->SetChildOf("hls");
+     add("--hlsstreamid", "hlsstreamid", -1, "Stream ID to process", "")
+         ->SetChildOf("hls");
++    add(QStringList(QStringList() << "-d" << "--delete" ), "delete", false,
++            "Delete original after successful transcoding", "")
++        ->SetGroup("Encoding");
+ }
+-
+diff --git a/mythtv/programs/mythtranscode/main.cpp b/mythtv/programs/mythtranscode/main.cpp
+index d6bd389..f68683c 100644
+--- a/mythtv/programs/mythtranscode/main.cpp
++++ b/mythtv/programs/mythtranscode/main.cpp
+@@ -34,7 +34,7 @@ using namespace std;
+ 
+ static void CompleteJob(int jobID, ProgramInfo *pginfo, bool useCutlist,
+                         frm_dir_map_t *deleteMap, int &exitCode,
+-                        int resultCode);
++                        int resultCode, bool forceDelete);
+ 
+ static int glbl_jobID = -1;
+ static QString recorderOptions = "";
+@@ -367,6 +367,8 @@ int main(int argc, char *argv[])
+         AudioTrackNo = cmdline.toInt("audiotrack");
+     if (cmdline.toBool("passthru"))
+         passthru = true;
++    // Set if we want to delete the original file once conversion succeeded.
++    bool deleteOriginal = cmdline.toBool("delete");
+ 
+     CleanupGuard callCleanup(cleanup);
+ 
+@@ -732,8 +734,8 @@ int main(int argc, char *argv[])
+         exitcode = result;
+     }
+ 
+-    if (!cmdline.toBool("hls"))
+-        CompleteJob(jobID, pginfo, useCutlist, &deleteMap, exitcode, result);
++    if (deleteOriginal || jobID >= 0)
++        CompleteJob(jobID, pginfo, useCutlist, &deleteMap, exitcode, result, deleteOriginal);
+ 
+     transcode->deleteLater();
+ 
+@@ -858,7 +860,7 @@ static void WaitToDelete(ProgramInfo *pginfo)
+ }
+ 
+ static void CompleteJob(int jobID, ProgramInfo *pginfo, bool useCutlist,
+-                 frm_dir_map_t *deleteMap, int &exitCode, int resultCode)
++                 frm_dir_map_t *deleteMap, int &exitCode, int resultCode, bool forceDelete)
+ {
+     int status = JOB_UNKNOWN;
+     if (jobID >= 0)
+@@ -940,7 +942,7 @@ static void CompleteJob(int jobID, ProgramInfo *pginfo, bool useCutlist,
+                     .arg(tmpfile).arg(newfile) + ENO);
+         }
+ 
+-        if (!gCoreContext->GetNumSetting("SaveTranscoding", 0))
++        if (!gCoreContext->GetNumSetting("SaveTranscoding", 0) || forceDelete)
+         {
+             int err;
+             bool followLinks =
+diff --git a/mythtv/programs/mythtranscode/transcode.cpp b/mythtv/programs/mythtranscode/transcode.cpp
+index ea05590..cd28a00 100644
+--- a/mythtv/programs/mythtranscode/transcode.cpp
++++ b/mythtv/programs/mythtranscode/transcode.cpp
+@@ -38,6 +38,7 @@ extern "C" {
+ #include "libavcodec/avcodec.h"
+ #include "libswscale/swscale.h"
+ }
++#include "mythavutil.h"
+ 
+ #include <unistd.h> // for unlink()
+ 
+@@ -666,6 +667,11 @@ int Transcode::TranscodeFile(const QString &inputname,
+             while (loop < options.size())
+             {
+                 QStringList tokens = options[loop].split("=");
++                if (tokens.length() < 2)
++                {
++                    LOG(VB_GENERAL, LOG_ERR, "Transcoding aborted, invalid option settings.");
++                    return REENCODE_ERROR;
++                }
+                 recorderOptionsMap[tokens[0]] = tokens[1];
+ 
+                 loop++;
+@@ -900,21 +906,48 @@ int Transcode::TranscodeFile(const QString &inputname,
+         return REENCODE_ERROR;
+     }
+ 
+-    int vidSize = 0;
+-
+-    // 1080i/p video is actually 1088 because of the 16x16 blocks so
+-    // we have to fudge the output size here.  nuvexport knows how to handle
+-    // this and as of right now it is the only app that uses the fifo ability.
+-    if (video_height == 1080)
+-        vidSize = (1088 * video_width) * 3 / 2;
+-    else
+-        vidSize = (video_height * video_width) * 3 / 2;
+-
+     VideoFrame frame;
+-    frame.codec = FMT_YV12;
+-    frame.width = newWidth;
+-    frame.height = newHeight;
+-    frame.size = newWidth * newHeight * 3 / 2;
++    memset(&frame, 0, sizeof(frame));
++    // Do not use padding when compressing to RTjpeg or when in fifomode.
++    // The RTjpeg compressor doesn't know how to handle strides different to
++    // video width.
++    bool nonAligned = vidsetting == "RTjpeg" || !fifodir.isEmpty(); 
++    bool rescale =
++        (video_width != newWidth) || (video_height != newHeight)
++        || nonAligned;
++
++    if (rescale)
++    {
++        size_t newSize;
++        if (nonAligned)
++        {
++            // Set a stride identical to actual width, to ease fifo post-conversion process.
++            // 1080i/p video is actually 1088 because of the 16x16 blocks so
++            // we have to fudge the output size here.  nuvexport knows how to handle
++            // this and as of right now it is the only app that uses the fifo ability.
++            newSize = buffersize(FMT_YV12, video_width, video_height == 1080 ? 1088 : video_height, 0 /* aligned */);
++        }
++        else
++        {
++            newSize = buffersize(FMT_YV12, newWidth, newHeight);
++        }
++        unsigned char *newFrame = (unsigned char *)av_malloc(newSize);
++        if (!newFrame)
++        {
++            // OOM
++            return REENCODE_ERROR;
++        }
++        if (nonAligned)
++        {
++            // Set a stride identical to actual width, to ease fifo post-conversion process.
++            init(&frame, FMT_YV12, newFrame, video_width, video_height, newSize, NULL, NULL, -1, -1, 0 /* aligned */);
++        }
++        else
++        {
++            // use default stride size.
++            init(&frame, FMT_YV12, newFrame, newWidth, newHeight, newSize);
++        }
++    }
+ 
+     if (!fifodir.isEmpty())
+     {
+@@ -991,6 +1024,10 @@ int Transcode::TranscodeFile(const QString &inputname,
+             // the actual transcode, so stop here.
+             unlink(outputname.toLocal8Bit().constData());
+             SetPlayerContext(NULL);
++            if (rescale)
++            {
++                av_freep(&frame.buf);
++            }
+             delete hls;
+             return REENCODE_OK;
+         }
+@@ -1003,13 +1040,17 @@ int Transcode::TranscodeFile(const QString &inputname,
+             LOG(VB_GENERAL, LOG_INFO, "Enforcing sync on fifos");
+         fifow = new FIFOWriter(2, framecontrol);
+ 
+-        if (!fifow->FIFOInit(0, QString("video"), vidfifo, vidSize, 50) ||
++        if (!fifow->FIFOInit(0, QString("video"), vidfifo, frame.size, 50) ||
+             !fifow->FIFOInit(1, QString("audio"), audfifo, audio_size, 25))
+         {
+             LOG(VB_GENERAL, LOG_ERR,
+                 "Error initializing fifo writer.  Aborting");
+             unlink(outputname.toLocal8Bit().constData());
+             SetPlayerContext(NULL);
++            if (rescale)
++            {
++                av_freep(&frame.buf);
++            }
+             delete hls;
+             return REENCODE_ERROR;
+         }
+@@ -1048,8 +1089,6 @@ int Transcode::TranscodeFile(const QString &inputname,
+     VideoOutput *videoOutput = GetPlayer()->GetVideoOutput();
+     bool is_key = 0;
+     bool first_loop = true;
+-    unsigned char *newFrame = (unsigned char *)av_malloc(frame.size);
+-    frame.buf = newFrame;
+     AVPicture imageIn, imageOut;
+     struct SwsContext  *scontext = NULL;
+ 
+@@ -1106,7 +1145,18 @@ int Transcode::TranscodeFile(const QString &inputname,
+ 
+         if (fifow)
+         {
+-            frame.buf = lastDecode->buf;
++            AVPictureFill(&imageIn, lastDecode);
++            AVPictureFill(&imageOut, &frame);
++
++            scontext = sws_getCachedContext(scontext,
++                           lastDecode->width, lastDecode->height, FrameTypeToPixelFormat(lastDecode->codec),
++                           frame.width, frame.height, FrameTypeToPixelFormat(frame.codec),
++                           SWS_FAST_BILINEAR, NULL, NULL, NULL);
++            // Typically, wee aren't rescaling per say, we're just correcting the stride set by the decoder.
++            // However, it allows to properly handle recordings that see their resolution change half-way.
++            sws_scale(scontext, imageIn.data, imageIn.linesize, 0,
++                      lastDecode->height, imageOut.data, imageOut.linesize);
++
+             totalAudio += arb->GetSamples(frame.timecode);
+             int audbufTime = (int)(totalAudio / rateTimeConv);
+             int auddelta = frame.timecode - audbufTime;
+@@ -1141,7 +1191,7 @@ int Transcode::TranscodeFile(const QString &inputname,
+                     while (delta > vidFrameTime)
+                     {
+                         if (!cutter || !cutter->InhibitDummyFrame())
+-                            fifow->FIFOWrite(0, frame.buf, vidSize);
++                            fifow->FIFOWrite(0, frame.buf, frame.size);
+ 
+                         count++;
+                         delta -= (int)vidFrameTime;
+@@ -1184,7 +1234,7 @@ int Transcode::TranscodeFile(const QString &inputname,
+             if (dropvideo < 0)
+             {
+                 if (cutter && cutter->InhibitDropFrame())
+-                    fifow->FIFOWrite(0, frame.buf, vidSize);
++                    fifow->FIFOWrite(0, frame.buf, frame.size);
+ 
+                 LOG(VB_GENERAL, LOG_INFO, "Dropping video frame");
+                 dropvideo++;
+@@ -1193,12 +1243,12 @@ int Transcode::TranscodeFile(const QString &inputname,
+             else
+             {
+                 if (!cutter || !cutter->InhibitUseVideoFrame())
+-                    fifow->FIFOWrite(0, frame.buf, vidSize);
++                    fifow->FIFOWrite(0, frame.buf, frame.size);
+ 
+                 if (dropvideo)
+                 {
+                     if (!cutter || !cutter->InhibitDummyFrame())
+-                        fifow->FIFOWrite(0, frame.buf, vidSize);
++                        fifow->FIFOWrite(0, frame.buf, frame.size);
+ 
+                     curFrameNum++;
+                     dropvideo--;
+@@ -1219,7 +1269,10 @@ int Transcode::TranscodeFile(const QString &inputname,
+                                          "is not in raw audio mode.");
+ 
+                 unlink(outputname.toLocal8Bit().constData());
+-                av_free(newFrame);
++                if (rescale)
++                {
++                    av_freep(&frame.buf);
++                }
+                 SetPlayerContext(NULL);
+                 if (videoBuffer)
+                     videoBuffer->stop();
+@@ -1298,30 +1351,23 @@ int Transcode::TranscodeFile(const QString &inputname,
+                   writekeyframe = true;
+                 }
+ 
+-                if ((video_width == newWidth) && (video_height == newHeight))
++                if (rescale)
+                 {
+-                    frame.buf = lastDecode->buf;
+-                }
+-                else
+-                {
+-                    frame.buf = newFrame;
+-                    avpicture_fill(&imageIn, lastDecode->buf, AV_PIX_FMT_YUV420P,
+-                                   video_width, video_height);
+-                    avpicture_fill(&imageOut, frame.buf, AV_PIX_FMT_YUV420P,
+-                                   newWidth, newHeight);
+-
+-                    int bottomBand = (video_height == 1088) ? 8 : 0;
+-                    scontext = sws_getCachedContext(scontext, video_width,
+-                                   video_height, AV_PIX_FMT_YUV420P, newWidth,
+-                                   newHeight, AV_PIX_FMT_YUV420P,
++                    AVPictureFill(&imageIn, lastDecode);
++                    AVPictureFill(&imageOut, &frame);
++
++                    int bottomBand = (lastDecode->height == 1088) ? 8 : 0;
++                    scontext = sws_getCachedContext(scontext,
++                                   lastDecode->width, lastDecode->height, FrameTypeToPixelFormat(lastDecode->codec),
++                                   frame.width, frame.height, FrameTypeToPixelFormat(frame.codec),
+                                    SWS_FAST_BILINEAR, NULL, NULL, NULL);
+ 
+                     sws_scale(scontext, imageIn.data, imageIn.linesize, 0,
+-                              video_height - bottomBand,
++                              lastDecode->height - bottomBand,
+                               imageOut.data, imageOut.linesize);
+                 }
+ 
+-                nvr->WriteVideo(&frame, true, writekeyframe);
++                nvr->WriteVideo(rescale ? &frame : lastDecode, true, writekeyframe);
+             }
+             GetPlayer()->GetCC608Reader()->FlushTxtBuffers();
+         }
+@@ -1356,26 +1402,19 @@ int Transcode::TranscodeFile(const QString &inputname,
+                         .arg(newWidth).arg(newHeight));
+             }
+ 
+-            if ((video_width == newWidth) && (video_height == newHeight))
+-            {
+-                frame.buf = lastDecode->buf;
+-            }
+-            else
++            if (rescale)
+             {
+-                frame.buf = newFrame;
+-                avpicture_fill(&imageIn, lastDecode->buf, AV_PIX_FMT_YUV420P,
+-                               video_width, video_height);
+-                avpicture_fill(&imageOut, frame.buf, AV_PIX_FMT_YUV420P,
+-                               newWidth, newHeight);
+-
+-                int bottomBand = (video_height == 1088) ? 8 : 0;
+-                scontext = sws_getCachedContext(scontext, video_width,
+-                               video_height, AV_PIX_FMT_YUV420P, newWidth,
+-                               newHeight, AV_PIX_FMT_YUV420P,
++                AVPictureFill(&imageIn, lastDecode);
++                AVPictureFill(&imageOut, &frame);
++
++                int bottomBand = (lastDecode->height == 1088) ? 8 : 0;
++                scontext = sws_getCachedContext(scontext,
++                               lastDecode->width, lastDecode->height, FrameTypeToPixelFormat(lastDecode->codec),
++                               frame.width, frame.height, FrameTypeToPixelFormat(frame.codec),
+                                SWS_FAST_BILINEAR, NULL, NULL, NULL);
+ 
+                 sws_scale(scontext, imageIn.data, imageIn.linesize, 0,
+-                          video_height - bottomBand,
++                          lastDecode->height - bottomBand,
+                           imageOut.data, imageOut.linesize);
+             }
+ 
+@@ -1418,7 +1457,10 @@ int Transcode::TranscodeFile(const QString &inputname,
+                             "Transcode: Encountered irrecoverable error in "
+                             "NVR::WriteAudio");
+ 
+-                        av_free(newFrame);
++                        if (rescale)
++                        {
++                            av_freep(&frame.buf);
++                        }
+                         SetPlayerContext(NULL);
+                         if (videoBuffer)
+                             videoBuffer->stop();
+@@ -1463,7 +1505,7 @@ int Transcode::TranscodeFile(const QString &inputname,
+                         hlsSegmentFrames = 0;
+                     }
+ 
+-                    if (avfw->WriteVideoFrame(&frame) > 0)
++                    if (avfw->WriteVideoFrame(rescale ? &frame : lastDecode) > 0)
+                     {
+                         lastWrittenTime = frame.timecode + timecodeOffset;
+                         if (hls)
+@@ -1475,9 +1517,9 @@ int Transcode::TranscodeFile(const QString &inputname,
+             else
+             {
+                 if (forceKeyFrames)
+-                    nvr->WriteVideo(&frame, true, true);
++                    nvr->WriteVideo(rescale ? &frame : lastDecode, true, true);
+                 else
+-                    nvr->WriteVideo(&frame);
++                    nvr->WriteVideo(rescale ? &frame : lastDecode);
+                 lastWrittenTime = frame.timecode + timecodeOffset;
+             }
+         }
+@@ -1508,7 +1550,10 @@ int Transcode::TranscodeFile(const QString &inputname,
+                     "Transcoding aborted, cutlist updated");
+ 
+                 unlink(outputname.toLocal8Bit().constData());
+-                av_free(newFrame);
++                if (rescale)
++                {
++                    av_freep(&frame.buf);
++                }
+                 SetPlayerContext(NULL);
+                 if (videoBuffer)
+                     videoBuffer->stop();
+@@ -1523,7 +1568,10 @@ int Transcode::TranscodeFile(const QString &inputname,
+                         "Transcoding STOPped by JobQueue");
+ 
+                     unlink(outputname.toLocal8Bit().constData());
+-                    av_free(newFrame);
++                    if (rescale)
++                    {
++                        av_freep(&frame.buf);
++                    }
+                     SetPlayerContext(NULL);
+                     if (videoBuffer)
+                         videoBuffer->stop();
+@@ -1624,7 +1672,10 @@ int Transcode::TranscodeFile(const QString &inputname,
+         videoBuffer->stop();
+     }
+ 
+-    av_free(newFrame);
++    if (rescale)
++    {
++        av_freep(&frame.buf);
++    }
+     SetPlayerContext(NULL);
+ 
+     return REENCODE_OK;
 diff --git a/mythtv/programs/mythtv-setup/importicons.cpp b/mythtv/programs/mythtv-setup/importicons.cpp
 index 26a2850..66945d1 100644
 --- a/mythtv/programs/mythtv-setup/importicons.cpp

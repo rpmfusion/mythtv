@@ -1,3 +1,305 @@
+commit e9d0543d64fc21072fb1a0199ac2e24334169461
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Wed Oct 19 12:50:26 2016 +0200
+
+    unbreak JW Player menu item (and three other) in the web frontend
+    
+    (cherry picked from commit d790d9a935a3b161f469272e4d8f898a84c9a302)
+
+commit 0a6ffc71a468048f89266ae1cd49620ddba5f256
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Sat Sep 17 22:25:23 2016 +0200
+
+    let IPTV recorder recognize HTTPS urls
+    
+    Fixes #12820
+    
+    (cherry picked from commit 0a3945326e77f53f8091783be3e607d8c3b15a10)
+
+commit bf571d2b07a286df5419c857517dd8789c49fe27
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Nov 21 15:32:00 2016 -0500
+
+    Fix small memory leak caused by commit 89bc8e7
+    
+    Refs #12917
+    
+    (cherry picked from commit 169fc9b39c2b7ad94dcb02702796e6a9c9bbf012)
+
+commit a56e4ee5cf7f18598c76c644dec2d87d21c78702
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Tue Nov 22 21:50:08 2016 +1100
+
+    Bump ABI version.
+
+commit b75130d5181089e70dacad95b20a8d5723665e5b
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Mon Nov 21 09:52:58 2016 +0000
+
+    Install mythframe.h, should fix build failures for plugins
+    
+    (cherry picked from commit ccd8131e8d24ba3d8e8dc7e883e8d12451cc9742)
+
+commit 55169b72b08b58e7c145f1556a55a77d785ace3b
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Mon Nov 21 16:12:01 2016 +1100
+
+    Make --delete act as an override and ignore global settings.
+    
+    Fixes #12845
+    
+    (cherry picked from commit d610830807cb0a05e170aa01ef67a273e08a2247)
+
+commit 5bf021a477e998267ee1ebd2f09c39b96962ebb2
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Mon Nov 21 14:50:25 2016 +1100
+
+    Fix RTjpeg transcoding.
+    
+    Fixes #12479
+    
+    (cherry picked from commit 86962abc626add3d7f2fbac8646c7d0194e4a8cb)
+
+commit f4dcd3aab0317dbd875eca8370419c7873d16f78
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Mon Nov 21 14:29:26 2016 +1100
+
+    Prevent out of bound access when invalid parameters are provided
+    
+    (cherry picked from commit 9232f657ca75dd6604e6b225ebdec21654bddfb3)
+
+commit 49ef81ea4c31dea3140fc3c0f69423660b2e5900
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Mon Nov 21 13:12:40 2016 +1100
+
+    Fixes transcoding when decoder doesn't ouput YUV420 frame.
+    
+    Fix #12479
+    
+    (cherry picked from commit cea674d6b6198f61d1bfed1c59ddf34ce99262e0)
+
+commit 825d528a6ec42103c600b8991613f4f6b3d19775
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Mon Nov 21 11:43:46 2016 +1100
+
+    Fix FIFO transcoding.
+    
+    There were two issues at play.
+    One that was a regression over 0.27, in that it was assumed the stride was identical to the width which is no longer true from 0.28
+    Second, if the file being transcoded changed resolution, the video output would have been corrupted.
+    
+    TODO: Handle codecs not returning a YUV420 frame.
+    
+    Fixes #12479
+    
+    (cherry picked from commit 97054767dd3f838ceb02998a69703c574cdb1eb3)
+
+commit f513db7548ba14ed52fda13fa1108b478dbf0c23
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Mon Nov 21 03:37:54 2016 +1100
+
+    Properly handle stride size when transcoding in fifo mode.
+    
+    Fixes #12479
+    
+    (cherry picked from commit 1d9033084562f24b7e0a4003dc05da6cea4c19f8)
+
+commit 261858dc9db063c84e0e462e5111c98c4a18a38e
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Mon Nov 21 00:36:16 2016 +1100
+
+    Properly handle stride size when transcoding.
+    
+    Fixes #12479
+    
+    (cherry picked from commit 5e3a9bf2ce9ffa3e46b5691340e0feaae8ffb5f7)
+
+commit 9028a7763b73872cfcc2d39288fb533fd0d554a7
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Sun Nov 20 23:21:13 2016 +1100
+
+    Only delete original recording if explictly set.
+    This is done by adding --delete (or -d) as argument.
+    Auto transcoding will continue to replace the original.
+    
+    Fixes #12845
+    
+    (cherry picked from commit b1d1d5aa7c348cf0a49b6efd4981e726960e4f03)
+
+commit efbedfb142ede80ee9d1e6e7ba6bce61e9998d31
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Sat Nov 19 19:21:48 2016 +0100
+
+    Fix getting stuck in an infinite loop when undeleting a recording.
+    
+    Fixes #12518
+    (cherry picked from commit 86bd8a84e47a3ca183437d053a28764be26e5376)
+
+commit a55db54b9d938937adffbe2b09d7d68f0c1b063e
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Sat Nov 19 13:09:06 2016 +1100
+
+    Prevent potential out of bound memory access.
+    
+    (cherry picked from commit 4880fe2427c1c83b861c3158fe7899865093cba0)
+
+commit 1224d760d9901289836ae2c3fe18f4210ae2a6a7
+Author: Jean-Yves Avenard <jyavenard@mozilla.com>
+Date:   Sat Nov 19 14:53:10 2016 +1100
+
+    Prevent out of bound access when table is empty.
+    
+    Fixes #12928
+    
+    (cherry picked from commit faf254ffd5ff2ca170b9995966940c6ccbf48ce9)
+
+commit 2131fb291c49fc62cf8ac0c1b26c89193d2436dc
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Tue Nov 15 22:02:47 2016 +0000
+
+    README update
+    
+    (cherry picked from commit 2550bdf6f268aa977985574aa2b547f366e4ba21)
+
+commit 43fcdd92737f70fcc1e45467c7ba78bcd0e5a9ab
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Nov 14 12:04:03 2016 -0500
+
+    Fix QT 5.6.1 seg fault in ~QNetworkConfiguration during exit from program.
+    
+    Make a copy of the QNetworkConfiguration in the QNetworkAccessManager object
+    in mythuiwebbrowser, in case the default QNetworkConfiguration object is
+    already deleted when the QNetworkAccessManager is deleted.
+    
+    Fixes #12917
+    
+    (cherry picked from commit 89bc8e7c2673ed6e4002ccffd1805bd6ea5ee5b2)
+
+commit 49b6e2e1dc99eda391bae2b3119d92ed4e1cabe6
+Author: Gregorio Gervasio <gregorio.gervasio@gmail.com>
+Date:   Mon Nov 14 11:56:47 2016 -0500
+
+    Add support for A53 captions.
+    
+    Refs #12893
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit 59135e61f9c24ef2db30306afccc9cee1714d3d7)
+
+commit 1434df8592ad6bf1eae4fd2eb46955e0adedc8aa
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Fri Nov 4 11:11:42 2016 -0400
+
+    Fix Artifacts that appear on VDPAU setups in Live TV.
+    
+    This problem was caused by commit 28fe92a (Fix Seg Fault due to OSD
+    painter being deleted while image loader threads are still using it)
+    
+    Leaving the OSD painter undeleted after the OSD has been reinitialized
+    results in artifacts displayed in the screen when the video has a
+    black image over the place where the initial Live TV OSD showed. This
+    only affect Live TV because only Live TV starts out with an OSD
+    display before the video starts running.
+    
+    Fix: Call Teardown on the osd painter when deleting the VDPAU
+    renderer. Leave the osd painter still allocated but ignoring
+    all requests, so that image loads in other threads do not crash.
+    
+    (cherry picked from commit e0d15446e7df50ec5f671a068a4e4392c54fe628)
+
+commit 2bb98e1749b4b0642076eae440a073b5649b88a6
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Sun Sep 4 13:26:13 2016 +0100
+
+    Correctly identify Service Descriptor for UHD
+
+commit 7f8f1688e882cd0587097fe4867e20d8fa122cce
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sat Oct 22 12:16:00 2016 -0400
+
+    Frontend and backend changes to support music choice.
+    
+    Music choice channels from Comcast are mpeg2 video which internally
+    identifies as 30 fps but actually sends frames with intervals
+    5.939, 0.033, 0.033, repeat, ... This amounts to 3 frames at 30fps
+    every 6 seconds. These frames are never identified as key frames.
+    Tuning takes up to 8 seconds for these channels on CETON. This
+    stream breaks several MythTV timeouts, and causes havoc with the
+    audio-video synchronization routines. It causes the recorder to
+    report a great many 6 second gaps in the video and mark it as failed.
+    
+    Fix: Increase timeouts. Increase audio buffer size to allow up to
+    8 seconds to be buffered. In the backend allow recordings to start with a
+    non-key frame and set a high threshold for gaps in specific cases.
+    Change handling of video buffer waits so that audio data is not lost by
+    audio resets in music choice programs.
+    
+    Fixes #8096
+    
+    (cherry picked from commit 2a1ccc06a58af472bd3044bff81dc93c49c83885)
+
+commit 89e17dc0d65ca58cb3bcda4765c80986a00e4c71
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Oct 10 15:52:03 2016 -0400
+
+    Setup change to allow CETON users to set tuning timeout.
+    
+    The 3 second default tuning timeout is not enough. Many recordings
+    are marked as failed even though they are successful. Also allow
+    users who wish to watch music choice to set the timeout
+    sufficient for those slow to tune channels.
+    
+    Refs #8096
+    
+    (cherry picked from commit 2d24c4acbe858cc6eaa3dcb981d46b37b295f892)
+
+commit ed7df02899f3a8dbfe67566797168c2f9d9446ce
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Oct 10 15:49:01 2016 -0400
+
+    Fix Seg fault in OSD due to notification being displayed using a painter that is no longer valid.
+    
+    The OSD goes through all notifications in the notification center
+    and displays them. Each notification screen has a painter stored in
+    it. The painter will be invalid if the notification started being
+    displayed before the playback started or before an inputchanged
+    notification caused it to be deleted
+    
+    Exception Details:
+    1   in MythUIType::HandleMovementPulse at mythuitype.cpp:374
+    ...
+    3   in OSD::DrawDirect at osd.cpp:702
+    
+    Fix: Always update the painter to the latest one before painting
+    notifications.
+    
+    Refs #8096
+    
+    (cherry picked from commit 5b011ca7e7706efe15e21d6435be72429b50194f)
+
+commit c2c1465f474158492f7f7f77f7bf37f64afeb40f
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Oct 10 15:43:38 2016 -0400
+
+    Fix Seg Fault due to OSD painter being deleted while image loader threads are still using it.
+    
+    Image loading for the OSD uses ImageLoadThread and continues
+    loading while the video is playing. If the video playback
+    encounters an "InputChanged" situation it deletes the OSD and its
+    painter and re-creates it.  If the Image load is still running and
+    using the painter, it gets a Seg Fault calling a virtual function
+    using a corrupted object
+    
+    Exception Details:
+    1   in MythPainter::GetFormatImage at mythpainter.cpp:540
+    
+    Fix: Keep the old osd painter valid until either it changes again
+    or the OSD is deleted.
+    
+    Refs #8096
+    
+    (cherry picked from commit 28fe92a74d0cd903ad0c154fa3cd9a74019d1ca8)
+
 commit 228b05bd7a8103192957a9abfc0a5baa551e8ba6
 Author: Stuart Auchterlonie <stuarta@mythtv.org>
 Date:   Wed Oct 12 16:02:04 2016 +0100
