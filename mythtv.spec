@@ -790,6 +790,7 @@ on demand content.
 #find -name *.pyc -exec rm -f {} \;
 
 %patch0 -p1
+%patch1 -p1
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
