@@ -82,7 +82,7 @@ Version:        0.28
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        10%{?dist}
+Release:        11%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -285,7 +285,11 @@ BuildRequires:  perl(IO::Socket::INET6)
 
 %if %{with python}
 BuildRequires:  python2-devel
+%if 0%{?fedora}
 BuildRequires:  python2-mysql
+%else
+BuildRequires:  MySQL-python 
+%endif
 BuildRequires:  python-urlgrabber
 %endif
 
@@ -355,6 +359,11 @@ Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
 Requires:  mariadb-server >= 5, mariadb >= 5
 Requires:  xmltv
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 22
+Requires:  udisks2
+%else
+Requires:  udisks
+%endif
 
 # Generate the required mythtv-frontend-api version string here so we only
 # have to do it once.
@@ -1399,6 +1408,9 @@ fi
 
 
 %changelog
+* Sat Jan 21 2017 Xavier Bachelot <xavier@bachelot.org> - 0.28-11
+- Fix build on EL7.
+
 * Sun Nov 27 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-10
 - Update to latest fixes/0.28 from git.
 - Add patch for libcec 4, fixes RFBZ#4345.
