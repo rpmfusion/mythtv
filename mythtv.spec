@@ -2,6 +2,7 @@
 #
 # by:   Chris Petersen <cpetersen@mythtv.org>
 #       Jarod Wilson <jarod@wilsonet.com>
+#       Richard Shaw <hobbes1069@gmail.com>
 #
 #  Modified/Extended from the great work of:
 #     Axel Thimm <Axel.Thimm@ATrpms.net>
@@ -59,12 +60,15 @@
 # The vendor name we should attribute the aforementioned entries to
 %define desktop_vendor RPMFusion
 
-# MythTV Version string -- preferably the output from git --describe
-%define vers_string v0.27.4-64-g8fd277b
-%define branch fixes/0.27
+# MythTV Version string -- preferably the output from git describe
+%define vers_string v28.0-72-g228b05b
+%define branch fixes/0.28
 
 # Git revision and branch ID
 %define _gitrev g5b917e8
+
+# Harden build as mythbackend is long running.
+%global _hardened_build 1
 
 #
 # Basic descriptive tags for this package:
@@ -74,11 +78,11 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.27.4
+Version:        0.28
 %if "%{branch}" == "master"
-Release:        0.1.git.%{_gitrev}%{?dist}
+Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        6%{?dist}
+Release:        10%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -91,51 +95,47 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # processor-specific optimizations.  It seems to cause compile problems on many
 # systems (particularly x86_64), so it is classified by the MythTV developers
 # as "use at your own risk."
-%define with_proc_opt      %{?_with_proc_opt:      1} %{!?_with_proc_opt:      0}
+%bcond_with proc_opt
 
 # Set "--with debug" to enable MythTV debug compile mode
-%define with_debug         %{?_with_debug:         1} %{?!_with_debug:         0}
-
+%bcond_with debug
 
 # The following options are enabled by default.  Use --without to disable them
-%define with_vdpau         %{?_without_vdpau:      0} %{?!_without_vdpau:      1}
-%define with_vaapi         %{?_without_vaapi:      0} %{?!_without_vaapi:      1}
-
-%define with_crystalhd     %{?_without_crystalhd:  0} %{?!_without_crystalhd:  1}
-%define with_systemd       %{?_without_systemd:    0} %{?!_without_systemd:    1}
-
-%define with_perl          %{?_without_perl:       0} %{!?_without_perl:       1}
-%define with_php           %{?_without_php:        0} %{!?_without_php:        1}
-%define with_python        %{?_without_python:     0} %{!?_without_python:     1}
-%define with_pulseaudio    %{?_without_pulseaudio: 0} %{!?_without_pulseaudio: 1}
+%bcond_without vdpau
+%bcond_without vaapi
+%bcond_without crystalhd
+%bcond_without systemd
+%bcond_without sdnotify
+%bcond_without perl
+%bcond_without php
+%bcond_without python
+%bcond_without pulseaudio
 
 # FAAC is non-free, so we disable it by default
-%define with_faac          %{?_with_faac:          1} %{?!_with_faac:          0}
+%bcond_with faac
 
 # All plugins get built by default, but you can disable them as you wish
-%define with_plugins        %{?_without_plugins:        0} %{!?_without_plugins:         1}
-%define with_mytharchive    %{?_without_mytharchive:    0} %{!?_without_mytharchive:     1}
-%define with_mythbrowser    %{?_without_mythbrowser:    0} %{!?_without_mythbrowser:     1}
-%define with_mythgallery    %{?_without_mythgallery:    0} %{!?_without_mythgallery:     1}
-%define with_mythgame       %{?_without_mythgame:       0} %{!?_without_mythgame:        1}
-%define with_mythmusic      %{?_without_mythmusic:      0} %{!?_without_mythmusic:       1}
-%define with_mythnews       %{?_without_mythnews:       0} %{!?_without_mythnews:        1}
-%define with_mythweather    %{?_without_mythweather:    0} %{!?_without_mythweather:     1}
-%define with_mythzoneminder %{?_without_mythzoneminder: 0} %{!?_without_mythzoneminder:  1}
-%define with_mythnetvision  %{?_without_mythnetvision:  0} %{!?_without_mythnetvision:   1}
+%bcond_without plugins
+%bcond_without mytharchive
+%bcond_without mythbrowser
+%bcond_without mythgallery
+%bcond_without mythgame
+%bcond_without mythmusic
+%bcond_without mythnews
+%bcond_without mythweather
+%bcond_without mythzoneminder
+%bcond_without mythnetvision
 
 ################################################################################
 
-# https://github.com/MythTV/mythtv/tarball/v0.26
-Source0:   %{name}-%{version}.tar.gz
+Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 
 # From the mythtv git repository with the appropriate branch checked out:
-# git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
-Patch0:    mythtv-0.27-fixes.patch
-Patch1:    mythtv-0.26.0-types_h.patch
-# http://code.mythtv.org/trac/ticket/11338
-# Offset required for 0.27, patch was for 0.26.1
-Patch2:    mythtv-0.27-libcec2.patch
+# Example: git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
+# Also update ChangeLog with git log v0.28..HEAD > ChangeLog
+# and update define vers_string to v0.28-52-ge6a60f7 with git describe
+Patch0:    mythtv-0.28-fixes.patch
+Patch1:    mythtv-0.28-libcec4.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -150,10 +150,12 @@ Source108: mythtv-setup.png
 Source109: mythtv-setup.desktop
 Source111: 99-mythbackend.rules
 Source112: mythjobqueue.service
+Source113: mythdb-optimize.service
+Source114: mythdb-optimize.timer
 
 # Global MythTV and Shared Build Requirements
 
-%if %{with_systemd}
+%if %{with systemd}
 # Use systemd
 BuildRequires:  systemd
 Requires(post): systemd
@@ -167,20 +169,18 @@ Requires(preun): initscripts
 Requires(postun): initscripts
 %endif
 
-BuildRequires:  desktop-file-utils
-BuildRequires:  freetype-devel >= 2
-BuildRequires:  libpng-devel
+BuildRequires:  perl-generators
 BuildRequires:  gcc-c++
+BuildRequires:  desktop-file-utils
+BuildRequires:  qt5-qtbase-devel >= 5.2
+BuildRequires:  qt5-qtscript-devel >= 5.2
+BuildRequires:  qt5-qtwebkit-devel >= 5.2
+BuildRequires:  freetype-devel >= 2
 BuildRequires:  mariadb-devel >= 5
-BuildRequires:  qt-webkit-devel
-BuildRequires:  qt-devel >= 4.6
-BuildRequires:  phonon-devel phonon-backend-gstreamer
-BuildRequires:  libuuid-devel
 %if 0%{?fedora}
-BuildRequires:  libcec-devel
+BuildRequires:  libcec-devel >= 1.7
 %endif
 BuildRequires:  libvpx-devel
-
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
 BuildRequires:  nasm, yasm-devel
@@ -190,6 +190,8 @@ BuildRequires:  libXmu-devel
 BuildRequires:  libXv-devel
 BuildRequires:  libXvMC-devel
 BuildRequires:  libXxf86vm-devel
+BuildRequires:  libXinerama-devel
+BuildRequires:  libXrandr-devel
 BuildRequires:  mesa-libGLU-devel
 %ifarch %arm
 BuildRequires:  mesa-libGLES-devel
@@ -204,29 +206,26 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-%if %{with_faac}
+%if %{with faac}
 BuildRequires:  faac-devel
 %endif
 BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
-BuildRequires:  gsm-devel
 BuildRequires:  lame-devel
-BuildRequires:  libdca-devel
 BuildRequires:  libcdio-devel libcdio-paranoia-devel
-# nb: libdvdcss will be dynamically loaded if installed
-#BuildRequires:  libfame-devel >= 0.9.0
 BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
-BuildRequires:  taglib-devel >= 1.6
+BuildRequires:  taglib-devel >= 1.7
 BuildRequires:  x264-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
+BuildRequires:  exiv2-devel
 
 # Audio framework support
 BuildRequires:  sox-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  jack-audio-connection-kit-devel
-%if %{with_pulseaudio}
+%if %{with pulseaudio}
 BuildRequires:  pulseaudio-libs-devel
 %endif
 BuildRequires:  avahi-compat-libdns_sd-devel
@@ -239,28 +238,32 @@ BuildRequires:  libxml2-devel
 BuildRequires:  libass-devel
 
 # Need dvb headers to build in dvb support
-BuildRequires: kernel-headers
+BuildRequires:  kernel-headers
 
 # FireWire cable box support
 BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
 
-%if %{with_vdpau}
-BuildRequires: libvdpau-devel
+%if %{with vdpau}
+BuildRequires:  libvdpau-devel
 %endif
 
-%if %{with_vaapi}
-BuildRequires: libva-devel
+%if %{with vaapi}
+BuildRequires:  libva-devel
 %endif
 
-%if %{with_crystalhd}
-BuildRequires: libcrystalhd-devel
+%if %{with crystalhd}
+BuildRequires:  libcrystalhd-devel
+%endif
+
+%if %{with sdnotify}
+BuildRequires:  systemd-devel
 %endif
 
 # API Build Requirements
 
-%if %{with_perl}
+%if %{with perl}
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Config)
@@ -276,35 +279,39 @@ BuildRequires:  perl(DBD::mysql)
 BuildRequires:  perl(IO::Socket::INET6)
 %endif
 
-%if %{with_php}
+%if %{with php}
 # No php specific requirements yet.
 %endif
 
-%if %{with_python}
-BuildRequires:  python-devel
-BuildRequires:  MySQL-python
+%if %{with python}
+BuildRequires:  python2-devel
+%if 0%{?fedora}
+BuildRequires:  python2-mysql
+%else
+BuildRequires:  MySQL-python 
+%endif
 BuildRequires:  python-urlgrabber
 %endif
 
 # Plugin Build Requirements
 
-%if %{with_plugins}
+%if %{with plugins}
 
-%if %{with_mythgallery}
+%if %{with mythgallery}
 BuildRequires:  libexif-devel >= 0.6.9
 %endif
 
-%if %{with_mythgame}
+%if %{with mythgame}
 BuildRequires:  zlib-devel
 %endif
 
-%if %{with_mythnews}
+%if %{with mythnews}
 %endif
 
 BuildRequires: ncurses-devel
 
 
-%if %{with_mythweather}
+%if %{with mythweather}
 Requires:       mythweather      >= %{version}
 BuildRequires:  perl(XML::Simple)
 Requires:       perl(XML::Simple)
@@ -323,10 +330,10 @@ BuildRequires:  perl(JSON)
 Requires:       perl(JSON)
 %endif
 
-%if %{with_mythzoneminder}
+%if %{with mythzoneminder}
 %endif
 
-%if %{with_mythnetvision}
+%if %{with mythnetvision}
 BuildRequires:  python-pycurl
 BuildRequires:  python-lxml
 BuildRequires:  python-oauth
@@ -399,13 +406,15 @@ and miscellaneous other bits and pieces.
 
 %package libs
 Summary:   Library providing mythtv support
-Provides:  libmyth = %{version}-%{release}
-Obsoletes: libmyth < %{version}-%{release}
 
 Requires:  freetype >= 2
 Requires:  lame
-Requires:  qt4 >= 4.6
-Requires:  qt4-MySQL
+Requires:  qt5-qtbase-mysql
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 22
+Requires:  udisks2
+%else
+Requires:  udisks
+%endif
 
 %description libs
 Common library code for MythTV and add-on modules (development)
@@ -416,18 +425,14 @@ television programs.  Refer to the mythtv package for more information.
 
 %package devel
 Summary:   Development files for mythtv
-Provides:  libmyth-devel = %{version}-%{release}
-Obsoletes: libmyth-devel < %{version}-%{release}
 
 Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
-%if 0%{?fedora} >= 19
 Requires:  mariadb-devel >= 5
-%else
-Requires:  mysql-devel >= 5
-%endif
-Requires:  qt4-devel >= 4.6
+Requires:  qt5-qtbase-devel >= 5.2
+Requires:  qt5-qtscript-devel >= 5.2
+Requires:  qt5-qtwebkit-devel >= 5.2
 Requires:  lm_sensors-devel
 Requires:  lirc-devel
 
@@ -443,7 +448,7 @@ Requires:  xorg-x11-proto-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-%if %{with_faac}
+%if %{with faac}
 Requires:  faac-devel
 %endif
 Requires:  fftw-devel >= 3
@@ -459,14 +464,13 @@ Requires:  libtheora-devel
 Requires:  libvorbis-devel >= 1.0
 Requires:  mjpegtools-devel >= 1.6.1
 Requires:  taglib-devel >= 1.5
-#Requires:  transcode >= 0.6.8
 Requires:  x264-devel
 Requires:  xvidcore-devel >= 0.9.1
 
 # Audio framework support
 Requires:  alsa-lib-devel
 Requires:  jack-audio-connection-kit-devel
-%if %{with_pulseaudio}
+%if %{with pulseaudio}
 Requires:  pulseaudio-libs-devel
 %endif
 
@@ -478,15 +482,15 @@ Requires:  libavc1394-devel
 Requires:  libiec61883-devel
 Requires:  libraw1394-devel
 
-%if %{with_vdpau}
+%if %{with vdpau}
 Requires: libvdpau-devel
 %endif
 
-%if %{with_vaapi}
+%if %{with vaapi}
 Requires: libva-devel
 %endif
 
-%if %{with_crystalhd}
+%if %{with crystalhd}
 Requires: libcrystalhd-devel
 %endif
 
@@ -498,10 +502,6 @@ add-ons for mythtv.
 
 %package base-themes
 Summary: Core user interface themes for mythtv
-
-# Replace an old ATRMS package
-Provides:   mythtv-theme-gant
-Obsoletes:  mythtv-theme-gant
 
 %description base-themes
 MythTV provides a unified graphical interface for recording and viewing
@@ -567,9 +567,6 @@ mythtv backend.
 
 %package common
 Summary: Common components needed by multiple other MythTV components
-# mythpmovies is now DOA, but we need this for upgrade path preservation.
-Provides: mythmovies = %{version}-%{release}
-Obsoletes: mythmovies < %{version}-%{release}
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -591,7 +588,7 @@ can interact with a known verion.
 
 ################################################################################
 
-%if %{with_perl}
+%if %{with perl}
 
 %package -n perl-MythTV
 Summary:        Perl bindings for MythTV
@@ -609,7 +606,7 @@ Provides a perl-based interface to interacting with MythTV.
 
 ################################################################################
 
-%if %{with_php}
+%if %{with php}
 
 %package -n php-MythTV
 Summary:        PHP bindings for MythTV
@@ -622,7 +619,7 @@ Provides a PHP-based interface to interacting with MythTV.
 
 ################################################################################
 
-%if %{with_python}
+%if %{with python}
 
 %package -n python-MythTV
 Summary:        Python bindings for MythTV
@@ -638,7 +635,7 @@ Provides a python-based interface to interacting with MythTV.
 
 ################################################################################
 
-%if %{with_plugins}
+%if %{with plugins}
 
 # Meta package for all mythtv plugins
 %package -n mythplugins
@@ -660,7 +657,7 @@ This is a consolidation of all the official MythTV plugins that used to be
 distributed as separate downloads from mythtv.org.
 
 ################################################################################
-%if %{with_mytharchive}
+%if %{with mytharchive}
 
 %package -n mytharchive
 Summary:   A module for MythTV for creating and burning DVDs
@@ -675,7 +672,6 @@ Requires:  mjpegtools >= 1.6.2
 Requires:  mkisofs >= 2.01
 Requires:  python >= 2.3.5
 Requires:  python-imaging
-#Requires:  transcode >= 1.0.2
 Requires:  pmount
 
 %description -n mytharchive
@@ -685,7 +681,7 @@ your system.
 
 %endif
 ################################################################################
-%if %{with_mythbrowser}
+%if %{with mythbrowser}
 
 %package -n mythbrowser
 Summary:   A small web browser module for MythTV
@@ -702,7 +698,7 @@ links in a simple mythplugin.
 
 %endif
 ################################################################################
-%if %{with_mythgallery}
+%if %{with mythgallery}
 
 %package -n mythgallery
 Summary:   A gallery/slideshow module for MythTV
@@ -713,7 +709,7 @@ A gallery/slideshow module for MythTV.
 
 %endif
 ################################################################################
-%if %{with_mythgame}
+%if %{with mythgame}
 
 %package -n mythgame
 Summary:   A game frontend (xmame, nes, snes, pc) for MythTV
@@ -724,7 +720,7 @@ A game frontend (xmame, nes, snes, pc) for MythTV.
 
 %endif
 ################################################################################
-%if %{with_mythmusic}
+%if %{with mythmusic}
 
 %package -n mythmusic
 Summary:   The music player add-on module for MythTV
@@ -735,7 +731,7 @@ Music add-on for mythtv.
 
 %endif
 ################################################################################
-%if %{with_mythnews}
+%if %{with mythnews}
 
 %package -n mythnews
 Summary:   An RSS news feed plugin for MythTV
@@ -746,7 +742,7 @@ An RSS news feed reader plugin for MythTV.
 
 %endif
 ################################################################################
-%if %{with_mythweather}
+%if %{with mythweather}
 
 %package -n mythweather
 Summary:   A MythTV module that displays a weather forecast
@@ -758,7 +754,7 @@ A MythTV module that displays a weather forecast.
 
 %endif
 ################################################################################
-%if %{with_mythzoneminder}
+%if %{with mythzoneminder}
 
 %package -n mythzoneminder
 Summary:   A module for MythTV for camera security and surveillance
@@ -772,7 +768,7 @@ and replay recorded events.
 
 %endif
 ################################################################################
-%if %{with_mythnetvision}
+%if %{with mythnetvision}
 
 %package -n mythnetvision
 Summary:   A MythTV module for Internet video on demand
@@ -800,21 +796,16 @@ on demand content.
 %prep
 %setup -q -n %{name}-%{version}
 
-# Replace static lib paths with %{_lib} so we build properly on x86_64
-# systems, where the libs are actually in lib64.
-    if [ "%{_lib}" != "lib" ]; then
-         find \( -name 'configure' -o -name '*pro' -o -name 'Makefile' \) -exec sed -r -i -e 's,/lib\b,/%{_lib},g' {} \+
-    fi
+# Remove compiled python file
+#find -name *.pyc -exec rm -f {} \;
 
-%patch0 -p1 -b .mythtv
-%patch1 -p1 -b .types_h
-%patch2 -p1 -b .libcec2
+%patch0 -p1
+%patch1 -p1
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
 
 pushd mythtv
-
 
 # Set the mythtv --version string
 cat > EXPORTED_VERSION <<EOF
@@ -822,7 +813,7 @@ SOURCE_VERSION=%{vers_string}
 BRANCH=%{branch}
 EOF
 
-# Drop execute permissions on contrib bits, since they'll be %doc
+# Drop execute permissions on contrib bits, since they'll be %%doc
     find contrib/ -type f -exec chmod -x "{}" \;
 # And drop execute bit on theme html files
     chmod -x themes/default/htmls/*.html
@@ -841,11 +832,6 @@ EOF
 # Make sure we use -O2 and not -O3
     sed -i '/speed_cflags=/d' configure
 
-# Prevent all of those nasty installs to ../../../../../bin/whatever
-#    echo "QMAKE_PROJECT_DEPTH = 0" >> mythtv.pro
-#    echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
-#    chmod 644 settings.pro
-
 popd
 
 
@@ -861,36 +847,35 @@ pushd mythtv
 # {_exec_prefix} etc... MythTV no longer accepts the parameters that the
 # configure macro passes, so we do this manually.
 ./configure \
+    --qmake=%{_bindir}/qmake-qt5                \
     --prefix=%{_prefix}                         \
     --libdir=%{_libdir}                         \
     --libdir-name=%{_lib}                       \
     --mandir=%{_mandir}                         \
-    --x11-path=%{_includedir}                   \
-    --disable-mythlogserver                     \
+%if ! %{with vdpau}
+    --disable-vdpau                             \
+%endif
+%if ! %{with crystalhd}
+    --disable-crystalhd                         \
+%endif
+%if ! %{with vaapi}
+    --disable-vaapi                             \
+%endif
     --enable-libmp3lame                         \
+%if %{with faac}
+    --enable-libfaac                            \
+%endif
     --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
     --enable-libxvid                            \
-%if %{with_faac}
-    --enable-libfaac --enable-nonfree           \
-%endif
     --enable-libvpx                             \
-%if %{with_vdpau}
-    --enable-vdpau                              \
-%endif
-%if %{with_vaapi}
-    --enable-vaapi				\
-%endif
-%if !%{with_crystalhd}
-    --disable-crystalhd				\
-%endif
-%if !%{with_perl}
+%if !%{with perl}
     --without-bindings=perl                     \
 %endif
-%if !%{with_php}
+%if !%{with php}
     --without-bindings=php                      \
 %endif
-%if !%{with_python}
+%if !%{with python}
     --without-bindings=python                   \
 %endif
 %ifarch ppc
@@ -903,10 +888,10 @@ pushd mythtv
 %ifarch %{ix86}
     --cpu=i686 --tune=i686 --enable-mmx \
 %endif
-%if %{with_proc_opt}
+%if %{with proc_opt}
     --enable-proc-opt \
 %endif
-%if %{with_debug}
+%if %{with debug}
     --compile-type=debug                        \
 %else
     --compile-type=release                      \
@@ -924,7 +909,7 @@ pushd mythtv
     export LD_LIBRARY_PATH=$temp%{_libdir}:$LD_LIBRARY_PATH
 
 # Next, we build the plugins
-%if %{with_plugins}
+%if %{with plugins}
 pushd mythplugins
 
 # Fix things up so they can find our "temp" install location for mythtv-libs
@@ -937,7 +922,7 @@ pushd mythplugins
     echo "INCLUDEPATH -= \$\${SYSROOT}/\$\${PREFIX}/include" >> settings.pro
     echo "INCLUDEPATH -= %{_includedir}"       >> settings.pro
     echo "INCLUDEPATH += $temp%{_includedir}"  >> settings.pro
-    echo "INCLUDEPATH += %{_includedir}"       >> settings.pro
+    #echo "INCLUDEPATH += %{_includedir}"       >> settings.pro
     echo "LIBS *= -L$temp%{_libdir}"           >> settings.pro
     echo "QMAKE_LIBDIR += $temp%{_libdir}"     >> targetdep.pro
 
@@ -945,49 +930,49 @@ pushd mythplugins
         --prefix=${temp}%{_prefix} \
         --libdir=%{_libdir} \
         --libdir-name=%{_lib} \
-    %if %{with_mytharchive}
+    %if %{with mytharchive}
         --enable-mytharchive \
     %else
         --disable-mytharchive \
     %endif
-    %if %{with_mythbrowser}
+    %if %{with mythbrowser}
         --enable-mythbrowser \
     %else
         --disable-mythbrowser \
     %endif
-    %if %{with_mythgallery}
+    %if %{with mythgallery}
         --enable-mythgallery \
         --enable-exif \
         --enable-new-exif \
     %else
         --disable-mythgallery \
     %endif
-    %if %{with_mythgame}
+    %if %{with mythgame}
         --enable-mythgame \
     %else
         --disable-mythgame \
     %endif
-    %if %{with_mythmusic}
+    %if %{with mythmusic}
         --enable-mythmusic \
     %else
         --disable-mythmusic \
     %endif
-    %if %{with_mythnews}
+    %if %{with mythnews}
         --enable-mythnews \
     %else
         --disable-mythnews \
     %endif
-    %if %{with_mythweather}
+    %if %{with mythweather}
         --enable-mythweather \
     %else
         --disable-mythweather \
     %endif
-    %if %{with_mythzoneminder}
+    %if %{with mythzoneminder}
         --enable-mythzoneminder \
     %else
         --disable-mythzoneminder \
     %endif
-    %if %{with_mythnetvision}
+    %if %{with mythnetvision}
         --enable-mythnetvision \
     %else
         --disable-mythnetvision \
@@ -1015,7 +1000,7 @@ pushd mythtv
     mkdir -p %{buildroot}%{_localstatedir}/cache/mythtv
     mkdir -p %{buildroot}%{_localstatedir}/log/mythtv
     mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
-    %if %{with_systemd}
+    %if %{with systemd}
     mkdir -p %{buildroot}%{_unitdir}
     %else
     mkdir -p %{buildroot}%{_sysconfdir}/init.d
@@ -1024,14 +1009,11 @@ pushd mythtv
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
 
 
-# Fix permissions on executable python bindings
-#    chmod +x %{buildroot}%{python_sitelib}/MythTV/Myth*.py
-
 # config/init files
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
 
     ### SystemD based setup. ###
-    %if %{with_systemd}
+    %if %{with systemd}
     install -p -m 0644 %{SOURCE105} %{buildroot}%{_unitdir}/
     install -p -m 0644 %{SOURCE104} %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
     # Install udev rules for devices that may initialize late in the boot
@@ -1041,6 +1023,12 @@ pushd mythtv
 
     # Systemd unit file for mythjobqueue only backends.
     install -p -m 0644 %{SOURCE112} %{buildroot}%{_unitdir}/
+
+    # Systemd unit files for database optimization
+    install -p -m 0644 %{SOURCE113} %{buildroot}%{_unitdir}/
+    install -p -m 0644 %{SOURCE114} %{buildroot}%{_unitdir}/
+    install -p -m 0755 contrib/maintenance/optimize_mythdb.pl \
+        %{buildroot}%{_bindir}/optimize_mythdb
 
     ### SysV based setup. ###
     %else
@@ -1075,21 +1063,20 @@ rm -f %{buildroot}%{_libdir}/libmythqjson.prl \
       %{buildroot}%{_libdir}/pkgconfig/libmythzmq.pc
 
 # MythPlugins
-%if %{with_plugins}
+%if %{with plugins}
 pushd mythplugins
 
     make install INSTALL_ROOT=%{buildroot}
 
-%if %{with_mythmusic}
+%if %{with mythmusic}
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythmusic
 %endif
-%if %{with_mythgallery}
+%if %{with mythgallery}
     mkdir -p %{buildroot}%{_localstatedir}/lib/pictures
 %endif
-%if %{with_mythgame}
+%if %{with mythgame}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/nes/{roms,screens}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/snes/{roms,screens}
-#   mkdir -p %{buildroot}%{_datadir}/mythtv/games/mame/{roms,screens,flyers,cabs}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/PC/screens
     mkdir -p %{buildroot}%{_datadir}/mame
     ln -s ../../mame %{buildroot}%{_datadir}/mythtv/games/xmame
@@ -1144,18 +1131,20 @@ usermod -a -G audio,video mythtv
 exit 0
 
 %post backend
-%if %{with_systemd}
+%if %{with systemd}
     %systemd_post mythbackend.service
     %systemd_post mythjobqueue.service
+    %systemd_post mythdb-optimize.service
 %else
     /sbin/chkconfig --add mythbackend
 %endif
 
 
 %preun backend
-%if %{with_systemd}
+%if %{with systemd}
     %systemd_preun mythbackend.service
     %systemd_preun mythjobqueue.service
+    %systemd_preun mythdb-optimize.service
 %else
 if [ $1 = 0 ]; then
     /sbin/service mythbackend stop > /dev/null 2>&1
@@ -1164,9 +1153,10 @@ fi
 %endif
 
 %postun backend
-%if %{with_systemd}
+%if %{with systemd}
     %systemd_postun_with_restart mythbackend.service
     %systemd_postun_with_restart mythjobqueue.service
+    %systemd_postun_with_restart mythdb-optimize.service
 %else
 if [ "$1" -ge "1" ] ; then
     /sbin/service mythbackend condrestart >/dev/null 2>&1 || :
@@ -1186,8 +1176,8 @@ fi
 %doc mythtv/FAQ
 %doc mythtv/database mythtv/keys.txt
 # Do we really need the API documentation?
-#%doc mythtv/docs/*.html mythtv/docs/*.png
-#%doc mythtv/docs/*.txt
+#%%doc mythtv/docs/*.html mythtv/docs/*.png
+#%%doc mythtv/docs/*.txt
 %doc mythtv/contrib
 
 %files common
@@ -1199,7 +1189,6 @@ fi
 %{_bindir}/mythwikiscripts
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
-#{_bindir}/mythlogserver
 %{_datadir}/mythtv/mythconverg*.pl
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
@@ -1210,17 +1199,21 @@ fi
 %files backend
 %{_bindir}/mythbackend
 %{_bindir}/mythfilldatabase
+%{_bindir}/mythfilerecorder
 %{_bindir}/mythjobqueue
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
 %{_bindir}/mythhdhomerun_config
+%{_bindir}/optimize_mythdb
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
-%if %{with_systemd}
+%if %{with systemd}
 %{_unitdir}/mythbackend.service
 %{_unitdir}/mythjobqueue.service
+%{_unitdir}/mythdb-optimize.service
+%{_unitdir}/mythdb-optimize.timer
 /lib/udev/rules.d/99-mythbackend.rules
 %else
 %{_sysconfdir}/init.d/mythbackend
@@ -1283,34 +1276,32 @@ fi
 %{_bindir}/mythffprobe
 %{_bindir}/mythffserver
 
-%if %{with_perl}
+%if %{with perl}
 %files -n perl-MythTV
 %{perl_vendorlib}/MythTV.pm
 %dir %{perl_vendorlib}/MythTV
 %{perl_vendorlib}/MythTV/*.pm
-#%dir %{perl_vendorlib}/IO/Socket
-#%dir %{perl_vendorlib}/IO/Socket/INET
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 %endif
 
-%if %{with_php}
+%if %{with php}
 %files -n php-MythTV
 %{_datadir}/mythtv/bindings/php/*
 %endif
 
-%if %{with_python}
+%if %{with python}
 %files -n python-MythTV
 %{_bindir}/mythpython
 %{python_sitelib}/MythTV/
 %{python_sitelib}/MythTV-*.egg-info
 %endif
 
-%if %{with_plugins}
+%if %{with plugins}
 %files -n mythplugins
 %doc mythplugins/COPYING
 
-%if %{with_mytharchive}
+%if %{with mytharchive}
 %files -n mytharchive
 %doc mythplugins/mytharchive/AUTHORS
 %doc mythplugins/mytharchive/COPYING
@@ -1324,7 +1315,7 @@ fi
 %{_datadir}/mythtv/i18n/mytharchive_*.qm
 %endif
 
-%if %{with_mythbrowser}
+%if %{with mythbrowser}
 %files -n mythbrowser
 %doc mythplugins/mythbrowser/AUTHORS
 %doc mythplugins/mythbrowser/COPYING
@@ -1333,7 +1324,7 @@ fi
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 %endif
 
-%if %{with_mythgallery}
+%if %{with mythgallery}
 %files -n mythgallery
 %doc mythplugins/mythgallery/AUTHORS
 %doc mythplugins/mythgallery/COPYING
@@ -1343,7 +1334,7 @@ fi
 %attr(0775,mythtv,mythtv) %{_localstatedir}/lib/pictures
 %endif
 
-%if %{with_mythgame}
+%if %{with mythgame}
 %files -n mythgame
 %dir %{_sysconfdir}/mythgame
 %config(noreplace) %{_sysconfdir}/mythgame/gamelist.xml
@@ -1356,20 +1347,20 @@ fi
 %{_datadir}/mythtv/i18n/mythgame_*.qm
 %endif
 
-%if %{with_mythmusic}
+%if %{with mythmusic}
 %files -n mythmusic
 %doc mythplugins/mythmusic/AUTHORS
 %doc mythplugins/mythmusic/COPYING
 %doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
 %attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythmusic
-%{_datadir}/mythtv/mythmusic/
+#%{_datadir}/mythtv/mythmusic/
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
 %endif
 
-%if %{with_mythnews}
+%if %{with mythnews}
 %files -n mythnews
 %doc mythplugins/mythnews/AUTHORS
 %doc mythplugins/mythnews/COPYING
@@ -1379,7 +1370,7 @@ fi
 %{_datadir}/mythtv/i18n/mythnews_*.qm
 %endif
 
-%if %{with_mythweather}
+%if %{with mythweather}
 %files -n mythweather
 %doc mythplugins/mythweather/AUTHORS
 %doc mythplugins/mythweather/COPYING
@@ -1391,7 +1382,7 @@ fi
 %{_datadir}/mythtv/mythweather/*
 %endif
 
-%if %{with_mythzoneminder}
+%if %{with mythzoneminder}
 %files -n mythzoneminder
 %{_libdir}/mythtv/plugins/libmythzoneminder.so
 %{_datadir}/mythtv/zonemindermenu.xml
@@ -1399,7 +1390,7 @@ fi
 %{_datadir}/mythtv/i18n/mythzoneminder_*.qm
 %endif
 
-%if %{with_mythnetvision}
+%if %{with mythnetvision}
 %files -n mythnetvision
 %doc mythplugins/mythnetvision/AUTHORS
 %doc mythplugins/mythnetvision/ChangeLog
@@ -1417,6 +1408,59 @@ fi
 
 
 %changelog
+* Sun Nov 27 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-10
+- Update to latest fixes/0.28 from git.
+- Add patch for libcec 4, fixes RFBZ#4345.
+
+* Thu Nov 17 2016 Adrian Reber <adrian@lisas.de> - 0.28-9
+- Rebuilt for libcdio-0.94
+
+* Wed Oct 19 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-8
+- Update to lastest fixes/0.28 from git.
+
+* Sun Sep 11 2016 Sérgio Basto <sergio@serjux.com> - 0.28-7
+- Update to latest fixes/0.28, rfbz#4241
+
+* Sun Sep 11 2016 Sérgio Basto <sergio@serjux.com> - 0.28-6
+- Change mythtv.spec to use %%bcond
+- Add BuildRequires: perl-generators, since F25 we have buildroot without Perl
+
+* Thu Sep 08 2016 Sérgio Basto <sergio@serjux.com> - 0.28-5
+- Rebuild again, previous perl-MythTV-0.28-4 does not provide perl(MythTV) !
+
+* Mon Aug 01 2016 Sérgio Basto <sergio@serjux.com> - 0.28-4
+-
+  https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
+* Mon Jun 13 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-3
+- Update to lastest fixes/0.28 from git.
+
+* Mon May 23 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-2
+- Update to lastest fixes/0.28 from git.
+
+* Tue Apr 12 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-1
+- Update to latst upstream release.
+
+* Mon Apr  4 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.6-3
+- Update to latst upstream release.
+
+* Fri Feb 19 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.6-2
+- Update to latst upstream release.
+
+* Tue Feb  2 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.6-1
+- Update to latest upstream release.
+
+* Thu Jan 14 2016 Richard Shaw <hobbes1069@gmail.com> - 0.27.5-4
+- Update to latest upstream release.
+
+* Mon Nov 16 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.5-3
+- Update to latest upstream release.
+
+* Mon Jul  6 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.5-1
+- Update to latest upstream release.
+- Move udisks requirement to the libs package where it's actually used.
+- Add systemd mythtv database optimization service and timer.
+
 * Tue May 26 2015 Richard Shaw <hobbes1069@gmail.com> - 0.27.4-6
 - Update to latest bugfix release.
 - Add conditional for udisks for Fedora 22+ (BZ#3660).
