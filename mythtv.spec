@@ -82,7 +82,7 @@ Version:        0.28
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        10%{?dist}
+Release:        11%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1408,6 +1408,9 @@ fi
 
 
 %changelog
+* Sat Jan 21 2017 Xavier Bachelot <xavier@bachelot.org> - 0.28-11
+- Fix build on EL7.
+
 * Sun Nov 27 2016 Richard Shaw <hobbes1069@gmail.com> - 0.28-10
 - Update to latest fixes/0.28 from git.
 - Add patch for libcec 4, fixes RFBZ#4345.
