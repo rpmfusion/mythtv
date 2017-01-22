@@ -1,3 +1,102 @@
+commit 3930f5d13a7e0a4b6328a1b3032374752dfacbe4
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Thu Dec 29 12:38:49 2016 +0000
+
+    MythMusic: increase the probe buffer size to 128K
+    
+    There is a increasing trend to put the cover art images into an MJPEG video
+    stream which was sometimes causing the probing of some files to fail because
+    the buffer didn't contain enough data to determine the available streams.
+    
+    Fixes #12906.
+    
+    (cherry picked from commit e8d36304610f79ab6ec6042d0a251db83586f08f)
+
+commit adf730061311ef0e6a4763cfe3d204fb89e79351
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Thu Dec 29 11:41:44 2016 +0000
+
+    musicscanner: Compare music_directory.path as binary
+    
+    SQL string comparisons are case insensitive by default (who knew!), meaning
+    that a music rescan will not pickup a renamed directory if it differs only in
+    the case.
+    
+    Use BINARY rather than arranging for a case-sensitive comparison because the
+    latter still considers 'a' and 'á' equal but for paths we need literal binary
+    sameness.
+    
+    Apply the same logic to music_songs.filename, although I've not tripped over a
+    related issue there.
+    
+    Fixes #12949.
+    
+    Signed-off-by: Paul Harrison <pharrison@mythtv.org>
+    (cherry picked from commit 258ba1fc3e6ab39c93450f276406671599f63a5d)
+
+commit 9befb426e7d92b107453736e6f000610b3381e5a
+Author: Robert Watson <robertabcdefgwatson@gmail.com>
+Date:   Tue Dec 20 11:33:10 2016 -0700
+
+    Fix displaying of input connection display name on 'C' or 'Y'.  Video
+    output needs to be active before the OSD message can be set.
+    
+    Signed-off-by: John Poet <jpoet@mythtv.org>
+    (cherry picked from commit f2eac57151f7e56b6a8087439f66ef10353c78f2)
+
+commit 2c5df31214a050d7247a93b39defd70d84a3a8d7
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Sep 4 13:02:36 2016 -0600
+
+    Stop mythfilldatabase from creating duplicate channels just because they are
+    marked as invisible.
+    
+    (cherry picked from commit 83fec2bb4c0447c81f74621e7510d56e4231f599)
+
+commit 2d6466f1aa08c29531f27edd61963d5180186a96
+Author: Bradley Baetz <bbaetz@gmail.com>
+Date:   Mon Dec 5 10:40:40 2016 +0000
+
+    Fixes #12754 - Fix deadlock in libcec initialization.
+    
+    Configuring the TV at startup is done from the main thread. However, when the
+    TV state changes as a result of this, libCEC sends a message to the callback
+    handler on its own thread, which tries to get the UI lock to reset the
+    screensaver state. This results in a deadlock because the main thread already
+    has the UI lock during startup time.
+    
+    Instead, run the initial setup activity at the start of the CEC handler thread.
+    
+    This was missed in the patch applied for #11986.
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
+    (cherry picked from commit 22ff48d7bafc622246141094b727dab47662bc3f)
+
+commit 128e29782fa3f397bb7b54d260be4b85606bcdeb
+Author: Guenter Kukkukk <linux@kukkukk.com>
+Date:   Thu Dec 1 11:11:50 2016 +0000
+
+    Fixes #12945 - Add HEVC to the mpegts parser.
+    
+    Enables use of DVB-T2 broadcasts in Germany.
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
+    (cherry picked from commit 07c59e7d962c9e046c0960ae42d2a1d38d5508b3)
+
+commit 0890206d9d303db7f10829b7d9bf574e091e70fc
+Author: BlackEagle <ike.devolder@gmail.com>
+Date:   Sat Nov 26 23:23:13 2016 +0100
+
+    Fixes #12939 - add compatibility for libcec4
+    
+    added updates to the libcec4 interface, so mythtv can be compiled
+    against it. Some parts might need some cleaning.
+    
+    Signed-off-by: BlackEagle <ike.devolder@gmail.com>
+    (cherry picked from commit f6144655200bf2927da69186c2f22040446e7bb2)
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
+    (cherry picked from commit 65f16a504687f3ee7a42abc292f1d3e05aee71d7)
+
 commit e9d0543d64fc21072fb1a0199ac2e24334169461
 Author: Karl Dietz <dekarl@mythtv.org>
 Date:   Wed Oct 19 12:50:26 2016 +0200
