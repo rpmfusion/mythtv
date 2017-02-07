@@ -81,7 +81,7 @@ Version:        0.28
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        12%{?dist}
+Release:        13%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -347,7 +347,7 @@ Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
 Requires:  mariadb-server >= 5, mariadb >= 5
-Recommends:  xmltv
+%{?fedora:Recommends:  xmltv}
 
 # Generate the required mythtv-frontend-api version string here so we only
 # have to do it once.
@@ -1338,6 +1338,9 @@ exit 0
 
 
 %changelog
+* Tue Feb 07 2017 Xavier Bachelot <xavier@bachelot.org> - 0.28-13
+- Only Recommends: xmltv on Fedora.
+
 * Sun Jan 22 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28-12
 - Update to latest fixes/0.28 from git.
 - Remove SysV conditionals as EL 7 has systemd and EL 6 is not supported.
