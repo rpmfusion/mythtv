@@ -31,7 +31,6 @@
 #
 # The following options are enabled by default.  Use these options to disable:
 #
-# --without systemd         Use systemd for backend rather than SysV init.
 # --without vdpau           Disable VDPAU support
 # --without vaapi           Disable VAAPI support
 # --without crystalhd       Disable Crystal HD support
@@ -61,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v28.0-72-g228b05b
+%define vers_string v28.0-104-g3930f5d
 %define branch fixes/0.28
 
 # Git revision and branch ID
@@ -82,7 +81,7 @@ Version:        0.28
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        11%{?dist}
+Release:        13%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -104,7 +103,6 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %bcond_without vdpau
 %bcond_without vaapi
 %bcond_without crystalhd
-%bcond_without systemd
 %bcond_without sdnotify
 %bcond_without perl
 %bcond_without php
@@ -135,7 +133,6 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
 Patch0:    mythtv-0.28-fixes.patch
-Patch1:    mythtv-0.28-libcec4.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -155,19 +152,11 @@ Source114: mythdb-optimize.timer
 
 # Global MythTV and Shared Build Requirements
 
-%if %{with systemd}
 # Use systemd
 BuildRequires:  systemd
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-%else
-# Use SysV
-Requires(post): chkconfig
-Requires(preun): chkconfig
-Requires(preun): initscripts
-Requires(postun): initscripts
-%endif
 
 BuildRequires:  perl-generators
 BuildRequires:  gcc-c++
@@ -358,12 +347,7 @@ Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
 Requires:  mariadb-server >= 5, mariadb >= 5
-Requires:  xmltv
-%if 0%{?rhel} >= 7 || 0%{?fedora} >= 22
-Requires:  udisks2
-%else
-Requires:  udisks
-%endif
+%{?fedora:Recommends:  xmltv}
 
 # Generate the required mythtv-frontend-api version string here so we only
 # have to do it once.
@@ -410,11 +394,7 @@ Summary:   Library providing mythtv support
 Requires:  freetype >= 2
 Requires:  lame
 Requires:  qt5-qtbase-mysql
-%if 0%{?rhel} >= 7 || 0%{?fedora} >= 22
 Requires:  udisks2
-%else
-Requires:  udisks
-%endif
 
 %description libs
 Common library code for MythTV and add-on modules (development)
@@ -518,7 +498,7 @@ Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Requires:  python-MythTV
-Requires:  mesa-vdpau-drivers
+%{?fedora:Recommends:  mesa-vdpau-drivers}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
 
 %description frontend
@@ -800,7 +780,6 @@ on demand content.
 #find -name *.pyc -exec rm -f {} \;
 
 %patch0 -p1
-%patch1 -p1
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -1000,12 +979,7 @@ pushd mythtv
     mkdir -p %{buildroot}%{_localstatedir}/cache/mythtv
     mkdir -p %{buildroot}%{_localstatedir}/log/mythtv
     mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
-    %if %{with systemd}
     mkdir -p %{buildroot}%{_unitdir}
-    %else
-    mkdir -p %{buildroot}%{_sysconfdir}/init.d
-    mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
-    %endif
     mkdir -p %{buildroot}%{_sysconfdir}/mythtv
 
 
@@ -1013,7 +987,6 @@ pushd mythtv
     echo "# to be filled in by mythtv-setup" > %{buildroot}%{_sysconfdir}/mythtv/config.xml
 
     ### SystemD based setup. ###
-    %if %{with systemd}
     install -p -m 0644 %{SOURCE105} %{buildroot}%{_unitdir}/
     install -p -m 0644 %{SOURCE104} %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
     # Install udev rules for devices that may initialize late in the boot
@@ -1029,13 +1002,6 @@ pushd mythtv
     install -p -m 0644 %{SOURCE114} %{buildroot}%{_unitdir}/
     install -p -m 0755 contrib/maintenance/optimize_mythdb.pl \
         %{buildroot}%{_bindir}/optimize_mythdb
-
-    ### SysV based setup. ###
-    %else
-    install -p -m 0755 %{SOURCE102} %{buildroot}%{_sysconfdir}/init.d/mythbackend
-    install -p -m 0644 %{SOURCE101} %{buildroot}%{_sysconfdir}/sysconfig/mythbackend
-    install -p -m 0644 %{SOURCE103} %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
-    %endif
 
 # Desktop entries
     mkdir -p %{buildroot}%{_datadir}/pixmaps
@@ -1093,22 +1059,7 @@ popd
 %endif
 
 
-%post libs -p /sbin/ldconfig
-
-%postun libs -p /sbin/ldconfig
-
-%pre backend
-# Add the "mythtv" user, with membership in the audio and video group
-getent group mythtv >/dev/null || groupadd -r mythtv
-getent passwd mythtv >/dev/null || \
-    useradd -r -g mythtv -d %{_localstatedir}/lib/mythtv -s /sbin/nologin \
-    -c "mythbackend user" mythtv
-# Make sure the mythtv user is in the audio and video group for existing
-# or new installs.
-usermod -a -G audio,video mythtv
-exit 0
-
-%pre frontend
+%pre common
 # Add the "mythtv" user, with membership in the audio and video group
 getent group mythtv >/dev/null || groupadd -r mythtv
 getent passwd mythtv >/dev/null || \
@@ -1130,54 +1081,38 @@ getent passwd mythtv >/dev/null || \
 usermod -a -G audio,video mythtv
 exit 0
 
+%post libs -p /sbin/ldconfig
+
 %post backend
-%if %{with systemd}
     %systemd_post mythbackend.service
     %systemd_post mythjobqueue.service
     %systemd_post mythdb-optimize.service
-%else
-    /sbin/chkconfig --add mythbackend
-%endif
-
 
 %preun backend
-%if %{with systemd}
     %systemd_preun mythbackend.service
     %systemd_preun mythjobqueue.service
     %systemd_preun mythdb-optimize.service
-%else
-if [ $1 = 0 ]; then
-    /sbin/service mythbackend stop > /dev/null 2>&1
-    /sbin/chkconfig --del mythbackend
-fi
-%endif
+
+%postun libs -p /sbin/ldconfig
 
 %postun backend
-%if %{with systemd}
     %systemd_postun_with_restart mythbackend.service
     %systemd_postun_with_restart mythjobqueue.service
     %systemd_postun_with_restart mythdb-optimize.service
-%else
-if [ "$1" -ge "1" ] ; then
-    /sbin/service mythbackend condrestart >/dev/null 2>&1 || :
-fi
-%endif
 
 ################################################################################
 
 %files
-%doc ChangeLog mythtv/PACKAGE-LICENSING
+%doc ChangeLog
+%license mythtv/PACKAGE-LICENSING
 
 %files docs
 %doc mythtv/README*
 %doc mythtv/UPGRADING
 %doc mythtv/AUTHORS
-%doc mythtv/COPYING
+%license mythtv/COPYING
 %doc mythtv/FAQ
 %doc mythtv/database mythtv/keys.txt
-# Do we really need the API documentation?
-#%%doc mythtv/docs/*.html mythtv/docs/*.png
-#%%doc mythtv/docs/*.txt
 %doc mythtv/contrib
 
 %files common
@@ -1193,8 +1128,8 @@ fi
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
 %{_datadir}/mythtv/hardwareprofile/
-%attr(-,mythtv,mythtv) %dir %{_sysconfdir}/mythtv
-%attr(0664,mythtv,mythtv) %config(noreplace) %{_sysconfdir}/mythtv/config.xml
+%attr(0775,-,mythtv) %dir %{_sysconfdir}/mythtv
+%attr(0664,-,mythtv) %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 
 %files backend
 %{_bindir}/mythbackend
@@ -1209,16 +1144,11 @@ fi
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
-%if %{with systemd}
 %{_unitdir}/mythbackend.service
 %{_unitdir}/mythjobqueue.service
 %{_unitdir}/mythdb-optimize.service
 %{_unitdir}/mythdb-optimize.timer
 /lib/udev/rules.d/99-mythbackend.rules
-%else
-%{_sysconfdir}/init.d/mythbackend
-%config(noreplace) %{_sysconfdir}/sysconfig/mythbackend
-%endif
 %config(noreplace) %{_sysconfdir}/logrotate.d/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
 %{_datadir}/mythtv/internetcontent/
@@ -1408,6 +1338,16 @@ fi
 
 
 %changelog
+* Tue Feb 07 2017 Xavier Bachelot <xavier@bachelot.org> - 0.28-13
+- Only Recommends: xmltv on Fedora.
+
+* Sun Jan 22 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28-12
+- Update to latest fixes/0.28 from git.
+- Remove SysV conditionals as EL 7 has systemd and EL 6 is not supported.
+- Update default permissions for /etc/mythtv and move user/group creation
+  to the common package, fixes RFBZ#4414.
+- Change some dependencies from Requires to Recommends, fixes RFBZ#4415.
+
 * Sat Jan 21 2017 Xavier Bachelot <xavier@bachelot.org> - 0.28-11
 - Fix build on EL7.
 
