@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v28.0-104-g3930f5d
+%define vers_string v0.28.1-9-g3255b98
 %define branch fixes/0.28
 
 # Git revision and branch ID
@@ -77,11 +77,11 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.28
+Version:        0.28.1
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        13%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -498,6 +498,7 @@ Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Requires:  python-MythTV
+Requires:  google-droid-sans-mono-fonts
 %{?fedora:Recommends:  mesa-vdpau-drivers}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
 
@@ -1193,6 +1194,10 @@ exit 0
 %{_datadir}/mythtv/themes/
 
 %files libs
+%exclude %{_libdir}/libmythav*.so.*
+%exclude %{_libdir}/libmythpostproc.so.*
+%exclude %{_libdir}/libmythswscale.so.*
+%exclude %{_libdir}/libmythswresample.so.*
 %{_libdir}/*.so.*
 
 %files devel
@@ -1205,6 +1210,10 @@ exit 0
 %{_bindir}/mythffmpeg
 %{_bindir}/mythffprobe
 %{_bindir}/mythffserver
+%{_libdir}/libmythav*.so.*
+%{_libdir}/libmythpostproc.so.*
+%{_libdir}/libmythswscale.so.*
+%{_libdir}/libmythswresample.so.*
 
 %if %{with perl}
 %files -n perl-MythTV
@@ -1338,6 +1347,10 @@ exit 0
 
 
 %changelog
+* Tue Mar 14 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-1
+- Update to latest upstream release.
+- Move bundled ffmpeg libraries to mythffmpeg package, fixes RFBZ#4430.
+
 * Tue Feb 07 2017 Xavier Bachelot <xavier@bachelot.org> - 0.28-13
 - Only Recommends: xmltv on Fedora.
 
