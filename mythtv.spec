@@ -79,9 +79,9 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        0.28.1
 %if "%{branch}" == "master"
-Release:        0.5.git.%{_gitrev}%{?dist}
+Release:        0.6.git.%{_gitrev}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1347,6 +1347,9 @@ exit 0
 
 
 %changelog
+* Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.28.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Tue Mar 14 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-1
 - Update to latest upstream release.
 - Move bundled ffmpeg libraries to mythffmpeg package, fixes RFBZ#4430.
