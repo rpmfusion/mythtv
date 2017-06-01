@@ -1,6 +1,6 @@
 # Does not currently build on ppc
 # https://code.mythtv.org/trac/ticket/13049
-#ExcludeArch:    ppc64 ppc64le
+ExcludeArch:    ppc64 ppc64le
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -1355,9 +1355,6 @@ exit 0
 
 
 %changelog
-* Thu Jun  1 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-4
-- Add patch from upstream to fix ppc bug.
-
 * Mon Apr 24 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-3
 - Update to latest fixes/0.28.
 - Exclude ppc64 and ppc64le due to failed builds:
