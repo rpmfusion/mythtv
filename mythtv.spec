@@ -1,3 +1,7 @@
+# Does not currently build on ppc
+# https://code.mythtv.org/trac/ticket/13049
+ExcludeArch:    ppc64 ppc64le
+
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
 # by:   Chris Petersen <cpetersen@mythtv.org>
@@ -60,7 +64,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v0.28.1-9-g3255b98
+%define vers_string v0.28.1-23-gaf98262
 %define branch fixes/0.28
 
 # Git revision and branch ID
@@ -79,9 +83,9 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        0.28.1
 %if "%{branch}" == "master"
-Release:        0.6.git.%{_gitrev}%{?dist}
+Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -517,6 +521,7 @@ reachable via the network.
 Summary:    Server component of mythtv (a DVR)
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
+Requires:   mythtv-setup
 Requires(pre): shadow-utils
 Conflicts:  xmltv-grabbers < 0.5.37
 
@@ -536,6 +541,7 @@ Summary:   Setup the mythtv backend
 Requires:  freetype
 Requires:  mythtv-backend = %{version}-%{release}
 Requires:  mythtv-base-themes = %{version}
+Requires:  google-droid-sans-fonts
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -1347,6 +1353,11 @@ exit 0
 
 
 %changelog
+* Mon Apr 24 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-3
+- Update to latest fixes/0.28.
+- Exclude ppc64 and ppc64le due to failed builds:
+  https://code.mythtv.org/trac/ticket/13049
+
 * Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.28.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
