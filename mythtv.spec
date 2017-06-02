@@ -1,6 +1,6 @@
 # Does not currently build on ppc
 # https://code.mythtv.org/trac/ticket/13049
-ExcludeArch:    ppc64 ppc64le
+#ExcludeArch:    ppc64 ppc64le
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -85,7 +85,7 @@ Version:        0.28.1
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -137,7 +137,7 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
 Patch0:    mythtv-0.28-fixes.patch
-Patch1:    ticket13049-bswap-guard.diff
+Patch1:    ticket13049-remove-ffmpeg-bswap-change.diff
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -1355,6 +1355,9 @@ exit 0
 
 
 %changelog
+* Thu Jun  1 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-4
+- Add patch from upstream to fix ppc bug.
+
 * Mon Apr 24 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-3
 - Update to latest fixes/0.28.
 - Exclude ppc64 and ppc64le due to failed builds:
