@@ -85,7 +85,7 @@ Version:        0.28.1
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        4%{?dist}
+Release:        5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -282,7 +282,7 @@ BuildRequires:  python2-devel
 %if 0%{?fedora}
 BuildRequires:  python2-mysql
 %else
-BuildRequires:  MySQL-python 
+BuildRequires:  MySQL-python
 %endif
 BuildRequires:  python-urlgrabber
 %endif
@@ -1355,6 +1355,9 @@ exit 0
 
 
 %changelog
+* Mon Jun 19 2017 Paul Howarth <paul@city-fan.org> - 0.28.1-5
+- Perl 5.26 rebuild
+
 * Thu Jun  1 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-4
 - Add patch from upstream to fix ppc bug.
 
