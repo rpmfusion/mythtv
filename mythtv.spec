@@ -1,3 +1,7 @@
+# Does not currently build on ppc
+# https://code.mythtv.org/trac/ticket/13049
+#ExcludeArch:    ppc64 ppc64le
+
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
 # by:   Chris Petersen <cpetersen@mythtv.org>
@@ -60,7 +64,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v28.0-104-g3930f5d
+%define vers_string v0.28.1-23-gaf98262
 %define branch fixes/0.28
 
 # Git revision and branch ID
@@ -77,11 +81,11 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.28
+Version:        0.28.1
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        13%{?dist}
+Release:        5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -133,6 +137,7 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
 Patch0:    mythtv-0.28-fixes.patch
+Patch1:    ticket13049-remove-ffmpeg-bswap-change.diff
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -277,7 +282,7 @@ BuildRequires:  python2-devel
 %if 0%{?fedora}
 BuildRequires:  python2-mysql
 %else
-BuildRequires:  MySQL-python 
+BuildRequires:  MySQL-python
 %endif
 BuildRequires:  python-urlgrabber
 %endif
@@ -498,6 +503,7 @@ Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Requires:  python-MythTV
+Requires:  google-droid-sans-mono-fonts
 %{?fedora:Recommends:  mesa-vdpau-drivers}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
 
@@ -516,6 +522,7 @@ reachable via the network.
 Summary:    Server component of mythtv (a DVR)
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
+Requires:   mythtv-setup
 Requires(pre): shadow-utils
 Conflicts:  xmltv-grabbers < 0.5.37
 
@@ -535,6 +542,7 @@ Summary:   Setup the mythtv backend
 Requires:  freetype
 Requires:  mythtv-backend = %{version}-%{release}
 Requires:  mythtv-base-themes = %{version}
+Requires:  google-droid-sans-fonts
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -780,6 +788,7 @@ on demand content.
 #find -name *.pyc -exec rm -f {} \;
 
 %patch0 -p1
+%patch1 -p1
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -1193,6 +1202,10 @@ exit 0
 %{_datadir}/mythtv/themes/
 
 %files libs
+%exclude %{_libdir}/libmythav*.so.*
+%exclude %{_libdir}/libmythpostproc.so.*
+%exclude %{_libdir}/libmythswscale.so.*
+%exclude %{_libdir}/libmythswresample.so.*
 %{_libdir}/*.so.*
 
 %files devel
@@ -1205,6 +1218,10 @@ exit 0
 %{_bindir}/mythffmpeg
 %{_bindir}/mythffprobe
 %{_bindir}/mythffserver
+%{_libdir}/libmythav*.so.*
+%{_libdir}/libmythpostproc.so.*
+%{_libdir}/libmythswscale.so.*
+%{_libdir}/libmythswresample.so.*
 
 %if %{with perl}
 %files -n perl-MythTV
@@ -1338,6 +1355,24 @@ exit 0
 
 
 %changelog
+* Mon Jun 19 2017 Paul Howarth <paul@city-fan.org> - 0.28.1-5
+- Perl 5.26 rebuild
+
+* Thu Jun  1 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-4
+- Add patch from upstream to fix ppc bug.
+
+* Mon Apr 24 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-3
+- Update to latest fixes/0.28.
+- Exclude ppc64 and ppc64le due to failed builds:
+  https://code.mythtv.org/trac/ticket/13049
+
+* Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.28.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
+* Tue Mar 14 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-1
+- Update to latest upstream release.
+- Move bundled ffmpeg libraries to mythffmpeg package, fixes RFBZ#4430.
+
 * Tue Feb 07 2017 Xavier Bachelot <xavier@bachelot.org> - 0.28-13
 - Only Recommends: xmltv on Fedora.
 
