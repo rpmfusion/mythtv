@@ -1,3 +1,370 @@
+commit eef6a480b0eca5201eec785b0ce57f9a6f4b7fdd
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Jul 12 15:33:31 2017 -0400
+
+    Fix bugs that occur when using a different video mode for playback.
+    
+    Fixes these cases where the code does not cater for the video mode
+    changing between GUI and playback.
+    - Playback using xv-blit and maybe others is shown in the wrong size and position.
+    - Playback using OpenGL is displaced downward.
+    - LiveTV using OpenGL is the wrong size.
+    - Program Guide and other screens selected from within LiveTV when using OpenGL
+    are cut off on the right.
+    
+    Fixes #7408
+    Fixes #11363
+    Fixes #13054
+    
+    (cherry picked from commit 7388b5a60c54d5e812a535bf5212295e512c5c3f)
+
+commit 457a417f407bd38fa0d989f9ca006a5fb3173695
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Tue Apr 19 12:32:28 2016 +0100
+
+    Services: Fix exception messages
+    
+    Some exceptions are thrown as const char* so they are not being logged.
+    Exceptions should be thrown as QStrings.
+    
+    (cherry picked from commit 29e2269424b6b84afeb3d68158ada829429a0610)
+
+commit 1c2863c23f9c188b00b59255c5408c0ca06d44f5
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Wed Nov 9 17:04:40 2016 +0000
+
+    [PATCH] Support tuning via freqid translation for ExternalRecorder
+    
+    Signed-off-by: John Poet <jpoet@mythtv.org>
+    
+    Fixes #12919
+    
+    (cherry picked from commit 87140917197b156a5c06ac6ce36eb47de358a313)
+
+commit 392be659b69243ce70311480db82cd111689fc53
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Jun 28 11:21:47 2017 -0400
+
+    Fixes #13059 - Flickering pause on Raspberry Pi.
+    
+    (cherry picked from commit 42d4a3146a0658403579ba9446050b3974090b6d)
+
+commit 8f7475b88902052b1eb27f297370d5f4f22b2aff
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Jun 20 19:25:13 2017 -0400
+
+    Fix Raspberry Pi hardware deinterlace
+    
+    Fixes #13030
+    
+    (cherry picked from commit 4b8862829d98aff2e5baba92ee98e1dd3b505e6b)
+
+commit ec95cbd7f401ab43d4d7c5a7d5b17a0e5021a260
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Thu Jun 15 11:36:31 2017 +0100
+
+    Refs #13031 - No GL/gl.h on osx
+    
+    (cherry picked from commit ab0dfcba5e3b92b90f993148c9449450c40acbff)
+
+commit 6a683aff7834054238413e83b0cf3f832f91cacb
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Thu Jun 15 11:03:40 2017 +0100
+
+    Refs #13031 - Reorganise the OpenGL includes a bit to fix build issues on arch on rpi
+    
+    (cherry picked from commit 05ad15bab9c11b7f102efc42a435406d7d0157c9)
+
+commit 98550bedeeea666cc412fe3ee9ac3ffa12803ce5
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Wed Jun 7 09:15:00 2017 +0100
+
+    Refs #13047 - fix check for OSX platforms
+    
+    (cherry picked from commit 37c41f1b411070471060b2f2d695e3a1ee8bebe3)
+
+commit 219fbe688eab463cdf1f948270459f47bf9f0885
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Tue Jun 6 22:55:50 2017 +0100
+
+    Refs #13047 - Windows also has major() and minor() in <sys/types.h>
+    
+    (cherry picked from commit 0a8e8423e8cc4d7ced1db96ba58caeb85c5af6e0)
+
+commit b012ff0f6b284969183863d42a6a14eb77ed0a1d
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Tue Jun 6 22:39:03 2017 +0100
+
+    Refs #13047 - major() and minor() are defined in <sys/sysmacros.h>
+    
+    On BSD platforms they remain defined in <sys/types.h>
+    
+    (cherry picked from commit eca27c542b70deb58e50ad4581b2d6f6b2e1d3c2)
+
+commit 63ada4ffb865f9cc2d723113dbc5263748e8410f
+Author: John Poet <jpoet@mythtv.org>
+Date:   Tue Jun 6 12:25:15 2017 -0600
+
+    ProgramInfo::ToMap: Add a copy of 'description' called 'description0'.
+    
+    This allows themes to set different characteristics for the description
+    depend on other elements.
+    
+    (cherry picked from commit fe0928403e5b544894d22ab614ed69e4430f518d)
+
+commit b3480d043721848bda06d841eca09a6a2149c7e1
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Mon Jun 5 09:45:34 2017 +0100
+
+    Remove a custom FFmpeg patch for bswap_dbl
+    
+    We have been carrying a custom patch for FFmpeg which
+    adds bswap_dbl to the ffmpeg codebase, yet it's not
+    used within ffmpeg, and we also have the same definition
+    in libs/libmythbase/bswap.h:29
+    
+    This was causing duplicate function definition errors
+    building on some platforms.
+    
+    Rather than carrying an unneeded ffmpeg customization
+    around lets just remove that customization.
+    
+    Fixes #13049
+    Refs #12634 <- no longer requires `avoid_bswap_conflict.patch`
+    
+    (cherry picked from commit 517216c725bedcff47db908e161abae1dd18e7a3)
+
+commit 2d42863a62dc721e5ddea61a3aedfc414ca4c0ff
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Fri Jun 2 10:49:33 2017 +0100
+
+    Fixes #13050 - Properly enable symbol visibility for GCC7
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
+    (cherry picked from commit 1866a820f69162d1ffda724e0173478eeac0f78b)
+
+commit e3b8adeb88e42719ce2acae9eb3a2981a27eba68
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Thu Jun 1 17:59:39 2017 +0200
+
+    TV: Fix ESCAPE being ignored
+    
+    The cause was that lcdVolumeTimerId was never set to 0 after killing it.
+    Since timer IDs are reused by Qt the timer started when ESCAPE was
+    pressed to exit playback could be treated as lcdVolumeTimerId and ending
+    up never being processed.  This only happened if the LCD support was
+    enabled and the volume was changed.
+    
+    Fixes #12566
+    
+    (cherry picked from commit bdbc6363a311f08cdb61eab81d62243b56b7bd12)
+
+commit 4664d5ca42a21548f390cd26bd14500559f0da9e
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Thu Jun 1 08:17:04 2017 -0500
+
+    Services API: Dvr/GetTitleInfoList was returning Deleted recordings.
+    
+    (cherry picked from commit 08a03c582cbac3927805213fa3a1786ccd05f525)
+
+commit af9826265820668395c64f04179a90dcdf331adb
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Wed May 10 01:18:44 2017 +0100
+
+    Prevent cutlist editor crash when extending marks
+    
+    Code was modifying the container without adjusting the iterator.
+    Fixes #13039
+    
+    (cherry picked from commit 9d2f7b67ef004c20c24048922a1f9367c6127399)
+
+commit 2d247dc4600cc11166f056f48058f74252a27419
+Author: Roger Siddons <rsiddons@mythtv.org>
+Date:   Thu Apr 20 09:26:51 2017 +0100
+
+    Python: Fix bookmarkupdate error
+    
+    Python scripts updating a recording with no bookmark elicit:
+    Failed due to: "MySQL error 1292: Incorrect datetime value: '0' for column 'bookmarkupdate' at row 1"
+    
+    The bindings use a default of 0, which is rejected by newer MySQL versions
+    
+    (cherry picked from commit 37ef0fa91e7fdffb0edccec288b00471c60f2148)
+
+commit e26a33c69af48399b8c52b1d76872d64a944d137
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Tue Apr 18 11:10:45 2017 -0400
+
+    Fix parsing of season from xmltv
+    
+    Fixes #12786
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit 585f509dea5a8e9c7d7e213d4440ebde958e8138)
+
+commit 14f82aa54c2825b58b08499a2f448dd6a155fb05
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Apr 18 10:45:01 2017 -0400
+
+    Fix for LCD device code hanging
+    
+    When playing recordings if the audio changes (e.g. number of
+    channels change), it sends a message to the lcd server
+    from the wrong thread.
+    After this no LCD messages get through, but queue indefinitely.
+    The fix uses a slot to ensure messages are send from the
+    correct thread.
+    
+    Refs #12566
+    Fixes #12567
+    
+    (cherry picked from commit 3cd374dd16d2257485468e0415892d417eb7520a)
+
+commit 0037461751becd40aedd2d3dd8bd2ad5e0836c9f
+Author: Karl Dietz <dekarl@mythtv.org>
+Date:   Wed Mar 22 22:37:13 2017 +0100
+
+    Set MySQL session mode in Perl bindings
+    
+    this allows optimize_mythdb.pl to work against newer (5.7+)
+    versions of MySQL.
+    
+    Patch by Michael Dean
+    
+    Refs #12871
+    
+    (cherry picked from commit 83c67a0c7b5eec295e9cad757ff6edc1438078ff)
+
+commit 70266230d3d3afcf9c356cf503fce210fe67ab07
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Mon Feb 13 16:19:57 2017 -0700
+
+    Use XMLTV dd_progid data to create seriesid
+    
+    The current seriesid processing for XMLTV grabbers using a hash for the
+    title is non-optimal in the (Schedules Direct) case where the seriesid can
+    be more accurately represented (via a supplied dd_progid). The internal
+    datadirect grabber creates such a seriesid from its feeds.
+    
+    From some research and discussions with Schedules Direct regarding the
+    gracenote upstream (raw) data, there is a true seriesid available, but
+    passing that through to MythTV, and then adjusting existing data has some
+    challenges (some upstream). And while there are some potential approaches,
+    rather than wait for the perfect, we can do something now which is
+    equivalent to the internal dd grabber.
+    
+    This patch creates a better seriesid from a XMLTV source which provides a
+    dd_progid with a seriesid which is compatible with the (internal)
+    DataDirect? grabber (further moving forward to allowing the eventual removal
+    of the internal DD grabber).
+    
+    The following patch (based on some initial work by Mr. Poet) creates an
+    appropriate seriesid.
+    
+    Note:
+    
+    The uniqueid value was added to the code in commit
+    347ea0319330cb06cf3e418e12e79602c3235bc0 (over a decade ago) however it was
+    never set, and always empty, resulting in some dead code. It appears that
+    the uniqueid may have been intended to serve the same/equivalent purposes of
+    programid (at some point). This patch removes the (dead) uniqueid along the
+    way as part of the larger set of fixes.
+    
+    As this patch changes the seriesid for new grabbed programs, those that are
+    using the "this series" matching based on the previous seriesid may run into
+    some issues. Likely the easiest solution to recommend is to recreate those
+    rules.
+    
+    Signed-off-by: John Poet <jpoet@mythtv.org>
+    (cherry picked from commit 4e5cf2b4ef875ee578b121be9867ba05da5fab17)
+
+commit 845f6d47b4d904589050a12b67245161339a41e6
+Author: John Poet <jpoet@mythtv.org>
+Date:   Fri Feb 10 14:54:54 2017 -0700
+
+    Another attempt at preventing mythfilldatabase from inserting duplicate
+    channels.
+    
+    In ChannelData::channelList use ChannelUtil::LoadChannels instead of
+    ChannelUtil::GetChannels, as the former seems to be more reliable.
+    
+    (cherry picked from commit b25f8c630bbd73602c4bf646c9aa760cb0fb60fc)
+
+commit 3dd03e36ed6df640665e1c8b93944442d9f91406
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Jun 12 01:17:40 2016 -0600
+
+    mythfilldatabase: Also try matching ATSC major.minor when update xmltvid.
+    
+    (cherry picked from commit 5933e03efdb136a5bd35f60bdcf24f8a1a32749b)
+
+commit 044b22b95734ee607806ff8cea04e84c5112438d
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed Mar 15 10:32:01 2017 +0000
+
+    MythArchive: guard against an empty deleteMap in the thumb image finder
+    
+    (cherry picked from commit abb225031b2ece763f773bdf060cfde1ec7abe81)
+
+commit 0bd473036fdb132c6f094eff360de3e444256aeb
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed Mar 15 10:29:54 2017 +0000
+
+    MythArchive: update the initial seek amount text on the thumb image finder
+    
+    (cherry picked from commit 9572352cc6e267254ede2feea567c088e5d5b7ad)
+
+commit 2622ddd0c7f8e9cd037bbb8da0225975c305fda8
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Wed Mar 15 09:22:03 2017 +0000
+
+    IPTV Tuner: fix recording/playing simultaneous RTSP streams
+    
+    Thanks to strenker on the forum for tracking this down.
+    
+    (cherry picked from commit b5659411dd7e964c86077f49f6bde29736df680d)
+
+commit 8f13742e18f76ede87e46f1ce12bd00aa40d621b
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Tue Mar 7 10:02:21 2017 -0500
+
+    Validate the programme starttime/channel early
+    
+    If a programme does not have a starttime the (later) attempted
+    insertion of the program into the database will result in a
+    database constraint error.  If the program does not have a
+    channel there will be a match error later.  Verify both early
+    (perhaps with better log messages).
+    
+    Fixes #13011
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit ab4513fbb6f50f1402835b5599f6ff79b4b0fd48)
+
+commit 12232f081c672165f67819de8cd9f437c991a082
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Tue Mar 7 10:00:21 2017 -0500
+
+    Improve fromXMLTVDate processing for mythfilldatabase
+    
+    In cases where the system is running in localtime, the
+    current processing will apply timezone validation to
+    the input datetime, which can result in rejection of valid
+    datetimes.
+    
+    Fixes #13010
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit 841073ea8c1f49e858f5bb6c18e3c0ade04eb512)
+
+commit dc2b2782408f25992f34fad71628ece96f5d9f3a
+Author: John Poet <jpoet@mythtv.org>
+Date:   Tue May 17 18:20:41 2016 -0600
+
+    mythfilldatabase - xmltvparser.cpp:  Fix whitespace.
+    
+    (cherry picked from commit 55eb77fda5f4578801d579e9823e7eeb8bb8399c)
+
 commit 3255b983b039f26c36cae016f4a522183283837c
 Author: Stuart Auchterlonie <stuarta@mythtv.org>
 Date:   Fri Mar 3 15:08:14 2017 +0000

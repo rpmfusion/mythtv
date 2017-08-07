@@ -1,14 +1,215 @@
- mythtv/libs/libmythbase/loggingserver.cpp |  2 +-
- mythtv/libs/libmythtv/eitfixup.cpp        |  2 ++
- mythtv/libs/libmythtv/eithelper.cpp       | 17 +++++++++--------
- mythtv/libs/libmythtv/mythavutil.cpp      | 15 ++++++++++++++-
- mythtv/libs/libmythupnp/mythxmlclient.cpp |  4 +++-
- mythtv/libs/libmythupnp/soapclient.cpp    |  4 +++-
- mythtv/libs/libmythupnp/ssdp.cpp          |  4 ++++
- mythtv/libs/libmythupnp/upnp.h            |  1 +
- mythtv/programs/mythfrontend/proglist.cpp |  4 ++--
- 9 files changed, 39 insertions(+), 14 deletions(-)
+ .../mytharchive/mytharchive/thumbfinder.cpp        |   8 +
+ mythtv/bindings/perl/MythTV.pm                     |   2 +
+ mythtv/bindings/python/MythTV/dataheap.py          |   2 +-
+ mythtv/configure                                   |  15 +-
+ mythtv/external/FFmpeg/libavutil/bswap.h           |  15 --
+ mythtv/libs/libmyth/programinfo.cpp                |   2 +-
+ mythtv/libs/libmythbase/lcddevice.cpp              |  10 +-
+ mythtv/libs/libmythbase/lcddevice.h                |   5 +-
+ mythtv/libs/libmythbase/loggingserver.cpp          |   2 +-
+ mythtv/libs/libmythtv/deletemap.cpp                |   3 +-
+ mythtv/libs/libmythtv/eitfixup.cpp                 |   2 +
+ mythtv/libs/libmythtv/eithelper.cpp                |  17 +-
+ mythtv/libs/libmythtv/iptvtuningdata.h             |   2 +-
+ mythtv/libs/libmythtv/mythavutil.cpp               |  15 +-
+ mythtv/libs/libmythtv/privatedecoder_omx.cpp       |  89 +--------
+ mythtv/libs/libmythtv/privatedecoder_omx.h         |   4 -
+ .../libs/libmythtv/recorders/ExternalChannel.cpp   |   5 +
+ mythtv/libs/libmythtv/recorders/ExternalChannel.h  |   1 +
+ mythtv/libs/libmythtv/tv_play.cpp                  |  31 +++-
+ mythtv/libs/libmythtv/videoout_omx.cpp             |  20 +-
+ mythtv/libs/libmythtv/videoout_omx.h               |   1 +
+ mythtv/libs/libmythtv/videoout_opengl.cpp          |  19 +-
+ mythtv/libs/libmythtv/videooutwindow.cpp           |   8 +
+ mythtv/libs/libmythtv/videooutwindow.h             |   1 +
+ mythtv/libs/libmythtv/videosource.cpp              |   4 +
+ mythtv/libs/libmythui/mythrender_opengl.h          |   3 -
+ mythtv/libs/libmythui/mythrender_opengl1.h         |   3 +
+ mythtv/libs/libmythupnp/mythxmlclient.cpp          |   4 +-
+ mythtv/libs/libmythupnp/soapclient.cpp             |   4 +-
+ mythtv/libs/libmythupnp/ssdp.cpp                   |   4 +
+ mythtv/libs/libmythupnp/upnp.h                     |   1 +
+ mythtv/programs/mythbackend/services/content.cpp   |   4 +-
+ mythtv/programs/mythbackend/services/dvr.cpp       |   2 +-
+ mythtv/programs/mythbackend/services/guide.cpp     |  18 +-
+ mythtv/programs/mythbackend/services/myth.cpp      |   2 +-
+ mythtv/programs/mythfilldatabase/channeldata.cpp   |  39 +++-
+ mythtv/programs/mythfilldatabase/channeldata.h     |   6 +-
+ mythtv/programs/mythfilldatabase/xmltvparser.cpp   | 205 ++++++++++++---------
+ mythtv/programs/mythfrontend/proglist.cpp          |   4 +-
+ 39 files changed, 329 insertions(+), 253 deletions(-)
 
+diff --git a/mythplugins/mytharchive/mytharchive/thumbfinder.cpp b/mythplugins/mytharchive/mytharchive/thumbfinder.cpp
+index d2bcdf5..25b3829 100644
+--- a/mythplugins/mytharchive/mytharchive/thumbfinder.cpp
++++ b/mythplugins/mytharchive/mytharchive/thumbfinder.cpp
+@@ -159,6 +159,8 @@ bool ThumbFinder::Create(void)
+ 
+     connect(m_frameButton, SIGNAL(Clicked()), this, SLOT(updateThumb()));
+ 
++    m_seekAmountText->SetText(SeekAmounts[m_currentSeek].name);
++
+     BuildFocusList();
+ 
+     SetFocusWidget(m_imageGrid);
+@@ -274,6 +276,12 @@ void ThumbFinder::loadCutList()
+         delete progInfo;
+     }
+ 
++    if (m_deleteMap.isEmpty())
++    {
++        LOG(VB_GENERAL, LOG_ERR, "ThumbFinder::loadCutList: Got an empty delete map");
++        return;
++    }
++
+     // if the first mark is a end mark then add the start mark at the beginning
+     frm_dir_map_t::const_iterator it = m_deleteMap.begin();
+     if (it.value() == MARK_CUT_END)
+diff --git a/mythtv/bindings/perl/MythTV.pm b/mythtv/bindings/perl/MythTV.pm
+index 188fcc0..db196ec 100644
+--- a/mythtv/bindings/perl/MythTV.pm
++++ b/mythtv/bindings/perl/MythTV.pm
+@@ -372,6 +372,8 @@ EOF
+                                       $self->{'db_user'},
+                                       $self->{'db_pass'})
+             or die "Cannot connect to database: $!\n\n";
++        $self->{'dbh'}->do("SET SESSION sql_mode = ''")
++            or die "Can't set sql_mode: $!\n\n";
+         $self->{'dbh'}->do("SET time_zone = 'Etc/UTC'")
+             or die "Can't set timezone: $!\n\n";
+ 
+diff --git a/mythtv/bindings/python/MythTV/dataheap.py b/mythtv/bindings/python/MythTV/dataheap.py
+index 859e060..4de3085 100644
+--- a/mythtv/bindings/python/MythTV/dataheap.py
++++ b/mythtv/bindings/python/MythTV/dataheap.py
+@@ -283,7 +283,7 @@ class Recorded( CMPRecord, DBDataWrite ):
+                  'commflagged':0,    'recgroup':'Default',   'seriesid':'',
+                  'programid':'',     'lastmodified':'CURRENT_TIMESTAMP',
+                  'filesize':0,       'stars':0,              'previouslyshown':0,
+-                 'preserve':0,       'bookmarkupdate':0,
++                 'preserve':0,       'bookmarkupdate':None,
+                  'findid':0,         'deletepending':0,      'transcoder':0,
+                  'timestretch':1,    'recpriority':0,        'playgroup':'Default',
+                  'profile':'No',     'duplicate':1,          'transcoded':0,
+diff --git a/mythtv/configure b/mythtv/configure
+index af0d6a6..5019732 100755
+--- a/mythtv/configure
++++ b/mythtv/configure
+@@ -7618,19 +7618,10 @@ esac
+ 
+ if enabled gxx; then
+     if enabled symbol_visibility; then
+-        # Don't check for patch levels in gcc4 series.
+-        # See https://bugs.launchpad.net/ubuntu/+source/gcc-4.8/+bug/1360404
+-        if expr "$gxx_version" : '4\.[2-9]' >/dev/null || expr "$gxx_version" : '[5-9]\..*\.' >/dev/null; then
+-            check_cxxflags -fvisibility-inlines-hidden
+-            append CCONFIG "use_hidesyms"
+-        else
+-            disable symbol_visibility
+-            warn "--enable-symbol-visibility requires gcc 4.2 or higher"
+-        fi
+-    fi
+-    if expr "$gxx_version" : '4\.[3-9]' >/dev/null || expr "$gxx_version" : '[5-9]\..*\.' >/dev/null; then
+-        check_cxxflags -Wmissing-declarations
++        check_cxxflags -fvisibility-inlines-hidden
++        append CCONFIG "use_hidesyms"
+     fi
++    check_cxxflags -Wmissing-declarations
+     check_cxxflags -Wno-switch
+     check_cxxflags -Woverloaded-virtual
+     check_cxxflags -funit-at-a-time
+diff --git a/mythtv/external/FFmpeg/libavutil/bswap.h b/mythtv/external/FFmpeg/libavutil/bswap.h
+index 331d391..91cb795 100644
+--- a/mythtv/external/FFmpeg/libavutil/bswap.h
++++ b/mythtv/external/FFmpeg/libavutil/bswap.h
+@@ -76,21 +76,6 @@ static inline uint64_t av_const av_bswap64(uint64_t x)
+ }
+ #endif
+ 
+-#ifndef av_bswap_dbl
+-static inline double bswap_dbl(double x)
+-{
+-    union {
+-        uint32_t l[2];
+-        double   d;
+-    } w, r;
+-    w.d = x;
+-    r.l[0] = av_bswap32(w.l[1]);
+-    r.l[1] = av_bswap32(w.l[0]);
+-    return r.d;
+-}
+-#endif
+-
+-
+ // be2ne ... big-endian to native-endian
+ // le2ne ... little-endian to native-endian
+ 
+diff --git a/mythtv/libs/libmyth/programinfo.cpp b/mythtv/libs/libmyth/programinfo.cpp
+index 56a1a3b..3d7c94d 100644
+--- a/mythtv/libs/libmyth/programinfo.cpp
++++ b/mythtv/libs/libmyth/programinfo.cpp
+@@ -1593,7 +1593,7 @@ void ProgramInfo::ToMap(InfoMap &progMap,
+ 
+     progMap["titlesubtitle"] = tempSubTitle;
+ 
+-    progMap["description"] = description;
++    progMap["description"] = progMap["description0"] = description;
+ 
+     if (season > 0 || episode > 0)
+     {
+diff --git a/mythtv/libs/libmythbase/lcddevice.cpp b/mythtv/libs/libmythbase/lcddevice.cpp
+index f3924d9..1ee9964 100644
+--- a/mythtv/libs/libmythbase/lcddevice.cpp
++++ b/mythtv/libs/libmythbase/lcddevice.cpp
+@@ -77,6 +77,7 @@ LCD::LCD()
+ 
+     connect(m_retryTimer, SIGNAL(timeout()),   this, SLOT(restartConnection()));
+     connect(m_LEDTimer,   SIGNAL(timeout()),   this, SLOT(outputLEDs()));
++    connect(this, &LCD::sendToServer, this, &LCD::sendToServerSlot, Qt::QueuedConnection);
+ }
+ 
+ bool LCD::m_enabled = false;
+@@ -204,13 +205,20 @@ bool LCD::connectToHost(const QString &lhostname, unsigned int lport)
+     return m_connected;
+ }
+ 
+-void LCD::sendToServer(const QString &someText)
++void LCD::sendToServerSlot(const QString &someText)
+ {
+     QMutexLocker locker(&m_socketLock);
+ 
+     if (!m_socket || !m_lcdReady)
+         return;
+ 
++    if (m_socket->thread() != QThread::currentThread())
++    {
++        LOG(VB_GENERAL, LOG_ERR,
++            "Sending to LCDServer from wrong thread.");
++        return;
++    }
++
+     // Check the socket, make sure the connection is still up
+     if (QAbstractSocket::ConnectedState != m_socket->state())
+     {
+diff --git a/mythtv/libs/libmythbase/lcddevice.h b/mythtv/libs/libmythbase/lcddevice.h
+index b6346ec..c3247b4 100644
+--- a/mythtv/libs/libmythbase/lcddevice.h
++++ b/mythtv/libs/libmythbase/lcddevice.h
+@@ -293,10 +293,13 @@ class MBASE_PUBLIC LCD : public QObject
+     void restartConnection();      // Try to re-establish the connection to
+                                    // LCDServer every 10 seconds
+     void outputLEDs();
++    void sendToServerSlot(const QString &someText);
++
++signals:
++    void sendToServer(const QString &someText);
+ 
+   private:
+     bool startLCDServer(void);
+-    void sendToServer(const QString &someText);
+     void init();
+     void handleKeyPress(const QString &keyPressed);
+     QString quotedString(const QString &string);
 diff --git a/mythtv/libs/libmythbase/loggingserver.cpp b/mythtv/libs/libmythbase/loggingserver.cpp
 index 4ebb705..15aafa2 100644
 --- a/mythtv/libs/libmythbase/loggingserver.cpp
@@ -22,6 +223,20 @@ index 4ebb705..15aafa2 100644
              {
                  qLock.unlock();
                  bool logged = m_logger->logqmsg(*query, item);
+diff --git a/mythtv/libs/libmythtv/deletemap.cpp b/mythtv/libs/libmythtv/deletemap.cpp
+index 1be1a02..adf06c2 100644
+--- a/mythtv/libs/libmythtv/deletemap.cpp
++++ b/mythtv/libs/libmythtv/deletemap.cpp
+@@ -489,7 +489,8 @@ void DeleteMap::NewCut(uint64_t frame)
+                 {
+                     LOG(VB_PLAYBACK, LOG_INFO, LOC +
+                         QString("Deleting bounded marker: %1").arg(otherframe));
+-                    Delete(otherframe);
++                    it = m_deleteMap.erase(it);
++                    m_changed = true;
+                 }
+             }
+         }
 diff --git a/mythtv/libs/libmythtv/eitfixup.cpp b/mythtv/libs/libmythtv/eitfixup.cpp
 index 6c664c9..28b9816 100644
 --- a/mythtv/libs/libmythtv/eitfixup.cpp
@@ -67,6 +282,19 @@ index 5b66988..1369cab 100644
      fix[ 2112LL << 32 | 2U << 16] = EITFixUp::kFixUK;
      fix[ 2116LL << 32 | 2U << 16] = EITFixUp::kFixUK;
      fix[ 2301LL << 32 | 2U << 16] = EITFixUp::kFixUK | EITFixUp::kFixHTML;
+diff --git a/mythtv/libs/libmythtv/iptvtuningdata.h b/mythtv/libs/libmythtv/iptvtuningdata.h
+index c5a3c2e..111052d 100644
+--- a/mythtv/libs/libmythtv/iptvtuningdata.h
++++ b/mythtv/libs/libmythtv/iptvtuningdata.h
+@@ -97,7 +97,7 @@ class MTV_PUBLIC IPTVTuningData
+         const QUrl u = GetDataURL();
+         if (IsHLS())
+             return QString("%1(%2)").arg(u.toString()).arg(GetBitrate(0));
+-        if (IsHTTPTS())
++        if (IsHTTPTS() || IsRTSP())
+             return QString("%1").arg(u.toString());
+         return QString("%1:%2:%3")
+             .arg(u.host()).arg(u.userInfo()).arg(u.port()).toLower();
 diff --git a/mythtv/libs/libmythtv/mythavutil.cpp b/mythtv/libs/libmythtv/mythavutil.cpp
 index afed323..c69c4d2 100644
 --- a/mythtv/libs/libmythtv/mythavutil.cpp
@@ -101,6 +329,409 @@ index afed323..c69c4d2 100644
                                       SWS_FAST_BILINEAR, NULL, NULL, NULL);
      if (d->swsctx == NULL)
      {
+diff --git a/mythtv/libs/libmythtv/privatedecoder_omx.cpp b/mythtv/libs/libmythtv/privatedecoder_omx.cpp
+index b2999ad..f644ed5 100644
+--- a/mythtv/libs/libmythtv/privatedecoder_omx.cpp
++++ b/mythtv/libs/libmythtv/privatedecoder_omx.cpp
+@@ -92,9 +92,6 @@ void PrivateDecoderOMX::GetDecoders(render_opts &opts)
+ PrivateDecoderOMX::PrivateDecoderOMX() :
+     m_videc(gCoreContext->GetSetting("OMXVideoDecode", VIDEO_DECODE), *this),
+     m_filter(0), m_bStartTime(false),
+-#ifdef USING_BROADCOM
+-    m_eMode(OMX_InterlaceFieldsInterleavedUpperFirst), m_bRepeatFirstField(false),
+-#endif
+     m_avctx(0),
+     m_lock(QMutex::Recursive), m_bSettingsChanged(false),
+     m_bSettingsHaveChanged(false)
+@@ -888,6 +885,7 @@ int PrivateDecoderOMX::GetBufferedFrame(AVStream *stream, AVFrame *picture)
+     OMX_BUFFERHEADERTYPE *hdr = m_obufs.takeFirst();
+     m_lock.unlock();
+ 
++    OMX_U32 nFlags = hdr->nFlags;
+     if (hdr->nFlags & ~OMX_BUFFERFLAG_ENDOFFRAME)
+         LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
+             QString("Decoded frame flags=%1").arg(HeaderFlags(hdr->nFlags)) );
+@@ -1019,39 +1017,15 @@ int PrivateDecoderOMX::GetBufferedFrame(AVStream *stream, AVFrame *picture)
+         if (ret)
+         {
+ #ifdef USING_BROADCOM
+-            switch (m_eMode)
+-            {
+-              case OMX_InterlaceProgressive:
+-                picture->interlaced_frame = 0;
+-                picture->top_field_first = 0;
+-                break;
+-              case OMX_InterlaceFieldSingleUpperFirst:
+-                /* The data is interlaced, fields sent
+-                 * separately in temporal order, with upper field first */
+-                picture->interlaced_frame = 1;
+-                picture->top_field_first = 1;
+-                break;
+-              case OMX_InterlaceFieldSingleLowerFirst:
+-                picture->interlaced_frame = 1;
+-                picture->top_field_first = 0;
+-                break;
+-              case OMX_InterlaceFieldsInterleavedUpperFirst:
+-                /* The data is interlaced, two fields sent together line
+-                 * interleaved, with the upper field temporally earlier */
++            if (nFlags & OMX_BUFFERFLAG_INTERLACED)
+                 picture->interlaced_frame = 1;
++            else
++                picture->interlaced_frame = 0;
++            if (nFlags & OMX_BUFFERFLAG_TOP_FIELD_FIRST)
+                 picture->top_field_first = 1;
+-                break;
+-              case OMX_InterlaceFieldsInterleavedLowerFirst:
+-                picture->interlaced_frame = 1;
++            else
+                 picture->top_field_first = 0;
+-                break;
+-              case OMX_InterlaceMixed:
+-                /* The stream may contain a mixture of progressive
+-                 * and interlaced frames */
+-                picture->interlaced_frame = 1;
+-                break;
+-            }
+-            picture->repeat_pict = m_bRepeatFirstField;
++            picture->repeat_pict = 0;
+ #endif // USING_BROADCOM
+ 
+             if (!frame)
+@@ -1128,55 +1102,6 @@ OMX_ERRORTYPE PrivateDecoderOMX::SettingsChanged(AVCodecContext *avctx)
+             .arg(Error2String(e)));
+ 
+ #ifdef USING_BROADCOM
+-    OMX_CONFIG_INTERLACETYPE inter;
+-    e = GetInterlace(inter, index);
+-    if (e == OMX_ErrorNone)
+-    {
+-        LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("%1%2")
+-            .arg(Interlace2String(inter.eMode))
+-            .arg(inter.bRepeatFirstField ? " rpt 1st" : "") );
+-
+-        m_bRepeatFirstField = inter.bRepeatFirstField;
+-        m_eMode = inter.eMode;
+-#if 0 // Can't change interlacing setting, at least not on RPi
+-        switch (inter.eMode)
+-        {
+-          case OMX_InterlaceProgressive:
+-            break;
+-
+-          case OMX_InterlaceFieldSingleUpperFirst:
+-          case OMX_InterlaceFieldSingleLowerFirst:
+-            break;
+-
+-          case OMX_InterlaceFieldsInterleavedUpperFirst:
+-            /* The data is interlaced, two fields sent together line
+-             * interleaved, with the upper field temporally earlier */
+-            inter.eMode = OMX_InterlaceFieldSingleUpperFirst;
+-            break;
+-          case OMX_InterlaceFieldsInterleavedLowerFirst:
+-            inter.eMode = OMX_InterlaceFieldSingleLowerFirst;
+-            break;
+-
+-          case OMX_InterlaceMixed:
+-            inter.eMode = OMX_InterlaceFieldSingleUpperFirst;
+-            break;
+-        }
+-
+-        if (m_eMode != inter.eMode)
+-        {
+-            e = m_videc.SetConfig(OMX_IndexConfigCommonInterlace, &inter);
+-            if (e == OMX_ErrorNone)
+-                m_eMode = inter.eMode;
+-            else
+-                LOG(VB_PLAYBACK, LOG_ERR, LOC + QString(
+-                        "Set ConfigCommonInterlace error %1")
+-                    .arg(Error2String(e)));
+-        }
+-#endif
+-    }
+-#endif // USING_BROADCOM
+-
+-#ifdef USING_BROADCOM
+     if (VERBOSE_LEVEL_CHECK(VB_PLAYBACK, LOG_INFO))
+     {
+         OMX_CONFIG_POINTTYPE aspect;
+diff --git a/mythtv/libs/libmythtv/privatedecoder_omx.h b/mythtv/libs/libmythtv/privatedecoder_omx.h
+index 7fe28eb..6a00506 100644
+--- a/mythtv/libs/libmythtv/privatedecoder_omx.h
++++ b/mythtv/libs/libmythtv/privatedecoder_omx.h
+@@ -70,10 +70,6 @@ class PrivateDecoderOMX : public PrivateDecoder, private OMXComponentCtx
+     OMXComponent m_videc;
+     AVBitStreamFilterContext *m_filter;
+     bool m_bStartTime;
+-#ifdef USING_BROADCOM
+-    OMX_INTERLACETYPE m_eMode;
+-    bool m_bRepeatFirstField;
+-#endif
+     AVCodecContext *m_avctx;
+ 
+     QMutex mutable m_lock;      // Protects data following
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalChannel.cpp b/mythtv/libs/libmythtv/recorders/ExternalChannel.cpp
+index 604819c..5d44f8d 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalChannel.cpp
++++ b/mythtv/libs/libmythtv/recorders/ExternalChannel.cpp
+@@ -95,6 +95,11 @@ bool ExternalChannel::Tune(const QString &channum)
+     return true;
+ }
+ 
++bool ExternalChannel::Tune(const QString &freqid, int /*finetune*/)
++{
++    return ExternalChannel::Tune(freqid);
++}
++
+ bool ExternalChannel::EnterPowerSavingMode(void)
+ {
+     Close();
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalChannel.h b/mythtv/libs/libmythtv/recorders/ExternalChannel.h
+index d74e5a9..da3b79f 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalChannel.h
++++ b/mythtv/libs/libmythtv/recorders/ExternalChannel.h
+@@ -29,6 +29,7 @@ class ExternalChannel : public DTVChannel
+     using DTVChannel::Tune;
+     virtual bool Tune(const DTVMultiplex&) { return true; }
+     virtual bool Tune(const QString &channum);
++    virtual bool Tune(const QString &freqid, int /*finetune*/);
+ 
+     virtual bool EnterPowerSavingMode(void);
+ 
+diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
+index d6367a6..12fa839 100644
+--- a/mythtv/libs/libmythtv/tv_play.cpp
++++ b/mythtv/libs/libmythtv/tv_play.cpp
+@@ -2601,15 +2601,21 @@ void TV::HandleStateChange(PlayerContext *mctx, PlayerContext *ctx)
+     {
+         if (!ctx->IsPIP())
+             GetMythUI()->DisableScreensaver();
+-        MythMainWindow *mainWindow = GetMythMainWindow();
+-        mainWindow->setBaseSize(player_bounds.size());
+-        mainWindow->setMinimumSize(
+-            (db_use_fixed_size) ? player_bounds.size() : QSize(16, 16));
+-        mainWindow->setMaximumSize(
+-            (db_use_fixed_size) ? player_bounds.size() :
+-            QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+-        mainWindow->setGeometry(player_bounds);
+-        mainWindow->ResizePainterWindow(player_bounds.size());
++        bool switchMode = gCoreContext->GetNumSetting("UseVideoModes", 0);
++        // player_bounds is not applicable when switching modes so
++        // skip this logic in that case.
++        if (!switchMode)
++        {
++            MythMainWindow *mainWindow = GetMythMainWindow();
++            mainWindow->setBaseSize(player_bounds.size());
++            mainWindow->setMinimumSize(
++                (db_use_fixed_size) ? player_bounds.size() : QSize(16, 16));
++            mainWindow->setMaximumSize(
++                (db_use_fixed_size) ? player_bounds.size() :
++                QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
++            mainWindow->setGeometry(player_bounds);
++            mainWindow->ResizePainterWindow(player_bounds.size());
++        }
+         // PGB Do not disable the GUI when using openmax renderer,
+         // to ensure that space next to letterbox pictures
+         // is painted.
+@@ -3296,6 +3302,7 @@ void TV::HandleLCDVolumeTimerEvent()
+ 
+     QMutexLocker locker(&timerIdLock);
+     KillTimer(lcdVolumeTimerId);
++    lcdVolumeTimerId = 0;
+ }
+ 
+ int TV::StartTimer(int interval, int line)
+@@ -9867,7 +9874,11 @@ void TV::customEvent(QEvent *e)
+         mctx->UnlockDeletePlayer(__FILE__, __LINE__);
+         ReturnPlayerLock(mctx);
+ 
+-        if (!db_use_gui_size_for_tv || !db_use_fixed_size)
++        // player_bounds is not applicable when switching modes so
++        // skip this logic in that case.
++        bool switchMode = gCoreContext->GetNumSetting("UseVideoModes", 0);
++        if (!switchMode
++            && (!db_use_gui_size_for_tv || !db_use_fixed_size))
+         {
+             mwnd->setMinimumSize(QSize(16, 16));
+             mwnd->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+diff --git a/mythtv/libs/libmythtv/videoout_omx.cpp b/mythtv/libs/libmythtv/videoout_omx.cpp
+index 3c5c448..63a5c3f 100644
+--- a/mythtv/libs/libmythtv/videoout_omx.cpp
++++ b/mythtv/libs/libmythtv/videoout_omx.cpp
+@@ -286,7 +286,8 @@ VideoOutputOMX::VideoOutputOMX() :
+     m_render(gCoreContext->GetSetting("OMXVideoRender", VIDEO_RENDER), *this),
+     m_imagefx(gCoreContext->GetSetting("OMXVideoFilter", IMAGE_FX), *this),
+     m_context(0),   
+-    m_backgroundscreen(0), m_glOsdThread(0), m_changed(false)
++    m_backgroundscreen(0), m_glOsdThread(0), m_changed(false),
++    m_videoPaused(false)
+ {
+ #ifdef OSD_EGL
+       m_osdpainter = 0;
+@@ -755,6 +756,10 @@ void VideoOutputOMX::UpdatePauseFrame(int64_t &disp_timecode)
+         CopyFrame(&av_pause_frame, used_frame);
+     }
+ 
++    // Suppress deinterlace while paused to prevent the jiggles.
++    av_pause_frame.interlaced_frame = 0;
++    av_pause_frame.top_field_first = 0;
++
+     disp_timecode = av_pause_frame.disp_timecode;
+ }
+ 
+@@ -773,9 +778,11 @@ void VideoOutputOMX::ProcessFrame(VideoFrame *frame, OSD *osd,
+         return;
+     }
+ 
++    m_videoPaused = false;
+     if (!frame)
+     {
+         // Rotate pause frames
++        m_videoPaused = true;
+         vbuffers.Enqueue(kVideoBuffer_pause, vbuffers.Dequeue(kVideoBuffer_pause));
+         frame = vbuffers.GetScratchFrame();
+         CopyFrame(frame, &av_pause_frame);
+@@ -877,7 +884,18 @@ void VideoOutputOMX::Show(FrameScanType scan)
+ 
+     hdr->nFilledLen = frame->offsets[2] + (frame->offsets[1] >> 2);
+     hdr->nFlags = OMX_BUFFERFLAG_ENDOFFRAME;
++    if (frame->interlaced_frame)
++        hdr->nFlags |= OMX_BUFFERFLAG_INTERLACED;
++    if (frame->top_field_first)
++        hdr->nFlags |= OMX_BUFFERFLAG_TOP_FIELD_FIRST;
+     OMXComponent &cmpnt = m_imagefx.IsValid() ? m_imagefx : m_render;
++    // Paused - do not display anything unless softblend set
++    if (m_videoPaused && GetOSDRenderer() != "softblend")
++    {
++        // fake out that the buffer was already emptied
++        EmptyBufferDone(cmpnt, hdr);
++        return;
++    }
+     OMX_ERRORTYPE e = OMX_EmptyThisBuffer(cmpnt.Handle(), hdr);
+     if (e != OMX_ErrorNone)
+     {
+diff --git a/mythtv/libs/libmythtv/videoout_omx.h b/mythtv/libs/libmythtv/videoout_omx.h
+index fb162d1..5ecdcdb 100644
+--- a/mythtv/libs/libmythtv/videoout_omx.h
++++ b/mythtv/libs/libmythtv/videoout_omx.h
+@@ -88,6 +88,7 @@ class VideoOutputOMX : public VideoOutput, private OMXComponentCtx
+     MythScreenType *m_backgroundscreen;
+     GlOsdThread *m_glOsdThread;
+     bool m_changed;
++    bool m_videoPaused;
+ };
+ 
+ #endif // ndef VIDEOOUT_OMX_H
+diff --git a/mythtv/libs/libmythtv/videoout_opengl.cpp b/mythtv/libs/libmythtv/videoout_opengl.cpp
+index 7a13935..a743e92 100644
+--- a/mythtv/libs/libmythtv/videoout_opengl.cpp
++++ b/mythtv/libs/libmythtv/videoout_opengl.cpp
+@@ -363,7 +363,24 @@ bool VideoOutputOpenGL::SetupOpenGL(void)
+     if (!gl_context)
+         return false;
+ 
+-    const QRect dvr = window.GetDisplayVisibleRect();
++    QRect dvr = window.GetDisplayVisibleRect();
++
++    MythMainWindow *mainWin = GetMythMainWindow();
++    QSize mainSize = mainWin->size();
++
++    // If the Video screen mode has vertically less pixels
++    // than the GUI screen mode - OpenGL coordinate adjustments
++    // must be made to put the video at the top of the display 
++    // area instead of at the bottom.
++    if (dvr.height() < mainSize.height())
++        dvr.setTop(dvr.top()-mainSize.height()+dvr.height());
++
++    // If the Video screen mode has horizontally less pixels
++    // than the GUI screen mode - OpenGL width must be set
++    // as the higher GUI width so that the Program Guide
++    // invoked from playback is not cut off.
++    if (dvr.width() < mainSize.width())
++        dvr.setWidth(mainSize.width());
+ 
+     if (video_codec_id == kCodec_NONE)
+     {
+diff --git a/mythtv/libs/libmythtv/videooutwindow.cpp b/mythtv/libs/libmythtv/videooutwindow.cpp
+index 78993b5..0ea9a17 100644
+--- a/mythtv/libs/libmythtv/videooutwindow.cpp
++++ b/mythtv/libs/libmythtv/videooutwindow.cpp
+@@ -93,6 +93,12 @@ VideoOutWindow::VideoOutWindow() :
+                      gCoreContext->GetNumSetting("yScanDisplacement", 0));
+     db_use_gui_size = gCoreContext->GetNumSetting("GuiSizeForTV", 0);
+ 
++    populateGeometry();
++}
++
++void VideoOutWindow::populateGeometry(void)
++{
++    qApp->processEvents();
+     QDesktopWidget *desktop = NULL;
+     if (qobject_cast<QApplication*>(qApp))
+         desktop = QApplication::desktop();
+@@ -489,6 +495,8 @@ bool VideoOutWindow::Init(const QSize &new_video_dim_buf,
+                           AspectOverrideMode new_aspectoverride,
+                           AdjustFillMode new_adjustfill)
+ {
++    // Refresh the geometry in case the video mode has changed
++    populateGeometry();
+     display_visible_rect = db_use_gui_size ? new_display_visible_rect :
+                                              screen_geom;
+ 
+diff --git a/mythtv/libs/libmythtv/videooutwindow.h b/mythtv/libs/libmythtv/videooutwindow.h
+index 0d5b04d..93aef00 100644
+--- a/mythtv/libs/libmythtv/videooutwindow.h
++++ b/mythtv/libs/libmythtv/videooutwindow.h
+@@ -68,6 +68,7 @@ class VideoOutWindow
+     void SetNeedRepaint(bool needRepaint)
+         { needrepaint = needRepaint; }
+ 
++    void populateGeometry(void);
+     // Gets
+     bool     IsVideoScalingAllowed(void) const { return db_scaling_allowed; }
+     /// \brief Returns if videooutput is embedding
+diff --git a/mythtv/libs/libmythtv/videosource.cpp b/mythtv/libs/libmythtv/videosource.cpp
+index 97618ad..0b530ae 100644
+--- a/mythtv/libs/libmythtv/videosource.cpp
++++ b/mythtv/libs/libmythtv/videosource.cpp
+@@ -3,7 +3,11 @@
+ // Standard UNIX C headers
+ #include <unistd.h>
+ #include <fcntl.h>
++#if defined(__FreeBSD__) || defined(__APPLE__) || defined(__OpenBSD__) || defined(_WIN32)
+ #include <sys/types.h>
++#else
++#include <sys/sysmacros.h>
++#endif
+ #include <sys/stat.h>
+ 
+ // C++ headers
+diff --git a/mythtv/libs/libmythui/mythrender_opengl.h b/mythtv/libs/libmythui/mythrender_opengl.h
+index adaf302..a18c515 100644
+--- a/mythtv/libs/libmythui/mythrender_opengl.h
++++ b/mythtv/libs/libmythui/mythrender_opengl.h
+@@ -19,9 +19,6 @@
+ #ifdef USING_X11
+ #define GLX_GLXEXT_PROTOTYPES
+ #define XMD_H 1
+-#ifndef GL_ES_VERSION_2_0
+-#include <GL/gl.h>
+-#endif
+ #undef GLX_ARB_get_proc_address
+ #endif // USING_X11
+ 
+diff --git a/mythtv/libs/libmythui/mythrender_opengl1.h b/mythtv/libs/libmythui/mythrender_opengl1.h
+index ce651df..53e25fe 100644
+--- a/mythtv/libs/libmythui/mythrender_opengl1.h
++++ b/mythtv/libs/libmythui/mythrender_opengl1.h
+@@ -3,6 +3,9 @@
+ 
+ #include "mythrender_opengl.h"
+ #include "mythrender_opengl_defs1.h"
++#if !defined(Q_OS_MAC)
++#include <GL/gl.h>
++#endif
+ 
+ class MUI_PUBLIC MythRenderOpenGL1 : public MythRenderOpenGL
+ {
 diff --git a/mythtv/libs/libmythupnp/mythxmlclient.cpp b/mythtv/libs/libmythupnp/mythxmlclient.cpp
 index 45d7497..c6fe011 100644
 --- a/mythtv/libs/libmythupnp/mythxmlclient.cpp
@@ -160,6 +791,501 @@ index 4b0457f..acc2bd9 100644
  
  } UPnPResultCode;
  
+diff --git a/mythtv/programs/mythbackend/services/content.cpp b/mythtv/programs/mythbackend/services/content.cpp
+index 1f5cd1b..5eea0ae 100644
+--- a/mythtv/programs/mythbackend/services/content.cpp
++++ b/mythtv/programs/mythbackend/services/content.cpp
+@@ -503,7 +503,7 @@ QFileInfo Content::GetPreviewImage(        int        nRecordedId,
+     if (!sFormat.isEmpty()
+         && !QImageWriter::supportedImageFormats().contains(sFormat.toLower().toLocal8Bit()))
+     {
+-        throw "GetPreviewImage: Specified 'Format' is not supported.";
++        throw QString("GetPreviewImage: Specified 'Format' is not supported.");
+     }
+ 
+     // ----------------------------------------------------------------------
+@@ -1081,7 +1081,7 @@ DTC::LiveStreamInfo *Content::AddVideoLiveStream( int nId,
+                                                   int nSampleRate )
+ {
+     if (nId < 0)
+-        throw( "Id is invalid" );
++        throw QString( "Id is invalid" );
+ 
+     VideoMetadataListManager::VideoMetadataPtr metadata =
+                           VideoMetadataListManager::loadOneFromDatabase(nId);
+diff --git a/mythtv/programs/mythbackend/services/dvr.cpp b/mythtv/programs/mythbackend/services/dvr.cpp
+index 605dd48..abdf07d 100644
+--- a/mythtv/programs/mythbackend/services/dvr.cpp
++++ b/mythtv/programs/mythbackend/services/dvr.cpp
+@@ -741,7 +741,7 @@ DTC::TitleInfoList* Dvr::GetTitleInfoList()
+         "SELECT title, inetref, count(title) as count "
+         "    FROM recorded AS r "
+         "    JOIN recgroups AS g ON r.recgroupid = g.recgroupid "
+-        "    WHERE g.recgroup != 'LiveTV' "
++        "    WHERE g.recgroup NOT IN ('Deleted', 'LiveTV') "
+         "    AND r.deletepending = 0 "
+         "    GROUP BY title, inetref "
+         "    ORDER BY title");
+diff --git a/mythtv/programs/mythbackend/services/guide.cpp b/mythtv/programs/mythbackend/services/guide.cpp
+index cd2e61e..c349e8c 100644
+--- a/mythtv/programs/mythbackend/services/guide.cpp
++++ b/mythtv/programs/mythbackend/services/guide.cpp
+@@ -53,16 +53,16 @@ DTC::ProgramGuide *Guide::GetProgramGuide( const QDateTime &rawStartTime ,
+                                            int              nCount)
+ {
+     if (!rawStartTime.isValid())
+-        throw( "StartTime is invalid" );
++        throw QString( "StartTime is invalid" );
+ 
+     if (!rawEndTime.isValid())
+-        throw( "EndTime is invalid" );
++        throw QString( "EndTime is invalid" );
+ 
+     QDateTime dtStartTime = rawStartTime.toUTC();
+     QDateTime dtEndTime = rawEndTime.toUTC();
+ 
+     if (dtEndTime < dtStartTime)
+-        throw( "EndTime is before StartTime");
++        throw QString( "EndTime is before StartTime");
+ 
+     if (nStartIndex <= 0)
+         nStartIndex = 0;
+@@ -179,16 +179,16 @@ DTC::ProgramList* Guide::GetProgramList(int              nStartIndex,
+                                         bool             bDescending)
+ {
+     if (!rawStartTime.isNull() && !rawStartTime.isValid())
+-        throw( "StartTime is invalid" );
++        throw QString( "StartTime is invalid" );
+ 
+     if (!rawEndTime.isNull() && !rawEndTime.isValid())
+-        throw( "EndTime is invalid" );
++        throw QString( "EndTime is invalid" );
+ 
+     QDateTime dtStartTime = rawStartTime;
+     QDateTime dtEndTime = rawEndTime;
+ 
+     if (!rawEndTime.isNull() && dtEndTime < dtStartTime)
+-        throw( "EndTime is before StartTime");
++        throw QString( "EndTime is before StartTime");
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+ 
+@@ -333,9 +333,9 @@ DTC::Program* Guide::GetProgramDetails( int              nChanId,
+ 
+ {
+     if (!(nChanId > 0))
+-        throw( "Channel ID is invalid" );
++        throw QString( "Channel ID is invalid" );
+     if (!rawStartTime.isValid())
+-        throw( "StartTime is invalid" );
++        throw QString( "StartTime is invalid" );
+ 
+     QDateTime dtStartTime = rawStartTime.toUTC();
+ 
+@@ -506,7 +506,7 @@ QStringList Guide::GetStoredSearches( const QString& sType )
+ 
+     if (iType == kNoSearch)
+     {
+-        //throw( "Invalid Type" );
++        //throw QString( "Invalid Type" );
+         return keywordList;
+     }
+ 
+diff --git a/mythtv/programs/mythbackend/services/myth.cpp b/mythtv/programs/mythbackend/services/myth.cpp
+index d7a3a83..f0744a8 100644
+--- a/mythtv/programs/mythbackend/services/myth.cpp
++++ b/mythtv/programs/mythbackend/services/myth.cpp
+@@ -437,7 +437,7 @@ QDateTime Myth::ParseISODateString(const QString& DateTimeString)
+     QDateTime dateTime = QDateTime().fromString(DateTimeString, Qt::ISODate);
+ 
+     if (!dateTime.isValid())
+-        throw( "Unable to parse DateTimeString" );
++        throw QString( "Unable to parse DateTimeString" );
+ 
+     return dateTime;
+ }
+diff --git a/mythtv/programs/mythfilldatabase/channeldata.cpp b/mythtv/programs/mythfilldatabase/channeldata.cpp
+index c0ee522..9825c4e 100644
+--- a/mythtv/programs/mythfilldatabase/channeldata.cpp
++++ b/mythtv/programs/mythfilldatabase/channeldata.cpp
+@@ -128,27 +128,31 @@ QString ChannelData::normalizeChannelKey(const QString &chanName) const
+     return result;
+ }
+ 
+-QHash<QString, ChannelInfo> ChannelData::channelList(int sourceId)
++ChannelList ChannelData::channelList(int sourceId)
+ {
+-    QHash<QString, ChannelInfo> retList;
++    ChannelList retList;
+ 
+-    ChannelInfoList channelList = ChannelUtil::GetChannels(sourceId, false);
++    uint avail = 0;
++    ChannelInfoList channelList = ChannelUtil::LoadChannels(0, 0, avail, false,
++                                                ChannelUtil::kChanOrderByChanNum,
++                                                ChannelUtil::kChanGroupByChanid,
++                                                sourceId);
+ 
+     ChannelInfoList::iterator it = channelList.begin();
+     for ( ; it != channelList.end(); ++it)
+     {
+         QString chanName = (*it).name;
+         QString key  = normalizeChannelKey(chanName);
+-        retList[key] = (*it);
++        retList.insert(key, *it);
+     }
+ 
+     return retList;
+ }
+ 
+ ChannelInfo ChannelData::FindMatchingChannel(const ChannelInfo &chanInfo,
+-                            QHash<QString, ChannelInfo> existingChannels) const
++                                             ChannelList existingChannels) const
+ {
+-    QHash<QString, ChannelInfo>::iterator it;
++    ChannelList::iterator it;
+     for (it = existingChannels.begin(); it != existingChannels.end(); ++it)
+     {
+         if ((*it).xmltvid == chanInfo.xmltvid)
+@@ -158,6 +162,27 @@ ChannelInfo ChannelData::FindMatchingChannel(const ChannelInfo &chanInfo,
+     QString searchKey = normalizeChannelKey(chanInfo.name);
+     ChannelInfo existChan = existingChannels.value(searchKey);
+ 
++    if (existChan.chanid < 1)
++    {
++        // Check if it is ATSC
++        int chansep = chanInfo.channum.indexOf(QRegExp("\\D"));
++        if (chansep > 0)
++        {
++            // Populate xmltvid for scanned ATSC channels
++            uint major = chanInfo.channum.left(chansep).toInt();
++            uint minor = chanInfo.channum.right
++                         (chanInfo.channum.length() - (chansep + 1)).toInt();
++
++            for (it = existingChannels.begin();
++                 it != existingChannels.end(); ++it)
++            {
++                if ((*it).atsc_major_chan == major &&
++                    (*it).atsc_minor_chan == minor)
++                    return (*it);
++            }
++        }
++    }
++
+     return existChan;
+ }
+ 
+@@ -169,7 +194,7 @@ void ChannelData::handleChannels(int id, ChannelInfoList *chanlist)
+         return;
+     }
+ 
+-    QHash<QString, ChannelInfo> existingChannels = channelList(id);
++    ChannelList existingChannels = channelList(id);
+     QString fileprefix = SetupIconCacheDirectory();
+ 
+     QDir::setCurrent(fileprefix);
+diff --git a/mythtv/programs/mythfilldatabase/channeldata.h b/mythtv/programs/mythfilldatabase/channeldata.h
+index 978ec8c..af0aa1c 100644
+--- a/mythtv/programs/mythfilldatabase/channeldata.h
++++ b/mythtv/programs/mythfilldatabase/channeldata.h
+@@ -7,6 +7,8 @@
+ // libmythtv
+ #include "channelinfo.h"
+ 
++using ChannelList = QMultiHash<QString, ChannelInfo>;
++
+ class ChannelData
+ {
+   public:
+@@ -21,8 +23,8 @@ class ChannelData
+                                          unsigned int chanid);
+ 
+     ChannelInfo FindMatchingChannel(const ChannelInfo &chanInfo,
+-                            QHash<QString, ChannelInfo> existingChannels) const;
+-    QHash<QString, ChannelInfo> channelList(int sourceId);
++                            ChannelList existingChannels) const;
++    ChannelList channelList(int sourceId);
+     QString normalizeChannelKey(const QString &chanName) const;
+ 
+   public:
+diff --git a/mythtv/programs/mythfilldatabase/xmltvparser.cpp b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
+index 62a3a13..21bf5b8 100644
+--- a/mythtv/programs/mythfilldatabase/xmltvparser.cpp
++++ b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
+@@ -131,82 +131,107 @@ static void fromXMLTVDate(QString &timestr, QDateTime &dt)
+         return;
+     }
+ 
+-    QStringList split = timestr.split(" ");
++    QStringList split = timestr.split(" ", QString::SkipEmptyParts);
+     QString ts = split[0];
+-    QDateTime tmpDT;
+-    tmpDT.setTimeSpec(Qt::LocalTime);
+-
+-    // UTC/GMT, just strip
+-    if (ts.endsWith('Z'))
+-        ts.truncate(ts.length()-1);
+-    
+-    if (ts.length() == 14)
+-    {
+-        tmpDT = QDateTime::fromString(ts, "yyyyMMddHHmmss");
+-    }
+-    else if (ts.length() == 12)
+-    {
+-        tmpDT = QDateTime::fromString(ts, "yyyyMMddHHmm");
+-    }
+-    else if (ts.length() == 8)
+-    {
+-        tmpDT = QDateTime::fromString(ts, "yyyyMMdd");
+-    }
+-    else if (ts.length() == 6)
++    QDate tmpDate;
++    QTime tmpTime;
++    QString tzoffset;
++
++    // Process the TZ offset (if any)
++    if (split.size() > 1)
+     {
+-        tmpDT = QDateTime::fromString(ts, "yyyyMM");
++        tzoffset = split[1];
++        // These shouldn't be required and they aren't ISO 8601 but the
++        // xmltv spec mentions these and just these so handle them just in
++        // case
++        if (tzoffset == "GMT" || tzoffset == "UTC")
++            tzoffset = "+0000";
++        else if (tzoffset == "BST")
++            tzoffset = "+0100";
+     }
+-    else if (ts.length() == 4)
++    else
+     {
+-        tmpDT = QDateTime::fromString(ts, "yyyy");
++        // We will accept a datetime with a trailing Z as being explicit
++        if (ts.endsWith('Z'))
++        {
++            tzoffset = "+0000";
++            ts.truncate(ts.length()-1);
++        }
++        else
++        {
++            tzoffset = "+0000";
++            static bool warned_once_on_implicit_utc = false;
++            if (!warned_once_on_implicit_utc)
++            {
++                LOG(VB_XMLTV, LOG_WARNING, "No explicit time zone found, "
++                    "guessing implicit UTC! Please consider enhancing "
++                    "the guide source to provide explicit UTC or local "
++                    "time instead.");
++                warned_once_on_implicit_utc = true;
++            }
++        }
+     }
+ 
+-    if (!tmpDT.isValid())
++    // Process the date part
++    QString tsDate = ts.left(8);
++    if (tsDate.length() == 8)
++        tmpDate = QDate::fromString(tsDate, "yyyyMMdd");
++    else if (tsDate.length() == 6)
++        tmpDate = QDate::fromString(tsDate, "yyyyMM");
++    else if (tsDate.length() == 4)
++        tmpDate = QDate::fromString(tsDate, "yyyy");
++    if (!tmpDate.isValid())
+     {
+-        LOG(VB_GENERAL, LOG_ERR,
+-            QString("Ignoring unknown timestamp format: %1")
+-                .arg(ts));
++        LOG(VB_XMLTV, LOG_ERR,
++            QString("Invalid datetime (date) in XMLTV data, ignoring: %1")
++                .arg(timestr));
+         return;
+     }
+-    
+-    if (split.size() > 1)
++
++    // Process the time part (if any)
++    if (ts.length() > 8)
+     {
+-        QString tmp = split[1].trimmed();
+-        
+-        // These shouldn't be required and they aren't ISO 8601 but the
+-        // xmltv spec mentions these and just these so handle them just in
+-        // case
+-        if (tmp == "GMT" || tmp == "UTC")
+-            tmp = "+0000";
+-        else if (tmp == "BST")
+-            tmp = "+0100";
+-        
+-        // While this seems like a hack, it's better than what was done before
+-        QString isoDateString = QString("%1 %2").arg(tmpDT.toString(Qt::ISODate))
+-                                                .arg(tmp);
+-        // Work around Qt bug where zero offset dates are flagged as LocalTime
+-        tmpDT = QDateTime::fromString(isoDateString, Qt::ISODate);
+-        if (tmpDT.timeSpec() == Qt::LocalTime)
+-            tmpDT.setTimeSpec(Qt::UTC);
+-        dt = tmpDT.toUTC();
++        QString tsTime = ts.mid(8);
++        if (tsTime.length() == 6)
++            tmpTime = QTime::fromString(tsTime, "HHmmss");
++        else if (tsTime.length() == 4)
++            tmpTime = QTime::fromString(tsTime, "HHmm");
++        else if (tsTime.length() == 2)
++            tmpTime = QTime::fromString(tsTime, "HH");
++        if (!tmpTime.isValid())
++        {
++            // Time part exists, but is (somehow) invalid
++            LOG(VB_XMLTV, LOG_ERR,
++                QString("Invalid datetime (time) in XMLTV data, ignoring: %1")
++                    .arg(timestr));
++            return;
++        }
+     }
+-    
+-    if (!dt.isValid())
+-    {
+-        static bool warned_once_on_implicit_utc = false;
+-        if (!warned_once_on_implicit_utc)
++
++    QDateTime tmpDT = QDateTime(tmpDate, tmpTime, Qt::UTC);
++    if (!tmpDT.isValid())
+         {
+-            LOG(VB_XMLTV, LOG_ERR, "No explicit time zone found, "
+-                "guessing implicit UTC! Please consider enhancing "
+-                "the guide source to provice explicit UTC or local "
+-                "time instead.");
+-            warned_once_on_implicit_utc = true;
++            LOG(VB_XMLTV, LOG_ERR,
++                QString("Invalid datetime (combination of date/time) "
++                    "in XMLTV data, ignoring: %1").arg(timestr));
++            return;
+         }
+-        dt = tmpDT;
++
++    // While this seems like a hack, it's better than what was done before
++    QString isoDateString = tmpDT.toString(Qt::ISODate);
++    if (isoDateString.endsWith('Z'))    // Should always be Z, but ...
++        isoDateString.truncate(isoDateString.length()-1);
++    isoDateString += tzoffset;
++    dt = QDateTime::fromString(isoDateString, Qt::ISODate).toUTC();
++
++    if (!dt.isValid())
++    {
++        LOG(VB_XMLTV, LOG_ERR,
++            QString("Invalid datetime (zone offset) in XMLTV data, "
++                "ignoring: %1").arg(timestr));
++        return;
+     }
+ 
+-    dt.setTimeSpec(Qt::UTC);
+-    
+     timestr = MythDate::toString(dt, MythDate::kFilename);
+ }
+ 
+@@ -277,8 +302,7 @@ static void parseAudio(QDomElement &element, ProgInfo *pginfo)
+ 
+ ProgInfo *XMLTVParser::parseProgram(QDomElement &element)
+ {
+-    QString uniqueid, season, episode, totalepisodes;
+-    int dd_progid_done = 0;
++    QString programid, season, episode, totalepisodes;
+     ProgInfo *pginfo = new ProgInfo();
+ 
+     QString text = element.attribute("start", "");
+@@ -451,8 +475,11 @@ ProgInfo *XMLTVParser::parseProgram(QDomElement &element)
+                     int idx = episodenum.indexOf('.');
+                     if (idx != -1)
+                         episodenum.remove(idx, 1);
+-                    pginfo->programId = episodenum;
+-                    dd_progid_done = 1;
++                    programid = episodenum;
++                    /* Only EPisodes and SHows are part of a series for SD */
++                    if (programid.startsWith(QString("EP")) ||
++                        programid.startsWith(QString("SH")))
++                        pginfo->seriesId = QString("EP") + programid.mid(2,8);
+                 }
+                 else if (info.attribute("system") == "xmltv_ns")
+                 {
+@@ -462,6 +489,7 @@ ProgInfo *XMLTVParser::parseProgram(QDomElement &element)
+                     totalepisodes = episode.section('/',1,1).trimmed();
+                     episode = episode.section('/',0,0).trimmed();
+                     season = episodenum.section('.',0,0).trimmed();
++                    season = season.section('/',0,0).trimmed();
+                     QString part(episodenum.section('.',2,2));
+                     QString partnumber(part.section('/',0,0).trimmed());
+                     QString parttotal(part.section('/',1,1).trimmed());
+@@ -549,22 +577,20 @@ ProgInfo *XMLTVParser::parseProgram(QDomElement &element)
+         && ProgramInfo::kCategorySeries != pginfo->categoryType)
+         pginfo->airdate = current_year;
+ 
+-    /* Let's build ourself a programid */
+-    QString programid;
++    if (programid.isEmpty())
++    {
+ 
+-    if (ProgramInfo::kCategoryMovie == pginfo->categoryType)
+-        programid = "MV";
+-    else if (ProgramInfo::kCategorySeries == pginfo->categoryType)
+-        programid = "EP";
+-    else if (ProgramInfo::kCategorySports == pginfo->categoryType)
+-        programid = "SP";
+-    else
+-        programid = "SH";
++        /* Let's build ourself a programid */
++
++        if (ProgramInfo::kCategoryMovie == pginfo->categoryType)
++            programid = "MV";
++        else if (ProgramInfo::kCategorySeries == pginfo->categoryType)
++            programid = "EP";
++        else if (ProgramInfo::kCategorySports == pginfo->categoryType)
++            programid = "SP";
++        else
++            programid = "SH";
+ 
+-    if (!uniqueid.isEmpty()) // we already have a unique id ready for use
+-        programid.append(uniqueid);
+-    else
+-    {
+         QString seriesid = QString::number(ELFHash(pginfo->title.toUtf8()));
+         pginfo->seriesId = seriesid;
+         programid.append(seriesid);
+@@ -602,8 +628,8 @@ ProgInfo *XMLTVParser::parseProgram(QDomElement &element)
+                 programid.clear();
+         }
+     }
+-    if (dd_progid_done == 0)
+-        pginfo->programId = programid;
++
++    pginfo->programId = programid;
+ 
+     return pginfo;
+ }
+@@ -662,7 +688,21 @@ bool XMLTVParser::parseFile(
+             {
+                 ProgInfo *pginfo = parseProgram(e);
+ 
+-                if (pginfo->startts == pginfo->endts)
++                if (!(pginfo->starttime.isValid()))
++                {
++                    LOG(VB_GENERAL, LOG_WARNING, QString("Invalid programme (%1), "
++                                                        "invalid start time, "
++                                                        "skipping")
++                                                        .arg(pginfo->title));
++                }
++                else if (pginfo->channel.isEmpty())
++                {
++                    LOG(VB_GENERAL, LOG_WARNING, QString("Invalid programme (%1), "
++                                                        "missing channel, "
++                                                        "skipping")
++                                                        .arg(pginfo->title));
++                }
++                else if (pginfo->startts == pginfo->endts)
+                 {
+                     LOG(VB_GENERAL, LOG_WARNING, QString("Invalid programme (%1), "
+                                                         "identical start and end "
+@@ -712,4 +752,3 @@ bool XMLTVParser::parseFile(
+ 
+     return true;
+ }
+-
 diff --git a/mythtv/programs/mythfrontend/proglist.cpp b/mythtv/programs/mythfrontend/proglist.cpp
 index 37e4506..ebd94c1 100644
 --- a/mythtv/programs/mythfrontend/proglist.cpp

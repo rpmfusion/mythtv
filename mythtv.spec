@@ -1,7 +1,3 @@
-# Does not currently build on ppc
-# https://code.mythtv.org/trac/ticket/13049
-#ExcludeArch:    ppc64 ppc64le
-
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
 # by:   Chris Petersen <cpetersen@mythtv.org>
@@ -64,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v0.28.1-23-gaf98262
+%define vers_string v0.28.1-38-geef6a48
 %define branch fixes/0.28
 
 # Git revision and branch ID
@@ -85,7 +81,7 @@ Version:        0.28.1
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        5%{?dist}
+Release:        6%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -137,7 +133,6 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
 Patch0:    mythtv-0.28-fixes.patch
-Patch1:    ticket13049-remove-ffmpeg-bswap-change.diff
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -282,7 +277,7 @@ BuildRequires:  python2-devel
 %if 0%{?fedora}
 BuildRequires:  python2-mysql
 %else
-BuildRequires:  MySQL-python
+BuildRequires:  MySQL-python 
 %endif
 BuildRequires:  python-urlgrabber
 %endif
@@ -502,8 +497,9 @@ Requires:  freetype, lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
+Requires:  mariadb >= 5
 Requires:  python-MythTV
-Requires:  google-droid-sans-mono-fonts
+%{?fedora:Requires:  google-droid-sans-mono-fonts}
 %{?fedora:Recommends:  mesa-vdpau-drivers}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
 
@@ -782,13 +778,10 @@ on demand content.
 ################################################################################
 
 %prep
-%setup -q -n %{name}-%{version}
+%autosetup -p1 -n %{name}-%{version}
 
 # Remove compiled python file
 #find -name *.pyc -exec rm -f {} \;
-
-%patch0 -p1
-%patch1 -p1
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -1355,6 +1348,9 @@ exit 0
 
 
 %changelog
+* Sun Aug  6 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-6
+- Update to lates fixes/0.28, v0.28.1-38-geef6a48.
+
 * Mon Jun 19 2017 Paul Howarth <paul@city-fan.org> - 0.28.1-5
 - Perl 5.26 rebuild
 
