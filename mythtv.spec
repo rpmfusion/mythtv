@@ -133,6 +133,9 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
 Patch0:    mythtv-0.28-fixes.patch
+%if 0%{?fedora} >= 27
+Patch1:    mythtv-mariadb.patch
+%endif
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
