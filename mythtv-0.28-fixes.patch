@@ -12,23 +12,25 @@
  mythtv/libs/libmythtv/eithelper.cpp                |  17 +-
  mythtv/libs/libmythtv/iptvtuningdata.h             |   2 +-
  mythtv/libs/libmythtv/mythavutil.cpp               |  15 +-
- mythtv/libs/libmythtv/privatedecoder_omx.cpp       |  89 +--------
+ mythtv/libs/libmythtv/privatedecoder_omx.cpp       |  96 ++--------
  mythtv/libs/libmythtv/privatedecoder_omx.h         |   4 -
  .../libs/libmythtv/recorders/ExternalChannel.cpp   |   5 +
  mythtv/libs/libmythtv/recorders/ExternalChannel.h  |   1 +
  mythtv/libs/libmythtv/tv_play.cpp                  |  31 +++-
- mythtv/libs/libmythtv/videoout_omx.cpp             |  20 +-
+ mythtv/libs/libmythtv/videoout_omx.cpp             |  24 ++-
  mythtv/libs/libmythtv/videoout_omx.h               |   1 +
  mythtv/libs/libmythtv/videoout_opengl.cpp          |  19 +-
  mythtv/libs/libmythtv/videooutwindow.cpp           |   8 +
  mythtv/libs/libmythtv/videooutwindow.h             |   1 +
  mythtv/libs/libmythtv/videosource.cpp              |   4 +
+ mythtv/libs/libmythui/mythmainwindow.cpp           |   4 +-
  mythtv/libs/libmythui/mythrender_opengl.h          |   3 -
  mythtv/libs/libmythui/mythrender_opengl1.h         |   3 +
  mythtv/libs/libmythupnp/mythxmlclient.cpp          |   4 +-
  mythtv/libs/libmythupnp/soapclient.cpp             |   4 +-
  mythtv/libs/libmythupnp/ssdp.cpp                   |   4 +
  mythtv/libs/libmythupnp/upnp.h                     |   1 +
+ mythtv/programs/mythbackend/scheduler.cpp          |  14 +-
  mythtv/programs/mythbackend/services/content.cpp   |   4 +-
  mythtv/programs/mythbackend/services/dvr.cpp       |   2 +-
  mythtv/programs/mythbackend/services/guide.cpp     |  18 +-
@@ -37,10 +39,10 @@
  mythtv/programs/mythfilldatabase/channeldata.h     |   6 +-
  mythtv/programs/mythfilldatabase/xmltvparser.cpp   | 205 ++++++++++++---------
  mythtv/programs/mythfrontend/proglist.cpp          |   4 +-
- 39 files changed, 329 insertions(+), 253 deletions(-)
+ 41 files changed, 349 insertions(+), 262 deletions(-)
 
 diff --git a/mythplugins/mytharchive/mytharchive/thumbfinder.cpp b/mythplugins/mytharchive/mytharchive/thumbfinder.cpp
-index d2bcdf5..25b3829 100644
+index d2bcdf56d1..25b3829237 100644
 --- a/mythplugins/mytharchive/mytharchive/thumbfinder.cpp
 +++ b/mythplugins/mytharchive/mytharchive/thumbfinder.cpp
 @@ -159,6 +159,8 @@ bool ThumbFinder::Create(void)
@@ -66,7 +68,7 @@ index d2bcdf5..25b3829 100644
      frm_dir_map_t::const_iterator it = m_deleteMap.begin();
      if (it.value() == MARK_CUT_END)
 diff --git a/mythtv/bindings/perl/MythTV.pm b/mythtv/bindings/perl/MythTV.pm
-index 188fcc0..db196ec 100644
+index 188fcc0080..db196ecdd2 100644
 --- a/mythtv/bindings/perl/MythTV.pm
 +++ b/mythtv/bindings/perl/MythTV.pm
 @@ -372,6 +372,8 @@ EOF
@@ -79,7 +81,7 @@ index 188fcc0..db196ec 100644
              or die "Can't set timezone: $!\n\n";
  
 diff --git a/mythtv/bindings/python/MythTV/dataheap.py b/mythtv/bindings/python/MythTV/dataheap.py
-index 859e060..4de3085 100644
+index 859e060112..4de3085423 100644
 --- a/mythtv/bindings/python/MythTV/dataheap.py
 +++ b/mythtv/bindings/python/MythTV/dataheap.py
 @@ -283,7 +283,7 @@ class Recorded( CMPRecord, DBDataWrite ):
@@ -92,7 +94,7 @@ index 859e060..4de3085 100644
                   'timestretch':1,    'recpriority':0,        'playgroup':'Default',
                   'profile':'No',     'duplicate':1,          'transcoded':0,
 diff --git a/mythtv/configure b/mythtv/configure
-index af0d6a6..5019732 100755
+index af0d6a6caf..5019732a40 100755
 --- a/mythtv/configure
 +++ b/mythtv/configure
 @@ -7618,19 +7618,10 @@ esac
@@ -119,7 +121,7 @@ index af0d6a6..5019732 100755
      check_cxxflags -Woverloaded-virtual
      check_cxxflags -funit-at-a-time
 diff --git a/mythtv/external/FFmpeg/libavutil/bswap.h b/mythtv/external/FFmpeg/libavutil/bswap.h
-index 331d391..91cb795 100644
+index 331d391f0c..91cb79538d 100644
 --- a/mythtv/external/FFmpeg/libavutil/bswap.h
 +++ b/mythtv/external/FFmpeg/libavutil/bswap.h
 @@ -76,21 +76,6 @@ static inline uint64_t av_const av_bswap64(uint64_t x)
@@ -145,7 +147,7 @@ index 331d391..91cb795 100644
  // le2ne ... little-endian to native-endian
  
 diff --git a/mythtv/libs/libmyth/programinfo.cpp b/mythtv/libs/libmyth/programinfo.cpp
-index 56a1a3b..3d7c94d 100644
+index 56a1a3b94f..3d7c94db6a 100644
 --- a/mythtv/libs/libmyth/programinfo.cpp
 +++ b/mythtv/libs/libmyth/programinfo.cpp
 @@ -1593,7 +1593,7 @@ void ProgramInfo::ToMap(InfoMap &progMap,
@@ -158,7 +160,7 @@ index 56a1a3b..3d7c94d 100644
      if (season > 0 || episode > 0)
      {
 diff --git a/mythtv/libs/libmythbase/lcddevice.cpp b/mythtv/libs/libmythbase/lcddevice.cpp
-index f3924d9..1ee9964 100644
+index f3924d912d..1ee9964351 100644
 --- a/mythtv/libs/libmythbase/lcddevice.cpp
 +++ b/mythtv/libs/libmythbase/lcddevice.cpp
 @@ -77,6 +77,7 @@ LCD::LCD()
@@ -192,7 +194,7 @@ index f3924d9..1ee9964 100644
      if (QAbstractSocket::ConnectedState != m_socket->state())
      {
 diff --git a/mythtv/libs/libmythbase/lcddevice.h b/mythtv/libs/libmythbase/lcddevice.h
-index b6346ec..c3247b4 100644
+index b6346ecf6a..c3247b4c93 100644
 --- a/mythtv/libs/libmythbase/lcddevice.h
 +++ b/mythtv/libs/libmythbase/lcddevice.h
 @@ -293,10 +293,13 @@ class MBASE_PUBLIC LCD : public QObject
@@ -211,7 +213,7 @@ index b6346ec..c3247b4 100644
      void handleKeyPress(const QString &keyPressed);
      QString quotedString(const QString &string);
 diff --git a/mythtv/libs/libmythbase/loggingserver.cpp b/mythtv/libs/libmythbase/loggingserver.cpp
-index 4ebb705..15aafa2 100644
+index 4ebb705f62..15aafa2ef1 100644
 --- a/mythtv/libs/libmythbase/loggingserver.cpp
 +++ b/mythtv/libs/libmythbase/loggingserver.cpp
 @@ -722,7 +722,7 @@ void DBLoggerThread::run(void)
@@ -224,7 +226,7 @@ index 4ebb705..15aafa2 100644
                  qLock.unlock();
                  bool logged = m_logger->logqmsg(*query, item);
 diff --git a/mythtv/libs/libmythtv/deletemap.cpp b/mythtv/libs/libmythtv/deletemap.cpp
-index 1be1a02..adf06c2 100644
+index 1be1a02897..adf06c2f11 100644
 --- a/mythtv/libs/libmythtv/deletemap.cpp
 +++ b/mythtv/libs/libmythtv/deletemap.cpp
 @@ -489,7 +489,8 @@ void DeleteMap::NewCut(uint64_t frame)
@@ -238,7 +240,7 @@ index 1be1a02..adf06c2 100644
              }
          }
 diff --git a/mythtv/libs/libmythtv/eitfixup.cpp b/mythtv/libs/libmythtv/eitfixup.cpp
-index 6c664c9..28b9816 100644
+index 6c664c92ad..28b9816cc2 100644
 --- a/mythtv/libs/libmythtv/eitfixup.cpp
 +++ b/mythtv/libs/libmythtv/eitfixup.cpp
 @@ -2658,8 +2658,10 @@ void EITFixUp::FixGreekEIT(DBEventEIT &event) const
@@ -253,7 +255,7 @@ index 6c664c9..28b9816 100644
      // Remove white spaces
      event.description = event.description.trimmed();
 diff --git a/mythtv/libs/libmythtv/eithelper.cpp b/mythtv/libs/libmythtv/eithelper.cpp
-index 5b66988..1369cab 100644
+index 5b66988766..1369cab6c3 100644
 --- a/mythtv/libs/libmythtv/eithelper.cpp
 +++ b/mythtv/libs/libmythtv/eithelper.cpp
 @@ -1085,16 +1085,17 @@ static void init_fixup(FixupMap &fix)
@@ -283,7 +285,7 @@ index 5b66988..1369cab 100644
      fix[ 2116LL << 32 | 2U << 16] = EITFixUp::kFixUK;
      fix[ 2301LL << 32 | 2U << 16] = EITFixUp::kFixUK | EITFixUp::kFixHTML;
 diff --git a/mythtv/libs/libmythtv/iptvtuningdata.h b/mythtv/libs/libmythtv/iptvtuningdata.h
-index c5a3c2e..111052d 100644
+index c5a3c2ea87..111052d6b9 100644
 --- a/mythtv/libs/libmythtv/iptvtuningdata.h
 +++ b/mythtv/libs/libmythtv/iptvtuningdata.h
 @@ -97,7 +97,7 @@ class MTV_PUBLIC IPTVTuningData
@@ -296,7 +298,7 @@ index c5a3c2e..111052d 100644
          return QString("%1:%2:%3")
              .arg(u.host()).arg(u.userInfo()).arg(u.port()).toLower();
 diff --git a/mythtv/libs/libmythtv/mythavutil.cpp b/mythtv/libs/libmythtv/mythavutil.cpp
-index afed323..c69c4d2 100644
+index afed323917..c69c4d279e 100644
 --- a/mythtv/libs/libmythtv/mythavutil.cpp
 +++ b/mythtv/libs/libmythtv/mythavutil.cpp
 @@ -9,6 +9,7 @@
@@ -330,7 +332,7 @@ index afed323..c69c4d2 100644
      if (d->swsctx == NULL)
      {
 diff --git a/mythtv/libs/libmythtv/privatedecoder_omx.cpp b/mythtv/libs/libmythtv/privatedecoder_omx.cpp
-index b2999ad..f644ed5 100644
+index b2999ad2fc..cc18150e40 100644
 --- a/mythtv/libs/libmythtv/privatedecoder_omx.cpp
 +++ b/mythtv/libs/libmythtv/privatedecoder_omx.cpp
 @@ -92,9 +92,6 @@ void PrivateDecoderOMX::GetDecoders(render_opts &opts)
@@ -351,10 +353,11 @@ index b2999ad..f644ed5 100644
      if (hdr->nFlags & ~OMX_BUFFERFLAG_ENDOFFRAME)
          LOG(VB_PLAYBACK, LOG_DEBUG, LOC +
              QString("Decoded frame flags=%1").arg(HeaderFlags(hdr->nFlags)) );
-@@ -1019,39 +1017,15 @@ int PrivateDecoderOMX::GetBufferedFrame(AVStream *stream, AVFrame *picture)
+@@ -1018,42 +1016,19 @@ int PrivateDecoderOMX::GetBufferedFrame(AVStream *stream, AVFrame *picture)
+ 
          if (ret)
          {
- #ifdef USING_BROADCOM
+-#ifdef USING_BROADCOM
 -            switch (m_eMode)
 -            {
 -              case OMX_InterlaceProgressive:
@@ -374,16 +377,20 @@ index b2999ad..f644ed5 100644
 -              case OMX_InterlaceFieldsInterleavedUpperFirst:
 -                /* The data is interlaced, two fields sent together line
 -                 * interleaved, with the upper field temporally earlier */
++#ifdef OMX_BUFFERFLAG_INTERLACED
 +            if (nFlags & OMX_BUFFERFLAG_INTERLACED)
                  picture->interlaced_frame = 1;
 +            else
++#endif
 +                picture->interlaced_frame = 0;
++#ifdef OMX_BUFFERFLAG_TOP_FIELD_FIRST
 +            if (nFlags & OMX_BUFFERFLAG_TOP_FIELD_FIRST)
                  picture->top_field_first = 1;
 -                break;
 -              case OMX_InterlaceFieldsInterleavedLowerFirst:
 -                picture->interlaced_frame = 1;
 +            else
++#endif
                  picture->top_field_first = 0;
 -                break;
 -              case OMX_InterlaceMixed:
@@ -393,11 +400,13 @@ index b2999ad..f644ed5 100644
 -                break;
 -            }
 -            picture->repeat_pict = m_bRepeatFirstField;
+-#endif // USING_BROADCOM
+-
 +            picture->repeat_pict = 0;
- #endif // USING_BROADCOM
- 
              if (!frame)
-@@ -1128,55 +1102,6 @@ OMX_ERRORTYPE PrivateDecoderOMX::SettingsChanged(AVCodecContext *avctx)
+             {
+                 // Copy OMX buffer to the frame provided
+@@ -1128,55 +1103,6 @@ OMX_ERRORTYPE PrivateDecoderOMX::SettingsChanged(AVCodecContext *avctx)
              .arg(Error2String(e)));
  
  #ifdef USING_BROADCOM
@@ -454,7 +463,7 @@ index b2999ad..f644ed5 100644
      {
          OMX_CONFIG_POINTTYPE aspect;
 diff --git a/mythtv/libs/libmythtv/privatedecoder_omx.h b/mythtv/libs/libmythtv/privatedecoder_omx.h
-index 7fe28eb..6a00506 100644
+index 7fe28eb10f..6a0050621f 100644
 --- a/mythtv/libs/libmythtv/privatedecoder_omx.h
 +++ b/mythtv/libs/libmythtv/privatedecoder_omx.h
 @@ -70,10 +70,6 @@ class PrivateDecoderOMX : public PrivateDecoder, private OMXComponentCtx
@@ -469,7 +478,7 @@ index 7fe28eb..6a00506 100644
  
      QMutex mutable m_lock;      // Protects data following
 diff --git a/mythtv/libs/libmythtv/recorders/ExternalChannel.cpp b/mythtv/libs/libmythtv/recorders/ExternalChannel.cpp
-index 604819c..5d44f8d 100644
+index 604819cc2f..5d44f8d41f 100644
 --- a/mythtv/libs/libmythtv/recorders/ExternalChannel.cpp
 +++ b/mythtv/libs/libmythtv/recorders/ExternalChannel.cpp
 @@ -95,6 +95,11 @@ bool ExternalChannel::Tune(const QString &channum)
@@ -485,7 +494,7 @@ index 604819c..5d44f8d 100644
  {
      Close();
 diff --git a/mythtv/libs/libmythtv/recorders/ExternalChannel.h b/mythtv/libs/libmythtv/recorders/ExternalChannel.h
-index d74e5a9..da3b79f 100644
+index d74e5a91a6..da3b79f51b 100644
 --- a/mythtv/libs/libmythtv/recorders/ExternalChannel.h
 +++ b/mythtv/libs/libmythtv/recorders/ExternalChannel.h
 @@ -29,6 +29,7 @@ class ExternalChannel : public DTVChannel
@@ -497,7 +506,7 @@ index d74e5a9..da3b79f 100644
      virtual bool EnterPowerSavingMode(void);
  
 diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
-index d6367a6..12fa839 100644
+index d6367a6ebb..12fa8391b6 100644
 --- a/mythtv/libs/libmythtv/tv_play.cpp
 +++ b/mythtv/libs/libmythtv/tv_play.cpp
 @@ -2601,15 +2601,21 @@ void TV::HandleStateChange(PlayerContext *mctx, PlayerContext *ctx)
@@ -553,7 +562,7 @@ index d6367a6..12fa839 100644
              mwnd->setMinimumSize(QSize(16, 16));
              mwnd->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 diff --git a/mythtv/libs/libmythtv/videoout_omx.cpp b/mythtv/libs/libmythtv/videoout_omx.cpp
-index 3c5c448..63a5c3f 100644
+index 3c5c4486af..859eb8ea64 100644
 --- a/mythtv/libs/libmythtv/videoout_omx.cpp
 +++ b/mythtv/libs/libmythtv/videoout_omx.cpp
 @@ -286,7 +286,8 @@ VideoOutputOMX::VideoOutputOMX() :
@@ -589,14 +598,18 @@ index 3c5c448..63a5c3f 100644
          vbuffers.Enqueue(kVideoBuffer_pause, vbuffers.Dequeue(kVideoBuffer_pause));
          frame = vbuffers.GetScratchFrame();
          CopyFrame(frame, &av_pause_frame);
-@@ -877,7 +884,18 @@ void VideoOutputOMX::Show(FrameScanType scan)
+@@ -877,7 +884,22 @@ void VideoOutputOMX::Show(FrameScanType scan)
  
      hdr->nFilledLen = frame->offsets[2] + (frame->offsets[1] >> 2);
      hdr->nFlags = OMX_BUFFERFLAG_ENDOFFRAME;
++#ifdef OMX_BUFFERFLAG_INTERLACED
 +    if (frame->interlaced_frame)
 +        hdr->nFlags |= OMX_BUFFERFLAG_INTERLACED;
++#endif
++#ifdef OMX_BUFFERFLAG_TOP_FIELD_FIRST
 +    if (frame->top_field_first)
 +        hdr->nFlags |= OMX_BUFFERFLAG_TOP_FIELD_FIRST;
++#endif
      OMXComponent &cmpnt = m_imagefx.IsValid() ? m_imagefx : m_render;
 +    // Paused - do not display anything unless softblend set
 +    if (m_videoPaused && GetOSDRenderer() != "softblend")
@@ -609,7 +622,7 @@ index 3c5c448..63a5c3f 100644
      if (e != OMX_ErrorNone)
      {
 diff --git a/mythtv/libs/libmythtv/videoout_omx.h b/mythtv/libs/libmythtv/videoout_omx.h
-index fb162d1..5ecdcdb 100644
+index fb162d17b5..5ecdcdb969 100644
 --- a/mythtv/libs/libmythtv/videoout_omx.h
 +++ b/mythtv/libs/libmythtv/videoout_omx.h
 @@ -88,6 +88,7 @@ class VideoOutputOMX : public VideoOutput, private OMXComponentCtx
@@ -621,7 +634,7 @@ index fb162d1..5ecdcdb 100644
  
  #endif // ndef VIDEOOUT_OMX_H
 diff --git a/mythtv/libs/libmythtv/videoout_opengl.cpp b/mythtv/libs/libmythtv/videoout_opengl.cpp
-index 7a13935..a743e92 100644
+index 7a13935de1..a743e92989 100644
 --- a/mythtv/libs/libmythtv/videoout_opengl.cpp
 +++ b/mythtv/libs/libmythtv/videoout_opengl.cpp
 @@ -363,7 +363,24 @@ bool VideoOutputOpenGL::SetupOpenGL(void)
@@ -651,7 +664,7 @@ index 7a13935..a743e92 100644
      if (video_codec_id == kCodec_NONE)
      {
 diff --git a/mythtv/libs/libmythtv/videooutwindow.cpp b/mythtv/libs/libmythtv/videooutwindow.cpp
-index 78993b5..0ea9a17 100644
+index 78993b5c0f..0ea9a171c3 100644
 --- a/mythtv/libs/libmythtv/videooutwindow.cpp
 +++ b/mythtv/libs/libmythtv/videooutwindow.cpp
 @@ -93,6 +93,12 @@ VideoOutWindow::VideoOutWindow() :
@@ -677,7 +690,7 @@ index 78993b5..0ea9a17 100644
                                               screen_geom;
  
 diff --git a/mythtv/libs/libmythtv/videooutwindow.h b/mythtv/libs/libmythtv/videooutwindow.h
-index 0d5b04d..93aef00 100644
+index 0d5b04de42..93aef00518 100644
 --- a/mythtv/libs/libmythtv/videooutwindow.h
 +++ b/mythtv/libs/libmythtv/videooutwindow.h
 @@ -68,6 +68,7 @@ class VideoOutWindow
@@ -689,7 +702,7 @@ index 0d5b04d..93aef00 100644
      bool     IsVideoScalingAllowed(void) const { return db_scaling_allowed; }
      /// \brief Returns if videooutput is embedding
 diff --git a/mythtv/libs/libmythtv/videosource.cpp b/mythtv/libs/libmythtv/videosource.cpp
-index 97618ad..0b530ae 100644
+index 97618adc80..0b530ae3a7 100644
 --- a/mythtv/libs/libmythtv/videosource.cpp
 +++ b/mythtv/libs/libmythtv/videosource.cpp
 @@ -3,7 +3,11 @@
@@ -704,8 +717,24 @@ index 97618ad..0b530ae 100644
  #include <sys/stat.h>
  
  // C++ headers
+diff --git a/mythtv/libs/libmythui/mythmainwindow.cpp b/mythtv/libs/libmythui/mythmainwindow.cpp
+index 8a903c625f..55f90ab01d 100644
+--- a/mythtv/libs/libmythui/mythmainwindow.cpp
++++ b/mythtv/libs/libmythui/mythmainwindow.cpp
+@@ -2195,9 +2195,9 @@ bool MythMainWindow::eventFilter(QObject *, QEvent *e)
+                         QCoreApplication::postEvent(this, key);
+                     else
+                         QCoreApplication::postEvent(key_target, key);
+-                }
+ 
+-                return true;
++                    return true;
++                }
+             }
+ #endif
+ 
 diff --git a/mythtv/libs/libmythui/mythrender_opengl.h b/mythtv/libs/libmythui/mythrender_opengl.h
-index adaf302..a18c515 100644
+index adaf302d5a..a18c5152d6 100644
 --- a/mythtv/libs/libmythui/mythrender_opengl.h
 +++ b/mythtv/libs/libmythui/mythrender_opengl.h
 @@ -19,9 +19,6 @@
@@ -719,7 +748,7 @@ index adaf302..a18c515 100644
  #endif // USING_X11
  
 diff --git a/mythtv/libs/libmythui/mythrender_opengl1.h b/mythtv/libs/libmythui/mythrender_opengl1.h
-index ce651df..53e25fe 100644
+index ce651dfa94..53e25fedc4 100644
 --- a/mythtv/libs/libmythui/mythrender_opengl1.h
 +++ b/mythtv/libs/libmythui/mythrender_opengl1.h
 @@ -3,6 +3,9 @@
@@ -733,7 +762,7 @@ index ce651df..53e25fe 100644
  class MUI_PUBLIC MythRenderOpenGL1 : public MythRenderOpenGL
  {
 diff --git a/mythtv/libs/libmythupnp/mythxmlclient.cpp b/mythtv/libs/libmythupnp/mythxmlclient.cpp
-index 45d7497..c6fe011 100644
+index 45d7497fd9..c6fe011338 100644
 --- a/mythtv/libs/libmythupnp/mythxmlclient.cpp
 +++ b/mythtv/libs/libmythupnp/mythxmlclient.cpp
 @@ -115,7 +115,9 @@ UPnPResultCode MythXMLClient::GetConnectionInfo( const QString &sPin, DatabasePa
@@ -748,7 +777,7 @@ index 45d7497..c6fe011 100644
          // Service calls no longer return UPnPResult codes, 
          // convert standard 501 to UPnPResult code for now.
 diff --git a/mythtv/libs/libmythupnp/soapclient.cpp b/mythtv/libs/libmythupnp/soapclient.cpp
-index 4940e13..16748cf 100644
+index 4940e13d94..16748cf33e 100644
 --- a/mythtv/libs/libmythupnp/soapclient.cpp
 +++ b/mythtv/libs/libmythupnp/soapclient.cpp
 @@ -267,9 +267,11 @@ QDomDocument SOAPClient::SendSOAPRequest(const QString &sMethod,
@@ -765,7 +794,7 @@ index 4940e13..16748cf 100644
              QString("SendSOAPRequest( %1 ) - Invalid response from %2")
                  .arg(sMethod).arg(url.toString()) + 
 diff --git a/mythtv/libs/libmythupnp/ssdp.cpp b/mythtv/libs/libmythupnp/ssdp.cpp
-index cf54274..d89e009 100644
+index cf54274220..d89e009bde 100644
 --- a/mythtv/libs/libmythupnp/ssdp.cpp
 +++ b/mythtv/libs/libmythupnp/ssdp.cpp
 @@ -624,6 +624,10 @@ bool SSDP::ProcessSearchResponse( const QStringMap &headers )
@@ -780,7 +809,7 @@ index cf54274..d89e009 100644
          return false;
  
 diff --git a/mythtv/libs/libmythupnp/upnp.h b/mythtv/libs/libmythupnp/upnp.h
-index 4b0457f..acc2bd9 100644
+index 4b0457f4e8..acc2bd9ff7 100644
 --- a/mythtv/libs/libmythupnp/upnp.h
 +++ b/mythtv/libs/libmythupnp/upnp.h
 @@ -80,6 +80,7 @@ typedef enum
@@ -791,8 +820,51 @@ index 4b0457f..acc2bd9 100644
  
  } UPnPResultCode;
  
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index a5eb1a1cdb..cad6bdd000 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -1993,7 +1993,7 @@ void Scheduler::run(void)
+     bool      blockShutdown   =
+         gCoreContext->GetNumSetting("blockSDWUwithoutClient", 1);
+     bool      firstRun        = true;
+-    QDateTime lastSleepCheck  = MythDate::current().addDays(-1);
++    QDateTime nextSleepCheck  = MythDate::current();
+     RecIter   startIter       = reclist.begin();
+     QDateTime idleSince       = QDateTime();
+     int       schedRunTime    = 0; // max scheduler run time in seconds
+@@ -2021,7 +2021,7 @@ void Scheduler::run(void)
+             sched_sleep = min(sched_sleep, 15000);
+         bool haveRequests = HaveQueuedRequests();
+         int const kSleepCheck = 300;
+-        bool checkSlaves = lastSleepCheck.secsTo(curtime) >= kSleepCheck;
++        bool checkSlaves = curtime >= nextSleepCheck;
+ 
+         // If we're about to start a recording don't do any reschedules...
+         // instead sleep for a bit
+@@ -2082,12 +2082,18 @@ void Scheduler::run(void)
+             {
+                 // Check for slaves that can be put to sleep.
+                 PutInactiveSlavesToSleep();
+-                lastSleepCheck = MythDate::current();
++                nextSleepCheck = MythDate::current().addSecs(kSleepCheck);
++                checkSlaves = false;
+             }
+         }
+ 
+         nextStartTime = MythDate::current().addDays(14);
+-        nextWakeTime = lastSleepCheck.addSecs(kSleepCheck);
++        // If checkSlaves is still set, choose a reasonable wake time
++        // in the future instead of one that we know is in the past.
++        if (checkSlaves)
++            nextWakeTime = MythDate::current().addSecs(kSleepCheck);
++        else
++            nextWakeTime = nextSleepCheck;
+ 
+         // Skip past recordings that are already history
+         // (i.e. AddHistory() has been called setting oldrecstatus)
 diff --git a/mythtv/programs/mythbackend/services/content.cpp b/mythtv/programs/mythbackend/services/content.cpp
-index 1f5cd1b..5eea0ae 100644
+index 1f5cd1bb65..5eea0aee13 100644
 --- a/mythtv/programs/mythbackend/services/content.cpp
 +++ b/mythtv/programs/mythbackend/services/content.cpp
 @@ -503,7 +503,7 @@ QFileInfo Content::GetPreviewImage(        int        nRecordedId,
@@ -814,7 +886,7 @@ index 1f5cd1b..5eea0ae 100644
      VideoMetadataListManager::VideoMetadataPtr metadata =
                            VideoMetadataListManager::loadOneFromDatabase(nId);
 diff --git a/mythtv/programs/mythbackend/services/dvr.cpp b/mythtv/programs/mythbackend/services/dvr.cpp
-index 605dd48..abdf07d 100644
+index 605dd486f0..abdf07df11 100644
 --- a/mythtv/programs/mythbackend/services/dvr.cpp
 +++ b/mythtv/programs/mythbackend/services/dvr.cpp
 @@ -741,7 +741,7 @@ DTC::TitleInfoList* Dvr::GetTitleInfoList()
@@ -827,7 +899,7 @@ index 605dd48..abdf07d 100644
          "    GROUP BY title, inetref "
          "    ORDER BY title");
 diff --git a/mythtv/programs/mythbackend/services/guide.cpp b/mythtv/programs/mythbackend/services/guide.cpp
-index cd2e61e..c349e8c 100644
+index cd2e61eb03..c349e8c1fa 100644
 --- a/mythtv/programs/mythbackend/services/guide.cpp
 +++ b/mythtv/programs/mythbackend/services/guide.cpp
 @@ -53,16 +53,16 @@ DTC::ProgramGuide *Guide::GetProgramGuide( const QDateTime &rawStartTime ,
@@ -892,7 +964,7 @@ index cd2e61e..c349e8c 100644
      }
  
 diff --git a/mythtv/programs/mythbackend/services/myth.cpp b/mythtv/programs/mythbackend/services/myth.cpp
-index d7a3a83..f0744a8 100644
+index d7a3a83e9c..f0744a841c 100644
 --- a/mythtv/programs/mythbackend/services/myth.cpp
 +++ b/mythtv/programs/mythbackend/services/myth.cpp
 @@ -437,7 +437,7 @@ QDateTime Myth::ParseISODateString(const QString& DateTimeString)
@@ -905,7 +977,7 @@ index d7a3a83..f0744a8 100644
      return dateTime;
  }
 diff --git a/mythtv/programs/mythfilldatabase/channeldata.cpp b/mythtv/programs/mythfilldatabase/channeldata.cpp
-index c0ee522..9825c4e 100644
+index c0ee522b65..9825c4e8d4 100644
 --- a/mythtv/programs/mythfilldatabase/channeldata.cpp
 +++ b/mythtv/programs/mythfilldatabase/channeldata.cpp
 @@ -128,27 +128,31 @@ QString ChannelData::normalizeChannelKey(const QString &chanName) const
@@ -984,7 +1056,7 @@ index c0ee522..9825c4e 100644
  
      QDir::setCurrent(fileprefix);
 diff --git a/mythtv/programs/mythfilldatabase/channeldata.h b/mythtv/programs/mythfilldatabase/channeldata.h
-index 978ec8c..af0aa1c 100644
+index 978ec8c77b..af0aa1c04d 100644
 --- a/mythtv/programs/mythfilldatabase/channeldata.h
 +++ b/mythtv/programs/mythfilldatabase/channeldata.h
 @@ -7,6 +7,8 @@
@@ -1008,7 +1080,7 @@ index 978ec8c..af0aa1c 100644
  
    public:
 diff --git a/mythtv/programs/mythfilldatabase/xmltvparser.cpp b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
-index 62a3a13..21bf5b8 100644
+index 62a3a13820..21bf5b8324 100644
 --- a/mythtv/programs/mythfilldatabase/xmltvparser.cpp
 +++ b/mythtv/programs/mythfilldatabase/xmltvparser.cpp
 @@ -131,82 +131,107 @@ static void fromXMLTVDate(QString &timestr, QDateTime &dt)
@@ -1287,7 +1359,7 @@ index 62a3a13..21bf5b8 100644
  }
 -
 diff --git a/mythtv/programs/mythfrontend/proglist.cpp b/mythtv/programs/mythfrontend/proglist.cpp
-index 37e4506..ebd94c1 100644
+index 37e4506130..ebd94c18a1 100644
 --- a/mythtv/programs/mythfrontend/proglist.cpp
 +++ b/mythtv/programs/mythfrontend/proglist.cpp
 @@ -960,11 +960,11 @@ void ProgLister::FillViewList(const QString &view)

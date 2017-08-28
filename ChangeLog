@@ -1,3 +1,39 @@
+commit 2c4c711b1ff47e3a3c39fd830e181fd6582f4887
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sat Aug 12 16:16:58 2017 -0400
+
+    Fix raspberry pi compile eror when using old header files
+    
+    Note that deinterlace will not work unless recent headers and
+    firmware are used
+    
+    (cherry picked from commit 19ed105c848b3955e4d3ecba81847848183c997e)
+
+commit 3b18a09ad152ff4323effaaad45e5845e7d2d042
+Author: David Engel <dengel@mythtv.org>
+Date:   Wed Aug 9 12:03:09 2017 -0500
+
+    Avoid busy looping in some cases in the scheduler when the time to
+    check on slaves that can be put to sleep has already passed.  Thanks
+    to lucylangthorne55 for helping to debug this issue.
+    
+    Cherry picked from master commit 871f9e82b95c3848978a5e032a40c58906b24565.
+    
+    Refs #13072
+
+commit f1a485c62ad2c8da4f8d44056a2053ccf6e9eb84
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Sun Aug 6 21:02:13 2017 -0500
+
+    Restore SendAction operation, Fixes #12738
+    
+    SendAction appears to be affected by 9f34b4f, but that's needed to
+    allow operation of some keypresses.
+    
+    Thanks to Roger Siddons for finding the root cause of the problem.
+    
+    (cherry picked from commit 7075a5fb0f4554beccca019849a9d2dd38b62fe8)
+
 commit eef6a480b0eca5201eec785b0ce57f9a6f4b7fdd
 Author: Peter Bennett <pbennett@mythtv.org>
 Date:   Wed Jul 12 15:33:31 2017 -0400
