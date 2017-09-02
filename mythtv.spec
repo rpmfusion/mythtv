@@ -235,6 +235,11 @@ BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
 
+# For ttvdb.py
+BuildRequires: python2-future
+BuildRequires: python2-requests
+BuildRequires: python-requests-cache
+
 %if %{with vdpau}
 BuildRequires:  libvdpau-devel
 %endif
@@ -299,7 +304,6 @@ BuildRequires:  zlib-devel
 %endif
 
 BuildRequires: ncurses-devel
-
 
 %if %{with mythweather}
 Requires:       mythweather      >= %{version}
