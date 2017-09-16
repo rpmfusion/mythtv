@@ -60,7 +60,7 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v0.28.1-41-g2c4c711b1f
+%define vers_string v0.28.1-45-g73cf7474ad
 %define branch fixes/0.28
 
 # Git revision and branch ID
@@ -304,6 +304,7 @@ BuildRequires:  zlib-devel
 %endif
 
 BuildRequires: ncurses-devel
+
 
 %if %{with mythweather}
 Requires:       mythweather      >= %{version}
@@ -1357,8 +1358,8 @@ exit 0
 
 
 %changelog
-* Sat Aug 19 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-7
-- Update to latest fixes/0/28, v0.28.1-41-g2c4c711b1f.
+* Wed Sep  6 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-7
+- Update to latest fixes/0/28, v0.28.1-45-g73cf7474ad.
 
 * Sun Aug  6 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-6
 - Update to latest fixes/0.28, v0.28.1-38-geef6a48.

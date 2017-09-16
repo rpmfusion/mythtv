@@ -1,3 +1,85 @@
+commit 73cf7474ad38ee2edddfeb7540eb5b7f28b245f4
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Thu Aug 31 14:52:55 2017 -0400
+
+    Fix OpenGL bug introduced recently
+    
+    commit ad3fc1b88c used an #ifdef instead of #if, resulting in
+    OpenGL being disabled for all instead of just for raspberry pi.
+    
+    Refs #13110
+
+commit ebd69ec33b67df52628eedcb1dca647306cfc887
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Aug 29 16:09:54 2017 -0400
+
+    Raspberry Pi: Support for Raspbian Stretch (fixes/0.28)
+    
+    This is slightly different from the commit for master and fixes/29.
+    
+    * some libraries in /opt/vc/lib were renamed
+    * QT version is now 5.7.1
+    * Incorrect code that was based on a custom QT compile was being activated
+    * Invalid parameters for creating textures with OpenGL ES
+    * QT XCB GL Integration caused a segfault because of incompatible GL libraries.
+    
+    Fixes #13110
+
+commit ff9002adc9ef4dd58d54c66e9f85fa6a9e4edb41
+Author: David Engel <dengel@mythtv.org>
+Date:   Sun Aug 27 15:31:43 2017 -0500
+
+    Fix invocation of Previously Recorded from Recording Rules.
+    
+    When the Schedule Editor is entered from Recording Rules, there is no
+    ProgramInfo to use.  Fix it calling Previously Recorded with the
+    recording rule ID and title.
+    
+    Refs #13112
+    
+    (cherry picked from commit a60e8c63bb185abc0741827349957f4d60222cc8)
+
+commit 204bb2e5345290ae5b112e8fc9381744339813b2
+Author: Mark Spieth <mark@digivation.com.au>
+Date:   Sat Aug 26 13:32:40 2017 -0400
+
+    ttvdb: Update to support new JSON API.
+    
+    The old xml ttvdb api will be terminated on September 30th 2017.
+    
+    Consolidated from multiple commits.
+    
+    Fixes #13084
+    
+    * Update ttdvb to use V2 API
+    * Update python to 2/3 compatability
+    * Update tvdb_api with upstream 2.0-dev
+    * Fix some incorrect exception formatting in ttvdb.py
+    
+    * Upstream support for partial language data
+    * Upstream handle loadurl errors by callers
+    * Upstream support no cache and non-conforming cache
+    * Upstream tolerate missing cache _ignored_parameters attribute
+    * Remove username and userkey from auth info, not required, less brittle
+    * python 3.6 support for num-seasons output order
+    
+    * ttvdb fix output of more commands
+    * -l de -m -a US -D 72449 1 10
+    * -l en -a US -D 281053
+    
+    * Handle empty cast
+    * ttvdb: Add more detailed episode data
+    * ttvdb.py Handle no actors in returned data
+    * ttvdb: add old requests_cache version compatability
+    * ttvdb Fix User-Agent to a specific one, fixes auth 403
+    * ttvdb Restore original api key
+    * ttvdb Fix up python3 compatability
+    * ttvdb fix all error outputs to stderr
+    * ttvdb: make doctest a bit less brittle with changing data
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit e60c0283eda6f2e094a0b002eaea72f0ba06455b)
+
 commit 2c4c711b1ff47e3a3c39fd830e181fd6582f4887
 Author: Peter Bennett <pbennett@mythtv.org>
 Date:   Sat Aug 12 16:16:58 2017 -0400
