@@ -81,7 +81,7 @@ Version:        0.28.1
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        7%{?dist}
+Release:        8%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1358,7 +1358,7 @@ exit 0
 
 
 %changelog
-* Wed Sep  6 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-7
+* Wed Sep  6 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-8
 - Update to latest fixes/0/28, v0.28.1-45-g73cf7474ad.
 
 * Sun Aug  6 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-6
