@@ -60,8 +60,8 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v0.28.1-45-g73cf7474ad
-%define branch fixes/0.28
+%define vers_string v29.0-28-g5dce69fbb5
+%define branch fixes/29
 
 # Git revision and branch ID
 %define _gitrev g5b917e8
@@ -77,11 +77,11 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.28.1
+Version:        29.0
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        8%{?dist}
+Release:        1%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -109,9 +109,6 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %bcond_without python
 %bcond_without pulseaudio
 
-# FAAC is non-free, so we disable it by default
-%bcond_with faac
-
 # All plugins get built by default, but you can disable them as you wish
 %bcond_without plugins
 %bcond_without mytharchive
@@ -132,7 +129,7 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 # Example: git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
-Patch0:    mythtv-0.28-fixes.patch
+Patch0:    mythtv-fixes.patch
 Patch1:    mythtv-mariadb.patch
 
 Source10:  PACKAGE-LICENSING
@@ -196,9 +193,6 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-%if %{with faac}
-BuildRequires:  faac-devel
-%endif
 BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  lame-devel
@@ -208,6 +202,7 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
 BuildRequires:  taglib-devel >= 1.7
 BuildRequires:  x264-devel
+BuildRequires:  x265-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
 BuildRequires:  exiv2-devel
 
@@ -221,6 +216,7 @@ BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  avahi-compat-libdns_sd-devel
 
 # Bluray support
+BuildRequires:  ant java-devel
 BuildRequires:  libxml2-devel
 #BuildRequires:  libudf-devel
 
@@ -434,9 +430,6 @@ Requires:  xorg-x11-proto-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-%if %{with faac}
-Requires:  faac-devel
-%endif
 Requires:  fftw-devel >= 3
 Requires:  flac-devel >= 1.0.4
 Requires:  gsm-devel
@@ -451,6 +444,7 @@ Requires:  libvorbis-devel >= 1.0
 Requires:  mjpegtools-devel >= 1.6.1
 Requires:  taglib-devel >= 1.5
 Requires:  x264-devel
+Requires:  x265-devel
 Requires:  xvidcore-devel >= 0.9.1
 
 # Audio framework support
@@ -505,6 +499,7 @@ Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Requires:  mariadb >= 5
 Requires:  python-MythTV
+Recommends: libaacs
 %{?fedora:Requires:  google-droid-sans-mono-fonts}
 %{?fedora:Recommends:  mesa-vdpau-drivers}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
@@ -525,6 +520,10 @@ Summary:    Server component of mythtv (a DVR)
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
 Requires:   mythtv-setup
+Requires:   python2-future
+Requires:   python2-requests
+Requires:   python-requests-cache
+
 Requires(pre): shadow-utils
 Conflicts:  xmltv-grabbers < 0.5.37
 
@@ -852,12 +851,11 @@ pushd mythtv
 %if ! %{with vaapi}
     --disable-vaapi                             \
 %endif
+    --enable-bdjava                             \
     --enable-libmp3lame                         \
-%if %{with faac}
-    --enable-libfaac                            \
-%endif
     --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
+    --enable-libx265                            \
     --enable-libxvid                            \
     --enable-libvpx                             \
 %if !%{with perl}
@@ -1358,6 +1356,9 @@ exit 0
 
 
 %changelog
+* Sat Sep 16 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-1
+- Update to new release, 29.0.
+
 * Wed Sep  6 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-8
 - Update to latest fixes/0/28, v0.28.1-45-g73cf7474ad.
 
