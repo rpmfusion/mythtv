@@ -60,8 +60,8 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v29.0-28-g5dce69fbb5
-%define branch fixes/29
+%define vers_string v29.0-57-gd743ef49a8
+%define branch fixes/29.0
 
 # Git revision and branch ID
 %define _gitrev g5b917e8
@@ -81,7 +81,7 @@ Version:        29.0
 %if "%{branch}" == "master"
 Release:        0.5.git.%{_gitrev}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        4%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -96,8 +96,8 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # as "use at your own risk."
 %bcond_with proc_opt
 
-# Set "--with debug" to enable MythTV debug compile mode
-%bcond_with debug
+# Set "--without debug" to disable MythTV debug compile mode
+%bcond_without debug
 
 # The following options are enabled by default.  Use --without to disable them
 %bcond_without vdpau
@@ -130,7 +130,6 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
 Patch0:    mythtv-fixes.patch
-Patch1:    mythtv-mariadb.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -164,6 +163,7 @@ BuildRequires:  qt5-qtscript-devel >= 5.2
 BuildRequires:  qt5-qtwebkit-devel >= 5.2
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  mariadb-devel >= 5
+#BuildRequires:  mariadb-connector-c-devel
 %if 0%{?fedora}
 BuildRequires:  libcec-devel >= 1.7
 %endif
@@ -412,6 +412,7 @@ Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
 Requires:  mariadb-devel >= 5
+#Requires:  mariadb-connector-c-devel
 Requires:  qt5-qtbase-devel >= 5.2
 Requires:  qt5-qtscript-devel >= 5.2
 Requires:  qt5-qtwebkit-devel >= 5.2
@@ -824,6 +825,9 @@ EOF
 
 popd
 
+#pushd mythplugins
+#sed -i "s|mysql\/mysql.h|mariadb\/mysql.h|g" configure mythzoneminder/mythzmserver/zmserver.h mythmusic/contrib/import/itunes/it2m.h
+#popd
 
 
 ################################################################################
@@ -874,6 +878,7 @@ pushd mythtv
     --extra-cflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
     --extra-cxxflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
 %endif
+    --extra-ldflags="%{optflags}"               \
 %ifarch %{ix86}
     --cpu=i686 --tune=i686 --enable-mmx \
 %endif
@@ -881,17 +886,17 @@ pushd mythtv
     --enable-proc-opt \
 %endif
 %if %{with debug}
-    --compile-type=debug                        \
+    --compile-type=debug                        
 %else
-    --compile-type=release                      \
+    --compile-type=release                      
 %endif
-    --enable-debug
 
 # Make
-    make %{?_smp_mflags}
+%make_build
+
+popd
 
 # Prepare to build the plugins
-    popd
     mkdir fakeroot
     temp=`pwd`/fakeroot
     make -C mythtv install INSTALL_ROOT=$temp
@@ -1356,6 +1361,15 @@ exit 0
 
 
 %changelog
+* Mon Nov 13 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-4
+- Update to v29.0-57-gd743ef49a8.
+
+* Wed Nov  1 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-3
+- Update to v29.0-49-g75f05119b7.
+
+* Mon Oct 23 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-2
+- Update to v29.0-47-g83b32140f0.
+
 * Sat Sep 16 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-1
 - Update to new release, 29.0.
 

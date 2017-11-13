@@ -11,27 +11,30 @@
  mythplugins/mythnetvision/i18n/mythnetvision_it.ts |   96 +-
  mythplugins/mythnews/i18n/mythnews_it.ts           |    3 +-
  mythplugins/mythweather/i18n/mythweather_it.ts     |   73 +-
+ .../mythweather/scripts/ca_envcan/ENVCANParser.pm  |    4 +-
  .../mythzoneminder/i18n/mythzoneminder_it.qm       |  Bin 8293 -> 9428 bytes
  .../mythzoneminder/i18n/mythzoneminder_it.ts       |  203 ++-
+ .../mythzoneminder/mythzmserver/zmserver.cpp       |    3 +-
+ mythtv/bindings/perl/MythTV.pm                     |    4 +-
  mythtv/bindings/python/MythTV/__init__.py          |   22 +-
- mythtv/bindings/python/MythTV/_conn_mysqldb.py     |    6 +-
+ mythtv/bindings/python/MythTV/_conn_mysqldb.py     |    9 +-
  mythtv/bindings/python/MythTV/_conn_oursql.py      |    4 +-
  mythtv/bindings/python/MythTV/altdict.py           |    9 +-
  mythtv/bindings/python/MythTV/connections.py       |   48 +-
  mythtv/bindings/python/MythTV/database.py          |   32 +-
  mythtv/bindings/python/MythTV/dataheap.py          |   40 +-
  mythtv/bindings/python/MythTV/logging.py           |   12 +-
- mythtv/bindings/python/MythTV/methodheap.py        |   14 +-
+ mythtv/bindings/python/MythTV/methodheap.py        |   16 +-
  mythtv/bindings/python/MythTV/msearch.py           |    2 +-
  mythtv/bindings/python/MythTV/mythproto.py         |    5 +-
- mythtv/bindings/python/MythTV/static.py            |    2 +-
+ mythtv/bindings/python/MythTV/static.py            |   53 +-
  .../python/MythTV/ttvdb/XSLT/tvdbCollection.xsl    |  127 +-
  .../python/MythTV/ttvdb/XSLT/tvdbQuery.xsl         |   18 +-
- .../python/MythTV/ttvdb/XSLT/tvdbVideo.xsl         |   87 +-
+ .../python/MythTV/ttvdb/XSLT/tvdbVideo.xsl         |   89 +-
  mythtv/bindings/python/MythTV/ttvdb/cache.py       |  230 ---
  .../MythTV/ttvdb/requests_cache_compatability.py   |   44 +
  mythtv/bindings/python/MythTV/ttvdb/tvdbXslt.py    |  108 +-
- mythtv/bindings/python/MythTV/ttvdb/tvdb_api.py    | 1186 +++++++++-----
+ mythtv/bindings/python/MythTV/ttvdb/tvdb_api.py    | 1189 +++++++++-----
  .../python/MythTV/ttvdb/tvdb_create_key.py         |   36 +
  .../python/MythTV/ttvdb/tvdb_exceptions.py         |   48 +-
  mythtv/bindings/python/MythTV/ttvdb/tvdb_ui.py     |  121 +-
@@ -42,47 +45,70 @@
  mythtv/bindings/python/MythTV/utility/dt.py        |    6 +-
  mythtv/bindings/python/MythTV/utility/enum.py      |    8 +-
  mythtv/bindings/python/MythTV/utility/other.py     |   40 +-
+ mythtv/external/libudfread/default_blockinput.c    |   35 +-
+ mythtv/external/libudfread/ecma167.c               |   92 +-
+ mythtv/external/libudfread/ecma167.h               |   30 +-
+ mythtv/external/libudfread/libudfread.pro          |    2 +-
+ mythtv/external/libudfread/udfread-version.h       |    2 +-
+ mythtv/external/libudfread/udfread.c               |  285 +++-
  mythtv/i18n/mythfrontend_en_gb.qm                  |  Bin 112556 -> 738161 bytes
  mythtv/i18n/mythfrontend_en_gb.ts                  | 1668 ++++++++++----------
  mythtv/i18n/mythfrontend_it.qm                     |  Bin 766688 -> 765165 bytes
  mythtv/i18n/mythfrontend_it.ts                     |  864 +++++-----
- mythtv/libs/libmyth/mythcontext.cpp                |   36 +-
+ mythtv/libs/libmyth/mythcontext.cpp                |   43 +-
+ mythtv/libs/libmyth/mythmediamonitor.cpp           |    4 +
+ mythtv/libs/libmyth/programinfo.cpp                |   20 +-
+ mythtv/libs/libmythbase/mythcorecontext.cpp        |    2 +
  mythtv/libs/libmythbase/mythdownloadmanager.cpp    |    1 +
  mythtv/libs/libmythbase/mythmiscutil.cpp           |   45 +-
  mythtv/libs/libmythbase/serverpool.cpp             |   10 +-
+ mythtv/libs/libmythmetadata/metadatacommon.h       |   10 +-
+ mythtv/libs/libmythmetadata/metadatadownload.cpp   |   26 +-
+ .../channelscan/channelscanmiscsettings.h          |    1 +
  .../libs/libmythtv/channelscan/modulationsetting.h |    2 +
+ mythtv/libs/libmythtv/channelsettings.cpp          |    8 -
+ mythtv/libs/libmythtv/channelsettings.h            |    1 -
+ mythtv/libs/libmythtv/dbcheck.cpp                  |   32 +-
  mythtv/libs/libmythtv/libmythtv.pro                |   11 +
  mythtv/libs/libmythtv/privatedecoder_omx.cpp       |    7 +-
  mythtv/libs/libmythtv/recorders/dvbchannel.cpp     |    2 +
+ mythtv/libs/libmythtv/recordinginfo.cpp            |    4 +-
+ mythtv/libs/libmythtv/subtitlescreen.cpp           |    3 +-
  mythtv/libs/libmythtv/teletextreader.cpp           |   64 +-
  mythtv/libs/libmythtv/transporteditor.cpp          |   43 +-
- mythtv/libs/libmythtv/videoout_omx.cpp             |    7 +-
+ mythtv/libs/libmythtv/videodisplayprofile.cpp      |    5 +-
+ mythtv/libs/libmythtv/videoout_omx.cpp             |   14 +-
+ mythtv/libs/libmythtv/videoout_omx.h               |    5 +
  mythtv/libs/libmythtv/videoout_vdpau.cpp           |   13 +
  mythtv/libs/libmythtv/videooutbase.cpp             |    5 +-
- mythtv/libs/libmythtv/videosource.cpp              |    9 +-
- mythtv/libs/libmythui/libmythui.pro                |   13 +
+ mythtv/libs/libmythtv/videosource.cpp              |   43 +-
+ mythtv/libs/libmythtv/videosource.h                |   16 +-
+ mythtv/libs/libmythui/libmythui.pro                |   12 +
  mythtv/libs/libmythui/mythmainwindow.cpp           |   11 +-
  mythtv/libs/libmythui/mythmainwindow.h             |    2 +-
  mythtv/libs/libmythui/mythrender_opengl.cpp        |    6 +
  mythtv/libs/libmythui/mythrender_opengl.h          |   16 +-
  mythtv/libs/libmythui/mythrender_opengl2.cpp       |   13 +
  mythtv/programs/mythavtest/main.cpp                |    5 +
+ mythtv/programs/mythbackend/backendhousekeeper.cpp |    9 +
+ mythtv/programs/mythbackend/backendhousekeeper.h   |    1 +
  mythtv/programs/mythbackend/scheduler.cpp          |   51 +-
  mythtv/programs/mythbackend/scheduler.h            |    3 +-
  mythtv/programs/mythbackend/services/video.cpp     |    8 +-
- mythtv/programs/mythfrontend/main.cpp              |    8 +-
+ mythtv/programs/mythfrontend/main.cpp              |    9 +-
  mythtv/programs/mythfrontend/mythfrontend.pro      |   25 +-
  mythtv/programs/mythfrontend/schedulecommon.cpp    |   11 +-
  mythtv/programs/mythfrontend/schedulecommon.h      |    1 +
  mythtv/programs/mythfrontend/scheduleeditor.cpp    |    3 +-
  mythtv/programs/mythscreenwizard/main.cpp          |    5 +
- mythtv/programs/mythtv-setup/main.cpp              |    4 +
+ mythtv/programs/mythtv-setup/main.cpp              |    6 +-
  mythtv/programs/mythwelcome/main.cpp               |    4 +
  .../scripts/database/mythconverg_backup.pl         |   16 +-
  .../scripts/database/mythconverg_restore.pl        |   18 +-
- .../programs/scripts/metadata/Television/ttvdb.py  | 1228 +++++++++++---
+ mythtv/programs/scripts/metadata/Movie/tmdb3.py    |    7 +-
+ .../programs/scripts/metadata/Television/ttvdb.py  | 1335 +++++++++++++---
  .../scripts/metadata/Television/tvdb_test.conf     |    7 +
- 84 files changed, 5394 insertions(+), 3335 deletions(-)
+ 110 files changed, 6028 insertions(+), 3530 deletions(-)
 
 diff --git a/mythplugins/mytharchive/i18n/mytharchive_it.qm b/mythplugins/mytharchive/i18n/mytharchive_it.qm
 index e211d98a16..901f57d9f7 100644
@@ -4187,6 +4213,28 @@ index 0748f00398..50b2402c85 100644
          <source>Version: </source>
          <translation>Versione:</translation>
      </message>
+diff --git a/mythplugins/mythweather/mythweather/scripts/ca_envcan/ENVCANParser.pm b/mythplugins/mythweather/mythweather/scripts/ca_envcan/ENVCANParser.pm
+index 66677dae50..5fd0fb8d06 100644
+--- a/mythplugins/mythweather/mythweather/scripts/ca_envcan/ENVCANParser.pm
++++ b/mythplugins/mythweather/mythweather/scripts/ca_envcan/ENVCANParser.pm
+@@ -111,7 +111,7 @@ sub doParse {
+                 $results{'weather_icon'} = getIcon($1);
+             }
+             $results{'temp'}     = sprintf("%.0f", $1) 
+-                if ($item->{summary}->{content} =~ /Temperature:\<\/b\>\s*(-?\d*\.?\d*)\&deg\;\C\s*\<br\/\>/s);
++                if ($item->{summary}->{content} =~ /Temperature:\<\/b\>\s*(-?\d*\.?\d*)\&deg\;C\s*\<br\/\>/s);
+             $results{'pressure'} = sprintf("%d", $1 * 10)
+                 if ($item->{summary}->{content} =~ /Pressure.*:\<\/b\>\s*(\d*\.?\d*) kPa\s*.*\<br\/\>/s);
+             $results{'visibility'} = sprintf("%.1f", $1)
+@@ -123,7 +123,7 @@ sub doParse {
+                 $results{'windchill'} = $1; 
+             }
+             $results{'dewpoint'} = sprintf("%.0f", $1)
+-                if ($item->{summary}->{content} =~ /Dewpoint:\<\/b\>\s*(-?\d*\.?\d*)\&deg\;\C\s*\<br\/\>/s);
++                if ($item->{summary}->{content} =~ /Dewpoint:\<\/b\>\s*(-?\d*\.?\d*)\&deg\;C\s*\<br\/\>/s);
+             if ($item->{summary}->{content} =~ /(\d*\:\d*[\w ]*\d*[\w *]\d*)\s*\<br\/\>/s) {
+                 $results{'observation_time'} = "Last updated at ". $1;
+                 $results{'updatetime'} = "Last updated at ". $1;
 diff --git a/mythplugins/mythzoneminder/i18n/mythzoneminder_it.qm b/mythplugins/mythzoneminder/i18n/mythzoneminder_it.qm
 index 5e91b99023..db539adf55 100644
 Binary files a/mythplugins/mythzoneminder/i18n/mythzoneminder_it.qm and b/mythplugins/mythzoneminder/i18n/mythzoneminder_it.qm differ
@@ -4655,6 +4703,35 @@ index fcef9677b9..e530376855 100644
          <source>MythZoneMinder Settings</source>
          <translation>Impostazioni MythZoneMinder</translation>
      </message>
+diff --git a/mythplugins/mythzoneminder/mythzmserver/zmserver.cpp b/mythplugins/mythzoneminder/mythzmserver/zmserver.cpp
+index 74da6acc98..036a64b1b6 100644
+--- a/mythplugins/mythzoneminder/mythzmserver/zmserver.cpp
++++ b/mythplugins/mythzoneminder/mythzmserver/zmserver.cpp
+@@ -183,7 +183,8 @@ void connectToDatabase(void)
+         exit(mysql_errno(&g_dbConn));
+     }
+ 
+-    g_dbConn.reconnect = 1;
++    my_bool reconnect = 1;
++    mysql_options(&g_dbConn, MYSQL_OPT_RECONNECT, &reconnect);
+ 
+     if (!mysql_real_connect(&g_dbConn, g_server.c_str(), g_user.c_str(),
+          g_password.c_str(), 0, 0, 0, 0))
+diff --git a/mythtv/bindings/perl/MythTV.pm b/mythtv/bindings/perl/MythTV.pm
+index d2a00f5005..dd61d3b05d 100644
+--- a/mythtv/bindings/perl/MythTV.pm
++++ b/mythtv/bindings/perl/MythTV.pm
+@@ -318,7 +318,9 @@ EOF
+     # Hostname override.  Not sure if this is still valid or not
+         elsif ($line =~ m#<LocalHostName>(.*?)</LocalHostName>#) {
+             $profileoverride = $1;
+-            if ($profileoverride ne "my-unique-identifier-goes-here") {
++            if ($profileoverride =~ /^\s*$/) {
++                print STDERR "Warning: LocalHostName tag is empty. Ignoring.\n";
++            } elsif ($profileoverride ne "my-unique-identifier-goes-here") {
+                 $mysql_conf{'hostname'} = $profileoverride;
+             }
+         }
 diff --git a/mythtv/bindings/python/MythTV/__init__.py b/mythtv/bindings/python/MythTV/__init__.py
 index 5f3b857698..81fda6a881 100644
 --- a/mythtv/bindings/python/MythTV/__init__.py
@@ -4689,19 +4766,22 @@ index 5f3b857698..81fda6a881 100644
  
  __version__ = OWN_VERSION
 diff --git a/mythtv/bindings/python/MythTV/_conn_mysqldb.py b/mythtv/bindings/python/MythTV/_conn_mysqldb.py
-index 42f368acff..63cc3c7425 100644
+index 42f368acff..676d147a62 100644
 --- a/mythtv/bindings/python/MythTV/_conn_mysqldb.py
 +++ b/mythtv/bindings/python/MythTV/_conn_mysqldb.py
-@@ -44,7 +44,7 @@ class LoggedCursor( MySQLdb.cursors.Cursor ):
+@@ -44,7 +44,10 @@ class LoggedCursor( MySQLdb.cursors.Cursor ):
      def _sanitize(self, query): return query.replace('?', '%s')
  
      def log_query(self, query, args):
 -        self.log(self.log.DATABASE, MythLog.DEBUG, 
++        if isinstance(query, bytearray):
++            encoding = self._get_db().encoding
++            query = query.decode(encoding)
 +        self.log(self.log.DATABASE, MythLog.DEBUG,
                   ' '.join(query.split()), str(args))
  
      def execute(self, query, args=None):
-@@ -67,7 +67,7 @@ class LoggedCursor( MySQLdb.cursors.Cursor ):
+@@ -67,7 +70,7 @@ class LoggedCursor( MySQLdb.cursors.Cursor ):
              if args is None:
                  return super(LoggedCursor, self).execute(query)
              return super(LoggedCursor, self).execute(query, args)
@@ -4710,7 +4790,7 @@ index 42f368acff..63cc3c7425 100644
              raise MythDBError(MythDBError.DB_RAW, e.args)
  
      def executemany(self, query, args):
-@@ -92,7 +92,7 @@ class LoggedCursor( MySQLdb.cursors.Cursor ):
+@@ -92,7 +95,7 @@ class LoggedCursor( MySQLdb.cursors.Cursor ):
          self.log_query(query, args)
          try:
              return super(LoggedCursor, self).executemany(query, args)
@@ -5191,7 +5271,7 @@ index 45ace3216d..7304be4d71 100644
  
      def __new__(cls, *args, **kwargs):
 diff --git a/mythtv/bindings/python/MythTV/methodheap.py b/mythtv/bindings/python/MythTV/methodheap.py
-index 871605565c..f68903a4e8 100644
+index 871605565c..cbbc861509 100644
 --- a/mythtv/bindings/python/MythTV/methodheap.py
 +++ b/mythtv/bindings/python/MythTV/methodheap.py
 @@ -16,7 +16,11 @@ from MythTV.dataheap import *
@@ -5243,6 +5323,15 @@ index 871605565c..f68903a4e8 100644
                  'StartChanId':startchan, 'Details':1}
          if numchan:
              args['NumOfChannels'] = numchan
+@@ -1231,7 +1235,7 @@ class MythMusic( MusicSchema, DBCache ):
+                                     fields=('genre_id',)))
+ 
+         if key in ('name','track','disc_number','rating',
+-                        'format','sample_rate','bitrate'):
++                        'format','sample_rate','bitrate', 'hostname'):
+             return ('music_songs.%s=%%s' % key, value, 0)
+         if key == 'artist':
+             return ('music_artists.artist_name=%s', value, 1)
 diff --git a/mythtv/bindings/python/MythTV/msearch.py b/mythtv/bindings/python/MythTV/msearch.py
 index 8142f5bf5c..a5d1f3d123 100644
 --- a/mythtv/bindings/python/MythTV/msearch.py
@@ -5273,10 +5362,10 @@ index a3df5def54..aa45d326b7 100644
  import socket
  import weakref
 diff --git a/mythtv/bindings/python/MythTV/static.py b/mythtv/bindings/python/MythTV/static.py
-index 6d82b8ef87..2e5fcd64a4 100644
+index 6d82b8ef87..4fecaa199f 100644
 --- a/mythtv/bindings/python/MythTV/static.py
 +++ b/mythtv/bindings/python/MythTV/static.py
-@@ -4,7 +4,7 @@
+@@ -4,38 +4,43 @@
  Contains any static and global variables for MythTV Python Bindings
  """
  
@@ -5284,9 +5373,68 @@ index 6d82b8ef87..2e5fcd64a4 100644
 +OWN_VERSION = (29,0,-1,0)
  SCHEMA_VERSION = 1348
  NVSCHEMA_VERSION = 1007
- MUSICSCHEMA_VERSION = 1018
+-MUSICSCHEMA_VERSION = 1018
++MUSICSCHEMA_VERSION = 1024
+ PROTO_VERSION = '91'
+ PROTO_TOKEN = 'BuzzOff'
+ BACKEND_SEP = '[]:[]'
+ INSTALL_PREFIX = '/usr/local'
+ 
+ class MARKUP( object ):
+-    MARK_UNSET          = -10
+-    MARK_UPDATED_CUT    = -3
+-    MARK_PLACEHOLDER    = -2
+-    MARK_CUT_END        = 0
+-    MARK_CUT_START      = 1
+-    MARK_BOOKMARK       = 2
+-    MARK_BLANK_FRAME    = 3
+-    MARK_COMM_START     = 4
+-    MARK_COMM_END       = 5
+-    MARK_GOP_START      = 6
+-    MARK_KEYFRAME       = 7
+-    MARK_SCENE_CHANGE   = 8
+-    MARK_GOP_BYFRAME    = 9
+-    MARK_ASPECT_1_1     = 10
+-    MARK_ASPECT_4_3     = 11
+-    MARK_ASPECT_16_9    = 12
+-    MARK_ASPECT_2_21_1  = 13
+-    MARK_ASPECT_CUSTOM  = 14
+-    MARK_VIDEO_WIDTH    = 30
+-    MARK_VIDEO_HEIGHT   = 31
+-    MARK_VIDEO_RATE     = 32
+-    MARK_DURATION_MS    = 33
++    MARK_UNSET            = -10
++    MARK_TMP_CUT_END      = -5
++    MARK_TMP_CUT_START    = -4
++    MARK_UPDATED_CUT      = -3
++    MARK_PLACEHOLDER      = -2
++    MARK_CUT_END          = 0
++    MARK_CUT_START        = 1
++    MARK_BOOKMARK         = 2
++    MARK_BLANK_FRAME      = 3
++    MARK_COMM_START       = 4
++    MARK_COMM_END         = 5
++    MARK_GOP_START        = 6
++    MARK_KEYFRAME         = 7
++    MARK_SCENE_CHANGE     = 8
++    MARK_GOP_BYFRAME      = 9
++    MARK_ASPECT_1_1       = 10
++    MARK_ASPECT_4_3       = 11
++    MARK_ASPECT_16_9      = 12
++    MARK_ASPECT_2_21_1    = 13
++    MARK_ASPECT_CUSTOM    = 14
++    MARK_VIDEO_WIDTH      = 30
++    MARK_VIDEO_HEIGHT     = 31
++    MARK_VIDEO_RATE       = 32
++    MARK_DURATION_MS      = 33
++    MARK_TOTAL_FRAMES     = 34
++    MARK_UTIL_PROGSTART   = 40
++    MARK_UTIL_LASTPLAYPOS = 41
+ 
+ class RECTYPE( object ):
+     kNotRecording       = 0
 diff --git a/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbCollection.xsl b/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbCollection.xsl
-index 4dfa7c1757..f9464db373 100644
+index 4dfa7c1757..ee9a630cff 100644
 --- a/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbCollection.xsl
 +++ b/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbCollection.xsl
 @@ -16,7 +16,7 @@
@@ -5345,10 +5493,10 @@ index 4dfa7c1757..f9464db373 100644
                      </certifications>
                  </xsl:if>
 -                <xsl:if test="./Genre/text() != ''">
-+                <xsl:if test="./genre/text() != ''">
++                <xsl:if test="./genre">
                      <categories>
 -                        <xsl:for-each select="tvdbXpath:stringToList(string(./Genre))">
-+                        <xsl:for-each select="tvdbXpath:stringToList(string(./genre))">
++                        <xsl:for-each select="./genre/item">
                              <xsl:element name="category">
                                  <xsl:attribute name="type">genre</xsl:attribute>
                                  <xsl:attribute name="name"><xsl:value-of select="normalize-space(.)"/></xsl:attribute>
@@ -5383,7 +5531,7 @@ index 4dfa7c1757..f9464db373 100644
                  </xsl:if>
 -                <xsl:if test="./Rating/text() != ''">
 -                    <userrating><xsl:value-of select="normalize-space(Rating)"/></userrating>
-+                <xsl:if test="./siteRating/text() != ''">
++                <xsl:if test="./siteRating/text() != '0'">
 +                    <userrating><xsl:value-of select="normalize-space(siteRating)"/></userrating>
                  </xsl:if>
 -                <xsl:if test="./RatingCount/text() != ''">
@@ -5465,7 +5613,7 @@ index 4dfa7c1757..f9464db373 100644
 +                                </xsl:element>
 +                            </xsl:when>
 +                        </xsl:choose>
-+                        <xsl:if test="./banner/text() != ''">
++                        <xsl:if test="./banner/text() != '' and ./banner/text() != 'http://thetvdb.com/banners/'">
                              <xsl:element name="image">
                                  <xsl:attribute name="type">banner</xsl:attribute>
 -                                <xsl:attribute name="url"><xsl:value-of select="concat('http://www.thetvdb.com/banners/', normalize-space(banner))"/></xsl:attribute>
@@ -5523,7 +5671,7 @@ index 28daee047e..bf7ad06a82 100644
                  <xsl:if test=".//poster/text() != '' or .//fanart/text() != '' or .//banner/text() != ''">
                      <images>
 diff --git a/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbVideo.xsl b/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbVideo.xsl
-index 3eb3c8eb66..c36e13e41c 100644
+index 3eb3c8eb66..d283592925 100644
 --- a/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbVideo.xsl
 +++ b/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbVideo.xsl
 @@ -16,7 +16,7 @@
@@ -5568,10 +5716,10 @@ index 3eb3c8eb66..c36e13e41c 100644
                      </certifications>
                  </xsl:if>
 -                <xsl:if test="./Genre/text() != ''">
-+                <xsl:if test="./genre/text() != ''">
++                <xsl:if test="./genre/item != ''">
                      <categories>
 -                        <xsl:for-each select="tvdbXpath:stringToList(string(./Genre))">
-+                        <xsl:for-each select="tvdbXpath:stringToList(string(./genre))">
++                        <xsl:for-each select="./genre/item">
                              <xsl:element name="category">
                                  <xsl:attribute name="type">genre</xsl:attribute>
                                  <xsl:attribute name="name"><xsl:value-of select="normalize-space(.)"/></xsl:attribute>
@@ -5591,8 +5739,9 @@ index 3eb3c8eb66..c36e13e41c 100644
                      </studios>
                  </xsl:if>
 -                <xsl:if test="./Runtime/text() != ''">
+-                    <runtime><xsl:value-of select="normalize-space(Runtime)"/></runtime>
 +                <xsl:if test="./runtime/text() != ''">
-                     <runtime><xsl:value-of select="normalize-space(Runtime)"/></runtime>
++                    <runtime><xsl:value-of select="normalize-space(runtime)"/></runtime>
                  </xsl:if>
                  <inetref><xsl:value-of select="normalize-space(id)"/></inetref>
                  <collectionref><xsl:value-of select="normalize-space(id)"/></collectionref>
@@ -6183,7 +6332,7 @@ index ff5dc6827d..cd34f93a9b 100755
          # Sometimes all the results are required
          if allValues == True:
 diff --git a/mythtv/bindings/python/MythTV/ttvdb/tvdb_api.py b/mythtv/bindings/python/MythTV/ttvdb/tvdb_api.py
-index 6aa08945e1..aaef0dd691 100644
+index 6aa08945e1..c5ed0d8352 100644
 --- a/mythtv/bindings/python/MythTV/ttvdb/tvdb_api.py
 +++ b/mythtv/bindings/python/MythTV/ttvdb/tvdb_api.py
 @@ -1,68 +1,283 @@
@@ -6706,10 +6855,10 @@ index 6aa08945e1..aaef0dd691 100644
 +                except KeyError:
 +                    # We either return something or we get the exception below
 +                    pass
-+
-+                    raise tvdb_attributenotfound("Cannot find attribute %s" % (repr(key)))
  
 -    def search(self, term = None, key = None):
++                    raise tvdb_attributenotfound("Cannot find attribute %s" % (repr(key)))
++
 +    def search(self, term=None, key=None):
          """Search episode data for term, if it matches, return the Episode (self).
          The key parameter can be used to limit the search to a specific element,
@@ -6809,13 +6958,13 @@ index 6aa08945e1..aaef0dd691 100644
 +
 +                 >>> import logging
 +                 >>> logging.basicConfig(level = logging.DEBUG)
-+
-+        cache (True/False/str/requests_cache.CachedSession):
  
 -        cache (True/False/str/unicode):
 -            Retrieved XML are persisted to to disc. If true, stores in tvdb_api
 -            folder under your systems TEMP_DIR, if set to str/unicode instance it
 -            will use this as the cache location. If False, disables caching.
++        cache (True/False/str/requests_cache.CachedSession):
++
 +            Retrieved URLs can be persisted to to disc.
 +
 +            True/False enable or disable default caching. Passing
@@ -7128,12 +7277,16 @@ index 6aa08945e1..aaef0dd691 100644
 -            logger.setLevel(logging.WARNING)
 -        return logger
 -    #end initLogger
--
++            data = r_data
+ 
 -    def _getTempDir(self):
 -        """Returns the [system temp dir]/tvdb_api
 -        """
 -        return os.path.join(tempfile.gettempdir(), "tvdb_api")
-+            data = r_data
++        if links and links['next']:
++            url = url.split('?')[0]
++            _url = url + "?page=%s" % links['next']
++            self._loadUrl(_url, data)
  
 -    def _loadUrl(self, url, recache = False):
 -        try:
@@ -7150,11 +7303,7 @@ index 6aa08945e1..aaef0dd691 100644
 -        except urllib2.URLError, errormsg:
 -            raise tvdb_error("Could not connect to server: %s" % (errormsg))
 -        #end try
-+        if links and links['next']:
-+            url = url.split('?')[0]
-+            _url = url + "?page=%s" % links['next']
-+            self._loadUrl(_url, data)
- 
+-
 -        return resp.read()
 +        return data
  
@@ -7189,13 +7338,13 @@ index 6aa08945e1..aaef0dd691 100644
 -                errormsg = "There was an error with the XML retrieved from thetvdb.com:\n%s" % (
 -                    exceptionmsg
 -                )
--
++        src = self._loadUrl(url, language=language)
+ 
 -                if self.config['cache_enabled']:
 -                    errormsg += "\nFirst try emptying the cache folder at..\n%s" % (
 -                        self.config['cache_location']
 -                    )
-+        src = self._loadUrl(url, language=language)
- 
+-
 -                errormsg += "\nIf this does not resolve the issue, please try again later. If the error persists, report a bug on"
 -                errormsg += "\nhttp://dbr.lighthouseapp.com/projects/13342-tvdb_api/overview\n"
 -                raise tvdb_error(errormsg)
@@ -7323,7 +7472,7 @@ index 6aa08945e1..aaef0dd691 100644
          >>>
  
          Any key starting with an underscore has been processed (not the raw
-@@ -589,121 +951,42 @@ class Tvdb:
+@@ -589,121 +951,44 @@ class Tvdb:
  
          This interface will be improved in future versions.
          """
@@ -7333,6 +7482,8 @@ index 6aa08945e1..aaef0dd691 100644
 -            self.imagesInfoTree = self.tmpTree
 +        log().debug('Getting season banners for %s' % (sid))
 +        bannersEt = self._getetsrc(self.config['url_seriesBanner'] % sid)
++        if not bannersEt:
++            return
          banners = {}
 -        for cur_banner in bannersEt.findall('Banner'):
 -            bid = cur_banner.find('id').text
@@ -7381,15 +7532,8 @@ index 6aa08945e1..aaef0dd691 100644
 -    def ttvdb_parseBanners(self, sid):
 -        """Parses banners XML, from
 -        http://www.thetvdb.com/api/[APIKEY]/series/[SERIES ID]/banners.xml
--
--        Banners are retrieved using t['show name]['_banners'], for example:
  
--        >>> t = Tvdb(banners = True)
--        >>> t['scrubs']['_banners'].keys()
--        ['fanart', 'poster', 'series', 'season']
--        >>> t['scrubs']['_banners']['poster']['680x1000']['35308']['_bannerpath']
--        'http://www.thetvdb.com/banners/posters/76156-2.jpg'
--        >>>
+-        Banners are retrieved using t['show name]['_banners'], for example:
 +                if btype not in banners:
 +                    banners[btype] = {}
 +                if btype2 not in banners[btype]:
@@ -7397,12 +7541,19 @@ index 6aa08945e1..aaef0dd691 100644
 +                if bid not in banners[btype][btype2]:
 +                    banners[btype][btype2][bid] = {}
  
--        Any key starting with an underscore has been processed (not the raw
--        data from the XML)
+-        >>> t = Tvdb(banners = True)
+-        >>> t['scrubs']['_banners'].keys()
+-        ['fanart', 'poster', 'series', 'season']
+-        >>> t['scrubs']['_banners']['poster']['680x1000']['35308']['_bannerpath']
+-        'http://www.thetvdb.com/banners/posters/76156-2.jpg'
+-        >>>
 +                banners[btype][btype2][bid]['bannerpath'] = banner_info['fileName']
 +                banners[btype][btype2][bid]['resolution'] = banner_info['resolution']
 +                banners[btype][btype2][bid]['subKey'] = banner_info['subKey']
  
+-        Any key starting with an underscore has been processed (not the raw
+-        data from the XML)
+-
 -        This interface will be improved in future versions.
 -        Changed in this interface is that a list or URLs is created to preserve the user rating order from
 -        top rated to lowest rated.
@@ -7472,7 +7623,7 @@ index 6aa08945e1..aaef0dd691 100644
  
          Actors are retrieved using t['show name]['_actors'], for example:
  
-@@ -714,59 +997,71 @@ class Tvdb:
+@@ -714,59 +999,71 @@ class Tvdb:
          >>> type(actors[0])
          <class 'tvdb_api.Actor'>
          >>> actors[0]
@@ -7575,7 +7726,7 @@ index 6aa08945e1..aaef0dd691 100644
  
          # Parse banners
          if self.config['banners_enabled']:
-@@ -777,24 +1072,61 @@ class Tvdb:
+@@ -777,24 +1074,62 @@ class Tvdb:
              self._parseActors(sid)
  
          # Parse episode data
@@ -7601,8 +7752,9 @@ index 6aa08945e1..aaef0dd691 100644
 +
 +        url = self.config['url_epInfo'] % sid
 +        epsEt = self._getetsrc(url, language=self.shows[sid].data[u'language'])
-+        for cur_ep in epsEt:
-+            self._parseEpisodeInfo(sid, cur_ep)
++        if epsEt:
++            for cur_ep in epsEt:
++                self._parseEpisodeInfo(sid, cur_ep)
 +
 +    def _parseEpisodeInfo(self, sid, cur_ep):
 +        if self.config['dvdorder']:
@@ -7655,7 +7807,7 @@ index 6aa08945e1..aaef0dd691 100644
  
      def _nameToSid(self, name):
          """Takes show name, returns the correct series ID (if the show has
-@@ -802,48 +1134,48 @@ class Tvdb:
+@@ -802,48 +1137,48 @@ class Tvdb:
          the correct SID.
          """
          if name in self.corrections:
@@ -8668,6 +8820,974 @@ index a91ff47b5d..543bef38a0 100644
          if self[key] == value:
              return
          tmp = self._parent[self._field].split(',')
+diff --git a/mythtv/external/libudfread/default_blockinput.c b/mythtv/external/libudfread/default_blockinput.c
+index ac4d671564..fb2ec5fd3d 100644
+--- a/mythtv/external/libudfread/default_blockinput.c
++++ b/mythtv/external/libudfread/default_blockinput.c
+@@ -1,6 +1,6 @@
+ /*
+  * This file is part of libudfread
+- * Copyright (C) 2014-2015 VLC authors and VideoLAN
++ * Copyright (C) 2014-2017 VLC authors and VideoLAN
+  *
+  * Authors: Petri Hintukainen <phintuka@users.sourceforge.net>
+  *
+@@ -41,6 +41,10 @@
+ #include <stdio.h>
+ #endif
+ #include <io.h>
++# undef  lseek
++# define lseek _lseeki64
++# undef  off_t
++# define off_t int64_t
+ #endif
+ 
+ #ifdef __ANDROID__
+@@ -70,7 +74,30 @@ static ssize_t pread(int fd, void *buf, size_t count, off_t offset)
+     }
+     return got;
+ }
+-#endif
++
++#elif defined (NEED_PREAD_IMPL)
++
++#include <pthread.h>
++static ssize_t pread_impl(int fd, void *buf, size_t count, off_t offset)
++{
++    static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
++    ssize_t result;
++
++    pthread_mutex_lock(&lock);
++
++    if (lseek(fd, offset, SEEK_SET) != offset) {
++        result = -1;
++    } else {
++        result = read(fd, buf, count);
++    }
++
++    pthread_mutex_unlock(&lock);
++    return result;
++}
++
++#define pread(a,b,c,d) pread_impl(a,b,c,d)
++
++#endif /* _WIN32 || NEED_PREAD_IMPL */
+ 
+ 
+ typedef struct default_block_input {
+@@ -120,7 +147,7 @@ static int _def_read(udfread_block_input *p_gen, uint32_t lba, void *buf, uint32
+     pos   = (off_t)lba * UDF_BLOCK_SIZE;
+ 
+     while (got < bytes) {
+-        ssize_t ret = pread(p->fd, ((char*)buf) + got, bytes - got, pos + got);
++        ssize_t ret = pread(p->fd, ((char*)buf) + got, bytes - got, pos + (off_t)got);
+ 
+         if (ret <= 0) {
+             if (ret < 0 && errno == EINTR) {
+@@ -131,7 +158,7 @@ static int _def_read(udfread_block_input *p_gen, uint32_t lba, void *buf, uint32
+             }
+             break;
+         }
+-        got += ret;
++        got += (size_t)ret;
+     }
+ 
+     return got / UDF_BLOCK_SIZE;
+diff --git a/mythtv/external/libudfread/ecma167.c b/mythtv/external/libudfread/ecma167.c
+index ab7a5b99d4..9c07c08e20 100644
+--- a/mythtv/external/libudfread/ecma167.c
++++ b/mythtv/external/libudfread/ecma167.c
+@@ -37,7 +37,7 @@
+  */
+ 
+ /* fixed-length dstring, ECMA 1/7.2.12 */
+-static size_t _decode_dstring(const uint8_t *p, size_t field_length, uint8_t *str)
++static uint8_t _decode_dstring(const uint8_t *p, size_t field_length, uint8_t *str)
+ {
+     size_t length;
+ 
+@@ -51,7 +51,7 @@ static size_t _decode_dstring(const uint8_t *p, size_t field_length, uint8_t *st
+         length = field_length;
+     }
+     memcpy(str, p, length);
+-    return length;
++    return (uint8_t)length;
+ }
+ 
+ /* Extent Descriptor (ECMA 167, 3/7.1) */
+@@ -85,10 +85,10 @@ enum tag_identifier decode_descriptor_tag(const uint8_t *buf)
+ 
+   /* calculate tag checksum */
+   for (i = 0; i < 4; i++) {
+-      checksum += buf[i];
++      checksum = (uint8_t)(checksum + buf[i]);
+   }
+   for (i = 5; i < 16; i++) {
+-      checksum += buf[i];
++      checksum = (uint8_t)(checksum + buf[i]);
+   }
+ 
+   if (checksum != buf[4]) {
+@@ -106,7 +106,7 @@ void decode_primary_volume(const uint8_t *p, struct primary_volume_descriptor *p
+     memcpy(pvd->volume_set_identifier, p + 72, 128);
+ }
+ 
+-/* Anchor Volume Description Pointer (ECMA 167 3/10.2) */
++/* Anchor Volume Descriptor Pointer (ECMA 167 3/10.2) */
+ void decode_avdp(const uint8_t *p, struct anchor_volume_descriptor *avdp)
+ {
+     /* Main volume descriptor sequence extent */
+@@ -116,6 +116,12 @@ void decode_avdp(const uint8_t *p, struct anchor_volume_descriptor *avdp)
+     _decode_extent_ad(p + 24, &avdp->rvds);
+ }
+ 
++/* Volume Descriptor Pointer (ECMA 167 3/10.3) */
++void decode_vdp(const uint8_t *p, struct volume_descriptor_pointer *vdp)
++{
++    _decode_extent_ad(p + 20, &vdp->next_extent);
++}
++
+ /* Partition Descriptor (ECMA 167 3/10.5) */
+ void decode_partition(const uint8_t *p, struct partition_descriptor *pd)
+ {
+@@ -144,6 +150,11 @@ void decode_logical_volume(const uint8_t *p, struct logical_volume_descriptor *l
+         map_size = sizeof(lvd->partition_map_table);
+     }
+ 
++    /* input size is one block (2048 bytes) */
++    if (map_size > 2048 - 440) {
++        map_size = 2048 - 440;
++    }
++
+     memcpy(lvd->partition_map_table, p + 440, map_size);
+ }
+ 
+@@ -158,16 +169,26 @@ void decode_file_set_descriptor(const uint8_t *p, struct file_set_descriptor *fs
+ }
+ 
+ /* File Identifier (ECMA 167 4/14.4) */
+-size_t decode_file_identifier(const uint8_t *p, struct file_identifier *fi)
++size_t decode_file_identifier(const uint8_t *p, size_t size, struct file_identifier *fi)
+ {
+     size_t l_iu; /* length of implementation use field */
+ 
++    if (size < 38) {
++        ecma_error("not enough data\n");
++        return 0;
++    }
++
+     fi->characteristic = _get_u8(p + 18);
+     fi->filename_len   = _get_u8(p + 19);
+     decode_long_ad(p + 20, &fi->icb);
+ 
+     l_iu = _get_u16(p + 36);
+ 
++    if (size < 38 + l_iu + fi->filename_len) {
++        ecma_error("not enough data\n");
++        return 0;
++    }
++
+     if (fi->filename_len) {
+         memcpy(fi->filename, p + 38 + l_iu, fi->filename_len);
+     }
+@@ -232,23 +253,23 @@ static void _decode_extended_ad(const uint8_t *buf, struct long_ad *ad)
+ 
+ /* File Entry */
+ 
+-static void _decode_file_ads(const uint8_t *p, int flags, uint16_t partition, struct file_entry *fe)
++static void _decode_file_ads(const uint8_t *p, int ad_type, uint16_t partition,
++                             struct long_ad *ad, unsigned num_ad)
+ {
+     uint32_t i;
+ 
+-    flags &= 7;
+-    for (i = 0; i < fe->num_ad; i++) {
+-        switch (flags) {
++    for (i = 0; i < num_ad; i++) {
++        switch (ad_type) {
+         case 0:
+-            _decode_short_ad(p, partition, &fe->data.ad[i]);
++            _decode_short_ad(p, partition, &ad[i]);
+             p += 8;
+             break;
+         case 1:
+-            decode_long_ad(p, &fe->data.ad[i]);
++            decode_long_ad(p, &ad[i]);
+             p += 16;
+             break;
+         case 2:
+-            _decode_extended_ad(p, &fe->data.ad[i]);
++            _decode_extended_ad(p, &ad[i]);
+             p += 20;
+             break;
+         }
+@@ -300,20 +321,59 @@ static struct file_entry *_decode_file_entry(const uint8_t *p, size_t size,
+ 
+     fe->file_type = tag.file_type;
+     fe->length    = _get_u64(p + 56);
+-    fe->num_ad    = num_ad;
++    fe->ad_type   = tag.flags & 7;
+ 
+     if (content_inline) {
+         /* data of small files can be embedded in file entry */
+         /* copy embedded file data */
+         fe->content_inline = 1;
+-        memcpy(fe->data.content, p + p_ad, l_ad);
++        fe->u.data.information_length = l_ad;
++        memcpy(fe->u.data.content, p + p_ad, l_ad);
+     } else {
+-        _decode_file_ads(p + p_ad, tag.flags, partition, fe);
++        fe->u.ads.num_ad = num_ad;
++        _decode_file_ads(p + p_ad, fe->ad_type, partition, &fe->u.ads.ad[0], num_ad);
+     }
+ 
+     return fe;
+ }
+ 
++int decode_allocation_extent(struct file_entry **p_fe, const uint8_t *p, size_t size, uint16_t partition)
++{
++    struct file_entry *fe = *p_fe;
++    uint32_t l_ad, num_ad;
++
++    l_ad = _get_u32(p + 20);
++    if (size < 24 || size - 24 < l_ad) {
++        ecma_error("decode_allocation_extent: invalid allocation extent (l_ad)\n");
++        return -1;
++    }
++
++    switch (fe->ad_type) {
++        case 0: num_ad = l_ad / 8;  break;
++        case 1: num_ad = l_ad / 16; break;
++        case 2: num_ad = l_ad / 20; break;
++        default:
++            return -1;
++    }
++
++    if (num_ad < 1) {
++        ecma_error("decode_allocation_extent: empty allocation extent\n");
++        return 0;
++    }
++
++    fe = (struct file_entry *)realloc(*p_fe, sizeof(struct file_entry) + sizeof(struct long_ad) * (fe->u.ads.num_ad + num_ad));
++    if (!fe) {
++        return -1;
++    }
++    *p_fe = fe;
++
++    /* decode new allocation descriptors */
++    _decode_file_ads(p + 24, fe->ad_type, partition, &fe->u.ads.ad[fe->u.ads.num_ad], num_ad);
++    fe->u.ads.num_ad += num_ad;
++
++    return 0;
++}
++
+ /* File Entry (ECMA 167, 4/14.9) */
+ struct file_entry *decode_file_entry(const uint8_t *p, size_t size, uint16_t partition)
+ {
+diff --git a/mythtv/external/libudfread/ecma167.h b/mythtv/external/libudfread/ecma167.h
+index 9300255591..be56d8da04 100644
+--- a/mythtv/external/libudfread/ecma167.h
++++ b/mythtv/external/libudfread/ecma167.h
+@@ -87,6 +87,7 @@ enum tag_identifier {
+     /* ECMA 167, 3/7.2.1) */
+     ECMA_PrimaryVolumeDescriptor              = 1,
+     ECMA_AnchorVolumeDescriptorPointer        = 2,
++    ECMA_VolumeDescriptorPointer              = 3,
+     ECMA_PartitionDescriptor                  = 5,
+     ECMA_LogicalVolumeDescriptor              = 6,
+     ECMA_TerminatingDescriptor                = 8,
+@@ -94,6 +95,7 @@ enum tag_identifier {
+     /* ECMA 167, 4/7.2.1 */
+     ECMA_FileSetDescriptor                    = 256,
+     ECMA_FileIdentifierDescriptor             = 257,
++    ECMA_AllocationExtentDescriptor           = 258,
+     ECMA_FileEntry                            = 261,
+     ECMA_ExtendedFileEntry                    = 266,
+ 
+@@ -121,6 +123,14 @@ struct anchor_volume_descriptor {
+ 
+ void decode_avdp(const uint8_t *p, struct anchor_volume_descriptor *avdp);
+ 
++/* Volume Descriptor Pointer (ECMA 167, 3/10.3) */
++
++struct volume_descriptor_pointer {
++    struct extent_ad next_extent; /* Next Volume Descriptor Sequence Extent */
++};
++
++void decode_vdp(const uint8_t *p, struct volume_descriptor_pointer *vdp);
++
+ /* Partition Descriptor (ECMA 167, 3/10.5) */
+ 
+ struct partition_descriptor {
+@@ -192,7 +202,7 @@ struct file_identifier {
+     uint8_t        filename[256];
+ };
+ 
+-size_t decode_file_identifier(const uint8_t *p, struct file_identifier *fi);
++size_t decode_file_identifier(const uint8_t *p, size_t size, struct file_identifier *fi);
+ 
+ /* File Entry (ECMA 167, 4/14.9) */
+ /* Extended File Entry (ECMA 167, 4/14.17) */
+@@ -211,17 +221,27 @@ struct file_entry {
+     uint64_t       length;         /* in bytes */
+     uint8_t        file_type;      /* ECMA_FT_* */
+     uint8_t        content_inline; /* 1 if file data is embedded in file entry */
++    uint8_t        ad_type;        /* from icb_flags; used when parsing allocation extents */
+ 
+-    uint32_t       num_ad;
+     union {
+-        struct long_ad ad[1];      /* Most files have only single extent, files in 3D BDs can have 100+. */
+-        uint8_t        content[1]; /* content of small files is embedded here */
+-    } data;
++        /* "normal" file */
++        struct {
++            uint32_t       num_ad;
++            struct long_ad ad[1];      /* Most files have only single extent, files in 3D BDs can have 100+. */
++        } ads;
++
++        /* inline file */
++        struct {
++            uint32_t       information_length; /* recorded information length, may be different than file length */
++            uint8_t        content[1]; /* content of small files is embedded here */
++        } data;
++    } u;
+ };
+ 
+ struct file_entry *decode_file_entry    (const uint8_t *p, size_t size, uint16_t partition);
+ struct file_entry *decode_ext_file_entry(const uint8_t *p, size_t size, uint16_t partition);
+ void               free_file_entry      (struct file_entry **p_fe);
+ 
++int decode_allocation_extent(struct file_entry **p_fe, const uint8_t *p, size_t size, uint16_t partition);
+ 
+ #endif /* UDFREAD_ECMA167_H_ */
+diff --git a/mythtv/external/libudfread/libudfread.pro b/mythtv/external/libudfread/libudfread.pro
+index bb228409ff..19fe314d96 100644
+--- a/mythtv/external/libudfread/libudfread.pro
++++ b/mythtv/external/libudfread/libudfread.pro
+@@ -19,7 +19,7 @@ win32-msvc* {
+ 
+ QMAKE_CLEAN += $(TARGET)
+ 
+-HEADERS += blockinput.h default_blockinput.h ecma167.h udfread.h
++HEADERS += blockinput.h default_blockinput.h ecma167.h udfread.h udfread-version.h
+ SOURCES += default_blockinput.c ecma167.c udfread.c udfread-version.c
+ DEFINES += HAVE_CONFIG_H
+ 
+diff --git a/mythtv/external/libudfread/udfread-version.h b/mythtv/external/libudfread/udfread-version.h
+index 8a134ea39d..1bd0d1016f 100644
+--- a/mythtv/external/libudfread/udfread-version.h
++++ b/mythtv/external/libudfread/udfread-version.h
+@@ -27,7 +27,7 @@
+      ((minor) *   100) +                         \
+      ((micro) *     1))
+ 
+-#define UDFREAD_VERSION_MAJOR 0
++#define UDFREAD_VERSION_MAJOR 1
+ #define UDFREAD_VERSION_MINOR 0
+ #define UDFREAD_VERSION_MICRO 0
+ 
+diff --git a/mythtv/external/libudfread/udfread.c b/mythtv/external/libudfread/udfread.c
+index a7ce87dac1..ba1b6753d5 100644
+--- a/mythtv/external/libudfread/udfread.c
++++ b/mythtv/external/libudfread/udfread.c
+@@ -25,6 +25,10 @@
+ 
+ #include "udfread.h"
+ 
++#ifdef HAVE_UDFREAD_VERSION_H
++#include "udfread-version.h"
++#endif
++
+ #include "blockinput.h"
+ #include "default_blockinput.h"
+ #include "ecma167.h"
+@@ -139,7 +143,7 @@ static void *_safe_realloc(void *p, size_t s)
+ #define utf16lo_to_utf8(out, out_pos, out_size, ch) \
+   do {                                              \
+     if (ch < 0x80) {                                \
+-      out[out_pos++] = ch;                          \
++      out[out_pos++] = (uint8_t)ch;                 \
+     } else {                                        \
+       out_size++;                                   \
+       out = (uint8_t *)_safe_realloc(out, out_size);\
+@@ -172,8 +176,14 @@ static char *_cs0_to_utf8(const uint8_t *cs0, size_t size)
+     size_t   out_pos = 0;
+     size_t   out_size = size;
+     size_t   i;
+-    uint8_t *out = (uint8_t *)malloc(size);
++    uint8_t *out;
++
++    if (size < 1) {
++        /* empty string */
++        return calloc(1, 1);
++    }
+ 
++    out = (uint8_t *)malloc(size);
+     if (!out) {
+         udf_error("out of memory\n");
+         return NULL;
+@@ -187,7 +197,7 @@ static char *_cs0_to_utf8(const uint8_t *cs0, size_t size)
+         }
+         break;
+     case 16:
+-        for (i = 1; i < size; i+=2) {
++        for (i = 1; i < size - 1; i+=2) {
+             uint16_t ch = cs0[i + 1] | (cs0[i] << 8);
+             utf16_to_utf8(out, out_pos, out_size, ch);
+         }
+@@ -239,7 +249,7 @@ static uint32_t _read_blocks(udfread_block_input *input,
+ 
+     result = input->read(input, lba, buf, nblocks, flags);
+ 
+-    return result < 0 ? 0 : result;
++    return result < 0 ? 0 : (uint32_t)result;
+ }
+ 
+ static int _read_descriptor_block(udfread_block_input *input, uint32_t lba, uint8_t *buf)
+@@ -371,14 +381,20 @@ static int _search_vds(udfread_block_input *input, int part_number,
+                        struct volume_descriptor_set *vds)
+ 
+ {
++    struct volume_descriptor_pointer vdp;
+     uint8_t  buf[UDF_BLOCK_SIZE];
+     int      tag_id;
+     uint32_t lba;
+-    uint32_t end_lba = loc->lba + loc->length / UDF_BLOCK_SIZE;
++    uint32_t end_lba;
+     int      have_part = 0, have_lvd = 0, have_pvd = 0;
+ 
++    memset(vds, 0, sizeof(*vds));
++
++next_extent:
+     udf_trace("reading Volume Descriptor Sequence at lba %u, len %u bytes\n", loc->lba, loc->length);
+ 
++    end_lba = loc->lba + loc->length / UDF_BLOCK_SIZE;
++
+     /* parse Volume Descriptor Sequence */
+     for (lba = loc->lba; lba < end_lba; lba++) {
+ 
+@@ -386,6 +402,11 @@ static int _search_vds(udfread_block_input *input, int part_number,
+ 
+         switch (tag_id) {
+ 
++        case ECMA_VolumeDescriptorPointer:
++            decode_vdp(buf, &vdp);
++            loc = &vdp.next_extent;
++            goto next_extent;
++
+         case ECMA_PrimaryVolumeDescriptor:
+             udf_log("Primary Volume Descriptor in lba %u\n", lba);
+             decode_primary_volume(buf, &vds->pvd);
+@@ -457,6 +478,7 @@ static int _validate_logical_volume(const struct logical_volume_descriptor *lvd,
+     /* UDF 2.60 2.1.5.2 */
+     if (_check_domain_identifier(&lvd->domain_id, lvd_domain_id) < 0) {
+         udf_error("unknown Domain ID in Logical Volume Descriptor: %1.22s\n", lvd->domain_id.identifier);
++        return -1;
+ 
+     } else {
+ 
+@@ -508,11 +530,15 @@ static int _map_metadata_partition(udfread_block_input *input,
+             continue;
+         }
+ 
+-        if (fe->file_type == UDF_FT_METADATA) {
+-            part->p[1].lba = pd->start_block + fe->data.ad[0].lba;
++        if (fe->content_inline) {
++            udf_error("invalid metadata file (content inline)\n");
++        } else if (!fe->u.ads.num_ad) {
++            udf_error("invalid metadata file (no allocation descriptors)\n");
++        } else if (fe->file_type == UDF_FT_METADATA) {
++            part->p[1].lba = pd->start_block + fe->u.ads.ad[0].lba;
+             udf_log("metadata file at lba %u\n", part->p[1].lba);
+         } else if (fe->file_type == UDF_FT_METADATA_MIRROR) {
+-            part->p[1].mirror_lba = pd->start_block + fe->data.ad[0].lba;
++            part->p[1].mirror_lba = pd->start_block + fe->u.ads.ad[0].lba;
+             udf_log("metadata mirror file at lba %u\n", part->p[1].mirror_lba);
+         } else {
+             udf_error("unknown metadata file type %u\n", fe->file_type);
+@@ -558,6 +584,11 @@ static int _parse_udf_partition_maps(udfread_block_input *input,
+         uint8_t  len  = _get_u8(map + 1);
+         uint16_t ref;
+ 
++        if (len < 2) {
++            udf_error("invalid partition map length %d\n", (int)len);
++            break;
++        }
++
+         udf_trace("map %u: type %u\n", i, type);
+         if (map + len > end) {
+             udf_error("partition map table too short !\n");
+@@ -568,6 +599,11 @@ static int _parse_udf_partition_maps(udfread_block_input *input,
+ 
+             /* ECMA 167 Type 1 partition map */
+ 
++            if (len != 6) {
++                udf_error("invalid type 1 partition map length %d\n", (int)len);
++                break;
++            }
++
+             ref = _get_u16(map + 4);
+             udf_log("partition map: %u: type 1 partition, ref %u\n", i, ref);
+ 
+@@ -588,6 +624,11 @@ static int _parse_udf_partition_maps(udfread_block_input *input,
+ 
+             /* Type 2 partition map, UDF 2.60 2.2.18 */
+ 
++            if (len != 64) {
++                udf_error("invalid type 2 partition map length %d\n", (int)len);
++                break;
++            }
++
+             struct entity_id type_id;
+             decode_entity_id(map + 4, &type_id);
+             if (!_check_domain_identifier(&type_id, meta_domain_id)) {
+@@ -693,6 +734,10 @@ udfread *udfread_init(void)
+         enable_log = 1;
+     }
+ 
++#ifdef HAVE_UDFREAD_VERSION_H
++    udf_log("libudfread " UDFREAD_VERSION_STRING "\n");
++#endif
++
+     return (udfread *)calloc(1, sizeof(udfread));
+ }
+ 
+@@ -824,6 +869,43 @@ static struct file_entry *_read_file_entry(udfread *udf,
+     }
+ 
+     free(buf);
++
++    /* read possible additional allocation extents */
++    if (fe && !fe->content_inline) {
++        while (fe->u.ads.num_ad > 0 &&
++               fe->u.ads.ad[fe->u.ads.num_ad - 1].extent_type == ECMA_AD_EXTENT_AD) {
++
++            /* drop pointer to this extent from the end of AD list */
++            fe->u.ads.num_ad--;
++
++            icb = &fe->u.ads.ad[fe->u.ads.num_ad];
++            udf_log("_read_file_entry: reading allocation extent @%u\n", icb->lba);
++
++            buf = _read_metadata(udf, icb, &tag_id);
++            if (!buf) {
++                udf_error("_read_file_entry: reading allocation extent @%u failed\n", icb->lba);
++                break;
++            }
++
++            if (tag_id != ECMA_AllocationExtentDescriptor) {
++                free(buf);
++                udf_error("_read_file_entry: unexpected tag %d (expected ECMA_AllocationExtentDescriptor)\n", tag_id);
++                break;
++            }
++
++            if (decode_allocation_extent(&fe, buf, icb->length, icb->partition) < 0) {
++                free(buf);
++                udf_error("_read_file_entry: decode_allocation_extent() failed\n");
++                break;
++            }
++
++            /* failure before this point will cause an error when reading the file past extent point.
++               (extent ad is left in file ad list). */
++
++            free(buf);
++        }
++    }
++
+     return fe;
+ }
+ 
+@@ -834,7 +916,16 @@ static int _parse_dir(const uint8_t *data, uint32_t length, struct udf_dir *dir)
+     const uint8_t *end = data + length;
+     int            tag_id;
+ 
+-    while (p < end) {
++    if (length < 16) {
++        return 0;
++    }
++
++    while (p < end - 16) {
++        size_t used;
++
++        if (dir->num_entries == UINT32_MAX) {
++            return 0;
++        }
+ 
+         tag_id = decode_descriptor_tag(p);
+         if (tag_id != ECMA_FileIdentifierDescriptor) {
+@@ -847,7 +938,12 @@ static int _parse_dir(const uint8_t *data, uint32_t length, struct udf_dir *dir)
+             return -1;
+         }
+ 
+-        p += decode_file_identifier(p, &fid);
++        used = decode_file_identifier(p, (size_t)(end - p), &fid);
++        if (used == 0) {
++            /* not enough data. keep the entries we already have. */
++            break;
++        }
++        p += used;
+ 
+         if (fid.characteristic & CHAR_FLAG_PARENT) {
+             continue;
+@@ -860,10 +956,21 @@ static int _parse_dir(const uint8_t *data, uint32_t length, struct udf_dir *dir)
+         dir->files[dir->num_entries].icb = fid.icb;
+         dir->files[dir->num_entries].filename = _cs0_to_utf8(fid.filename, fid.filename_len);
+ 
+-        if (dir->files[dir->num_entries].filename) {
+-            dir->num_entries++;
++        if (!dir->files[dir->num_entries].filename) {
++            continue;
+         }
+ 
++        /* Skip empty file identifiers.
++         * Not strictly compilant (?), \0 is allowed in
++         * ECMA167 file identifier.
++         */
++        if (!dir->files[dir->num_entries].filename[0]) {
++            udf_error("skipping empty file identifier\n");
++            free(dir->files[dir->num_entries].filename);
++            continue;
++        }
++
++        dir->num_entries++;
+     }
+ 
+     return 0;
+@@ -914,16 +1021,19 @@ static struct udf_dir *_read_dir(udfread *udf, const struct long_ad *icb)
+     if (fe->content_inline) {
+         dir = (struct udf_dir *)calloc(1, sizeof(struct udf_dir));
+         if (dir) {
+-            if (_parse_dir(&fe->data.content[0], fe->length, dir) < 0) {
++            if (_parse_dir(&fe->u.data.content[0], fe->u.data.information_length, dir) < 0) {
+                 udf_error("failed parsing inline directory file\n");
+                 _free_dir(&dir);
+             }
+         }
+ 
+-    } else if (fe->num_ad == 0) {
++    } else if (fe->u.ads.num_ad == 0) {
+         udf_error("empty directory file");
+     } else {
+-        dir = _read_dir_file(udf, &fe->data.ad[0]);
++        if (fe->u.ads.num_ad > 1) {
++            udf_error("unsupported fragmented directory file\n");
++        }
++        dir = _read_dir_file(udf, &fe->u.ads.ad[0]);
+     }
+ 
+     free_file_entry(&fe);
+@@ -1002,13 +1112,14 @@ static struct udf_dir *_read_subdir(udfread *udf, struct udf_dir *dir, uint32_t
+     return dir->subdirs[index];
+ }
+ 
+-static int _scan_dir(const struct udf_dir *dir, const char *filename)
++static int _scan_dir(const struct udf_dir *dir, const char *filename, uint32_t *index)
+ {
+     uint32_t i;
+ 
+     for (i = 0; i < dir->num_entries; i++) {
+         if (!strcmp(filename, dir->files[i].filename)) {
+-            return i;
++            *index = i;
++            return 0;
+         }
+     }
+ 
+@@ -1040,9 +1151,8 @@ static int _find_file(udfread *udf, const char *path,
+     }
+ 
+     while (token) {
+-
+-        int index = _scan_dir(current_dir, token);
+-        if (index < 0) {
++        uint32_t index;
++        if (_scan_dir(current_dir, token, &index) < 0) {
+             udf_log("_find_file: entry %s not found\n", token);
+             goto error;
+         }
+@@ -1278,7 +1388,7 @@ struct udfread_file {
+     struct file_entry *fe;
+ 
+     /* byte stream access */
+-    int64_t     pos;
++    uint64_t    pos;
+     uint8_t    *block;
+     int         block_valid;
+ 
+@@ -1324,8 +1434,8 @@ UDFFILE *udfread_file_open(udfread *udf, const char *path)
+ 
+ int64_t udfread_file_size(UDFFILE *p)
+ {
+-    if (p && p->fe) {
+-        return p->fe->length;
++    if (p) {
++        return (int64_t)p->fe->length;
+     }
+     return -1;
+ }
+@@ -1343,7 +1453,7 @@ void udfread_file_close(UDFFILE *p)
+  * block access
+  */
+ 
+-static uint32_t _file_lba(UDFFILE *p, uint32_t file_block)
++static uint32_t _file_lba(UDFFILE *p, uint32_t file_block, uint32_t *extent_length)
+ {
+     const struct file_entry *fe;
+     unsigned int i;
+@@ -1351,14 +1461,14 @@ static uint32_t _file_lba(UDFFILE *p, uint32_t file_block)
+ 
+     fe = p->fe;
+ 
+-    for (i = 0; i < fe->num_ad; i++) {
+-        const struct long_ad *ad = &fe->data.ad[0];
++    for (i = 0; i < fe->u.ads.num_ad; i++) {
++        const struct long_ad *ad = &fe->u.ads.ad[0];
+         ad_size = (ad[i].length + UDF_BLOCK_SIZE - 1) / UDF_BLOCK_SIZE;
+         if (file_block < ad_size) {
+ 
+             if (ad[i].extent_type != ECMA_AD_EXTENT_NORMAL) {
+                 if (ad[i].extent_type == ECMA_AD_EXTENT_AD) {
+-                    udf_error("unsupported allocation desriptor: extent type %u\n", ad[i].extent_type);
++                    udf_error("unsupported allocation descriptor: extent type %u\n", ad[i].extent_type);
+                 }
+                 return 0;
+             }
+@@ -1371,6 +1481,10 @@ static uint32_t _file_lba(UDFFILE *p, uint32_t file_block)
+             if (ad[i].partition != p->udf->part.p[0].number) {
+                 udf_error("file partition %u != %u\n", ad[i].partition, p->udf->part.p[0].number);
+             }
++
++            if (extent_length) {
++                *extent_length = ad_size - file_block;
++            }
+             return p->udf->part.p[0].lba + ad[i].lba + file_block;
+         }
+ 
+@@ -1400,7 +1514,7 @@ uint32_t udfread_file_lba(UDFFILE *p, uint32_t file_block)
+         return 0;
+     }
+ 
+-    return _file_lba(p, file_block);
++    return _file_lba(p, file_block, NULL);
+ }
+ 
+ uint32_t udfread_read_blocks(UDFFILE *p, void *buf, uint32_t file_block, uint32_t num_blocks, int flags)
+@@ -1415,10 +1529,12 @@ uint32_t udfread_read_blocks(UDFFILE *p, void *buf, uint32_t file_block, uint32_
+         return 0;
+     }
+ 
+-    for (i = 0; i < num_blocks; i++) {
+-        uint32_t lba = _file_lba(p, file_block + i);
++    for (i = 0; i < num_blocks; ) {
++        uint32_t extent_length = 0;
++        uint32_t lba;
+         uint8_t *block = (uint8_t *)buf + UDF_BLOCK_SIZE * i;
+ 
++        lba = _file_lba(p, file_block + i, &extent_length);
+         udf_trace("map block %u to lba %u\n", file_block + i, lba);
+ 
+         if (!lba) {
+@@ -1427,15 +1543,22 @@ uint32_t udfread_read_blocks(UDFFILE *p, void *buf, uint32_t file_block, uint32_
+             if (file_block + i < file_blocks) {
+                 udf_trace("zero-fill unallocated / unwritten block %u\n", file_block + i);
+                 memset(block, 0, UDF_BLOCK_SIZE);
++                i++;
+                 continue;
+             }
+             udf_error("block %u outside of file (size %u blocks)\n", file_block + i, file_blocks);
+             break;
+         }
+ 
+-        if (_read_blocks(p->udf->input, lba, block, 1, flags) != 1) {
++        if (extent_length > num_blocks - i) {
++            extent_length = num_blocks - i;
++        }
++
++        extent_length = _read_blocks(p->udf->input, lba, block, extent_length, flags);
++        if (extent_length < 1) {
+             break;
+         }
++        i += extent_length;
+     }
+     return i;
+ }
+@@ -1446,12 +1569,16 @@ uint32_t udfread_read_blocks(UDFFILE *p, void *buf, uint32_t file_block, uint32_
+ 
+ static ssize_t _read(UDFFILE *p, void *buf, size_t bytes)
+ {
+-    /* start from middle of block ? */
++    /* start from middle of block ?
++     * maximal file size, i.e. position, is 2^32 * block size
++     */
++
+     size_t pos_off = p->pos % UDF_BLOCK_SIZE;
++    uint32_t file_block = (uint32_t)(p->pos / UDF_BLOCK_SIZE);
+     if (pos_off) {
+         size_t chunk_size = UDF_BLOCK_SIZE - pos_off;
+         if (!p->block_valid) {
+-            if (udfread_read_blocks(p, p->block, p->pos / UDF_BLOCK_SIZE, 1, 0) != 1) {
++            if (udfread_read_blocks(p, p->block, file_block, 1, 0) != 1) {
+                 return -1;
+             }
+             p->block_valid = 1;
+@@ -1460,14 +1587,14 @@ static ssize_t _read(UDFFILE *p, void *buf, size_t bytes)
+             chunk_size = bytes;
+         }
+         memcpy(buf, p->block + pos_off, chunk_size);
+-        p->pos += (int64_t)chunk_size;
+-        return chunk_size;
++        p->pos += (uint64_t)chunk_size;
++        return (ssize_t)chunk_size;
+     }
+ 
+     /* read full block(s) ? */
+     if (bytes >= UDF_BLOCK_SIZE) {
+         uint32_t num_blocks = bytes / UDF_BLOCK_SIZE;
+-        num_blocks = udfread_read_blocks(p, buf, p->pos / UDF_BLOCK_SIZE, num_blocks, 0);
++        num_blocks = udfread_read_blocks(p, buf, file_block, num_blocks, 0);
+         if (num_blocks < 1) {
+             return -1;
+         }
+@@ -1476,13 +1603,36 @@ static ssize_t _read(UDFFILE *p, void *buf, size_t bytes)
+     }
+ 
+     /* read beginning of a block */
+-    if (udfread_read_blocks(p, p->block, p->pos / UDF_BLOCK_SIZE, 1, 0) != 1) {
++    if (udfread_read_blocks(p, p->block, file_block, 1, 0) != 1) {
+         return -1;
+     }
+     p->block_valid = 1;
+     memcpy(buf, p->block, bytes);
+     p->pos += bytes;
+-    return bytes;
++    return (ssize_t)bytes;
++}
++
++static ssize_t _read_inline(UDFFILE *p, void *buf, size_t bytes)
++{
++    uint64_t information_length = p->fe->u.data.information_length;
++    size_t   pad_size = 0;
++
++    if (p->pos + bytes > information_length) {
++        udf_log("read hits padding in inline file\n");
++        if (p->pos > information_length) {
++            pad_size = bytes;
++        } else {
++            pad_size = (size_t)(p->pos + bytes - information_length);
++        }
++        memset((char*)buf + bytes - pad_size, 0, pad_size);
++    }
++
++    if (pad_size < bytes) {
++        memcpy(buf, &p->fe->u.data.content[p->pos], bytes - pad_size);
++    }
++
++    p->pos = p->pos + bytes;
++    return (ssize_t)bytes;
+ }
+ 
+ #define ALIGN(p, align) \
+@@ -1493,28 +1643,33 @@ ssize_t udfread_file_read(UDFFILE *p, void *buf, size_t bytes)
+     uint8_t *bufpt = (uint8_t *)buf;
+ 
+     /* sanity checks */
+-    if (!p || !buf || p->pos < 0) {
++    if (!p || !buf) {
+         return -1;
+     }
+     if ((ssize_t)bytes < 0 || (int64_t)bytes < 0) {
+         return -1;
+     }
+ 
++    if (p->pos >= p->fe->length) {
++        return 0;
++    }
++
+     /* limit range to file size */
+-    if ((uint64_t)p->pos + bytes > (uint64_t)udfread_file_size(p)) {
+-        bytes = udfread_file_size(p) - p->pos;
++    if (p->pos + bytes > p->fe->length) {
++        bytes = (size_t)(p->fe->length - p->pos);
+     }
+ 
+     /* small files may be stored inline in file entry */
+     if (p->fe->content_inline) {
+-        memcpy(buf, &p->fe->data.content + p->pos, bytes);
+-        p->pos += bytes;
+-        return bytes;
++        return _read_inline(p, buf, bytes);
+     }
+ 
+     /* allocate temp storage for input block */
+     if (!p->block) {
+         p->block_mem = malloc(2 * UDF_BLOCK_SIZE);
++        if (!p->block_mem) {
++            return -1;
++        }
+         p->block = ALIGN(p->block_mem, UDF_BLOCK_SIZE);
+     }
+ 
+@@ -1530,7 +1685,7 @@ ssize_t udfread_file_read(UDFFILE *p, void *buf, size_t bytes)
+             return -1;
+         }
+         bufpt += r;
+-        bytes -= r;
++        bytes -= (size_t)r;
+     }
+ 
+     return (intptr_t)bufpt - (intptr_t)buf;
+@@ -1539,30 +1694,34 @@ ssize_t udfread_file_read(UDFFILE *p, void *buf, size_t bytes)
+ int64_t udfread_file_tell(UDFFILE *p)
+ {
+     if (p) {
+-        return p->pos;
++        return (int64_t)p->pos;
+     }
+     return -1;
+ }
+ 
+ int64_t udfread_file_seek(UDFFILE *p, int64_t pos, int whence)
+ {
+-    if (p) {
+-        switch (whence) {
+-            case UDF_SEEK_CUR:
+-                pos += p->pos;
+-                break;
+-            case UDF_SEEK_END:
+-                pos = udfread_file_size(p) + pos;
+-                break;
+-            case UDF_SEEK_SET:
+-            default:
+-                break;
+-        }
+-        if (pos >= 0 && pos <= udfread_file_size(p)) {
+-            p->pos = pos;
+-            p->block_valid = 0;
+-            return p->pos;
+-        }
++    if (!p) {
++        return -1;
++    }
++
++    switch (whence) {
++        case UDF_SEEK_CUR:
++            pos = udfread_file_tell(p) + pos;
++            break;
++        case UDF_SEEK_END:
++            pos = udfread_file_size(p) + pos;
++            break;
++        case UDF_SEEK_SET:
++            break;
++        default:
++            return -1;
++    }
++
++    if (pos >= 0 && pos <= udfread_file_size(p)) {
++        p->pos = (uint64_t)pos;
++        p->block_valid = 0;
++        return udfread_file_tell(p);
+     }
+ 
+     return -1;
 diff --git a/mythtv/i18n/mythfrontend_en_gb.qm b/mythtv/i18n/mythfrontend_en_gb.qm
 index c392ae3273..ba1398d67a 100644
 Binary files a/mythtv/i18n/mythfrontend_en_gb.qm and b/mythtv/i18n/mythfrontend_en_gb.qm differ
@@ -17050,7 +18170,7 @@ index d9f3b8089f..bc325db171 100644
  </context>
  <context>
 diff --git a/mythtv/libs/libmyth/mythcontext.cpp b/mythtv/libs/libmyth/mythcontext.cpp
-index 5e169a3210..4b6680a1db 100644
+index 5e169a3210..bd03ac535e 100644
 --- a/mythtv/libs/libmyth/mythcontext.cpp
 +++ b/mythtv/libs/libmyth/mythcontext.cpp
 @@ -127,6 +127,7 @@ class MythContextPrivate : public QObject
@@ -17088,7 +18208,28 @@ index 5e169a3210..4b6680a1db 100644
      EnableDBerrors();
  }
  
-@@ -1007,7 +1005,6 @@ QString MythContextPrivate::TestDBconnection(bool prompt)
+@@ -786,7 +784,7 @@ QString MythContextPrivate::TestDBconnection(bool prompt)
+     // Jan 20, 2017
+     // Changed to use port check instead of ping
+ 
+-    int port;
++    int port = 0;
+ 
+     // 1 = db awake, 2 = db listening, 3 = db connects,
+     // 4 = backend awake, 5 = backend listening
+@@ -808,7 +806,10 @@ QString MythContextPrivate::TestDBconnection(bool prompt)
+ 
+     do
+     {
+-        host = m_DBparams.dbHostName;
++        if (m_DBparams.dbHostName.isNull() && m_DBhostCp.length())
++            host = m_DBhostCp;
++        else
++            host = m_DBparams.dbHostName;
+         port = m_DBparams.dbPort;
+         if (port == 0)
+             port = 3306;
+@@ -1007,7 +1008,6 @@ QString MythContextPrivate::TestDBconnection(bool prompt)
      // Current DB connection may have been silenced (invalid):
      EnableDBerrors();
      ResetDatabase();
@@ -17096,7 +18237,7 @@ index 5e169a3210..4b6680a1db 100644
  
      return QString::null;
  }
-@@ -1423,32 +1420,38 @@ void MythContextPrivate::processEvents(void)
+@@ -1423,32 +1423,38 @@ void MythContextPrivate::processEvents(void)
  
  const QString MythContextPrivate::settingsToSave[] =
  { "Theme", "Language", "Country", "GuiHeight",
@@ -17142,7 +18283,7 @@ index 5e169a3210..4b6680a1db 100644
      XmlConfiguration config = XmlConfiguration("cache/contextcache.xml");
      static const int arraySize = sizeof(settingsToSave)/sizeof(settingsToSave[0]);
      for (int ix = 0; ix < arraySize; ix++)
-@@ -1516,6 +1519,8 @@ bool MythContext::Init(const bool gui,
+@@ -1516,6 +1522,8 @@ bool MythContext::Init(const bool gui,
                         const bool disableAutoDiscovery,
                         const bool ignoreDB)
  {
@@ -17151,7 +18292,7 @@ index 5e169a3210..4b6680a1db 100644
      if (!d)
      {
          LOG(VB_GENERAL, LOG_EMERG, LOC + "Init() Out-of-memory");
-@@ -1582,6 +1587,13 @@ bool MythContext::Init(const bool gui,
+@@ -1582,6 +1590,13 @@ bool MythContext::Init(const bool gui,
          return false;
      }
  
@@ -17165,6 +18306,68 @@ index 5e169a3210..4b6680a1db 100644
      gCoreContext->ActivateSettingsCache(true);
  
      return true;
+diff --git a/mythtv/libs/libmyth/mythmediamonitor.cpp b/mythtv/libs/libmyth/mythmediamonitor.cpp
+index 51c01466e8..3c91c69115 100644
+--- a/mythtv/libs/libmyth/mythmediamonitor.cpp
++++ b/mythtv/libs/libmyth/mythmediamonitor.cpp
+@@ -447,6 +447,10 @@ void MediaMonitor::StartMonitoring(void)
+     // Sanity check
+     if (m_Active)
+         return;
++    if (!gCoreContext->GetNumSetting("MonitorDrives", 0)) {
++        LOG(VB_MEDIA, LOG_NOTICE, "MediaMonitor diasabled by user setting.");
++        return;
++    }
+ 
+     if (!m_Thread)
+         m_Thread = new MonitorThread(this, m_MonitorPollingInterval);
+diff --git a/mythtv/libs/libmyth/programinfo.cpp b/mythtv/libs/libmyth/programinfo.cpp
+index 61742520f4..1d64f17e92 100644
+--- a/mythtv/libs/libmyth/programinfo.cpp
++++ b/mythtv/libs/libmyth/programinfo.cpp
+@@ -5791,12 +5791,26 @@ bool LoadFromOldRecorded(ProgramList &destination, const QString &sql,
+         "WHERE oldrecorded.future = 0 "
+         + sql;
+ 
++    bool hasLimit = querystr.contains(" LIMIT ",Qt::CaseInsensitive);
++
++    // make sure the most recent rows are retrieved first in case
++    // there are more than the limit to be set below
++    if (!hasLimit && !querystr.contains(" ORDER ",Qt::CaseInsensitive))
++        querystr += " ORDER BY starttime DESC ";
++
+     // If a limit arg was given then append the LIMIT, otherwise set a hard
+-    // limit of 20000.
++    // limit of 20000, which can be overridden by a setting
+     if (limit > 0)
+         querystr += QString("LIMIT %1 ").arg(limit);
+-    else if (!querystr.contains(" LIMIT "))
+-        querystr += " LIMIT 20000 "; // For performance reasons we have to have an upper limit
++    else if (!hasLimit)
++    {
++        // For performance reasons we have to have an upper limit
++        int nLimit = gCoreContext->GetNumSetting("PrevRecLimit", 20000);
++        // For sanity sake at least 100
++        if (nLimit < 100)
++            nLimit = 100;
++        querystr += QString("LIMIT %1 ").arg(nLimit);
++    }
+ 
+     MSqlBindings::const_iterator it;
+     // If count is non-zero then also return total number of matching records,
+diff --git a/mythtv/libs/libmythbase/mythcorecontext.cpp b/mythtv/libs/libmythbase/mythcorecontext.cpp
+index bbcd468e6f..fe33c54481 100644
+--- a/mythtv/libs/libmythbase/mythcorecontext.cpp
++++ b/mythtv/libs/libmythbase/mythcorecontext.cpp
+@@ -349,6 +349,8 @@ bool MythCoreContext::ConnectToMasterServer(bool blockingClient,
+                 "to itself!");
+         return false;
+     }
++    if (IsExiting())
++        return false;
+ 
+     QString server = GetMasterServerIP();
+     if (server.isEmpty())
 diff --git a/mythtv/libs/libmythbase/mythdownloadmanager.cpp b/mythtv/libs/libmythbase/mythdownloadmanager.cpp
 index bc9db945ec..735d53c618 100644
 --- a/mythtv/libs/libmythbase/mythdownloadmanager.cpp
@@ -17287,6 +18490,167 @@ index fd6ad9e04a..c39e99024f 100644
                   continue;
              }
  
+diff --git a/mythtv/libs/libmythmetadata/metadatacommon.h b/mythtv/libs/libmythmetadata/metadatacommon.h
+index a20574403a..d0613e638f 100644
+--- a/mythtv/libs/libmythmetadata/metadatacommon.h
++++ b/mythtv/libs/libmythmetadata/metadatacommon.h
+@@ -249,7 +249,13 @@ class META_PUBLIC MetadataLookup : public QObject, public ReferenceCounter
+     void SetDownloads(ArtworkMap map) { m_downloads = map; };
+ 
+     // General Sets
+-    void SetTitle(const QString &title) { m_title = title; };
++    void SetTitle(const QString &title)
++    {
++        m_title = title;
++        QString manRecSuffix = QString(" (%1)").arg(QObject::tr("Manual Record"));
++        m_base_title = title;  // m_title with " (Manual Record)" stripped.
++        m_base_title.replace(manRecSuffix,"");
++    };
+     void SetFilename(const QString &filename) { m_filename = filename; };
+ 
+     // General Sets - Video
+@@ -287,6 +293,7 @@ class META_PUBLIC MetadataLookup : public QObject, public ReferenceCounter
+     // General
+     QString GetFilename() const { return m_filename; };
+     QString GetTitle() const { return m_title; };
++    QString GetBaseTitle() const { return m_base_title; };
+     QStringList GetCategories() const { return m_categories; };
+     float GetUserRating() const { return m_userrating; };
+     uint GetRatingCount() const { return m_ratingcount; };
+@@ -375,6 +382,7 @@ class META_PUBLIC MetadataLookup : public QObject, public ReferenceCounter
+ 
+     QString m_filename;
+     QString m_title;
++    QString m_base_title;  // m_title with " (Manual Record)" stripped.
+     QString m_network;
+     QString m_status;
+     const QStringList m_categories;
+diff --git a/mythtv/libs/libmythmetadata/metadatadownload.cpp b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+index c886654212..bf5d4fb077 100644
+--- a/mythtv/libs/libmythmetadata/metadatadownload.cpp
++++ b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+@@ -148,7 +148,7 @@ void MetadataDownload::run()
+             if (list[0]->GetAutomatic() && list.count() > 1
+                 && list[0]->GetStep() == kLookupSearch)
+             {
+-                MetadataLookup *bestLookup = findBestMatch(list, lookup->GetTitle());
++                MetadataLookup *bestLookup = findBestMatch(list, lookup->GetBaseTitle());
+                 if (bestLookup)
+                 {
+                     MetadataLookup *newlookup = bestLookup;
+@@ -172,7 +172,7 @@ void MetadataDownload::run()
+ 
+             LOG(VB_GENERAL, LOG_INFO,
+                 QString("Returning Metadata Results: %1 %2 %3")
+-                    .arg(lookup->GetTitle()).arg(lookup->GetSeason())
++                    .arg(lookup->GetBaseTitle()).arg(lookup->GetSeason())
+                     .arg(lookup->GetEpisode()));
+             QCoreApplication::postEvent(m_parent,
+                 new MetadataLookupEvent(list));
+@@ -183,7 +183,7 @@ void MetadataDownload::run()
+             {
+                 LOG(VB_GENERAL, LOG_INFO,
+                     QString("Metadata Lookup Failed: No Results %1 %2 %3")
+-                        .arg(lookup->GetTitle()).arg(lookup->GetSeason())
++                        .arg(lookup->GetBaseTitle()).arg(lookup->GetSeason())
+                         .arg(lookup->GetEpisode()));
+             }
+             if (m_parent)
+@@ -210,7 +210,7 @@ MetadataLookup* MetadataDownload::findBestMatch(MetadataLookupList list,
+     for (MetadataLookupList::const_iterator i = list.begin();
+             i != list.end(); ++i)
+     {
+-        QString title = (*i)->GetTitle();
++        QString title = (*i)->GetBaseTitle();
+         if (title == originaltitle)
+         {
+             ret = (*i);
+@@ -260,7 +260,7 @@ MetadataLookup* MetadataDownload::findBestMatch(MetadataLookupList list,
+     MetadataLookupList::const_iterator i = list.begin();
+     for (; i != list.end(); ++i)
+     {
+-        if ((*i)->GetTitle() == bestTitle)
++        if ((*i)->GetBaseTitle() == bestTitle)
+         {
+             ret = (*i);
+             break;
+@@ -526,12 +526,12 @@ MetadataLookupList MetadataDownload::handleMovie(MetadataLookup *lookup)
+     }
+     else if (lookup->GetStep() == kLookupSearch)
+     {
+-        if (lookup->GetTitle().isEmpty())
++        if (lookup->GetBaseTitle().isEmpty())
+         {
+             // no point searching on nothing...
+             return list;
+         }
+-        list = grabber.Search(lookup->GetTitle(), lookup);
++        list = grabber.Search(lookup->GetBaseTitle(), lookup);
+     }
+ 
+     return list;
+@@ -582,7 +582,7 @@ MetadataLookupList MetadataDownload::handleTelevision(MetadataLookup *lookup)
+         if (!lookup->GetSubtitle().isEmpty())
+         {
+             list = grabber.SearchSubtitle(lookup->GetInetref(),
+-                                          lookup->GetTitle() /* unused */,
++                                          lookup->GetBaseTitle() /* unused */,
+                                           lookup->GetSubtitle(), lookup, false);
+         }
+ 
+@@ -608,19 +608,19 @@ MetadataLookupList MetadataDownload::handleTelevision(MetadataLookup *lookup)
+     }
+     else if (lookup->GetStep() == kLookupSearch)
+     {
+-        if (lookup->GetTitle().isEmpty())
++        if (lookup->GetBaseTitle().isEmpty())
+         {
+             // no point searching on nothing...
+             return list;
+         }
+         if (!lookup->GetSubtitle().isEmpty())
+         {
+-            list = grabber.SearchSubtitle(lookup->GetTitle(),
++            list = grabber.SearchSubtitle(lookup->GetBaseTitle(),
+                                           lookup->GetSubtitle(), lookup, false);
+         }
+         if (list.isEmpty())
+         {
+-            list = grabber.Search(lookup->GetTitle(), lookup);
++            list = grabber.Search(lookup->GetBaseTitle(), lookup);
+         }
+     }
+     else if (lookup->GetStep() == kLookupCollection)
+@@ -685,7 +685,7 @@ MetadataLookupList MetadataDownload::handleRecordingGeneric(MetadataLookup *look
+ 
+     MetadataLookupList list;
+ 
+-    if (lookup->GetTitle().isEmpty())
++    if (lookup->GetBaseTitle().isEmpty())
+     {
+         // no point searching on nothing...
+         return list;
+@@ -705,7 +705,7 @@ MetadataLookupList MetadataDownload::handleRecordingGeneric(MetadataLookup *look
+         lookup->SetEpisode(1);
+     }
+ 
+-    list = grabber.Search(lookup->GetTitle(), lookup);
++    list = grabber.Search(lookup->GetBaseTitle(), lookup);
+ 
+     if (list.count() == 1)
+     {
+diff --git a/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h b/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
+index c2630cd240..7e9e7e8643 100644
+--- a/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
++++ b/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
+@@ -171,6 +171,7 @@ class ScanSymbolRateDVBS: public TransMythUIComboBoxSetting
+                 "million symbols per second."));
+         addSelection("3333000");
+         addSelection("22000000");
++        addSelection("22500000");
+         addSelection("23000000");
+         addSelection("27500000", "27500000", true);
+         addSelection("28000000");
 diff --git a/mythtv/libs/libmythtv/channelscan/modulationsetting.h b/mythtv/libs/libmythtv/channelscan/modulationsetting.h
 index 005846c158..df9517d61d 100644
 --- a/mythtv/libs/libmythtv/channelscan/modulationsetting.h
@@ -17300,6 +18664,90 @@ index 005846c158..df9517d61d 100644
  
          setLabel(QCoreApplication::translate("(ModulationSettings)",
                                               "Modulation"));
+diff --git a/mythtv/libs/libmythtv/channelsettings.cpp b/mythtv/libs/libmythtv/channelsettings.cpp
+index 3e74185d8e..23f94ed116 100644
+--- a/mythtv/libs/libmythtv/channelsettings.cpp
++++ b/mythtv/libs/libmythtv/channelsettings.cpp
+@@ -510,8 +510,6 @@ ChannelOptionsCommon::ChannelOptionsCommon(const ChannelID &id,
+             this,       SLOT(  onAirGuideChanged(bool)));
+     connect(source,     SIGNAL(valueChanged( const QString&)),
+             this,       SLOT(  sourceChanged(const QString&)));
+-    connect(channum,     SIGNAL(valueChanged( const QString&)),
+-            this,       SLOT(  channumChanged(const QString&)));
+ };
+ 
+ void ChannelOptionsCommon::onAirGuideChanged(bool fValue)
+@@ -564,12 +562,6 @@ void ChannelOptionsCommon::sourceChanged(const QString& sourceid)
+     xmltvID->Load();
+ }
+ 
+-void ChannelOptionsCommon::channumChanged(const QString& channum)
+-{
+-    if (freqid)
+-        freqid->setValue(channum);
+-}
+-
+ ChannelOptionsFilters::ChannelOptionsFilters(const ChannelID& id)
+ {
+     setLabel(QCoreApplication::translate("(ChannelSettings)",
+diff --git a/mythtv/libs/libmythtv/channelsettings.h b/mythtv/libs/libmythtv/channelsettings.h
+index bbb8589242..3bd2b08b9e 100644
+--- a/mythtv/libs/libmythtv/channelsettings.h
++++ b/mythtv/libs/libmythtv/channelsettings.h
+@@ -118,7 +118,6 @@ class MTV_PUBLIC ChannelOptionsCommon: public GroupSetting
+   public slots:
+     void onAirGuideChanged(bool);
+     void sourceChanged(const QString&);
+-    void channumChanged(const QString&);
+ 
+   protected:
+     OnAirGuide *onairguide;
+diff --git a/mythtv/libs/libmythtv/dbcheck.cpp b/mythtv/libs/libmythtv/dbcheck.cpp
+index 85a8144c63..9f4176fe17 100644
+--- a/mythtv/libs/libmythtv/dbcheck.cpp
++++ b/mythtv/libs/libmythtv/dbcheck.cpp
+@@ -3340,25 +3340,25 @@ NULL
+ 
+     if (dbver == "1346")
+     {
+-            QString master;
+-            // Create new MasterServerName setting
+-            if (gCoreContext->IsMasterHost())
+-                master =
+-                "insert into settings (value,data,hostname) "
+-                "values('MasterServerName','"
+-                   + gCoreContext->GetHostName() + "', null);";
+-            else
+-                master =
+-                "insert into settings (value,data,hostname) "
+-                "select 'MasterServerName', b.hostname, null "
+-                "from settings a, settings b "
+-                "where a.value = 'MasterServerIP' "
+-                "and b.value in ('BackendServerIP','BackendServerIP6')"
+-                "and a.data = b.data;";
++        QString master;
++        // Create new MasterServerName setting
++        if (gCoreContext->IsMasterHost())
++            master =
++            "insert into settings (value,data,hostname) "
++            "values('MasterServerName','"
++                + gCoreContext->GetHostName() + "', null);";
++        else
++            master =
++            "insert into settings (value,data,hostname) "
++            "select 'MasterServerName', b.hostname, null "
++            "from settings a, settings b "
++            "where a.value = 'MasterServerIP' "
++            "and b.value in ('BackendServerIP','BackendServerIP6')"
++            "and a.data = b.data;";
+ 
+         const char *updates[] = {
+             // Create new MasterServerName setting
+-            master.toUtf8(),
++            master.toLocal8Bit().constData(),
+             // Create new BackendServerAddr setting for each backend server
+             // Assume using IPV4 value.
+             "insert into settings (value,data,hostname) "
 diff --git a/mythtv/libs/libmythtv/libmythtv.pro b/mythtv/libs/libmythtv/libmythtv.pro
 index 77dd7917a0..98fcd4bbf0 100644
 --- a/mythtv/libs/libmythtv/libmythtv.pro
@@ -17362,6 +18810,42 @@ index d2e8c48513..dbdf7adc11 100644
  #endif //HAVE_FE_CAN_2G_MODULATION
          ((DTVModulation::kModulationQAM16   == m) && (c & FE_CAN_QAM_16))   ||
          ((DTVModulation::kModulationQAM32   == m) && (c & FE_CAN_QAM_32))   ||
+diff --git a/mythtv/libs/libmythtv/recordinginfo.cpp b/mythtv/libs/libmythtv/recordinginfo.cpp
+index 3a87da047c..a1d11ef34f 100644
+--- a/mythtv/libs/libmythtv/recordinginfo.cpp
++++ b/mythtv/libs/libmythtv/recordinginfo.cpp
+@@ -146,8 +146,8 @@ RecordingInfo::RecordingInfo(
+ 
+     findid = _findid;
+ 
+-    properties = ((_subtitleType    << 11) |
+-                  (_videoproperties << 6)  |
++    properties = ((_subtitleType    << kSubtitlePropertyOffset) |
++                  (_videoproperties << kVideoPropertyOffset)  |
+                   _audioproperties);
+ 
+     if (recstartts >= recendts)
+diff --git a/mythtv/libs/libmythtv/subtitlescreen.cpp b/mythtv/libs/libmythtv/subtitlescreen.cpp
+index b4c4087243..b65ac5e604 100644
+--- a/mythtv/libs/libmythtv/subtitlescreen.cpp
++++ b/mythtv/libs/libmythtv/subtitlescreen.cpp
+@@ -1398,6 +1398,8 @@ SubtitleScreen::~SubtitleScreen(void)
+ 
+ void SubtitleScreen::EnableSubtitles(int type, bool forced_only)
+ {
++    m_subtitleType = type;
++
+     if (forced_only)
+     {
+         SetElementDeleted();
+@@ -1406,7 +1408,6 @@ void SubtitleScreen::EnableSubtitles(int type, bool forced_only)
+         return;
+     }
+ 
+-    m_subtitleType = type;
+     if (m_subreader)
+     {
+         m_subreader->EnableAVSubtitles(kDisplayAVSubtitle == m_subtitleType);
 diff --git a/mythtv/libs/libmythtv/teletextreader.cpp b/mythtv/libs/libmythtv/teletextreader.cpp
 index 0e9870e9a2..48a77c8b79 100644
 --- a/mythtv/libs/libmythtv/teletextreader.cpp
@@ -17523,11 +19007,47 @@ index 6562ad7002..e4ad74cf7e 100644
      }
      else if (CardUtil::QAM == cardtype)
      {
+diff --git a/mythtv/libs/libmythtv/videodisplayprofile.cpp b/mythtv/libs/libmythtv/videodisplayprofile.cpp
+index 1b031e2da4..0ca407ea9d 100644
+--- a/mythtv/libs/libmythtv/videodisplayprofile.cpp
++++ b/mythtv/libs/libmythtv/videodisplayprofile.cpp
+@@ -172,11 +172,10 @@ bool ProfileItem::IsMatch(const QSize &size,
+     // codec
+     cmp = Get(QString("cond_codecs"));
+     if (!cmp.isEmpty())
+-        cmp.replace(QLatin1String(" "),QLatin1String(""));
+-    if (!cmp.isEmpty())
+     {
+         QStringList clist = cmp.split(" ", QString::SkipEmptyParts);
+-        match &= clist.contains(codecName,Qt::CaseInsensitive);
++        if (clist.size() > 0)
++            match &= clist.contains(codecName,Qt::CaseInsensitive);
+     }
+ 
+     return match;
 diff --git a/mythtv/libs/libmythtv/videoout_omx.cpp b/mythtv/libs/libmythtv/videoout_omx.cpp
-index 5a019db0a2..b6c8c49e35 100644
+index 5a019db0a2..5a592fbe3d 100644
 --- a/mythtv/libs/libmythtv/videoout_omx.cpp
 +++ b/mythtv/libs/libmythtv/videoout_omx.cpp
-@@ -29,9 +29,6 @@
+@@ -1,6 +1,5 @@
+-#ifdef USING_OPENGLES
+-#define OSD_EGL // OSD with EGL
+-#endif
++
++#include "videoout_omx.h"
+ 
+ #ifdef OSD_EGL /* includes QJson with enum value named Bool, must go before EGL/egl.h */
+ # include "mythpainter_ogl.h"
+@@ -10,8 +9,6 @@
+ /* must go before X11/X.h due to #define None 0L */
+ #include "privatedecoder_omx.h" // For PrivateDecoderOMX::s_name
+ 
+-#include "videoout_omx.h"
+-
+ #include <cstddef>
+ #include <cassert>
+ #include <algorithm> // max/min
+@@ -29,9 +26,6 @@
  #ifdef OSD_EGL
  #include <EGL/egl.h>
  #include <QtGlobal>
@@ -17537,7 +19057,7 @@ index 5a019db0a2..b6c8c49e35 100644
  #endif
  
  // MythTV
-@@ -884,10 +881,14 @@ void VideoOutputOMX::Show(FrameScanType scan)
+@@ -884,10 +878,14 @@ void VideoOutputOMX::Show(FrameScanType scan)
  
      hdr->nFilledLen = frame->offsets[2] + (frame->offsets[1] >> 2);
      hdr->nFlags = OMX_BUFFERFLAG_ENDOFFRAME;
@@ -17552,6 +19072,29 @@ index 5a019db0a2..b6c8c49e35 100644
      OMXComponent &cmpnt = m_imagefx.IsValid() ? m_imagefx : m_render;
      // Paused - do not display anything unless softblend set
      if (m_videoPaused && GetOSDRenderer() != "softblend")
+diff --git a/mythtv/libs/libmythtv/videoout_omx.h b/mythtv/libs/libmythtv/videoout_omx.h
+index 5ecdcdb969..4b55440e49 100644
+--- a/mythtv/libs/libmythtv/videoout_omx.h
++++ b/mythtv/libs/libmythtv/videoout_omx.h
+@@ -1,6 +1,10 @@
+ #ifndef VIDEOOUT_OMX_H
+ #define VIDEOOUT_OMX_H
+ 
++#ifdef USING_OPENGLES
++#define OSD_EGL // OSD with EGL
++#endif
++
+ #include <OMX_Types.h>
+ #include <OMX_Core.h>
+ 
+@@ -16,6 +20,7 @@ class GlOsdThread;
+ #ifdef OSD_EGL
+ class MythOpenGLPainter;
+ #endif
++class MythScreenType;
+ 
+ class VideoOutputOMX : public VideoOutput, private OMXComponentCtx
+ {
 diff --git a/mythtv/libs/libmythtv/videoout_vdpau.cpp b/mythtv/libs/libmythtv/videoout_vdpau.cpp
 index 07f6e6d4f4..770413f73f 100644
 --- a/mythtv/libs/libmythtv/videoout_vdpau.cpp
@@ -17621,10 +19164,136 @@ index 15c00e1919..9b73002891 100644
      return NULL;
  }
 diff --git a/mythtv/libs/libmythtv/videosource.cpp b/mythtv/libs/libmythtv/videosource.cpp
-index f26ee692cd..368f8b7458 100644
+index f26ee692cd..7fa15a28e3 100644
 --- a/mythtv/libs/libmythtv/videosource.cpp
 +++ b/mythtv/libs/libmythtv/videosource.cpp
-@@ -3190,11 +3190,11 @@ class QuickTune : public CardInputComboBoxSetting
+@@ -1373,7 +1373,7 @@ HDHomeRunIP::HDHomeRunIP()
+ 
+ void HDHomeRunIP::setEnabled(bool e)
+ {
+-    GroupSetting::setEnabled(e);
++    MythUITextEditSetting::setEnabled(e);
+     if (e)
+     {
+         if (!_oldValue.isEmpty())
+@@ -1409,7 +1409,7 @@ HDHomeRunTunerIndex::HDHomeRunTunerIndex()
+ 
+ void HDHomeRunTunerIndex::setEnabled(bool e)
+ {
+-    GroupSetting::setEnabled(e);
++    MythUITextEditSetting::setEnabled(e);
+     if (e) {
+         if (!_oldValue.isEmpty())
+             setValue(_oldValue);
+@@ -1440,6 +1440,7 @@ HDHomeRunDeviceID::HDHomeRunDeviceID(const CaptureCard &parent) :
+ {
+     setLabel(tr("Device ID"));
+     setHelpText(tr("Device ID of HDHomeRun device"));
++    setEnabled(false);
+ }
+ 
+ void HDHomeRunDeviceID::SetIP(const QString &ip)
+@@ -1487,12 +1488,14 @@ HDHomeRunDeviceIDList::HDHomeRunDeviceIDList(
+     StandardSetting     *desc,
+     HDHomeRunIP         *cardip,
+     HDHomeRunTunerIndex *cardtuner,
+-    HDHomeRunDeviceList *devicelist) :
++    HDHomeRunDeviceList *devicelist,
++    const CaptureCard &parent) :
+     _deviceid(deviceid),
+     _desc(desc),
+     _cardip(cardip),
+     _cardtuner(cardtuner),
+-    _devicelist(devicelist)
++    _devicelist(devicelist),
++    m_parent(parent)
+ {
+     setLabel(QObject::tr("Available devices"));
+     setHelpText(
+@@ -1580,7 +1583,9 @@ void HDHomeRunDeviceIDList::Load(void)
+ {
+     clearSelections();
+ 
+-    fillSelections(_deviceid->getValue());
++    int cardid = m_parent.getCardID();
++    QString device = CardUtil::GetVideoDevice(cardid);
++    fillSelections(device);
+ }
+ 
+ void HDHomeRunDeviceIDList::UpdateDevices(const QString &v)
+@@ -1629,7 +1634,7 @@ VBoxIP::VBoxIP()
+ 
+ void VBoxIP::setEnabled(bool e)
+ {
+-    GroupSetting::setEnabled(e);
++    MythUITextEditSetting::setEnabled(e);
+     if (e)
+     {
+         if (!_oldValue.isEmpty())
+@@ -1661,7 +1666,7 @@ VBoxTunerIndex::VBoxTunerIndex()
+ 
+ void VBoxTunerIndex::setEnabled(bool e)
+ {
+-    GroupSetting::setEnabled(e);
++    MythUITextEditSetting::setEnabled(e);
+     if (e) {
+         if (!_oldValue.isEmpty())
+             setValue(_oldValue);
+@@ -1687,6 +1692,7 @@ VBoxDeviceID::VBoxDeviceID(const CaptureCard &parent) :
+ {
+     setLabel(tr("Device ID"));
+     setHelpText(tr("Device ID of VBox device"));
++    setEnabled(false);
+ }
+ 
+ void VBoxDeviceID::SetIP(const QString &ip)
+@@ -1722,12 +1728,14 @@ VBoxDeviceIDList::VBoxDeviceIDList(
+     StandardSetting     *desc,
+     VBoxIP              *cardip,
+     VBoxTunerIndex      *cardtuner,
+-    VBoxDeviceList      *devicelist) :
++    VBoxDeviceList      *devicelist,
++    const CaptureCard &parent) :
+     _deviceid(deviceid),
+     _desc(desc),
+     _cardip(cardip),
+     _cardtuner(cardtuner),
+-    _devicelist(devicelist)
++    _devicelist(devicelist),
++    m_parent(parent)
+ {
+     setLabel(QObject::tr("Available devices"));
+     setHelpText(
+@@ -1796,7 +1804,9 @@ void VBoxDeviceIDList::Load(void)
+ {
+     clearSelections();
+ 
+-    fillSelections(_deviceid->getValue());
++    int cardid = m_parent.getCardID();
++    QString device = CardUtil::GetVideoDevice(cardid);
++    fillSelections(device);
+ }
+ 
+ void VBoxDeviceIDList::UpdateDevices(const QString &v)
+@@ -2065,7 +2075,7 @@ HDHomeRunConfigurationGroup::HDHomeRunConfigurationGroup
+     cardip       = new HDHomeRunIP();
+     cardtuner    = new HDHomeRunTunerIndex();
+     deviceidlist = new HDHomeRunDeviceIDList(
+-        deviceid, desc, cardip, cardtuner, &devicelist);
++        deviceid, desc, cardip, cardtuner, &devicelist, parent);
+ 
+     a_cardtype.addTargetedChild("HDHOMERUN", deviceidlist);
+     a_cardtype.addTargetedChild("HDHOMERUN", new EmptyAudioDevice(parent));
+@@ -2228,7 +2238,7 @@ VBoxConfigurationGroup::VBoxConfigurationGroup
+     cardip       = new VBoxIP();
+     cardtuner    = new VBoxTunerIndex();
+     deviceidlist = new VBoxDeviceIDList(
+-        deviceid, desc, cardip, cardtuner, &devicelist);
++        deviceid, desc, cardip, cardtuner, &devicelist, parent);
+ 
+     a_cardtype.addTargetedChild("VBOX", deviceidlist);
+     a_cardtype.addTargetedChild("VBOX", new EmptyAudioDevice(parent));
+@@ -3190,11 +3200,11 @@ class QuickTune : public CardInputComboBoxSetting
      };
  };
  
@@ -17638,7 +19307,7 @@ index f26ee692cd..368f8b7458 100644
      {
          setLabel(QObject::tr("External channel change command"));
          setValue("");
-@@ -3205,11 +3205,11 @@ class ExternalChannelCommand : public CardInputComboBoxSetting
+@@ -3205,11 +3215,11 @@ class ExternalChannelCommand : public CardInputComboBoxSetting
      };
  };
  
@@ -17652,7 +19321,7 @@ index f26ee692cd..368f8b7458 100644
      {
          setLabel(QObject::tr("Preset tuner to channel"));
          setValue("");
-@@ -3729,6 +3729,7 @@ void CaptureCardEditor::AddNewCard()
+@@ -3729,6 +3739,7 @@ void CaptureCardEditor::AddNewCard()
  {
      CaptureCard *card = new CaptureCard();
      card->setLabel(tr("New capture card"));
@@ -17660,19 +19329,87 @@ index f26ee692cd..368f8b7458 100644
      addChild(card);
      emit settingsChanged(this);
  }
+diff --git a/mythtv/libs/libmythtv/videosource.h b/mythtv/libs/libmythtv/videosource.h
+index baedabd012..7beb6f4230 100644
+--- a/mythtv/libs/libmythtv/videosource.h
++++ b/mythtv/libs/libmythtv/videosource.h
+@@ -880,7 +880,7 @@ class CardInput : public GroupSetting
+ class HDHomeRunDeviceID;
+ class HDHomeRunTunerIndex;
+ 
+-class HDHomeRunIP : public GroupSetting
++class HDHomeRunIP : public MythUITextEditSetting
+ {
+     Q_OBJECT
+ 
+@@ -901,7 +901,7 @@ class HDHomeRunIP : public GroupSetting
+     QString _oldValue;
+ };
+ 
+-class HDHomeRunTunerIndex : public GroupSetting
++class HDHomeRunTunerIndex : public MythUITextEditSetting
+ {
+     Q_OBJECT
+ 
+@@ -932,7 +932,8 @@ class HDHomeRunDeviceIDList : public TransMythUIComboBoxSetting
+                           StandardSetting *desc,
+                           HDHomeRunIP       *cardip,
+                           HDHomeRunTunerIndex *cardtuner,
+-                          HDHomeRunDeviceList *devicelist);
++                          HDHomeRunDeviceList *devicelist,
++                          const CaptureCard &parent);
+ 
+     void fillSelections(const QString &current);
+ 
+@@ -947,6 +948,7 @@ class HDHomeRunDeviceIDList : public TransMythUIComboBoxSetting
+     HDHomeRunIP         *_cardip;
+     HDHomeRunTunerIndex *_cardtuner;
+     HDHomeRunDeviceList *_devicelist;
++    const CaptureCard &m_parent;
+ 
+     QString              _oldValue;
+ };
+@@ -975,7 +977,7 @@ class HDHomeRunDeviceID : public MythUITextEditSetting
+ class VBoxDeviceID;
+ class VBoxTunerIndex;
+ 
+-class VBoxIP : public GroupSetting
++class VBoxIP : public MythUITextEditSetting
+ {
+     Q_OBJECT
+ 
+@@ -996,7 +998,7 @@ class VBoxIP : public GroupSetting
+     QString _oldValue;
+ };
+ 
+-class VBoxTunerIndex : public GroupSetting
++class VBoxTunerIndex : public MythUITextEditSetting
+ {
+     Q_OBJECT
+ 
+@@ -1026,7 +1028,8 @@ class VBoxDeviceIDList : public TransMythUIComboBoxSetting
+                      StandardSetting *desc,
+                      VBoxIP *cardip,
+                      VBoxTunerIndex *cardtuner,
+-                     VBoxDeviceList *devicelist);
++                     VBoxDeviceList *devicelist,
++                     const CaptureCard &parent);
+ 
+     void fillSelections(const QString &current);
+ 
+@@ -1041,6 +1044,7 @@ class VBoxDeviceIDList : public TransMythUIComboBoxSetting
+     VBoxIP            *_cardip;
+     VBoxTunerIndex    *_cardtuner;
+     VBoxDeviceList    *_devicelist;
++    const CaptureCard &m_parent;
+ 
+     QString            _oldValue;
+ };
 diff --git a/mythtv/libs/libmythui/libmythui.pro b/mythtv/libs/libmythui/libmythui.pro
-index 6b534ad2c2..74235dee55 100644
+index 6b534ad2c2..9bd4d05bb1 100644
 --- a/mythtv/libs/libmythui/libmythui.pro
 +++ b/mythtv/libs/libmythui/libmythui.pro
-@@ -189,6 +189,7 @@ using_opengl {
-     using_opengles {
-         DEFINES += USING_OPENGLES
-         HEADERS += mythrender_opengl2es.h
-+        LIBS += -L/opt/vc/include -lbrcmGLESv2 -lbrcmEGL
-     }
-     !using_opengles {
-         SOURCES += mythrender_opengl1.cpp
-@@ -200,6 +201,18 @@ using_opengl {
+@@ -200,6 +200,18 @@ using_opengl {
      mingw|win32-msvc*:LIBS += -lopengl32
  }
  
@@ -17827,6 +19564,38 @@ index 325d25dcdc..3c7fd0e6af 100644
      MythAVTestCommandLineParser cmdline;
      if (!cmdline.Parse(argc, argv))
      {
+diff --git a/mythtv/programs/mythbackend/backendhousekeeper.cpp b/mythtv/programs/mythbackend/backendhousekeeper.cpp
+index 4bb60e6c56..67d6eb220f 100644
+--- a/mythtv/programs/mythbackend/backendhousekeeper.cpp
++++ b/mythtv/programs/mythbackend/backendhousekeeper.cpp
+@@ -364,6 +364,15 @@ void CleanupTask::CleanupProgramListings(void)
+         MythDB::DBError("HouseKeeper Cleaning Program Listings", query);
+ }
+ 
++bool ThemeUpdateTask::DoCheckRun(QDateTime now)
++{
++    if (gCoreContext->GetNumSetting("ThemeUpdateNofications", 1) &&
++            PeriodicHouseKeeperTask::DoCheckRun(now))
++        return true;
++
++    return false;
++}
++
+ bool ThemeUpdateTask::DoRun(void)
+ {
+     bool    result = false;
+diff --git a/mythtv/programs/mythbackend/backendhousekeeper.h b/mythtv/programs/mythbackend/backendhousekeeper.h
+index 28dfc0b07e..667efae17d 100644
+--- a/mythtv/programs/mythbackend/backendhousekeeper.h
++++ b/mythtv/programs/mythbackend/backendhousekeeper.h
+@@ -45,6 +45,7 @@ class ThemeUpdateTask : public DailyHouseKeeperTask
+                                             kHKGlobal, kHKRunOnStartup),
+                             m_running(false) {};
+     bool DoRun(void);
++    bool DoCheckRun(QDateTime now);
+     virtual void Terminate(void);
+   private:
+     bool LoadVersion(const QString &version, int download_log_level);
 diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
 index 49b291290f..42820f5e20 100644
 --- a/mythtv/programs/mythbackend/scheduler.cpp
@@ -18049,7 +19818,7 @@ index c73707fdfa..8cc5d11c46 100644
  }
  
 diff --git a/mythtv/programs/mythfrontend/main.cpp b/mythtv/programs/mythfrontend/main.cpp
-index 8710e1c022..9c3a83b4cd 100644
+index 8710e1c022..6ee4cd7f2b 100644
 --- a/mythtv/programs/mythfrontend/main.cpp
 +++ b/mythtv/programs/mythfrontend/main.cpp
 @@ -1767,6 +1767,10 @@ int main(int argc, char **argv)
@@ -18063,7 +19832,15 @@ index 8710e1c022..9c3a83b4cd 100644
  #ifdef Q_OS_ANDROID
      // extra for 0 termination
      char *newargv[argc+4+1];
-@@ -1973,9 +1977,9 @@ int main(int argc, char **argv)
+@@ -1871,6 +1875,7 @@ int main(int argc, char **argv)
+     if (!gContext->Init(true, bPromptForBackend, bBypassAutoDiscovery))
+     {
+         LOG(VB_GENERAL, LOG_ERR, "Failed to init MythContext, exiting.");
++        gCoreContext->SetExiting(true);
+         return GENERIC_EXIT_NO_MYTHCONTEXT;
+     }
+ 
+@@ -1973,9 +1978,9 @@ int main(int argc, char **argv)
  
      MythMainWindow *mainWindow = GetMythMainWindow();
  #if CONFIG_DARWIN
@@ -18182,7 +19959,7 @@ index d94ad76c93..583cf49118 100644
      if (!cmdline.Parse(argc, argv))
      {
 diff --git a/mythtv/programs/mythtv-setup/main.cpp b/mythtv/programs/mythtv-setup/main.cpp
-index b30442d992..a6833dc11a 100644
+index b30442d992..00378373e8 100644
 --- a/mythtv/programs/mythtv-setup/main.cpp
 +++ b/mythtv/programs/mythtv-setup/main.cpp
 @@ -279,6 +279,10 @@ int main(int argc, char *argv[])
@@ -18196,6 +19973,15 @@ index b30442d992..a6833dc11a 100644
      MythTVSetupCommandLineParser cmdline;
      if (!cmdline.Parse(argc, argv))
      {
+@@ -390,7 +394,7 @@ int main(int argc, char *argv[])
+ 
+     gContext = new MythContext(MYTH_BINARY_VERSION);
+ 
+-    if (!gContext->Init(use_display)) // No Upnp, Prompt for db
++    if (!gContext->Init(use_display,false,true)) // No Upnp, Prompt for db
+     {
+         LOG(VB_GENERAL, LOG_ERR, "Failed to init MythContext, exiting.");
+         return GENERIC_EXIT_NO_MYTHCONTEXT;
 diff --git a/mythtv/programs/mythwelcome/main.cpp b/mythtv/programs/mythwelcome/main.cpp
 index 37f34e0f21..abc4a38543 100644
 --- a/mythtv/programs/mythwelcome/main.cpp
@@ -18291,11 +20077,29 @@ index 62a60d2e4e..42c0f68b15 100755
          $result = 0 if (!defined($dbh));
          if ($show_errors && !defined($dbh))
          {
+diff --git a/mythtv/programs/scripts/metadata/Movie/tmdb3.py b/mythtv/programs/scripts/metadata/Movie/tmdb3.py
+index 39b49db719..3dd893d8b7 100755
+--- a/mythtv/programs/scripts/metadata/Movie/tmdb3.py
++++ b/mythtv/programs/scripts/metadata/Movie/tmdb3.py
+@@ -297,8 +297,11 @@ def main():
+                 print "Unable to find MythTV directory for metadata cache."
+                 sys.exit(1)
+             confdir = os.path.join(confdir, '.mythtv')
+-        confpath = os.path.join(confdir, 'cache', 'pytmdb3.cache')
+-        set_cache(engine='file', filename=confpath)
++        cachedir = os.path.join(confdir, 'cache')
++        if not os.path.exists(cachedir):
++            os.makedirs(cachedir)
++        cachepath = os.path.join(cachedir, 'pytmdb3.cache')
++        set_cache(engine='file', filename=cachepath)
+ 
+     if opts.language:
+         set_locale(language=opts.language, fallthrough=True)
 diff --git a/mythtv/programs/scripts/metadata/Television/ttvdb.py b/mythtv/programs/scripts/metadata/Television/ttvdb.py
-index 492feb7f09..20ad08d433 100755
+index 492feb7f09..7aa7a6b8e3 100755
 --- a/mythtv/programs/scripts/metadata/Television/ttvdb.py
 +++ b/mythtv/programs/scripts/metadata/Television/ttvdb.py
-@@ -34,10 +34,552 @@
+@@ -34,10 +34,659 @@
  #
  # License:Creative Commons GNU GPL v2
  # (http://creativecommons.org/licenses/GPL/2.0/)
@@ -18321,10 +20125,16 @@ index 492feb7f09..20ad08d433 100755
 +    <certifications>
 +      <certification locale="us" name="TV-PG"/>
 +    </certifications>
++    <categories>
++      <category type="genre" name="Action"/>
++      <category type="genre" name="Adventure"/>
++      <category type="genre" name="Fantasy"/>
++      <category type="genre" name="Science-Fiction"/>
++    </categories>
 +    <studios>
 +      <studio name="Syfy"/>
 +    </studios>
-+    <runtime/>
++    <runtime>45</runtime>
 +    <inetref>72449</inetref>
 +    <collectionref>72449</collectionref>
 +    <imdb>0118480</imdb>
@@ -18400,10 +20210,15 @@ index 492feb7f09..20ad08d433 100755
 +    <certifications>
 +      <certification locale="us" name="TV-14"/>
 +    </certifications>
++    <categories>
++      <category type="genre" name="Drama"/>
++      <category type="genre" name="Science-Fiction"/>
++      <category type="genre" name="Thriller"/>
++    </categories>
 +    <studios>
 +      <studio name="CBS"/>
 +    </studios>
-+    <runtime/>
++    <runtime>45</runtime>
 +    <inetref>83066</inetref>
 +    <collectionref>83066</collectionref>
 +    <imdb>1118697</imdb>
@@ -18460,10 +20275,17 @@ index 492feb7f09..20ad08d433 100755
 +    <certifications>
 +      <certification locale="us" name="TV-PG"/>
 +    </certifications>
++    <categories>
++      <category type="genre" name="Action"/>
++      <category type="genre" name="Adventure"/>
++      <category type="genre" name="Crime"/>
++      <category type="genre" name="Mystery"/>
++      <category type="genre" name="Science-Fiction"/>
++    </categories>
 +    <studios>
 +      <studio name="Space"/>
 +    </studios>
-+    <runtime/>
++    <runtime>60</runtime>
 +    <inetref>80159</inetref>
 +    <collectionref>80159</collectionref>
 +    <imdb>0965394</imdb>
@@ -18680,6 +20502,13 @@ index 492feb7f09..20ad08d433 100755
 +    <certifications>
 +      <certification locale="us" name="TV-PG"/>
 +    </certifications>
++    <categories>
++      <category type="genre" name="Action"/>
++      <category type="genre" name="Adventure"/>
++      <category type="genre" name="Crime"/>
++      <category type="genre" name="Mystery"/>
++      <category type="genre" name="Science-Fiction"/>
++    </categories>
 +    <studios>
 +      <studio name="Space"/>
 +    </studios>
@@ -18722,7 +20551,7 @@ index 492feb7f09..20ad08d433 100755
 +Dvddiscid:
 +Id:5463514
 +Imdbid:
-+Lastupdated:1451954464
++Lastupdated:...
 +Lastupdatedby:447800
 +Productioncode:
 +Seriesid:281053
@@ -18730,7 +20559,7 @@ index 492feb7f09..20ad08d433 100755
 +Siterating:0
 +Siteratingcount:0
 +Thumbadded:
-+Thumbauthor:1
++Thumbauthor:...
 +Cast:Chip Gaines, Joanna Gaines
 +Runtime:45
 +Title:Fixer Upper
@@ -18753,10 +20582,16 @@ index 492feb7f09..20ad08d433 100755
 +    <certifications>
 +      <certification locale="us" name="TV-14"/>
 +    </certifications>
++    <categories>
++      <category type="genre" name="Action"/>
++      <category type="genre" name="Adventure"/>
++      <category type="genre" name="Crime"/>
++      <category type="genre" name="Drama"/>
++    </categories>
 +    <studios>
 +      <studio name="CBS"/>
 +    </studios>
-+    <runtime/>
++    <runtime>45</runtime>
 +    <inetref>72108</inetref>
 +    <collectionref>72108</collectionref>
 +    <tmsref>EP00681911</tmsref>
@@ -18819,10 +20654,14 @@ index 492feb7f09..20ad08d433 100755
 +    <certifications>
 +      <certification locale="us" name="TV-G"/>
 +    </certifications>
++    <categories>
++      <category type="genre" name="Family"/>
++      <category type="genre" name="Special Interest"/>
++    </categories>
 +    <studios>
 +      <studio name="ABC (US)"/>
 +    </studios>
-+    <runtime/>
++    <runtime>30</runtime>
 +    <inetref>283661</inetref>
 +    <collectionref>283661</collectionref>
 +    <imdb>3062384</imdb>
@@ -18839,6 +20678,78 @@ index 492feb7f09..20ad08d433 100755
 +</metadata>
 +0
 +
++>>> sys.argv = shlex.split('ttvdb.py -l en -a US -N 76119 "Eclipse Over America"')
++>>> main()
++<?xml version='1.0' encoding='UTF-8'?>
++<metadata>
++  <item>
++    <title>NOVA</title>
++    <subtitle>Eclipse Over America</subtitle>
++    <description>On August 21, 2017, millions of Americans witnessed the first total solar eclipse to cross the continental United States in 99 years. As in all total solar eclipses, the moon blocked the sun and revealed its ethereal outer atmosphere – its corona – in a wondrous celestial spectacle. While hordes of citizens flocked to the eclipse’s path of totality, scientists, too, staked out spots for a very different reason: to investigate the secrets of the sun’s elusive atmosphere. During the eclipse’s precious seconds of darkness, they gathered new clues on how our sun works, how it can produce deadly solar storms, and why its atmosphere is so hot. NOVA investigates the storied history of solar eclipse science, and joins both seasoned and citizen-scientists alike as they don their eclipse glasses, tune their telescopes, and behold the Eclipse Over America.</description>
++    <season>44</season>
++    <episode>11</episode>
++    <certifications>
++      <certification locale="us" name="TV-PG"/>
++    </certifications>
++    <categories>
++      <category type="genre" name="Documentary"/>
++    </categories>
++    <studios>
++      <studio name="PBS"/>
++    </studios>
++    <runtime>60</runtime>
++    <inetref>76119</inetref>
++    <collectionref>76119</collectionref>
++    <imdb>0206501</imdb>
++    <tmsref>EP00003163</tmsref>
++    <language>en</language>
++    <year>2017</year>
++    <releasedate>2017-08-21</releasedate>
++    <people>
++      <person job="Guest Star" name="Craig Sechler"/>
++      <person job="Director" name="Martin Gorst"/>
++    </people>
++    <images>
++      <image type="screenshot" url="http://thetvdb.com/banners/episodes/76119/6286436.jpg" thumb="http://thetvdb.com/banners/_cache/episodes/76119/6286436.jpg"/>
++      <image type="coverart" url="http://www.thetvdb.com/banners/seasons/76119-44.jpg" thumb="http://www.thetvdb.com/banners/_cache/seasons/76119-44.jpg"/>
++      <image type="coverart" url="http://www.thetvdb.com/banners/seasons/76119-44-2.jpg" thumb="http://www.thetvdb.com/banners/_cache/seasons/76119-44-2.jpg"/>
++      <image type="fanart" url="http://www.thetvdb.com/banners/fanart/original/76119-1.jpg" thumb="http://www.thetvdb.com/banners/_cache/fanart/original/76119-1.jpg" width="1920" height="1080"/>
++      <image type="fanart" url="http://www.thetvdb.com/banners/fanart/original/76119-2.jpg" thumb="http://www.thetvdb.com/banners/_cache/fanart/original/76119-2.jpg" width="1920" height="1080"/>
++      <image type="fanart" url="http://www.thetvdb.com/banners/fanart/original/76119-3.jpg" thumb="http://www.thetvdb.com/banners/_cache/fanart/original/76119-3.jpg" width="1280" height="720"/>
++    </images>
++  </item>
++</metadata>
++0
++
++>>> sys.argv = shlex.split('ttvdb.py -l en -a GB -C 330432')
++>>> main()
++<?xml version='1.0' encoding='UTF-8'?>
++<metadata>
++  <item>
++    <language>en</language>
++    <title>Nine Minute Ninja</title>
++    <network>CBBC</network>
++    <description>Art Ninja spinoff. Ricky makes art in nine minutes.</description>
++    <categories>
++      <category type="genre" name="Children"/>
++    </categories>
++    <studios>
++      <studio name="CBBC"/>
++    </studios>
++    <runtime>10</runtime>
++    <inetref>330432</inetref>
++    <ratingcount>0</ratingcount>
++    <year>2015</year>
++    <releasedate>2015-06-24</releasedate>
++    <lastupdated>...</lastupdated>
++    <status>Continuing</status>
++    <images>
++      <image type="coverart" url="http://www.thetvdb.com/banners/posters/330432-1.jpg" thumb="http://www.thetvdb.com/banners/_cache/posters/330432-1.jpg"/>
++    </images>
++  </item>
++</metadata>
++0
++
 +"""
 +from __future__ import print_function
 +
@@ -18850,7 +20761,7 @@ index 492feb7f09..20ad08d433 100755
  # Version .1    Initial development
  # Version .2    Add an option to get season and episode numbers from ep name
  # Version .3    Cleaned up the documentation and added a usage display option
-@@ -137,6 +679,7 @@ __version__="1.1.5"
+@@ -137,6 +786,7 @@ __version__="1.1.5"
  # Version 1.1.5 Add the -C (collection option) with corresponding XML output
  #               and add a <collectionref> XML tag to Search and Query XML output
  # Version 1.1.6 Honor series name overrides during TV series search
@@ -18858,7 +20769,7 @@ index 492feb7f09..20ad08d433 100755
  
  usage_txt='''
  Usage: ttvdb.py usage: ttvdb -hdruviomMPFBDSC [parameters]
-@@ -338,6 +881,7 @@ Banner:http://www.thetvdb.com/banners/graphical/73739-g4.jpg,http://www.thetvdb.
+@@ -338,6 +988,7 @@ Banner:http://www.thetvdb.com/banners/graphical/73739-g4.jpg,http://www.thetvdb.
    </item>
  </metadata>
  '''
@@ -18866,7 +20777,7 @@ index 492feb7f09..20ad08d433 100755
  # Episode keys that can be used in a episode data/information search.
  # All keys are currently being used.
  '''
-@@ -368,47 +912,94 @@ Banner:http://www.thetvdb.com/banners/graphical/73739-g4.jpg,http://www.thetvdb.
+@@ -368,47 +1019,94 @@ Banner:http://www.thetvdb.com/banners/graphical/73739-g4.jpg,http://www.thetvdb.
  'episodename'
  '''
  
@@ -18979,7 +20890,7 @@ index 492feb7f09..20ad08d433 100755
  # Check that the lxml library is current enough
  # From the lxml documents it states: (http://codespeak.net/lxml/installation.html)
  # "If you want to use XPath, do not use libxml2 2.6.27. We recommend libxml2 2.7.2 or later"
-@@ -429,8 +1020,6 @@ if version < '2.7.2':
+@@ -429,8 +1127,6 @@ if version < '2.7.2':
  http_find="http://www.thetvdb.com"
  http_replace="http://www.thetvdb.com" #Keep replace code "just in case"
  
@@ -18988,7 +20899,7 @@ index 492feb7f09..20ad08d433 100755
  name_parse=[
              # foo_[s01]_[e01]
              re.compile('''^(.+?)[ \._\-]\[[Ss]([0-9]+?)\]_\[[Ee]([0-9]+?)\]?[^\\/]*$'''),
-@@ -447,7 +1036,7 @@ name_parse=[
+@@ -447,7 +1143,7 @@ name_parse=[
  # Episode meta data that is massaged
  massage={'writer':'|','director':'|', 'overview':'&', 'gueststars':'|' }
  # Keys and titles used for episode data (option '-D')
@@ -18997,7 +20908,7 @@ index 492feb7f09..20ad08d433 100755
  data_titles=['Season:','Episode:','Subtitle:','ReleaseDate:','Director:','Plot:','UserRating:','Writers:','Screenshot:','Language:' ]
  # High level dictionay keys for select graphics URL(s)
  fanart_key='fanart'
-@@ -472,10 +1061,17 @@ confdir = os.environ.get('MYTHCONFDIR', '')
+@@ -472,10 +1168,17 @@ confdir = os.environ.get('MYTHCONFDIR', '')
  if (not confdir) or (confdir == '/'):
      confdir = os.environ.get('HOME', '')
      if (not confdir) or (confdir == '/'):
@@ -19013,11 +20924,11 @@ index 492feb7f09..20ad08d433 100755
 +else:
 +    cache_dir=os.path.join(confdir, "cache/tvdb_api3/")
 +if not os.path.exists(cache_dir):
-+    os.mkdir(cache_dir)
++    os.makedirs(cache_dir)
  
  def _can_int(x):
      """Takes a string, checks if it is numeric.
-@@ -492,14 +1088,6 @@ def _can_int(x):
+@@ -492,14 +1195,6 @@ def _can_int(x):
          return True
  # end _can_int
  
@@ -19032,7 +20943,7 @@ index 492feb7f09..20ad08d433 100755
  class OutStreamEncoder(object):
      """Wraps a stream with an encoder"""
      def __init__(self, outstream, encoding=None):
-@@ -512,15 +1100,18 @@ class OutStreamEncoder(object):
+@@ -512,15 +1207,18 @@ class OutStreamEncoder(object):
      def write(self, obj):
          """Wraps the output stream, encoding Unicode strings with the specified encoding"""
          if isinstance(obj, unicode):
@@ -19055,7 +20966,7 @@ index 492feb7f09..20ad08d433 100755
  
  # modified Show class implementing a fuzzy search
  class Show( tvdb_api.Show ):
-@@ -574,11 +1165,12 @@ class Episode( tvdb_api.Episode ):
+@@ -574,11 +1272,12 @@ class Episode( tvdb_api.Episode ):
  
  # modified Tvdb API class using modified show classes
  class Tvdb( tvdb_api.Tvdb ):
@@ -19071,7 +20982,7 @@ index 492feb7f09..20ad08d433 100755
              self.corrections[seriesid] = sid
          return self.shows[sid]
      #end series_by_sid
-@@ -603,10 +1195,10 @@ class Tvdb( tvdb_api.Tvdb ):
+@@ -603,10 +1302,10 @@ class Tvdb( tvdb_api.Tvdb ):
  #end Tvdb
  
  # Search for a series by SID or Series name
@@ -19084,7 +20995,7 @@ index 492feb7f09..20ad08d433 100755
      else:
          return tvdb[sid_or_name]
  # end search_for_series
-@@ -615,19 +1207,21 @@ def search_for_series(tvdb, sid_or_name):
+@@ -615,19 +1314,21 @@ def search_for_series(tvdb, sid_or_name):
  def searchseries(t, opts, series_season_ep):
      global SID
      series_name=''
@@ -19111,7 +21022,7 @@ index 492feb7f09..20ad08d433 100755
      except tvdb_shownotfound:
          # No such show found.
          # Use the show-name from the files name, and None as the ep name
-@@ -636,25 +1230,25 @@ def searchseries(t, opts, series_season_ep):
+@@ -636,25 +1337,25 @@ def searchseries(t, opts, series_season_ep):
          # The season, episode or name wasn't found, but the show was.
          # Use the corrected show-name, but no episode name.
          sys.exit(0)
@@ -19145,7 +21056,7 @@ index 492feb7f09..20ad08d433 100755
          return(seriesfound)
  # end searchseries
  
-@@ -663,15 +1257,28 @@ def get_graphics(t, opts, series_season_ep, graphics_type, single_option, langua
+@@ -663,15 +1364,28 @@ def get_graphics(t, opts, series_season_ep, graphics_type, single_option, langua
      banners='_banners'
      series_name=''
      graphics=[]
@@ -19178,7 +21089,7 @@ index 492feb7f09..20ad08d433 100755
  
      if graphics_type == fanart_type: # Series fanart graphics
          if not len(URLs[u'fanart']):
-@@ -692,16 +1299,18 @@ def get_graphics(t, opts, series_season_ep, graphics_type, single_option, langua
+@@ -692,16 +1406,18 @@ def get_graphics(t, opts, series_season_ep, graphics_type, single_option, langua
              return []
          if graphics_type == banner_type: # Season Banners
              season_banners=[]
@@ -19200,7 +21111,7 @@ index 492feb7f09..20ad08d433 100755
                      season_posters.append(url)
              if not len(season_posters):
                  return []
-@@ -715,11 +1324,12 @@ def get_graphics(t, opts, series_season_ep, graphics_type, single_option, langua
+@@ -715,11 +1431,12 @@ def get_graphics(t, opts, series_season_ep, graphics_type, single_option, langua
      wasanythingadded = 0
      anyotherlanguagegraphics=[]
      englishlanguagegraphics=[]
@@ -19214,7 +21125,7 @@ index 492feb7f09..20ad08d433 100755
              if language == URL['language']:
                  graphicsURLs.append((URL['_bannerpath']).replace(http_find, http_replace))
              else: # Check for fall back graphics in case there are no selected language graphics
-@@ -740,7 +1350,7 @@ def get_graphics(t, opts, series_season_ep, graphics_type, single_option, langua
+@@ -740,7 +1457,7 @@ def get_graphics(t, opts, series_season_ep, graphics_type, single_option, langua
              graphicsURLs = anyotherlanguagegraphics
  
      if opts.debug == True:
@@ -19223,7 +21134,7 @@ index 492feb7f09..20ad08d433 100755
  
      if len(graphicsURLs) == 1 and graphicsURLs[0] == graphics_type+':':
          return [] # Due to the language filter there may not be any URLs
-@@ -764,8 +1374,11 @@ def change_to_commas(meta_data):
+@@ -764,8 +1481,11 @@ def change_to_commas(meta_data):
  # Change &amp; values to ascii equivalents
  def change_amp(text):
      if not text: return text
@@ -19237,7 +21148,7 @@ index 492feb7f09..20ad08d433 100755
      return text
  # end change_amp
  
-@@ -789,26 +1402,30 @@ def Getseries_episode_data(t, opts, series_season_ep, language = None):
+@@ -789,26 +1509,30 @@ def Getseries_episode_data(t, opts, series_season_ep, language = None):
  
      args = len(series_season_ep)
      series_name=''
@@ -19274,7 +21185,7 @@ index 492feb7f09..20ad08d433 100755
                  cast_members = unicode(cast_members[:-2],'utf8')
              cast_members = change_amp(cast_members)
              cast_members = change_to_commas(cast_members)
-@@ -817,43 +1434,56 @@ def Getseries_episode_data(t, opts, series_season_ep, language = None):
+@@ -817,43 +1541,56 @@ def Getseries_episode_data(t, opts, series_season_ep, language = None):
      # Get genre(s)
      genres=''
      try:
@@ -19341,7 +21252,7 @@ index 492feb7f09..20ad08d433 100755
                          text = change_to_commas(text)
                          if text == 'None' and key.title() == 'Director':
                              text = u"Unknown"
-@@ -862,34 +1492,42 @@ def Getseries_episode_data(t, opts, series_season_ep, language = None):
+@@ -862,34 +1599,42 @@ def Getseries_episode_data(t, opts, series_season_ep, language = None):
                          except UnicodeDecodeError:
                              extra_ep_data.append(u"%s:%s" % (key.title(), unicode(text, "utf8")))
                      continue
@@ -19390,7 +21301,7 @@ index 492feb7f09..20ad08d433 100755
                      if (len(extra_cast)>128) and not extra_cast.count(','):
                          continue
                      if cast_members:
-@@ -897,19 +1535,23 @@ def Getseries_episode_data(t, opts, series_season_ep, language = None):
+@@ -897,19 +1642,23 @@ def Getseries_episode_data(t, opts, series_season_ep, language = None):
                      else:
                          extra_data=u"Cast:%s" % extra_cast
                      cast_print=True
@@ -19419,7 +21330,7 @@ index 492feb7f09..20ad08d433 100755
  # end Getseries_episode_data
  
  # Get Series Season and Episode numbers
-@@ -926,8 +1568,9 @@ def Getseries_episode_numbers(t, opts, series_season_ep):
+@@ -926,8 +1675,9 @@ def Getseries_episode_numbers(t, opts, series_season_ep):
      global xmlFlag
      series_name=''
      ep_name=''
@@ -19431,7 +21342,7 @@ index 492feb7f09..20ad08d433 100755
          ep_name=series_season_ep[1]
          if len(override[series_season_ep[0].lower()][1]) != 0: # Are there search-replace strings?
              ep_name=massageEpisode_name(ep_name, series_season_ep)
-@@ -935,14 +1578,19 @@ def Getseries_episode_numbers(t, opts, series_season_ep):
+@@ -935,14 +1685,19 @@ def Getseries_episode_numbers(t, opts, series_season_ep):
          series_name=series_season_ep[0] # Leave the series name alone
          ep_name=series_season_ep[1] # Leave the episode name alone
  
@@ -19454,7 +21365,7 @@ index 492feb7f09..20ad08d433 100755
  #            elif (episode['episodename'].lower()).startswith(ep_name.lower()):
  #                if len(episode['episodename']) > (len(ep_name)+1):
  #                    if episode['episodename'][len(ep_name):len(ep_name)+2] != ' (':
-@@ -950,12 +1598,12 @@ def Getseries_episode_numbers(t, opts, series_season_ep):
+@@ -950,12 +1705,12 @@ def Getseries_episode_numbers(t, opts, series_season_ep):
  #                    if xmlFlag:
  #                        displaySeriesXML(t, [series_name, episode['seasonnumber'], episode['episodenumber']])
  #                        sys.exit(0)
@@ -19470,7 +21381,7 @@ index 492feb7f09..20ad08d433 100755
          self.config = config
          self.log = log
  
-@@ -963,7 +1611,7 @@ class returnAllSeriesUI(tvdb_ui.BaseUI):
+@@ -963,7 +1718,7 @@ class returnAllSeriesUI(tvdb_ui.BaseUI):
          return allSeries
  # ends returnAllSeriesUI
  
@@ -19479,7 +21390,7 @@ index 492feb7f09..20ad08d433 100755
      """ Change variables through a user supplied configuration file
      return False and exit the script if there are issues with the configuration file values
      """
-@@ -1001,7 +1649,15 @@ def initialize_override_dictionary(useroptions):
+@@ -1001,7 +1756,15 @@ def initialize_override_dictionary(useroptions):
          if section =='series_name_override':
              for option in cfg.options(section):
                  overrides[option] = cfg.get(section, option)
@@ -19496,7 +21407,7 @@ index 492feb7f09..20ad08d433 100755
              for key in overrides.keys():
                  sid = overrides[key]
                  if len(sid) == 0:
-@@ -1014,28 +1670,88 @@ def initialize_override_dictionary(useroptions):
+@@ -1014,28 +1777,88 @@ def initialize_override_dictionary(useroptions):
                  # Make sure that the series name is not empty or all blanks
                  if len(key.replace(' ','')) == 0:
                      sys.stdout.write("! Invalid Series name (must have some non-blank characters) [%s] in config file\n" % key)
@@ -19589,7 +21500,7 @@ index 492feb7f09..20ad08d433 100755
  def initializeXslt(language):
      ''' Initalize all data and functions for XSLT stylesheet processing
      return nothing
-@@ -1043,13 +1759,14 @@ def initializeXslt(language):
+@@ -1043,13 +1866,14 @@ def initializeXslt(language):
      global xslt, tvdbXpath
      try:
          import MythTV.ttvdb.tvdbXslt as tvdbXslt
@@ -19605,7 +21516,7 @@ index 492feb7f09..20ad08d433 100755
      tvdbXpath = etree.FunctionNamespace('http://www.mythtv.org/wiki/MythTV_Universal_Metadata_Format')
      tvdbXpath.prefix = 'tvdbXpath'
      for key in xslt.FuncDict.keys():
-@@ -1079,7 +1796,7 @@ def displaySearchXML(tvdb_api):
+@@ -1079,7 +1903,7 @@ def displaySearchXML(tvdb_api):
      if items.getroot() != None:
          if len(items.xpath('//item')):
              sys.stdout.write(etree.tostring(items, encoding='UTF-8', method="xml", xml_declaration=True, pretty_print=True, ))
@@ -19614,7 +21525,7 @@ index 492feb7f09..20ad08d433 100755
  # end displaySearchXML()
  
  def displaySeriesXML(tvdb_api, series_season_ep):
-@@ -1097,25 +1814,14 @@ def displaySeriesXML(tvdb_api, series_season_ep):
+@@ -1097,25 +1921,14 @@ def displaySeriesXML(tvdb_api, series_season_ep):
      allDataElement.append(requestDetails)
  
      # Combine the various XML inputs into a single XML element and send to the XSLT stylesheet
@@ -19642,7 +21553,7 @@ index 492feb7f09..20ad08d433 100755
  # end displaySeriesXML()
  
  def displayCollectionXML(tvdb_api):
-@@ -1140,12 +1846,48 @@ def displayCollectionXML(tvdb_api):
+@@ -1140,12 +1953,48 @@ def displayCollectionXML(tvdb_api):
      if items.getroot() != None:
          if len(items.xpath('//item')):
              sys.stdout.write(etree.tostring(items, encoding='UTF-8', method="xml", xml_declaration=True, pretty_print=True, ))
@@ -19692,7 +21603,7 @@ index 492feb7f09..20ad08d433 100755
      parser.add_option(  "-d", "--debug", action="store_true", default=False, dest="debug",
                          help=u"Show debugging info")
      parser.add_option(  "-r", "--raw", action="store_true",default=False, dest="raw",
-@@ -1187,19 +1929,22 @@ def main():
+@@ -1187,19 +2036,22 @@ def main():
  
      opts, series_season_ep = parser.parse_args()
  
@@ -19721,7 +21632,7 @@ index 492feb7f09..20ad08d433 100755
  
      # Process version command line requests
      if opts.version == True:
-@@ -1212,34 +1957,33 @@ def main():
+@@ -1212,34 +2064,33 @@ def main():
          etree.SubElement(version, "description").text = 'Search and metadata downloads for thetvdb.com'
          etree.SubElement(version, "version").text = __version__
          sys.stdout.write(etree.tostring(version, encoding='UTF-8', pretty_print=True))
@@ -19762,7 +21673,7 @@ index 492feb7f09..20ad08d433 100755
          if len(series_season_ep) == 3:
              season_and_episode_num = series_season_ep[2] # Override default output format
  
-@@ -1247,27 +1991,27 @@ def main():
+@@ -1247,27 +2098,27 @@ def main():
          if len(series_season_ep) > 1:
              if not _can_int(series_season_ep[1]):
                  parser.error("! Season is not numeric")
@@ -19799,7 +21710,7 @@ index 492feb7f09..20ad08d433 100755
  
      # List of language from http://www.thetvdb.com/api/0629B785CE550C8D/languages.xml
      # Hard-coded here as it is realtively static, and saves another HTTP request, as
-@@ -1284,18 +2028,44 @@ def main():
+@@ -1284,18 +2135,44 @@ def main():
  
      # Access thetvdb.com API with banners (Posters, Fanart, banners, screenshots) data retrieval enabled
      if opts.list ==True:
@@ -19847,7 +21758,7 @@ index 492feb7f09..20ad08d433 100755
      # Determine if there is a SID or a series name to search with
      global SID
      SID = False
-@@ -1310,12 +2080,12 @@ def main():
+@@ -1310,12 +2187,12 @@ def main():
              pass
          else:
              parser.error("! Option (-C), collection requires an inetref number")
@@ -19864,7 +21775,7 @@ index 492feb7f09..20ad08d433 100755
  
      global override
      override={} # Initialize series name override dictionary
-@@ -1324,15 +2094,15 @@ def main():
+@@ -1324,15 +2201,15 @@ def main():
          if opts.configure[0]=='~':
              opts.configure=os.path.expanduser("~")+opts.configure[1:]
          if os.path.exists(opts.configure) == 1: # Do overrides exist?
@@ -19884,7 +21795,7 @@ index 492feb7f09..20ad08d433 100755
  
      if len(override) == 0:
          opts.configure = False # Turn off the override option as there is nothing to override
-@@ -1351,37 +2121,42 @@ def main():
+@@ -1351,37 +2228,42 @@ def main():
      # Fetch a list of matching series names
      if opts.list ==True:
          try:
@@ -19940,7 +21851,7 @@ index 492feb7f09..20ad08d433 100755
  
      # Verify that thetvdb.com has the desired series_season_ep.
      # Exit this module if series_season_ep is not found
-@@ -1396,38 +2171,38 @@ def main():
+@@ -1396,38 +2278,38 @@ def main():
      # Return the season numbers for a series
      if opts.num_seasons == True:
          season_numbers=''
@@ -20000,7 +21911,7 @@ index 492feb7f09..20ad08d433 100755
          sys.exit (True)
  
      if opts.numbers == True: # Fetch and output season and episode numbers
-@@ -1437,33 +2212,38 @@ def main():
+@@ -1437,33 +2319,38 @@ def main():
          else:
              xmlFlag = False
          Getseries_episode_numbers(t, opts, series_season_ep)
@@ -20049,7 +21960,7 @@ index 492feb7f09..20ad08d433 100755
  
      banner= False
      poster= False
-@@ -1479,12 +2259,12 @@ def main():
+@@ -1479,12 +2366,12 @@ def main():
  
      # Make sure that some graphics URL(s) (Posters, FanArt or Banners) are available
      if ( fanart!=True and poster!=True and banner!=True ):
@@ -20066,7 +21977,7 @@ index 492feb7f09..20ad08d433 100755
  
      # Determine if graphic URL identification output is required
      if opts.data:    # Along with episode data get all graphics
-@@ -1507,8 +2287,8 @@ def main():
+@@ -1507,8 +2394,8 @@ def main():
          season_poster_found = False
          if opts.mythvideo:
              if len(series_season_ep) < 2:
@@ -20077,7 +21988,7 @@ index 492feb7f09..20ad08d433 100755
          all_posters = u'Coverart:'
          all_empty = len(all_posters)
          for p in get_graphics(t, opts, series_season_ep, poster_type, single_option, opts.language):
-@@ -1516,17 +2296,18 @@ def main():
+@@ -1516,17 +2403,18 @@ def main():
              season_poster_found = True
          if season_poster_found == False: # If there were no season posters get the series top poster
              series_name=''
@@ -20100,7 +22011,7 @@ index 492feb7f09..20ad08d433 100755
  
      if (fanart==True and opts.fanart==True and opts.raw!=True): # Get Fan Art and send to stdout
          all_fanart = u'Fanart:'
-@@ -1535,16 +2316,16 @@ def main():
+@@ -1535,16 +2423,16 @@ def main():
              all_fanart = all_fanart+f+u','
          if len(all_fanart) > all_empty:
              if all_fanart[-1] == u',':
@@ -20121,7 +22032,7 @@ index 492feb7f09..20ad08d433 100755
          all_banners = u'Banner:'
          all_empty = len(all_banners)
          for b in get_graphics(t, opts, series_season_ep, banner_type, single_option, opts.language):
-@@ -1552,24 +2333,25 @@ def main():
+@@ -1552,24 +2440,25 @@ def main():
              season_banner_found = True
          if not season_banner_found: # If there were no season banner get the series top banner
              series_name=''
