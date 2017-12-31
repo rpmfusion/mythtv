@@ -79,9 +79,9 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        29.0
 %if "%{branch}" == "master"
-Release:        0.5.git.%{_gitrev}%{?dist}
+Release:        0.6.git.%{_gitrev}%{?dist}
 %else
-Release:        4%{?dist}
+Release:        5%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1361,6 +1361,9 @@ exit 0
 
 
 %changelog
+* Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-5
+- Mass rebuild for x264 and x265
+
 * Mon Nov 13 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-4
 - Update to v29.0-57-gd743ef49a8.
 
