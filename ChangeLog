@@ -1,3 +1,139 @@
+commit 339b08e4677135ad57b2f1e43e5535878143a65b
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Dec 26 13:53:47 2017 -0500
+
+    Fixes #13196 : Add "New Entry" to symbol rate selection in DVB scans
+    
+    (cherry picked from commit 5163d6e79108c6ac100f108a2757d5db694c3c2f)
+
+commit 15c05999fbd31bd3a02f33a39c06468c7c3a54ed
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Tue Dec 26 11:31:36 2017 +0000
+
+    MythCenter-wide: In the OSD only show the callsign if the channel icon is missing
+    
+    (cherry picked from commit 4dc7ced5b1a875d651f3bd100c40ecbe2e6a0e95)
+
+commit 68e982ee82f079c92d7ccd007859fff36541a4ed
+Author: Mark Spieth <mspieth@digivation.com.au>
+Date:   Sat Dec 23 10:27:55 2017 +1100
+
+    Convert monkey patch _cache_expire_after to timedelta if its not already
+    
+    Fixes #13188
+
+commit e65734db54812b3daeb8e568260d42f103b7bac6
+Merge: e9c7e51ca3 3411d57e80
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Dec 22 20:23:42 2017 +0000
+
+    Merge branch 'fixes/29' of code.mythtv.org:mythtv into fixes/29
+
+commit e9c7e51ca3ced5b00614062dc4a433c0a9c7a8c3
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Dec 22 19:14:46 2017 +0000
+
+    Fix miniplayer display issue when playing radio streams with no broadcaster
+    
+    (cherry picked from commit 3d22580056cafc029c3627dc5d19fb4a4945f579)
+
+commit 3411d57e8014cd8423ac7e832d8648be4ec7d65d
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Tue Dec 19 19:52:37 2017 +0100
+
+    MythSystem: Make sure to clean up objects properly
+    
+    In case MythSystemLegacy{Unix, Windows}::m_parent had already been
+    deleted when a process exited, a dangling QBuffer pointer could be left
+    in MythSystemLegacyIOHandler.  If this pointer was accessed, for example
+    in MythSystemLegacyIOHandler::HandleRead, it could cause a crash.
+    
+    Fixes #12317
+    
+    (cherry picked from commit 3eccd6152b0f468df16906e2472fd879a18a54b9)
+
+commit 31fdace083ab295d3c1bf4ed3543f6d1dfa050a6
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Tue Dec 19 19:47:57 2017 +0100
+
+    MainServer: Reinstate the event about disconnected sockets
+    
+    Fixes #13150
+    
+    (cherry picked from commit b1e5ddeb92ae93b6eb692aa7863d80be89aaf1e9)
+
+commit 39b2062c069e801c9f9c4b15d198e8ef72594f55
+Author: David Hampton <mythtv@love2code.net>
+Date:   Mon Nov 20 18:04:29 2017 -0500
+
+    Fix compilation error in Fedora Rawhide.
+    
+    A recent change to the kernel headers (for 4.15.0) changed the most of
+    the fields in the iso_primary_descriptor data structure from signed
+    character arrays to unsigned character arrays.  The one used by MythTV
+    needs to be cast back to signed characters so that it can continue to
+    be used to initialize a QString.
+    
+    (cherry picked from commit 90f9457b74f1ccd0df31c825b1e721203e5075ff)
+
+commit af1126277ade4351a3c13923cecade1465586f19
+Author: John Poet <jpoet@mythtv.org>
+Date:   Mon Nov 27 14:17:10 2017 -0700
+
+    ExternalStreamHandler: When reading, give EAGAIN a few tries before giving up.
+    
+    (cherry picked from commit 77810afe6990794717f175761367928643254b33)
+
+commit 2a0211d71c9822889f73e5ccc4adc8e7c8d6c78f
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sat Nov 25 13:01:21 2017 -0700
+
+    ExternalStreamHandler: Cleanup and simplify logging.
+    
+    (cherry picked from commit 686a9fd145c667e58148597e79d3982b074d3751)
+
+commit faa7994416d8362170ce06990210665ff425a366
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sat Nov 25 13:01:04 2017 -0700
+
+    ExternalStreamhandler: Make sure we only process one 'status' line.
+    
+    More than one line may be queued when we go to read it, so buffer the messages.
+    
+    (cherry picked from commit 0f3781cc5b2516edeed14af0dcd5600a0c303124)
+
+commit 09c617f0405247c37c4b13038b3ba7a4116906b4
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sat Nov 25 13:00:29 2017 -0700
+
+    ExternalStreamHandler::run: Don't hold _listener_lock except when necessary.
+    
+    (cherry picked from commit 0e67fb1c6f1ce115367f42099a014db7ff568f76)
+
+commit 61d331cc0ebb9eccb666b883afcf25c39ed4032b
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Nov 14 11:22:50 2017 -0500
+
+    Fix for frontend overrides not taking effect
+    
+    If the MythTV Startup page appears, any command line overrides (-O option)
+    that affect GUI are not taken for that run. Fixed so that all overrides take effect in
+    all cases.
+    
+    (cherry picked from commit fe96ef1596e6b216147e9ebf297644186844d6bf)
+
+commit e62530954d2b5814fc95808608b3b555d9a101e7
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Nov 14 10:47:13 2017 -0500
+
+    Fixes #13173 - Raspberry Pi hangs during playback
+    
+    Running out of OMX decoder input buffers occasionally. Fixed by
+    increasing default number of buffers from 20 to 30 and reducing the timeout
+    for acquiring a buffer to 100ms.
+    
+    (cherry picked from commit 01f2e33130e5d2ff8bc2429da8af68195c4cdab1)
+
 commit d743ef49a801295547b5aee43a3c83b6de595eda
 Author: Jonatan Lindblad <jlindblad@mythtv.org>
 Date:   Fri Nov 10 20:14:32 2017 +0100

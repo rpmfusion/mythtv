@@ -32,7 +32,7 @@
  .../python/MythTV/ttvdb/XSLT/tvdbQuery.xsl         |   18 +-
  .../python/MythTV/ttvdb/XSLT/tvdbVideo.xsl         |   89 +-
  mythtv/bindings/python/MythTV/ttvdb/cache.py       |  230 ---
- .../MythTV/ttvdb/requests_cache_compatability.py   |   44 +
+ .../MythTV/ttvdb/requests_cache_compatability.py   |   49 +
  mythtv/bindings/python/MythTV/ttvdb/tvdbXslt.py    |  108 +-
  mythtv/bindings/python/MythTV/ttvdb/tvdb_api.py    | 1189 +++++++++-----
  .../python/MythTV/ttvdb/tvdb_create_key.py         |   36 +
@@ -55,22 +55,29 @@
  mythtv/i18n/mythfrontend_en_gb.ts                  | 1668 ++++++++++----------
  mythtv/i18n/mythfrontend_it.qm                     |  Bin 766688 -> 765165 bytes
  mythtv/i18n/mythfrontend_it.ts                     |  864 +++++-----
- mythtv/libs/libmyth/mythcontext.cpp                |   43 +-
+ mythtv/libs/libmyth/mythcontext.cpp                |   45 +-
  mythtv/libs/libmyth/mythmediamonitor.cpp           |    4 +
  mythtv/libs/libmyth/programinfo.cpp                |   20 +-
+ mythtv/libs/libmythbase/mythcdrom-linux.cpp        |    2 +-
  mythtv/libs/libmythbase/mythcorecontext.cpp        |    2 +
  mythtv/libs/libmythbase/mythdownloadmanager.cpp    |    1 +
  mythtv/libs/libmythbase/mythmiscutil.cpp           |   45 +-
+ mythtv/libs/libmythbase/mythsystemunix.cpp         |    2 +-
+ mythtv/libs/libmythbase/mythsystemwindows.cpp      |    6 +-
  mythtv/libs/libmythbase/serverpool.cpp             |   10 +-
  mythtv/libs/libmythmetadata/metadatacommon.h       |   10 +-
  mythtv/libs/libmythmetadata/metadatadownload.cpp   |   26 +-
- .../channelscan/channelscanmiscsettings.h          |    1 +
+ mythtv/libs/libmythmetadata/musicmetadata.cpp      |    7 +-
+ .../channelscan/channelscanmiscsettings.h          |    5 +-
  .../libs/libmythtv/channelscan/modulationsetting.h |    2 +
  mythtv/libs/libmythtv/channelsettings.cpp          |    8 -
  mythtv/libs/libmythtv/channelsettings.h            |    1 -
  mythtv/libs/libmythtv/dbcheck.cpp                  |   32 +-
  mythtv/libs/libmythtv/libmythtv.pro                |   11 +
- mythtv/libs/libmythtv/privatedecoder_omx.cpp       |    7 +-
+ mythtv/libs/libmythtv/privatedecoder_omx.cpp       |   43 +-
+ .../libs/libmythtv/recorders/ExternalRecorder.cpp  |    3 -
+ .../libmythtv/recorders/ExternalStreamHandler.cpp  |  172 +-
+ .../libmythtv/recorders/ExternalStreamHandler.h    |   14 +-
  mythtv/libs/libmythtv/recorders/dvbchannel.cpp     |    2 +
  mythtv/libs/libmythtv/recordinginfo.cpp            |    4 +-
  mythtv/libs/libmythtv/subtitlescreen.cpp           |    3 +-
@@ -92,23 +99,25 @@
  mythtv/programs/mythavtest/main.cpp                |    5 +
  mythtv/programs/mythbackend/backendhousekeeper.cpp |    9 +
  mythtv/programs/mythbackend/backendhousekeeper.h   |    1 +
+ mythtv/programs/mythbackend/mainserver.cpp         |   10 +
  mythtv/programs/mythbackend/scheduler.cpp          |   51 +-
  mythtv/programs/mythbackend/scheduler.h            |    3 +-
  mythtv/programs/mythbackend/services/video.cpp     |    8 +-
- mythtv/programs/mythfrontend/main.cpp              |    9 +-
+ mythtv/programs/mythfrontend/main.cpp              |   10 +-
  mythtv/programs/mythfrontend/mythfrontend.pro      |   25 +-
  mythtv/programs/mythfrontend/schedulecommon.cpp    |   11 +-
  mythtv/programs/mythfrontend/schedulecommon.h      |    1 +
  mythtv/programs/mythfrontend/scheduleeditor.cpp    |    3 +-
  mythtv/programs/mythscreenwizard/main.cpp          |    5 +
- mythtv/programs/mythtv-setup/main.cpp              |    6 +-
+ mythtv/programs/mythtv-setup/main.cpp              |    7 +-
  mythtv/programs/mythwelcome/main.cpp               |    4 +
  .../scripts/database/mythconverg_backup.pl         |   16 +-
  .../scripts/database/mythconverg_restore.pl        |   18 +-
  mythtv/programs/scripts/metadata/Movie/tmdb3.py    |    7 +-
  .../programs/scripts/metadata/Television/ttvdb.py  | 1335 +++++++++++++---
  .../scripts/metadata/Television/tvdb_test.conf     |    7 +
- 110 files changed, 6028 insertions(+), 3530 deletions(-)
+ mythtv/themes/MythCenter-wide/osd.xml              |   13 +-
+ 119 files changed, 6221 insertions(+), 3615 deletions(-)
 
 diff --git a/mythplugins/mytharchive/i18n/mytharchive_it.qm b/mythplugins/mytharchive/i18n/mytharchive_it.qm
 index e211d98a16..901f57d9f7 100644
@@ -6102,10 +6111,10 @@ index 1c37d795da..0000000000
 -    main()
 diff --git a/mythtv/bindings/python/MythTV/ttvdb/requests_cache_compatability.py b/mythtv/bindings/python/MythTV/ttvdb/requests_cache_compatability.py
 new file mode 100644
-index 0000000000..3d6a056f42
+index 0000000000..248a9b1d0c
 --- /dev/null
 +++ b/mythtv/bindings/python/MythTV/ttvdb/requests_cache_compatability.py
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,49 @@
 +# -*- coding: utf-8 -*-
 +
 +'''
@@ -6118,7 +6127,7 @@ index 0000000000..3d6a056f42
 +'''
 +
 +import requests_cache
-+from datetime import datetime
++from datetime import datetime, timedelta
 +
 +# patch if required if older versions of
 +try:
@@ -6145,6 +6154,11 @@ index 0000000000..3d6a056f42
 +        """
 +        if not self._cache_expire_after:
 +            return
++        # just in case expire_after is not converted in the
++        #  original constructor, convert it to a timedelta
++        if not isinstance(self._cache_expire_after, timedelta):
++            self._cache_expire_after = timedelta(seconds=self._cache_expire_after)
++
 +        self.cache.remove_old_entries(datetime.utcnow() - self._cache_expire_after)
 +
 +
@@ -18170,7 +18184,7 @@ index d9f3b8089f..bc325db171 100644
  </context>
  <context>
 diff --git a/mythtv/libs/libmyth/mythcontext.cpp b/mythtv/libs/libmyth/mythcontext.cpp
-index 5e169a3210..bd03ac535e 100644
+index 5e169a3210..5a6628063c 100644
 --- a/mythtv/libs/libmyth/mythcontext.cpp
 +++ b/mythtv/libs/libmyth/mythcontext.cpp
 @@ -127,6 +127,7 @@ class MythContextPrivate : public QObject
@@ -18237,13 +18251,13 @@ index 5e169a3210..bd03ac535e 100644
  
      return QString::null;
  }
-@@ -1423,32 +1423,38 @@ void MythContextPrivate::processEvents(void)
+@@ -1423,36 +1423,44 @@ void MythContextPrivate::processEvents(void)
  
  const QString MythContextPrivate::settingsToSave[] =
  { "Theme", "Language", "Country", "GuiHeight",
 -  "GuiOffsetX", "GuiOffsetY", "GuiWidth", "RunFrontendInWindow" };
 +  "GuiOffsetX", "GuiOffsetY", "GuiWidth", "RunFrontendInWindow",
-+  "AlwaysOnTop", "HideMouseCursor", "ThemePainter" };
++  "AlwaysOnTop", "HideMouseCursor", "ThemePainter", "libCECEnabled" };
  
  
  bool MythContextPrivate::saveSettingsCache(void)
@@ -18283,7 +18297,13 @@ index 5e169a3210..bd03ac535e 100644
      XmlConfiguration config = XmlConfiguration("cache/contextcache.xml");
      static const int arraySize = sizeof(settingsToSave)/sizeof(settingsToSave[0]);
      for (int ix = 0; ix < arraySize; ix++)
-@@ -1516,6 +1522,8 @@ bool MythContext::Init(const bool gui,
+     {
++        if (!gCoreContext->GetSetting(settingsToSave[ix],QString()).isEmpty())
++            continue;
+         QString value = config.GetValue("Settings/"+settingsToSave[ix],QString());
+         if (!value.isEmpty())
+             gCoreContext->OverrideSettingForSession(settingsToSave[ix], value);
+@@ -1516,6 +1524,8 @@ bool MythContext::Init(const bool gui,
                         const bool disableAutoDiscovery,
                         const bool ignoreDB)
  {
@@ -18292,7 +18312,7 @@ index 5e169a3210..bd03ac535e 100644
      if (!d)
      {
          LOG(VB_GENERAL, LOG_EMERG, LOC + "Init() Out-of-memory");
-@@ -1582,6 +1590,13 @@ bool MythContext::Init(const bool gui,
+@@ -1582,6 +1592,13 @@ bool MythContext::Init(const bool gui,
          return false;
      }
  
@@ -18355,6 +18375,19 @@ index 61742520f4..1d64f17e92 100644
  
      MSqlBindings::const_iterator it;
      // If count is non-zero then also return total number of matching records,
+diff --git a/mythtv/libs/libmythbase/mythcdrom-linux.cpp b/mythtv/libs/libmythbase/mythcdrom-linux.cpp
+index ba84699daf..ad1835229c 100644
+--- a/mythtv/libs/libmythbase/mythcdrom-linux.cpp
++++ b/mythtv/libs/libmythbase/mythcdrom-linux.cpp
+@@ -585,7 +585,7 @@ MythMediaStatus MythCDROMLinux::checkMedia()
+                     m_VolumeID = QString(buf.volume_id).trimmed();
+                     m_KeyID = QString("%1%2")
+                         .arg(m_VolumeID)
+-                        .arg(QString(buf.creation_date).left(16));
++                        .arg(QString(reinterpret_cast<char*>(buf.creation_date)).left(16));
+                 }
+                 else
+                 {
 diff --git a/mythtv/libs/libmythbase/mythcorecontext.cpp b/mythtv/libs/libmythbase/mythcorecontext.cpp
 index bbcd468e6f..fe33c54481 100644
 --- a/mythtv/libs/libmythbase/mythcorecontext.cpp
@@ -18448,6 +18481,36 @@ index 5741a464de..4a12fd2c65 100644
  #endif
  
      return true;
+diff --git a/mythtv/libs/libmythbase/mythsystemunix.cpp b/mythtv/libs/libmythbase/mythsystemunix.cpp
+index 63620a9630..a57b8cb1a2 100644
+--- a/mythtv/libs/libmythbase/mythsystemunix.cpp
++++ b/mythtv/libs/libmythbase/mythsystemunix.cpp
+@@ -321,7 +321,7 @@ void MythSystemLegacyManager::run(void)
+                     QString("Structure for child PID %1 already deleted!")
+                     .arg(pid));
+                 if (ms)
+-                    ms->DecrRef();
++                    msList.append(ms);
+                 continue;
+             }
+ 
+diff --git a/mythtv/libs/libmythbase/mythsystemwindows.cpp b/mythtv/libs/libmythbase/mythsystemwindows.cpp
+index 510a1129f0..a6033aacb6 100644
+--- a/mythtv/libs/libmythbase/mythsystemwindows.cpp
++++ b/mythtv/libs/libmythbase/mythsystemwindows.cpp
+@@ -295,7 +295,11 @@ void MythSystemLegacyManager::run(void)
+                 QString("Structure for child handle %1 already deleted!")
+                 .arg((long long)child));
+             if (ms)
+-                ms->DecrRef();
++            {
++                listLock.lock();
++                msList.append(ms);
++                listLock.unlock();
++            }
+             continue;
+         }
+ 
 diff --git a/mythtv/libs/libmythbase/serverpool.cpp b/mythtv/libs/libmythbase/serverpool.cpp
 index fd6ad9e04a..c39e99024f 100644
 --- a/mythtv/libs/libmythbase/serverpool.cpp
@@ -18639,10 +18702,37 @@ index c886654212..bf5d4fb077 100644
  
      if (list.count() == 1)
      {
+diff --git a/mythtv/libs/libmythmetadata/musicmetadata.cpp b/mythtv/libs/libmythmetadata/musicmetadata.cpp
+index 7605635e12..4547417aca 100644
+--- a/mythtv/libs/libmythmetadata/musicmetadata.cpp
++++ b/mythtv/libs/libmythmetadata/musicmetadata.cpp
+@@ -1079,7 +1079,12 @@ void MusicMetadata::toMap(InfoMap &metadataMap, const QString &prefix)
+     metadataMap[prefix + "compilationartist"] = m_compilation_artist;
+ 
+     if (m_album.isEmpty() && ID_TO_REPO(m_id) == RT_Radio)
+-        metadataMap[prefix + "album"] = QString("%1 - %2").arg(m_broadcaster).arg(m_channel);
++    {
++        if (m_broadcaster.isEmpty())
++            metadataMap[prefix + "album"] = m_channel;
++        else
++            metadataMap[prefix + "album"] = QString("%1 - %2").arg(m_broadcaster).arg(m_channel);
++    }
+     else
+         metadataMap[prefix + "album"] = m_album;
+ 
 diff --git a/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h b/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
-index c2630cd240..7e9e7e8643 100644
+index c2630cd240..00878f1fde 100644
 --- a/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
 +++ b/mythtv/libs/libmythtv/channelscan/channelscanmiscsettings.h
+@@ -161,7 +161,7 @@ class ScanFrequency: public TransTextEditSetting
+ class ScanSymbolRateDVBS: public TransMythUIComboBoxSetting
+ {
+   public:
+-    ScanSymbolRateDVBS()
++    ScanSymbolRateDVBS() : TransMythUIComboBoxSetting(true)
+     {
+         setLabel(QObject::tr("Symbol Rate"));
+         setHelpText(
 @@ -171,6 +171,7 @@ class ScanSymbolRateDVBS: public TransMythUIComboBoxSetting
                  "million symbols per second."));
          addSelection("3333000");
@@ -18651,6 +18741,15 @@ index c2630cd240..7e9e7e8643 100644
          addSelection("23000000");
          addSelection("27500000", "27500000", true);
          addSelection("28000000");
+@@ -183,7 +184,7 @@ class ScanSymbolRateDVBS: public TransMythUIComboBoxSetting
+ class ScanSymbolRateDVBC: public TransMythUIComboBoxSetting
+ {
+   public:
+-    ScanSymbolRateDVBC()
++    ScanSymbolRateDVBC() : TransMythUIComboBoxSetting(true)
+     {
+         setLabel(QObject::tr("Symbol Rate"));
+         setHelpText(
 diff --git a/mythtv/libs/libmythtv/channelscan/modulationsetting.h b/mythtv/libs/libmythtv/channelscan/modulationsetting.h
 index 005846c158..df9517d61d 100644
 --- a/mythtv/libs/libmythtv/channelscan/modulationsetting.h
@@ -18771,10 +18870,73 @@ index 77dd7917a0..98fcd4bbf0 100644
      POST_TARGETDEPS += ../libmyth/libmyth-$${MYTH_SHLIB_EXT}
      POST_TARGETDEPS += ../../external/FFmpeg/libswresample/$$avLibName(swresample)
 diff --git a/mythtv/libs/libmythtv/privatedecoder_omx.cpp b/mythtv/libs/libmythtv/privatedecoder_omx.cpp
-index f644ed50c6..cc18150e40 100644
+index f644ed50c6..d787ba9499 100644
 --- a/mythtv/libs/libmythtv/privatedecoder_omx.cpp
 +++ b/mythtv/libs/libmythtv/privatedecoder_omx.cpp
-@@ -1016,18 +1016,19 @@ int PrivateDecoderOMX::GetBufferedFrame(AVStream *stream, AVFrame *picture)
+@@ -281,6 +281,28 @@ bool PrivateDecoderOMX::Init(const QString &decoder, PlayerFlags flags,
+     }
+     avctx->pix_fmt = AV_PIX_FMT_YUV420P; // == FMT_YV12
+ 
++    // Update input buffers (default is 20 preset in OMX)
++    m_videc.GetPortDef(0);
++    OMX_PARAM_PORTDEFINITIONTYPE &indef = m_videc.PortDef(0);
++    OMX_U32 inputBuffers
++        = OMX_U32(gCoreContext->GetNumSetting("OmxInputBuffers", 30));
++    if (inputBuffers > 0U
++        && inputBuffers != indef.nBufferCountActual
++        && inputBuffers > indef.nBufferCountMin)
++    {
++        indef.nBufferCountActual = inputBuffers;
++        e = m_videc.SetParameter(OMX_IndexParamPortDefinition, &indef);
++        if (e != OMX_ErrorNone)
++        {
++            LOG(VB_PLAYBACK, LOG_ERR, LOC + QString(
++                    "Set input IndexParamPortDefinition error %1")
++                .arg(Error2String(e)));
++            return false;
++        }
++    }
++    m_videc.GetPortDef(0);
++    m_videc.ShowPortDef(0, LOG_INFO);
++
+     // Ensure at least 2 output buffers
+     OMX_PARAM_PORTDEFINITIONTYPE &def = m_videc.PortDef(1);
+     if (def.nBufferCountActual < 2U ||
+@@ -296,6 +318,8 @@ bool PrivateDecoderOMX::Init(const QString &decoder, PlayerFlags flags,
+             return false;
+         }
+     }
++    m_videc.GetPortDef(0);
++    m_videc.ShowPortDef(1, LOG_INFO);
+ 
+     // Goto OMX_StateIdle & allocate all buffers
+     // This generates an error if fmt.eCompressionFormat is not supported
+@@ -812,14 +836,22 @@ int PrivateDecoderOMX::ProcessPacket(AVStream *stream, AVPacket *pkt)
+         }
+     }
+ 
++    // size is typically 50000 - 70000 but occasionally as low as 2500
++    // or as high as 360000
+     while (size > 0)
+     {
+-        if (!m_ibufs_sema.tryAcquire(1, 10000))
++        if (!m_ibufs_sema.tryAcquire(1, 100))
+         {
+-            LOG(VB_GENERAL, LOG_ERR, LOC + __func__ + " - no input buffers");
++            LOG(VB_GENERAL, LOG_ERR, LOC + __func__ +
++                " Ran out of OMX input buffers, see OmxInputBuffers setting.");
+             ret = 0;
+             break;
+         }
++        int freebuffers = m_ibufs_sema.available();
++        if (freebuffers < 2)
++            LOG(VB_PLAYBACK, LOG_WARNING, LOC + __func__ +
++                QString(" Free OMX input buffers = %1, see OmxInputBuffers setting.")
++                .arg(freebuffers));
+         m_lock.lock();
+         assert(!m_ibufs.isEmpty());
+         OMX_BUFFERHEADERTYPE *hdr = m_ibufs.takeFirst();
+@@ -1016,18 +1048,19 @@ int PrivateDecoderOMX::GetBufferedFrame(AVStream *stream, AVFrame *picture)
  
          if (ret)
          {
@@ -18797,6 +18959,492 @@ index f644ed50c6..cc18150e40 100644
              if (!frame)
              {
                  // Copy OMX buffer to the frame provided
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalRecorder.cpp b/mythtv/libs/libmythtv/recorders/ExternalRecorder.cpp
+index 9e499b90df..b95f7d29f1 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalRecorder.cpp
++++ b/mythtv/libs/libmythtv/recorders/ExternalRecorder.cpp
+@@ -143,9 +143,6 @@ bool ExternalRecorder::Open(void)
+             LOG(VB_RECORD, LOG_INFO, LOC + "Opened successfully");
+         else
+         {
+-            LOG(VB_RECORD, LOG_ERR, LOC +
+-                QString("Failed to open recorder: %1")
+-                .arg(m_stream_handler->ErrorString()));
+             ExternalStreamHandler::Return(m_stream_handler,
+                                           (tvrec ? tvrec->GetInputId() : -1));
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+index 422cb58d0a..b2bf050012 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+@@ -32,7 +32,10 @@
+ ExternIO::ExternIO(const QString & app,
+                    const QStringList & args)
+     : m_appin(-1), m_appout(-1), m_apperr(-1),
+-      m_pid(-1), m_bufsize(0), m_buffer(NULL)
++      m_pid(-1), m_bufsize(0), m_buffer(NULL),
++      m_status(&m_status_buf, QIODevice::ReadWrite),
++      m_errcnt(0)
++
+ {
+     m_app  = (app);
+ 
+@@ -58,6 +61,8 @@ ExternIO::ExternIO(const QString & app,
+     if (!m_args.contains("-q"))
+         m_args << "-q";
+     m_args.prepend(m_app.baseName());
++
++    m_status.setString(&m_status_buf);
+ }
+ 
+ ExternIO::~ExternIO(void)
+@@ -65,6 +70,7 @@ ExternIO::~ExternIO(void)
+     close(m_appin);
+     close(m_appout);
+     close(m_apperr);
++
+     // waitpid(m_pid, &status, 0);
+     delete[] m_buffer;
+ }
+@@ -126,10 +132,28 @@ int ExternIO::Read(QByteArray & buffer, int maxlen, int timeout)
+ 
+     if (len < 0)
+     {
+-        m_error = "Failed to read from External Recorder: " + ENO;
+-        LOG(VB_RECORD, LOG_ERR, m_error);
+-        return 0;
++        if (errno == EAGAIN)
++        {
++            if (++m_errcnt > kMaxErrorCnt)
++            {
++                m_error = "Failed to read from External Recorder: " + ENO;
++                LOG(VB_RECORD, LOG_WARNING,
++                    "External Recorder not ready. Giving up.");
++            }
++            else
++                LOG(VB_RECORD, LOG_WARNING,
++                    QString("External Recorder not ready. Will retry (%1/%2).")
++                    .arg(m_errcnt).arg(kMaxErrorCnt));
++        }
++        else
++        {
++            m_error = "Failed to read from External Recorder: " + ENO;
++            LOG(VB_RECORD, LOG_ERR, m_error);
++        }
+     }
++    else
++        m_errcnt = 0;
++
+     if (len == 0)
+         return 0;
+ 
+@@ -152,14 +176,18 @@ QString ExternIO::GetStatus(int timeout)
+         return QByteArray();
+     }
+ 
+-    if (!Ready(m_apperr, timeout, "status"))
++    int waitfor = m_status.atEnd() ? timeout : 0;
++    if (Ready(m_apperr, waitfor, "status"))
++    {
++        char buffer[2048];
++        int len = read(m_apperr, buffer, 2048);
++        m_status << QString::fromLatin1(buffer, len);
++    }
++
++    if (m_status.atEnd())
+         return QByteArray();
+ 
+-    char buffer[2048];
+-    int len = read(m_apperr, buffer, 2048);
+-    if (len > 0 && buffer[len - 1] == '\n')
+-        --len;
+-    QString msg = QString::fromLatin1(buffer, len);
++    QString msg = m_status.readLine();
+ 
+     LOG(VB_RECORD, LOG_DEBUG, QString("ExternIO::GetStatus '%1'")
+         .arg(msg));
+@@ -340,8 +368,8 @@ void ExternIO::Fork(void)
+ 
+         bool error = false;
+         error = (fcntl(m_appin,  F_SETFL, O_NONBLOCK) == -1);
+-        error = (fcntl(m_appout, F_SETFL, O_NONBLOCK) == -1);
+-        error = (fcntl(m_apperr, F_SETFL, O_NONBLOCK) == -1);
++        error |= (fcntl(m_appout, F_SETFL, O_NONBLOCK) == -1);
++        error |= (fcntl(m_apperr, F_SETFL, O_NONBLOCK) == -1);
+ 
+         if (error)
+         {
+@@ -442,7 +470,6 @@ ExternalStreamHandler *ExternalStreamHandler::Get(const QString &devname,
+     if (it == m_handlers.end())
+     {
+         ExternalStreamHandler *newhandler = new ExternalStreamHandler(devname);
+-        newhandler->OpenApp();
+         m_handlers[devkey] = newhandler;
+         m_handlers_refcnt[devkey] = 1;
+ 
+@@ -493,7 +520,6 @@ void ExternalStreamHandler::Return(ExternalStreamHandler * & ref,
+     {
+         LOG(VB_RECORD, LOG_INFO, QString("ExternSH: Closing handler for %1")
+                            .arg(devname));
+-        (*it)->CloseApp();
+         delete *it;
+         m_handlers.erase(it);
+     }
+@@ -527,9 +553,8 @@ ExternalStreamHandler::ExternalStreamHandler(const QString & path) :
+ 
+     if (!OpenApp())
+     {
+-        m_error = QString("Failed to start %1 : %2")
+-                  .arg(_device).arg(m_error);
+-        LOG(VB_GENERAL, LOG_ERR, LOC + m_error);
++        LOG(VB_GENERAL, LOG_ERR, LOC +
++            QString("Failed to start %1").arg(_device));
+     }
+ }
+ 
+@@ -572,8 +597,7 @@ void ExternalStreamHandler::run(void)
+     {
+         if (!IsTSOpen())
+         {
+-            LOG(VB_RECORD, LOG_WARNING, LOC + QString("TS not open yet: %1")
+-                .arg(m_error));
++            LOG(VB_RECORD, LOG_WARNING, LOC + "TS not open yet.");
+             usleep(1000);
+             continue;
+         }
+@@ -618,11 +642,10 @@ void ExternalStreamHandler::run(void)
+         {
+             if (m_IO->Error())
+             {
+-                m_error = m_IO->ErrorString();
+-                _error = true;
+                 LOG(VB_GENERAL, LOG_ERR, LOC +
+                     QString("Failed to read from External Recorder: %1")
+-                    .arg(m_error));
++                    .arg(m_IO->ErrorString()));
++                _error = true;
+                 break;
+             }
+ 
+@@ -632,13 +655,9 @@ void ExternalStreamHandler::run(void)
+             if (read_len > 0)
+                 empty_cnt = 0;
+ 
+-            if (!_listener_lock.tryLock())
+-                continue;
+-
+             if (_stream_data_list.empty())
+             {
+                 LOG(VB_GENERAL, LOG_ERR, LOC + "_stream_data_list is empty");
+-                _listener_lock.unlock();
+                 continue;
+             }
+ 
+@@ -678,6 +697,9 @@ void ExternalStreamHandler::run(void)
+                 }
+             }
+ 
++            if (!_listener_lock.tryLock())
++                continue;
++
+             StreamDataList::const_iterator sit = _stream_data_list.begin();
+             for (; sit != _stream_data_list.end(); ++sit)
+                 remainder = sit.key()->ProcessData
+@@ -707,12 +729,11 @@ void ExternalStreamHandler::run(void)
+         }
+         if (m_IO->Error())
+         {
+-            m_error = m_IO->ErrorString();
+-            _error = true;
+             LOG(VB_GENERAL, LOG_ERR, LOC +
+                 QString("Error from External Recorder: %1")
+-                .arg(m_error));
++                .arg(m_IO->ErrorString()));
+             CloseApp();
++            _error = true;
+             break;
+         }
+     }
+@@ -741,9 +762,8 @@ bool ExternalStreamHandler::OpenApp(void)
+ 
+         if (m_IO == NULL)
+         {
+-            m_error = strerror(errno);
++            LOG(VB_GENERAL, LOG_ERR, LOC + "ExternIO failed: " + ENO);
+             _error = true;
+-            LOG(VB_GENERAL, LOG_ERR, LOC + "ExternIO failed: " + m_error);
+         }
+         else
+         {
+@@ -751,13 +771,11 @@ bool ExternalStreamHandler::OpenApp(void)
+             m_IO->Run();
+             if (m_IO->Error())
+             {
+-                m_error = m_IO->ErrorString();
+-                _error = true;
+                 LOG(VB_GENERAL, LOG_ERR,
+-                    QString("Failed to start External Recorder: %1")
+-                    .arg(m_error));
++                    "Failed to start External Recorder: " + m_IO->ErrorString());
+                 delete m_IO;
+                 m_IO = NULL;
++                _error = true;
+                 return false;
+             }
+         }
+@@ -765,28 +783,28 @@ bool ExternalStreamHandler::OpenApp(void)
+ 
+     QString result;
+ 
+-    m_error.clear();
+-
+     if (!IsAppOpen())
+     {
++        LOG(VB_RECORD, LOG_ERR, LOC + "Application is not responding.");
+         _error = true;
+-        m_error = "Application is not responding.";
+         return false;
+     }
+ 
+     // Gather capabilities
+     if (!ProcessCommand("HasTuner?", 2500, result))
+     {
++        LOG(VB_RECORD, LOG_ERR, LOC +
++            QString("Bad response to 'HasTuner?' - '%1'").arg(result));
+         _error = true;
+-        m_error = QString("Bad response to 'HasTuner?' - '%1'").arg(result);
+         return false;
+     }
+     m_hasTuner = result.startsWith("OK:Yes");
+     if (!ProcessCommand("HasPictureAttributes?", 2500, result))
+     {
++        LOG(VB_RECORD, LOG_ERR, LOC +
++            QString("Bad response to 'HasPictureAttributes?' - '%1'")
++            .arg(result));
+         _error = true;
+-        m_error = QString("Bad response to 'HasPictureAttributes?' - '%1'")
+-                  .arg(result);
+         return false;
+     }
+     m_hasPictureAttributes = result.startsWith("OK:Yes");
+@@ -814,10 +832,14 @@ bool ExternalStreamHandler::OpenApp(void)
+ bool ExternalStreamHandler::IsAppOpen(void)
+ {
+     if (m_IO == NULL)
++    {
++        LOG(VB_RECORD, LOG_WARNING, LOC +
++            "WARNING: Unable to communicate with external app.");
+         return false;
++    }
+ 
+     QString result;
+-    return ProcessCommand("Version?", 2500, result);
++    return ProcessCommand("Version?", 5000, result);
+ }
+ 
+ bool ExternalStreamHandler::IsTSOpen(void)
+@@ -841,15 +863,12 @@ void ExternalStreamHandler::CloseApp(void)
+     if (m_IO)
+     {
+         QString result;
+-        bool    ok;
+ 
+         LOG(VB_RECORD, LOG_INFO, LOC + "CloseRecorder");
+         m_IO_lock.unlock();
+-        ok = ProcessCommand("CloseRecorder", 30000, result);
++        ProcessCommand("CloseRecorder", 30000, result);
+         m_IO_lock.lock();
+ 
+-        if (!ok)
+-            m_error = result;
+         if (!result.startsWith("OK:Terminating"))
+         {
+             LOG(VB_RECORD, LOG_INFO, LOC +
+@@ -876,7 +895,7 @@ bool ExternalStreamHandler::RestartStream(void)
+             return false;
+     }
+ 
+-    usleep(500000);
++    usleep(1000000);  // 1 second
+ 
+     if (streaming)
+     {
+@@ -926,14 +945,15 @@ bool ExternalStreamHandler::StartStreaming(bool flush_buffer)
+ 
+     if (StreamingCount() == 0)
+     {
+-        if (!ProcessCommand("StartStreaming", 5000, result))
++        if (!ProcessCommand("StartStreaming", 15000, result))
+         {
+             LOG(VB_GENERAL, LOG_ERR, LOC + QString("StartStreaming failed: '%1'")
+                 .arg(result));
+             if (!result.startsWith("Warn"))
+             {
++                LOG(VB_RECORD, LOG_WARNING, LOC +
++                    QString("StartStreaming failed: '%1'").arg(result));
+                 _error = true;
+-                m_error = QString("StartStreaming failed: '%1'").arg(result);
+             }
+             return false;
+         }
+@@ -992,21 +1012,24 @@ bool ExternalStreamHandler::StopStreaming(void)
+         return false;
+     }
+ 
+-    if (!ProcessCommand("StopStreaming", 5000, result))
++    if (!ProcessCommand("StopStreaming", 15000, result))
+     {
+         LOG(VB_GENERAL, LOG_ERR, LOC + QString("StopStreaming: '%1'")
+             .arg(result));
+         if (!result.startsWith("Warn"))
+         {
++            LOG(VB_RECORD, LOG_WARNING, LOC +
++                QString("StopStreaming failed: '%1'").arg(result));
+             _error = true;
+-            m_error = QString("StopStreaming failed: '%1'").arg(result);
+         }
+         return false;
+     }
+ 
+     if (!result.startsWith("OK:Stopped"))
+     {
+-        LOG(VB_GENERAL, LOG_WARNING, LOC + m_error);
++        LOG(VB_GENERAL, LOG_WARNING, LOC +
++            QString("Unexpected response to StopStreaming: '%1'")
++            .arg(result));
+         return false;
+     }
+ 
+@@ -1030,8 +1053,7 @@ bool ExternalStreamHandler::ProcessCommand(const QString & cmd, uint timeout,
+ 
+         if (!m_IO)
+         {
+-            m_error = "External I/O not ready!";
+-            LOG(VB_RECORD, LOG_ERR, LOC + m_error);
++            LOG(VB_RECORD, LOG_ERR, LOC + "External I/O not ready!");
+             return false;
+         }
+ 
+@@ -1051,19 +1073,29 @@ bool ExternalStreamHandler::ProcessCommand(const QString & cmd, uint timeout,
+ 
+         /* Send new query */
+         m_IO->Write(buf);
+-        result = m_IO->GetStatus(timeout);
+-        if (m_IO->Error())
++
++        for (int cnt = 0; cnt < 5; ++cnt)
+         {
+-            m_error = m_IO->ErrorString();
+-            _error = true;
+-            LOG(VB_GENERAL, LOG_ERR, "Failed to read from External Recorder: " +
+-                m_error);
+-            return false;
++            result = m_IO->GetStatus(timeout);
++            if (m_IO->Error())
++            {
++                LOG(VB_GENERAL, LOG_ERR,
++                    "Failed to read from External Recorder: " +
++                    m_IO->ErrorString());
++                    _error = true;
++                return false;
++            }
++            // STATUS message are "out of band".
++            // Ignore them while waiting for a responds to a command
++            if (!result.startsWith("STATUS"))
++                break;
+         }
+ 
+         if (result.size() < 1)
++        {
+             LOG(VB_GENERAL, LOG_WARNING, LOC +
+                 QString("External Recorder did not respond to '%1'").arg(cmd));
++        }
+         else
+         {
+             okay = result.startsWith("OK");
+@@ -1096,13 +1128,13 @@ bool ExternalStreamHandler::ProcessCommand(const QString & cmd, uint timeout,
+ bool ExternalStreamHandler::CheckForError(void)
+ {
+     QString result;
++    bool    err = false;
+ 
+     QMutexLocker locker(&m_IO_lock);
+ 
+     if (!m_IO)
+     {
+-        m_error = "External I/O not ready!";
+-        LOG(VB_RECORD, LOG_ERR, LOC + m_error);
++        LOG(VB_RECORD, LOG_ERR, LOC + "External I/O not ready!");
+         return true;
+     }
+ 
+@@ -1113,8 +1145,18 @@ bool ExternalStreamHandler::CheckForError(void)
+         return true;
+     }
+ 
+-    result = m_IO->GetStatus(0);
+-    return (result.startsWith("ERR"));
++    do
++    {
++        result = m_IO->GetStatus(0);
++        if (!result.isEmpty())
++        {
++            err |= result.startsWith("STATUS:ERR");
++            LOG(VB_RECORD, (err ? LOG_WARNING : LOG_INFO), LOC + result);
++        }
++    }
++    while (!result.isEmpty());
++
++    return err;
+ }
+ 
+ void ExternalStreamHandler::PurgeBuffer(void)
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.h b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.h
+index 9003c23c99..635e35fb24 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.h
++++ b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.h
+@@ -19,6 +19,8 @@ class ExternalChannel;
+ 
+ class ExternIO
+ {
++    enum constants { kMaxErrorCnt = 5 };
++
+   public:
+     ExternIO(const QString & app, const QStringList & args);
+     ~ExternIO(void);
+@@ -45,8 +47,12 @@ class ExternIO
+     pid_t   m_pid;
+     QString m_error;
+ 
+-    int     m_bufsize;
+-    char   *m_buffer;
++    int         m_bufsize;
++    char       *m_buffer;
++
++    QString     m_status_buf;
++    QTextStream m_status;
++    int         m_errcnt;
+ };
+ 
+ // Note : This class always uses a TS reader.
+@@ -81,9 +87,6 @@ class ExternalStreamHandler : public StreamHandler
+ 
+     void PurgeBuffer(void);
+ 
+-    QString ErrorString(void) const { return m_error; }
+-    void ClearError(void) { m_error.clear(); _error = false; }
+-
+     bool ProcessCommand(const QString & cmd, uint timeout,
+                         QString & result);
+ 
+@@ -96,7 +99,6 @@ class ExternalStreamHandler : public StreamHandler
+     ExternIO      *m_IO;
+     QStringList    m_args;
+     QString        m_app;
+-    QString        m_error;
+     bool           m_tsopen;
+     int            m_io_errcnt;
+     bool           m_poll_mode;
 diff --git a/mythtv/libs/libmythtv/recorders/dvbchannel.cpp b/mythtv/libs/libmythtv/recorders/dvbchannel.cpp
 index d2e8c48513..dbdf7adc11 100644
 --- a/mythtv/libs/libmythtv/recorders/dvbchannel.cpp
@@ -19596,6 +20244,27 @@ index 28dfc0b07e..667efae17d 100644
      virtual void Terminate(void);
    private:
      bool LoadVersion(const QString &version, int download_log_level);
+diff --git a/mythtv/programs/mythbackend/mainserver.cpp b/mythtv/programs/mythbackend/mainserver.cpp
+index 874f688e40..e70796f80a 100644
+--- a/mythtv/programs/mythbackend/mainserver.cpp
++++ b/mythtv/programs/mythbackend/mainserver.cpp
+@@ -7656,6 +7656,16 @@ void MainServer::connectionClosed(MythSocket *socket)
+             // delay handling the disconnect until a little later. #9885
+             if (!disconnectedSlaves.isEmpty())
+                 SendSlaveDisconnectedEvent(disconnectedSlaves, needsReschedule);
++            else
++            {
++                // During idle periods customEvent() might never be called,
++                // leading to an increasing number of closed sockets in
++                // decrRefSocketList.  Sending an event here makes sure that
++                // customEvent() is called and that the closed sockets are
++                // deleted.
++                MythEvent me("LOCAL_CONNECTION_CLOSED");
++                gCoreContext->dispatch(me);
++            }
+ 
+             return;
+         }
 diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
 index 49b291290f..42820f5e20 100644
 --- a/mythtv/programs/mythbackend/scheduler.cpp
@@ -19818,7 +20487,7 @@ index c73707fdfa..8cc5d11c46 100644
  }
  
 diff --git a/mythtv/programs/mythfrontend/main.cpp b/mythtv/programs/mythfrontend/main.cpp
-index 8710e1c022..6ee4cd7f2b 100644
+index 8710e1c022..cb4982b0e4 100644
 --- a/mythtv/programs/mythfrontend/main.cpp
 +++ b/mythtv/programs/mythfrontend/main.cpp
 @@ -1767,6 +1767,10 @@ int main(int argc, char **argv)
@@ -19832,7 +20501,11 @@ index 8710e1c022..6ee4cd7f2b 100644
  #ifdef Q_OS_ANDROID
      // extra for 0 termination
      char *newargv[argc+4+1];
-@@ -1871,6 +1875,7 @@ int main(int argc, char **argv)
+@@ -1868,9 +1872,11 @@ int main(int argc, char **argv)
+     gContext = new MythContext(MYTH_BINARY_VERSION, true);
+     gCoreContext->SetAsFrontend(true);
+ 
++    cmdline.ApplySettingsOverride();
      if (!gContext->Init(true, bPromptForBackend, bBypassAutoDiscovery))
      {
          LOG(VB_GENERAL, LOG_ERR, "Failed to init MythContext, exiting.");
@@ -19840,7 +20513,7 @@ index 8710e1c022..6ee4cd7f2b 100644
          return GENERIC_EXIT_NO_MYTHCONTEXT;
      }
  
-@@ -1973,9 +1978,9 @@ int main(int argc, char **argv)
+@@ -1973,9 +1979,9 @@ int main(int argc, char **argv)
  
      MythMainWindow *mainWindow = GetMythMainWindow();
  #if CONFIG_DARWIN
@@ -19959,7 +20632,7 @@ index d94ad76c93..583cf49118 100644
      if (!cmdline.Parse(argc, argv))
      {
 diff --git a/mythtv/programs/mythtv-setup/main.cpp b/mythtv/programs/mythtv-setup/main.cpp
-index b30442d992..00378373e8 100644
+index b30442d992..eb82858de9 100644
 --- a/mythtv/programs/mythtv-setup/main.cpp
 +++ b/mythtv/programs/mythtv-setup/main.cpp
 @@ -279,6 +279,10 @@ int main(int argc, char *argv[])
@@ -19973,11 +20646,12 @@ index b30442d992..00378373e8 100644
      MythTVSetupCommandLineParser cmdline;
      if (!cmdline.Parse(argc, argv))
      {
-@@ -390,7 +394,7 @@ int main(int argc, char *argv[])
+@@ -390,7 +394,8 @@ int main(int argc, char *argv[])
  
      gContext = new MythContext(MYTH_BINARY_VERSION);
  
 -    if (!gContext->Init(use_display)) // No Upnp, Prompt for db
++    cmdline.ApplySettingsOverride();
 +    if (!gContext->Init(use_display,false,true)) // No Upnp, Prompt for db
      {
          LOG(VB_GENERAL, LOG_ERR, "Failed to init MythContext, exiting.");
@@ -22080,3 +22754,35 @@ index 0000000000..709b8e7f30
 +Eleventh Hour:83066
 +# For overnight episode updates when a filename is used
 +Eleventh Hour (US):83066
+diff --git a/mythtv/themes/MythCenter-wide/osd.xml b/mythtv/themes/MythCenter-wide/osd.xml
+index 2d4a6df655..83e869a576 100644
+--- a/mythtv/themes/MythCenter-wide/osd.xml
++++ b/mythtv/themes/MythCenter-wide/osd.xml
+@@ -114,6 +114,12 @@
+             <multiline>yes</multiline>
+             <template>%"|SUBTITLE|" %%LONGREPEAT%%(|STARS|) %%DESCRIPTION%</template>
+         </textarea>
++        <textarea name="callsign" depends="!iconpath">
++            <area>1030,500,130,80</area>
++            <font>small</font>
++            <align>allcenter</align>
++            <multiline>true</multiline>
++        </textarea>
+         <imagetype name="iconpath">
+             <area>1030,500,130,100</area>
+         </imagetype>
+@@ -219,10 +225,11 @@
+             <align>hcenter,vcenter</align>
+             <value>%CHANNUM%</value>
+         </textarea>
+-        <textarea name="callsign">
+-            <area>925,10,300,80</area>
+-            <font>large</font>
++        <textarea name="callsign" depends="!iconpath">
++            <area>1000,10,155,80</area>
++            <font>medium</font>
+             <align>allcenter</align>
++            <multiline>true</multiline>
+         </textarea>
+         <imagetype name="iconpath">
+             <area>1015,10,125,80</area>

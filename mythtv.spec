@@ -60,7 +60,9 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v29.0-57-gd743ef49a8
+%define vers_string v29.0-71-g339b08e467
+%define rel_string .20171226.71.g339b08e467
+
 %define branch fixes/29.0
 
 # Git revision and branch ID
@@ -79,9 +81,9 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        29.0
 %if "%{branch}" == "master"
-Release:        0.6.git.%{_gitrev}%{?dist}
+Release:        0.7.git.%{_gitrev}%{?dist}
 %else
-Release:        5%{?dist}
+Release:        6%{?rel_string}%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1361,6 +1363,9 @@ exit 0
 
 
 %changelog
+* Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-6.20171226.71.g339b08e467
+- Update to v29.0-71-g339b08e467 from branch fixes/29
+
 * Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-5
 - Mass rebuild for x264 and x265
 
