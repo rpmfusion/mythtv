@@ -1,7 +1,3 @@
-# Does not currently build on ppc
-# https://code.mythtv.org/trac/ticket/13049
-#ExcludeArch:    ppc64 ppc64le
-
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
 # by:   Chris Petersen <cpetersen@mythtv.org>
@@ -64,8 +60,10 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v0.28.1-23-gaf98262
-%define branch fixes/0.28
+%define vers_string v29.0-71-g339b08e467
+%define rel_string .20171226.71.g339b08e467
+
+%define branch fixes/29.0
 
 # Git revision and branch ID
 %define _gitrev g5b917e8
@@ -81,11 +79,11 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 # Version/Release info
-Version:        0.28.1
+Version:        29.0
 %if "%{branch}" == "master"
-Release:        0.5.git.%{_gitrev}%{?dist}
+Release:        0.7.git.%{_gitrev}%{?dist}
 %else
-Release:        5%{?dist}
+Release:        6%{?rel_string}%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -100,8 +98,8 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # as "use at your own risk."
 %bcond_with proc_opt
 
-# Set "--with debug" to enable MythTV debug compile mode
-%bcond_with debug
+# Set "--without debug" to disable MythTV debug compile mode
+%bcond_without debug
 
 # The following options are enabled by default.  Use --without to disable them
 %bcond_without vdpau
@@ -113,9 +111,6 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %bcond_without python
 %bcond_without pulseaudio
 
-# FAAC is non-free, so we disable it by default
-%bcond_with faac
-
 # All plugins get built by default, but you can disable them as you wish
 %bcond_without plugins
 %bcond_without mytharchive
@@ -126,7 +121,12 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %bcond_without mythnews
 %bcond_without mythweather
 %bcond_without mythzoneminder
+%if 0%{?fedora}
 %bcond_without mythnetvision
+%else
+%bcond_with mythnetvision
+%endif
+
 
 ################################################################################
 
@@ -136,8 +136,8 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 # Example: git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
-Patch0:    mythtv-0.28-fixes.patch
-Patch1:    ticket13049-remove-ffmpeg-bswap-change.diff
+Patch0:    mythtv-fixes.patch
+Patch1:    mythtv-qmake.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -170,7 +170,11 @@ BuildRequires:  qt5-qtbase-devel >= 5.2
 BuildRequires:  qt5-qtscript-devel >= 5.2
 BuildRequires:  qt5-qtwebkit-devel >= 5.2
 BuildRequires:  freetype-devel >= 2
+%if 0%{?fedora} >= 28
+BuildRequires:  mariadb-connector-c-devel
+%else
 BuildRequires:  mariadb-devel >= 5
+%endif
 %if 0%{?fedora}
 BuildRequires:  libcec-devel >= 1.7
 %endif
@@ -200,9 +204,6 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 BuildRequires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-%if %{with faac}
-BuildRequires:  faac-devel
-%endif
 BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  lame-devel
@@ -212,6 +213,7 @@ BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel >= 1.0
 BuildRequires:  taglib-devel >= 1.7
 BuildRequires:  x264-devel
+BuildRequires:  x265-devel
 BuildRequires:  xvidcore-devel >= 0.9.1
 BuildRequires:  exiv2-devel
 
@@ -225,6 +227,7 @@ BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  avahi-compat-libdns_sd-devel
 
 # Bluray support
+BuildRequires:  ant java-devel
 BuildRequires:  libxml2-devel
 #BuildRequires:  libudf-devel
 
@@ -238,6 +241,13 @@ BuildRequires:  kernel-headers
 BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
+
+%if 0%{?fedora}
+# For ttvdb.py, not available in EPEL
+BuildRequires: python2-future
+BuildRequires: python2-requests
+BuildRequires: python-requests-cache
+%endif
 
 %if %{with vdpau}
 BuildRequires:  libvdpau-devel
@@ -282,7 +292,7 @@ BuildRequires:  python2-devel
 %if 0%{?fedora}
 BuildRequires:  python2-mysql
 %else
-BuildRequires:  MySQL-python
+BuildRequires:  MySQL-python 
 %endif
 BuildRequires:  python-urlgrabber
 %endif
@@ -415,6 +425,7 @@ Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
 Requires:  mariadb-devel >= 5
+#Requires:  mariadb-connector-c-devel
 Requires:  qt5-qtbase-devel >= 5.2
 Requires:  qt5-qtscript-devel >= 5.2
 Requires:  qt5-qtwebkit-devel >= 5.2
@@ -433,9 +444,6 @@ Requires:  xorg-x11-proto-devel
 Requires:  libGL-devel, libGLU-devel
 
 # Misc A/V format support
-%if %{with faac}
-Requires:  faac-devel
-%endif
 Requires:  fftw-devel >= 3
 Requires:  flac-devel >= 1.0.4
 Requires:  gsm-devel
@@ -450,6 +458,7 @@ Requires:  libvorbis-devel >= 1.0
 Requires:  mjpegtools-devel >= 1.6.1
 Requires:  taglib-devel >= 1.5
 Requires:  x264-devel
+Requires:  x265-devel
 Requires:  xvidcore-devel >= 0.9.1
 
 # Audio framework support
@@ -502,8 +511,14 @@ Requires:  freetype, lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
+Requires:  mariadb >= 5
 Requires:  python-MythTV
-Requires:  google-droid-sans-mono-fonts
+%if 0%{?fedora}
+Recommends: libaacs
+%else
+Requires: libaacs
+%endif
+%{?fedora:Requires:  google-droid-sans-mono-fonts}
 %{?fedora:Recommends:  mesa-vdpau-drivers}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
 
@@ -523,6 +538,10 @@ Summary:    Server component of mythtv (a DVR)
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
 Requires:   mythtv-setup
+Requires:   python2-future
+Requires:   python2-requests
+Requires:   python-requests-cache
+
 Requires(pre): shadow-utils
 Conflicts:  xmltv-grabbers < 0.5.37
 
@@ -555,6 +574,10 @@ mythtv backend.
 
 %package common
 Summary: Common components needed by multiple other MythTV components
+# For ttvdb.py
+Requires: python2-future
+Requires: python2-requests
+Requires: python-requests-cache
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -782,13 +805,10 @@ on demand content.
 ################################################################################
 
 %prep
-%setup -q -n %{name}-%{version}
+%autosetup -p1 -n %{name}-%{version}
 
 # Remove compiled python file
 #find -name *.pyc -exec rm -f {} \;
-
-%patch0 -p1
-%patch1 -p1
 
 # Install ChangeLog
 install -m 0644 %{SOURCE11} .
@@ -822,6 +842,9 @@ EOF
 
 popd
 
+#pushd mythplugins
+#sed -i "s|mysql\/mysql.h|mariadb\/mysql.h|g" configure mythzoneminder/mythzmserver/zmserver.h mythmusic/contrib/import/itunes/it2m.h
+#popd
 
 
 ################################################################################
@@ -849,12 +872,11 @@ pushd mythtv
 %if ! %{with vaapi}
     --disable-vaapi                             \
 %endif
+    --enable-bdjava                             \
     --enable-libmp3lame                         \
-%if %{with faac}
-    --enable-libfaac                            \
-%endif
     --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
+    --enable-libx265                            \
     --enable-libxvid                            \
     --enable-libvpx                             \
 %if !%{with perl}
@@ -873,6 +895,7 @@ pushd mythtv
     --extra-cflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
     --extra-cxxflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
 %endif
+    --extra-ldflags="%{optflags}"               \
 %ifarch %{ix86}
     --cpu=i686 --tune=i686 --enable-mmx \
 %endif
@@ -880,17 +903,17 @@ pushd mythtv
     --enable-proc-opt \
 %endif
 %if %{with debug}
-    --compile-type=debug                        \
+    --compile-type=debug                        
 %else
-    --compile-type=release                      \
+    --compile-type=release                      
 %endif
-    --enable-debug
 
 # Make
-    make %{?_smp_mflags}
+%make_build
+
+popd
 
 # Prepare to build the plugins
-    popd
     mkdir fakeroot
     temp=`pwd`/fakeroot
     make -C mythtv install INSTALL_ROOT=$temp
@@ -1301,7 +1324,6 @@ exit 0
 %doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
 %attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythmusic
-#%{_datadir}/mythtv/mythmusic/
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
@@ -1355,6 +1377,30 @@ exit 0
 
 
 %changelog
+* Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-6.20171226.71.g339b08e467
+- Update to v29.0-71-g339b08e467 from branch fixes/29
+
+* Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-5
+- Mass rebuild for x264 and x265
+
+* Mon Nov 13 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-4
+- Update to v29.0-57-gd743ef49a8.
+
+* Wed Nov  1 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-3
+- Update to v29.0-49-g75f05119b7.
+
+* Mon Oct 23 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-2
+- Update to v29.0-47-g83b32140f0.
+
+* Sat Sep 16 2017 Richard Shaw <hobbes1069@gmail.com> - 29.0-1
+- Update to new release, 29.0.
+
+* Wed Sep  6 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-8
+- Update to latest fixes/0/28, v0.28.1-45-g73cf7474ad.
+
+* Sun Aug  6 2017 Richard Shaw <hobbes1069@gmail.com> - 0.28.1-6
+- Update to latest fixes/0.28, v0.28.1-38-geef6a48.
+
 * Mon Jun 19 2017 Paul Howarth <paul@city-fan.org> - 0.28.1-5
 - Perl 5.26 rebuild
 

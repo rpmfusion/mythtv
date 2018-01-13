@@ -1,105 +1,842 @@
-commit 3255b983b039f26c36cae016f4a522183283837c
-Author: Stuart Auchterlonie <stuarta@mythtv.org>
-Date:   Fri Mar 3 15:08:14 2017 +0000
+commit 339b08e4677135ad57b2f1e43e5535878143a65b
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Dec 26 13:53:47 2017 -0500
 
-    [EIT] Additional Freesat mplexes to fix
+    Fixes #13196 : Add "New Entry" to symbol rate selection in DVB scans
     
-    (cherry picked from commit 23739db73e54f33efed764f763a9a4ccd9854fab)
+    (cherry picked from commit 5163d6e79108c6ac100f108a2757d5db694c3c2f)
 
-commit e9be5e0ece748ebcd4ad04b9072ead9bc98f84d4
-Author: Stuart Auchterlonie <stuarta@mythtv.org>
-Date:   Mon Feb 27 00:38:47 2017 +0000
+commit 15c05999fbd31bd3a02f33a39c06468c7c3a54ed
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Tue Dec 26 11:31:36 2017 +0000
 
-    [Qt5.8] Explicitly use a QChar in the comparison. Fixes a build failure
+    MythCenter-wide: In the OSD only show the callsign if the channel icon is missing
     
-    (cherry picked from commit e4b05c489673df970c8d1d41a9109f4441625d4c)
+    (cherry picked from commit 4dc7ced5b1a875d651f3bd100c40ecbe2e6a0e95)
 
-commit 9a805b9600dd4f0dafb640b6dd6b166ba310ee26
+commit 68e982ee82f079c92d7ccd007859fff36541a4ed
+Author: Mark Spieth <mspieth@digivation.com.au>
+Date:   Sat Dec 23 10:27:55 2017 +1100
+
+    Convert monkey patch _cache_expire_after to timedelta if its not already
+    
+    Fixes #13188
+
+commit e65734db54812b3daeb8e568260d42f103b7bac6
+Merge: e9c7e51ca3 3411d57e80
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Dec 22 20:23:42 2017 +0000
+
+    Merge branch 'fixes/29' of code.mythtv.org:mythtv into fixes/29
+
+commit e9c7e51ca3ced5b00614062dc4a433c0a9c7a8c3
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Fri Dec 22 19:14:46 2017 +0000
+
+    Fix miniplayer display issue when playing radio streams with no broadcaster
+    
+    (cherry picked from commit 3d22580056cafc029c3627dc5d19fb4a4945f579)
+
+commit 3411d57e8014cd8423ac7e832d8648be4ec7d65d
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Tue Dec 19 19:52:37 2017 +0100
+
+    MythSystem: Make sure to clean up objects properly
+    
+    In case MythSystemLegacy{Unix, Windows}::m_parent had already been
+    deleted when a process exited, a dangling QBuffer pointer could be left
+    in MythSystemLegacyIOHandler.  If this pointer was accessed, for example
+    in MythSystemLegacyIOHandler::HandleRead, it could cause a crash.
+    
+    Fixes #12317
+    
+    (cherry picked from commit 3eccd6152b0f468df16906e2472fd879a18a54b9)
+
+commit 31fdace083ab295d3c1bf4ed3543f6d1dfa050a6
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Tue Dec 19 19:47:57 2017 +0100
+
+    MainServer: Reinstate the event about disconnected sockets
+    
+    Fixes #13150
+    
+    (cherry picked from commit b1e5ddeb92ae93b6eb692aa7863d80be89aaf1e9)
+
+commit 39b2062c069e801c9f9c4b15d198e8ef72594f55
+Author: David Hampton <mythtv@love2code.net>
+Date:   Mon Nov 20 18:04:29 2017 -0500
+
+    Fix compilation error in Fedora Rawhide.
+    
+    A recent change to the kernel headers (for 4.15.0) changed the most of
+    the fields in the iso_primary_descriptor data structure from signed
+    character arrays to unsigned character arrays.  The one used by MythTV
+    needs to be cast back to signed characters so that it can continue to
+    be used to initialize a QString.
+    
+    (cherry picked from commit 90f9457b74f1ccd0df31c825b1e721203e5075ff)
+
+commit af1126277ade4351a3c13923cecade1465586f19
 Author: John Poet <jpoet@mythtv.org>
-Date:   Sun Feb 26 13:19:20 2017 -0700
+Date:   Mon Nov 27 14:17:10 2017 -0700
 
-    Apparently this results in poor performance on slow frontends.
+    ExternalStreamHandler: When reading, give EAGAIN a few tries before giving up.
     
-    Revert "Allow multiple element names with different dependancies."
-    
-    This reverts commit 299dbaee22795d09503f028670f8bbc891c42c5b.
+    (cherry picked from commit 77810afe6990794717f175761367928643254b33)
 
-commit 7de03a90c1b144fc0067261af1c9cfdd8d358972
-Author: Peter Bennett <pbennett@mythtv.org>
-Date:   Fri Feb 17 15:10:00 2017 -0500
-
-    Fix Bus Error in mythpreviewgen on Raspberry Pi
-    
-    Fixes #12888
-    
-    (cherry picked from commit 57d61f7412e5caf9b91772926bdb651354205581)
-
-commit 299dbaee22795d09503f028670f8bbc891c42c5b
+commit 2a0211d71c9822889f73e5ccc4adc8e7c8d6c78f
 Author: John Poet <jpoet@mythtv.org>
-Date:   Sat Jan 21 16:42:28 2017 -0700
+Date:   Sat Nov 25 13:01:21 2017 -0700
 
-    Allow multiple element names with different dependancies.
+    ExternalStreamHandler: Cleanup and simplify logging.
     
-    MythUI only allows one element with a given "name", so allow a themer to
-    specify names with an extension to make them unique:  Anthing after (and
-    including) a '+' will be ignored when matching the name.  For example:
-    
-    <textarea name="description+sub" depends="subtitle">
-    
-    and
-    
-    <textarea name="description+notsub" depends="!subtitle">
-    
-    results in the appropriate definition for "description" to be used depending
-    on if the "subtitle" element is available.
-    
-    I thought about making the "+dependancies" naming automatic, but if the
-    themer is using inheritance, they may find the result unexpected.
-    
-    This currently only works with textareas.  It would be quite a bit more work
-    to make it work with other types, and I have not been able to think of any
-    benifit.
-    
-    (cherry picked from commit d82629a4dfe6d8b2baa86aa7e71b34e76638f536)
+    (cherry picked from commit 686a9fd145c667e58148597e79d3982b074d3751)
 
-commit ea8cc22f2067a5c4f780855e18af4a24062d0f69
-Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Sun Feb 12 13:13:07 2017 +0100
+commit faa7994416d8362170ce06990210665ff425a366
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sat Nov 25 13:01:04 2017 -0700
 
-    Fix searching for movies based on star ratings
+    ExternalStreamhandler: Make sure we only process one 'status' line.
     
-    Original patch by Andrew M. Bishop
-    Fixes #12971
+    More than one line may be queued when we go to read it, so buffer the messages.
     
-    (cherry picked from commit dd05b6d0a3d137c3e6a6735cb0a5e3fa7d3933c8)
+    (cherry picked from commit 0f3781cc5b2516edeed14af0dcd5600a0c303124)
 
-commit fc737ffc45fdefd5671568ae0c959e777fd5ffbe
-Author: Karl Dietz <dekarl@mythtv.org>
-Date:   Fri Feb 10 21:00:29 2017 +0100
+commit 09c617f0405247c37c4b13038b3ba7a4116906b4
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sat Nov 25 13:00:29 2017 -0700
 
-    Fix for misleading indentation in greek EIT fixups.
+    ExternalStreamHandler::run: Don't hold _listener_lock except when necessary.
     
-    Patch from David Hampton
-    Already fixed in master with f3ce2b3a
-    
-    Fixes #12998
+    (cherry picked from commit 0e67fb1c6f1ce115367f42099a014db7ff568f76)
 
-commit 46bd4f402425e778ca88321f6cedc76681fe9cd9
+commit 61d331cc0ebb9eccb666b883afcf25c39ed4032b
 Author: Peter Bennett <pbennett@mythtv.org>
-Date:   Tue Feb 7 12:12:36 2017 -0500
+Date:   Tue Nov 14 11:22:50 2017 -0500
 
-    Fix UPNP for selecting backend when there is a PIN set
+    Fix for frontend overrides not taking effect
     
-    Incorrect error code was being set when a pin was required.
+    If the MythTV Startup page appears, any command line overrides (-O option)
+    that affect GUI are not taken for that run. Fixed so that all overrides take effect in
+    all cases.
     
-    Fixes #12217
-    
-    (cherry picked from commit 0a46103e458a9d8bb88b822d087e7a97acad10a4)
+    (cherry picked from commit fe96ef1596e6b216147e9ebf297644186844d6bf)
 
-commit 4d643549b1ee950343171ee06f710b7107a072c1
+commit e62530954d2b5814fc95808608b3b555d9a101e7
 Author: Peter Bennett <pbennett@mythtv.org>
-Date:   Mon Feb 6 11:54:22 2017 -0500
+Date:   Tue Nov 14 10:47:13 2017 -0500
 
-    Fix UPNP detection of backends to ignore link-local IPV6 addresses
+    Fixes #13173 - Raspberry Pi hangs during playback
     
-    (cherry picked from commit ef7e5946f39f3c910e968fda9b3b58d274f9f8f6)
+    Running out of OMX decoder input buffers occasionally. Fixed by
+    increasing default number of buffers from 20 to 30 and reducing the timeout
+    for acquiring a buffer to 100ms.
+    
+    (cherry picked from commit 01f2e33130e5d2ff8bc2429da8af68195c4cdab1)
+
+commit d743ef49a801295547b5aee43a3c83b6de595eda
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Fri Nov 10 20:14:32 2017 +0100
+
+    Housekeeping: Honor the theme update notifications setting
+    
+    Disabling theme update notifications in MythFrontend will now also
+    disable the master backend from downloading a list of the currently
+    available themes during its daily housekeeping.
+    
+    (cherry picked from commit 708baf28f288cc693152d5cbfe8f6ecf7ff663bd)
+
+commit eea89c909396c9c58b1638ff25273e877b5dbbab
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Nov 5 14:26:46 2017 -0500
+
+    Setup: New Setup - fix multiple issues with VBox tuners
+    
+    Fixes the same issues as existed with HDHomerun Prime tuners
+    See commit 7294644
+    
+    Fixes #13165
+    
+    (cherry picked from commit e601de058ae428cee771dc8e92a2220851f03b19)
+
+commit 528d01bbc576210f55b3c884d5f99df38ca897ea
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Nov 5 13:58:31 2017 -0500
+
+    Video Display Profile: Fix bug with multiple codec selection
+    
+    Multiple codecs can be entered, space separated, in a video display profile.
+    Fix bug where these were not being handled
+    
+    Fixes #13169
+    
+    (cherry picked from commit 310ae2aa8afb8a55a8a365e4ce1621ef4337718e)
+
+commit 67ba5c4f561f743620ff8b3a2fcc9127a5fba15f
+Author: David Hampton <mythtv@love2code.net>
+Date:   Sat Nov 4 10:40:17 2017 -0400
+
+    Honor the MonitorDrives setting.
+    
+    Check the value of this setting before starting up the MediaMonitor
+    thread.  The check is placed here instead of earlier with the thought
+    that these setting can eventually be responded to on the fly instead
+    of requiring a restart.
+
+commit ce2789645c69d20cce29f1dd47677bc932c6076a
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Fri Nov 3 15:33:03 2017 -0400
+
+    Startup: Fix failure of Retry option
+    
+    Ensure that the DB host name is valued after a Retry of startup
+    
+    Fixes #13162
+    
+    (cherry picked from commit 7d0b484c8372cda7b3166a8005f6806a0b5901f0)
+
+commit 6b326d2a74cd1c7a16447a3a05e38a35d158d514
+Author: hamelg <hamelg@laposte.net>
+Date:   Fri Nov 3 14:31:13 2017 -0400
+
+    Fixes #12029 Forced Subtitles (MKV) can stay onscreen indefinitely
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit e65ec0af55662833d8c2fb1606d36265c707bce7)
+
+commit 2f13b7e9761e5c9a666394bb1855ed343e8ecd3a
+Author: David Hampton <mythtv@love2code.net>
+Date:   Thu Nov 2 08:49:19 2017 -0400
+
+    Check for an empty banner list before running it.
+    
+    Add a None check before trying to get the keys from a hash.
+    Fixes #13166.
+    
+    (cherry picked from commit 9d87dd9927a00766888ff6c165b431ab8e5b7c97)
+
+commit bbc56176a002be9330d4480af032f8cb8c054142
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Nov 1 19:43:09 2017 -0400
+
+    Setup: New Setup - fix multiple issues with HD HomeRun tuners
+    
+    Fix the following issues
+    * When an existing capture card is selected, Available devices
+      shows "Manually enter". It should show the selected id.
+    * When an existing capture card is selected the currently selected
+      shows "warning already in use". It should only show that if it is
+      in use on another tuner.
+    * Device id must always be read-only. currently it is always updateable.
+    * When "manually enter ip address" is selected, IP address and tuner
+      should be updateable. They are not.
+    * When updating ip address or tuner, the device id should be changed
+      to match what is entered.
+    * When editing an existing tuner, the tuner id shows as 0.
+      It should show the correct value.
+    
+    Fixes #13139
+    
+    (cherry picked from commit 72946446b7d14d74c13c2fc66110daaa4062cada)
+
+commit 75f05119b7ea20bfbe3bc31058e24b85c146f9b0
+Author: David Hampton <mythtv@love2code.net>
+Date:   Sat Oct 7 09:54:16 2017 -0400
+
+    Use mysql_options() to specify reconnection.
+    
+    MySQL added the option flag for specifying reconnection back in 2004,
+    to be used instead of directly tweaking the bit inside a structure.
+    Apparently MariaDB has finally removed the obsolete method of directly
+    tweaking the reconnect bit.  This has been compile tested but not
+    functionality tested.
+    
+    (cherry picked from commit 9d50b38ad69a19a8a6cc2d739171c3a1e4fcf8fb)
+
+commit cf364afa843b91c301c2c6e18669f4adb6726a0c
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Oct 25 13:47:59 2017 -0400
+
+    Fix memory corruption on Raspberry Pi Playback
+    
+    Macro OSD_EGL was not being defined in all places it was used,
+    resulting in an incorrect definition of VideoOutputOMX.
+    
+    (cherry picked from commit 13172e3881bf2e0f85b54e5a30512a12b8c891c1)
+
+commit 83b32140f0aab7612eea1023edc1098706a23781
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Fri Oct 20 19:50:17 2017 -0400
+
+    Fixes #13155 - Schema upgrade fails intermittently
+    
+    Fix incorrect conversion from QString to char* in upgrade SQL.
+    
+    (cherry picked from commit f5c7f266df056f36624010077bf71a578b740a82)
+
+commit 915856bb9e79ada1ae96b2fbf12231e738df442d
+Author: David Hampton <mythtv@love2code.net>
+Date:   Fri Oct 20 17:39:02 2017 -0400
+
+    Resynchronises mark types in the python bindings.
+    
+    Add missing values to the python bindings.
+    
+    (cherry picked from commit a870656b1f278c1f9305fb80c5e5e5828cefe72d)
+
+commit ee3e5c75a155f516fa887f792bd1d2b34507dbd7
+Author: David Hampton <mythtv@love2code.net>
+Date:   Fri Oct 20 17:06:04 2017 -0400
+
+    The Perl bindings should ignore a blank LocalHostName tag in the config.
+    
+    This should never happen, but just in case it does, add validation to
+    prevent overwriting the hostname with an empty string.  Fixes #12804.
+    
+    (cherry picked from commit 36f2724cfacee03d8677c76432d87ad8845a33cb)
+
+commit 760bcea4f0ae7499d16b2a614afff5852ded758f
+Author: Mark Spieth <mspieth@digivation.com.au>
+Date:   Fri Oct 13 11:35:45 2017 +1100
+
+    ttvdb: Check if episodes are received before parsing them. Fixes #13152
+    
+    (cherry picked from commit 2dda8727d6381540a486a75d7547b8bbeca1bb4a)
+
+commit 44dac01b2135f8b209d85ba58c05ce8d16baa533
+Author: David Hampton <mythtv@love2code.net>
+Date:   Thu Sep 7 03:40:28 2017 -0400
+
+    Make the Canadian weather scripts work again.
+    
+    Fix the parsing code that is looking for the letter 'C' in the
+    temperature and dew-point lines.  This was unnecessarily escaped as
+    '\C' which causes Perl to complain about a no longer supported regex.
+    Removing the escaping solves the problem.
+    
+    (cherry picked from commit 8f27146d1e3155bef2298b0033f804f23b8178bf)
+
+commit 4c4d7ed718bf55354e321256101170ede8d6a676
+Author: David Hampton <mythtv@love2code.net>
+Date:   Fri Sep 22 07:53:26 2017 -0400
+
+    Create all directories leading to the ttvdb/tmdb3 cache files.
+    
+    With this change, MythTv will create all directories leading up to the
+    cache file, instead of only creating the final directory.  This will
+    solve some recent problems on the mailing list where the ttvdb/tmdb3
+    scripts would work in some scenarios and fail in others.
+    
+    (cherry picked from commit ae0093aa69845cfa790db935d0802162c6f9ea7e)
+
+commit 0cf1422e206219db797b2b3b08ce1171cab8c7f4
+Author: Steve Erlenborn <simon.sinister@sbcglobal.net>
+Date:   Sun Oct 8 10:37:47 2017 -0400
+
+    Fixes #12277 Metadata collection for Manual Record rules
+    
+    Fix metadata grabber so that it does nor pass in the string
+    "(Manual Record)" , which was causing meatadata lookup to fail.
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit 594b16057be11be56286e7d7385dc6be686cc4a4)
+
+commit 70885dd5a5e84155f69477c80af596e73aa4a5f4
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sat Oct 7 11:53:17 2017 -0400
+
+    Fixes #13137 - Frontend looping on exit.
+    
+    If database is up and backend is down the frontend could loop endlessly
+    after exiting from the startup GUI page. This fixes that.
+    
+    (cherry picked from commit 0415bd07d9f47b6caa1212112783f9f38c6aaf88)
+
+commit dabbbbe6c00258b799c084f3b5e8190c3a5ab0e5
+Author: Richard Hulme <peper03@mythtv.org>
+Date:   Tue Oct 3 22:07:21 2017 +0200
+
+    Update libudfread to match commit 131629921cc756c38eaf3e2d6b69ba2db690b199 from https://git.videolan.org/git/libudfread.git
+    (cherry picked from commit d63054429245c0e9f04516866d735e0e4725f9b2)
+
+commit 7080df5b71a707b070f05ef729b88dce5400652e
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Thu Sep 28 12:37:39 2017 +0100
+
+    [dvb-s] Fixes #13129. Add 22500000 symbol rate
+    
+    (cherry picked from commit 2719ff14552bc9ee3f4884eef35beba202119c75)
+
+commit 28d0893731b39749306b7038a4931de7b13d04c8
+Author: David Hampton <mythtv@love2code.net>
+Date:   Mon Sep 25 21:45:24 2017 -0400
+
+    Use the define property flags when creating a RecordingInfo object.
+    
+    This code used a hard coded shift for adding the subtitle flags to the
+    properties field, and that value hasn't kept up with the addition of
+    new flags.  Change the hard coded number to a constant defined in the
+    same location as the flags.  One reported visible side effect of this
+    bug is that mythweb would indicate that most recording are damaged.
+    This is the result of the subtitle "hard of hearing" flag being
+    wrongly shifted into the position of the video damaged flag.
+
+commit d13b81788c276e3aa56de66ac1774d1b5a49e5b6
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Sep 27 14:08:05 2017 -0400
+
+    Fixes #13131 - Channel editor overwriting freqid with channel number.
+    
+    (cherry picked from commit 39b649d459793005fdc1932c14475f354c310441)
+
+commit b2a3174c0b66de83f8c931f157d4e5e709cb517e
+Author: Tom Hughes <tom@compton.nu>
+Date:   Tue Sep 26 16:35:35 2017 -0400
+
+    Fixes #13123 Exception using python bindings
+    
+    Update log_query to handle bytearray queries
+    
+    Merge remote-tracking branch 'tomhughes/bytearray'
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit b5201fd40bb4259361f5e689606ff5a1cf66dba2)
+
+commit ed4356116a754b4c13e83567b5458080f80dcd59
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Mon Sep 25 12:09:08 2017 -0400
+
+    ttvdb: Various fixes
+    
+    1. ttvdb: Update "Fixer Upper" test cases with wildcards
+    "Lastupdated" field has changed, and seems likely to change, so make it a
+    wildcard match. "Thumbauthor" field has also changed.
+    2. Update "NOVA: Eclipse Over America" test case
+    This appears to have moved from episode 18 to episode 11 and had updates
+    to the description and other metadata.
+    3. Ignore banner of just  "http://thetvdb.com/banners/"
+    4. ignore user rating of 0
+    5. correct handingly of genre
+    They are a list of "<item>..</item>".
+    6. Add new test case: ttvdb.py -l en -a GB -C 330432
+    This had some regressions compared to v29.0 which are now fixed, so add a test case.
+    
+    Fixes #13130
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit 09090e1ff99468da4f0cc44c0f6b5b98a7ae34be)
+
+commit 1c6bad937899f2f9eb9cb11718177cc82ea00f47
+Author: Mark Spieth <mspieth@digivation.com.au>
+Date:   Mon Sep 4 14:58:08 2017 +1000
+
+    Refs #13084 ttvdb fix runtime and genre
+    (cherry picked from commit d1bd29ff3d6b817d2f6f1bef005d71bbc84b9c23)
+
+commit ecb1ef71f8540efb7e9e898172274e38b7fa61f1
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Mon Sep 25 11:34:32 2017 -0400
+
+    Fixes #12950 - Update Mythmusic schema in python bindings
+    
+    mythmusic schema has been updated several times. This brings the python
+    bindings up to date.
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit 932312d91739ea6ca258ff2e7c1c154219ef938f)
+
+commit ea16cdc33a593ec90ec37cf7cb1488a6e1106e25
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sat Sep 23 10:44:12 2017 -0400
+
+    Fixes #13090 - Prevent mythtv-setup from searching for a backend via upnp
+    
+    (cherry picked from commit 01a3b5f11b0064c3af2bceda1cf55fa0add5072a)
+
+commit a9c1f49b0ce2bd24b0195ca0831f44c58fe16531
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Sep 18 11:40:24 2017 -0400
+
+    Fixes #13096 - Previously Recorded screen only showing ancient history
+    
+    This affects people with more than 20000 items previously recorded.
+    Short term fix does 2 things -
+    * Shows the most recent 20000 items instead of a random 20000 items.
+    * Adds a setting which can be used to override the default of 20000.
+      Increasing it can be done by those with large histories they want to
+      look at, but at the risk of slow responses and large memory use.
+      Decreasing it can be useful for those with small low powered frontends.
+    
+    Long term fix is to redesign the '''previously recorded''' screen.
+    
+    (cherry picked from commit b5a5e80f140d82c02e438d7263506db128930d07)
+
+commit ab635ebefdf114c8b97218d70ff2258c4ed8a30f
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Sep 17 16:39:45 2017 -0400
+
+    Fix PPA Build error for ARM platforms.
+    
+    Build was expecting brcmEGL and brcmGLESv2 when they were not present.
+    
+    (cherry picked from commit fec9202ad33f99520387941fd453717442b269ad)
+
+commit 5dce69fbb52c03739f9ca379fbb8e7885b45bd95
+Author: Angela Schmidt <angela.schmid@wolke7.net>
+Date:   Wed Sep 13 11:28:54 2017 -0400
+
+    Fix the missing teletext subtitle problem
+    
+    Implements "Teletext Magazin Serial Mode".
+    
+    Only Parallel Mode was implemented, therefor some subtitles where not
+    displayed when there where not enough teletext page changes in the
+    magazin where the subtitle pages where gathered. In Magazin Serial
+    Mode any new page finishes the previously gathered teletext pages
+    independently of the magazin of the new page.
+    
+    Fixes #13016
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit 39c9292fdc9385dbee25faf5bca8ca6b1d67b31b)
+
+commit 45fe9f301cdf4ceac016ee72e34c31901aae8f48
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Sun Sep 10 16:29:35 2017 -0500
+
+    Python bindings: update version
+
+commit c6cd86f5d6ad7bcb6df4c9c598768719a97e6ec2
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Fri Sep 8 16:50:52 2017 -0400
+
+    Fixes #13117 - Unable to enter external channel change command
+    
+    Fixed both the channel change command entry and the Preset Tuner entry
+    which were set up as option lists with no options. Changed to Text
+    input settings.
+    
+    (cherry picked from commit 5003c1018960155ea5765d68e4d0a1a93c11d564)
+
+commit 7a40b2fcac29743b2756ea28796f45b59aa06e40
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Thu Aug 31 14:39:07 2017 -0400
+
+    Fix OpenGL bug introduced recently
+    
+    commit ad3fc1b88c used an #ifdef instead of #if, resulting in
+    OpenGL being disabled for all instead of just for raspberry pi.
+    
+    Refs #13110
+    
+    (cherry picked from commit 7c4a57a42f4c71119b58640ee9f84d50a8afbd53)
+
+commit 4611f52af4cd1345adcccd7b928d1e37788513a6
+Author: Nick Morrott <knowledgejunkie@gmail.com>
+Date:   Thu Aug 31 14:02:25 2017 +0100
+
+    Update British English translation for MythFrontend
+    
+    (cherry picked from commit 851257b563ab138282d844634f34a2fcef329dcc)
+
+commit feee0aa22205604385e7f13c9f9e07392a3ccc03
+Author: Morris Cavestro <morriscavestro@yahoo.it>
+Date:   Thu Aug 31 13:23:22 2017 +0100
+
+    Updated Italian translations
+    
+    Updates for MythArchive, MythBrowser, MythGallery, MythGame, MythMusic,
+    MythNetVision, MythNews, MythWeather, MythZoneMinder and MythFrontend
+    
+    Thank you Morris!
+    
+    Signed-off-by: Nick Morrott <knowledgejunkie@gmail.com>
+    
+    (cherry picked from commit 925f2289c1e6490169e4ac388c36464721b4f410)
+
+commit afb2a83edd5e6f94572e5550bd9ae47dbc6834db
+Author: David Hampton <mythtv@love2code.net>
+Date:   Wed Aug 23 21:13:01 2017 -0400
+
+    Use correct ping timeout parameter for the operating system.
+    
+    The ping command on Linux based operating systems uses the -w
+    paremeter to specify the timeout in seconds.  The ping command on
+    FreeBSD based operating systems uses the -t parameter.  Use compile
+    time flags to generate the right ping command for the operating
+    system.  This fixes #12034.
+    
+    Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
+
+commit f153e7f53afc7c4e20b62be227da1c2ad7f4c392
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Aug 28 11:59:54 2017 -0400
+
+    Raspberry Pi: Support for Raspbian Stretch
+    
+    * some libraries in /opt/vc/lib were renamed
+    * QT version is now 5.7.1
+    * Incorrect code that was based on a custom QT compile was being activated
+    * Invalid parameters for creating textures with OpenGL ES
+    * QT XCB GL Integration caused a segfault because of incompatible GL libraries.
+    
+    Fixes #13110
+    
+    (cherry picked from commit ad3fc1b88c17ecf8bad8967422360e13a4a010ec)
+
+commit 9c01fa4e91345d665a1a7aa2a652961b99ce8634
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Aug 28 11:35:59 2017 -0400
+
+    Backend: Add log messages on reasons for failure to shut down
+    
+    Every 15 minutes (i.e. at 00,15,30,45 past the hour) output a general
+    log message with reason for blocking shutdown, if the system has
+    a shutdown timeout.
+    
+    Refs #9712
+    
+    (cherry picked from commit 2fa7549706fc6d5807c93d6c2ddbd1bec5a85489)
+
+commit aec892861c7cb5dab087dc2628fe57a228093825
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Aug 28 10:57:40 2017 -0400
+
+    Fix problem with frontend setup not repainting main window
+    
+    Frontend setup was not redisplaying the main window as it
+    should when changing appearance or theme. This bug was caused
+    by the recent commit
+    deeed3c : Fix disappearing startup screen.
+    
+    (cherry picked from commit b31624d2281664ccd63561afcc49867c9e45f778)
+
+commit ab61079894a5ad01ffb49f55cb395bee3591df11
+Author: David Engel <dengel@mythtv.org>
+Date:   Sun Aug 27 15:31:43 2017 -0500
+
+    Fix invocation of Previously Recorded from Recording Rules.
+    
+    When the Schedule Editor is entered from Recording Rules, there is no
+    ProgramInfo to use.  Fix it calling Previously Recorded with the
+    recording rule ID and title.
+    
+    Refs #13112
+    
+    (cherry picked from commit a60e8c63bb185abc0741827349957f4d60222cc8)
+
+commit 4f8f6aed87adda8c7033d479bd3f471393804a32
+Author: Mark Spieth <mark@digivation.com.au>
+Date:   Sat Aug 26 13:32:40 2017 -0400
+
+    ttvdb: Update to support new JSON API.
+    
+    The old xml ttvdb api will be terminated on September 30th 2017.
+    
+    Consolidated from multiple commits.
+    
+    Fixes #13084
+    
+    * Update ttdvb to use V2 API
+    * Update python to 2/3 compatability
+    * Update tvdb_api with upstream 2.0-dev
+    * Fix some incorrect exception formatting in ttvdb.py
+    
+    * Upstream support for partial language data
+    * Upstream handle loadurl errors by callers
+    * Upstream support no cache and non-conforming cache
+    * Upstream tolerate missing cache _ignored_parameters attribute
+    * Remove username and userkey from auth info, not required, less brittle
+    * python 3.6 support for num-seasons output order
+    
+    * ttvdb fix output of more commands
+    * -l de -m -a US -D 72449 1 10
+    * -l en -a US -D 281053
+    
+    * Handle empty cast
+    * ttvdb: Add more detailed episode data
+    * ttvdb.py Handle no actors in returned data
+    * ttvdb: add old requests_cache version compatability
+    * ttvdb Fix User-Agent to a specific one, fixes auth 403
+    * ttvdb Restore original api key
+    * ttvdb Fix up python3 compatability
+    * ttvdb fix all error outputs to stderr
+    * ttvdb: make doctest a bit less brittle with changing data
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit e60c0283eda6f2e094a0b002eaea72f0ba06455b)
+
+commit 485676ce0e96597a0fab6d2588c290069e5b0ad8
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Sun Aug 27 13:12:38 2017 +0200
+
+    Settings: Fix editing of DVB-S transports
+    
+    Fixes #13095
+    
+    (cherry picked from commit ac22686d41fda46311a7ab1c926fc1eab0d359cb)
+
+commit 48a2cfadcf24539eb4b01f6dd424b2834e28a827
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Aug 21 11:43:57 2017 -0400
+
+    Fix disappearing startup screen.
+    
+    Startup screen will remain visible until main menu shows.
+    It will still disappear the first time you start and any
+    time the cache has been cleared.
+    
+    (cherry picked from commit deeed3c2bccb77277cd3568b4760fbf433dcde19)
+
+commit eea73b70530c5674167cbd1d6608b4e4d97e5259
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Sun Aug 20 15:39:40 2017 -0500
+
+    Services API: Fixes #13106 (memory leak)
+    
+    (cherry picked from commit 777965c9108c20b1956cf5cab2d060abcab02bf0)
+
+commit b9dec4387e64eac67b426bd02c9ddb74ad694e09
+Author: Jonatan Lindblad <jlindblad@mythtv.org>
+Date:   Sun Aug 20 19:53:02 2017 +0200
+
+    Settings: Make sure to call Load() after adding a capture card
+    
+    Without this the device list would be empty for HDHR and potentially
+    other capture card types.
+    
+    Refs #13046
+    
+    (cherry picked from commit 38de2d093157302c57119c183bc544e22b8a29cc)
+
+commit 8680910218c241c07919108e0d044226d87b89be
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sat Aug 12 16:16:58 2017 -0400
+
+    Fix raspberry pi compile eror when using old header files
+    
+    Note that deinterlace will not work unless recent headers and
+    firmware are used
+    
+    (cherry picked from commit 19ed105c848b3955e4d3ecba81847848183c997e)
+
+commit d35436d9405eb31e9e2aeef3c2fad20c6e613da6
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Thu Aug 10 14:07:07 2017 -0400
+
+    Refs #10633 - Set default proxy for listening ports to NoProxy.
+    
+    The code was using http proxy as the default for listening ports, and
+    in most cases overriding it to NoProxy. Http proxies do not make
+    sense for listening ports, so default to NoProxy unless the code
+    specifically requests otherwise when creating the server socket.
+    
+    (cherry picked from commit c6efa1b869f5a89497db14a0c48ee5001ca7746b)
+
+commit 18c6f49975b28e36fe2a976edba5b77bfa701303
+Author: David Engel <dengel@mythtv.org>
+Date:   Wed Aug 9 12:03:09 2017 -0500
+
+    Avoid busy looping in some cases in the scheduler when the time to
+    check on slaves that can be put to sleep has already passed.  Thanks
+    to lucylangthorne55 for helping to debug this issue.
+    
+    Cherry picked form master commit 871f9e82b95c3848978a5e032a40c58906b24565.
+    
+    Refs #13072
+
+commit d087884e403d7f9479f6efc07dd8a9d971f996be
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Mon Aug 7 11:28:43 2017 -0400
+
+    Refs #10633 - Remove some incorrect logic around IPV6 checking.
+    
+    (cherry picked from commit a1823f3c390c02fb6d5c2c4ff969d811e7d2729d)
+
+commit 3ab8bebf7f46ef7e87e612d0eb1c9c4fc88b037d
+Author: Bill Meek <bmeek@mythtv.org>
+Date:   Sun Aug 6 21:02:13 2017 -0500
+
+    Restore SendAction operation, Fixes #12738
+    
+    SendAction appears to be affected by 9f34b4f, but that's needed to
+    allow operation of some keypresses.
+    
+    Thanks to Roger Siddons for finding the root cause of the problem.
+    
+    (cherry picked from commit 7075a5fb0f4554beccca019849a9d2dd38b62fe8)
+
+commit 9ea488fbe28abfe9fd05c2055620435cd8843078
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Aug 6 15:05:38 2017 -0400
+
+    Networking: Improve check for IPV4 and IPV6 support
+    
+    Under certain conditions the system is incorrectly finding that
+    there is no support for IPV4 and IPV6. This adds some more logic
+    to the process.
+    
+    Refs #10633
+    
+    (cherry picked from commit 951e601107aa4974fd8e6284071c17611a96283a)
+
+commit ad5f88b1174ea49a133d920cb454f4810b1c1ff8
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Aug 6 14:31:42 2017 -0400
+
+    Video Playback: Fix compile error on debian jessie
+    
+    Prior commit for for VDPAU h265 needs to have an ifdef so that it
+    does not fail compile if the vdpau.h file is old and does not
+    have H265 support.
+    
+    Refs #12992
+    
+    (cherry picked from commit c0a2558689915b0fe9aa3b2bf7d41e21d395e10e)
+
+commit 345f69c8332102d8284a9bfb87126f6f8eb127f1
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Aug 6 12:28:20 2017 -0400
+
+    Fixes #13077 IPV6 support for backup and restore scripts.
+    
+    (cherry picked from commit 68392fd5b4358447da11be5b097a02aa3742cc58)
+
+commit 022d0989f1d015b252c89ce797185652834e61e7
+Author: Dave Chiluk <chiluk@gmail.com>
+Date:   Sun Aug 6 12:12:04 2017 -0400
+
+    Video Playback: Workaround for VDPAU h265 interlaced playback
+    
+    Allow VDPAU h265 interlaced playback without deinterlacing.
+    
+    Refs #12992
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit b63e92cc00f466391157cb45830f98d2e1a58dcd)
+
+commit 433f5d17312e6ffce428de959d87ae4b60a2aebf
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Aug 6 11:58:52 2017 -0400
+
+    Fixes #13091 - Seg fault in video playback when using an alternate video output method
+    
+    Fix premature deletion of VideoDisplayProfile object.
+    
+    (cherry picked from commit 48111f8d6707c5a53cbb66c796046bb87c38192a)
+
+commit f6acaf5878712e28da2e3b817345de1c086e6e9f
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Aug 2 15:52:51 2017 -0400
+
+    Fixes #13082 - Python bindings need to use new setting for backend server address.
+    
+    (cherry picked from commit eebe25c7c17e21071b49e3970dca698c852cdb61)
+
+commit 9cf09cc43cbced882569ec959fbf9e30a5372a04
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Aug 2 14:10:19 2017 -0400
+
+    Fixes #13086 - add missing include for QTcpSocket, causing compile failure in certain cases.
+    
+    (cherry picked from commit 9646afee0061c4e9bbb784e80b71fa0c65af21fc)
