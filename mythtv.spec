@@ -121,7 +121,12 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 %bcond_without mythnews
 %bcond_without mythweather
 %bcond_without mythzoneminder
+%if 0%{?fedora}
 %bcond_without mythnetvision
+%else
+%bcond_with mythnetvision
+%endif
+
 
 ################################################################################
 
@@ -132,6 +137,7 @@ Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
 Patch0:    mythtv-fixes.patch
+Patch1:    mythtv-qmake.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -164,8 +170,11 @@ BuildRequires:  qt5-qtbase-devel >= 5.2
 BuildRequires:  qt5-qtscript-devel >= 5.2
 BuildRequires:  qt5-qtwebkit-devel >= 5.2
 BuildRequires:  freetype-devel >= 2
+%if 0%{?fedora} >= 28
+BuildRequires:  mariadb-connector-c-devel
+%else
 BuildRequires:  mariadb-devel >= 5
-#BuildRequires:  mariadb-connector-c-devel
+%endif
 %if 0%{?fedora}
 BuildRequires:  libcec-devel >= 1.7
 %endif
@@ -233,10 +242,12 @@ BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
 
-# For ttvdb.py
+%if 0%{?fedora}
+# For ttvdb.py, not available in EPEL
 BuildRequires: python2-future
 BuildRequires: python2-requests
 BuildRequires: python-requests-cache
+%endif
 
 %if %{with vdpau}
 BuildRequires:  libvdpau-devel
@@ -502,7 +513,11 @@ Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Requires:  mariadb >= 5
 Requires:  python-MythTV
+%if 0%{?fedora}
 Recommends: libaacs
+%else
+Requires: libaacs
+%endif
 %{?fedora:Requires:  google-droid-sans-mono-fonts}
 %{?fedora:Recommends:  mesa-vdpau-drivers}
 Provides:  mythtv-frontend-api = %{mythfeapiver}
@@ -1309,7 +1324,6 @@ exit 0
 %doc mythplugins/mythmusic/README
 %{_libdir}/mythtv/plugins/libmythmusic.so
 %attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythmusic
-#%{_datadir}/mythtv/mythmusic/
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
