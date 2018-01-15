@@ -81,9 +81,9 @@ URL:            http://www.mythtv.org/
 # Version/Release info
 Version:        29.0
 %if "%{branch}" == "master"
-Release:        0.7.git.%{_gitrev}%{?dist}
+Release:        0.8.git.%{_gitrev}%{?dist}
 %else
-Release:        6%{?rel_string}%{?dist}
+Release:        7%{?rel_string}%{?dist}
 %endif
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1377,6 +1377,9 @@ exit 0
 
 
 %changelog
+* Mon Jan 15 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.0-7.20171226.71.g339b08e467
+- Rebuilt for VA-API 1.0.0
+
 * Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-6.20171226.71.g339b08e467
 - Update to v29.0-71-g339b08e467 from branch fixes/29
 
