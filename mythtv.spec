@@ -62,7 +62,8 @@
 # MythTV Version string -- preferably the output from git describe
 %define vers_string v29.0-77-g771115f47d
 %define rel_string .20180111.77.g771115f47d
-%define shortcommit %(c=%{vers_string}; echo ${c:(-10)})
+%define githash 771115f47d39095652f8f660d3477008a0cbce12
+%define shorthash %(c=%{githash}; echo ${c:0:10})
 
 %define branch fixes/29.0
 
@@ -76,15 +77,16 @@
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Summary:        A digital video recorder (DVR) application
-URL:            http://www.mythtv.org/
-
 Version:        29.0
 Release:        8%{?rel_string}%{?dist}
+Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
 # projects... For a breakdown of the licensing, see PACKAGE-LICENSING.
 License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
+URL:            http://www.mythtv.org/
+Source0:        https://github.com/MythTV/%{name}/archive/%{githash}/%{name}-%{version}-%{shorthash}.tar.gz
+
 
 ################################################################################
 
@@ -125,9 +127,6 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 
 ################################################################################
-
-Source0:   https://github.com/MythTV/%{name}/archive/%{shortcommit}/%{name}-%{version}-%{shortcommit}.tar.gz
-
 #
 ### THE BELOW IS NOW AUTOMATED BY SCRIPTS IN SCM ###
 #
@@ -802,7 +801,7 @@ on demand content.
 ################################################################################
 
 %prep
-%autosetup -p1 -n %{name}-%{version}
+%autosetup -p1 -n %{name}-%{githash}
 
 # Remove compiled python file
 #find -name *.pyc -exec rm -f {} \;
