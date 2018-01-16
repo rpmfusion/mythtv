@@ -80,7 +80,7 @@ Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
 Version:        29.0
-Release:        7%{?rel_string}%{?dist}
+Release:        8%{?rel_string}%{?dist}
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
 # projects... For a breakdown of the licensing, see PACKAGE-LICENSING.
@@ -1374,8 +1374,11 @@ exit 0
 
 
 %changelog
-* Tue Jan 16 2018 Richard Shaw <hobbes1069@gmail.com> - 29.0-7.20180111.77.g771115f47d
+* Tue Jan 16 2018 Richard Shaw <hobbes1069@gmail.com> - 29.0-8.20180111.77.g771115f47d
 - Update to v29.0-77-g771115f47d from branch fixes/29
+
+* Mon Jan 15 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.0-7.20171226.71.g339b08e467
+- Rebuilt for VA-API 1.0.0
 
 * Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-6.20171226.71.g339b08e467
 - Update to v29.0-71-g339b08e467 from branch fixes/29.
