@@ -60,8 +60,9 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v29.0-71-g339b08e467
-%define rel_string .20171226.71.g339b08e467
+%define vers_string v29.0-77-g771115f47d
+%define rel_string .20180111.77.g771115f47d
+%define shortcommit %(c=%{vers_string}; echo ${c:(-10)})
 
 %define branch fixes/29.0
 
@@ -78,13 +79,8 @@ Name:           mythtv
 Summary:        A digital video recorder (DVR) application
 URL:            http://www.mythtv.org/
 
-# Version/Release info
 Version:        29.0
-%if "%{branch}" == "master"
-Release:        0.7.git.%{_gitrev}%{?dist}
-%else
-Release:        6%{?rel_string}%{?dist}
-%endif
+Release:        7%{?rel_string}%{?dist}
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
 # projects... For a breakdown of the licensing, see PACKAGE-LICENSING.
@@ -130,14 +126,15 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 ################################################################################
 
-Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source0:   https://github.com/MythTV/%{name}/archive/%{shortcommit}/%{name}-%{version}-%{shortcommit}.tar.gz
 
+#
+### THE BELOW IS NOW AUTOMATED BY SCRIPTS IN SCM ###
+#
 # From the mythtv git repository with the appropriate branch checked out:
 # Example: git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
-Patch0:    mythtv-fixes.patch
-Patch1:    mythtv-qmake.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -1377,8 +1374,11 @@ exit 0
 
 
 %changelog
+* Tue Jan 16 2018 Richard Shaw <hobbes1069@gmail.com> - 29.0-7.20180111.77.g771115f47d
+- Update to v29.0-77-g771115f47d from branch fixes/29
+
 * Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-6.20171226.71.g339b08e467
-- Update to v29.0-71-g339b08e467 from branch fixes/29
+- Update to v29.0-71-g339b08e467 from branch fixes/29.
 
 * Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-5
 - Mass rebuild for x264 and x265
