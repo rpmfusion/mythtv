@@ -78,7 +78,7 @@
 #
 Name:           mythtv
 Version:        29.0
-Release:        8%{?rel_string}%{?dist}
+Release:        9%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -166,7 +166,7 @@ BuildRequires:  qt5-qtbase-devel >= 5.2
 BuildRequires:  qt5-qtscript-devel >= 5.2
 BuildRequires:  qt5-qtwebkit-devel >= 5.2
 BuildRequires:  freetype-devel >= 2
-%if 0%{?fedora} >= 28
+%if 0%{?fedora} > 24
 BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel >= 5
@@ -357,7 +357,7 @@ Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
-Requires:  mariadb-server >= 5, mariadb >= 5
+Requires:  mysql-compat-server >= 5, mysql >= 5
 %{?fedora:Recommends:  xmltv}
 
 # Generate the required mythtv-frontend-api version string here so we only
@@ -420,8 +420,11 @@ Summary:   Development files for mythtv
 Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
-Requires:  mariadb-devel >= 5
-#Requires:  mariadb-connector-c-devel
+%if 0%{?fedora} > 24
+BuildRequires:  mariadb-connector-c-devel
+%else
+BuildRequires:  mariadb-devel >= 5
+%endif
 Requires:  qt5-qtbase-devel >= 5.2
 Requires:  qt5-qtscript-devel >= 5.2
 Requires:  qt5-qtwebkit-devel >= 5.2
@@ -507,7 +510,7 @@ Requires:  freetype, lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
-Requires:  mariadb >= 5
+Requires:  mysql >= 5
 Requires:  python-MythTV
 %if 0%{?fedora}
 Recommends: libaacs
@@ -1373,6 +1376,10 @@ exit 0
 
 
 %changelog
+* Sat Jan 20 2018 Sérgio Basto <sergio@serjux.com> - 29.0-9.20180111.77.g771115f47d
+- fix rfbz #4684, Use mariadb-connector-c-devel instead of mysql-devel or
+  mariadb-devel
+
 * Tue Jan 16 2018 Richard Shaw <hobbes1069@gmail.com> - 29.0-8.20180111.77.g771115f47d
 - Update to v29.0-77-g771115f47d from branch fixes/29
 
