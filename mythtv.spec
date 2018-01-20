@@ -1262,8 +1262,8 @@ exit 0
 %if %{with python}
 %files -n python-MythTV
 %{_bindir}/mythpython
-%{python_sitelib}/MythTV/
-%{python_sitelib}/MythTV-*.egg-info
+%{python2_sitelib}/MythTV/
+%{python2_sitelib}/MythTV-*.egg-info
 %endif
 
 %if %{with plugins}
