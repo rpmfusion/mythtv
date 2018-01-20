@@ -15,7 +15,7 @@
 #
 # The latest RPM Fusion version can be found at:
 #
-#     http://cvs.rpmfusion.org/viewvc/rpms/mythtv/devel/?root=free
+#     https://pkgs.rpmfusion.org/cgit/free/mythtv.git/
 #
 # Note:
 #
@@ -60,8 +60,10 @@
 %define desktop_vendor RPMFusion
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v29.0-71-g339b08e467
-%define rel_string .20171226.71.g339b08e467
+%define vers_string v29.0-77-g771115f47d
+%define rel_string .20180111.77.g771115f47d
+%define githash 771115f47d39095652f8f660d3477008a0cbce12
+%define shorthash %(c=%{githash}; echo ${c:0:10})
 
 %define branch fixes/29.0
 
@@ -75,20 +77,16 @@
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Summary:        A digital video recorder (DVR) application
-URL:            http://www.mythtv.org/
-
-# Version/Release info
 Version:        29.0
-%if "%{branch}" == "master"
-Release:        0.7.git.%{_gitrev}%{?dist}
-%else
-Release:        6%{?rel_string}%{?dist}
-%endif
+Release:        9%{?rel_string}%{?dist}
+Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
 # projects... For a breakdown of the licensing, see PACKAGE-LICENSING.
 License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
+URL:            http://www.mythtv.org/
+Source0:        https://github.com/MythTV/%{name}/archive/%{githash}/%{name}-%{version}-%{shorthash}.tar.gz
+
 
 ################################################################################
 
@@ -129,15 +127,13 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 
 ################################################################################
-
-Source0:   https://github.com/MythTV/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
-
+#
+### THE BELOW IS NOW AUTOMATED BY SCRIPTS IN SCM ###
+#
 # From the mythtv git repository with the appropriate branch checked out:
 # Example: git diff -p --stat v0.26.0 > mythtv-0.26-fixes.patch
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
-Patch0:    mythtv-fixes.patch
-Patch1:    mythtv-qmake.patch
 
 Source10:  PACKAGE-LICENSING
 Source11:  ChangeLog
@@ -170,7 +166,7 @@ BuildRequires:  qt5-qtbase-devel >= 5.2
 BuildRequires:  qt5-qtscript-devel >= 5.2
 BuildRequires:  qt5-qtwebkit-devel >= 5.2
 BuildRequires:  freetype-devel >= 2
-%if 0%{?fedora} >= 28
+%if 0%{?fedora} > 24
 BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel >= 5
@@ -361,7 +357,7 @@ Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
-Requires:  mariadb-server >= 5, mariadb >= 5
+Requires:  mysql-compat-server >= 5, mysql >= 5
 %{?fedora:Recommends:  xmltv}
 
 # Generate the required mythtv-frontend-api version string here so we only
@@ -424,8 +420,11 @@ Summary:   Development files for mythtv
 Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
-Requires:  mariadb-devel >= 5
-#Requires:  mariadb-connector-c-devel
+%if 0%{?fedora} > 24
+BuildRequires:  mariadb-connector-c-devel
+%else
+BuildRequires:  mariadb-devel >= 5
+%endif
 Requires:  qt5-qtbase-devel >= 5.2
 Requires:  qt5-qtscript-devel >= 5.2
 Requires:  qt5-qtwebkit-devel >= 5.2
@@ -511,7 +510,7 @@ Requires:  freetype, lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
-Requires:  mariadb >= 5
+Requires:  mysql >= 5
 Requires:  python-MythTV
 %if 0%{?fedora}
 Recommends: libaacs
@@ -805,7 +804,7 @@ on demand content.
 ################################################################################
 
 %prep
-%autosetup -p1 -n %{name}-%{version}
+%autosetup -p1 -n %{name}-%{githash}
 
 # Remove compiled python file
 #find -name *.pyc -exec rm -f {} \;
@@ -1377,8 +1376,18 @@ exit 0
 
 
 %changelog
+* Sat Jan 20 2018 Sérgio Basto <sergio@serjux.com> - 29.0-9.20180111.77.g771115f47d
+- fix rfbz #4684, Use mariadb-connector-c-devel instead of mysql-devel or
+  mariadb-devel
+
+* Tue Jan 16 2018 Richard Shaw <hobbes1069@gmail.com> - 29.0-8.20180111.77.g771115f47d
+- Update to v29.0-77-g771115f47d from branch fixes/29
+
+* Mon Jan 15 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.0-7.20171226.71.g339b08e467
+- Rebuilt for VA-API 1.0.0
+
 * Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-6.20171226.71.g339b08e467
-- Update to v29.0-71-g339b08e467 from branch fixes/29
+- Update to v29.0-71-g339b08e467 from branch fixes/29.
 
 * Sun Dec 31 2017 Sérgio Basto <sergio@serjux.com> - 29.0-5
 - Mass rebuild for x264 and x265

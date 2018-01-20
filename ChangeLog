@@ -1,3 +1,67 @@
+commit 771115f47d39095652f8f660d3477008a0cbce12
+Author: David Hampton <mythtv@love2code.net>
+Date:   Tue Jan 9 08:56:00 2018 -0500
+
+    Update qmake project files for a minimum 5.2 version.
+    
+    Remove all clauses related to Qt4.  Remove any checks for Qt5, keeping
+    the needed changes to the QT variable.
+    
+    (cherry picked from commit d6e2e23dedd28dd4dec70ac39efaf09207f5d175)
+
+commit 993468df3882934f2bc1e29248cbc0cc2a958e4c
+Author: David Hampton <mythtv@love2code.net>
+Date:   Tue Jan 9 00:30:02 2018 -0500
+
+    Clean up Qt version checking in 'configure'.
+    
+    Make mythtv/configure the "one true source of truth" for the minimum
+    Qt version.  Make it easier to compare Qt version numbers by
+    converting them from strings to numbers before comparison.  Remove Qt4
+    related checks (since the minimum Qt version is already 5.2).
+    
+    (cherry picked from commit 85aa2363451fefa2abd9af1cd886a7a86a7cd9a1)
+
+commit 5d976d25a75c955584a3f9b67034b9ef86f6d94c
+Author: David Hampton <mythtv@love2code.net>
+Date:   Mon Jan 8 19:09:18 2018 -0500
+
+    Clean up the checks for finding the qmake executable.
+    
+    Throw away error output from the 'which' command so that garbage
+    doesn't get into the list of possible locations for qmake.  Make the
+    tests for qmake in the mythplugins directory the same as in the mythtv
+    directory.
+    
+    (cherry picked from commit 3f5aa0c9f2425e7c54d79ce23d239f1afd29b220)
+
+commit 72a9c64c7f92b21bd9a0d230ed9a6c78e7f837de
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sat Jan 6 13:57:34 2018 -0500
+
+    Fix crash when invoking Interactive TV (MHEG) pages
+    
+    Fixes #13194
+    
+    (cherry picked from commit 5dea615d059984e52404c242d1af33ca97b19023)
+
+commit e2956d025f40ad7c8c69db4de477a0bd6448057e
+Author: Paul Harrison <pharrison@mythtv.org>
+Date:   Sun Oct 22 11:02:03 2017 +0100
+
+    MythMusic: stop the player on first error when playing radio streams
+    
+    (cherry picked from commit 33671e75d4ea8464386011002f7688154addeb15)
+
+commit 9dbf6706337b72b132f34d6c8e9f305609a44d7e
+Author: Mark Spieth <mspieth@digivation.com.au>
+Date:   Thu Jan 4 09:54:47 2018 +1100
+
+    ttvdb.py: Handle missing banners gracefully
+    
+    fixes #13199
+    (cherry picked from commit 6c0c90a27bc287d19abeef7fb1d3a17f02369aa3)
+
 commit 339b08e4677135ad57b2f1e43e5535878143a65b
 Author: Peter Bennett <pbennett@mythtv.org>
 Date:   Tue Dec 26 13:53:47 2017 -0500
