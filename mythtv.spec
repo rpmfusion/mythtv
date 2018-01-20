@@ -15,7 +15,7 @@
 #
 # The latest RPM Fusion version can be found at:
 #
-#     http://cvs.rpmfusion.org/viewvc/rpms/mythtv/devel/?root=free
+#     https://pkgs.rpmfusion.org/cgit/free/mythtv.git/
 #
 # Note:
 #

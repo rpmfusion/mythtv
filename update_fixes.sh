@@ -20,7 +20,7 @@ spectool -g mythtv.spec
 echo Press enter to run: rfpkg new-sources mythtv-${version}-${shorthash}.tar.gz; read dummy;
 rfpkg new-sources mythtv-${version}-${shorthash}.tar.gz
 echo Press enter to continue; read dummy;
-rfpkg clog && rfpkg commit -F clog && /bin/rm clog && git show
+rfpkg clog && rfpkg ci -c && git show
 echo Press enter to continue; read dummy;
 rfpkg push && rfpkg build --nowait
 echo Press enter to continue; read dummy;
