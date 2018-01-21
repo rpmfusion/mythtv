@@ -67,9 +67,6 @@
 
 %define branch fixes/29.0
 
-# Git revision and branch ID
-%define _gitrev g5b917e8
-
 # Harden build as mythbackend is long running.
 %global _hardened_build 1
 
