@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        29.0
-Release:        9%{?rel_string}%{?dist}
+Release:        10%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1373,6 +1373,9 @@ exit 0
 
 
 %changelog
+* Sat Jan 27 2018 Leigh Scott <leigh123linux@googlemail.com> - 29.0-10.20180111.77.g771115f47d
+- Rebuild for new libcdio and libvpx
+
 * Sat Jan 20 2018 Sérgio Basto <sergio@serjux.com> - 29.0-9.20180111.77.g771115f47d
 - fix rfbz #4684, Use mariadb-connector-c-devel instead of mysql-devel or
   mariadb-devel
