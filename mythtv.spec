@@ -174,7 +174,8 @@ BuildRequires:  libcec-devel >= 1.7
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
-BuildRequires:  nasm, yasm-devel
+BuildRequires:  nasm
+Buildrequires:  yasm-devel
 
 # X, and Xv video support
 BuildRequires:  libXmu-devel
@@ -194,7 +195,8 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 %endif
 
 # OpenGL video output and vsync support
-BuildRequires:  libGL-devel, libGLU-devel
+BuildRequires:  libGL-devel
+BuildRequires:  libGLU-devel
 
 # Misc A/V format support
 BuildRequires:  fftw-devel >= 3
@@ -354,7 +356,8 @@ Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
-Requires:  mysql-compat-server >= 5, mysql >= 5
+Requires:  mysql-compat-server >= 5
+Requires:  mysql >= 5
 %{?fedora:Recommends:  xmltv}
 
 # Generate the required mythtv-frontend-api version string here so we only
@@ -437,7 +440,8 @@ Requires:  mesa-libGLU-devel
 Requires:  xorg-x11-proto-devel
 
 # OpenGL video output and vsync support
-Requires:  libGL-devel, libGLU-devel
+Requires:  libGL-devel
+Requires:  libGLU-devel
 
 # Misc A/V format support
 Requires:  fftw-devel >= 3
@@ -503,7 +507,8 @@ This package contains the base themes for the mythtv user interface.
 
 %package frontend
 Summary:   Client component of mythtv (a DVR)
-Requires:  freetype, lame
+Requires:  freetype
+Requires:  lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
