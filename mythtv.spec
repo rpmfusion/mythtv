@@ -538,8 +538,10 @@ Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
 Requires:   mythtv-setup
 Requires:   python2-future
+%if 0%{?fedora}
 Requires:   python2-requests
 Requires:   python-requests-cache
+%endif
 
 Requires(pre): shadow-utils
 Conflicts:  xmltv-grabbers < 0.5.37
@@ -575,8 +577,10 @@ mythtv backend.
 Summary: Common components needed by multiple other MythTV components
 # For ttvdb.py
 Requires: python2-future
+%if 0%{?fedora}
 Requires: python2-requests
 Requires: python-requests-cache
+%endif
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
