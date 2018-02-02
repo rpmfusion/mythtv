@@ -898,7 +898,6 @@ pushd mythtv
 %endif
     --extra-cflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
     --extra-cxxflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
-    --extra-ldflags="%{__global_ldflags}" \
 %ifarch %{ix86}
     --cpu=i686 --tune=i686 --enable-mmx \
 %endif
