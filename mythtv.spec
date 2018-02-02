@@ -57,12 +57,12 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v29.0-77-g771115f47d
-%define rel_string .20180111.77.g771115f47d
-%define githash 771115f47d39095652f8f660d3477008a0cbce12
+%define githash 9b7b96283458073007a8f3801d5284fb59af3979
 %define shorthash %(c=%{githash}; echo ${c:0:10})
+%define vers_string v29.1-77-g%{shorthash}
+%define rel_string .20180201.77.g%{shorthash}
 
-%define branch fixes/29.0
+%define branch fixes/29
 
 # Harden build as mythbackend is long running.
 %global _hardened_build 1
@@ -71,8 +71,8 @@
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Version:        29.0
-Release:        11%{?rel_string}%{?dist}
+Version:        29.1
+Release:        12%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1376,6 +1376,9 @@ exit 0
 
 
 %changelog
+* Fri Feb 02 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.1-12.20180201.77.g9b7b962834
+- Update to 29.1
+
 * Fri Feb 02 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.0-11.20180111.77.g771115f47d
 - Clean-up conditionals
 - Remove vendor entry for desktop files
