@@ -56,9 +56,6 @@
 # A list of which applications we want to put into the desktop menu system
 %define desktop_applications mythfrontend mythtv-setup
 
-# The vendor name we should attribute the aforementioned entries to
-%define desktop_vendor RPMFusion
-
 # MythTV Version string -- preferably the output from git describe
 %define vers_string v29.0-77-g771115f47d
 %define rel_string .20180111.77.g771115f47d
@@ -66,9 +63,6 @@
 %define shorthash %(c=%{githash}; echo ${c:0:10})
 
 %define branch fixes/29.0
-
-# Git revision and branch ID
-%define _gitrev g5b917e8
 
 # Harden build as mythbackend is long running.
 %global _hardened_build 1
@@ -78,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.0
-Release:        9%{?rel_string}%{?dist}
+Release:        11%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -119,7 +113,7 @@ Source0:        https://github.com/MythTV/%{name}/archive/%{githash}/%{name}-%{v
 %bcond_without mythnews
 %bcond_without mythweather
 %bcond_without mythzoneminder
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} > 7
 %bcond_without mythnetvision
 %else
 %bcond_with mythnetvision
@@ -166,18 +160,19 @@ BuildRequires:  qt5-qtbase-devel >= 5.2
 BuildRequires:  qt5-qtscript-devel >= 5.2
 BuildRequires:  qt5-qtwebkit-devel >= 5.2
 BuildRequires:  freetype-devel >= 2
-%if 0%{?fedora} > 24
+%if 0%{?fedora} || 0%{?rhel} > 7
 BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel >= 5
 %endif
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  libcec-devel >= 1.7
 %endif
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
-BuildRequires:  nasm, yasm-devel
+BuildRequires:  nasm
+Buildrequires:  yasm-devel
 
 # X, and Xv video support
 BuildRequires:  libXmu-devel
@@ -197,7 +192,8 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 %endif
 
 # OpenGL video output and vsync support
-BuildRequires:  libGL-devel, libGLU-devel
+BuildRequires:  libGL-devel
+BuildRequires:  libGLU-devel
 
 # Misc A/V format support
 BuildRequires:  fftw-devel >= 3
@@ -238,11 +234,13 @@ BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
 
-%if 0%{?fedora}
-# For ttvdb.py, not available in EPEL
 BuildRequires: python2-future
+%if 0%{?fedora} || 0%{?rhel} > 7
+# For ttvdb.py, not available in EPEL
 BuildRequires: python2-requests
 BuildRequires: python-requests-cache
+%else
+BuildRequires: python-requests
 %endif
 
 %if %{with vdpau}
@@ -285,10 +283,10 @@ BuildRequires:  perl(IO::Socket::INET6)
 
 %if %{with python}
 BuildRequires:  python2-devel
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} > 7
 BuildRequires:  python2-mysql
 %else
-BuildRequires:  MySQL-python 
+BuildRequires:  MySQL-python
 %endif
 BuildRequires:  python-urlgrabber
 %endif
@@ -357,7 +355,8 @@ Requires:  python-MythTV      = %{version}-%{release}
 Requires:  mythplugins        = %{version}-%{release}
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
-Requires:  mysql-compat-server >= 5, mysql >= 5
+Requires:  mysql-compat-server >= 5
+Requires:  mysql >= 5
 %{?fedora:Recommends:  xmltv}
 
 # Generate the required mythtv-frontend-api version string here so we only
@@ -420,7 +419,7 @@ Summary:   Development files for mythtv
 Requires:  mythtv-libs = %{version}-%{release}
 
 Requires:  freetype-devel >= 2
-%if 0%{?fedora} > 24
+%if 0%{?fedora} || 0%{?rhel} > 7
 BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel >= 5
@@ -440,7 +439,8 @@ Requires:  mesa-libGLU-devel
 Requires:  xorg-x11-proto-devel
 
 # OpenGL video output and vsync support
-Requires:  libGL-devel, libGLU-devel
+Requires:  libGL-devel
+Requires:  libGLU-devel
 
 # Misc A/V format support
 Requires:  fftw-devel >= 3
@@ -506,13 +506,14 @@ This package contains the base themes for the mythtv user interface.
 
 %package frontend
 Summary:   Client component of mythtv (a DVR)
-Requires:  freetype, lame
+Requires:  freetype
+Requires:  lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
 Requires:  mythtv-base-themes  = %{version}
 Requires:  mysql >= 5
 Requires:  python-MythTV
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} > 7
 Recommends: libaacs
 %else
 Requires: libaacs
@@ -538,9 +539,11 @@ Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
 Requires:   mythtv-setup
 Requires:   python2-future
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} > 7
 Requires:   python2-requests
 Requires:   python-requests-cache
+%else
+Requires:   python-requests
 %endif
 
 Requires(pre): shadow-utils
@@ -577,9 +580,11 @@ mythtv backend.
 Summary: Common components needed by multiple other MythTV components
 # For ttvdb.py
 Requires: python2-future
-%if 0%{?fedora}
-Requires: python2-requests
-Requires: python-requests-cache
+%if 0%{?fedora} || 0%{?rhel} > 7
+Requires:   python2-requests
+Requires:   python-requests-cache
+%else
+Requires:   python-requests
 %endif
 
 %description common
@@ -891,14 +896,9 @@ pushd mythtv
 %if !%{with python}
     --without-bindings=python                   \
 %endif
-%ifarch ppc
-    --extra-cflags="%{optflags} -maltivec -fomit-frame-pointer" \
-    --extra-cxxflags="%{optflags} -maltivec -fomit-frame-pointer" \
-%else
     --extra-cflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
     --extra-cxxflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
-%endif
-    --extra-ldflags="%{optflags}"               \
+    --extra-ldflags="%{__global_ldflags}" \
 %ifarch %{ix86}
     --cpu=i686 --tune=i686 --enable-mmx \
 %endif
@@ -936,7 +936,6 @@ pushd mythplugins
     echo "INCLUDEPATH -= \$\${SYSROOT}/\$\${PREFIX}/include" >> settings.pro
     echo "INCLUDEPATH -= %{_includedir}"       >> settings.pro
     echo "INCLUDEPATH += $temp%{_includedir}"  >> settings.pro
-    #echo "INCLUDEPATH += %{_includedir}"       >> settings.pro
     echo "LIBS *= -L$temp%{_libdir}"           >> settings.pro
     echo "QMAKE_LIBDIR += $temp%{_libdir}"     >> targetdep.pro
 
@@ -992,8 +991,7 @@ pushd mythplugins
         --disable-mythnetvision \
     %endif
         --enable-opengl \
-        --enable-fftw \
-#        --enable-sdl
+        --enable-fftw
 
     make %{?_smp_mflags}
 
@@ -1043,9 +1041,8 @@ pushd mythtv
     mkdir -p %{buildroot}%{_datadir}/applications
     for file in %{desktop_applications}; do
       install -p $file.png %{buildroot}%{_datadir}/pixmaps/$file.png
-      desktop-file-install --vendor %{desktop_vendor} \
+      desktop-file-install \
         --dir %{buildroot}%{_datadir}/applications    \
-        --add-category X-Fedora-Extra     \
         --add-category Application        \
         --add-category AudioVideo         \
         $file.desktop
@@ -1380,6 +1377,14 @@ exit 0
 
 
 %changelog
+* Fri Feb 02 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.0-11.20180111.77.g771115f47d
+- Clean-up conditionals
+- Remove vendor entry for desktop files
+- Remove ppc conditional for cflags and use corrects ldflags
+
+* Sat Jan 27 2018 Leigh Scott <leigh123linux@googlemail.com> - 29.0-10.20180111.77.g771115f47d
+- Rebuild for new libcdio and libvpx
+
 * Sat Jan 20 2018 Sérgio Basto <sergio@serjux.com> - 29.0-9.20180111.77.g771115f47d
 - fix rfbz #4684, Use mariadb-connector-c-devel instead of mysql-devel or
   mariadb-devel
