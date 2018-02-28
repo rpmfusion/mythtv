@@ -28,5 +28,8 @@ Environment=MYTHCONFDIR=/etc/mythtv
 User=mythtv
 ExecStart=/bin/optimize_mythdb
 
-[Install]
-WantedBy=basic.target
+# This service should be started by mythdv-optimize.timer. If for some reason
+# you want to run on startup, copy to /etc/systemd/system and uncomment the
+# following two lines.
+#[Install]
+#WantedBy=basic.target
