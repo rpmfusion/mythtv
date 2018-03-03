@@ -35,11 +35,9 @@
     compresscmd /usr/bin/bzip2
     uncompresscmd /usr/bin/bunzip2
     compressext .bz2
-    firstaction
+    postrotate
         /bin/systemctl kill mythbackend.service --signal=HUP --kill-who=main 2>/dev/null || true
-    endscript
-    # general cleanup after 4 weeks of anything we might have missed
-    lastaction
-        find /var/log/mythtv -type f -mtime +28 -delete
+        # general cleanup after 4 weeks of anything we might have missed
+        find /var/log/mythtv -type f -mtime +30 -delete
     endscript
 }
