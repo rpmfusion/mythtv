@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        14%{?rel_string}%{?dist}
+Release:        15%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -352,7 +352,9 @@ Requires:  mythtv-setup       = %{version}-%{release}
 Requires:  perl-MythTV        = %{version}-%{release}
 Requires:  php-MythTV         = %{version}-%{release}
 Requires:  python-MythTV      = %{version}-%{release}
+%if %{with plugins}
 Requires:  mythplugins        = %{version}-%{release}
+%endif
 Requires:  mythweb            = %{version}
 Requires:  mythffmpeg         = %{version}-%{release}
 Requires:  mysql-compat-server >= 5
@@ -661,15 +663,33 @@ Provides a python-based interface to interacting with MythTV.
 
 Summary:  Main MythTV plugins
 
+%if %{with mythmusic}
 Requires:  mythmusic      = %{version}-%{release}
+%endif
+%if %{with mythweather}
 Requires:  mythweather    = %{version}-%{release}
+%endif
+%if %{with mythgallery}
 Requires:  mythgallery    = %{version}-%{release}
+%endif
+%if %{with mythgame}
 Requires:  mythgame       = %{version}-%{release}
+%endif
+%if %{with mythnews}
 Requires:  mythnews       = %{version}-%{release}
+%endif
+%if %{with mythbrowser}
 Requires:  mythbrowser    = %{version}-%{release}
+%endif
+%if %{with mytharchive}
 Requires:  mytharchive    = %{version}-%{release}
+%endif
+%if %{with mythzoneminder}
 Requires:  mythzoneminder = %{version}-%{release}
+%endif
+%if %{with mythnetvision}
 Requires:  mythnetvision  = %{version}-%{release}
+%endif
 
 %description -n mythplugins
 This is a consolidation of all the official MythTV plugins that used to be
@@ -1376,6 +1396,9 @@ exit 0
 
 
 %changelog
+* Fri Mar 09 2018 Sérgio Basto <sergio@serjux.com> - 29.1-15.20180228.8.g925ceea0fb
+- Fixes nothing provides mythnetvision needed by mythplugins on epel7
+
 * Sat Mar 03 2018 Richard Shaw <hobbes1069@gmail.com> - 29.1-14.20180228.8.g925ceea0fb
 - Update to v29.1-8-g925ceea0fb from branch fixes/29.
 - Update logrotate config, fixes RFBZ#4133.
