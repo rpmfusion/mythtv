@@ -1,3 +1,12 @@
+commit 0849e9959639dd8dfeab0af4ce0dfc166da1f896
+Author: David Hampton <mythtv@love2code.net>
+Date:   Thu May 10 15:05:38 2018 -0400
+
+    Revert "Fix crash in ProgramMapTable::Create"
+    
+    This reverts commit c2fa4ba7.  It is causing failed recordings on
+    DVB-S/S2 SAT multiplexes.
+
 commit 5f20e4f3f7e1dc3199888e9004d91b835a78f302
 Author: Peter Bennett <pbennett@mythtv.org>
 Date:   Wed May 9 19:22:44 2018 -0400

@@ -57,10 +57,10 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # MythTV Version string -- preferably the output from git describe
-%define githash 5f20e4f3f7e1dc3199888e9004d91b835a78f302
+%define githash 0849e9959639dd8dfeab0af4ce0dfc166da1f896
 %define shorthash %(c=%{githash}; echo ${c:0:10})
-%define vers_string v29.1-18-g5f20e4f3f7
-%define rel_string .20180509.18.g5f20e4f3f7
+%define vers_string v29.1-19-g0849e99596
+%define rel_string .19.20180510.g0849e99596
 
 %define branch fixes/29
 
@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        16%{?rel_string}%{?dist}
+Release:        17%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -925,9 +925,9 @@ pushd mythtv
     --enable-proc-opt \
 %endif
 %if %{with debug}
-    --compile-type=debug                        
+    --compile-type=debug
 %else
-    --compile-type=release                      
+    --compile-type=release
 %endif
 
 # Make
@@ -1396,6 +1396,9 @@ exit 0
 
 
 %changelog
+* Thu May 10 2018 Sérgio Basto <sergio@serjux.com> - 29.1-17.19.20180510.g0849e99596
+- Update to v29.1.19.20180510.g0849e99596 from branch fixes/29
+
 * Thu May 10 2018 Richard Shaw <hobbes1069@gmail.com> - 29.1-16.20180509.18.g5f20e4f3f7
 - Update to v29.1-18-g5f20e4f3f7 from branch fixes/29
 
