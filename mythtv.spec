@@ -57,10 +57,10 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # MythTV Version string -- preferably the output from git describe
-%define githash 925ceea0fb269b005ae94381374419b1c8389f5e
+%define githash 5f20e4f3f7e1dc3199888e9004d91b835a78f302
 %define shorthash %(c=%{githash}; echo ${c:0:10})
-%define vers_string v29.1-8-g925ceea0fb
-%define rel_string .20180228.8.g925ceea0fb
+%define vers_string v29.1-18-g5f20e4f3f7
+%define rel_string .20180509.18.g5f20e4f3f7
 
 %define branch fixes/29
 
@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        15%{?rel_string}%{?dist}
+Release:        16%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1396,6 +1396,9 @@ exit 0
 
 
 %changelog
+* Thu May 10 2018 Richard Shaw <hobbes1069@gmail.com> - 29.1-16.20180509.18.g5f20e4f3f7
+- Update to v29.1-18-g5f20e4f3f7 from branch fixes/29
+
 * Fri Mar 09 2018 Sérgio Basto <sergio@serjux.com> - 29.1-15.20180228.8.g925ceea0fb
 - Fixes nothing provides mythnetvision needed by mythplugins on epel7
 

@@ -1,4 +1,4 @@
-git clone git://github.com/MythTV/mythtv.git
+#git clone git://github.com/MythTV/mythtv.git
 version=29.1
 branch=fixes/29
 pushd mythtv
