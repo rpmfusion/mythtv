@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        18%{?rel_string}%{?dist}
+Release:        17%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1396,9 +1396,6 @@ exit 0
 
 
 %changelog
-* Sat May 12 2018 Sérgio Basto <sergio@serjux.com> - 29.1-18.19.20180510.g0849e99596
-- Update to v29.1.19.20180510.g0849e99596 from branch fixes/29
-
 * Thu May 10 2018 Sérgio Basto <sergio@serjux.com> - 29.1-17.19.20180510.g0849e99596
 - Update to v29.1.19.20180510.g0849e99596 from branch fixes/29
 
