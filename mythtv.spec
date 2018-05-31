@@ -57,10 +57,10 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # MythTV Version string -- preferably the output from git describe
-%define githash 0849e9959639dd8dfeab0af4ce0dfc166da1f896
+%define githash 1777cc442597e5c4d64124ba3de554514961df6b
 %define shorthash %(c=%{githash}; echo ${c:0:10})
-%define vers_string v29.1-19-g0849e99596
-%define rel_string .19.20180510.g0849e99596
+%define vers_string v29.1-21-g1777cc4425
+%define rel_string .21.20180529.g1777cc4425
 
 %define branch fixes/29
 
@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        17%{?rel_string}%{?dist}
+Release:        18%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1396,6 +1396,10 @@ exit 0
 
 
 %changelog
+* Thu May 31 2018 Richard Shaw <hobbes1069@gmail.com> - 29.1-18.21.20180529.g1777cc4425
+- Update to v29.1.21.20180529.g1777cc4425 from branch fixes/29
+- This update includes fixes for the backend crashes with gcc 8.
+
 * Thu May 10 2018 Sérgio Basto <sergio@serjux.com> - 29.1-17.19.20180510.g0849e99596
 - Update to v29.1.19.20180510.g0849e99596 from branch fixes/29
 
