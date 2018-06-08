@@ -512,9 +512,9 @@ Requires:  freetype
 Requires:  lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common       = %{version}-%{release}
-Requires:  mythtv-base-themes  = %{version}
+Requires:  mythtv-base-themes  = %{version}-%{release}
 Requires:  mysql >= 5
-Requires:  python-MythTV
+Requires:  python-MythTV       = %{version}-%{release}
 %if 0%{?fedora} || 0%{?rhel} > 7
 Recommends: libaacs
 %else
@@ -539,6 +539,7 @@ reachable via the network.
 Summary:    Server component of mythtv (a DVR)
 Requires:   lame
 Requires:   mythtv-common = %{version}-%{release}
+Requires:   mythtv-libs   = %{version}-%{release}
 Requires:   mythtv-setup
 Requires:   python2-future
 %if 0%{?fedora} || 0%{?rhel} > 7
