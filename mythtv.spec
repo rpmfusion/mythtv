@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        18%{?rel_string}%{?dist}
+Release:        19%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1397,6 +1397,9 @@ exit 0
 
 
 %changelog
+* Sun Jun 17 2018 Leigh Scott <leigh123linux@googlemail.com> - 29.1-19.21.20180529.g1777cc4425
+- Rebuild for new libass version
+
 * Thu May 31 2018 Richard Shaw <hobbes1069@gmail.com> - 29.1-18.21.20180529.g1777cc4425
 - Update to v29.1.21.20180529.g1777cc4425 from branch fixes/29
 - This update includes fixes for the backend crashes with gcc 8.
