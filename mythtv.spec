@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        20%{?rel_string}%{?dist}
+Release:        21%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -902,6 +902,7 @@ pushd mythtv
     --disable-vaapi                             \
 %endif
     --enable-bdjava                             \
+    --python=%{__python2}                       \
     --enable-libmp3lame                         \
     --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
@@ -1396,6 +1397,9 @@ exit 0
 
 
 %changelog
+* Wed Jul 25 2018 Leigh Scott <leigh123linux@googlemail.com> - 29.1-21.30.20180709.g2a0dadb37c
+- Define python2 path to configure
+
 * Sat Jul 21 2018 Richard Shaw <hobbes1069@gmail.com> - 29.1-20.30.20180709.g2a0dadb37c
 - Update to v29.1.30.20180709.g2a0dadb37c from branch fixes/29
 
