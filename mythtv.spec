@@ -1012,6 +1012,7 @@ pushd mythplugins
         --disable-mythnetvision \
     %endif
         --enable-opengl \
+        --python=%{__python2} \
         --enable-fftw
 
     make %{?_smp_mflags}
