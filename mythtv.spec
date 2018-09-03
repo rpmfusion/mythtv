@@ -710,7 +710,7 @@ Requires:  dvdauthor >= 0.6.11
 Requires:  ffmpeg >= 0.4.9
 Requires:  mjpegtools >= 1.6.2
 Requires:  mkisofs >= 2.01
-Requires:  python >= 2.3.5
+Requires:  python2 >= 2.3.5
 Requires:  python-imaging
 Requires:  pmount
 
@@ -816,7 +816,7 @@ Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  mythbrowser = %{version}-%{release}
 Requires:  python-MythTV = %{version}-%{release}
 Requires:  python-pycurl
-Requires:  python >= 2.5
+Requires:  python2 >= 2.5
 Requires:  python-lxml
 # This is packaged in adobe's yum repo
 #Requires:  flash-plugin
