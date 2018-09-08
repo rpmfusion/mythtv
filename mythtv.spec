@@ -57,10 +57,10 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # MythTV Version string -- preferably the output from git describe
-%define githash 2a0dadb37cf93216627fc07805b7bd50162687ca
+%define githash dde16d475a8d76490324fb32ce905a3145d26a50
 %define shorthash %(c=%{githash}; echo ${c:0:10})
-%define vers_string v29.1-30-g2a0dadb37c
-%define rel_string .30.20180709.g2a0dadb37c
+%define vers_string v29.1-36-gdde16d475a
+%define rel_string .36.20180907.gdde16d475a
 
 %define branch fixes/29
 
@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        21%{?rel_string}%{?dist}
+Release:        22%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1399,6 +1399,9 @@ exit 0
 
 
 %changelog
+* Sat Sep 08 2018 Richard Shaw <hobbes1069@gmail.com> - 29.1-22.36.20180907.gdde16d475a
+- Update to v29.1.36.20180907.gdde16d475a from branch fixes/29
+
 * Wed Jul 25 2018 Leigh Scott <leigh123linux@googlemail.com> - 29.1-21.30.20180709.g2a0dadb37c
 - Define python2 path to configure
 
