@@ -25,11 +25,13 @@ echo Press enter to run: rfpkg new-sources mythtv-${version}-${shorthash}.tar.gz
 rfpkg new-sources mythtv-${version}-${shorthash}.tar.gz
 echo Press enter to continue; read dummy;
 rfpkg ci -c && git show
-echo Press enter to continue; read dummy;
+echo Press enter to build current branch.; read dummy;
 rfpkg push && rfpkg build --nowait
-echo Press enter to continue; read dummy;
+echo Press enter to build f29; read dummy;
 git checkout f28 && git merge master && git push && rfpkg build --nowait; git checkout master
-echo Press enter to continue; read dummy;
+echo Press enter to build f28; read dummy;
+git checkout f28 && git merge master && git push && rfpkg build --nowait; git checkout master
+echo Press enter to build f27; read dummy;
 git checkout f27 && git merge master && git push && rfpkg build --nowait; git checkout master
-echo Press enter to continue; read dummy;
+echo Press enter to build elf; read dummy;
 git checkout el7 && git merge master && git push && rfpkg build --nowait; git checkout master
