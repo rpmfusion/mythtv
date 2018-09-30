@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        22%{?rel_string}%{?dist}
+Release:        23%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -704,12 +704,12 @@ Summary:   A module for MythTV for creating and burning DVDs
 
 Requires:  mythtv-frontend-api = %{mythfeapiver}
 Requires:  MySQL-python
-Requires:  cdrecord >= 2.01
+Requires:  wodim
 Requires:  dvd+rw-tools >= 5.21.4.10.8
 Requires:  dvdauthor >= 0.6.11
 Requires:  ffmpeg >= 0.4.9
 Requires:  mjpegtools >= 1.6.2
-Requires:  mkisofs >= 2.01
+Requires:  genisoimage
 Requires:  python2 >= 2.3.5
 Requires:  python-imaging
 Requires:  pmount
@@ -1399,6 +1399,9 @@ exit 0
 
 
 %changelog
+* Sun Sep 30 2018 Leigh Scott <leigh123linux@googlemail.com> - 29.1-23.36.20180907.gdde16d475a
+- Require genisoimage and wodim as mkisofs and cdrecord virtual provides were removed
+
 * Sat Sep 08 2018 Richard Shaw <hobbes1069@gmail.com> - 29.1-22.36.20180907.gdde16d475a
 - Update to v29.1.36.20180907.gdde16d475a from branch fixes/29
 
