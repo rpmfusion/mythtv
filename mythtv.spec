@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        23%{?rel_string}%{?dist}
+Release:        24%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1399,6 +1399,9 @@ exit 0
 
 
 %changelog
+* Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 29.1-24.36.20180907.gdde16d475a
+- Mass rebuild for x264 and/or x265
+
 * Sun Sep 30 2018 Leigh Scott <leigh123linux@googlemail.com> - 29.1-23.36.20180907.gdde16d475a
 - Require genisoimage and wodim as mkisofs and cdrecord virtual provides were removed
 
