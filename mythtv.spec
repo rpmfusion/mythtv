@@ -1108,9 +1108,11 @@ pushd mythplugins
         %{buildroot}%{_datadir}/mythtv/games/PC/gamelist.xml
 %endif
 popd
-
 # And back to the build/install root
 %endif
+
+# Fixes ERROR: ambiguous python shebang in F30
+find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' {} ';'
 
 
 %pre common
@@ -1401,6 +1403,7 @@ exit 0
 %changelog
 * Fri Oct 05 2018 Sérgio Basto <sergio@serjux.com> - 29.1-25.39.20181004git74fff5c285
 - Update to 29.1.39.20181004git74fff5c285 from branch fixes/29
+- Fixes ERROR: ambiguous python shebang in F30
 
 * Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 29.1-24.36.20180907.gdde16d475a
 - Mass rebuild for x264 and/or x265
