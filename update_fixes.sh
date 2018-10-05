@@ -6,10 +6,10 @@ branch=fixes/29
 pushd mythtv
 git checkout $branch
 git pull
-git log v$version..HEAD > ../ChangeLog
+#git log v$version..HEAD > ../ChangeLog
 newdescrib=$(git describe)
 date=$(git log -1 --format=%cd --date=short | tr -d \-)
-relversion=$(echo $newdescrib | sed "s/^[^-]*//; s/-/./g; s/\.g/.$date.g/")
+relversion=$(echo $newdescrib | sed "s/^[^-]*//; s/-/./g; s/\.g/.${date}git/")
 githash=$(git rev-parse HEAD)
 shorthash=$(echo $githash | cut -b -10)
 popd
@@ -19,7 +19,7 @@ git checkout mythtv.spec
 sed -i "s|^%define vers_string .*|%define vers_string $newdescrib|" mythtv.spec
 sed -i "s|^%define rel_string .*|%define rel_string $relversion|" mythtv.spec
 sed -i "s|^%define githash .*|%define githash $githash|" mythtv.spec
-rpmdev-bumpspec -c "Update to v$version$relversion from branch $branch " mythtv.spec
+rpmdev-bumpspec -c "Update to $version$relversion from branch $branch " mythtv.spec
 spectool -g mythtv.spec
 echo Press enter to run: rfpkg new-sources mythtv-${version}-${shorthash}.tar.gz; read dummy;
 rfpkg new-sources mythtv-${version}-${shorthash}.tar.gz
