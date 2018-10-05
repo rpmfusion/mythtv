@@ -81,6 +81,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 URL:            http://www.mythtv.org/
 Source0:        https://github.com/MythTV/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 Patch0:         https://github.com/MythTV/%{name}/compare/v%{version}..%{shorthash}.patch
+Patch10:        b9c5f8b2ff983343d2545ec87022d18fcf65fe1f.patch
 
 
 ################################################################################
@@ -835,7 +836,9 @@ on demand content.
 ################################################################################
 
 %prep
-%autosetup -p1 -n %{name}-%{version}
+%setup -q -n %{name}-%{version}
+%patch0 -p1
+%patch10 -p1 -R
 
 # Remove compiled python file
 #find -name *.pyc -exec rm -f {} \;
@@ -1406,6 +1409,7 @@ exit 0
 - Update to 29.1.39.20181004git74fff5c285 from branch fixes/29
 - Fixes ERROR: ambiguous python shebang in F30
 - Rework sources to avoid upload a new snapshot with 100MB, for every commit.
+- Revert upstream commit b9c5f8b2ff983343d2545ec87022d18fcf65fe1f to fix build.
 
 * Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 29.1-24.36.20180907.gdde16d475a
 - Mass rebuild for x264 and/or x265
