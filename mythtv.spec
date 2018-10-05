@@ -1117,6 +1117,7 @@ popd
 
 # Fixes ERROR: ambiguous python shebang in F30
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python:#!/usr/bin/env python2:' {} ';'
+find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/python:#!/usr/bin/python2:' {} ';'
 
 
 %pre common
