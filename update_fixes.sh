@@ -21,8 +21,8 @@ sed -i "s|^%define rel_string .*|%define rel_string $relversion|" mythtv.spec
 sed -i "s|^%define githash .*|%define githash $githash|" mythtv.spec
 rpmdev-bumpspec -c "Update to $version$relversion from branch $branch " mythtv.spec
 spectool -g mythtv.spec
-echo Press enter to run: rfpkg new-sources mythtv-${version}-${shorthash}.tar.gz; read dummy;
-rfpkg new-sources mythtv-${version}-${shorthash}.tar.gz
+echo Press enter to run: rfpkg new-sources mythtv-${version}.tar.gz v${version}..${shorthash}.patch; read dummy;
+rfpkg new-sources mythtv-${version}.tar.gz v${version}..${shorthash}.patch
 echo Press enter to continue; read dummy;
 rfpkg ci -c && git show
 echo Press enter to build current branch.; read dummy;

@@ -79,7 +79,8 @@ Summary:        A digital video recorder (DVR) application
 # projects... For a breakdown of the licensing, see PACKAGE-LICENSING.
 License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
 URL:            http://www.mythtv.org/
-Source0:        https://github.com/MythTV/%{name}/archive/%{githash}/%{name}-%{version}-%{shorthash}.tar.gz
+Source0:        https://github.com/MythTV/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
+Patch0:         https://github.com/MythTV/%{name}/compare/v%{version}..%{shorthash}.patch
 
 
 ################################################################################
@@ -834,7 +835,7 @@ on demand content.
 ################################################################################
 
 %prep
-%autosetup -p1 -n %{name}-%{githash}
+%autosetup -p1 -n %{name}-%{version}
 
 # Remove compiled python file
 #find -name *.pyc -exec rm -f {} \;
@@ -1404,6 +1405,7 @@ exit 0
 * Fri Oct 05 2018 Sérgio Basto <sergio@serjux.com> - 29.1-25.39.20181004git74fff5c285
 - Update to 29.1.39.20181004git74fff5c285 from branch fixes/29
 - Fixes ERROR: ambiguous python shebang in F30
+- Rework sources to avoid upload a new snapshot with 100MB, for every commit.
 
 * Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 29.1-24.36.20180907.gdde16d475a
 - Mass rebuild for x264 and/or x265
