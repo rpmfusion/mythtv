@@ -81,7 +81,6 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 URL:            http://www.mythtv.org/
 Source0:        https://github.com/MythTV/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 Patch0:         https://github.com/MythTV/%{name}/compare/v%{version}..%{shorthash}.patch
-Patch10:        b9c5f8b2ff983343d2545ec87022d18fcf65fe1f.patch
 
 
 ################################################################################
@@ -838,7 +837,6 @@ on demand content.
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1
-%patch10 -p1 -R
 
 # Remove compiled python file
 #find -name *.pyc -exec rm -f {} \;
@@ -946,13 +944,13 @@ pushd mythplugins
     echo "QMAKE_PROJECT_DEPTH = 0" >> settings.pro
     find . -name \*.pro \
         -exec sed -i -e "s,INCLUDEPATH += .\+/include/mythtv,INCLUDEPATH += $temp%{_includedir}/mythtv," {} \; \
-        -exec sed -i -e "s,DEPLIBS = \$\${LIBDIR},DEPLIBS = $temp%{_libdir}," {} \; \
+        -exec sed -i -e "s,DEPLIBS = \$\${SYSROOT}\$\${LIBDIR},DEPLIBS = $temp%{_libdir}," {} \; \
         -exec sed -i -e "s,\$\${PREFIX}/include/mythtv,$temp%{_includedir}/mythtv," {} \;
     echo "INCLUDEPATH -= \$\${PREFIX}/include" >> settings.pro
     echo "INCLUDEPATH -= \$\${SYSROOT}/\$\${PREFIX}/include" >> settings.pro
     echo "INCLUDEPATH -= %{_includedir}"       >> settings.pro
     echo "INCLUDEPATH += $temp%{_includedir}"  >> settings.pro
-    echo "LIBS *= -L$temp%{_libdir}"           >> settings.pro
+#    echo "LIBS *= -L$temp%{_libdir}"           >> settings.pro
     echo "QMAKE_LIBDIR += $temp%{_libdir}"     >> targetdep.pro
 
     ./configure \
