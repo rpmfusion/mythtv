@@ -856,11 +856,6 @@ EOF
 
 # Drop execute permissions on contrib bits, since they'll be %%doc
     find contrib/ -type f -exec chmod -x "{}" \;
-# And drop execute bit on theme html files
-    chmod -x themes/default/htmls/*.html
-
-# Nuke Windows and Mac OS X build scripts
-    rm -rf contrib/Win32 contrib/OSX
 
 # Put perl bits in the right place and set opt flags
     sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
@@ -869,10 +864,6 @@ EOF
 # Install other source files
     cp -a %{SOURCE10} .
     cp -a %{SOURCE106} %{SOURCE107} %{SOURCE108} %{SOURCE109} .
-
-# Make sure we use -O2 and not -O3
-    sed -i '/speed_cflags=/d' configure
-
 popd
 
 #pushd mythplugins
@@ -1019,7 +1010,7 @@ pushd mythplugins
         --python=%{__python2} \
         --enable-fftw
 
-    make %{?_smp_mflags}
+%make_build
 
     popd
 %endif
