@@ -57,10 +57,10 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # MythTV Version string -- preferably the output from git describe
-%define githash 74fff5c2856d592b8b2dfd41ac5cc08f372a8993
+%define githash 9f0acf372dec880800a57a77d67c19a68dedbd24
 %define shorthash %(c=%{githash}; echo ${c:0:10})
-%define vers_string v29.1-39-g74fff5c285
-%define rel_string .39.20181004git74fff5c285
+%define vers_string v29.1-53-g9f0acf372d
+%define rel_string .53.20181105git9f0acf372d
 
 %define branch fixes/29
 
@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        25%{?rel_string}%{?dist}
+Release:        26%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1395,6 +1395,9 @@ exit 0
 
 
 %changelog
+* Thu Nov 08 2018 Sérgio Basto <sergio@serjux.com> - 29.1-26.53.20181105git9f0acf372d
+- Update to 29.1.53.20181105git9f0acf372d from branch fixes/29
+
 * Fri Oct 05 2018 Sérgio Basto <sergio@serjux.com> - 29.1-25.39.20181004git74fff5c285
 - Update to 29.1.39.20181004git74fff5c285 from branch fixes/29
 - Fixes ERROR: ambiguous python shebang in F30
