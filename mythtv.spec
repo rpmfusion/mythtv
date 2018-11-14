@@ -81,6 +81,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 URL:            http://www.mythtv.org/
 Source0:        https://github.com/MythTV/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 Patch0:         https://github.com/MythTV/%{name}/compare/v%{version}..%{shorthash}.patch
+Patch1:         mythtv-space_in_GB.patch
 
 
 ################################################################################
@@ -837,6 +838,7 @@ on demand content.
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1
+%patch1 -p1
 
 # Remove compiled python file
 #find -name *.pyc -exec rm -f {} \;
@@ -1183,6 +1185,7 @@ exit 0
 
 %files backend
 %{_bindir}/mythbackend
+%{_bindir}/mythexternrecorder
 %{_bindir}/mythfilldatabase
 %{_bindir}/mythfilerecorder
 %{_bindir}/mythjobqueue

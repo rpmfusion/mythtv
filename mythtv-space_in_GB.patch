@@ -1,0 +1,92 @@
+diff --git a/mythtv/programs/mythbackend/httpstatus.cpp b/mythtv/programs/mythbackend/httpstatus.cpp
+index 742b1b7623..4188bc4d13 100644
+--- a/mythtv/programs/mythbackend/httpstatus.cpp
++++ b/mythtv/programs/mythbackend/httpstatus.cpp
+@@ -473,9 +473,9 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
+         QDomElement group = pDoc->createElement("Group");
+ 
+         group.setAttribute("id"   , fsID );
+-        group.setAttribute("total", (int)(iTotal>>10) );
+-        group.setAttribute("used" , (int)(iUsed>>10)  );
+-        group.setAttribute("free" , (int)(iAvail>>10) );
++        group.setAttribute("total", (int)(iTotal>>20) );
++        group.setAttribute("used" , (int)(iUsed>>20)  );
++        group.setAttribute("free" , (int)(iAvail>>20) );
+         group.setAttribute("dir"  , directory );
+ 
+         if (fsID == "total")
+@@ -502,9 +502,9 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
+             {
+                 iExpirable = query.value(0).toLongLong();
+             }
+-            group.setAttribute("livetv", (int)(iLiveTV>>20) );
+-            group.setAttribute("deleted", (int)(iDeleted>>20) );
+-            group.setAttribute("expirable", (int)(iExpirable>>20) );
++            group.setAttribute("livetv", (int)(iLiveTV>>30) );
++            group.setAttribute("deleted", (int)(iDeleted>>30) );
++            group.setAttribute("expirable", (int)(iExpirable>>30) );
+             total = group;
+         }
+         else
+@@ -1276,15 +1276,15 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, QDomElement info )
+                 QLocale c(QLocale::C);
+ 
+                 os << "            <li>Total Space: ";
+-                sRep = c.toString(nTotal) + " MB";
++                sRep = c.toString(nTotal) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "            <li>Space Used: ";
+-                sRep = c.toString(nUsed) + " MB";
++                sRep = c.toString(nUsed) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "            <li>Space Free: ";
+-                sRep = c.toString(nFree) + " MB";
++                sRep = c.toString(nFree) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 if ((nLiveTV + nDeleted + nExpirable) > 0)
+@@ -1292,19 +1292,19 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, QDomElement info )
+                     os << "            <li>Space Available "
+                           "After Auto-expire: ";
+                     sRep = c.toString(nFree + nLiveTV +
+-                                      nDeleted + nExpirable) + " MB";
++                                      nDeleted + nExpirable) + " GB";
+                     os << sRep << "\r\n";
+                     os << "              <ul>\r\n";
+                     os << "                <li>Space Used by LiveTV: ";
+-                    sRep = c.toString(nLiveTV) + " MB";
++                    sRep = c.toString(nLiveTV) + " GB";
+                     os << sRep << "</li>\r\n";
+                     os << "                <li>Space Used by "
+                           "Deleted Recordings: ";
+-                    sRep = c.toString(nDeleted) + " MB";
++                    sRep = c.toString(nDeleted) + " GB";
+                     os << sRep << "</li>\r\n";
+                     os << "                <li>Space Used by "
+                           "Auto-expirable Recordings: ";
+-                    sRep = c.toString(nExpirable) + " MB";
++                    sRep = c.toString(nExpirable) + " GB";
+                     os << sRep << "</li>\r\n";
+                     os << "              </ul>\r\n";
+                     os << "            </li>\r\n";
+@@ -1360,15 +1360,15 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, QDomElement info )
+                 QLocale c(QLocale::C);
+ 
+                 os << "            <li>Total Space: ";
+-                sRep = c.toString(nTotal) + " MB";
++                sRep = c.toString(nTotal) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "            <li>Space Used: ";
+-                sRep = c.toString(nUsed) + " MB";
++                sRep = c.toString(nUsed) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "            <li>Space Free: ";
+-                sRep = c.toString(nFree) + " MB";
++                sRep = c.toString(nFree) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "          </ul>\r\n"
