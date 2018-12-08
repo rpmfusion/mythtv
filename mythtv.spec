@@ -122,7 +122,7 @@ Patch1:         %{name}-space_in_GB.patch
 %endif
 
 # Python2 prefix for building on rhel
-%if 0%{?rhel}
+%if 0%{?rhel} && 0%{?rhel} < 8
 %global py_prefix python
 %endif
 
@@ -296,10 +296,11 @@ BuildRequires:  perl(IO::Socket::INET6)
 
 %if %{with python}
 BuildRequires:  %{py_prefix}-devel
-BuildRequires:  %{py_prefix}-urlgrabber
 %if 0%{?fedora} || 0%{?rhel} > 7
 BuildRequires:  %{py_prefix}-mysql
+BuildRequires:  %{py_prefix}-urlgrabber
 %else
+BuildRequires:  python-urlgrabber
 BuildRequires:  MySQL-python
 %endif
 %endif
