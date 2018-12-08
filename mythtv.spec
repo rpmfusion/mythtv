@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        27%{?rel_string}%{?dist}
+Release:        28%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -365,7 +365,7 @@ Requires:  mythtv-frontend%{?_isa}    = %{version}-%{release}
 Requires:  mythtv-setup%{?_isa}       = %{version}-%{release}
 Requires:  perl-MythTV                = %{version}-%{release}
 Requires:  php-MythTV                 = %{version}-%{release}
-Requires:  python%{py_prefix}-MythTV  = %{version}-%{release}
+Requires:  %{py_prefix}-MythTV  = %{version}-%{release}
 %if %{with plugins}
 Requires:  mythplugins%{?_isa}        = %{version}-%{release}
 %endif
@@ -529,7 +529,7 @@ Requires:  perl(XML::Simple)
 Requires:  mythtv-common%{?_isa}       = %{version}-%{release}
 Requires:  mythtv-base-themes%{?_isa}  = %{version}-%{release}
 Requires:  mysql%{?_isa} >= 5
-Requires:  python%{py_prefix}-MythTV       = %{version}-%{release}
+Requires:  %{py_prefix}-MythTV       = %{version}-%{release}
 %if 0%{?fedora} || 0%{?rhel} > 7
 Recommends: libaacs%{?_isa}
 %else
@@ -658,7 +658,7 @@ Provides a PHP-based interface to interacting with MythTV.
 
 %if %{with python}
 
-%package -n python%{py_prefix}-MythTV
+%package -n %{py_prefix}-MythTV
 Summary:        Python2 bindings for MythTV
 %if 0%{?fedora} > 29
 %{?python_provide:%python_provide python3-%{name}}
@@ -671,7 +671,7 @@ BuildArch:      noarch
 Requires:       %{py_prefix}-mysql
 Requires:       %{py_prefix}-lxml
 
-%description -n python%{py_prefix}-MythTV
+%description -n %{py_prefix}-MythTV
 Provides a python-based interface to interacting with MythTV.
 
 %endif
@@ -835,7 +835,7 @@ and replay recorded events.
 Summary:   A MythTV module for Internet video on demand
 Requires:  mythtv-frontend-api%{?_isa} = %{mythfeapiver}
 Requires:  mythbrowser%{?_isa} = %{version}-%{release}
-Requires:  python%{py_prefix}-MythTV = %{version}-%{release}
+Requires:  %{py_prefix}-MythTV = %{version}-%{release}
 Requires:  %{py_prefix}-pycurl
 Requires:  %{py_prefix} >= 2.5
 Requires:  %{py_prefix}-lxml
@@ -1313,7 +1313,7 @@ exit 0
 %endif
 
 %if %{with python}
-%files -n python%{py_prefix}-MythTV
+%files -n %{py_prefix}-MythTV
 %{_bindir}/mythpython
 %if 0%{?fedora} > 29
 %{python3_sitelib}/MythTV/
@@ -1434,6 +1434,9 @@ exit 0
 
 
 %changelog
+* Sat Dec 08 2018 Antonio Trande <sagitter@fedoraproject.org> - 29.1-28.53.20181105git9f0acf372d
+- Fix python package's name
+
 * Sat Dec 08 2018 Antonio Trande <sagitter@fedoraproject.org> - 29.1-27.53.20181105git9f0acf372d
 - Rebuild for ffmpeg-3.4.5 on el7
 - Rebuild for x264-0.148 on el7
