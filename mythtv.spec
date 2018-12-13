@@ -452,12 +452,12 @@ Requires:  libXmu-devel%{?_isa}
 Requires:  libXv-devel%{?_isa}
 Requires:  libXvMC-devel%{?_isa}
 Requires:  libXxf86vm-devel%{?_isa}
-Requires:  mesa-libGLU-devel%{?_isa}
-Requires:  xorg-x11-proto-devel%{?_isa}
+# Reminder this one is noarch
+Requires:  xorg-x11-proto-devel
 
 # OpenGL video output and vsync support
-Requires:  libGL-devel%{?_isa}
-Requires:  libGLU-devel%{?_isa}
+Requires:  mesa-libGL-devel%{?_isa}
+Requires:  mesa-libGLU-devel%{?_isa}
 
 # Misc A/V format support
 Requires:  fftw-devel%{?_isa} >= 3
@@ -668,8 +668,13 @@ Summary:        Python2 bindings for MythTV
 %endif
 BuildArch:      noarch
 
+%if 0%{?fedora} || 0%{?rhel} > 7
 Requires:       %{py_prefix}-mysql
 Requires:       %{py_prefix}-lxml
+%else
+Requires:       MySQL-python
+Requires:       python-lxml
+%endif
 
 %description -n %{py_prefix}-MythTV
 Provides a python-based interface to interacting with MythTV.
@@ -730,9 +735,13 @@ Requires:  dvdauthor%{?_isa} >= 0.6.11
 Requires:  ffmpeg%{?_isa} >= 0.4.9
 Requires:  mjpegtools%{?_isa} >= 1.6.2
 Requires:  genisoimage%{?_isa}
+%if 0%{?fedora} || 0%{?rhel} > 7
 Requires:  %{py_prefix}-mysql
-Requires:  %{py_prefix} >= 2.3.5
-Requires:  %{py_prefix}-imaging
+Requires:  %{py_prefix}-pillow
+%else
+Requires:  MySQL-python
+Requires:  python-pillow
+%endif
 Requires:  pmount%{?_isa}
 
 %description -n mytharchive
