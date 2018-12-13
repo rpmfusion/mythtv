@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        28%{?rel_string}%{?dist}
+Release:        29%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1443,6 +1443,9 @@ exit 0
 
 
 %changelog
+* Thu Dec 13 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.1-29.53.20181105git9f0acf372d
+- Rework dependencies for el7
+
 * Sat Dec 08 2018 Antonio Trande <sagitter@fedoraproject.org> - 29.1-28.53.20181105git9f0acf372d
 - Fix python package's name
 
