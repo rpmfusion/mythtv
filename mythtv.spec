@@ -369,7 +369,8 @@ Requires:  %{py_prefix}-MythTV  = %{version}-%{release}
 %if %{with plugins}
 Requires:  mythplugins%{?_isa}        = %{version}-%{release}
 %endif
-Requires:  mythweb%{?_isa}            = %{version}
+# Reminder this one is noarch - and not a sub-package (no EVR)
+Requires:  mythweb                    = %{version}
 Requires:  mythffmpeg%{?_isa}         = %{version}-%{release}
 Requires:  mysql-compat-server >= 5
 Requires:  mysql >= 5
