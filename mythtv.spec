@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        29.1
-Release:        29%{?rel_string}%{?dist}
+Release:        30%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1444,6 +1444,9 @@ exit 0
 
 
 %changelog
+* Wed Dec 19 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.1-30.53.20181105git9f0acf372d
+- Mythweb is noarch
+
 * Thu Dec 13 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.1-29.53.20181105git9f0acf372d
 - Rework dependencies for el7
 - Fix python shebang
