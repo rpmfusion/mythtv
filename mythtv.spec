@@ -208,6 +208,7 @@ BuildRequires:  xorg-x11-drv-openchrome-devel
 # OpenGL video output and vsync support
 BuildRequires:  libGL-devel
 BuildRequires:  libGLU-devel
+BuildRequires:  libXNVCtrl-devel
 
 # Misc A/V format support
 BuildRequires:  fftw-devel >= 3
