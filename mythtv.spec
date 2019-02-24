@@ -57,12 +57,13 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # MythTV Version string -- preferably the output from git describe
-%define githash 9f0acf372dec880800a57a77d67c19a68dedbd24
+%define githash b774c4140b2b9e148ccf699d1ad746bc4c84289c
 %define shorthash %(c=%{githash}; echo ${c:0:10})
-%define vers_string v29.1-53-g9f0acf372d
-%define rel_string .53.20181105git9f0acf372d
+%define vers_string v30.0-15-gb774c4140b
+%define rel_date 20190214
+%define rel_string .%{rel_date}git%{shorthash}
 
-%define branch fixes/29
+%define branch fixes/30
 
 # Harden build as mythbackend is long running.
 %global _hardened_build 1
@@ -71,8 +72,8 @@
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Version:        29.1
-Release:        30%{?rel_string}%{?dist}
+Version:        30.0
+Release:        1%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -126,7 +127,7 @@ Patch1:         %{name}-space_in_GB.patch
 %global py_prefix python
 %endif
 
-%if 0%{?fedora} && 0%{?fedora} > 29
+%if 0%{?fedora} && 0%{?fedora} > 30
 %global py_prefix python3
 %else
 %global py_prefix python2
@@ -661,7 +662,7 @@ Provides a PHP-based interface to interacting with MythTV.
 
 %package -n %{py_prefix}-MythTV
 Summary:        Python2 bindings for MythTV
-%if 0%{?fedora} > 29
+%if 0%{?fedora} > 30
 %{?python_provide:%python_provide python3-%{name}}
 %else
 %{?python_provide:%python_provide python2-%{name}}
@@ -929,7 +930,7 @@ pushd mythtv
     --disable-vaapi                             \
 %endif
     --enable-bdjava                             \
-%if 0%{?fedora} > 29
+%if 0%{?fedora} > 30
     --python=%{__python3}                       \
 %else
     --python=%{__python2}                       \
@@ -1042,7 +1043,7 @@ pushd mythplugins
         --disable-mythnetvision \
     %endif
         --enable-opengl \
-%if 0%{?fedora} > 29
+%if 0%{?fedora} > 30    
     --python=%{__python3}      \
 %else
     --python=%{__python2}      \
@@ -1145,7 +1146,7 @@ popd
 %endif
 
 # Fixes ERROR: ambiguous python shebang in F30
-%if 0%{?fedora} > 29
+%if 0%{?fedora} > 30
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python$:#!%{__python3}:' {} ';'
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/python$:#!%{__python3}:' {} ';'
 %else
@@ -1325,7 +1326,7 @@ exit 0
 %if %{with python}
 %files -n %{py_prefix}-MythTV
 %{_bindir}/mythpython
-%if 0%{?fedora} > 29
+%if 0%{?fedora} > 30
 %{python3_sitelib}/MythTV/
 %{python3_sitelib}/MythTV-*.egg-info
 %else
@@ -1444,6 +1445,9 @@ exit 0
 
 
 %changelog
+* Thu Feb 14 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-1
+- Update to 30.0 with latest fixes/30.
+
 * Wed Dec 19 2018 Nicolas Chauvet <kwizart@gmail.com> - 29.1-30.53.20181105git9f0acf372d
 - Mythweb is noarch
 

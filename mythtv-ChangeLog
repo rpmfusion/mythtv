@@ -1,226 +1,157 @@
-commit 0849e9959639dd8dfeab0af4ce0dfc166da1f896
-Author: David Hampton <mythtv@love2code.net>
-Date:   Thu May 10 15:05:38 2018 -0400
-
-    Revert "Fix crash in ProgramMapTable::Create"
-    
-    This reverts commit c2fa4ba7.  It is causing failed recordings on
-    DVB-S/S2 SAT multiplexes.
-
-commit 5f20e4f3f7e1dc3199888e9004d91b835a78f302
+commit b774c4140b2b9e148ccf699d1ad746bc4c84289c
 Author: Peter Bennett <pbennett@mythtv.org>
-Date:   Wed May 9 19:22:44 2018 -0400
+Date:   Sun Feb 10 12:17:53 2019 -0500
 
-    configure: new version of freetype2 does not support freetype-config
+    Remove debugging code.
     
-    freetype2 v2.9.1 uses only pkgconfig and removes support for freetype-config
+    Program guide fix included some debugging code.
     
-    Fixes #13262
+    (cherry picked from commit 7fd7b8443073ab53804b284f69968d37932825cc)
 
-commit c2fa4ba7981032edf6dcafec90d1e64a8139144b
-Author: David Hampton <mythtv@love2code.net>
-Date:   Mon May 7 22:58:04 2018 -0400
+commit c6760c6210597453c140079628a509683b738f54
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Sun Feb 10 11:25:55 2019 -0500
 
-    Fix crash in ProgramMapTable::Create
+    Guide Grid: Fix missing text when using QT painter
     
-    Abort in libmythtv due to accessing beyond the size of the vector.
+    Grid icons, arrows and record status, caused text to show as blank.
+    Changed to paint the text first, which resolves the issue.
     
-    With at least some recording sources (I am using an OCUR device) it is
-    apparently possible to end up having zero descriptors in the stream
-    when ProgramMapTable::Create is called, but GCC 8 (and libstdc++) now
-    includes AddressSanitizer integration for std::vector, detecting
-    out-of-range accesses to a vector, which means that referencing the
-    0th element is now an error (and an abort) even though the called code
-    would not typically copy any data.
+    Fixes #13398
     
-    Patch from Gary Buhrmaster, fixes #13263.
-    
-    (cherry picked from commit 7f00642ba11eb0d9d633a23ce74e5b695c05153e)
+    (cherry picked from commit f561a3c4b2f8d59df8674849d40e046874aee8a2)
 
-commit 81d2fb020fd1e6e5c1114ff3e6c02f2e33a78188
-Author: David Hampton <mythtv@love2code.net>
-Date:   Mon May 7 19:45:09 2018 -0400
-
-    Fix crash (abort) in MythSocket::ResetReal
-    
-    In libmythbase mythsocket.cpp MythSocket::ResetReal there can be cases
-    where there are no bytes to available to read, so the vector is never
-    resized to greater than zero, which results in an abort when
-    referencing the 1st (non-existant) element which is now checked by
-    gcc8 (libstdc++).
-    
-    Patch from Gary Buhrmaster, fixes #13264.
-    
-    (cherry picked from commit 1f78097f0cef0ca15e1b7eee4e94fd17ca3b07b7)
-
-commit 280138b452c16c3ce02734b57d9245f91002af81
+commit 1c2068c62bd67f5458009a49412e8b50a4bafbe5
 Author: David Engel <dengel@mythtv.org>
-Date:   Wed Apr 25 16:40:24 2018 -0500
+Date:   Fri Feb 1 20:04:46 2019 -0600
 
-    Stop active EIT scans from interfering with recordings
+    Missed a locking difference in the previous GetPlaybackURL commit.
     
-    Because DiSEqC inputs no longer share file descriptors, extra care
-    must be taken with active EIT scans to prevent them from holding an
-    open file descripter and causing recordings to fail.  This change more
-    aggressively stops active scans when recordings are pending and also
-    releases all resources when they are stopped.
-    
-    Many, many, many thanks go to jmwislez at gmail.com for being so
-    patient and trying so many patches to identify and ultimately fix the
-    problem.
-    
-    Refs #13207
-    
-    (cherry picked from commit ba4c52b9e5d9a9f31ebbd223c166759235dfd379)
+    (cherry picked from commit 068c9664724122d0b116d29aea31850a4ae85ed6)
 
-commit 56030f3f2a29ec67ccb2849719070c50d149587a
-Author: Peter Bennett <pbennett@mythtv.org>
-Date:   Sun Apr 22 21:17:10 2018 -0400
-
-    Raspberry Pi: Fix problem with startup on recent Raspbian Stretch builds
-    
-    There is no longer a libGLESv2.so or libEGL.so installed with raspbian
-    so the build will now install links to the new files that provide
-    those libraries.
-    
-    (cherry picked from commit e1c1e873859276363b429ac0032e90d05b879d8d)
-
-commit 329c235b572f9aa5de3758ca8b311f225de45d1e
-Author: Peter Bennett <pbennett@mythtv.org>
-Date:   Wed Apr 11 19:01:21 2018 -0400
-
-    Raspberry Pi: Fix decoder error on mp4 files
-    
-    There was test code in OpenMAX support that corrupts
-    AVCodecContext. New versions of FFmpeg fail to open the
-    codec with that corrupted data in existence.
-    
-    Fixes #13244
-    
-    (cherry picked from commit 4a828998bf0cd82430e1854429742a125eb80815)
-
-commit 60e40b352ab95a135ec2ab8f9f1ee93b4f9d245e
-Author: Peter Bennett <pbennett@mythtv.org>
-Date:   Sat Mar 24 14:32:16 2018 -0400
-
-    Raspberry Pi Openmax Audio: Fix swapped channels when using PCM output
-    
-    Fixes #13249
-    
-    (cherry picked from commit 5377e5089e243ec282514b6d68afb800c02aca03)
-
-commit bd764db51fed90450a9c96eb2102f2f27b6285ad
-Author: David Hampton <mythtv@love2code.net>
-Date:   Wed Feb 14 18:01:07 2018 -0500
-
-    Fix compiler error when compiling with USING_ASI.
-    
-    Cherry picked from master and cut to the single change to correct a
-    missing variable in a function definition.
-    
-    (cherry picked from commit cadee49a417edc121d6babaacfabef63e508809e)
-
-commit c0ac5283ab2a4af571837520a40cc718e9e842c8
+commit e5672657dce54a8059a2437f5a4899dcc07d3d10
 Author: David Engel <dengel@mythtv.org>
-Date:   Fri Mar 16 10:49:38 2018 -0500
+Date:   Fri Feb 1 18:37:43 2019 -0600
 
-    Fix issues with inputs that support multiple, physical connections
+    Completely move GetPlaybackURL() to libmythprotoserver.
     
-    There was some superflous and flat out wrong code left over from the
-    card/input to input conversion that prevented inputs from switching
-    among connections like tuner, s-video and composite.  Thanks to
-    ltskinol@gmail.com for doing most of the leg work and testing the
-    fixes.
+    It was copied previously but not completely marked as static in both
+    locations.  This change completely removes it from the old location so
+    that only the new location is used.
     
-    Refs #13247
-    
-    (cherry picked from commit 1f8cd4dbf9196fd1c8f8e6096fd2ccee24514878)
+    (cherry picked from commit 692219f9c9544f0344b69cb3ce053cadd948fa16)
 
-commit 67e8d62d222e1a9addcd384900d77592ca178ffa
-Author: Peter Bennett <pbennett@mythtv.org>
-Date:   Thu Mar 8 15:25:51 2018 -0500
+commit f11c5aba6ed1e88c22f1b3b6828fc085e1699b97
+Author: David Engel <dengel@mythtv.org>
+Date:   Sat Jan 26 11:48:15 2019 -0600
 
-    Video Playback: Fix external subtitle problem
+    Tweak some VB_FILE log levels to make it more useful at loglevel INTO.
     
-    Due to an incorrect usage of QString::right, any video which has
-    one of the following strings anywhere in the filename after the 4th character
-    would not look for external subtitles:
-    ass srt ssa sub txt gif png
-    
-    Fixes #13231
-    
-    (cherry picked from commit 02de2e4ba39416553d1df8494f1d586b87013c26)
+    (cherry picked from commit 85dc2a48dff419fe78cc6b9371bc46333247d06e)
 
-commit 925ceea0fb269b005ae94381374419b1c8389f5e
+commit b06510032478ec887fd2491b5f9a5dad415c30f0
+Author: David Engel <dengel@mythtv.org>
+Date:   Sat Jan 26 11:28:54 2019 -0600
+
+    Don't start RingBuffer thread if it's not open.
+    
+    The RingBuffer thread will exit immediately if the underlying file
+    isn't open.  That can cause the thread waiting for it to start to
+    deadlock.
+    
+    (cherry picked from commit 425386b93f3df1ec6872ef845e521c0546e70c61)
+
+commit 4fd4d574c6dacba22233d3eb3e6c9c4564a3c7ac
+Author: David Engel <dengel@mythtv.org>
+Date:   Fri Jan 25 10:09:50 2019 -0600
+
+    Restore (cached) call to GetFilesystemInfos() in AutoExpire.
+    
+    A previous change removed it because it was believed to be redundant.
+    It actually is redundant in that it doesn't need to be called again so
+    soon.  However, a logic bug left the needed filesystem information
+    empty.  Rather than attempt to thread safely re-use the data completely
+    within AutoExpire, restore the call to GetFilesystemInfos() but used
+    the previously cached results.
+    
+    (cherry picked from commit 193eb990ceb30d6cd69c57972be7f9d380d1368e)
+
+commit 39794c9b6cfa83a03d0f8b0589f67924a6d0f5a0
+Author: David Engel <dengel@mythtv.org>
+Date:   Thu Jan 24 23:39:20 2019 -0600
+
+    Don't double print the log timestamp and level on Android.
+    
+    (cherry picked from commit 86ad64b4ef6a044c3e5c439c06cbd2cb3ba5dcb6)
+
+commit 2b8211e8e5d1cd512f96dd31f7cecffc353c19ba
+Author: David Engel <dengel@mythtv.org>
+Date:   Wed Jan 23 17:12:11 2019 -0600
+
+    Simpify previous FileSystemInfo caching change.
+    
+    (cherry picked from commit ab65230280cbeda555b0b25d79933d27a823540b)
+
+commit 6b5490bfab0301c70ab79c313cf6b8369ed3507a
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Jan 21 20:55:52 2019 -0600
+
+    Cache FileSystemInfo data to avoid unwanted blocking.
+    
+    Change the MainServer to cache updated, FileSystemInfo data and
+    optionally return the cached data when requested.  The Scheduler uses
+    this data to decide where to put a recording right before it starts.
+    Previously, an unresponsive, remote filesystem could block the
+    Scheduler for up to several minutes.  Now, the Scheduler always uses
+    the cached data to avoid getting blocked.  The AutoExpirer does not
+    and should not use the cached data so that the data gets updated
+    periodically.
+    
+    (cherry picked from commit df607e9bfcb5cc0798989b2e983e0071cb973ae6)
+
+commit 18c9bc9c35f7cb58a8b67d7d53ed73a71aaf4994
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Jan 21 17:59:58 2019 -0600
+
+    Work around to get A/V subtitles working on Android.
+    
+    fontconfig doesn't yet work for us on Android.  For the time being,
+    more explicitly set a font we know should exist.  This was adapted
+    from VLC master as of 2019-01-21.
+    
+    (cherry picked from commit a3d7b79b445457d027710dd6509155753a1aa3a5)
+
+commit 57e69de0ba76333d9cb6a08c51cd0837c155d94d
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Jan 21 17:31:18 2019 -0600
+
+    Fix libass logging.
+    
+    Previously, logs from libass were accumulated until one happened to
+    end with a newline and then all were printed without newlines between
+    them.  Now, each log is printed as is as they are received.
+    
+    (cherry picked from commit 7fe5013c90e17cfaac79f343097001d7d248dc35)
+
+commit 44fee4bc8a4a69b2ae2ee09fb6568f47d1f8269d
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Sat Jan 19 15:15:15 2019 +0000
+
+    OpenGLVideo: Fix texture filtering
+    
+    - this was most apparent using the default OpenGL profile and the kernel
+    deinterlacer but would have been impacting quality elsewhere.
+
+commit c62e2733944311f3a0adf17e718f5fb60b006991
 Author: John Poet <jpoet@mythtv.org>
-Date:   Wed Feb 28 17:02:07 2018 -0700
+Date:   Thu Jan 17 21:25:51 2019 -0700
 
-    ExternalStreamHandler::ProcessCommand: Stop looping after hitting io error limit.
+    Move BottomLine: Allow user to save horizontal adjustments as well.
+
+commit 07fc9359b383b97d84cc756825db9c0f97583d33
+Author: David Engel <dengel@mythtv.org>
+Date:   Wed Jan 16 23:36:51 2019 -0600
+
+    Fix issues with recent live TV channels commit.
     
-    (cherry picked from commit 03bc275cf9533c8fa9d767598815d720f7dc9efd)
-
-commit 77a0ff883d171d2e8a393b8ff9740d9b2477f4e1
-Author: John Poet <jpoet@mythtv.org>
-Date:   Sun Feb 25 19:28:57 2018 -0700
-
-    ExternIO::KillIfRunning: Fix QString arguments.
-    
-    (cherry picked from commit f9c9dd44b68c49530a7f84102483a22772b77a9c)
-
-commit b33705b0b4f30c5ebb88b2f25699bc16bf6b0a91
-Author: John Poet <jpoet@mythtv.org>
-Date:   Thu Feb 22 18:51:40 2018 -0700
-
-    Allow the SignalHandler's StreamHandler to be used by the Recorder.
-    
-    Currently only supported by the External Recorder, this allows the data seen
-    by the Signal Monitor to be used by the recorder.  This is helpful for
-    'slow' recorders, and the IPTV recorder would also benifit.
-    
-    (cherry picked from commit ed85b14c137f88d0e1da8c1488f460cf68f5d5af)
-
-commit 21d4e9714b6765041e669ee2bea416182ae2d3ce
-Author: John Poet <jpoet@mythtv.org>
-Date:   Thu Feb 22 17:29:24 2018 -0700
-
-    ExternalStreamHandler: Kill miss-behaving external recorders.
-    
-    (cherry picked from commit 002c7606372f1657fb4857ad708c055d28275cb7)
-
-commit 00355e29bb289532e0a592cfb04c0b08bd62541c
-Author: John Poet <jpoet@mythtv.org>
-Date:   Sat Feb 17 17:24:10 2018 -0700
-
-    ExternalRecorder: Allow use of the "External Channel Changer".
-    
-    (cherry picked from commit 23d74c719ac440e4c45bf01ae21b8cdd945af483)
-
-commit 0831e888842125c315906694c092a3012a1bdfd8
-Author: John Poet <jpoet@mythtv.org>
-Date:   Sat Feb 17 16:44:03 2018 -0700
-
-    ExternalRecorder: Allow user to specify arguments to the external recorder.
-    
-    FileDevice does not (currently) support arguments to the file, so just let
-    the user hand-type in the path.
-    
-    (cherry picked from commit dab5b5dd0cd971e82a2a50d4378a8e447cffad84)
-
-commit 0f4ac3e6539a4eee70ea660c1f361d8c253b7af9
-Author: John Poet <jpoet@mythtv.org>
-Date:   Sat Feb 17 16:32:16 2018 -0700
-
-    External Recorder: Allow user to specify the tunning timeout.
-    
-    (cherry picked from commit d092966109b9713d84e225da092f780d8f88c33f)
-
-commit f25203ca1827d8997e9ea8ebf6cc06de78cad2ab
-Author: Peter Bennett <pbennett@mythtv.org>
-Date:   Sat Feb 24 14:21:07 2018 -0500
-
-    settings: fix bug where updates are not taking immediate effect
-    
-    Change to video playback profile was not taking effect.
-    Solution: Clear out cached value when updating a setting.
-    
-    (cherry picked from commit e7173e38b8767571a973050512e4afc288785ec5)
+    (cherry picked from commit ccf39fad9213c80ce8b7b4fd79dfa0ff63c090ca)
