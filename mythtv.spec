@@ -213,6 +213,7 @@ BuildRequires:  libGLU-devel
 BuildRequires:  fftw-devel >= 3
 BuildRequires:  flac-devel >= 1.0.4
 BuildRequires:  lame-devel
+BuildRequires:  libbluray-devel
 BuildRequires:  libcdio-devel libcdio-paranoia-devel
 BuildRequires:  libsamplerate-devel
 BuildRequires:  libogg-devel
