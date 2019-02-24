@@ -1,8 +1,6 @@
-diff --git a/mythtv/programs/mythbackend/httpstatus.cpp b/mythtv/programs/mythbackend/httpstatus.cpp
-index 742b1b7623..4188bc4d13 100644
 --- a/mythtv/programs/mythbackend/httpstatus.cpp
 +++ b/mythtv/programs/mythbackend/httpstatus.cpp
-@@ -473,9 +473,9 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
+@@ -467,9 +467,9 @@ void HttpStatus::FillStatusXML( QDomDocu
          QDomElement group = pDoc->createElement("Group");
  
          group.setAttribute("id"   , fsID );
@@ -15,7 +13,7 @@ index 742b1b7623..4188bc4d13 100644
          group.setAttribute("dir"  , directory );
  
          if (fsID == "total")
-@@ -502,9 +502,9 @@ void HttpStatus::FillStatusXML( QDomDocument *pDoc )
+@@ -496,9 +496,9 @@ void HttpStatus::FillStatusXML( QDomDocu
              {
                  iExpirable = query.value(0).toLongLong();
              }
@@ -28,7 +26,7 @@ index 742b1b7623..4188bc4d13 100644
              total = group;
          }
          else
-@@ -1276,15 +1276,15 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, QDomElement info )
+@@ -1269,15 +1269,15 @@ int HttpStatus::PrintMachineInfo( QTextS
                  QLocale c(QLocale::C);
  
                  os << "            <li>Total Space: ";
@@ -47,7 +45,7 @@ index 742b1b7623..4188bc4d13 100644
                  os << sRep << "</li>\r\n";
  
                  if ((nLiveTV + nDeleted + nExpirable) > 0)
-@@ -1292,19 +1292,19 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, QDomElement info )
+@@ -1285,19 +1285,19 @@ int HttpStatus::PrintMachineInfo( QTextS
                      os << "            <li>Space Available "
                            "After Auto-expire: ";
                      sRep = c.toString(nFree + nLiveTV +
@@ -71,7 +69,7 @@ index 742b1b7623..4188bc4d13 100644
                      os << sRep << "</li>\r\n";
                      os << "              </ul>\r\n";
                      os << "            </li>\r\n";
-@@ -1360,15 +1360,15 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, QDomElement info )
+@@ -1353,15 +1353,15 @@ int HttpStatus::PrintMachineInfo( QTextS
                  QLocale c(QLocale::C);
  
                  os << "            <li>Total Space: ";

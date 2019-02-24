@@ -936,7 +936,6 @@ pushd mythtv
     --python=%{__python2}                       \
 %endif
     --enable-libmp3lame                         \
-    --enable-libtheora --enable-libvorbis       \
     --enable-libx264                            \
     --enable-libx265                            \
     --enable-libxvid                            \
