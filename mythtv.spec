@@ -1289,11 +1289,16 @@ exit 0
 %{_datadir}/mythtv/themes/
 
 %files libs
-%exclude %{_libdir}/libmythav*.so.*
-%exclude %{_libdir}/libmythpostproc.so.*
-%exclude %{_libdir}/libmythswscale.so.*
-%exclude %{_libdir}/libmythswresample.so.*
-%{_libdir}/*.so.*
+%{_libdir}/libmyth-30.so.*
+%{_libdir}/libmythavutil.so.*
+%{_libdir}/libmythbase-30.so.*
+%{_libdir}/libmythfreemheg-30.so.*
+%{_libdir}/libmythmetadata-30.so.*
+%{_libdir}/libmythprotoserver-30.so.*
+%{_libdir}/libmythservicecontracts-30.so.*
+%{_libdir}/libmythtv-30.so.*
+%{_libdir}/libmythui-30.so.*
+%{_libdir}/libmythupnp-30.so.*
 
 %files devel
 %{_includedir}/*
@@ -1304,7 +1309,6 @@ exit 0
 %files -n mythffmpeg
 %{_bindir}/mythffmpeg
 %{_bindir}/mythffprobe
-%{_bindir}/mythffserver
 %{_libdir}/libmythav*.so.*
 %{_libdir}/libmythpostproc.so.*
 %{_libdir}/libmythswscale.so.*
