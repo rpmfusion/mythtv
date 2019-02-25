@@ -167,8 +167,8 @@ Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 
+BuildRequires:  gcc-c++ lzo-devel
 BuildRequires:  perl-generators
-BuildRequires:  gcc-c++
 BuildRequires:  desktop-file-utils
 BuildRequires:  qt5-qtbase-devel >= 5.2
 BuildRequires:  qt5-qtscript-devel >= 5.2
