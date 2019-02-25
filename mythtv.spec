@@ -1235,7 +1235,6 @@ exit 0
 %{_bindir}/mythjobqueue
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
-%{_bindir}/mythhdhomerun_config
 %{_bindir}/optimize_mythdb
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
