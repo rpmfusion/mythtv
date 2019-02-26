@@ -276,6 +276,11 @@ BuildRequires:  libcrystalhd-devel
 BuildRequires:  systemd-devel
 %endif
 
+%if %{with mythgame}
+BuildRequires:  minizip-devel
+%endif
+
+
 # API Build Requirements
 
 %if %{with perl}
@@ -315,6 +320,7 @@ BuildRequires:  MySQL-python
 
 %if %{with mythgallery}
 BuildRequires:  libexif-devel >= 0.6.9
+BuildRequires:  dcraw
 %endif
 
 %if %{with mythgame}
@@ -778,6 +784,7 @@ links in a simple mythplugin.
 %package -n mythgallery
 Summary:   A gallery/slideshow module for MythTV
 Requires:  mythtv-frontend-api%{?_isa} = %{mythfeapiver}
+Requires:  dcraw
 
 %description -n mythgallery
 A gallery/slideshow module for MythTV.
