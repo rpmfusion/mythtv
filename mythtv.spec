@@ -277,7 +277,11 @@ BuildRequires:  systemd-devel
 %endif
 
 %if %{with mythgame}
+  %if 0%{?fedora} >= 30
+BuildRequires:  minizip-compat-devel
+  %else
 BuildRequires:  minizip-devel
+  %endif
 %endif
 
 
@@ -876,9 +880,7 @@ on demand content.
 ################################################################################
 
 %prep
-%setup -q -n %{name}-%{version}
-%patch0 -p1
-%patch1 -p1
+%autosetup -p1 -n %{name}-%{version}
 
 # Remove compiled python file
 #find -name *.pyc -exec rm -f {} \;
