@@ -73,7 +73,7 @@
 #
 Name:           mythtv
 Version:        30.0
-Release:        2%{?rel_string}%{?dist}
+Release:        3%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -250,6 +250,9 @@ BuildRequires:  kernel-headers
 BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
+
+# Tuner support
+BuildRequires:  hdhomerun-devel
 
 BuildRequires: %{py_prefix}-future
 %if 0%{?fedora} || 0%{?rhel} > 7
@@ -1459,6 +1462,9 @@ exit 0
 
 
 %changelog
+* Wed Mar 06 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-3.20190214gitb774c4140b
+- Add hdhomerun-devel as build requirement as it is no longer bundled.
+
 * Sat Mar 02 2019 Nicolas Chauvet <kwizart@gmail.com> - 30.0-2.20190214gitb774c4140b
 - Rebuilt for x265
 
