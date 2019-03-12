@@ -73,7 +73,7 @@
 #
 Name:           mythtv
 Version:        30.0
-Release:        3%{?rel_string}%{?dist}
+Release:        4%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1462,6 +1462,9 @@ exit 0
 
 
 %changelog
+* Tue Mar 12 2019 Sérgio Basto <sergio@serjux.com> - 30.0-4.20190214gitb774c4140b
+- Mass rebuild for x264
+
 * Wed Mar 06 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-3.20190214gitb774c4140b
 - Add hdhomerun-devel as build requirement as it is no longer bundled.
 
