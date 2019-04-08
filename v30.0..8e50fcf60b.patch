@@ -1,0 +1,2784 @@
+From 07fc9359b383b97d84cc756825db9c0f97583d33 Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Wed, 16 Jan 2019 23:36:51 -0600
+Subject: [PATCH 01/39] Fix issues with recent live TV channels commit.
+
+(cherry picked from commit ccf39fad9213c80ce8b7b4fd79dfa0ff63c090ca)
+---
+ mythtv/libs/libmythtv/channelutil.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/channelutil.cpp b/mythtv/libs/libmythtv/channelutil.cpp
+index 1c35d7ca4f0..dc2e412e7d6 100644
+--- a/mythtv/libs/libmythtv/channelutil.cpp
++++ b/mythtv/libs/libmythtv/channelutil.cpp
+@@ -2409,7 +2409,7 @@ ChannelInfoList ChannelUtil::LoadChannels(uint startIndex, uint count,
+         cond << "channel.sourceid = :SOURCEID ";
+ 
+     if (liveTVOnly)
+-        cond << "channel.livetvorder > 0 ";
++        cond << "capturecard.livetvorder > 0 ";
+ 
+     if (!cond.isEmpty())
+         sql += QString("WHERE %1").arg(cond.join("AND "));
+@@ -2429,7 +2429,7 @@ ChannelInfoList ChannelUtil::LoadChannels(uint startIndex, uint count,
+     }
+     else // kChanOrderByLiveTV
+     {
+-        sql += "ORDER BY callsign = :CALLSIGN1 AND channum = :CHANNUM, "
++        sql += "ORDER BY callsign = :CALLSIGN1 AND channum = :CHANNUM DESC, "
+                "         callsign = :CALLSIGN2 DESC, "
+                "         livetvorder, "
+                "         channel.recpriority DESC, "
+
+From c62e2733944311f3a0adf17e718f5fb60b006991 Mon Sep 17 00:00:00 2001
+From: John Poet <jpoet@mythtv.org>
+Date: Thu, 17 Jan 2019 21:25:51 -0700
+Subject: [PATCH 02/39] Move BottomLine: Allow user to save horizontal
+ adjustments as well.
+
+---
+ mythtv/libs/libmythtv/videooutwindow.cpp | 27 ++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/videooutwindow.cpp b/mythtv/libs/libmythtv/videooutwindow.cpp
+index a38a2786e53..2d7b2a34082 100644
+--- a/mythtv/libs/libmythtv/videooutwindow.cpp
++++ b/mythtv/libs/libmythtv/videooutwindow.cpp
+@@ -952,7 +952,9 @@ void VideoOutWindow::ToggleMoveBottomLine(void)
+ {
+     if (bottomline)
+     {
++        mz_move.setX(0);
+         mz_move.setY(0);
++        mz_scale_h = 1.0;
+         mz_scale_v = 1.0;
+         bottomline = false;
+     }
+@@ -960,11 +962,21 @@ void VideoOutWindow::ToggleMoveBottomLine(void)
+     {
+         const float zf = 0.02;
+ 
+-        int y = gCoreContext->GetNumSetting("OSDMoveBottomLine", 4);
++        int x = gCoreContext->GetNumSetting("OSDMoveXBottomLine", 0);
++        mz_move.setX(x);
++
++        int y = gCoreContext->GetNumSetting("OSDMoveYBottomLine", 5);
+         mz_move.setY(y);
+-        double z = static_cast<double>
+-                   (gCoreContext->GetNumSetting("OSDZoomBottomLine", 112)) / 100.0;
+-        mz_scale_v = snap(z, 1.0f, zf / 2);
++
++        double h = static_cast<double>
++                   (gCoreContext->GetNumSetting("OSDScaleHBottomLine", 100)) /
++                   100.0;
++        mz_scale_h = snap(h, 1.0f, zf / 2);
++
++        double v = static_cast<double>
++                   (gCoreContext->GetNumSetting("OSDScaleVBottomLine", 112)) /
++                   100.0;
++        mz_scale_v = snap(v, 1.0f, zf / 2);
+ 
+         bottomline = true;
+     }
+@@ -974,8 +986,11 @@ void VideoOutWindow::ToggleMoveBottomLine(void)
+ 
+ void VideoOutWindow::SaveBottomLine(void)
+ {
+-    gCoreContext->SaveSetting("OSDMoveBottomLine", GetMzMove().y());
+-    gCoreContext->SaveSetting("OSDZoomBottomLine", GetMzScaleV() * 100.0f);
++    gCoreContext->SaveSetting("OSDMoveXBottomLine", GetMzMove().x());
++    gCoreContext->SaveSetting("OSDMoveYBottomLine", GetMzMove().y());
++
++    gCoreContext->SaveSetting("OSDScaleHBottomLine", GetMzScaleH() * 100.0f);
++    gCoreContext->SaveSetting("OSDScaleVBottomLine", GetMzScaleV() * 100.0f);
+ }
+ 
+ QString VideoOutWindow::GetZoomString(void) const
+
+From 44fee4bc8a4a69b2ae2ee09fb6568f47d1f8269d Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Sat, 19 Jan 2019 15:15:15 +0000
+Subject: [PATCH 03/39] OpenGLVideo: Fix texture filtering
+
+- this was most apparent using the default OpenGL profile and the kernel
+deinterlacer but would have been impacting quality elsewhere.
+---
+ mythtv/libs/libmythtv/openglvideo.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/libs/libmythtv/openglvideo.cpp b/mythtv/libs/libmythtv/openglvideo.cpp
+index 8b572b8d767..484c3f9a667 100644
+--- a/mythtv/libs/libmythtv/openglvideo.cpp
++++ b/mythtv/libs/libmythtv/openglvideo.cpp
+@@ -297,6 +297,7 @@ void OpenGLVideo::CheckResize(bool deinterlacing, bool allow)
+     {
+         RemoveFilter(kGLFilterResize);
+         AddFilter(kGLFilterBicubic);
++        SetFiltering();
+         return;
+     }
+ 
+@@ -304,6 +305,7 @@ void OpenGLVideo::CheckResize(bool deinterlacing, bool allow)
+     {
+         RemoveFilter(kGLFilterBicubic);
+         AddFilter(kGLFilterResize);
++        SetFiltering();
+         return;
+     }
+ 
+
+From 57e69de0ba76333d9cb6a08c51cd0837c155d94d Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Mon, 21 Jan 2019 17:31:18 -0600
+Subject: [PATCH 04/39] Fix libass logging.
+
+Previously, logs from libass were accumulated until one happened to
+end with a newline and then all were printed without newlines between
+them.  Now, each log is printed as is as they are received.
+
+(cherry picked from commit 7fe5013c90e17cfaac79f343097001d7d248dc35)
+---
+ mythtv/libs/libmythtv/subtitlescreen.cpp | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/subtitlescreen.cpp b/mythtv/libs/libmythtv/subtitlescreen.cpp
+index c210b28efd9..6a48414c036 100644
+--- a/mythtv/libs/libmythtv/subtitlescreen.cpp
++++ b/mythtv/libs/libmythtv/subtitlescreen.cpp
+@@ -2335,9 +2335,6 @@ void SubtitleScreen::AddScaledImage(QImage &img, QRect &pos)
+ #ifdef USING_LIBASS
+ static void myth_libass_log(int level, const char *fmt, va_list vl, void */*ctx*/)
+ {
+-    static QString full_line("libass:");
+-    static const int msg_len = 255;
+-    static QMutex string_lock;
+     uint64_t verbose_mask = VB_GENERAL;
+     LogLevel_t verbose_level = LOG_INFO;
+ 
+@@ -2366,25 +2363,21 @@ static void myth_libass_log(int level, const char *fmt, va_list vl, void */*ctx*
+     if (!VERBOSE_LEVEL_CHECK(verbose_mask, verbose_level))
+         return;
+ 
++    static QMutex string_lock;
+     string_lock.lock();
+ 
+-    char str[msg_len+1];
+-    int bytes = vsnprintf(str, msg_len+1, fmt, vl);
++    char str[1024];
++    int bytes = vsnprintf(str, sizeof str, fmt, vl);
+     // check for truncated messages and fix them
+-    if (bytes > msg_len)
++    int truncated = bytes - ((sizeof str)-1);
++    if (truncated > 0)
+     {
+         LOG(VB_GENERAL, LOG_ERR,
+             QString("libASS log output truncated %1 of %2 bytes written")
+-                .arg(msg_len).arg(bytes));
+-        str[msg_len-1] = '\n';
++            .arg(truncated).arg(bytes));
+     }
+ 
+-    full_line += QString(str);
+-    if (full_line.endsWith("\n"))
+-    {
+-        LOG(verbose_mask, verbose_level, full_line.trimmed());
+-        full_line.truncate(0);
+-    }
++    LOG(verbose_mask, verbose_level, QString("libass: %s").arg(str));
+     string_lock.unlock();
+ }
+ 
+
+From 18c9bc9c35f7cb58a8b67d7d53ed73a71aaf4994 Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Mon, 21 Jan 2019 17:59:58 -0600
+Subject: [PATCH 05/39] Work around to get A/V subtitles working on Android.
+
+fontconfig doesn't yet work for us on Android.  For the time being,
+more explicitly set a font we know should exist.  This was adapted
+from VLC master as of 2019-01-21.
+
+(cherry picked from commit a3d7b79b445457d027710dd6509155753a1aa3a5)
+---
+ mythtv/libs/libmythtv/subtitlescreen.cpp | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/subtitlescreen.cpp b/mythtv/libs/libmythtv/subtitlescreen.cpp
+index 6a48414c036..f0322fe1ff8 100644
+--- a/mythtv/libs/libmythtv/subtitlescreen.cpp
++++ b/mythtv/libs/libmythtv/subtitlescreen.cpp
+@@ -2405,7 +2405,17 @@ bool SubtitleScreen::InitialiseAssLibrary(void)
+         if (!m_assRenderer)
+             return false;
+ 
+-        ass_set_fonts(m_assRenderer, nullptr, "sans-serif", 1, nullptr, 1);
++#ifdef Q_OS_ANDROID
++        // fontconfig doesn't yet work for us on Android.  For the
++        // time being, more explicitly set a font we know should
++        // exist.  This was adapted from VLC master as of 2019-01-21.
++        const char *psz_font = "/system/fonts/DroidSans.ttf";
++        const char *psz_font_family = "Droid Sans";
++#else
++        const char *psz_font = nullptr;
++        const char *psz_font_family = "sans-serif";
++#endif
++        ass_set_fonts(m_assRenderer, psz_font, psz_font_family, 1, nullptr, 1);
+         ass_set_hinting(m_assRenderer, ASS_HINTING_LIGHT);
+         LOG(VB_PLAYBACK, LOG_INFO, LOC + "Initialised libass renderer.");
+     }
+
+From 6b5490bfab0301c70ab79c313cf6b8369ed3507a Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Mon, 21 Jan 2019 20:55:52 -0600
+Subject: [PATCH 06/39] Cache FileSystemInfo data to avoid unwanted blocking.
+
+Change the MainServer to cache updated, FileSystemInfo data and
+optionally return the cached data when requested.  The Scheduler uses
+this data to decide where to put a recording right before it starts.
+Previously, an unresponsive, remote filesystem could block the
+Scheduler for up to several minutes.  Now, the Scheduler always uses
+the cached data to avoid getting blocked.  The AutoExpirer does not
+and should not use the cached data so that the data gets updated
+periodically.
+
+(cherry picked from commit df607e9bfcb5cc0798989b2e983e0071cb973ae6)
+---
+ mythtv/programs/mythbackend/autoexpire.cpp | 14 ++++++++++----
+ mythtv/programs/mythbackend/mainserver.cpp | 15 ++++++++++++++-
+ mythtv/programs/mythbackend/mainserver.h   |  5 ++++-
+ mythtv/programs/mythbackend/scheduler.cpp  | 22 ++++++++--------------
+ mythtv/programs/mythbackend/scheduler.h    |  4 ++--
+ 5 files changed, 38 insertions(+), 22 deletions(-)
+
+diff --git a/mythtv/programs/mythbackend/autoexpire.cpp b/mythtv/programs/mythbackend/autoexpire.cpp
+index e05ab7cbbe5..415fa1ae25a 100644
+--- a/mythtv/programs/mythbackend/autoexpire.cpp
++++ b/mythtv/programs/mythbackend/autoexpire.cpp
+@@ -141,7 +141,16 @@ void AutoExpire::CalcParams()
+ 
+     instance_lock.lock();
+     if (main_server)
+-        main_server->GetFilesystemInfos(fsInfos);
++    {
++        // The scheduler relies on something forcing the mainserver
++        // fsinfos cache to get updated periodically.  Currently, that
++        // is done here.  Don't remove or change this invocation
++        // without handling that issue too.  It is done this way
++        // because the scheduler thread can't afford to be blocked by
++        // an unresponsive, remote filesystem and the autoexpirer
++        // thrad can.
++        main_server->GetFilesystemInfos(fsInfos, false);
++    }
+     instance_lock.unlock();
+ 
+     if (fsInfos.empty())
+@@ -414,9 +423,6 @@ void AutoExpire::ExpireRecordings(void)
+ 
+     LOG(VB_FILE, LOG_INFO, LOC + "ExpireRecordings()");
+ 
+-    if (main_server)
+-        main_server->GetFilesystemInfos(fsInfos);
+-
+     if (fsInfos.empty())
+     {
+         LOG(VB_GENERAL, LOG_ERR, LOC + "Filesystem Info cache is empty, unable "
+diff --git a/mythtv/programs/mythbackend/mainserver.cpp b/mythtv/programs/mythbackend/mainserver.cpp
+index b6ba9bb9c9a..982ad29f004 100644
+--- a/mythtv/programs/mythbackend/mainserver.cpp
++++ b/mythtv/programs/mythbackend/mainserver.cpp
+@@ -5341,8 +5341,17 @@ void MainServer::BackendQueryDiskSpace(QStringList &strlist, bool consolidated,
+     }
+ }
+ 
+-void MainServer::GetFilesystemInfos(QList<FileSystemInfo> &fsInfos)
++void MainServer::GetFilesystemInfos(QList<FileSystemInfo> &fsInfos,
++                                    bool useCache)
+ {
++    // Return cached information if requested.
++    if (useCache)
++    {
++        QMutexLocker locker(&fsInfosCacheLock);
++        fsInfos = fsInfosCache;
++        return;
++    }
++
+     QStringList strlist;
+     FileSystemInfo fsInfo;
+ 
+@@ -5411,6 +5420,10 @@ void MainServer::GetFilesystemInfos(QList<FileSystemInfo> &fsInfos)
+         LOG(VB_FILE | VB_SCHEDULE, LOG_INFO, LOC +
+             "--- GetFilesystemInfos directory list end ---");
+     }
++
++    // Save these results to the cache.
++    QMutexLocker locker(&fsInfosCacheLock);
++    fsInfosCache = fsInfos;
+ }
+ 
+ void MainServer::HandleMoveFile(PlaybackSock *pbs, const QString &storagegroup,
+diff --git a/mythtv/programs/mythbackend/mainserver.h b/mythtv/programs/mythbackend/mainserver.h
+index 4c6bc0b4b59..f32fe5fa6a6 100644
+--- a/mythtv/programs/mythbackend/mainserver.h
++++ b/mythtv/programs/mythbackend/mainserver.h
+@@ -143,7 +143,8 @@ class MainServer : public QObject, public MythSocketCBs
+     size_t GetCurrentMaxBitrate(void);
+     void BackendQueryDiskSpace(QStringList &strlist, bool consolidated,
+                                bool allHosts);
+-    void GetFilesystemInfos(QList<FileSystemInfo> &fsInfos);
++    void GetFilesystemInfos(QList<FileSystemInfo> &fsInfos,
++                            bool useCache=true);
+ 
+     int GetExitCode() const { return m_exitCode; }
+ 
+@@ -352,6 +353,8 @@ class MainServer : public QObject, public MythSocketCBs
+ 
+     QMap<QString, int> fsIDcache;
+     QMutex fsIDcacheLock;
++    QList<FileSystemInfo> fsInfosCache;
++    QMutex fsInfosCacheLock;
+ 
+     QMutex                     m_downloadURLsLock;
+     QMap<QString, QString>     m_downloadURLs;
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index aaacb872054..5368958fda6 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -96,8 +96,6 @@ Scheduler::Scheduler(bool runthread, QMap<int, EncoderLink *> *tvList,
+ 
+     InitInputInfoMap();
+ 
+-    fsInfoCacheFillTime = MythDate::current().addSecs(-1000);
+-
+     if (doRun)
+     {
+         ProgramInfo::CheckProgramIDAuthorities();
+@@ -156,6 +154,9 @@ void Scheduler::Stop(void)
+ 
+ void Scheduler::SetMainServer(MainServer *ms)
+ {
++    // Make sure we have a good, fsinfo cache before setting
++    // m_mainServer.
++    FillDirectoryInfoCache(ms, false);
+     m_mainServer = ms;
+ }
+ 
+@@ -2474,8 +2475,6 @@ bool Scheduler::HandleReschedule(void)
+                 static_cast<double>(placeTime));
+     LOG(VB_GENERAL, LOG_INFO, msg);
+ 
+-    fsInfoCacheFillTime = MythDate::current().addSecs(-1000);
+-
+     // Write changed entries to oldrecorded.
+     RecIter it = reclist.begin();
+     for ( ; it != reclist.end(); ++it)
+@@ -5152,7 +5151,7 @@ int Scheduler::FillRecordingDir(
+             gCoreContext->GetNumSetting("SGweightRemoteStarting", 0);
+     int maxOverlap = gCoreContext->GetNumSetting("SGmaxRecOverlapMins", 3) * 60;
+ 
+-    FillDirectoryInfoCache();
++    FillDirectoryInfoCache(m_mainServer, true);
+ 
+     LOG(VB_FILE | VB_SCHEDULE, LOG_INFO, LOC +
+         "FillRecordingDir: Calculating initial FS Weights.");
+@@ -5587,18 +5586,15 @@ int Scheduler::FillRecordingDir(
+     return fsID;
+ }
+ 
+-void Scheduler::FillDirectoryInfoCache(bool force)
++void Scheduler::FillDirectoryInfoCache(MainServer *mainServer,
++                                       bool useMainServerCache)
+ {
+-    if ((!force) &&
+-        (fsInfoCacheFillTime > MythDate::current().addSecs(-180)))
+-        return;
+-
+     QList<FileSystemInfo> fsInfos;
+ 
+     fsInfoCache.clear();
+ 
+-    if (m_mainServer)
+-        m_mainServer->GetFilesystemInfos(fsInfos);
++    if (mainServer)
++        mainServer->GetFilesystemInfos(fsInfos, useMainServerCache);
+ 
+     QMap <int, bool> fsMap;
+     QList<FileSystemInfo>::iterator it1;
+@@ -5611,8 +5607,6 @@ void Scheduler::FillDirectoryInfoCache(bool force)
+     LOG(VB_FILE, LOG_INFO, LOC +
+         QString("FillDirectoryInfoCache: found %1 unique filesystems")
+             .arg(fsMap.size()));
+-
+-    fsInfoCacheFillTime = MythDate::current();
+ }
+ 
+ void Scheduler::SchedLiveTV(void)
+diff --git a/mythtv/programs/mythbackend/scheduler.h b/mythtv/programs/mythbackend/scheduler.h
+index b583161483f..5fd1d2fee74 100644
+--- a/mythtv/programs/mythbackend/scheduler.h
++++ b/mythtv/programs/mythbackend/scheduler.h
+@@ -201,7 +201,8 @@ class Scheduler : public MThread, public MythScheduler
+                          uint cardid,
+                          QString &recording_dir,
+                          const RecList &reclist);
+-    void FillDirectoryInfoCache(bool force = false);
++    void FillDirectoryInfoCache(MainServer *mainServer,
++                                bool useMainServerCache);
+ 
+     void OldRecordedFixups(void);
+     void ResetDuplicates(uint recordid, uint findid, const QString &title,
+@@ -273,7 +274,6 @@ class Scheduler : public MThread, public MythScheduler
+     bool m_isShuttingDown;
+     MSqlQueryInfo dbConn;
+ 
+-    QDateTime fsInfoCacheFillTime;
+     QMap<QString, FileSystemInfo> fsInfoCache;
+ 
+     int error;
+
+From 2b8211e8e5d1cd512f96dd31f7cecffc353c19ba Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Wed, 23 Jan 2019 17:12:11 -0600
+Subject: [PATCH 07/39] Simpify previous FileSystemInfo caching change.
+
+(cherry picked from commit ab65230280cbeda555b0b25d79933d27a823540b)
+---
+ mythtv/programs/mythbackend/mainserver.cpp |  6 ++++++
+ mythtv/programs/mythbackend/scheduler.cpp  | 12 ++++--------
+ mythtv/programs/mythbackend/scheduler.h    |  3 +--
+ 3 files changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/mythtv/programs/mythbackend/mainserver.cpp b/mythtv/programs/mythbackend/mainserver.cpp
+index 982ad29f004..95243be61c9 100644
+--- a/mythtv/programs/mythbackend/mainserver.cpp
++++ b/mythtv/programs/mythbackend/mainserver.cpp
+@@ -323,7 +323,13 @@ MainServer::MainServer(bool master, int port,
+     deferredDeleteTimer->start(30 * 1000);
+ 
+     if (sched)
++    {
++        // Make sure we have a good, fsinfo cache before setting
++        // mainServer in the scheduler.
++        QList<FileSystemInfo> fsInfos;
++        GetFilesystemInfos(fsInfos, false);
+         sched->SetMainServer(this);
++    }
+     if (expirer)
+         expirer->SetMainServer(this);
+ 
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index 5368958fda6..16cceeeb641 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -154,9 +154,6 @@ void Scheduler::Stop(void)
+ 
+ void Scheduler::SetMainServer(MainServer *ms)
+ {
+-    // Make sure we have a good, fsinfo cache before setting
+-    // m_mainServer.
+-    FillDirectoryInfoCache(ms, false);
+     m_mainServer = ms;
+ }
+ 
+@@ -5151,7 +5148,7 @@ int Scheduler::FillRecordingDir(
+             gCoreContext->GetNumSetting("SGweightRemoteStarting", 0);
+     int maxOverlap = gCoreContext->GetNumSetting("SGmaxRecOverlapMins", 3) * 60;
+ 
+-    FillDirectoryInfoCache(m_mainServer, true);
++    FillDirectoryInfoCache();
+ 
+     LOG(VB_FILE | VB_SCHEDULE, LOG_INFO, LOC +
+         "FillRecordingDir: Calculating initial FS Weights.");
+@@ -5586,15 +5583,14 @@ int Scheduler::FillRecordingDir(
+     return fsID;
+ }
+ 
+-void Scheduler::FillDirectoryInfoCache(MainServer *mainServer,
+-                                       bool useMainServerCache)
++void Scheduler::FillDirectoryInfoCache(void)
+ {
+     QList<FileSystemInfo> fsInfos;
+ 
+     fsInfoCache.clear();
+ 
+-    if (mainServer)
+-        mainServer->GetFilesystemInfos(fsInfos, useMainServerCache);
++    if (m_mainServer)
++        m_mainServer->GetFilesystemInfos(fsInfos, true);
+ 
+     QMap <int, bool> fsMap;
+     QList<FileSystemInfo>::iterator it1;
+diff --git a/mythtv/programs/mythbackend/scheduler.h b/mythtv/programs/mythbackend/scheduler.h
+index 5fd1d2fee74..db956207422 100644
+--- a/mythtv/programs/mythbackend/scheduler.h
++++ b/mythtv/programs/mythbackend/scheduler.h
+@@ -201,8 +201,7 @@ class Scheduler : public MThread, public MythScheduler
+                          uint cardid,
+                          QString &recording_dir,
+                          const RecList &reclist);
+-    void FillDirectoryInfoCache(MainServer *mainServer,
+-                                bool useMainServerCache);
++    void FillDirectoryInfoCache(void);
+ 
+     void OldRecordedFixups(void);
+     void ResetDuplicates(uint recordid, uint findid, const QString &title,
+
+From 39794c9b6cfa83a03d0f8b0589f67924a6d0f5a0 Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Thu, 24 Jan 2019 23:39:20 -0600
+Subject: [PATCH 08/39] Don't double print the log timestamp and level on
+ Android.
+
+(cherry picked from commit 86ad64b4ef6a044c3e5c439c06cbd2cb3ba5dcb6)
+---
+ mythtv/libs/libmythbase/logging.cpp | 38 ++++++++++++++++++++++++++---
+ 1 file changed, 35 insertions(+), 3 deletions(-)
+
+diff --git a/mythtv/libs/libmythbase/logging.cpp b/mythtv/libs/libmythbase/logging.cpp
+index 92de0eb539b..e127f40ae4d 100644
+--- a/mythtv/libs/libmythbase/logging.cpp
++++ b/mythtv/libs/libmythbase/logging.cpp
+@@ -428,6 +428,7 @@ bool LoggerThread::logConsole(LoggingItem *item)
+ 
+     item->IncrRef();
+ 
++#ifndef Q_OS_ANDROID
+     if (item->m_type & kStandardIO)
+         snprintf( line, MAX_STRING_LENGTH, "%s", item->m_message );
+     else
+@@ -462,11 +463,42 @@ bool LoggerThread::logConsole(LoggingItem *item)
+ #endif
+     }
+ 
+-#ifdef Q_OS_ANDROID
+-    __android_log_print(ANDROID_LOG_INFO, "mfe", line);
+-#else
+     int result = write( 1, line, strlen(line) );
+     (void)result;
++
++#else // Q_OS_ANDROID
++
++    android_LogPriority aprio;
++    switch (item->m_level)
++    {
++    case LOG_EMERG:
++        aprio = ANDROID_LOG_FATAL;
++    case LOG_ALERT:
++    case LOG_CRIT:
++    case LOG_ERR:
++        aprio = ANDROID_LOG_ERROR;
++        break;
++    case LOG_WARNING:
++        aprio = ANDROID_LOG_WARN;
++        break;
++    case LOG_NOTICE:
++    case LOG_INFO:
++        aprio = ANDROID_LOG_INFO;
++        break;
++    case LOG_DEBUG:
++        aprio = ANDROID_LOG_DEBUG;
++        break;
++    case LOG_UNKNOWN:
++    default:
++        aprio = ANDROID_LOG_UNKNOWN;
++        break;
++    }
++#if CONFIG_DEBUGTYPE
++    __android_log_print(aprio, "mfe", "%s:%d:%s  %s", item->m_file,
++                        item->m_line, item->m_function, item->m_message);
++#else
++    __android_log_print(aprio, "mfe", "%s", item->m_message);
++#endif
+ #endif
+ 
+     item->DecrRef();
+
+From 4fd4d574c6dacba22233d3eb3e6c9c4564a3c7ac Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Fri, 25 Jan 2019 10:09:50 -0600
+Subject: [PATCH 09/39] Restore (cached) call to GetFilesystemInfos() in
+ AutoExpire.
+
+A previous change removed it because it was believed to be redundant.
+It actually is redundant in that it doesn't need to be called again so
+soon.  However, a logic bug left the needed filesystem information
+empty.  Rather than attempt to thread safely re-use the data completely
+within AutoExpire, restore the call to GetFilesystemInfos() but used
+the previously cached results.
+
+(cherry picked from commit 193eb990ceb30d6cd69c57972be7f9d380d1368e)
+---
+ mythtv/programs/mythbackend/autoexpire.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/mythtv/programs/mythbackend/autoexpire.cpp b/mythtv/programs/mythbackend/autoexpire.cpp
+index 415fa1ae25a..52463638a55 100644
+--- a/mythtv/programs/mythbackend/autoexpire.cpp
++++ b/mythtv/programs/mythbackend/autoexpire.cpp
+@@ -423,6 +423,9 @@ void AutoExpire::ExpireRecordings(void)
+ 
+     LOG(VB_FILE, LOG_INFO, LOC + "ExpireRecordings()");
+ 
++    if (main_server)
++        main_server->GetFilesystemInfos(fsInfos, true);
++
+     if (fsInfos.empty())
+     {
+         LOG(VB_GENERAL, LOG_ERR, LOC + "Filesystem Info cache is empty, unable "
+
+From b06510032478ec887fd2491b5f9a5dad415c30f0 Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Sat, 26 Jan 2019 11:28:54 -0600
+Subject: [PATCH 10/39] Don't start RingBuffer thread if it's not open.
+
+The RingBuffer thread will exit immediately if the underlying file
+isn't open.  That can cause the thread waiting for it to start to
+deadlock.
+
+(cherry picked from commit 425386b93f3df1ec6872ef845e521c0546e70c61)
+---
+ mythtv/programs/mythbackend/filetransfer.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/programs/mythbackend/filetransfer.cpp b/mythtv/programs/mythbackend/filetransfer.cpp
+index 29b226f6112..4a879f22341 100644
+--- a/mythtv/programs/mythbackend/filetransfer.cpp
++++ b/mythtv/programs/mythbackend/filetransfer.cpp
+@@ -19,7 +19,7 @@ FileTransfer::FileTransfer(QString &filename, MythSocket *remote,
+ {
+     pginfo = new ProgramInfo(filename);
+     pginfo->MarkAsInUse(true, kFileTransferInUseID);
+-    if (rbuffer)
++    if (rbuffer && rbuffer->IsOpen())
+         rbuffer->Start();
+ }
+ 
+
+From f11c5aba6ed1e88c22f1b3b6828fc085e1699b97 Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Sat, 26 Jan 2019 11:48:15 -0600
+Subject: [PATCH 11/39] Tweak some VB_FILE log levels to make it more useful at
+ loglevel INTO.
+
+(cherry picked from commit 85dc2a48dff419fe78cc6b9371bc46333247d06e)
+---
+ mythtv/libs/libmythbase/storagegroup.cpp | 2 +-
+ mythtv/libs/libmythtv/ringbuffer.cpp     | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythbase/storagegroup.cpp b/mythtv/libs/libmythbase/storagegroup.cpp
+index 1349f00f7fe..15ff64c4680 100644
+--- a/mythtv/libs/libmythbase/storagegroup.cpp
++++ b/mythtv/libs/libmythbase/storagegroup.cpp
+@@ -615,7 +615,7 @@ QString StorageGroup::FindFile(const QString &filename)
+     if (!recDir.isEmpty())
+     {
+         result = recDir + "/" + filename;
+-        LOG(VB_FILE, LOG_DEBUG, LOC +
++        LOG(VB_FILE, LOG_INFO, LOC +
+             QString("FindFile: Found '%1'") .arg(result));
+     }
+     else
+diff --git a/mythtv/libs/libmythtv/ringbuffer.cpp b/mythtv/libs/libmythtv/ringbuffer.cpp
+index bd8aa4f18ed..36ad31099b0 100644
+--- a/mythtv/libs/libmythtv/ringbuffer.cpp
++++ b/mythtv/libs/libmythtv/ringbuffer.cpp
+@@ -1085,7 +1085,7 @@ void RingBuffer::run(void)
+             uint64_t bps = !sr_elapsed ? 1000000001 :
+                            (uint64_t)(((double)read_return * 8000.0) /
+                                       (double)sr_elapsed);
+-            LOG(VB_FILE, LOG_INFO, LOC +
++            LOG(VB_FILE, LOG_DEBUG, LOC +
+                 QString("safe_read(...@%1, %2) -> %3, took %4 ms %5 avg %6 ms")
+                     .arg(rbwposcopy).arg(totfree).arg(read_return)
+                     .arg(sr_elapsed)
+@@ -1271,6 +1271,8 @@ void RingBuffer::run(void)
+     rbrlock.unlock();
+     rwlock.unlock();
+ 
++    LOG(VB_FILE, LOG_INFO, LOC + QString("Exiting readahead thread"));
++
+     RunEpilog();
+ }
+ 
+
+From e5672657dce54a8059a2437f5a4899dcc07d3d10 Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Fri, 1 Feb 2019 18:37:43 -0600
+Subject: [PATCH 12/39] Completely move GetPlaybackURL() to libmythprotoserver.
+
+It was copied previously but not completely marked as static in both
+locations.  This change completely removes it from the old location so
+that only the new location is used.
+
+(cherry picked from commit 692219f9c9544f0344b69cb3ce053cadd948fa16)
+---
+ .../requesthandler/fileserverutil.cpp         |  4 +-
+ mythtv/programs/mythbackend/autoexpire.cpp    |  2 +-
+ mythtv/programs/mythbackend/backendutil.cpp   | 47 -------------------
+ mythtv/programs/mythbackend/backendutil.h     | 22 ---------
+ mythtv/programs/mythbackend/encoderlink.cpp   |  2 +-
+ mythtv/programs/mythbackend/httpconfig.cpp    |  1 -
+ mythtv/programs/mythbackend/mainserver.cpp    |  2 +-
+ mythtv/programs/mythbackend/mythbackend.pro   |  3 +-
+ mythtv/programs/mythbackend/scheduler.cpp     |  1 -
+ .../programs/mythbackend/services/content.cpp |  2 +-
+ 10 files changed, 7 insertions(+), 79 deletions(-)
+ delete mode 100644 mythtv/programs/mythbackend/backendutil.cpp
+ delete mode 100644 mythtv/programs/mythbackend/backendutil.h
+
+diff --git a/mythtv/libs/libmythprotoserver/requesthandler/fileserverutil.cpp b/mythtv/libs/libmythprotoserver/requesthandler/fileserverutil.cpp
+index 3e990f019db..99ed5507318 100644
+--- a/mythtv/libs/libmythprotoserver/requesthandler/fileserverutil.cpp
++++ b/mythtv/libs/libmythprotoserver/requesthandler/fileserverutil.cpp
+@@ -39,11 +39,11 @@ void DeleteHandler::Close(void)
+     m_fd = -1;
+ }
+ 
+-QMap <QString, QString> recordingPathCache;
++static QMap <QString, QString> recordingPathCache;
++static QMutex recordingPathLock;
+ 
+ QString GetPlaybackURL(ProgramInfo *pginfo, bool storePath)
+ {
+-    static QMutex recordingPathLock;
+     QString result = "";
+     QMutexLocker locker(&recordingPathLock);
+     QString cacheKey = QString("%1:%2").arg(pginfo->GetChanID())
+diff --git a/mythtv/programs/mythbackend/autoexpire.cpp b/mythtv/programs/mythbackend/autoexpire.cpp
+index 52463638a55..b6e16f8e8e8 100644
+--- a/mythtv/programs/mythbackend/autoexpire.cpp
++++ b/mythtv/programs/mythbackend/autoexpire.cpp
+@@ -36,7 +36,7 @@ using namespace std;
+ #include "remoteutil.h"
+ #include "remoteencoder.h"
+ #include "encoderlink.h"
+-#include "backendutil.h"
++#include "requesthandler/fileserverutil.h"
+ #include "mainserver.h"
+ #include "compat.h"
+ #include "mythlogging.h"
+diff --git a/mythtv/programs/mythbackend/backendutil.cpp b/mythtv/programs/mythbackend/backendutil.cpp
+deleted file mode 100644
+index 7ad22dae16b..00000000000
+--- a/mythtv/programs/mythbackend/backendutil.cpp
++++ /dev/null
+@@ -1,47 +0,0 @@
+-
+-#include <cstdlib> // for llabs
+-
+-#include "mythconfig.h"
+-#if CONFIG_DARWIN || defined(__FreeBSD__)
+-#include <sys/param.h>
+-#include <sys/mount.h>
+-#elif __linux__
+-#include <sys/vfs.h>
+-#endif
+-
+-#include <QMutex>
+-#include <QFile>
+-#include <QMap>
+-
+-#include "backendutil.h"
+-#include "programinfo.h"
+-
+-QMutex recordingPathLock;
+-QMap <QString, QString> recordingPathCache;
+-
+-QString GetPlaybackURL(ProgramInfo *pginfo, bool storePath)
+-{
+-    QString result = "";
+-    QMutexLocker locker(&recordingPathLock);
+-    QString cacheKey = QString("%1:%2").arg(pginfo->GetChanID())
+-        .arg(pginfo->GetRecordingStartTime(MythDate::ISODate));
+-    if ((recordingPathCache.contains(cacheKey)) &&
+-        (QFile::exists(recordingPathCache[cacheKey])))
+-    {
+-        result = recordingPathCache[cacheKey];
+-        if (!storePath)
+-            recordingPathCache.remove(cacheKey);
+-    }
+-    else
+-    {
+-        locker.unlock();
+-        result = pginfo->GetPlaybackURL(false, true);
+-        locker.relock();
+-        if (storePath && result.startsWith("/"))
+-            recordingPathCache[cacheKey] = result;
+-    }
+-
+-    return result;
+-}
+-
+-/* vim: set expandtab tabstop=4 shiftwidth=4: */
+diff --git a/mythtv/programs/mythbackend/backendutil.h b/mythtv/programs/mythbackend/backendutil.h
+deleted file mode 100644
+index c43f13953c2..00000000000
+--- a/mythtv/programs/mythbackend/backendutil.h
++++ /dev/null
+@@ -1,22 +0,0 @@
+-#ifndef _BACKENDUTIL_H
+-#define _BACKENDUTIL_H
+-
+-#include <vector>
+-using namespace std;
+-
+-#include <QMap>
+-
+-#include "remoteutil.h"
+-
+-class QStringList;
+-class EncoderLink;
+-
+-void BackendQueryDiskSpace(QStringList &strlist,
+-                           QMap <int, EncoderLink *> *encoderList,
+-                           bool consolidated = false, bool allHosts = false);
+-
+-QString GetPlaybackURL(ProgramInfo *pginfo, bool storePath = true);
+-
+-#endif
+-
+-/* vim: set expandtab tabstop=4 shiftwidth=4: */
+diff --git a/mythtv/programs/mythbackend/encoderlink.cpp b/mythtv/programs/mythbackend/encoderlink.cpp
+index d76301dcbc6..422ce90f35e 100644
+--- a/mythtv/programs/mythbackend/encoderlink.cpp
++++ b/mythtv/programs/mythbackend/encoderlink.cpp
+@@ -11,7 +11,7 @@
+ #include "playbacksock.h"
+ #include "tv_rec.h"
+ #include "mythdate.h"
+-#include "backendutil.h"
++#include "requesthandler/fileserverutil.h"
+ #include "compat.h"
+ #include "referencecounter.h"
+ #include "inputinfo.h"                  // for InputInfo
+diff --git a/mythtv/programs/mythbackend/httpconfig.cpp b/mythtv/programs/mythbackend/httpconfig.cpp
+index 48ccff8eb76..24ea02274e0 100644
+--- a/mythtv/programs/mythbackend/httpconfig.cpp
++++ b/mythtv/programs/mythbackend/httpconfig.cpp
+@@ -7,7 +7,6 @@
+ 
+ // MythTV headers
+ #include "httpconfig.h"
+-#include "backendutil.h"
+ #include "mythcontext.h"
+ #include "mythdb.h"
+ #include "mythdirs.h"
+diff --git a/mythtv/programs/mythbackend/mainserver.cpp b/mythtv/programs/mythbackend/mainserver.cpp
+index 95243be61c9..6bd01606b3b 100644
+--- a/mythtv/programs/mythbackend/mainserver.cpp
++++ b/mythtv/programs/mythbackend/mainserver.cpp
+@@ -54,7 +54,7 @@ using namespace std;
+ #include "server.h"
+ #include "mthread.h"
+ #include "scheduler.h"
+-#include "backendutil.h"
++#include "requesthandler/fileserverutil.h"
+ #include "programinfo.h"
+ #include "mythtimezone.h"
+ #include "recordinginfo.h"
+diff --git a/mythtv/programs/mythbackend/mythbackend.pro b/mythtv/programs/mythbackend/mythbackend.pro
+index 6d6e1083c46..9dde76944dc 100644
+--- a/mythtv/programs/mythbackend/mythbackend.pro
++++ b/mythtv/programs/mythbackend/mythbackend.pro
+@@ -27,7 +27,6 @@ QMAKE_CLEAN += $(TARGET)
+ # Input
+ HEADERS += autoexpire.h encoderlink.h filetransfer.h httpstatus.h mainserver.h
+ HEADERS += playbacksock.h scheduler.h server.h backendhousekeeper.h
+-HEADERS += backendutil.h
+ HEADERS += upnpcdstv.h upnpcdsmusic.h upnpcdsvideo.h mediaserver.h
+ HEADERS += internetContent.h main_helpers.h backendcontext.h
+ HEADERS += httpconfig.h mythsettings.h commandlineparser.h
+@@ -45,7 +44,7 @@ HEADERS += services/capture.h services/image.h services/music.h
+ 
+ SOURCES += autoexpire.cpp encoderlink.cpp filetransfer.cpp httpstatus.cpp
+ SOURCES += main.cpp mainserver.cpp playbacksock.cpp scheduler.cpp server.cpp
+-SOURCES += backendhousekeeper.cpp backendutil.cpp
++SOURCES += backendhousekeeper.cpp
+ SOURCES += upnpcdstv.cpp upnpcdsmusic.cpp upnpcdsvideo.cpp mediaserver.cpp
+ SOURCES += internetContent.cpp main_helpers.cpp backendcontext.cpp
+ SOURCES += httpconfig.cpp mythsettings.cpp commandlineparser.cpp
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index 16cceeeb641..29aa293a24e 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -33,7 +33,6 @@ using namespace std;
+ #include "encoderlink.h"
+ #include "mainserver.h"
+ #include "remoteutil.h"
+-#include "backendutil.h"
+ #include "mythdate.h"
+ #include "exitcodes.h"
+ #include "mythcontext.h"
+diff --git a/mythtv/programs/mythbackend/services/content.cpp b/mythtv/programs/mythbackend/services/content.cpp
+index 3fddaed4675..cb3afc320c7 100644
+--- a/mythtv/programs/mythbackend/services/content.cpp
++++ b/mythtv/programs/mythbackend/services/content.cpp
+@@ -36,7 +36,7 @@
+ #include "storagegroup.h"
+ #include "programinfo.h"
+ #include "previewgenerator.h"
+-#include "backendutil.h"
++#include "requesthandler/fileserverutil.h"
+ #include "httprequest.h"
+ #include "serviceUtil.h"
+ #include "mythdate.h"
+
+From 1c2068c62bd67f5458009a49412e8b50a4bafbe5 Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Fri, 1 Feb 2019 20:04:46 -0600
+Subject: [PATCH 13/39] Missed a locking difference in the previous
+ GetPlaybackURL commit.
+
+(cherry picked from commit 068c9664724122d0b116d29aea31850a4ae85ed6)
+---
+ .../libs/libmythprotoserver/requesthandler/fileserverutil.cpp   | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/libs/libmythprotoserver/requesthandler/fileserverutil.cpp b/mythtv/libs/libmythprotoserver/requesthandler/fileserverutil.cpp
+index 99ed5507318..bb79ae3e329 100644
+--- a/mythtv/libs/libmythprotoserver/requesthandler/fileserverutil.cpp
++++ b/mythtv/libs/libmythprotoserver/requesthandler/fileserverutil.cpp
+@@ -57,7 +57,9 @@ QString GetPlaybackURL(ProgramInfo *pginfo, bool storePath)
+     }
+     else
+     {
++        locker.unlock();
+         result = pginfo->GetPlaybackURL(false, true);
++        locker.relock();
+         if (storePath && result.startsWith("/"))
+             recordingPathCache[cacheKey] = result;
+     }
+
+From c6760c6210597453c140079628a509683b738f54 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Sun, 10 Feb 2019 11:25:55 -0500
+Subject: [PATCH 14/39] Guide Grid: Fix missing text when using QT painter
+
+Grid icons, arrows and record status, caused text to show as blank.
+Changed to paint the text first, which resolves the issue.
+
+Fixes #13398
+
+(cherry picked from commit f561a3c4b2f8d59df8674849d40e046874aee8a2)
+---
+ mythtv/libs/libmythui/mythuiguidegrid.cpp | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/mythtv/libs/libmythui/mythuiguidegrid.cpp b/mythtv/libs/libmythui/mythuiguidegrid.cpp
+index 4fbd523e4a3..3115f675622 100644
+--- a/mythtv/libs/libmythui/mythuiguidegrid.cpp
++++ b/mythtv/libs/libmythui/mythuiguidegrid.cpp
+@@ -329,6 +329,7 @@ void MythUIGuideGrid::DrawSelf(MythPainter *p, int xoffset, int yoffset,
+                 drawBox(p, xoffset, yoffset, data, m_recordingColor, alphaMod);
+             else
+                 drawBox(p, xoffset, yoffset, data, m_conflictingColor, alphaMod);
++            drawText(p, xoffset, yoffset, data, alphaMod);
+         }
+     }
+ 
+@@ -341,10 +342,7 @@ void MythUIGuideGrid::DrawSelf(MythPainter *p, int xoffset, int yoffset,
+         for (; it != m_allData[i].end(); ++it)
+         {
+             UIGTCon *data = *it;
+-            drawText(p, xoffset, yoffset, data, alphaMod);
+-
+-            if (data->m_recType != 0 || data->m_arrow != GridTimeNormal)
+-                drawRecDecoration(p, xoffset, yoffset, data, alphaMod);
++            drawRecDecoration(p, xoffset, yoffset, data, alphaMod);
+         }
+     }
+ }
+@@ -690,6 +688,9 @@ void MythUIGuideGrid::drawText(MythPainter *p, int xoffset, int yoffset, UIGTCon
+     if (area.width() <= 0 || area.height() <= 0)
+         return;
+ 
++const char *msgx = QString("DrawText title=%1")
++    .arg(msg).toLocal8Bit();
++fprintf(stderr,"%s\n", msgx);
+     p->DrawText(area, msg, m_justification, *m_font, alphaMod, area);
+ }
+ 
+
+From b774c4140b2b9e148ccf699d1ad746bc4c84289c Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Sun, 10 Feb 2019 12:17:53 -0500
+Subject: [PATCH 15/39] Remove debugging code.
+
+Program guide fix included some debugging code.
+
+(cherry picked from commit 7fd7b8443073ab53804b284f69968d37932825cc)
+---
+ mythtv/libs/libmythui/mythuiguidegrid.cpp | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/mythtv/libs/libmythui/mythuiguidegrid.cpp b/mythtv/libs/libmythui/mythuiguidegrid.cpp
+index 3115f675622..106314344c8 100644
+--- a/mythtv/libs/libmythui/mythuiguidegrid.cpp
++++ b/mythtv/libs/libmythui/mythuiguidegrid.cpp
+@@ -688,9 +688,6 @@ void MythUIGuideGrid::drawText(MythPainter *p, int xoffset, int yoffset, UIGTCon
+     if (area.width() <= 0 || area.height() <= 0)
+         return;
+ 
+-const char *msgx = QString("DrawText title=%1")
+-    .arg(msg).toLocal8Bit();
+-fprintf(stderr,"%s\n", msgx);
+     p->DrawText(area, msg, m_justification, *m_font, alphaMod, area);
+ }
+ 
+
+From 7c0dc9b25906e0bdf9f6cb878268c9d0fc2316bb Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Fri, 25 Jan 2019 15:20:30 -0500
+Subject: [PATCH 16/39] Fix spurious font mismatch errors.
+
+Strip out any text between square brackets before comparing font
+names.  This will allow a font family name like "Droid Sans [MONO]" to
+match the request for "Droid Sans".
+
+Fixes #13385.
+
+(cherry picked from commit 60a1db79f36e4f0734c79c4783864340d4e695bf)
+---
+ mythtv/libs/libmythui/mythfontproperties.cpp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythui/mythfontproperties.cpp b/mythtv/libs/libmythui/mythfontproperties.cpp
+index 4e7fa3516a6..5354f9229f9 100644
+--- a/mythtv/libs/libmythui/mythfontproperties.cpp
++++ b/mythtv/libs/libmythui/mythfontproperties.cpp
+@@ -9,6 +9,7 @@
+ #include <QFontInfo>
+ #include <QFontDatabase>
+ #include <QRect>
++#include <QRegularExpression>
+ 
+ #include "mythlogging.h"
+ #include "mythdb.h"
+@@ -432,7 +433,9 @@ MythFontProperties *MythFontProperties::ParseFromXml(
+     newFont->Unfreeze();
+ 
+     QFontInfo fi(newFont->m_face);
+-    if (newFont->m_face.family() != fi.family())
++    QString fi_family =
++        fi.family().remove(QRegularExpression("\\[.*]")).trimmed();
++    if (newFont->m_face.family() != fi_family)
+     {
+         VERBOSE_XML(VB_GENERAL, LOG_ERR, filename, element,
+                     QString("Failed to load '%1', got '%2' instead")
+
+From f7b66345c5da82915e9db25817c59f42182766ab Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Sat, 2 Feb 2019 14:42:40 -0500
+Subject: [PATCH 17/39] Update custom FreeBSD type declarations in videodev2.h.
+
+(cherry picked from commit 209c15535056407ffd9af9fbf557b0f1c98dad8f)
+---
+ mythtv/libs/libmythtv/videodev2.h | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/videodev2.h b/mythtv/libs/libmythtv/videodev2.h
+index c64b5e5a305..6c2e9bb41c0 100644
+--- a/mythtv/libs/libmythtv/videodev2.h
++++ b/mythtv/libs/libmythtv/videodev2.h
+@@ -59,15 +59,14 @@
+ #include <sys/time.h>
+ 
+ #ifdef __FreeBSD__
+-#include <linux/input.h>	// For __[us][0-9]+ types
+-#define __le64 __u64
+-#define __le32 __u32
+-#define __le16 __u16
+-#define __le8  __u8
+-#define __be64 __u64
+-#define __be32 __u32
+-#define __be16 __u16
+-#define __be8  __u8
++typedef uint64_t __u64;
++typedef uint32_t __u32;
++typedef uint16_t __u16;
++typedef uint8_t __u8;
++typedef int64_t __s64;
++typedef int32_t __s32;
++typedef int16_t __s16;
++typedef int8_t __s8;
+ #else
+ #include <linux/ioctl.h>
+ #include <linux/types.h>
+@@ -1906,7 +1905,7 @@ struct v4l2_mpeg_vbi_itv0_line {
+ } __attribute__ ((packed));
+ 
+ struct v4l2_mpeg_vbi_itv0 {
+-	__le32 linemask[2]; /* Bitmasks of VBI service lines present */
++	__u32 linemask[2]; /* Bitmasks of VBI service lines present */
+ 	struct v4l2_mpeg_vbi_itv0_line line[35];
+ } __attribute__ ((packed));
+ 
+
+From f0644ebd2a33f096dc1b8d97b36a22804d913c5f Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Fri, 15 Feb 2019 14:49:37 -0500
+Subject: [PATCH 18/39] AVSync2: Fix never-ending stutter on Live TV
+
+With AVSync2, Live TV could continue to stutter until pause
+is pressed. Added a timecode reset so that it can add a small
+delay to allow catch up.
+
+(cherry picked from commit 90b4ec347fd01e40f97427de8ab261f74e9b2d68)
+---
+ mythtv/libs/libmythtv/mythplayer.cpp | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index 5b80c452a3b..6c0c41ef565 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -2451,7 +2451,6 @@ bool MythPlayer::PrebufferEnoughFrames(int min_buffers)
+     if (!videoOutput)
+         return false;
+ 
+-    bool paused_now = false;
+     if (!(min_buffers ? (videoOutput->ValidVideoFrames() >= min_buffers) :
+                         (GetEof() != kEofStateNone) ||
+                         (videoOutput->hasHWAcceleration() ?
+@@ -2467,19 +2466,20 @@ bool MythPlayer::PrebufferEnoughFrames(int min_buffers)
+         // for the jerking is detected.
+ 
+         bool watchingTV = IsWatchingInprogress();
+-        if (!paused_now && (livetv || watchingTV) && !FlagIsSet(kMusicChoice))
++        if ( (livetv || watchingTV) && !FlagIsSet(kMusicChoice))
+         {
+             uint64_t frameCount = GetCurrentFrameCount();
+             uint64_t framesLeft = frameCount - framesPlayed;
+             uint64_t margin = (uint64_t) (video_frame_rate * 3);
+             if (framesLeft < margin)
+             {
+-                LOG(VB_PLAYBACK, LOG_NOTICE, LOC +
+-                    QString("Pause to allow live tv catch up. Position in sec. Current: %2, Total: %3")
+-                    .arg(framesPlayed).arg(frameCount));
++                if (rtcbase)
++                    LOG(VB_PLAYBACK, LOG_NOTICE, LOC +
++                        QString("Pause to allow live tv catch up. Position in sec. Current: %2, Total: %3")
++                        .arg(framesPlayed).arg(frameCount));
+                 audio.Pause(true);
+                 avsync_audiopaused = true;
+-                paused_now = true;
++                rtcbase = 0;
+             }
+         }
+         usleep(frame_interval >> 3);
+
+From 5100ef5870eed4012e02c0d62d4adb1f20c0f312 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Fri, 15 Feb 2019 14:50:29 -0500
+Subject: [PATCH 19/39] AVSync2: Improve resync speed and accuracy
+
+1. If out of sync by more than 200 ms fix the sync more quickly.
+2. Measure audio and video timecode at the same instant.
+3. Base audio / video adjustment on the prior frame timecodes.
+4. When there is excess audio (more than 200 ms) discard it.
+5. No longer limit adjustments to when error is over 40 ms.
+
+Fixes #13383
+
+(cherry picked from commit 6b402ca5a3b8c45c9ee190aaaf0e63a0d5548855)
+---
+ mythtv/libs/libmythtv/mythplayer.cpp | 71 ++++++++++++++++++----------
+ mythtv/libs/libmythtv/mythplayer.h   |  2 +
+ 2 files changed, 49 insertions(+), 24 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index 6c0c41ef565..db5bb6f06eb 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -223,6 +223,8 @@ MythPlayer::MythPlayer(PlayerFlags flags)
+       rtcbase(0),
+       maxtcval(0), maxtcframes(0),
+       numdroppedframes(0),
++      prior_audiotimecode(0),
++      prior_videotimecode(0),
+       // LiveTVChain stuff
+       m_tv(nullptr),                isDummy(false),
+       // Counter for buffering messages
+@@ -415,6 +417,8 @@ bool MythPlayer::Play(float speed, bool normal, bool unpauseaudio)
+         return false;
+     }
+     rtcbase = 0;
++    prior_audiotimecode = 0;
++    prior_videotimecode = 0;
+     SetEof(kEofStateNone);
+     UnpauseBuffer();
+     UnpauseDecoder();
+@@ -1806,6 +1810,8 @@ void MythPlayer::ResetAVSync(void)
+     prevtc = 0;
+     avsync_next = avsync_interval;      // Frames till next sync check
+     rtcbase = 0;
++    prior_audiotimecode = 0;
++    prior_videotimecode = 0;
+     LOG(VB_PLAYBACK | VB_TIMESTAMP, LOG_INFO, LOC + "A/V sync reset");
+ }
+ 
+@@ -1822,6 +1828,8 @@ void MythPlayer::InitAVSync(void)
+     // Number of frames over which to average time divergence
+     avsync_averaging=4;
+     rtcbase = 0;
++    prior_audiotimecode = 0;
++    prior_videotimecode = 0;
+ 
+     // Special averaging default of 60 for OpenMAX passthru
+     QString device = gCoreContext->GetSetting("AudioOutputDevice","");
+@@ -2170,7 +2178,7 @@ void wait_for_time(int64_t framedue)
+         QThread::usleep(delay);
+ }
+ 
+-#define AVSYNC_MAX_LATE 1000000
++#define AVSYNC_MAX_LATE 10000000
+ void MythPlayer::AVSync2(VideoFrame *buffer)
+ {
+     if (videoOutput->IsErrored())
+@@ -2180,7 +2188,6 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+         SetErrored(tr("Failed to initialize A/V Sync"));
+         return;
+     }
+-    int64_t audiotimecode = audio.GetAudioTime();
+     int64_t videotimecode = 0;
+ 
+     bool dropframe = false;
+@@ -2191,10 +2198,10 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+     int64_t unow = 0;
+     int64_t lateness = 0;
+     int64_t playspeed1000 = (float)1000 / play_speed;
++    bool reset = false;
+ 
+     while (framedue == 0)
+     {
+-        bool reset = false;
+         if (buffer)
+         {
+             videotimecode = buffer->timecode & 0x0000ffffffffffff;
+@@ -2210,7 +2217,7 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+         {
+             // cater for DVB radio
+             if (videotimecode == 0)
+-                videotimecode = audiotimecode;
++                videotimecode = audio.GetAudioTime();;
+             // On first frame we get nothing, so exit out.
+             if (videotimecode == 0)
+                 return;
+@@ -2244,19 +2251,31 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+         if (lateness > 30000)
+             dropframe = !FlagIsSet(kMusicChoice) && numdroppedframes < 10;
+ 
+-        if (lateness <= 30000 && audiotimecode > 0 && normal_speed && !FlagIsSet(kMusicChoice))
++        if (lateness <= 30000 && prior_audiotimecode > 0
++            && prior_videotimecode > 0 && normal_speed && !FlagIsSet(kMusicChoice))
+         {
+             // Get video in sync with audio
+-            audio_adjustment = audiotimecode - videotimecode;
+-            int sign = audio_adjustment < 0 ? -1 : 1;
+-            if (audio_adjustment * sign > 40)
++            audio_adjustment = prior_audiotimecode - prior_videotimecode;
++            // If there is excess audio - throw it away.
++            if (audio_adjustment < -200)
+             {
+-                // adjust by AVSyncIncrementMS milliseconds at a time (range 1-40)
+-                rtcbase -= (int64_t)1000000 * avsync2adjustms * sign / playspeed1000;
++                audio.Reset();
++                audio_adjustment = 0;
++            }
++            int sign = audio_adjustment < 0 ? -1 : 1;
++            int64_t fix_amount = audio_adjustment * sign;
++            if (fix_amount > avsync2adjustms)
++                fix_amount = avsync2adjustms;
++            // Faster catch-up when off by more than 200 ms
++            if (audio_adjustment * sign > 200)
++                // fix the sync within 15 - 20 frames
++                fix_amount = audio_adjustment * sign / 15;
++            int64_t speedup1000 = (float)1000 * play_speed;
++            rtcbase -= (int64_t)1000000 * fix_amount * sign / speedup1000;
++            if (audio_adjustment * sign > 20 || (framesPlayed % 400 == 0))
+                 LOG(VB_PLAYBACK, LOG_INFO, LOC +
+                     QString("AV Sync, audio ahead by %1 ms").arg(audio_adjustment));
+-            }
+-            if (audio_adjustment > 1000)
++            if (audio_adjustment > 200)
+                 pause_audio = true;
+         }
+         // sanity check - reset rtcbase if time codes have gone crazy.
+@@ -2277,7 +2296,7 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+             reset = true;
+         }
+     }
+-
++    prior_videotimecode = videotimecode;
+     disp_timecode = videotimecode;
+ 
+     output_jmeter && output_jmeter->RecordCycleTime();
+@@ -2307,17 +2326,6 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+         audio.Pause(true);
+     }
+ 
+-    LOG(VB_PLAYBACK | VB_TIMESTAMP, LOG_INFO, LOC +
+-        QString("A/V timecodes audio=%1 video=%2 frameinterval=%3 "
+-                "audioadj=%4 tcoffset=%5 unow=%6 udue=%7")
+-            .arg(audiotimecode)
+-            .arg(videotimecode)
+-            .arg(frame_interval)
+-            .arg(audio_adjustment)
+-            .arg(tc_wrap[TC_AUDIO])
+-            .arg(unow)
+-            .arg(framedue)
+-                );
+ 
+     if (dropframe)
+         numdroppedframes++;
+@@ -2338,6 +2346,8 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+         // the primary PBP will become out of sync
+         if (!player_ctx->IsPBP() || player_ctx->IsPrimaryPBP())
+             wait_for_time(framedue);
++        // get time codes for calculating difference next time
++        prior_audiotimecode = audio.GetAudioTime();
+         videoOutput->Show(ps);
+         if (videoOutput->IsErrored())
+         {
+@@ -2373,6 +2383,19 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+     }
+     else
+         wait_for_time(framedue);
++
++    LOG(VB_PLAYBACK | VB_TIMESTAMP, LOG_INFO, LOC +
++        QString("A/V timecodes audio=%1 video=%2 frameinterval=%3 "
++                "audioadj=%4 tcoffset=%5 unow=%6 udue=%7")
++            .arg(prior_audiotimecode)
++            .arg(prior_videotimecode)
++            .arg(frame_interval)
++            .arg(audio_adjustment)
++            .arg(tc_wrap[TC_AUDIO])
++            .arg(unow)
++            .arg(framedue)
++                );
++
+ }
+ 
+ void MythPlayer::RefreshPauseFrame(void)
+diff --git a/mythtv/libs/libmythtv/mythplayer.h b/mythtv/libs/libmythtv/mythplayer.h
+index 7358d617a9d..4b295af28fe 100644
+--- a/mythtv/libs/libmythtv/mythplayer.h
++++ b/mythtv/libs/libmythtv/mythplayer.h
+@@ -856,6 +856,8 @@ class MTV_PUBLIC MythPlayer
+     int       maxtcframes;    // number of frames seen since max to date tc
+     int64_t   avsync2adjustms; // number of milliseconds to adjust for av sync errors
+     int       numdroppedframes; // number of consecutive dropped frames.
++    int64_t   prior_audiotimecode;    // time code from prior frame
++    int64_t   prior_videotimecode;    // time code from prior frame
+ 
+     // LiveTV
+     TV *m_tv;
+
+From 70a58c0a38c637657f74f28ad86e04a157163f57 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas.de.waal@gmail.com>
+Date: Sun, 17 Feb 2019 13:35:42 -0600
+Subject: [PATCH 20/39] Don't leave HDHomeRun channels open after EIT scans.
+
+The HDHomeRun unlocks the tuner due to inactivity but MythTV still
+thinks it's open.  The result is the next recording or EIT scan fails.
+The fix is to always close the channel immediately after finishing
+with it.
+
+Refs #13407
+
+Signed-off-by: David Engel <dengel@mythtv.org>
+(cherry picked from commit e7e2270d68838bf72c8a7a12a1f027905a12e199)
+---
+ mythtv/libs/libmythtv/tv_rec.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/tv_rec.cpp b/mythtv/libs/libmythtv/tv_rec.cpp
+index 421aff6823a..00c7968a35a 100644
+--- a/mythtv/libs/libmythtv/tv_rec.cpp
++++ b/mythtv/libs/libmythtv/tv_rec.cpp
+@@ -1198,7 +1198,9 @@ void TVRec::CloseChannel(void)
+ {
+     if (channel &&
+         ((genOpt.inputtype == "DVB" && dvbOpt.dvb_on_demand) ||
+-         genOpt.inputtype == "FREEBOX" || genOpt.inputtype == "VBOX" ||
++         genOpt.inputtype == "FREEBOX" ||
++         genOpt.inputtype == "VBOX" ||
++         genOpt.inputtype == "HDHOMERUN" ||
+          CardUtil::IsV4L(genOpt.inputtype)))
+     {
+         channel->Close();
+
+From 26034244e8b664f2ae0e74027653293625615a86 Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Mon, 18 Feb 2019 13:51:10 -0600
+Subject: [PATCH 21/39] Services API: Allow images/icons immediately after BE
+ startup. Refs #13404
+
+Register <QFileInfo> to QMetaType at backend startup.
+
+Tested on master with:
+
+    curl --header Accept:Application/JSON --output /tmp/preview.out \
+        --silent localhost:6544/Content/GetPreviewImage?RecordedId=<validRID>
+
+    curl --header Accept:Application/JSON --output /tmp/icon.out \
+        --silent localhost:6544/Guide/GetChannelIcon?ChanId=<validChanID>
+
+    Also, without --header ... for XML responses.
+
+Required because Services need this type already registered. Without this
+fix expect:
+
+    JSON: {'': ''}
+    XML:  <?xml version="1.0" encoding="UTF-8"?><></>
+
+Thanks Roland.
+
+Signed-off-by: Bill Meek <billmeek@mythtv.org>
+(cherry picked from commit f7b5fd704be1e75071f8452b669d303ab053a245)
+---
+ mythtv/libs/libmythservicecontracts/service.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythservicecontracts/service.h b/mythtv/libs/libmythservicecontracts/service.h
+index b87995d94aa..fed7eb30476 100644
+--- a/mythtv/libs/libmythservicecontracts/service.h
++++ b/mythtv/libs/libmythservicecontracts/service.h
+@@ -71,7 +71,10 @@ class SERVICE_PUBLIC Service : public QObject
+ //
+ //////////////////////////////////////////////////////////////////////////////
+ 
+-inline Service::Service(QObject *parent) : QObject(parent) {}
++inline Service::Service(QObject *parent) : QObject(parent)
++{
++     qRegisterMetaType< QFileInfo >();
++}
+ 
+ //////////////////////////////////////////////////////////////////////////////
+ //
+
+From e3474f8afb7191d5593d5fa5baac24611842bbec Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Mon, 25 Feb 2019 14:45:13 -0500
+Subject: [PATCH 22/39] Program Guide: Fix for current selection text not
+ showing
+
+With certain themes (e.g. Blue Abstract) the current selection program name
+was not showing in the guide grid.
+
+(cherry picked from commit d6252135d684a9f6c1aa486fd9b684025f3d23d7)
+---
+ mythtv/libs/libmythui/mythuiguidegrid.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/libs/libmythui/mythuiguidegrid.cpp b/mythtv/libs/libmythui/mythuiguidegrid.cpp
+index 106314344c8..dda428461ac 100644
+--- a/mythtv/libs/libmythui/mythuiguidegrid.cpp
++++ b/mythtv/libs/libmythui/mythuiguidegrid.cpp
+@@ -334,6 +334,8 @@ void MythUIGuideGrid::DrawSelf(MythPainter *p, int xoffset, int yoffset,
+     }
+ 
+     drawCurrent(p, xoffset, yoffset, &m_selectedItem, alphaMod);
++    // Redraw the current selection's text in case it was clobbered by the above call.
++    drawText(p, xoffset, yoffset, &m_selectedItem, alphaMod);
+ 
+     for (int i = 0; i < m_rowCount; i++)
+     {
+
+From 042c180902bcdcf58ac12cef45a9cf0e5f348912 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Thu, 7 Mar 2019 14:38:13 -0500
+Subject: [PATCH 23/39] Previously Recorded List: Fix 2 bugs
+
+1. Time zone bug - In a USA time zone at 11 PM on tha last day of
+the month you can see the following month listed, albeit with
+no entries.
+
+2. Program Guide->select a program that has not been recorded, then
+Menu->Schedule Info->Previously Recorded, then press left or right.
+This causes a seg fault.
+
+Fixes #13397
+Fixes #13421
+
+(cherry picked from commit c08b7ae0e7589dbe54d817a1d6296688e576d675)
+---
+ mythtv/programs/mythfrontend/prevreclist.cpp | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/mythtv/programs/mythfrontend/prevreclist.cpp b/mythtv/programs/mythfrontend/prevreclist.cpp
+index d084efff92b..33288df9af4 100644
+--- a/mythtv/programs/mythfrontend/prevreclist.cpp
++++ b/mythtv/programs/mythfrontend/prevreclist.cpp
+@@ -245,7 +245,9 @@ bool PrevRecordedList::LoadTitles(void)
+ 
+ bool PrevRecordedList::LoadDates(void)
+ {
+-    QString querystr = "SELECT DISTINCT YEAR(starttime), MONTH(starttime) "
++    QString querystr = "SELECT DISTINCT "
++            "YEAR(CONVERT_TZ(starttime,'UTC','SYSTEM')), "
++            "MONTH(CONVERT_TZ(starttime,'UTC','SYSTEM')) "
+         "FROM oldrecorded "
+         "WHERE oldrecorded.future = 0 " + m_where;
+ 
+@@ -412,8 +414,11 @@ void PrevRecordedList::LoadShowsByTitle(void)
+ {
+     MSqlBindings bindings;
+     QString sql = " AND oldrecorded.title = :TITLE " + m_where;
+-    int selected = m_titleList->GetCurrentPos();
+-    bindings[":TITLE"] = m_titleData[selected]->GetTitle();
++    uint selected = m_titleList->GetCurrentPos();
++    if (selected < m_titleData.size())
++        bindings[":TITLE"] = m_titleData[selected]->GetTitle();
++    else
++        bindings[":TITLE"] = "";
+     if (!m_title.isEmpty())
+         bindings[":MTITLE"] = m_title;
+     m_showData.clear();
+
+From 90468ec49a0116068fffb11d799ae67e100ef1fe Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Sun, 24 Feb 2019 14:28:56 -0500
+Subject: [PATCH 24/39] Playback: AvSync2 fix fast forward/rewind
+
+Fast forward and rewind were not handling frame timing correctly so that
+they were dropping frames, resulting in no frames displayed in some cases.
+
+(cherry picked from commit 4089bf1ff031224fa1fefe990ef376628ef7589e)
+---
+ mythtv/libs/libmythtv/mythplayer.cpp | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index db5bb6f06eb..7abd60341f8 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -2212,6 +2212,12 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+ 
+         now = QDateTime::currentDateTimeUtc();
+         unow = now.toMSecsSinceEpoch() * 1000;
++
++        if (!normal_speed || FlagIsSet(kMusicChoice))
++        {
++            framedue = unow + frame_interval;
++            break;
++        }
+         // first time or after a seek - setup of rtcbase
+         if (rtcbase == 0)
+         {
+@@ -2249,10 +2255,10 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+         lateness = unow - framedue;
+         dropframe = false;
+         if (lateness > 30000)
+-            dropframe = !FlagIsSet(kMusicChoice) && numdroppedframes < 10;
++            dropframe = numdroppedframes < 10;
+ 
+         if (lateness <= 30000 && prior_audiotimecode > 0
+-            && prior_videotimecode > 0 && normal_speed && !FlagIsSet(kMusicChoice))
++            && prior_videotimecode > 0)
+         {
+             // Get video in sync with audio
+             audio_adjustment = prior_audiotimecode - prior_videotimecode;
+@@ -2279,8 +2285,7 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+                 pause_audio = true;
+         }
+         // sanity check - reset rtcbase if time codes have gone crazy.
+-        if ((lateness > AVSYNC_MAX_LATE || lateness < - AVSYNC_MAX_LATE)
+-            && !FlagIsSet(kMusicChoice))
++        if ((lateness > AVSYNC_MAX_LATE || lateness < - AVSYNC_MAX_LATE))
+         {
+             framedue = 0;
+             rtcbase = 0;
+
+From bceea69806d9d24fd1662edca23c2215bee2e8cf Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Mon, 4 Mar 2019 15:53:39 -0500
+Subject: [PATCH 25/39] AVSync2: Use frame timestamps to determine elapsed play
+ time
+
+MythTV uses frame count to determine the elapsed time of a recording
+for display, jumps, etc. This can be inaccurate with variable rate
+content and also with frame doubling being done in the decoder.
+This change recalculates the frame count based on the time code.
+This ensures MythTV elapsed time will be accurate.
+
+Fixes #13416
+
+(cherry picked from commit 6a5fb07fa17d7a7da09bd8a7be0394c8e4948122)
+---
+ mythtv/libs/libmythtv/decoderbase.h  | 1 +
+ mythtv/libs/libmythtv/mythplayer.cpp | 6 ++++++
+ mythtv/libs/libmythtv/mythplayer.h   | 1 +
+ 3 files changed, 8 insertions(+)
+
+diff --git a/mythtv/libs/libmythtv/decoderbase.h b/mythtv/libs/libmythtv/decoderbase.h
+index 22bbd9fbae5..64018b501d7 100644
+--- a/mythtv/libs/libmythtv/decoderbase.h
++++ b/mythtv/libs/libmythtv/decoderbase.h
+@@ -208,6 +208,7 @@ class DecoderBase
+     virtual void UpdateFramesPlayed(void);
+     long long GetFramesRead(void) const { return framesRead; }
+     long long GetFramesPlayed(void) const { return framesPlayed; }
++    void SetFramesPlayed(long long newValue) {m_framesPlayed = newValue;}
+ 
+     virtual QString GetCodecDecoderName(void) const = 0;
+     virtual QString GetRawEncodingType(void) { return QString(); }
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index 7abd60341f8..e735bd354d6 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -225,6 +225,7 @@ MythPlayer::MythPlayer(PlayerFlags flags)
+       numdroppedframes(0),
+       prior_audiotimecode(0),
+       prior_videotimecode(0),
++      m_timeOffsetBase(0),
+       // LiveTVChain stuff
+       m_tv(nullptr),                isDummy(false),
+       // Counter for buffering messages
+@@ -2231,6 +2232,7 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+             maxtcval = 0;
+             maxtcframes = 0;
+             numdroppedframes = 0;
++            m_timeOffsetBase = TranslatePositionFrameToMs(framesPlayed, false) - videotimecode;
+         }
+ 
+         if (videotimecode == 0)
+@@ -2252,6 +2254,10 @@ void MythPlayer::AVSync2(VideoFrame *buffer)
+         else
+             framedue = unow + frame_interval / 2;
+ 
++        // recalculate framesPlayed to conform to actual time code.
++        framesPlayed = TranslatePositionMsToFrame(videotimecode + m_timeOffsetBase, false);
++        decoder->SetFramesPlayed(framesPlayed);
++
+         lateness = unow - framedue;
+         dropframe = false;
+         if (lateness > 30000)
+diff --git a/mythtv/libs/libmythtv/mythplayer.h b/mythtv/libs/libmythtv/mythplayer.h
+index 4b295af28fe..088da8a04ea 100644
+--- a/mythtv/libs/libmythtv/mythplayer.h
++++ b/mythtv/libs/libmythtv/mythplayer.h
+@@ -858,6 +858,7 @@ class MTV_PUBLIC MythPlayer
+     int       numdroppedframes; // number of consecutive dropped frames.
+     int64_t   prior_audiotimecode;    // time code from prior frame
+     int64_t   prior_videotimecode;    // time code from prior frame
++    int64_t   m_timeOffsetBase;
+ 
+     // LiveTV
+     TV *m_tv;
+
+From 13f5fd83072a5b57c3aa3409d6db2038feb1f573 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Mon, 4 Mar 2019 16:09:49 -0500
+Subject: [PATCH 26/39] Playback: Improve "Music Choice" detection
+
+Some recordings could be incorrectly detected as "Music Choice",
+resulting in audio-video sync problems. This improves detection to
+reduce the likelihood of that.
+
+(cherry picked from commit e0534ab0964bbec10e52de62dce87aa3cf76165a)
+---
+ mythtv/libs/libmythtv/mythplayer.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index e735bd354d6..e428a19a503 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -2533,7 +2533,7 @@ bool MythPlayer::PrebufferEnoughFrames(int min_buffers)
+                     QString("Waited %1ms for video buffers %2")
+                         .arg(waited_for).arg(videoOutput->GetFrameStatus()));
+             buffering_last_msg = QTime::currentTime();
+-            if (audio.GetAudioBufferedTime() > 2000 && framesPlayed < 5
++            if (audio.IsBufferAlmostFull() && framesPlayed < 5
+                 && gCoreContext->GetBoolSetting("MusicChoiceEnabled", false))
+             {
+                 playerFlags = (PlayerFlags)(playerFlags | kMusicChoice);
+
+From 76ea9755b69cad0eb6595407a7dec3c63df9f8c5 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Wed, 6 Mar 2019 13:45:46 -0500
+Subject: [PATCH 27/39] Playback: Fix jerkiness with codec-deinterlaced content
+
+Remove unneeded setting of m_fps that was overwriting the correct
+value. m_fps is suppsed to contain the framerate before deinterlacing.
+
+Fixes #13419
+
+(cherry picked from commit 0e7e57f9c2eb0e2c4f47dcb30788a4e54d6808ba)
+---
+ mythtv/libs/libmythtv/avformatdecoder.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/avformatdecoder.cpp b/mythtv/libs/libmythtv/avformatdecoder.cpp
+index b25516c7953..3641c2fc4fb 100644
+--- a/mythtv/libs/libmythtv/avformatdecoder.cpp
++++ b/mythtv/libs/libmythtv/avformatdecoder.cpp
+@@ -1459,7 +1459,6 @@ float AvFormatDecoder::normalized_fps(AVStream *stream, AVCodecContext *enc)
+             QString("Selected FPS is %1 (avg %2 codec %3 "
+                     "container %4 estimated %5)").arg(fps).arg(avg_fps)
+                 .arg(codec_fps).arg(container_fps).arg(estimated_fps));
+-        m_fps = fps;
+     }
+ 
+     return fps;
+
+From 60cfb7c05ae21d0049537aaa66f8f70a836a1138 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Sun, 10 Mar 2019 15:06:41 -0400
+Subject: [PATCH 28/39] Fix compile error from bceea69806d
+
+Rename of member variables cause the cherry-pick to use the old
+variable name.
+---
+ mythtv/libs/libmythtv/decoderbase.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/decoderbase.h b/mythtv/libs/libmythtv/decoderbase.h
+index 64018b501d7..4ee216d02c4 100644
+--- a/mythtv/libs/libmythtv/decoderbase.h
++++ b/mythtv/libs/libmythtv/decoderbase.h
+@@ -208,7 +208,7 @@ class DecoderBase
+     virtual void UpdateFramesPlayed(void);
+     long long GetFramesRead(void) const { return framesRead; }
+     long long GetFramesPlayed(void) const { return framesPlayed; }
+-    void SetFramesPlayed(long long newValue) {m_framesPlayed = newValue;}
++    void SetFramesPlayed(long long newValue) {framesPlayed = newValue;}
+ 
+     virtual QString GetCodecDecoderName(void) const = 0;
+     virtual QString GetRawEncodingType(void) { return QString(); }
+
+From 01cde24f00573a44f7c62f8ddf6cdcccb0a865a8 Mon Sep 17 00:00:00 2001
+From: John Poet <jpoet@mythtv.org>
+Date: Mon, 4 Feb 2019 15:14:50 -0700
+Subject: [PATCH 29/39] ExternalStreamhandler: Don't spam log files due to very
+ low bitrate streams
+
+(cherry picked from commit fa86a6a2935c305c97fa75fcd8fd82fe25eae66a)
+---
+ .../libmythtv/recorders/ExternalStreamHandler.cpp   | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+index 4f541d30e5d..6de71f7ed94 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+@@ -719,8 +719,6 @@ void ExternalStreamHandler::run(void)
+ 
+         if (read_len == 0)
+         {
+-            std::this_thread::sleep_for(std::chrono::microseconds(50));
+-
+             if (!nodata_timer.isRunning())
+                 nodata_timer.start();
+             else
+@@ -731,15 +729,20 @@ void ExternalStreamHandler::run(void)
+                         "No data for 50 seconds, Restarting stream.");
+                     if (!RestartStream())
+                     {
+-                        LOG(VB_RECORD, LOG_ERR, LOC + "Failed to restart stream.");
++                        LOG(VB_RECORD, LOG_ERR, LOC +
++                            "Failed to restart stream.");
+                         _error = true;
+                     }
+                     nodata_timer.stop();
+                     continue;
+                 }
+-
+-                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+             }
++
++            std::this_thread::sleep_for(std::chrono::milliseconds(50));
++
++            // HLS type streams may only produce data every ~10 seconds
++            if (nodata_timer.elapsed() < 12000 && buffer.size() < TS_PACKET_SIZE)
++                continue;
+         }
+         else
+         {
+
+From 2327369fd558fcf00af6a280017560801534b44d Mon Sep 17 00:00:00 2001
+From: John Poet <jpoet@mythtv.org>
+Date: Tue, 5 Feb 2019 14:04:00 -0700
+Subject: [PATCH 30/39] RemoteFile::Read: Try and "resume" if read fails.
+
+When a remote frontend is paused for more than 5 minutes, the "remotefile"
+connection can end up in a state where no data is returned.  Attempt to use
+RemoteFile::Resume to reestablish the connection.
+
+(cherry picked from commit b7b737044eff2fff1090c582c1bf3bd61f6c2f26)
+---
+ mythtv/libs/libmythbase/remotefile.cpp | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/mythtv/libs/libmythbase/remotefile.cpp b/mythtv/libs/libmythbase/remotefile.cpp
+index 3bbfcff0340..d3ee79895ce 100644
+--- a/mythtv/libs/libmythbase/remotefile.cpp
++++ b/mythtv/libs/libmythbase/remotefile.cpp
+@@ -1073,7 +1073,19 @@ int RemoteFile::Read(void *data, int size)
+ 
+     if (error || sent != recv)
+     {
++        LOG(VB_GENERAL, LOG_WARNING,
++            QString("RemoteFile::Read(): sent %1 != recv %2")
++            .arg(sent).arg(recv));
+         recv = -1;
++
++        // The TCP socket is dropped if there's a timeout, so we reconnect
++        if (!Resume())
++        {
++            LOG(VB_GENERAL, LOG_WARNING, "RemoteFile::Read(): Resume failed.");
++            sent = -1;
++        }
++        else
++            LOG(VB_GENERAL, LOG_NOTICE, "RemoteFile::Read(): Resume success.");
+     }
+     else
+     {
+
+From 068e7e1958c46bcce65cca71603eeb537dbd9a1a Mon Sep 17 00:00:00 2001
+From: John Poet <jpoet@mythtv.org>
+Date: Fri, 1 Feb 2019 20:33:46 -0700
+Subject: [PATCH 31/39] ChannelUtil::GetChannelDatast:  Make sure results are
+ more predictable.
+
+Order results so lower numbered visible channels are prefered.  If no
+visible channels are available, then return an invisible one.
+
+(cherry picked from commit cf7e9cc8293719ee7d726dfa44b2501e5a38f80a)
+---
+ mythtv/libs/libmythtv/channelutil.cpp | 44 +++++++++++++++------------
+ 1 file changed, 24 insertions(+), 20 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/channelutil.cpp b/mythtv/libs/libmythtv/channelutil.cpp
+index dc2e412e7d6..bec67d02364 100644
+--- a/mythtv/libs/libmythtv/channelutil.cpp
++++ b/mythtv/libs/libmythtv/channelutil.cpp
+@@ -1875,7 +1875,8 @@ bool ChannelUtil::GetChannelData(
+         "FROM channel, videosource "
+         "WHERE videosource.sourceid = channel.sourceid AND "
+         "      channum              = :CHANNUM         AND "
+-        "      channel.sourceid     = :SOURCEID");
++        "      channel.sourceid     = :SOURCEID "
++        "ORDER BY channel.visible DESC, channel.chanid ");
+     query.bindValue(":CHANNUM",  channum);
+     query.bindValue(":SOURCEID", sourceid);
+ 
+@@ -1885,35 +1886,38 @@ bool ChannelUtil::GetChannelData(
+         return false;
+     }
+ 
+-    while (query.next())
++    if (query.next())
+     {
++        finetune      = query.value(0).toInt();
++        freqid        = query.value(1).toString();
++        tvformat      = query.value(2).toString();
++        freqtable     = query.value(3).toString();
++        commfree      = (query.value(4).toInt() == -2);
++        mplexid       = query.value(5).toUInt();
++        atsc_major    = query.value(6).toUInt();
++        atsc_minor    = query.value(7).toUInt();
++        mpeg_prog_num = (query.value(8).isNull()) ? -1
++                        : query.value(8).toInt();
++        chanid        = query.value(9).toUInt();
++
+         found += query.value(10).toInt();
+-        if (found)
+-        {
+-            finetune      = query.value(0).toInt();
+-            freqid        = query.value(1).toString();
+-            tvformat      = query.value(2).toString();
+-            freqtable     = query.value(3).toString();
+-            commfree      = (query.value(4).toInt() == -2);
+-            mplexid       = query.value(5).toUInt();
+-            atsc_major    = query.value(6).toUInt();
+-            atsc_minor    = query.value(7).toUInt();
+-            mpeg_prog_num = (query.value(8).isNull()) ? -1
+-                            : query.value(8).toInt();
+-            chanid        = query.value(9).toUInt();
+-        }
+     }
+ 
+-    if (!found)
++    while (query.next())
++        found += query.value(10).toInt();
++
++    if (found == 0 && chanid)
+     {
+-        LOG(VB_GENERAL, LOG_INFO,
+-            QString("No visible channels for %1").arg(channum));
++        LOG(VB_GENERAL, LOG_WARNING,
++            QString("No visible channels for %1, using invisble chanid %2")
++            .arg(channum).arg(chanid));
+     }
+ 
+     if (found > 1)
+     {
+         LOG(VB_GENERAL, LOG_WARNING,
+-            QString("Found multiple visible channels for %1").arg(channum));
++            QString("Found multiple visible channels for %1, using chanid %2")
++            .arg(channum).arg(chanid));
+     }
+ 
+     if (!chanid)
+
+From 363d00440163d55456bcb2eb353eb8a3ac9dc93d Mon Sep 17 00:00:00 2001
+From: John Poet <jpoet@mythtv.org>
+Date: Tue, 26 Feb 2019 13:57:12 -0700
+Subject: [PATCH 32/39] mythexternrecorder: Allow config to pass logging
+ options.
+
+(cherry picked from commit 5b63846899946c0c150d1bf3ca4c90289293ca9f)
+---
+ .../recorders/ExternalStreamHandler.cpp       |  7 ++---
+ .../mythexternrecorder/MythExternRecApp.cpp   | 28 ++++++++++++++++---
+ .../mythexternrecorder/MythExternRecApp.h     |  3 +-
+ .../mythexternrecorder/external-ffmpeg.conf   |  3 ++
+ .../mythexternrecorder/external-twitch.conf   |  3 ++
+ .../mythexternrecorder/external-vlc.conf      |  3 ++
+ mythtv/programs/mythexternrecorder/main.cpp   |  7 +++--
+ 7 files changed, 42 insertions(+), 12 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+index 6de71f7ed94..74aea1419d1 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+@@ -1141,7 +1141,7 @@ bool ExternalStreamHandler::StartStreaming(void)
+ 
+     if (StreamingCount() == 0)
+     {
+-        if (!ProcessCommand("StartStreaming", result, 10000))
++        if (!ProcessCommand("StartStreaming", result, 15000))
+         {
+             LogLevel_t level = LOG_ERR;
+             if (result.toLower().startsWith("warn"))
+@@ -1171,8 +1171,6 @@ bool ExternalStreamHandler::StartStreaming(void)
+ 
+ bool ExternalStreamHandler::StopStreaming(void)
+ {
+-    QString result;
+-
+     QMutexLocker locker(&m_stream_lock);
+ 
+     LOG(VB_RECORD, LOG_INFO, LOC +
+@@ -1209,7 +1207,8 @@ bool ExternalStreamHandler::StopStreaming(void)
+         return false;
+     }
+ 
+-    if (!ProcessCommand("StopStreaming", result, 6000))
++    QString result;
++    if (!ProcessCommand("StopStreaming", result, 10000))
+     {
+         LogLevel_t level = LOG_ERR;
+         if (result.toLower().startsWith("warn"))
+diff --git a/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp b/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp
+index bc7a67cbb9f..f4970d62baf 100644
+--- a/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp
++++ b/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp
+@@ -31,7 +31,8 @@
+ 
+ MythExternRecApp::MythExternRecApp(const QString & command,
+                                    const QString & conf_file,
+-                                   const QString & log_file)
++                                   const QString & log_file,
++                                   const QString & logging)
+     : QObject()
+     , m_fatal(false)
+     , m_run(true)
+@@ -43,6 +44,7 @@ MythExternRecApp::MythExternRecApp(const QString & command,
+     , m_lock_timeout(0)
+     , m_scan_timeout(120000)
+     , m_log_file(log_file)
++    , m_logging(logging)
+     , m_config_ini(conf_file)
+     , m_tuned(false)
+     , m_chan_settings(nullptr)
+@@ -146,7 +148,8 @@ bool MythExternRecApp::Open(void)
+ 
+     qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
+     QObject::connect(&m_proc,
+-                     static_cast<void (QProcess::*)(int,QProcess::ExitStatus exitStatus)>
++                     static_cast<void (QProcess::*)
++                     (int,QProcess::ExitStatus exitStatus)>
+                      (&QProcess::finished),
+                      this, &MythExternRecApp::ProcFinished);
+ 
+@@ -391,7 +394,24 @@ Q_SLOT void MythExternRecApp::TuneChannel(const QString & serial,
+     {
+         m_command.replace("%URL%", url);
+         LOG(VB_CHANNEL, LOG_DEBUG, LOC +
+-            QString(": '%URL%' replaced in cmd: '%1'").arg(m_command));
++            QString(": '%URL%' replaced with '%1' in cmd: '%2'")
++            .arg(url).arg(m_command));
++    }
++
++    if (!m_log_file.isEmpty() && m_command.indexOf("%LOGFILE%") >= 0)
++    {
++        m_command.replace("%LOGFILE%", m_log_file);
++        LOG(VB_RECORD, LOG_DEBUG, LOC +
++            QString(": '%LOGFILE%' replaced with '%1' in cmd: '%2'")
++            .arg(m_log_file).arg(m_command));
++    }
++
++    if (!m_logging.isEmpty() && m_command.indexOf("%LOGGING%") >= 0)
++    {
++        m_command.replace("%LOGGING%", m_logging);
++        LOG(VB_RECORD, LOG_DEBUG, LOC +
++            QString(": '%LOGGING%' replaced with '%1' in cmd: '%2'")
++            .arg(m_logging).arg(m_command));
+     }
+ 
+     m_desc = m_rec_desc;
+@@ -498,7 +518,7 @@ Q_SLOT void MythExternRecApp::StopStreaming(const QString & serial, bool silent)
+     if (m_proc.state() == QProcess::Running)
+     {
+         m_proc.terminate();
+-        m_proc.waitForFinished();
++        m_proc.waitForFinished(3000);
+         m_proc.kill();
+ 
+         LOG(VB_RECORD, LOG_INFO, LOC + ": External application terminated.");
+diff --git a/mythtv/programs/mythexternrecorder/MythExternRecApp.h b/mythtv/programs/mythexternrecorder/MythExternRecApp.h
+index 175a30b933a..e1115122fd3 100644
+--- a/mythtv/programs/mythexternrecorder/MythExternRecApp.h
++++ b/mythtv/programs/mythexternrecorder/MythExternRecApp.h
+@@ -35,7 +35,7 @@ class MythExternRecApp : public QObject
+ 
+   public:
+     MythExternRecApp(const QString & command, const QString & conf_file,
+-                     const QString & log_file);
++                     const QString & log_file, const QString & logging);
+     ~MythExternRecApp(void);
+ 
+     bool Open(void);
+@@ -108,6 +108,7 @@ class MythExternRecApp : public QObject
+     uint      m_scan_timeout;
+ 
+     QString   m_log_file;
++    QString   m_logging;
+     QString   m_config_ini;
+     QString   m_desc;
+ 
+diff --git a/mythtv/programs/mythexternrecorder/external-ffmpeg.conf b/mythtv/programs/mythexternrecorder/external-ffmpeg.conf
+index 934cc4459aa..3804c1301bd 100644
+--- a/mythtv/programs/mythexternrecorder/external-ffmpeg.conf
++++ b/mythtv/programs/mythexternrecorder/external-ffmpeg.conf
+@@ -2,6 +2,9 @@
+ # The recorder command to execute.  %URL% is optional, and
+ # will be replaced with the channel's "URL" as defined in the
+ # [TUNER/channels] (channel conf) configuration file
++#
++# %LOGGING% will be replaced with mythtv logging params. For example:
++# --verbose general,channel,record --logpath /var/log/mythtv --loglevel info --quiet
+ command=/opt/ffmpeg/bin/ffmpeg -hide_banner -nostats -loglevel panic -re -i \"%URL%\" -c:v copy -c:a copy -f mpegts -
+ 
+ # Used in logging events
+diff --git a/mythtv/programs/mythexternrecorder/external-twitch.conf b/mythtv/programs/mythexternrecorder/external-twitch.conf
+index ed251fa6f95..d35bd188c06 100644
+--- a/mythtv/programs/mythexternrecorder/external-twitch.conf
++++ b/mythtv/programs/mythexternrecorder/external-twitch.conf
+@@ -2,6 +2,9 @@
+ # The recorder command to execute.  %URL% is optional, and
+ # will be replaced with the channel's "URL" as defined in the
+ # [TUNER/channels] (channel conf) configuration file
++#
++# %LOGGING% will be replaced with mythtv logging params. For example:
++# --verbose general,channel,record --logpath /var/log/mythtv --loglevel info --quiet
+ 
+ command="/usr/bin/youtube-dl --hls-use-mpegts --ffmpeg-location /opt/ffmpeg/bin --external-downloader-args \"-hide_banner -nostats -loglevel panic -re\" -o - \"%URL%\""
+ 
+diff --git a/mythtv/programs/mythexternrecorder/external-vlc.conf b/mythtv/programs/mythexternrecorder/external-vlc.conf
+index 843f8485852..73ad30db024 100644
+--- a/mythtv/programs/mythexternrecorder/external-vlc.conf
++++ b/mythtv/programs/mythexternrecorder/external-vlc.conf
+@@ -2,6 +2,9 @@
+ # The recorder command to execute.  %URL% is optional, and
+ # will be replaced with the channel's "URL" as defined in the
+ # [TUNER/channels] (channel conf) configuration file
++#
++# %LOGGING% will be replaced with mythtv logging params. For example:
++# --verbose general,channel,record --logpath /var/log/mythtv --loglevel info --quiet
+ command="cvlc \"%URL%\" --sout \"#std{mux=ts,access=file,dst=-}\""
+ 
+ # Used in logging events, %ARG% are replaced from the channel info
+diff --git a/mythtv/programs/mythexternrecorder/main.cpp b/mythtv/programs/mythexternrecorder/main.cpp
+index 77ba6fc16e4..11a97d1ddad 100644
+--- a/mythtv/programs/mythexternrecorder/main.cpp
++++ b/mythtv/programs/mythexternrecorder/main.cpp
+@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
+     if ((retval = cmdline.ConfigureLogging()) != GENERIC_EXIT_OK)
+         return retval;
+     QString logfile = cmdline.GetLogFilePath();
++    QString logging = logPropagateArgs;
+ 
+     MythExternControl *control = new MythExternControl();
+     MythExternRecApp  *process = nullptr;
+@@ -70,12 +71,12 @@ int main(int argc, char *argv[])
+     QString conf_file = cmdline.toString("conf");
+     if (!conf_file.isEmpty())
+     {
+-        process = new MythExternRecApp("", conf_file, logfile);
++        process = new MythExternRecApp("", conf_file, logfile, logging);
+     }
+     else if (!cmdline.toString("exec").isEmpty())
+     {
+         QString command = cmdline.toString("exec");
+-        process = new MythExternRecApp(command, "", logfile);
++        process = new MythExternRecApp(command, "", logfile, logging);
+     }
+     else if (!cmdline.toString("infile").isEmpty())
+     {
+@@ -83,7 +84,7 @@ int main(int argc, char *argv[])
+         QString command = QString("ffmpeg -re -i \"%1\" "
+                                   "-c:v copy -c:a copy -f mpegts -")
+                           .arg(filename);
+-        process = new MythExternRecApp(command, "", logfile);
++        process = new MythExternRecApp(command, "", logfile, logging);
+     }
+ 
+     QObject::connect(process, &MythExternRecApp::Opened,
+
+From df4b1b78ae4e6d551b9a5ce07a0af33d436b96fd Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Tue, 19 Mar 2019 14:05:09 -0500
+Subject: [PATCH 33/39] Include episode information in Scheduler-generated
+ ProgramInfos.
+
+Also, include the generic, episode indication when writing to the
+oldrecorded table.
+
+Refs #13425
+
+(cherry picked from commit f9794e0ac7d4214599bb9b43f77b46c8dfcfa8fc)
+---
+ mythtv/libs/libmythtv/recordinginfo.cpp   |  6 ++++--
+ mythtv/programs/mythbackend/scheduler.cpp | 13 +++++++------
+ 2 files changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/recordinginfo.cpp b/mythtv/libs/libmythtv/recordinginfo.cpp
+index f93da0bbea5..143b37f431d 100644
+--- a/mythtv/libs/libmythtv/recordinginfo.cpp
++++ b/mythtv/libs/libmythtv/recordinginfo.cpp
+@@ -1305,11 +1305,12 @@ void RecordingInfo::AddHistory(bool resched, bool forcedup, bool future)
+     result.prepare("REPLACE INTO oldrecorded (chanid,starttime,"
+                    "endtime,title,subtitle,description,season,episode,"
+                    "category,seriesid,programid,inetref,findid,recordid,"
+-                   "station,rectype,recstatus,duplicate,reactivate,future) "
++                   "station,rectype,recstatus,duplicate,reactivate,generic,"
++                   "future) "
+                    "VALUES(:CHANID,:START,:END,:TITLE,:SUBTITLE,:DESC,:SEASON,"
+                    ":EPISODE,:CATEGORY,:SERIESID,:PROGRAMID,:INETREF,"
+                    ":FINDID,:RECORDID,:STATION,:RECTYPE,:RECSTATUS,:DUPLICATE,"
+-                   ":REACTIVATE,:FUTURE);");
++                   ":REACTIVATE,:GENERIC,:FUTURE);");
+     result.bindValue(":CHANID", chanid);
+     result.bindValue(":START", startts);
+     result.bindValue(":END", endts);
+@@ -1329,6 +1330,7 @@ void RecordingInfo::AddHistory(bool resched, bool forcedup, bool future)
+     result.bindValue(":RECSTATUS", rs);
+     result.bindValue(":DUPLICATE", dup);
+     result.bindValue(":REACTIVATE", 0);
++    result.bindValue(":GENERIC", IsGeneric());
+     result.bindValue(":FUTURE", future);
+ 
+     if (!result.exec())
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index 29aa293a24e..6bb9b1e512e 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -4472,8 +4472,9 @@ void Scheduler::AddNewRecords(void)
+         "    capturecard.hostname, recordmatch.oldrecstatus, NULL, "//43-45
+         "    oldrecstatus.future, capturecard.schedorder, " //46-47
+         "    p.syndicatedepisodenumber, p.partnumber, p.parttotal, " //48-50
+-        "    c.mplexid, capturecard.displayname, ") +      //51-52
+-        pwrpri + QString(                                  //53
++        "    c.mplexid, capturecard.displayname,         "//51-52
++        "    p.season, p.episode, p.totalepisodes, ") +   //53-55
++        pwrpri + QString(                                  //56
+         "FROM recordmatch "
+         "INNER JOIN RECTABLE ON (recordmatch.recordid = RECTABLE.recordid) "
+         "INNER JOIN program AS p "
+@@ -4547,9 +4548,9 @@ void Scheduler::AddNewRecords(void)
+             result.value(5).toString(),//subtitle
+             QString(),//sortsubtitle
+             result.value(6).toString(),//description
+-            0, // season
+-            0, // episode
+-            0, // total episodes
++            result.value(53).toInt(), // season
++            result.value(54).toInt(), // episode
++            result.value(55).toInt(), // total episodes
+             result.value(48).toString(),//synidcatedepisode
+             result.value(11).toString(),//category
+ 
+@@ -4618,7 +4619,7 @@ void Scheduler::AddNewRecords(void)
+             p->SetRecordingStatus(p->oldrecstatus);
+         }
+ 
+-        p->SetRecordingPriority2(result.value(53).toInt());
++        p->SetRecordingPriority2(result.value(56).toInt());
+ 
+         // Check to see if the program is currently recording and if
+         // the end time was changed.  Ideally, checking for a new end
+
+From 81081957a0cbb83e7419269129b4babfe306a8ac Mon Sep 17 00:00:00 2001
+From: Yianni Vidalis <yiannividalis@hotmail.com>
+Date: Wed, 20 Mar 2019 12:50:31 -0400
+Subject: [PATCH 34/39] EIT fixes/enhancements for greek TV. (dvb-s and dvb-t)
+
+Fixes #13426.
+
+Signed-off-by: David Hampton <mythtv@love2code.net>
+(cherry picked from commit 2887266263db0ed423d697ea2d7e74915e2a4c68)
+---
+ mythtv/libs/libmythtv/eitfixup.cpp  | 157 ++++++++++++++++++++--------
+ mythtv/libs/libmythtv/eitfixup.h    |   2 +
+ mythtv/libs/libmythtv/eithelper.cpp |  11 ++
+ 3 files changed, 127 insertions(+), 43 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/eitfixup.cpp b/mythtv/libs/libmythtv/eitfixup.cpp
+index 7807484ae56..e8cd9fbf527 100644
+--- a/mythtv/libs/libmythtv/eitfixup.cpp
++++ b/mythtv/libs/libmythtv/eitfixup.cpp
+@@ -198,24 +198,28 @@ EITFixUp::EITFixUp()
+       m_HTML("</?EM>", Qt::CaseInsensitive),
+       m_grReplay("\\([ΕE]\\)"),
+       m_grDescriptionFinale("\\s*Τελευταίο\\sΕπεισόδιο\\.\\s*"),
+-      m_grActors("(?:[Ππ]α[ιί]ζουν:|[Μμ]ε τους:|Πρωταγωνιστο[υύ]ν:|Πρωταγωνιστε[ιί]:?)(?:\\s+στο ρόλο(?: του| της)?\\s(?:\\w+\\s[οη]\\s))?([-\\w\\s']+(?:,[-\\w\\s']+)*)(?:κ\\.[αά])?(?:\\W?)"),
++      m_grActors("(?:[Ππ]α[ιί]ζουν:|[ΜMμ]ε τους:|Πρωταγωνιστο[υύ]ν:|Πρωταγωνιστε[ιί]:?)(?:\\s+στο ρόλο(?: του| της)?\\s(?:\\w+\\s[οη]\\s))?([-\\w\\s']+(?:,[-\\w\\s']+)*)(?:κ\\.[αά])?(?:\\W?)"),
+       // cap(1) actors, just names
+       m_grFixnofullstopActors("(\\w\\s(Παίζουν:|Πρωταγων))"),
+       m_grFixnofullstopDirectors("((\\w\\s(Σκηνοθ[εέ]))"),
+-      m_grPeopleSeparator("(,\\s+)"),
+-      m_grDirector("(?:Σκηνοθεσία: |Σκηνοθέτης: )(\\w+\\s\\w+\\s?)(?:\\W?)"),
+-      m_grPres("(?:Παρουσ[ιί]αση:(?:\\b)*|Παρουσι[αά]ζ(?:ουν|ει)(?::|\\sο|\\sη)|Με τ(?:ον |ην )(?:[\\s|:|ο|η])*(?:\\b)*)([-\\w\\s]+(?:,[-\\w\\s]+)*)(?:\\W?)"),
++      m_grPeopleSeparator("([,-]\\s+)"),
++      m_grDirector("(?:Σκηνοθεσία: |Σκηνοθέτης: |Σκηνοθέτης - Επιμέλεια: )(\\w+\\s\\w+\\s?)(?:\\W?)"),
++      m_grPres("(?:Παρουσ[ιί]αση:(?:\\b)*|Παρουσι[αά]ζ(?:ουν|ει)(?::|\\sο|\\sη)|Παρουσι[αά]στ(?:[ηή]ς|ρια|ριες|[εέ]ς)(?::|\\sο|\\sη)|Με τ(?:ον |ην )(?:[\\s|:|ο|η])*(?:\\b)*)([-\\w\\s]+(?:,[-\\w\\s]+)*)(?:\\W?)"),
+       m_grYear("(?:\\W?)(?:\\s?παραγωγ[ηή]ς|\\s?-|,)\\s*([1-2]{1}[0-9]{3})(?:-\\d{1,4})?",Qt::CaseInsensitive),
+       m_grCountry("(?:\\W|\\b)(?:(ελλην|τουρκ|αμερικ[αά]ν|γαλλ|αγγλ|βρεττ?αν|γερμαν|ρωσσ?|ιταλ|ελβετ|σουηδ|ισπαν|πορτογαλ|μεξικ[αά]ν|κιν[εέ]ζικ|ιαπων|καναδ|βραζιλι[αά]ν)(ικ[ηή][ςσ]))",Qt::CaseInsensitive),
+       m_grlongEp("\\b(?:Επ.|επεισ[οό]διο:?)\\s*(\\d+)(?:\\W?)",Qt::CaseInsensitive),
+-      m_grSeason("(?:-\\s)?\\b((\\D{1,2})(?:')?|(\\d{1,2})(?:ος|ου)?)(?:\\sκ[υύ]κλο(?:[σς]|υ)){1}\\s?",Qt::CaseInsensitive),
+-      m_grRealTitleinDescription("(?:^\\()([\\w\\s\\d\\D-]+)(?:\\))(?:\\s*)"),
++      m_grSeason_as_RomanNumerals(",\\s*([MDCLXVIΙΧ]+)$",Qt::CaseInsensitive),
++      m_grSeason("(?:\\W-?)*(?:\\(-\\s*)?\\b(([Α-Ω]{1,2})(?:'|΄)?|(\\d{1,2})(?:ος|ου|oς|os)?)(?:\\s*κ[υύ]κλο(?:[σς]|υ)){1}\\s?",Qt::CaseInsensitive),
++      m_grRealTitleinDescription("(?:^\\()([A-Za-z\\s\\d-]+)(?:\\))(?:\\s*)"),
+       // cap1 = real title
+       // cap0 = real title in parentheses.
+-      m_grRealTitleinTitle("(?:\\()([\\w\\s\\d\\D-]+)(?:\\))(?:\\s*$)*"),
++      m_grRealTitleinTitle("(?:\\()([A-Za-z\\s\\d-]+)(?:\\))(?:\\s*$)*"),
+       // cap1 = real title
+       // cap0 = real title in parentheses.
+-      m_grNotPreviouslyShown("(?:\\b[Α1]['η]?\\s*(?:τηλεοπτικ[ηή]\\s*)?(?:μετ[αά]δοση|προβολ[ηή]))(?:\\W?)"),
++      m_grCommentsinTitle("(?:\\()([Α-Ωα-ω\\s\\d-]+)(?:\\))(?:\\s*$)*"),
++      // cap1 = real title
++      // cap0 = real title in parentheses.
++      m_grNotPreviouslyShown("(?:\\W?)(?:-\\s*)*(?:\\b[Α1]['΄η]?\\s*(?:τηλεοπτικ[ηή]\\s*)?(?:μετ[αά]δοση|προβολ[ηή]))(?:\\W?)",Qt::CaseInsensitive),
+       // Try to exctract Greek categories from keywords in description.
+       m_grEpisodeAsSubtitle("(?:^Επεισ[οό]διο:\\s?)([\\w\\s-,']+)\\.(?:\\s)?"),
+       m_grCategFood("(?:\\W)?(?:εκπομπ[ηή]\\W)?(Γαστρονομ[ιί]α[σς]?|μαγειρικ[ηή][σς]?|chef|συνταγ[εέηή]|διατροφ|wine|μ[αά]γειρα[σς]?)(?:\\W)?",Qt::CaseInsensitive),
+@@ -2552,6 +2556,8 @@ void EITFixUp::FixGreekSubtitle(DBEventEIT &event) const
+ 
+ void EITFixUp::FixGreekEIT(DBEventEIT &event) const
+ {
++    int position1;
++    int position2;
+     //Live show
+     int position;
+     QRegExp tmpRegEx;
+@@ -2567,7 +2573,7 @@ void EITFixUp::FixGreekEIT(DBEventEIT &event) const
+     if (position != -1)
+     {
+         event.previouslyshown = false;
+-        event.title = event.title.replace(m_grNotPreviouslyShown.cap(0), "");
++        event.title = event.title.replace(m_grNotPreviouslyShown, "");
+     }
+ 
+     // Greek Replay (Ε)
+@@ -2580,6 +2586,23 @@ void EITFixUp::FixGreekEIT(DBEventEIT &event) const
+         event.title = event.title.replace(tmpRegEx, "");
+     }
+ 
++    // Check for (HD) in the decription
++    position = event.description.indexOf("(HD)");
++    if (position != -1)
++    {
++        event.description = event.description.replace("(HD)", "");
++        event.videoProps |= VID_HDTV;
++    }
++
++    // Check for (Full HD) in the decription
++    position = event.description.indexOf("(Full HD)");
++    if (position != -1)
++    {
++        event.description = event.description.replace("(Full HD)", "");
++        event.videoProps |= VID_HDTV;
++    }
++
++
+     tmpRegEx = m_grFixnofullstopActors;
+     position = event.description.indexOf(tmpRegEx);
+     if (position != -1)
+@@ -2639,37 +2662,6 @@ void EITFixUp::FixGreekEIT(DBEventEIT &event) const
+         event.description.replace(tmpRegEx.cap(0), "");
+     }
+ 
+-/*
+-
+-    tmpRegEx = m_grDirector;
+-    position = event.description.indexOf(tmpRegEx);
+-    if (position != -1)
+-    {
+-        // director is captured in cap(1).Due to sometimes miswritten data in
+-        // eit, e.g no fullstop present(!)
+-        QString tmpDirectorsString = tmpRegEx.cap(1);
+-        // look for actors in director string (lack of fullstop, etc)
+-        tmpRegEx = m_grActors;
+-        int actposition = tmpDirectorsString.indexOf(tmpRegEx);
+-        if (actposition != -1)
+-        {
+-            tmpDirectorsString = tmpDirectorsString.replace(tmpRegEx,"");
+-        }
+-        const QStringList directors =
+-            tmpDirectorsString.split(m_grPeopleSeparator, QString::SkipEmptyParts);
+-        QStringList::const_iterator it = directors.begin();
+-        for (; it != directors.end(); ++it)
+-        {
+-            tmpDirectorsString = it->split(":").last().trimmed().
+-                    remove(QRegExp("\\.$"));
+-            if (tmpDirectorsString != "")
+-                event.AddPerson(DBPerson::kDirector, tmpDirectorsString);
+-
+-        }
+-        event.description.replace(tmpRegEx.cap(0), "");
+-       // directorPresent = true;
+-    }
+-*/
+     //Try to find presenter
+     tmpRegEx = m_grPres;
+     position = event.description.indexOf(tmpRegEx);
+@@ -2709,6 +2701,8 @@ void EITFixUp::FixGreekEIT(DBEventEIT &event) const
+     event.description = event.description.trimmed();
+     event.title       = event.title.trimmed();
+     event.subtitle    = event.subtitle.trimmed();
++    // Remove " ."
++    event.description = event.description.replace(" .",".").trimmed();
+ 
+     //find country of origin and remove it from description.
+     tmpRegEx = m_grCountry;
+@@ -2724,9 +2718,8 @@ void EITFixUp::FixGreekEIT(DBEventEIT &event) const
+     QRegExp tmpSeries = m_grSeason;
+     // cap(2) is the season for ΑΒΓΔ
+     // cap(3) is the season for 1234
+-    int position1 = tmpSeries.indexIn(event.title);
+-    int position2 = tmpSeries.indexIn(event.description);
+-    if ((position1 != -1) || (position2 != -1))
++    if ((position1 = tmpSeries.indexIn(event.title)) != -1
++          || (position2 = tmpSeries.indexIn(event.description)) != -1)
+     {
+         if (!tmpSeries.cap(2).isEmpty()) // we found a letter representing a number
+         {
+@@ -2756,6 +2749,73 @@ void EITFixUp::FixGreekEIT(DBEventEIT &event) const
+         if (position2 != -1)
+             event.description.replace(tmpSeries.cap(0),"");
+     }
++    // If Season is in Roman Numerals (I,II,etc)
++    tmpSeries = m_grSeason_as_RomanNumerals;
++    if ((position1 = tmpSeries.indexIn(event.title)) != -1
++          || (position2 = tmpSeries.indexIn(event.description)) != -1)
++    {
++        if (!tmpSeries.isEmpty()) //number
++        {
++            // make sure I replace greek Ι with english I
++            QString romanSeries = tmpSeries.cap(1).replace("Ι","I").toUpper();
++            if (romanSeries == "I")
++                event.season = 1;
++            else if (romanSeries == "II")
++                event.season = 2;
++            else if (romanSeries== "III")
++                event.season = 3;
++            else if (romanSeries == "IV")
++                event.season = 4;
++            else if (romanSeries == "V")
++                event.season = 5;
++            else if (romanSeries== "VI")
++                event.season = 6;
++            else if (romanSeries == "VII")
++                event.season = 7;
++            else if (romanSeries == "VIII")
++                event.season = 8;
++            else if (romanSeries == "IX")
++                event.season = 9;
++            else if (romanSeries == "X")
++                event.season = 10;
++            else if (romanSeries == "XI")
++                event.season = 11;
++            else if (romanSeries == "XII")
++                event.season = 12;
++            else if (romanSeries == "XII")
++                event.season = 13;
++            else if (romanSeries == "XIV")
++                event.season = 14;
++            else if (romanSeries == "XV")
++                event.season = 15;
++            else if (romanSeries == "XVI")
++                event.season = 16;
++            else if (romanSeries == "XVII")
++                event.season = 17;
++            else if (romanSeries == "XIII")
++                event.season = 18;
++            else if (romanSeries == "XIX")
++                event.season = 19;
++            else if (romanSeries == "XX")
++                event.season = 20;
++        }
++        series = true;
++        if (position1 != -1)
++        {
++            event.title.replace(tmpSeries.cap(0),"");
++            event.title = event.title.trimmed();
++            if (event.title.right(1) == ",")
++               event.title.chop(1);
++        }
++        if (position2 != -1)
++        {
++            event.description.replace(tmpSeries.cap(0),"");
++            event.description = event.description.trimmed();
++            if (event.description.right(1) == ",")
++               event.description.chop(1);
++        }
++    }
++
+ 
+     QRegExp tmpEpisode = m_grlongEp;
+     //tmpEpisode.setMinimal(true);
+@@ -2776,6 +2836,17 @@ void EITFixUp::FixGreekEIT(DBEventEIT &event) const
+                 event.season = 1;
+         }
+     }
++    // Sometimes, especially on greek national tv, they include comments in the
++    // title, e.g "connection to ert1", "ert archives".
++    // Because they obscure the real title, I'll isolate and remove them.
++
++    QRegExp tmpComment = m_grCommentsinTitle;
++    tmpComment.setMinimal(true);
++    position = event.title.indexOf(tmpComment);
++    if (position != -1)
++    {
++        event.title.replace(tmpComment.cap(0),"");
++    }
+ 
+     // Sometimes the real (mostly English) title of a movie or series is
+     // enclosed in parentheses in the event title, subtitle or description.
+diff --git a/mythtv/libs/libmythtv/eitfixup.h b/mythtv/libs/libmythtv/eitfixup.h
+index 67cbcd08463..c7f3df15c60 100644
+--- a/mythtv/libs/libmythtv/eitfixup.h
++++ b/mythtv/libs/libmythtv/eitfixup.h
+@@ -272,10 +272,12 @@ class EITFixUp
+     const QRegExp m_grYear; // Greek release year.
+     const QRegExp m_grCountry; // Greek event country of origin.
+     const QRegExp m_grlongEp; // Greek Episode
++    const QRegExp m_grSeason_as_RomanNumerals; // Greek Episode in Roman numerals
+     const QRegExp m_grSeason; // Greek Season
+     const QRegExp m_grSeries;
+     const QRegExp m_grRealTitleinDescription; // The original title is often in the descr in parenthesis.
+     const QRegExp m_grRealTitleinTitle; // The original title is often in the title in parenthesis.
++    const QRegExp m_grCommentsinTitle; // Sometimes esp. national stations include comments in the title eg "(ert arxeio)"
+     const QRegExp m_grNotPreviouslyShown; // Not previously shown on TV
+     const QRegExp m_grEpisodeAsSubtitle; // Description field: "^Episode: Lion in the cage. (Description follows)"
+     const QRegExp m_grCategFood; // Greek category food
+diff --git a/mythtv/libs/libmythtv/eithelper.cpp b/mythtv/libs/libmythtv/eithelper.cpp
+index 1caa158d9f4..91b2af2e927 100644
+--- a/mythtv/libs/libmythtv/eithelper.cpp
++++ b/mythtv/libs/libmythtv/eithelper.cpp
+@@ -1421,6 +1421,7 @@ static void init_fixup(FixupMap &fix)
+     fix[  100LL << 32 |  8492LL << 16 ] = // Ant1,Alpha,Art,10E
+     fix[  102LL << 32 |  8492LL << 16 ] = // Mega,Star,SKAI,M.tv
+     fix[  320LL << 32 |  8492LL << 16 ] = // Astra,Thessalia,TRT,TV10,ZEYS
++        EITFixUp::kEFixForceISO8859_7 |
+         EITFixUp::kFixGreekEIT |
+         EITFixUp::kFixGreekCategories;
+     fix[    2LL << 32 |  8492LL << 16 ] = // N1,Nplus,NHD,Vouli
+@@ -1429,6 +1430,16 @@ static void init_fixup(FixupMap &fix)
+         EITFixUp::kFixGreekEIT |              // cut in db. Will move to descr.
+         EITFixUp::kFixGreekCategories;
+ 
++    //DVB-S & S2 Greek Nova Provider
++    // Hotbird 11823H DVB-S
++    fix[ 5500LL << 32 |  318LL << 16 ] = EITFixUp::kEFixForceISO8859_7;
++    // Hotbird 11938H DVB-S
++    fix[ 6100LL << 32 |  318LL << 16 ] = EITFixUp::kEFixForceISO8859_7;
++    // Hotbird 12130H DVB-S2
++    fix[ 7100LL << 32 |  318LL << 16 ] = EITFixUp::kEFixForceISO8859_7;
++    // Hotbird 12169H DVB-S2
++    fix[ 7300LL << 32 |  318LL << 16 ] = EITFixUp::kEFixForceISO8859_7;
++
+     // DVB-S Star One C2 70W (Brazil)
+     // it has original_network_id = 1 like Astra on 19.2E, but transport_id does
+     // not collide at the moment
+
+From 094e0d0c8038dac291dc4634e268c5fdc9dc0502 Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Mon, 25 Mar 2019 17:43:51 -0400
+Subject: [PATCH 35/39] tidy: Fix memory leak in HLSSegment::DecodeData.
+
+The clang-tidy "memory leak" checker pointed out that
+HLSSegment::DecodeData function would leak memory if it read an
+invalid padding size from the end of the buffer.  Add a line to free
+the temporary buffer in this error condition.
+
+Fixes #13435.
+
+(cherry picked from commit 221e867bcbf5a79ff5f68eb5d30aa78538a2dbfb)
+---
+ mythtv/libs/libmythtv/HLS/httplivestreambuffer.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mythtv/libs/libmythtv/HLS/httplivestreambuffer.cpp b/mythtv/libs/libmythtv/HLS/httplivestreambuffer.cpp
+index 6067814cce3..43a0e9d2199 100644
+--- a/mythtv/libs/libmythtv/HLS/httplivestreambuffer.cpp
++++ b/mythtv/libs/libmythtv/HLS/httplivestreambuffer.cpp
+@@ -342,6 +342,7 @@ class HLSSegment
+         {
+             LOG(VB_PLAYBACK, LOG_ERR, LOC +
+                 QString("bad padding character (0x%1)").arg(pad, 0, 16, QLatin1Char('0')));
++            delete[] decrypted_data;
+             return RET_ERROR;
+         }
+         aeslen = m_data.size() - pad;
+
+From ff4c7158f4fb241760e77fad7c2a8eef1a4eb5c3 Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Mon, 25 Mar 2019 14:02:11 -0400
+Subject: [PATCH 36/39] tidy: Fix rare null pointer dereference in
+ cc707decoder.cpp.
+
+The clang-tidy "non-null parameter checker" pointed out to possibility
+of the cc708 decoder dereferencing through a null pointer.  This code
+starts with a default buffer size of 512 and then attempts to allocate
+a larger buffer when necessary (in this case, if a single subtitle is
+more than 512 characters.)  If the reallocation fails, the code would
+end up storing the nullptr error return into the buffer pointer, and
+then dereference it an an attempt to store the new characters.  Catch
+this rare condition and drop the characters that won't fit into the
+existing buffer.
+
+Fixes #13436.
+
+(cherry picked from commit d0356aba3c9394200a86dcab7d1cf17a558c5eab)
+---
+ mythtv/libs/libmythtv/cc708decoder.cpp | 41 +++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 14 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/cc708decoder.cpp b/mythtv/libs/libmythtv/cc708decoder.cpp
+index 718bdbeef7b..f8638a78307 100644
+--- a/mythtv/libs/libmythtv/cc708decoder.cpp
++++ b/mythtv/libs/libmythtv/cc708decoder.cpp
+@@ -15,7 +15,8 @@
+ #define DEBUG_CC_SERVICE_2     0
+ #define DEBUG_CC_RAWPACKET     0
+ #define DEBUG_CC_VALIDPACKET   0
+-#define DEBUG_CC_SERVICE_BLOCK 0
++#define DEBUG_CC_DECODE        0
++#define DEBUG_CC_PARSE         0
+ 
+ typedef enum
+ {
+@@ -40,7 +41,7 @@ void CC708Decoder::decode_cc_data(uint cc_type, uint data1, uint data2)
+ {
+     if (DTVCC_PACKET_START == cc_type)
+     {
+-#if 0
++#if DEBUG_CC_DECODE
+         LOG(VB_VBI, LOG_DEBUG, LOC + QString("CC ST data(0x%1 0x%2)")
+                 .arg(data1,0,16).arg(data2,0,16));
+ #endif
+@@ -54,7 +55,7 @@ void CC708Decoder::decode_cc_data(uint cc_type, uint data1, uint data2)
+     }
+     else if (DTVCC_PACKET_DATA == cc_type)
+     {
+-#if 0
++#if DEBUG_CC_DECODE
+         LOG(VB_VBI, LOG_DEBUG, LOC + QString("CC Ex data(0x%1 0x%2)")
+                 .arg(data1,0,16).arg(data2,0,16));
+ #endif
+@@ -197,10 +198,10 @@ static void parse_cc_service_stream(CC708Reader* cc, uint service_num)
+         dlc_loc = blk_size - 1;
+     }
+ 
+-#if 0
++#if DEBUG_CC_PARSE
+     LOG(VB_VBI, LOG_ERR,
+         QString("cc_ss delayed(%1) blk_start(%2) blk_size(%3)")
+-            .arg(cc->delayed) .arg(blk_start) .arg(blk_size));
++            .arg(cc->delayed[service_num]) .arg(blk_start) .arg(blk_size));
+ #endif
+ 
+     for (i = (cc->delayed[service_num]) ? blk_size : blk_start;
+@@ -492,7 +493,7 @@ static int handle_cc_c1(CC708Reader* cc, uint service_num, int i)
+     else
+     {
+         LOG(VB_VBI, LOG_ERR, QString("handle_cc_c1: (NOT HANDLED) "
+-                "code(0x%1) i(%2) blk_size(%3)").arg(code, 2, 16, '0')
++                "code(0x%1) i(%2) blk_size(%3)").arg(code, 2, 16, QLatin1Char('0'))
+                 .arg(i).arg(blk_size));
+     }
+ #endif
+@@ -555,18 +556,25 @@ static int handle_cc_c3(CC708Reader* cc, uint service_num, int i)
+     return i;
+ }
+ 
+-static void rightsize_buf(CC708Reader* cc, uint service_num, uint block_size)
++static bool rightsize_buf(CC708Reader* cc, uint service_num, uint block_size)
+ {
+-    uint min_new_size = block_size + cc->buf_size[service_num];
++    size_t min_new_size = block_size + cc->buf_size[service_num];
++    bool ret = true;
+     if (min_new_size >= cc->buf_alloc[service_num])
+     {
+-        uint new_alloc    = cc->buf_alloc[service_num];
++        size_t new_alloc = cc->buf_alloc[service_num];
+         for (uint i = 0; (i < 32) && (new_alloc <= min_new_size); i++)
+             new_alloc *= 2;
+-
+-        cc->buf[service_num] =
+-            (unsigned char*) realloc(cc->buf[service_num], new_alloc);
+-        cc->buf_alloc[service_num] = (cc->buf[service_num]) ? new_alloc : 0;
++        void *new_buf = realloc(cc->buf[service_num], new_alloc);
++        if (new_buf)
++        {
++            cc->buf[service_num] = (uchar *)new_buf;
++            cc->buf_alloc[service_num] = new_alloc;
++        }
++        else
++        {
++            ret = false;
++        }
+ 
+ #if DEBUG_CC_SERVICE_2
+         LOG(VB_VBI, LOG_DEBUG, QString("rightsize_buf: srv %1 to %1 bytes")
+@@ -579,12 +587,17 @@ static void rightsize_buf(CC708Reader* cc, uint service_num, uint block_size)
+             .arg(min_new_size)
+             .arg(service_num)
+             .arg(cc->buf_alloc[service_num]));
++    return ret;
+ }
+ 
+ static void append_cc(CC708Reader* cc, uint service_num,
+                       const unsigned char* blk_buf, int block_size)
+ {
+-    rightsize_buf(cc, service_num, block_size);
++    if (!rightsize_buf(cc, service_num, block_size))
++    {
++        // The buffer resize failed. Drop the new data.
++        return;
++    }
+ 
+     memcpy(cc->buf[service_num] + cc->buf_size[service_num],
+            blk_buf, block_size);
+
+From 0999fd0ff08d21bf7873daf78fe9e453925cd83d Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Sun, 24 Mar 2019 14:51:17 -0400
+Subject: [PATCH 37/39] tidy: Fix test to retrieve picture from FLAC file.
+
+The clang-tidy "call and message" check pointed out the inevitability
+of calling a function through a nullptr.  The getPictureFromFile
+function was testing the wrong variable when determining whether or
+not a picture was the requested type.  While there, make a variable
+'auto' to tighten up the code.
+
+Fixes #13437.
+
+(cherry picked from commit 6a21dd100e453d24437e980ef01c5525a53efbc1)
+---
+ mythtv/libs/libmythmetadata/metaioflacvorbis.cpp | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp b/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp
+index 3ac353dbc42..8452ffe71fa 100644
+--- a/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp
++++ b/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp
+@@ -198,10 +198,9 @@ TagLib::FLAC::Picture *MetaIOFLACVorbis::getPictureFromFile(
+         // From what I can tell, FLAC::File maintains ownership of the Picture pointers, so no need to delete
+         const TagLib::List<Picture *>& picList = flacfile->pictureList();
+ 
+-        for (TagLib::List<Picture *>::ConstIterator it = picList.begin();
+-                it != picList.end(); it++)
++        for (auto it = picList.begin(); it != picList.end(); it++)
+         {
+-            if (pic->type() == artType)
++            if ((*it)->type() == artType)
+             {
+                 //found the type we were looking for
+                 pic = *it;
+
+From 3af3cad3d74735a561ab594910a3400b2472645c Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Mon, 25 Mar 2019 19:32:11 -0400
+Subject: [PATCH 38/39] tidy: Fix memory leak in HLSSegment::DecodeData.
+
+The clang-tidy "memory leak" checker pointed out that the
+RecorderBase::CheckForRingBufferSwitch function would leak the memory
+pointed to by the 'recq' variable if the 'm_tvrec' variable contains
+nullptr.  Add a line to free the memory pointed to by the 'recq'
+variable in this case.
+
+Fixes #13438.
+
+(cherry picked from commit e6a39281b112fb03ef2f804c13bc6ebe9d336c90)
+---
+ mythtv/libs/libmythtv/recorders/recorderbase.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/mythtv/libs/libmythtv/recorders/recorderbase.cpp b/mythtv/libs/libmythtv/recorders/recorderbase.cpp
+index 24a5ff46306..024d81efbc0 100644
+--- a/mythtv/libs/libmythtv/recorders/recorderbase.cpp
++++ b/mythtv/libs/libmythtv/recorders/recorderbase.cpp
+@@ -391,7 +391,14 @@ void RecorderBase::CheckForRingBufferSwitch(void)
+     nextRingBufferLock.unlock();
+ 
+     if (recq && tvrec)
++    {
++        // This call will free recq.
+         tvrec->RingBufferChanged(ringBuffer, curRecording, recq);
++    }
++    else
++    {
++        delete recq;
++    }
+ 
+     ringBufferCheckTimer.restart();
+ }
+
+From 8e50fcf60bf9aaaddb5c8dbca4c957a0117d62c9 Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Thu, 28 Mar 2019 08:55:36 -0400
+Subject: [PATCH 39/39] Fix timeout on mediaserver announcements.
+
+The socket code was converted in 2009 from taking a boolean to indicate
+a 'short' timeout, to taking an actual timeout in milliseconds.  Fix
+one location that didn't get converted.
+
+Fixes #13439.
+
+(cherry picked from commit 66d8960da3e47023344a4caa1edaa37eff6f64b8)
+---
+ mythtv/libs/libmythbase/mythsocket.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythbase/mythsocket.cpp b/mythtv/libs/libmythbase/mythsocket.cpp
+index 69cba584485..61fbba0f664 100644
+--- a/mythtv/libs/libmythbase/mythsocket.cpp
++++ b/mythtv/libs/libmythbase/mythsocket.cpp
+@@ -490,7 +490,7 @@ bool MythSocket::Announce(const QStringList &new_announce)
+     WriteStringList(new_announce);
+ 
+     QStringList tmplist;
+-    if (!ReadStringList(tmplist, true))
++    if (!ReadStringList(tmplist, MythSocket::kShortTimeout))
+     {
+         LOG(VB_GENERAL, LOG_ERR, LOC +
+             QString("\n\t\t\tCould not read string list from server %1:%2")

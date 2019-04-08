@@ -57,10 +57,10 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # MythTV Version string -- preferably the output from git describe
-%define githash b774c4140b2b9e148ccf699d1ad746bc4c84289c
+%define githash 8e50fcf60bf9aaaddb5c8dbca4c957a0117d62c9
 %define shorthash %(c=%{githash}; echo ${c:0:10})
-%define vers_string v30.0-15-gb774c4140b
-%define rel_date 20190214
+%define vers_string v30.0-39-g8e50fcf60b
+%define rel_date 20190404
 %define rel_string .%{rel_date}git%{shorthash}
 
 %define branch fixes/30
@@ -73,7 +73,7 @@
 #
 Name:           mythtv
 Version:        30.0
-Release:        5%{?rel_string}%{?dist}
+Release:        6%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1461,6 +1461,9 @@ exit 0
 
 
 %changelog
+* Mon Apr 08 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-6.20190404git8e50fcf60b
+- Updated to fixes/30 commit 8e50fcf60b.
+
 * Mon Apr 08 2019 Nicolas Chauvet <kwizart@gmail.com> - 30.0-5.20190214gitb774c4140b
 - Fix multilibs deps
 
