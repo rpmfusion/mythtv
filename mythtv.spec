@@ -541,7 +541,7 @@ This package contains the base themes for the mythtv user interface.
 %package frontend
 Summary:   Client component of mythtv (a DVR)
 Requires:  freetype%{?_isa}
-Requires:  lame%{?_isa}
+Requires:  lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common%{?_isa}       = %{version}-%{release}
 Requires:  mythtv-base-themes%{?_isa}  = %{version}-%{release}
@@ -569,7 +569,7 @@ reachable via the network.
 
 %package backend
 Summary:    Server component of mythtv (a DVR)
-Requires:   lame%{?_isa}
+Requires:   lame
 Requires:   mythtv-common%{?_isa} = %{version}-%{release}
 Requires:   mythtv-libs%{?_isa}   = %{version}-%{release}
 Requires:   mythtv-setup%{?_isa}
