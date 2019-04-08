@@ -501,8 +501,8 @@ Requires:  jack-audio-connection-kit-devel%{?_isa}
 Requires:  pulseaudio-libs-devel%{?_isa}
 %endif
 
-# Need dvb headers for dvb support
-Requires:  kernel-headers%{?_isa}
+# Need dvb headers for dvb support (not arched)
+Requires:  kernel-headers
 
 # FireWire cable box support
 Requires:  libavc1394-devel%{?_isa}
