@@ -363,14 +363,9 @@ Requires:       perl(JSON)
 %endif
 
 %if %{with mythnetvision}
-%if 0%{?rhel} > 7 || 0%{?fedora} > 30
 BuildRequires:  %{py_prefix}-pycurl
 BuildRequires:  %{py_prefix}-lxml
-%else
-BuildRequires:  %{py_prefix}-pycurl
-BuildRequires:  %{py_prefix}-lxml
-BuildRequires:  python2-oauth
-%endif
+BuildRequires:  %{py_prefix}-oauth
 %endif
 
 %endif
