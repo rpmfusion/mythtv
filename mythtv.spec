@@ -437,9 +437,8 @@ Summary:   Library providing mythtv support
 
 %{?el7:BuildRequires: epel-rpm-macros}
 Requires:  freetype%{?_isa} >= 2
-Requires:  lame%{?_isa}
 Requires:  qt5-qtbase-mysql%{?_isa}
-Requires:  udisks2%{?_isa}
+Requires:  libudisks2%{?_isa}
 
 %description libs
 Common library code for MythTV and add-on modules (development)
