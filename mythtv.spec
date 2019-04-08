@@ -127,7 +127,7 @@ Patch1:         %{name}-space_in_GB.patch
 %global py_prefix python
 %endif
 
-%if 0%{?fedora} && 0%{?fedora} > 30
+%if 0%{?fedora} && 0%{?fedora} > 31
 %global py_prefix python3
 %else
 %global py_prefix python2
