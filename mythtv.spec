@@ -56,11 +56,13 @@
 # A list of which applications we want to put into the desktop menu system
 %define desktop_applications mythfrontend mythtv-setup
 
-# MythTV Version string -- preferably the output from git describe
-%define githash 8e50fcf60bf9aaaddb5c8dbca4c957a0117d62c9
+# git has used to fetch fixes diff
+%define githash 6bd8cd499382fd8b132218274fb4ae326c2b0243
 %define shorthash %(c=%{githash}; echo ${c:0:10})
-%define vers_string v30.0-39-g8e50fcf60b
-%define rel_date 20190404
+
+# MythTV Version string -- preferably the output from git describe
+%define vers_string v30.0-53-g6bd8cd4993
+%define rel_date 20190601
 %define rel_string .%{rel_date}git%{shorthash}
 
 %define branch fixes/30
@@ -73,7 +75,7 @@
 #
 Name:           mythtv
 Version:        30.0
-Release:        6%{?rel_string}%{?dist}
+Release:        7%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1461,6 +1463,9 @@ exit 0
 
 
 %changelog
+* Sat Jun 01 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-7.20190601git6bd8cd4993
+- Update to fixes/30 commit 6bd8cd4993.
+
 * Mon Apr 08 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-6.20190404git8e50fcf60b
 - Updated to fixes/30 commit 8e50fcf60b.
 
