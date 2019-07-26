@@ -85,6 +85,7 @@ URL:            http://www.mythtv.org/
 Source0:        https://github.com/MythTV/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 Patch0:         https://github.com/MythTV/%{name}/compare/v%{version}..%{shorthash}.patch
 Patch1:         %{name}-space_in_GB.patch
+Patch2:         %{name}-php72_fix.patch
 
 
 ################################################################################
