@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        30.0
-Release:        9%{?rel_string}%{?dist}
+Release:        10%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -130,7 +130,7 @@ Patch2:         %{name}-php72_fix.patch
 %global py_prefix python
 %endif
 
-%if 0%{?fedora} && 0%{?fedora} > 32
+%if 0%{?fedora} && 0%{?fedora} > 30
 %global py_prefix python3
 %else
 %global py_prefix python2
@@ -1464,6 +1464,9 @@ exit 0
 
 
 %changelog
+* Sun Aug 11 2019 Antonio Trande <sagitter@fedoraproject.org> - 30.0-10.20190601git6bd8cd4993
+- Use Python3 on Fedora 31+
+
 * Fri Aug 09 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 30.0-9.20190601git6bd8cd4993
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
