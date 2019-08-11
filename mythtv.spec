@@ -680,7 +680,7 @@ Provides a PHP-based interface to interacting with MythTV.
 
 %package -n %{py_prefix}-MythTV
 Summary:        Python2 bindings for MythTV
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 30
 %{?python_provide:%python_provide python3-%{name}}
 %else
 %{?python_provide:%python_provide python2-%{name}}
@@ -947,7 +947,7 @@ pushd mythtv
     --disable-vaapi                             \
 %endif
     --enable-bdjava                             \
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 30
     --python=%{__python3}                       \
 %else
     --python=%{__python2}                       \
@@ -1059,7 +1059,7 @@ pushd mythplugins
         --disable-mythnetvision \
     %endif
         --enable-opengl \
-%if 0%{?fedora} > 32   
+%if 0%{?fedora} > 30
     --python=%{__python3}      \
 %else
     --python=%{__python2}      \
@@ -1162,7 +1162,7 @@ popd
 %endif
 
 # Fixes ERROR: ambiguous python shebang in F30
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 30
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python$:#!%{__python3}:' {} ';'
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/python$:#!%{__python3}:' {} ';'
 %else
@@ -1344,7 +1344,7 @@ exit 0
 %if %{with python}
 %files -n %{py_prefix}-MythTV
 %{_bindir}/mythpython
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 30
 %{python3_sitelib}/MythTV/
 %{python3_sitelib}/MythTV-*.egg-info
 %else
