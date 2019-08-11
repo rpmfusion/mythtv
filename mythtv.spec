@@ -1231,7 +1231,6 @@ exit 0
 %{_bindir}/mythcommflag
 %{_bindir}/mythpreviewgen
 %{_bindir}/mythtranscode
-%{_bindir}/mythwikiscripts
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
 %{_datadir}/mythtv/mythconverg*.pl
