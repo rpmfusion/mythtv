@@ -963,7 +963,7 @@ pushd mythtv
 %if !%{with php}
     --without-bindings=php                      \
 %endif
-%if !%{with python}
+%if %{without python}
     --without-bindings=python                   \
 %endif
     --extra-cflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
