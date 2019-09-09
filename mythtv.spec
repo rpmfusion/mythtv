@@ -57,12 +57,12 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # git has used to fetch fixes diff
-%define githash 6bd8cd499382fd8b132218274fb4ae326c2b0243
+%define githash 5cde0578d84926171b20c8f7e95a101e9b0b9457
 %define shorthash %(c=%{githash}; echo ${c:0:10})
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v30.0-53-g6bd8cd4993
-%define rel_date 20190601
+%define vers_string v30.0-69-g5cde0578d8
+%define rel_date 20190904
 %define rel_string .%{rel_date}git%{shorthash}
 
 %define branch fixes/30
@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        30.0
-Release:        8%{?rel_string}%{?dist}
+Release:        9%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -86,6 +86,8 @@ Source0:        https://github.com/MythTV/%{name}/archive/v%{version}/%{name}-%{
 Patch0:         https://github.com/MythTV/%{name}/compare/v%{version}..%{shorthash}.patch
 Patch1:         %{name}-space_in_GB.patch
 Patch2:         %{name}-php72_fix.patch
+Patch3:         mythtv-python3.patch
+Patch4:         mythtv-py3_configure.patch
 
 
 ################################################################################
@@ -130,7 +132,7 @@ Patch2:         %{name}-php72_fix.patch
 %global py_prefix python
 %endif
 
-%if 0%{?fedora} && 0%{?fedora} > 32
+%if 0%{?fedora} && 0%{?fedora} > 30
 %global py_prefix python3
 %else
 %global py_prefix python2
@@ -315,6 +317,7 @@ BuildRequires:  perl(IO::Socket::INET6)
 
 %if %{with python}
 BuildRequires:  %{py_prefix}-devel
+BuildRequires:  %{py_prefix}-lxml
 %if 0%{?fedora} || 0%{?rhel} > 7
 BuildRequires:  %{py_prefix}-mysql
 BuildRequires:  %{py_prefix}-urlgrabber
@@ -680,7 +683,7 @@ Provides a PHP-based interface to interacting with MythTV.
 
 %package -n %{py_prefix}-MythTV
 Summary:        Python2 bindings for MythTV
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 30
 %{?python_provide:%python_provide python3-%{name}}
 %else
 %{?python_provide:%python_provide python2-%{name}}
@@ -947,7 +950,7 @@ pushd mythtv
     --disable-vaapi                             \
 %endif
     --enable-bdjava                             \
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 30
     --python=%{__python3}                       \
 %else
     --python=%{__python2}                       \
@@ -1059,7 +1062,7 @@ pushd mythplugins
         --disable-mythnetvision \
     %endif
         --enable-opengl \
-%if 0%{?fedora} > 32   
+%if 0%{?fedora} > 30
     --python=%{__python3}      \
 %else
     --python=%{__python2}      \
@@ -1162,7 +1165,7 @@ popd
 %endif
 
 # Fixes ERROR: ambiguous python shebang in F30
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 30
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python$:#!%{__python3}:' {} ';'
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/python$:#!%{__python3}:' {} ';'
 %else
@@ -1345,7 +1348,7 @@ exit 0
 %if %{with python}
 %files -n %{py_prefix}-MythTV
 %{_bindir}/mythpython
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 30
 %{python3_sitelib}/MythTV/
 %{python3_sitelib}/MythTV-*.egg-info
 %else
@@ -1464,6 +1467,10 @@ exit 0
 
 
 %changelog
+* Wed Sep 04 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-9.20190904git5cde0578d8
+- Update to v30.0-69-g5cde0578d8.
+- Initial update for Python 3 compatibility using upstream pull request.
+
 * Tue Jul 02 2019 Nicolas Chauvet <kwizart@gmail.com> - 30.0-8.20190601git6bd8cd4993
 - Rebuilt for x265
 
