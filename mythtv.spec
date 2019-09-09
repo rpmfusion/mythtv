@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        30.0
-Release:        9%{?rel_string}%{?dist}
+Release:        11%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -966,7 +966,7 @@ pushd mythtv
 %if !%{with php}
     --without-bindings=php                      \
 %endif
-%if !%{with python}
+%if %{without python}
     --without-bindings=python                   \
 %endif
     --extra-cflags="%{optflags} -fomit-frame-pointer -fno-devirtualize" \
@@ -1234,7 +1234,6 @@ exit 0
 %{_bindir}/mythcommflag
 %{_bindir}/mythpreviewgen
 %{_bindir}/mythtranscode
-%{_bindir}/mythwikiscripts
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
 %{_datadir}/mythtv/mythconverg*.pl
@@ -1467,9 +1466,15 @@ exit 0
 
 
 %changelog
-* Wed Sep 04 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-9.20190904git5cde0578d8
+* Wed Sep 04 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-11.20190904git5cde0578d8
 - Update to v30.0-69-g5cde0578d8.
 - Initial update for Python 3 compatibility using upstream pull request.
+
+* Sun Aug 11 2019 Antonio Trande <sagitter@fedoraproject.org> - 30.0-10.20190601git6bd8cd4993
+- Use Python3 on Fedora 31+
+
+* Fri Aug 09 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 30.0-9.20190601git6bd8cd4993
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
 * Tue Jul 02 2019 Nicolas Chauvet <kwizart@gmail.com> - 30.0-8.20190601git6bd8cd4993
 - Rebuilt for x265
