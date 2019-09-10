@@ -1347,6 +1347,7 @@ exit 0
 %if %{with python}
 %files -n %{py_prefix}-MythTV
 %{_bindir}/mythpython
+%{_bindir}/mythwikiscripts
 %if 0%{?fedora} > 30
 %{python3_sitelib}/MythTV/
 %{python3_sitelib}/MythTV-*.egg-info
