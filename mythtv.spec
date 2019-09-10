@@ -61,8 +61,8 @@
 %define shorthash %(c=%{githash}; echo ${c:0:10})
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v30.0-53-g6bd8cd4993
-%define rel_date 20190601
+%define vers_string v30.0-69-g5cde0578d8
+%define rel_date 20190904
 %define rel_string .%{rel_date}git%{shorthash}
 
 %define branch fixes/30

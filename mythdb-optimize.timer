@@ -23,6 +23,7 @@ Requires=mariadb.service
 #        weekly → Mon *-*-* 00:00:00
 # By default, run about midnight:
 OnCalendar=daily
+Persistent=yes
 
 [Install]
-WantedBy=timer.target
+WantedBy=timers.target
