@@ -57,7 +57,7 @@
 %define desktop_applications mythfrontend mythtv-setup
 
 # git has used to fetch fixes diff
-%define githash 6bd8cd499382fd8b132218274fb4ae326c2b0243
+%define githash 5cde0578d84926171b20c8f7e95a101e9b0b9457
 %define shorthash %(c=%{githash}; echo ${c:0:10})
 
 # MythTV Version string -- preferably the output from git describe
