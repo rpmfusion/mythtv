@@ -1,0 +1,21 @@
+--- a/mythtv/configure
++++ b/mythtv/configure
+@@ -6958,7 +6958,7 @@ fi
+ 
+ # Check for python dependencies
+ if enabled bindings_python; then
+-    is_python3                 && python=python2
++    is_python3                 || python=python2
+     check_python               || disable_bindings_python "Python 2.6"
+     check_py_lib MySQLdb       || disable_bindings_python "MySQLdb"
+     check_py_lib lxml          || disable_bindings_python "lxml"
+--- a/mythplugins/configure
++++ b/mythplugins/configure
+@@ -669,7 +669,6 @@ if enabled netvision; then
+     check_py_lib lxml    || disable_netvision "Python lxml library (lxml)"
+     check_py_lib xml     || disable_netvision "Python XML library (xml)"
+     check_py_lib urllib  || disable_netvision "Python URL library (urllib)"
+-    check_py_lib urllib2 || disable_netvision "Python URL library 2 (urllib2)"
+     check_py_lib oauth   || disable_netvision "Python OAuth library (oauth)"
+ 
+     disabled netvision && echo "Disabling MythNetvision due to missing dependencies."
