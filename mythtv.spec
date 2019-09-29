@@ -682,9 +682,10 @@ Provides a PHP-based interface to interacting with MythTV.
 %if %{with python}
 
 %package -n %{py_prefix}-MythTV
-Summary:        Python2 bindings for MythTV
+Summary:        Python bindings for MythTV
 %if 0%{?fedora} > 30
 %{?python_provide:%python_provide python3-%{name}}
+Obsoletes:      python2-MythTV
 %else
 %{?python_provide:%python_provide python2-%{name}}
 %{?python_provide:%python_provide python2-MythTV}
