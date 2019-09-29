@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        30.0
-Release:        11%{?rel_string}%{?dist}
+Release:        12%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1237,6 +1237,7 @@ exit 0
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
 %{_datadir}/mythtv/mythconverg*.pl
+%{_datadir}/mythtv/*.xml
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
 %{_datadir}/mythtv/hardwareprofile/
@@ -1252,7 +1253,6 @@ exit 0
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
 %{_bindir}/optimize_mythdb
-%{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/cache/mythtv
@@ -1269,17 +1269,9 @@ exit 0
 %files setup
 %{_bindir}/mythtv-setup
 %{_bindir}/mythtvsetup
-%{_datadir}/mythtv/setup.xml
 %{_datadir}/applications/*mythtv-setup.desktop
 
 %files frontend
-%{_datadir}/mythtv/CDS_scpd.xml
-%{_datadir}/mythtv/CMGR_scpd.xml
-%{_datadir}/mythtv/MFEXML_scpd.xml
-%{_datadir}/mythtv/MSRR_scpd.xml
-%{_datadir}/mythtv/devicemaster.xml
-%{_datadir}/mythtv/deviceslave.xml
-%{_datadir}/mythtv/setup.xml
 %{_bindir}/mythavtest
 %{_bindir}/mythfrontend
 %{_bindir}/mythlcdserver
@@ -1467,6 +1459,9 @@ exit 0
 
 
 %changelog
+* Sun Sep 29 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-12.20190904git5cde0578d8
+- Fix packaging for backend only systems.
+
 * Wed Sep 04 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-11.20190904git5cde0578d8
 - Update to v30.0-69-g5cde0578d8.
 - Initial update for Python 3 compatibility using upstream pull request.
