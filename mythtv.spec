@@ -88,6 +88,7 @@ Patch1:         %{name}-space_in_GB.patch
 Patch2:         %{name}-php72_fix.patch
 Patch3:         mythtv-python3.patch
 Patch4:         mythtv-py3_configure.patch
+Patch5:         mythtv-py3_urllib.patch
 
 
 ################################################################################
