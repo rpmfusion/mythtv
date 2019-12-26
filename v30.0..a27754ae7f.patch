@@ -1,7 +1,7 @@
 From 07fc9359b383b97d84cc756825db9c0f97583d33 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Wed, 16 Jan 2019 23:36:51 -0600
-Subject: [PATCH 01/69] Fix issues with recent live TV channels commit.
+Subject: [PATCH 01/79] Fix issues with recent live TV channels commit.
 
 (cherry picked from commit ccf39fad9213c80ce8b7b4fd79dfa0ff63c090ca)
 ---
@@ -34,7 +34,7 @@ index 1c35d7ca4f0..dc2e412e7d6 100644
 From c62e2733944311f3a0adf17e718f5fb60b006991 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Thu, 17 Jan 2019 21:25:51 -0700
-Subject: [PATCH 02/69] Move BottomLine: Allow user to save horizontal
+Subject: [PATCH 02/79] Move BottomLine: Allow user to save horizontal
  adjustments as well.
 
 ---
@@ -99,7 +99,7 @@ index a38a2786e53..2d7b2a34082 100644
 From 44fee4bc8a4a69b2ae2ee09fb6568f47d1f8269d Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Sat, 19 Jan 2019 15:15:15 +0000
-Subject: [PATCH 03/69] OpenGLVideo: Fix texture filtering
+Subject: [PATCH 03/79] OpenGLVideo: Fix texture filtering
 
 - this was most apparent using the default OpenGL profile and the kernel
 deinterlacer but would have been impacting quality elsewhere.
@@ -131,7 +131,7 @@ index 8b572b8d767..484c3f9a667 100644
 From 57e69de0ba76333d9cb6a08c51cd0837c155d94d Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Mon, 21 Jan 2019 17:31:18 -0600
-Subject: [PATCH 04/69] Fix libass logging.
+Subject: [PATCH 04/79] Fix libass logging.
 
 Previously, logs from libass were accumulated until one happened to
 end with a newline and then all were printed without newlines between
@@ -193,7 +193,7 @@ index c210b28efd9..6a48414c036 100644
 From 18c9bc9c35f7cb58a8b67d7d53ed73a71aaf4994 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Mon, 21 Jan 2019 17:59:58 -0600
-Subject: [PATCH 05/69] Work around to get A/V subtitles working on Android.
+Subject: [PATCH 05/79] Work around to get A/V subtitles working on Android.
 
 fontconfig doesn't yet work for us on Android.  For the time being,
 more explicitly set a font we know should exist.  This was adapted
@@ -231,7 +231,7 @@ index 6a48414c036..f0322fe1ff8 100644
 From 6b5490bfab0301c70ab79c313cf6b8369ed3507a Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Mon, 21 Jan 2019 20:55:52 -0600
-Subject: [PATCH 06/69] Cache FileSystemInfo data to avoid unwanted blocking.
+Subject: [PATCH 06/79] Cache FileSystemInfo data to avoid unwanted blocking.
 
 Change the MainServer to cache updated, FileSystemInfo data and
 optionally return the cached data when requested.  The Scheduler uses
@@ -439,7 +439,7 @@ index b583161483f..5fd1d2fee74 100644
 From 2b8211e8e5d1cd512f96dd31f7cecffc353c19ba Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Wed, 23 Jan 2019 17:12:11 -0600
-Subject: [PATCH 07/69] Simpify previous FileSystemInfo caching change.
+Subject: [PATCH 07/79] Simpify previous FileSystemInfo caching change.
 
 (cherry picked from commit ab65230280cbeda555b0b25d79933d27a823540b)
 ---
@@ -526,7 +526,7 @@ index 5fd1d2fee74..db956207422 100644
 From 39794c9b6cfa83a03d0f8b0589f67924a6d0f5a0 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Thu, 24 Jan 2019 23:39:20 -0600
-Subject: [PATCH 08/69] Don't double print the log timestamp and level on
+Subject: [PATCH 08/79] Don't double print the log timestamp and level on
  Android.
 
 (cherry picked from commit 86ad64b4ef6a044c3e5c439c06cbd2cb3ba5dcb6)
@@ -596,7 +596,7 @@ index 92de0eb539b..e127f40ae4d 100644
 From 4fd4d574c6dacba22233d3eb3e6c9c4564a3c7ac Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Fri, 25 Jan 2019 10:09:50 -0600
-Subject: [PATCH 09/69] Restore (cached) call to GetFilesystemInfos() in
+Subject: [PATCH 09/79] Restore (cached) call to GetFilesystemInfos() in
  AutoExpire.
 
 A previous change removed it because it was believed to be redundant.
@@ -629,7 +629,7 @@ index 415fa1ae25a..52463638a55 100644
 From b06510032478ec887fd2491b5f9a5dad415c30f0 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Sat, 26 Jan 2019 11:28:54 -0600
-Subject: [PATCH 10/69] Don't start RingBuffer thread if it's not open.
+Subject: [PATCH 10/79] Don't start RingBuffer thread if it's not open.
 
 The RingBuffer thread will exit immediately if the underlying file
 isn't open.  That can cause the thread waiting for it to start to
@@ -657,7 +657,7 @@ index 29b226f6112..4a879f22341 100644
 From f11c5aba6ed1e88c22f1b3b6828fc085e1699b97 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Sat, 26 Jan 2019 11:48:15 -0600
-Subject: [PATCH 11/69] Tweak some VB_FILE log levels to make it more useful at
+Subject: [PATCH 11/79] Tweak some VB_FILE log levels to make it more useful at
  loglevel INTO.
 
 (cherry picked from commit 85dc2a48dff419fe78cc6b9371bc46333247d06e)
@@ -705,7 +705,7 @@ index bd8aa4f18ed..36ad31099b0 100644
 From e5672657dce54a8059a2437f5a4899dcc07d3d10 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Fri, 1 Feb 2019 18:37:43 -0600
-Subject: [PATCH 12/69] Completely move GetPlaybackURL() to libmythprotoserver.
+Subject: [PATCH 12/79] Completely move GetPlaybackURL() to libmythprotoserver.
 
 It was copied previously but not completely marked as static in both
 locations.  This change completely removes it from the old location so
@@ -927,7 +927,7 @@ index 3fddaed4675..cb3afc320c7 100644
 From 1c2068c62bd67f5458009a49412e8b50a4bafbe5 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Fri, 1 Feb 2019 20:04:46 -0600
-Subject: [PATCH 13/69] Missed a locking difference in the previous
+Subject: [PATCH 13/79] Missed a locking difference in the previous
  GetPlaybackURL commit.
 
 (cherry picked from commit 068c9664724122d0b116d29aea31850a4ae85ed6)
@@ -953,7 +953,7 @@ index 99ed5507318..bb79ae3e329 100644
 From c6760c6210597453c140079628a509683b738f54 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Sun, 10 Feb 2019 11:25:55 -0500
-Subject: [PATCH 14/69] Guide Grid: Fix missing text when using QT painter
+Subject: [PATCH 14/79] Guide Grid: Fix missing text when using QT painter
 
 Grid icons, arrows and record status, caused text to show as blank.
 Changed to paint the text first, which resolves the issue.
@@ -1003,7 +1003,7 @@ index 4fbd523e4a3..3115f675622 100644
 From b774c4140b2b9e148ccf699d1ad746bc4c84289c Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Sun, 10 Feb 2019 12:17:53 -0500
-Subject: [PATCH 15/69] Remove debugging code.
+Subject: [PATCH 15/79] Remove debugging code.
 
 Program guide fix included some debugging code.
 
@@ -1030,7 +1030,7 @@ index 3115f675622..106314344c8 100644
 From 7c0dc9b25906e0bdf9f6cb878268c9d0fc2316bb Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Fri, 25 Jan 2019 15:20:30 -0500
-Subject: [PATCH 16/69] Fix spurious font mismatch errors.
+Subject: [PATCH 16/79] Fix spurious font mismatch errors.
 
 Strip out any text between square brackets before comparing font
 names.  This will allow a font family name like "Droid Sans [MONO]" to
@@ -1070,7 +1070,7 @@ index 4e7fa3516a6..5354f9229f9 100644
 From f7b66345c5da82915e9db25817c59f42182766ab Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Sat, 2 Feb 2019 14:42:40 -0500
-Subject: [PATCH 17/69] Update custom FreeBSD type declarations in videodev2.h.
+Subject: [PATCH 17/79] Update custom FreeBSD type declarations in videodev2.h.
 
 (cherry picked from commit 209c15535056407ffd9af9fbf557b0f1c98dad8f)
 ---
@@ -1118,7 +1118,7 @@ index c64b5e5a305..6c2e9bb41c0 100644
 From f0644ebd2a33f096dc1b8d97b36a22804d913c5f Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Fri, 15 Feb 2019 14:49:37 -0500
-Subject: [PATCH 18/69] AVSync2: Fix never-ending stutter on Live TV
+Subject: [PATCH 18/79] AVSync2: Fix never-ending stutter on Live TV
 
 With AVSync2, Live TV could continue to stutter until pause
 is pressed. Added a timecode reset so that it can add a small
@@ -1171,7 +1171,7 @@ index 5b80c452a3b..6c0c41ef565 100644
 From 5100ef5870eed4012e02c0d62d4adb1f20c0f312 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Fri, 15 Feb 2019 14:50:29 -0500
-Subject: [PATCH 19/69] AVSync2: Improve resync speed and accuracy
+Subject: [PATCH 19/79] AVSync2: Improve resync speed and accuracy
 
 1. If out of sync by more than 200 ms fix the sync more quickly.
 2. Measure audio and video timecode at the same instant.
@@ -1378,7 +1378,7 @@ index 7358d617a9d..4b295af28fe 100644
 From 70a58c0a38c637657f74f28ad86e04a157163f57 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas.de.waal@gmail.com>
 Date: Sun, 17 Feb 2019 13:35:42 -0600
-Subject: [PATCH 20/69] Don't leave HDHomeRun channels open after EIT scans.
+Subject: [PATCH 20/79] Don't leave HDHomeRun channels open after EIT scans.
 
 The HDHomeRun unlocks the tuner due to inactivity but MythTV still
 thinks it's open.  The result is the next recording or EIT scan fails.
@@ -1412,7 +1412,7 @@ index 421aff6823a..00c7968a35a 100644
 From 26034244e8b664f2ae0e74027653293625615a86 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Mon, 18 Feb 2019 13:51:10 -0600
-Subject: [PATCH 21/69] Services API: Allow images/icons immediately after BE
+Subject: [PATCH 21/79] Services API: Allow images/icons immediately after BE
  startup. Refs #13404
 
 Register <QFileInfo> to QMetaType at backend startup.
@@ -1461,7 +1461,7 @@ index b87995d94aa..fed7eb30476 100644
 From e3474f8afb7191d5593d5fa5baac24611842bbec Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Mon, 25 Feb 2019 14:45:13 -0500
-Subject: [PATCH 22/69] Program Guide: Fix for current selection text not
+Subject: [PATCH 22/79] Program Guide: Fix for current selection text not
  showing
 
 With certain themes (e.g. Blue Abstract) the current selection program name
@@ -1489,7 +1489,7 @@ index 106314344c8..dda428461ac 100644
 From 042c180902bcdcf58ac12cef45a9cf0e5f348912 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Thu, 7 Mar 2019 14:38:13 -0500
-Subject: [PATCH 23/69] Previously Recorded List: Fix 2 bugs
+Subject: [PATCH 23/79] Previously Recorded List: Fix 2 bugs
 
 1. Time zone bug - In a USA time zone at 11 PM on tha last day of
 the month you can see the following month listed, albeit with
@@ -1540,7 +1540,7 @@ index d084efff92b..33288df9af4 100644
 From 90468ec49a0116068fffb11d799ae67e100ef1fe Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Sun, 24 Feb 2019 14:28:56 -0500
-Subject: [PATCH 24/69] Playback: AvSync2 fix fast forward/rewind
+Subject: [PATCH 24/79] Playback: AvSync2 fix fast forward/rewind
 
 Fast forward and rewind were not handling frame timing correctly so that
 they were dropping frames, resulting in no frames displayed in some cases.
@@ -1594,7 +1594,7 @@ index db5bb6f06eb..7abd60341f8 100644
 From bceea69806d9d24fd1662edca23c2215bee2e8cf Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Mon, 4 Mar 2019 15:53:39 -0500
-Subject: [PATCH 25/69] AVSync2: Use frame timestamps to determine elapsed play
+Subject: [PATCH 25/79] AVSync2: Use frame timestamps to determine elapsed play
  time
 
 MythTV uses frame count to determine the elapsed time of a recording
@@ -1671,7 +1671,7 @@ index 4b295af28fe..088da8a04ea 100644
 From 13f5fd83072a5b57c3aa3409d6db2038feb1f573 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Mon, 4 Mar 2019 16:09:49 -0500
-Subject: [PATCH 26/69] Playback: Improve "Music Choice" detection
+Subject: [PATCH 26/79] Playback: Improve "Music Choice" detection
 
 Some recordings could be incorrectly detected as "Music Choice",
 resulting in audio-video sync problems. This improves detection to
@@ -1699,7 +1699,7 @@ index e735bd354d6..e428a19a503 100644
 From 76ea9755b69cad0eb6595407a7dec3c63df9f8c5 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Wed, 6 Mar 2019 13:45:46 -0500
-Subject: [PATCH 27/69] Playback: Fix jerkiness with codec-deinterlaced content
+Subject: [PATCH 27/79] Playback: Fix jerkiness with codec-deinterlaced content
 
 Remove unneeded setting of m_fps that was overwriting the correct
 value. m_fps is suppsed to contain the framerate before deinterlacing.
@@ -1727,7 +1727,7 @@ index b25516c7953..3641c2fc4fb 100644
 From 60cfb7c05ae21d0049537aaa66f8f70a836a1138 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Sun, 10 Mar 2019 15:06:41 -0400
-Subject: [PATCH 28/69] Fix compile error from bceea69806d
+Subject: [PATCH 28/79] Fix compile error from bceea69806d
 
 Rename of member variables cause the cherry-pick to use the old
 variable name.
@@ -1752,7 +1752,7 @@ index 64018b501d7..4ee216d02c4 100644
 From 01cde24f00573a44f7c62f8ddf6cdcccb0a865a8 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Mon, 4 Feb 2019 15:14:50 -0700
-Subject: [PATCH 29/69] ExternalStreamhandler: Don't spam log files due to very
+Subject: [PATCH 29/79] ExternalStreamhandler: Don't spam log files due to very
  low bitrate streams
 
 (cherry picked from commit fa86a6a2935c305c97fa75fcd8fd82fe25eae66a)
@@ -1801,7 +1801,7 @@ index 4f541d30e5d..6de71f7ed94 100644
 From 2327369fd558fcf00af6a280017560801534b44d Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Tue, 5 Feb 2019 14:04:00 -0700
-Subject: [PATCH 30/69] RemoteFile::Read: Try and "resume" if read fails.
+Subject: [PATCH 30/79] RemoteFile::Read: Try and "resume" if read fails.
 
 When a remote frontend is paused for more than 5 minutes, the "remotefile"
 connection can end up in a state where no data is returned.  Attempt to use
@@ -1840,7 +1840,7 @@ index 3bbfcff0340..d3ee79895ce 100644
 From 068e7e1958c46bcce65cca71603eeb537dbd9a1a Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 1 Feb 2019 20:33:46 -0700
-Subject: [PATCH 31/69] ChannelUtil::GetChannelDatast:  Make sure results are
+Subject: [PATCH 31/79] ChannelUtil::GetChannelDatast:  Make sure results are
  more predictable.
 
 Order results so lower numbered visible channels are prefered.  If no
@@ -1927,7 +1927,7 @@ index dc2e412e7d6..bec67d02364 100644
 From 363d00440163d55456bcb2eb353eb8a3ac9dc93d Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Tue, 26 Feb 2019 13:57:12 -0700
-Subject: [PATCH 32/69] mythexternrecorder: Allow config to pass logging
+Subject: [PATCH 32/79] mythexternrecorder: Allow config to pass logging
  options.
 
 (cherry picked from commit 5b63846899946c0c150d1bf3ca4c90289293ca9f)
@@ -2143,7 +2143,7 @@ index 77ba6fc16e4..11a97d1ddad 100644
 From df4b1b78ae4e6d551b9a5ce07a0af33d436b96fd Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Tue, 19 Mar 2019 14:05:09 -0500
-Subject: [PATCH 33/69] Include episode information in Scheduler-generated
+Subject: [PATCH 33/79] Include episode information in Scheduler-generated
  ProgramInfos.
 
 Also, include the generic, episode indication when writing to the
@@ -2226,7 +2226,7 @@ index 29aa293a24e..6bb9b1e512e 100644
 From 81081957a0cbb83e7419269129b4babfe306a8ac Mon Sep 17 00:00:00 2001
 From: Yianni Vidalis <yiannividalis@hotmail.com>
 Date: Wed, 20 Mar 2019 12:50:31 -0400
-Subject: [PATCH 34/69] EIT fixes/enhancements for greek TV. (dvb-s and dvb-t)
+Subject: [PATCH 34/79] EIT fixes/enhancements for greek TV. (dvb-s and dvb-t)
 
 Fixes #13426.
 
@@ -2522,7 +2522,7 @@ index 1caa158d9f4..91b2af2e927 100644
 From 094e0d0c8038dac291dc4634e268c5fdc9dc0502 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Mon, 25 Mar 2019 17:43:51 -0400
-Subject: [PATCH 35/69] tidy: Fix memory leak in HLSSegment::DecodeData.
+Subject: [PATCH 35/79] tidy: Fix memory leak in HLSSegment::DecodeData.
 
 The clang-tidy "memory leak" checker pointed out that
 HLSSegment::DecodeData function would leak memory if it read an
@@ -2552,7 +2552,7 @@ index 6067814cce3..43a0e9d2199 100644
 From ff4c7158f4fb241760e77fad7c2a8eef1a4eb5c3 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Mon, 25 Mar 2019 14:02:11 -0400
-Subject: [PATCH 36/69] tidy: Fix rare null pointer dereference in
+Subject: [PATCH 36/79] tidy: Fix rare null pointer dereference in
  cc707decoder.cpp.
 
 The clang-tidy "non-null parameter checker" pointed out to possibility
@@ -2682,7 +2682,7 @@ index 718bdbeef7b..f8638a78307 100644
 From 0999fd0ff08d21bf7873daf78fe9e453925cd83d Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Sun, 24 Mar 2019 14:51:17 -0400
-Subject: [PATCH 37/69] tidy: Fix test to retrieve picture from FLAC file.
+Subject: [PATCH 37/79] tidy: Fix test to retrieve picture from FLAC file.
 
 The clang-tidy "call and message" check pointed out the inevitability
 of calling a function through a nullptr.  The getPictureFromFile
@@ -2718,7 +2718,7 @@ index 3ac353dbc42..8452ffe71fa 100644
 From 3af3cad3d74735a561ab594910a3400b2472645c Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Mon, 25 Mar 2019 19:32:11 -0400
-Subject: [PATCH 38/69] tidy: Fix memory leak in HLSSegment::DecodeData.
+Subject: [PATCH 38/79] tidy: Fix memory leak in HLSSegment::DecodeData.
 
 The clang-tidy "memory leak" checker pointed out that the
 RecorderBase::CheckForRingBufferSwitch function would leak the memory
@@ -2756,7 +2756,7 @@ index 24a5ff46306..024d81efbc0 100644
 From 8e50fcf60bf9aaaddb5c8dbca4c957a0117d62c9 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Thu, 28 Mar 2019 08:55:36 -0400
-Subject: [PATCH 39/69] Fix timeout on mediaserver announcements.
+Subject: [PATCH 39/79] Fix timeout on mediaserver announcements.
 
 The socket code was converted in 2009 from taking a boolean to indicate
 a 'short' timeout, to taking an actual timeout in milliseconds.  Fix
@@ -2786,7 +2786,7 @@ index 69cba584485..61fbba0f664 100644
 From 3f494f57e27fef4285e094e919d6f795a8583e33 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 2 Apr 2019 22:56:37 -0400
-Subject: [PATCH 40/69] Fix "in progress" check in mythplayer.
+Subject: [PATCH 40/79] Fix "in progress" check in mythplayer.
 
 The clang-tidy "implicit boolean conversion" check pointed out a
 couple of nonsensical implicit conversion from TVState to boolean.
@@ -2835,7 +2835,7 @@ index a373d690f86..8e113c1e81f 100644
 From 09393940d6b448d74fcf5f983b21641f972a38bd Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Sun, 7 Apr 2019 11:01:24 -0500
-Subject: [PATCH 41/69] WebFrontend: Fix TV->Program Search (by Channel)
+Subject: [PATCH 41/79] WebFrontend: Fix TV->Program Search (by Channel)
 
 Only a single channel is presented with v30. Commit 63a5a20e
 added extra filtering options to Channel/GetChannelInfoList.
@@ -2866,7 +2866,7 @@ index cfce0300ca5..6441e769a8a 100644
 From 4d995941851b277b6365fed4ea003b8706432c2d Mon Sep 17 00:00:00 2001
 From: Dag Nygren <dag@newtech.fi>
 Date: Mon, 8 Apr 2019 11:33:42 -0400
-Subject: [PATCH 42/69] Update Finish EIT fixups.
+Subject: [PATCH 42/79] Update Finish EIT fixups.
 
 1) Remove 'Film' or 'Elokuva' at the start of titles.  2) Remove age
 limit at the end of the title.
@@ -2932,7 +2932,7 @@ index c7f3df15c60..35ed11753ac 100644
 From 5a67176bf907ca0686a7bd44c791a7003a544cfc Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Sun, 14 Apr 2019 16:35:42 -0400
-Subject: [PATCH 43/69] android: Fix for android OpenGL ES failures
+Subject: [PATCH 43/79] android: Fix for android OpenGL ES failures
 
 Android devices that do not support high precision were failing
 on an OpenGL error due to no precision specifiction. The result
@@ -2960,7 +2960,7 @@ index e27ec76f0fb..65e2fcc1687 100644
 From b61283d7d1ffcdb17a909216220283e005e52a47 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Wed, 24 Apr 2019 09:51:35 -0400
-Subject: [PATCH 44/69] Restore code that fixes up key bindings.
+Subject: [PATCH 44/79] Restore code that fixes up key bindings.
 
 This partially reverts commit 453178430d86f7fdf4030cc1a76d7a135df60aa0.
 
@@ -3017,7 +3017,7 @@ index ea0aa806d59..d40bfb3f64d 100644
 From d41d45ed6f50620a8836580c97bfd6fa25214633 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Mon, 15 Apr 2019 15:10:39 -0500
-Subject: [PATCH 45/69] Enable Schedule as Group by default.
+Subject: [PATCH 45/79] Enable Schedule as Group by default.
 
 This also includes the case when the maximum recordings is set to 1.
 Both the core feature scheduling feature and the on-demand addition of
@@ -3084,7 +3084,7 @@ index 51e15e1decf..bb17f61e82d 100644
 From 0bd850a54244d81dd086556d5425890b44dc2018 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Fri, 19 Apr 2019 16:13:43 -0400
-Subject: [PATCH 46/69] Add delay to handle race condition in FreeBSD testing.
+Subject: [PATCH 46/79] Add delay to handle race condition in FreeBSD testing.
 
 Calls to read the data output by the shell generate an EBADF error.
 Apparently FreeBSD is fast enough that the file descriptors have often
@@ -3205,7 +3205,7 @@ index 53a4601989c..51e669eb8bd 100644
 From 97786a019daa7973207149d728a0b9da978bec1f Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Fri, 19 Apr 2019 19:04:20 -0400
-Subject: [PATCH 47/69] Lengthen timers in test_mythtimer.
+Subject: [PATCH 47/79] Lengthen timers in test_mythtimer.
 
 This allows some slop for build systems being busy while the tests are
 running, but still keeps the same ratio of the timers so the test
@@ -3325,7 +3325,7 @@ index 2c4dddfeca6..6d0b8705c75 100644
 From 30a59af73f16c7b97c4704a721b3a366b5b96175 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Thu, 25 Apr 2019 09:35:24 -0500
-Subject: [PATCH 48/69] Account for very, large pre-roll values in
+Subject: [PATCH 48/79] Account for very, large pre-roll values in
  AssignGroupInput.
 
 Refs #13423
@@ -3417,7 +3417,7 @@ index db956207422..a739d774920 100644
 From f92255ce0620978cb0fffecd37832df3d6c56565 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Fri, 26 Apr 2019 12:40:56 -0400
-Subject: [PATCH 49/69] Playback: Fix DB Update that caused bookmark key
+Subject: [PATCH 49/79] Playback: Fix DB Update that caused bookmark key
  bindings to be lost
 
 The database update is clearing the key binding before it can be
@@ -3459,7 +3459,7 @@ index d40bfb3f64d..7a58929fed9 100644
 From fc79822ce4c8775361053d1bdd8d9dce2dc44ec1 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 30 Apr 2019 13:32:08 -0400
-Subject: [PATCH 50/69] Fix compilation with exiv2 > 0.27.0.
+Subject: [PATCH 50/79] Fix compilation with exiv2 > 0.27.0.
 
 Remove an old workaround that was introduced so that MythTV would
 continue to compile after the introduction of exiv2 version 0.21.  The
@@ -3496,7 +3496,7 @@ index f1a57d4f8ea..b7c71d2ed80 100644
 From a32ec4bdea1380ecf587c717bc882cbe9469e5c7 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 30 Apr 2019 14:10:13 -0400
-Subject: [PATCH 51/69] Fix mythgame configuration with minizip 2.8.6
+Subject: [PATCH 51/79] Fix mythgame configuration with minizip 2.8.6
 
 Minizip apparently moved its header files in/before version 2.0.
 Update the mythplugins configure script to look in both the old and
@@ -3569,7 +3569,7 @@ index b9838769c38..9bc8ed61eec 100644
 From 57ffe65dbc1a80b0f4289f7c6a2b8f2e73e2cf51 Mon Sep 17 00:00:00 2001
 From: Simon Hyde <simon@icedrop.net>
 Date: Tue, 26 Feb 2019 21:32:19 +0000
-Subject: [PATCH 52/69] Prevent data corruption in dvbchannel.cpp causing hang
+Subject: [PATCH 52/79] Prevent data corruption in dvbchannel.cpp causing hang
 
 m_is_open was being corrupted by multiple simultaneous modifications,
 leading to it managing to create infinite loops within its underlying
@@ -3632,7 +3632,7 @@ index a21d35df3f2..677165b5bd7 100644
 From 6bd8cd499382fd8b132218274fb4ae326c2b0243 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@modu.home.lan>
 Date: Thu, 30 May 2019 10:26:43 +0200
-Subject: [PATCH 53/69] Remove m_ in class member names for backport to
+Subject: [PATCH 53/79] Remove m_ in class member names for backport to
  fixes-30
 
 Refs #13415
@@ -3688,7 +3688,7 @@ index 677165b5bd7..70a354c67a7 100644
 From 8325b0780455cd7b90bc6e676b47d6a2aa32250c Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Thu, 30 May 2019 14:33:25 -0500
-Subject: [PATCH 54/69] mythwelcome: --override-settings choice(s) don't take
+Subject: [PATCH 54/79] mythwelcome: --override-settings choice(s) don't take
  affect
 
 mythwelcome --override-settings is valid, but overrides weren't
@@ -3719,7 +3719,7 @@ index 8459b04a8a6..36df6a6b43c 100644
 From 8d04874b1ecffebe0085997a3cd797b99643bc11 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Tue, 4 Jun 2019 11:02:03 -0500
-Subject: [PATCH 55/69] mythwelcome: Final --override-settings fix
+Subject: [PATCH 55/79] mythwelcome: Final --override-settings fix
 
 This adds to a previous commit and allows libCECEnabled=0 to take
 affect. Needed to be done before the Context was initialized.
@@ -3748,7 +3748,7 @@ index 36df6a6b43c..4c1dbe90610 100644
 From aa26a6b76bf00fcd5ddb051c76f9994757e09913 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Fri, 10 May 2019 14:34:14 -0500
-Subject: [PATCH 56/69] Python Bindings: Fix version test for Frontend services
+Subject: [PATCH 56/79] Python Bindings: Fix version test for Frontend services
 
 Use Frontend/version to 'prime' the session for POSTs (was always
 using Myth/version.)
@@ -3788,7 +3788,7 @@ index 0d5946a8c0d..4c30aec8ca5 100644
 From 402e8274435cfab094cd902105a11231b7eadfbc Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Fri, 10 May 2019 11:28:31 -0500
-Subject: [PATCH 57/69] HTTP Status: Restore thousands separators and use
+Subject: [PATCH 57/79] HTTP Status: Restore thousands separators and use
  proper LOCALE choice
 
 In #3957 the LOCALE was fixed to QLocale::C, and a report on the Forum
@@ -3887,7 +3887,7 @@ index 10cbbf2c30b..24224ef0c6f 100644
 From 4761e7a6d42a86c11f10bd4dea83ca8eb022b016 Mon Sep 17 00:00:00 2001
 From: Jan Ceuleers <jan.ceuleers@gmail.com>
 Date: Thu, 30 May 2019 16:14:27 -0500
-Subject: [PATCH 58/69] tmdb3.py: Prevent program from stalling
+Subject: [PATCH 58/79] tmdb3.py: Prevent program from stalling
 
 From the -users list. If one (or more) requests stall, no
 more metadata is retrieved until all stalled requests are
@@ -3953,7 +3953,7 @@ index 3dd893d8b74..9739ecf320e 100755
 From ef55cb239b27741954b1ed026297a0c59b4ac0e1 Mon Sep 17 00:00:00 2001
 From: Robert Watson <robertabcdefgwatson@gmail.com>
 Date: Thu, 13 Jun 2019 10:48:32 +0200
-Subject: [PATCH 59/69] Compute seek offset 64 bits in playback of Blu-Ray iso.
+Subject: [PATCH 59/79] Compute seek offset 64 bits in playback of Blu-Ray iso.
 
 Fixes #13461
 
@@ -3981,7 +3981,7 @@ index 06258070e11..d7e4707d40f 100644
 From b9c1b41a6c01a387bad8f325e2b8000327045cc6 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Mon, 17 Jun 2019 15:20:19 -0400
-Subject: [PATCH 60/69] android: Fix problem with guide grid colors.
+Subject: [PATCH 60/79] android: Fix problem with guide grid colors.
 
 assets file system does not support file handles.
 
@@ -4015,7 +4015,7 @@ index dda428461ac..994401adb41 100644
 From dac22b7f1043d4b212d1d73045ada3b8b113e090 Mon Sep 17 00:00:00 2001
 From: Stuart Auchterlonie <stuarta@mythtv.org>
 Date: Thu, 4 Jul 2019 11:57:25 +0100
-Subject: [PATCH 61/69] Fixes #13467 - Handle null blocks in DSMCC
+Subject: [PATCH 61/79] Fixes #13467 - Handle null blocks in DSMCC
 
 (cherry picked from commit 9dfa5c7a70bb422d748ab327f4b1a0cb3e435794)
 ---
@@ -4044,7 +4044,7 @@ index 0ace9e6a29b..4109a52cc5a 100644
 From 4dae2f4106d537babfe8ddca0c7871a113a139e5 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <pharrison@mythtv.org>
 Date: Tue, 5 Feb 2019 11:41:09 +0000
-Subject: [PATCH 62/69] MythWeather: fix some of the weather grabber scripts
+Subject: [PATCH 62/79] MythWeather: fix some of the weather grabber scripts
 
 Remove the no longer supported "use encoding 'utf8'" directive.
 
@@ -4154,7 +4154,7 @@ index 2ce69c250e1..c9a7896894d 100755
 From 80434249139b36701b050c7990cf20a09de268a1 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <pharrison@mythtv.org>
 Date: Fri, 19 Apr 2019 16:43:49 +0100
-Subject: [PATCH 63/69] MythZoneMinder: fix saving the enabled/disabled monitor
+Subject: [PATCH 63/79] MythZoneMinder: fix saving the enabled/disabled monitor
  notification setting
 
 (cherry picked from commit cca393352f1df6ef97b655f048b18c2f0b98732a)
@@ -4188,7 +4188,7 @@ index 0a99c93ac90..2bc78cab68e 100644
 From d794f3108195eb8fe5333a73db38275185ff73c2 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <pharrison@mythtv.org>
 Date: Wed, 19 Jun 2019 01:34:36 +0100
-Subject: [PATCH 64/69] ZMClient: use locking to make sure only one command
+Subject: [PATCH 64/79] ZMClient: use locking to make sure only one command
  runs at a time
 
 (cherry picked from commit b57372d484c1c9306ecb26b5e18906708980b4fe)
@@ -4369,7 +4369,7 @@ index 3dd5c20faae..75369f0f924 100644
 From 84e5caebaa9650b88a6082f19cb46d46b831b566 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <pharrison@mythtv.org>
 Date: Fri, 5 Jul 2019 19:02:40 +0100
-Subject: [PATCH 65/69] mythzmserver: don't try to get the shared memory
+Subject: [PATCH 65/79] mythzmserver: don't try to get the shared memory
  pointers for a disabled Monitor
 
 Also allow for a NULL result for the Host field in the Monitors table.
@@ -4416,7 +4416,7 @@ index eefe9fbbbe5..c890c82eb58 100644
 From 83e27017203abfac6958bd3a6ce3284c372fa2d4 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <pharrison@mythtv.org>
 Date: Fri, 5 Jul 2019 21:18:04 +0100
-Subject: [PATCH 66/69] mythzmserver: fix merge error after 84e5caebaa
+Subject: [PATCH 66/79] mythzmserver: fix merge error after 84e5caebaa
 
 Refs #13466
 ---
@@ -4440,7 +4440,7 @@ index c890c82eb58..daea2fbc5de 100644
 From a4bc92e244d815351bd6de6f8d4c2569f22bc403 Mon Sep 17 00:00:00 2001
 From: Tom Dexter <digitalaudiorock@gmail.com>
 Date: Thu, 11 Jul 2019 16:34:08 +0100
-Subject: [PATCH 67/69] Gentoo users may not have nvidia-settings utils
+Subject: [PATCH 67/79] Gentoo users may not have nvidia-settings utils
  installed. From https://bugs.gentoo.org/688084
 
 Signed-off-by: Stuart Auchterlonie <stuarta@mythtv.org>
@@ -4472,7 +4472,7 @@ index a80828efc7f..4f526864a5f 100755
 From e094a020179aba2d955a21b8fd067231a87e3334 Mon Sep 17 00:00:00 2001
 From: "Paul B. Henson" <henson@acm.org>
 Date: Thu, 25 Jul 2019 11:44:28 +0200
-Subject: [PATCH 68/69] DVB symbol errros with gcc 8.3
+Subject: [PATCH 68/79] DVB symbol errros with gcc 8.3
 
 Include of dvbchannel.h in channelscanner.cpp is now
 conditional on USING_DVB.
@@ -4505,7 +4505,7 @@ index d4532cd226b..a6a55340d90 100644
 From 5cde0578d84926171b20c8f7e95a101e9b0b9457 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Thu, 8 Aug 2019 12:45:52 -0400
-Subject: [PATCH 69/69] dbcheck: Enforce correct recgroupids for special
+Subject: [PATCH 69/79] dbcheck: Enforce correct recgroupids for special
  recording groups
 
 If the mysql server is set up with auto_increment_increment=2 or
@@ -4539,3 +4539,904 @@ index 6970a385bff..af4581ae345 100644
              // Copy in the passwords for the built-in groups
              "DELETE FROM recgrouppassword WHERE password = '';",
              "UPDATE recgroups r, recgrouppassword p SET r.password = p.password WHERE r.recgroup = p.recgroup;",
+
+From 72825c5c66751a7a6fb9156ee2710d25edcda390 Mon Sep 17 00:00:00 2001
+From: Stuart Auchterlonie <stuarta@mythtv.org>
+Date: Tue, 10 Sep 2019 14:39:26 +0100
+Subject: [PATCH 70/79] Handle kernel 5.x
+
+(cherry picked from commit 7ea2d6c414b10067a9965ee1c245ba4207261b51)
+---
+ mythtv/programs/scripts/hardwareprofile/smolt.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/programs/scripts/hardwareprofile/smolt.py b/mythtv/programs/scripts/hardwareprofile/smolt.py
+index d8677720996..40a421e2b18 100644
+--- a/mythtv/programs/scripts/hardwareprofile/smolt.py
++++ b/mythtv/programs/scripts/hardwareprofile/smolt.py
+@@ -1176,6 +1176,8 @@ def get_entry(a, entry):
+ def read_memory():
+     un = os.uname()
+     kernel = un[2]
++    if kernel[:2] == "5.":
++        return read_memory_2_6()
+     if kernel[:2] == "4.":
+         return read_memory_2_6()
+     if kernel[:2] == "3.":
+
+From 0c9abf30c838ad471134ec3e9fecfd6a3979baef Mon Sep 17 00:00:00 2001
+From: Stuart Auchterlonie <stuarta@mythtv.org>
+Date: Thu, 12 Sep 2019 16:30:17 +0100
+Subject: [PATCH 71/79] Set default runlevel to 9, as systemd targets report as
+ unknown. This blows the current smolt backend up
+
+(cherry picked from commit 479abcc77d11331a2c5732a55d3201241212367f)
+---
+ mythtv/programs/scripts/hardwareprofile/software.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/programs/scripts/hardwareprofile/software.py b/mythtv/programs/scripts/hardwareprofile/software.py
+index b90384943c0..b89ad58a1c4 100644
+--- a/mythtv/programs/scripts/hardwareprofile/software.py
++++ b/mythtv/programs/scripts/hardwareprofile/software.py
+@@ -33,7 +33,7 @@ def read_lsb_release():
+ initdefault_re = re.compile(r':(\d+):initdefault:')
+ 
+ def read_runlevel():
+-    defaultRunlevel = 'Unknown'
++    defaultRunlevel = '9'
+     try:
+         inittab = file('/etc/inittab').read()
+         match = initdefault_re.search(inittab)
+
+From 2855e2967209b8cbf16363aa46e4f3cc9a34fb90 Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Tue, 18 Jun 2019 10:40:26 -0500
+Subject: [PATCH 72/79] UPnP Serializer: Eliminate false 304 response statuses
+
+Affects Services API responses.
+
+For 'simple' Name=Value responses (Bool/Int/String/etc.),
+include Value in the hash calculated for the ETag.
+
+Without this, the ETag never changed and the backend always
+sent 304/Not Modified on subsequent queries (assuming the
+client returned the "If-None-Match" header.) For example:
+
+  http://hostname:6544/Myth/GetSetting?Key=UserJobDesc4&HostName=_GLOBAL_
+
+the backend always returned:
+
+  'ETag': '"da39a3ee5e6b4b0d3255bfef95601890afd80709"'
+
+regardless of the value in UserJobDesc4.
+
+(cherry picked from commit 698f1f98652d77e19adbfd05ee50e069557ac927)
+---
+ mythtv/libs/libmythupnp/serializers/serializer.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythupnp/serializers/serializer.cpp b/mythtv/libs/libmythupnp/serializers/serializer.cpp
+index e86d406ee50..28a84fab89a 100644
+--- a/mythtv/libs/libmythupnp/serializers/serializer.cpp
++++ b/mythtv/libs/libmythupnp/serializers/serializer.cpp
+@@ -71,7 +71,8 @@ void Serializer::Serialize( const QVariant &vValue, const QString &_sName )
+     if ((sName.length() > 0) && sName.at(0) == 'Q')
+         sName = sName.mid( 1 );
+ 
+-    m_hash.reset();
++    if ( !vValue.isNull() )
++        m_hash.addData( vValue.toString().toUtf8() );
+ 
+     BeginSerialize( sName );
+ 
+
+From 7087bc91cf5cfc18da2a2ef4059c5a64f07d4ce8 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Mon, 21 Oct 2019 15:26:36 -0400
+Subject: [PATCH 73/79] Services: Dvr/GetSavedBookmark - better handling for
+ when there is no seek table
+
+If there is no seektable, GetSavedBookmark with duration option is not able to
+calculate the duration. In that case it was returning a garbage value
+(from an uninitialized variable). Changed so it will return -1 in that case.
+
+(cherry picked from commit 36cf11e9f6941fcd3bfba7acc369ca008b86db65)
+---
+ mythtv/programs/mythbackend/services/dvr.cpp | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/mythtv/programs/mythbackend/services/dvr.cpp b/mythtv/programs/mythbackend/services/dvr.cpp
+index 6866f9aead3..7f0094671ac 100644
+--- a/mythtv/programs/mythbackend/services/dvr.cpp
++++ b/mythtv/programs/mythbackend/services/dvr.cpp
+@@ -473,13 +473,21 @@ long Dvr::GetSavedBookmark( int RecordedId,
+     uint64_t offset;
+     bool isend=true;
+     uint64_t position = ri.QueryBookmark();
++    // if no bookmark return 0
++    if (position == 0)
++        return 0;
+     if (offsettype.toLower() == "position"){
+-        ri.QueryKeyFramePosition(&offset, position, isend);
+-        return offset;
++        // if bookmark cannot be converted to a keyframe we will
++        // just return the actual frame saved as the bookmark
++        if (ri.QueryKeyFramePosition(&offset, position, isend))
++            return offset;
+     }
+-    else if (offsettype.toLower() == "duration"){
+-        ri.QueryKeyFrameDuration(&offset, position, isend);
+-        return offset;
++    if (offsettype.toLower() == "duration"){
++        if (ri.QueryKeyFrameDuration(&offset, position, isend))
++            return offset;
++        else
++            // If bookmark cannot be converted to a duration return -1
++            return -1;
+     }
+     else
+         return position;
+
+From 1c86e4083953a19de06e3f0937b563b2c7fd079c Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Tue, 12 Nov 2019 13:39:40 -0500
+Subject: [PATCH 74/79] Services: Add new DelayShutdown method
+
+DelayShutdown can be called by an external process that is using
+the services, to prevent an idle shutdown while it is running.
+The DelayShutdown service delays idle shutdown by 5 minutes.
+External processes must call it every 5 minutes or less to ensure
+the backend does not shut down.
+
+(from ae82a5a58f)
+---
+ .../services/mythServices.h                      |  3 +++
+ mythtv/programs/mythbackend/scheduler.cpp        | 16 +++++++++++++++-
+ mythtv/programs/mythbackend/scheduler.h          |  3 +++
+ mythtv/programs/mythbackend/services/myth.cpp    |  9 +++++++++
+ mythtv/programs/mythbackend/services/myth.h      |  9 +++++++++
+ 5 files changed, 39 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythservicecontracts/services/mythServices.h b/mythtv/libs/libmythservicecontracts/services/mythServices.h
+index 9c2f7f505e6..b4fc7834d47 100644
+--- a/mythtv/libs/libmythservicecontracts/services/mythServices.h
++++ b/mythtv/libs/libmythservicecontracts/services/mythServices.h
+@@ -54,6 +54,7 @@ class SERVICE_PUBLIC MythServices : public Service  //, public QScriptable ???
+     Q_CLASSINFO( "SendNotification_Method",      "POST" )
+     Q_CLASSINFO( "BackupDatabase_Method",        "POST" )
+     Q_CLASSINFO( "CheckDatabase_Method",         "POST" )
++    Q_CLASSINFO( "DelayShutdown_Method",         "POST" )
+     Q_CLASSINFO( "ProfileSubmit_Method",         "POST" )
+     Q_CLASSINFO( "ProfileDelete_Method",         "POST" )
+     Q_CLASSINFO( "ManageDigestUser_Method",      "POST" )
+@@ -164,6 +165,8 @@ class SERVICE_PUBLIC MythServices : public Service  //, public QScriptable ???
+ 
+         virtual bool                CheckDatabase       ( bool Repair ) = 0;
+ 
++        virtual bool                DelayShutdown       ( void ) = 0;
++
+         virtual bool                ProfileSubmit       ( void ) = 0;
+ 
+         virtual bool                ProfileDelete       ( void ) = 0;
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index 1eb95fe9167..a0a316ac262 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -3084,6 +3084,13 @@ bool Scheduler::AssignGroupInput(RecordingInfo &ri,
+     return bestid;
+ }
+ 
++// Called to delay shutdown for 5 minutes
++void Scheduler::DelayShutdown()
++{
++    m_delayShutdownTime = QDateTime::currentMSecsSinceEpoch() + 5*60*1000;
++}
++
++
+ void Scheduler::HandleIdleShutdown(
+     bool &blockShutdown, QDateTime &idleSince,
+     int prerollseconds, int idleTimeoutSecs, int idleWaitForRecordingTime,
+@@ -3114,6 +3121,9 @@ void Scheduler::HandleIdleShutdown(
+     }
+     else
+     {
++        // Check for delay shutdown request
++        bool delay = (m_delayShutdownTime > QDateTime::currentMSecsSinceEpoch());
++
+         QDateTime curtime = MythDate::current();
+ 
+         // find out, if we are currently recording (or LiveTV)
+@@ -3130,7 +3140,7 @@ void Scheduler::HandleIdleShutdown(
+ 
+         // If there are BLOCKING clients, then we're not idle
+         bool blocking = m_mainServer->isClientConnected(true);
+-        if (!blocking && !recording)
++        if (!blocking && !recording && !delay)
+         {
+             // have we received a RESET_IDLETIME message?
+             resetIdleTime_lock.lock();
+@@ -3272,6 +3282,10 @@ void Scheduler::HandleIdleShutdown(
+                 LOG(logmask, LOG_NOTICE, "Blocking shutdown because "
+                                          "of a connected client");
+ 
++            if (delay)
++                LOG(logmask, LOG_NOTICE, "Blocking shutdown because "
++                                         "of delay request from external application");
++
+             // not idle, make the time invalid
+             if (idleSince.isValid())
+             {
+diff --git a/mythtv/programs/mythbackend/scheduler.h b/mythtv/programs/mythbackend/scheduler.h
+index a739d774920..062c0c4edb0 100644
+--- a/mythtv/programs/mythbackend/scheduler.h
++++ b/mythtv/programs/mythbackend/scheduler.h
+@@ -122,6 +122,7 @@ class Scheduler : public MThread, public MythScheduler
+     int GetError(void) const { return error; }
+ 
+     void AddChildInput(uint parentid, uint childid);
++    void DelayShutdown();
+ 
+   protected:
+     void run(void) override; // MThread
+@@ -283,6 +284,8 @@ class Scheduler : public MThread, public MythScheduler
+     QDateTime livetvTime;
+ 
+     QDateTime lastPrepareTime;
++    // Delay shutdown util this time (ms since epoch);
++    int64_t m_delayShutdownTime        {0};
+ 
+     OpenEndType m_openEnd;
+ 
+diff --git a/mythtv/programs/mythbackend/services/myth.cpp b/mythtv/programs/mythbackend/services/myth.cpp
+index 733db2ceb61..093849a20e4 100644
+--- a/mythtv/programs/mythbackend/services/myth.cpp
++++ b/mythtv/programs/mythbackend/services/myth.cpp
+@@ -46,6 +46,7 @@
+ #include "mythdate.h"
+ #include "mythversion.h"
+ #include "serviceUtil.h"
++#include "scheduler.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ //
+@@ -941,6 +942,14 @@ bool Myth::CheckDatabase( bool repair )
+     return bResult;
+ }
+ 
++bool Myth::DelayShutdown( void )
++{
++    Scheduler *scheduler = dynamic_cast<Scheduler*>(gCoreContext->GetScheduler());
++    scheduler->DelayShutdown();
++    LOG(VB_GENERAL, LOG_NOTICE, "Shutdown delayed 5 minutes for external application.");
++    return true;
++}
++
+ /////////////////////////////////////////////////////////////////////////////
+ //
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/mythtv/programs/mythbackend/services/myth.h b/mythtv/programs/mythbackend/services/myth.h
+index e22b14bfb96..7e704ade5b5 100644
+--- a/mythtv/programs/mythbackend/services/myth.h
++++ b/mythtv/programs/mythbackend/services/myth.h
+@@ -129,6 +129,8 @@ class Myth : public MythServices
+ 
+         bool                CheckDatabase       ( bool Repair ) override; // MythServices
+ 
++        bool                DelayShutdown       ( void ) override; // MythServices
++
+         bool                ProfileSubmit       ( void ) override; // MythServices
+ 
+         bool                ProfileDelete       ( void ) override; // MythServices
+@@ -363,6 +365,13 @@ class ScriptableMyth : public QObject
+             )
+         }
+ 
++        bool DelayShutdown( void )
++        {
++            SCRIPT_CATCH_EXCEPTION( false,
++                return m_obj.DelayShutdown();
++            )
++        }
++
+         bool ProfileSubmit( void )
+         {
+             SCRIPT_CATCH_EXCEPTION( false,
+
+From 205d3659a924f45b2ec88e7ea325a2e9907c132f Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <kdewaal@mythtv.org>
+Date: Mon, 23 Sep 2019 16:49:38 +0200
+Subject: [PATCH 75/79] Remove ATSC ETT caching
+
+Process ATSC ETT events only after the corresponding EIT event,
+as identified by the event ID, has been received.
+This solves title/description mismatches in guide data.
+Bug reported and bug fix tested for several years by Roanld L Humble.
+Thanks for the perseverance in reporting and testing this bug.
+
+Also fix of a memory leak in the case where EIT events are cached
+awaiting a matching ETT event but the ETT event does never arrive.
+
+Refs #13455
+
+(cherry picked from commit fe0c80927fb6a3ec8d8e9b326c4c10df9a2c47dc)
+Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+---
+ mythtv/libs/libmythtv/eithelper.cpp | 76 +++++++++--------------------
+ mythtv/libs/libmythtv/eithelper.h   |  3 --
+ 2 files changed, 22 insertions(+), 57 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/eithelper.cpp b/mythtv/libs/libmythtv/eithelper.cpp
+index 91b2af2e927..7a839d1c427 100644
+--- a/mythtv/libs/libmythtv/eithelper.cpp
++++ b/mythtv/libs/libmythtv/eithelper.cpp
+@@ -89,13 +89,12 @@ uint EITHelper::ProcessEvents(void)
+     if (!insertCount)
+         return 0;
+ 
+-    if (incomplete_events.size() || unmatched_etts.size())
++    if (!incomplete_events.empty())
+     {
+         LOG(VB_EIT, LOG_INFO,
+-            LOC + QString("Added %1 events -- complete(%2) "
+-                          "incomplete(%3) unmatched(%4)")
++            LOC + QString("Added %1 events -- complete: %2 incomplete: %3")
+                 .arg(insertCount).arg(db_events.size())
+-                .arg(incomplete_events.size()).arg(unmatched_etts.size()));
++                .arg(incomplete_events.size()));
+     }
+     else
+     {
+@@ -147,7 +146,6 @@ void EITHelper::AddEIT(uint atsc_major, uint atsc_minor,
+ {
+     uint atsc_key = (atsc_major << 16) | atsc_minor;
+     EventIDToATSCEvent &events = incomplete_events[atsc_key];
+-    EventIDToETT &etts = unmatched_etts[atsc_key];
+ 
+     for (uint i = 0; i < eit->EventCount(); i++)
+     {
+@@ -156,29 +154,24 @@ void EITHelper::AddEIT(uint atsc_major, uint atsc_minor,
+                      eit->title(i).GetBestMatch(languagePreferences),
+                      eit->Descriptors(i), eit->DescriptorsLength(i));
+ 
+-        // Look to see if there has been a recent ett message with the same event id.
+-        EventIDToETT::iterator it = etts.find(eit->EventID(i));
+-        QString ett_text;
+-        bool found_matching_ett = false;
+-        if (it != etts.end())
++        // Create an event immediately if the ETM_location specifies
++        // that there is no ETT event coming; otherwise save the EIT
++        // event in the incomplete_events for this channel.
++        if (!ev.etm)
+         {
+-            // Don't use an ett description if it was scanned long in the past.
+-            if (!it->IsStale()) {
+-              ett_text = it->ett_text;
+-              found_matching_ett = true;
+-            }
+-            etts.erase(it);
+-        }
+-
+-        // Create an event immediately if a matching ett description was found,
+-        // or if item is false, indicating that no ett description should be
+-        // expected.
+-        if (found_matching_ett || !ev.etm)
+-        {
+-            CompleteEvent(atsc_major, atsc_minor, ev, ett_text);
++            CompleteEvent(atsc_major, atsc_minor, ev, "");
+         }
+         else
+         {
++            // If there is an existing EIT event with this event_id then
++            // delete the descriptor to avoid a memory leak.
++            EventIDToATSCEvent::iterator it = events.find(eit->EventID(i));
++            if (it != events.end())
++            {
++                delete [] (*it).desc;
++            }
++
++            // Save the EIT event in the incomplete_events for this channel.
+             unsigned char *tmp = new unsigned char[ev.desc_length];
+             memcpy(tmp, eit->Descriptors(i), ev.desc_length);
+             ev.desc = tmp;
+@@ -190,52 +183,27 @@ void EITHelper::AddEIT(uint atsc_major, uint atsc_minor,
+ void EITHelper::AddETT(uint atsc_major, uint atsc_minor,
+                        const ExtendedTextTable *ett)
+ {
++    // Find the matching incomplete EIT event for this ETT
++    // If we have no EIT event then just discard the ETT.
+     uint atsc_key = (atsc_major << 16) | atsc_minor;
+-    // Try to match up the ett with an eit event.
+     ATSCSRCToEvents::iterator eits_it = incomplete_events.find(atsc_key);
+     if (eits_it != incomplete_events.end())
+     {
+         EventIDToATSCEvent::iterator it = (*eits_it).find(ett->EventID());
+         if (it != (*eits_it).end())
+         {
+-            bool completed_event = false;
+-            // Only consider eit events from the recent past.
++            // Only consider EIT events from the very recent past.
+             if (!it->IsStale()) {
+-              completed_event = true;
+               CompleteEvent(
+                   atsc_major, atsc_minor, *it,
+                   ett->ExtendedTextMessage().GetBestMatch(languagePreferences));
+             }
+ 
+-            if ((*it).desc)
+-                delete [] (*it).desc;
+-
++            // Remove EIT event from the incomplete_event list.
++            delete [] (*it).desc;
+             (*eits_it).erase(it);
+-
+-            if (completed_event) return;
+         }
+     }
+-
+-    // Report if an unmatched ett was previously noted and overwrite it.
+-    // See also https://code.mythtv.org/trac/ticket/11739
+-    EventIDToETT &elist = unmatched_etts[atsc_key];
+-    EventIDToETT::iterator existing_unmatched_ett_it =
+-        elist.find(ett->EventID());
+-    const QString next_ett_text = ett->ExtendedTextMessage()
+-        .GetBestMatch(languagePreferences);
+-    if (existing_unmatched_ett_it != elist.end() &&
+-        existing_unmatched_ett_it->ett_text != next_ett_text)
+-    {
+-       LOG(VB_EIT, LOG_DEBUG, LOC +
+-           QString("Overwriting previously unmatched ett. stale: %1 major: %2 "
+-                   "minor: %3 old ett: %4  new ett: %5")
+-               .arg(existing_unmatched_ett_it->IsStale())
+-               .arg(atsc_major)
+-               .arg(atsc_minor)
+-               .arg(existing_unmatched_ett_it->ett_text)
+-               .arg(next_ett_text));
+-    }
+-    elist.insert(ett->EventID(), ATSCEtt(next_ett_text));
+ }
+ 
+ static void parse_dvb_event_descriptors(desc_list_t list, FixupValue fix,
+diff --git a/mythtv/libs/libmythtv/eithelper.h b/mythtv/libs/libmythtv/eithelper.h
+index fc2cff469a9..5c06615fac1 100644
+--- a/mythtv/libs/libmythtv/eithelper.h
++++ b/mythtv/libs/libmythtv/eithelper.h
+@@ -67,11 +67,9 @@ class ATSCEtt
+     time_t scan_time;
+ };
+ 
+-
+ typedef QMap<uint,ATSCEvent>               EventIDToATSCEvent;
+ typedef QMap<uint,ATSCEtt>                 EventIDToETT;
+ typedef QMap<uint,EventIDToATSCEvent>      ATSCSRCToEvents;
+-typedef QMap<uint,EventIDToETT>            ATSCSRCToETTs;
+ typedef QMap<unsigned long long,uint>      ServiceToChanID;
+ 
+ typedef uint64_t                           FixupKey;
+@@ -153,7 +151,6 @@ class EITHelper
+ 
+     FixupMap fixup;
+     ATSCSRCToEvents         incomplete_events;
+-    ATSCSRCToETTs           unmatched_etts;
+ 
+     MythDeque<DBEventEIT*>     db_events;
+ 
+
+From 511d424a180afb47ea310baaf0f25b16d32c45ee Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <kdewaal@mythtv.org>
+Date: Thu, 12 Sep 2019 22:08:26 +0200
+Subject: [PATCH 76/79] EITCache check on table version
+
+The EITcache code that checks if an EIT event contains new data or
+that it contains data that has been already processed did now allow
+for missing table versions when the table version wrapped around
+from 31 to 0.
+If that happens then the guide data of that channel will not
+be updated for a few days until the table version is 31 again.
+Note that it is completely valid for a receiver to not receive
+all table versions. This happens for instance when a tuner is
+used for recording; during that time the active EIT scanning
+is suspended and only the EIT data on the multiplex of the
+channel that is currently being reorded is processed.
+This happens also when a device is switched off.
+The check as now implemented only checks if the new table version
+is different from the previously processed table version.
+
+(cherry picked from commit 1ad17d49ea6bdfb16c3cd5e4882227a32f06ef2a)
+Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+---
+ mythtv/libs/libmythtv/eitcache.cpp | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/eitcache.cpp b/mythtv/libs/libmythtv/eitcache.cpp
+index c1ef93d608c..9bbb7243827 100644
+--- a/mythtv/libs/libmythtv/eitcache.cpp
++++ b/mythtv/libs/libmythtv/eitcache.cpp
+@@ -388,9 +388,7 @@ bool EITCache::IsNewEIT(uint chanid,  uint tableid,   uint version,
+             tblChgCnt++;
+         }
+         else if ((extract_table_id(*it) == tableid) &&
+-                 ((extract_version(*it) < version) ||
+-                  ((extract_version(*it) == kVersionMax) &&
+-                   version < kVersionMax)))
++                 (extract_version(*it) != version))
+         {
+             // EIT updated version on current table
+             verChgCnt++;
+
+From f1859d9b58ac2590c91f2504d827e19bc4095de1 Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Thu, 21 Nov 2019 19:32:43 -0600
+Subject: [PATCH 77/79] DB: Care for MySQL v8.0 use of "system" as a reserverd
+ word
+
+Change system to `system` in all queries.
+
+Thanks to jhavens1566 and Gary Buhrmaster
+
+Fixes: #13516
+(cherry picked from commit 4a108b98172739a335d2e8a280643f7c8de5d280)
+---
+ mythplugins/mytharchive/mytharchivehelper/main.cpp |  2 +-
+ mythplugins/mythgame/mythgame/dbcheck.cpp          |  8 ++++----
+ mythplugins/mythgame/mythgame/gamehandler.cpp      | 12 ++++++------
+ mythplugins/mythgame/mythgame/rominfo.cpp          | 12 ++++++------
+ mythtv/libs/libmythtv/dbcheck.cpp                  | 12 ++++++------
+ mythtv/libs/libmythtv/programdata.cpp              |  6 +++---
+ mythtv/programs/mythfrontend/progdetails.cpp       |  2 +-
+ 7 files changed, 27 insertions(+), 27 deletions(-)
+
+diff --git a/mythplugins/mytharchive/mytharchivehelper/main.cpp b/mythplugins/mytharchive/mytharchivehelper/main.cpp
+index 13c7032e62d..1960e0b9250 100644
+--- a/mythplugins/mytharchive/mytharchivehelper/main.cpp
++++ b/mythplugins/mytharchive/mytharchivehelper/main.cpp
+@@ -524,7 +524,7 @@ int NativeArchive::exportRecording(QDomElement   &itemNode,
+     }
+ 
+     // add any rating
+-    query.prepare("SELECT system, rating FROM recordedrating "
++    query.prepare("SELECT `system`, rating FROM recordedrating "
+             "WHERE chanid = :CHANID AND starttime = :STARTTIME;");
+     query.bindValue(":CHANID", chanID);
+     query.bindValue(":STARTTIME", startTime);
+diff --git a/mythplugins/mythgame/mythgame/dbcheck.cpp b/mythplugins/mythgame/mythgame/dbcheck.cpp
+index a787feb821b..6b9952a8e3c 100644
+--- a/mythplugins/mythgame/mythgame/dbcheck.cpp
++++ b/mythplugins/mythgame/mythgame/dbcheck.cpp
+@@ -70,7 +70,7 @@ static bool InitializeDatabase(void)
+ 
+     const QString updates[] = {
+ "CREATE TABLE gamemetadata ("
+-"  system varchar(128) NOT NULL default '',"
++"  `system` varchar(128) NOT NULL default '',"
+ "  romname varchar(128) NOT NULL default '',"
+ "  gamename varchar(128) NOT NULL default '',"
+ "  genre varchar(128) NOT NULL default '',"
+@@ -84,7 +84,7 @@ static bool InitializeDatabase(void)
+ "  crc_value varchar(64) NOT NULL default '',"
+ "  display tinyint(1) NOT NULL default '1',"
+ "  version varchar(64) NOT NULL default '',"
+-"  KEY system (system),"
++"  KEY `system` (`system`),"
+ "  KEY year (year),"
+ "  KEY romname (romname),"
+ "  KEY gamename (gamename),"
+@@ -298,7 +298,7 @@ bool UpgradeGameDatabaseSchema(void)
+ QString("ALTER DATABASE %1 DEFAULT CHARACTER SET latin1;")
+         .arg(gContext->GetDatabaseParams().dbName),
+ "ALTER TABLE gamemetadata"
+-"  MODIFY system varbinary(128) NOT NULL default '',"
++"  MODIFY `system` varbinary(128) NOT NULL default '',"
+ "  MODIFY romname varbinary(128) NOT NULL default '',"
+ "  MODIFY gamename varbinary(128) NOT NULL default '',"
+ "  MODIFY genre varbinary(128) NOT NULL default '',"
+@@ -345,7 +345,7 @@ QString("ALTER DATABASE %1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;")
+         .arg(gContext->GetDatabaseParams().dbName),
+ "ALTER TABLE gamemetadata"
+ "  DEFAULT CHARACTER SET default,"
+-"  MODIFY system varchar(128) CHARACTER SET utf8 NOT NULL default '',"
++"  MODIFY `system` varchar(128) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY romname varchar(128) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY gamename varchar(128) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY genre varchar(128) CHARACTER SET utf8 NOT NULL default '',"
+diff --git a/mythplugins/mythgame/mythgame/gamehandler.cpp b/mythplugins/mythgame/mythgame/gamehandler.cpp
+index 9d5539e3f1a..565662970f7 100644
+--- a/mythplugins/mythgame/mythgame/gamehandler.cpp
++++ b/mythplugins/mythgame/mythgame/gamehandler.cpp
+@@ -243,7 +243,7 @@ static void updateDisplayRom(QString romname, int display, QString Systemname)
+ {
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.prepare("UPDATE gamemetadata SET display = :DISPLAY "
+-                  "WHERE romname = :ROMNAME AND system = :SYSTEM");
++                  "WHERE romname = :ROMNAME AND `system` = :SYSTEM");
+ 
+     query.bindValue(":DISPLAY", display);
+     query.bindValue(":ROMNAME", romname);
+@@ -273,7 +273,7 @@ static void updateGameName(QString romname, QString GameName, QString Systemname
+ {
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.prepare("UPDATE gamemetadata SET GameName = :GAMENAME "
+-                  "WHERE romname = :ROMNAME AND system = :SYSTEM ");
++                  "WHERE romname = :ROMNAME AND `system` = :SYSTEM ");
+ 
+     query.bindValue(":GAMENAME", GameName);
+     query.bindValue(":ROMNAME", romname);
+@@ -300,10 +300,10 @@ static void UpdateGameCounts(QStringList updatelist)
+         LOG(VB_GENERAL, LOG_NOTICE,
+             LOC + QString("Update gametype %1").arg(GameType));
+ 
+-        query.prepare("SELECT romname,system,spandisks,gamename FROM "
++        query.prepare("SELECT romname,`system`,spandisks,gamename FROM "
+               "gamemetadata,gameplayers WHERE "
+               "gamemetadata.gametype = :GAMETYPE AND "
+-              "playername = system ORDER BY romname");
++              "playername = `system` ORDER BY romname");
+ 
+         query.bindValue(":GAMETYPE",GameType);
+ 
+@@ -450,7 +450,7 @@ void GameHandler::UpdateGameDB(GameHandler *handler)
+ #endif
+ 
+             query.prepare("INSERT INTO gamemetadata "
+-                          "(system, romname, gamename, genre, year, gametype, "
++                          "(`system`, romname, gamename, genre, year, gametype, "
+                           "rompath, country, crc_value, diskcount, display, plot, "
+                           "publisher, version, fanart, boxart, screenshot) "
+                           "VALUES (:SYSTEM, :ROMNAME, :GAMENAME, :GENRE, :YEAR, "
+@@ -501,7 +501,7 @@ void GameHandler::VerifyGameDB(GameHandler *handler)
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+     query.prepare("SELECT romname,rompath,gamename FROM gamemetadata "
+-                  "WHERE system = :SYSTEM");
++                  "WHERE `system` = :SYSTEM");
+ 
+     query.bindValue(":SYSTEM",handler->SystemName());
+ 
+diff --git a/mythplugins/mythgame/mythgame/rominfo.cpp b/mythplugins/mythgame/mythgame/rominfo.cpp
+index 53490b00545..0743c88fad3 100644
+--- a/mythplugins/mythgame/mythgame/rominfo.cpp
++++ b/mythplugins/mythgame/mythgame/rominfo.cpp
+@@ -31,7 +31,7 @@ void RomInfo::SaveToDatabase()
+             .arg(Romname()));
+ 
+         query.prepare("INSERT INTO gamemetadata "
+-                      "(system, romname, gamename, genre, year, gametype, "
++                      "(`system`, romname, gamename, genre, year, gametype, "
+                       "rompath, country, crc_value, diskcount, display, plot, "
+                       "publisher, version, fanart, boxart, screenshot) "
+                       "VALUES (:SYSTEM, :ROMNAME, :GAMENAME, :GENRE, :YEAR, "
+@@ -257,10 +257,10 @@ void RomInfo::fillData()
+ 
+     QString systemtype;
+     if (system != "") {
+-        systemtype  += " AND system = :SYSTEM ";
++        systemtype  += " AND `system` = :SYSTEM ";
+     }
+ 
+-    QString thequery = "SELECT system,gamename,genre,year,romname,favorite,"
++    QString thequery = "SELECT `system`,gamename,genre,year,romname,favorite,"
+                        "rompath,country,crc_value,diskcount,gametype,plot,publisher,"
+                        "version,screenshot,fanart,boxart,inetref,intid FROM gamemetadata "
+                        "WHERE gamename = :GAMENAME "
+@@ -299,7 +299,7 @@ void RomInfo::fillData()
+     // systems available to play it.
+     if (RomCount() > 1)
+     {
+-        query.prepare("SELECT DISTINCT system FROM gamemetadata "
++        query.prepare("SELECT DISTINCT `system` FROM gamemetadata "
+                       "WHERE romname = :ROMNAME");
+         query.bindValue(":ROMNAME", Romname());
+         if (!query.exec())
+@@ -325,7 +325,7 @@ QList<RomInfo*> RomInfo::GetAllRomInfo()
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+ 
+-    QString querystr = "SELECT intid,system,romname,gamename,genre,year,publisher,"
++    QString querystr = "SELECT intid,`system`,romname,gamename,genre,year,publisher,"
+                        "favorite,rompath,screenshot,fanart,plot,boxart,"
+                        "gametype,diskcount,country,crc_value,inetref,display,"
+                        "version FROM gamemetadata ORDER BY diskcount DESC";
+@@ -373,7 +373,7 @@ RomInfo *RomInfo::GetRomInfoById(int id)
+ 
+     MSqlQuery query(MSqlQuery::InitCon());
+ 
+-    QString querystr = "SELECT intid,system,romname,gamename,genre,year,publisher,"
++    QString querystr = "SELECT intid,`system`,romname,gamename,genre,year,publisher,"
+                        "favorite,rompath,screenshot,fanart,plot,boxart,"
+                        "gametype,diskcount,country,crc_value,inetref,display,"
+                        "version FROM gamemetadata WHERE intid = :INTID";
+diff --git a/mythtv/libs/libmythtv/dbcheck.cpp b/mythtv/libs/libmythtv/dbcheck.cpp
+index af4581ae345..c55f1b207c0 100644
+--- a/mythtv/libs/libmythtv/dbcheck.cpp
++++ b/mythtv/libs/libmythtv/dbcheck.cpp
+@@ -4125,10 +4125,10 @@ bool InitializeMythSchema(void)
+ "CREATE TABLE programrating ("
+ "  chanid int(10) unsigned NOT NULL DEFAULT '0',"
+ "  starttime datetime NOT NULL DEFAULT '0000-00-00 00:00:00',"
+-"  system varchar(8) DEFAULT NULL,"
++"  `system` varchar(8) DEFAULT NULL,"
+ "  rating varchar(16) DEFAULT NULL,"
+-"  UNIQUE KEY chanid (chanid,starttime,system,rating),"
+-"  KEY starttime (starttime,system)"
++"  UNIQUE KEY chanid (chanid,starttime,`system`,rating),"
++"  KEY starttime (starttime,`system`)"
+ ") ENGINE=MyISAM DEFAULT CHARSET=utf8;",
+ "CREATE TABLE recgrouppassword ("
+ "  recgroup varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',"
+@@ -4335,10 +4335,10 @@ bool InitializeMythSchema(void)
+ "CREATE TABLE recordedrating ("
+ "  chanid int(10) unsigned NOT NULL DEFAULT '0',"
+ "  starttime datetime NOT NULL DEFAULT '0000-00-00 00:00:00',"
+-"  system varchar(8) DEFAULT NULL,"
++"  `system` varchar(8) DEFAULT NULL,"
+ "  rating varchar(16) DEFAULT NULL,"
+-"  UNIQUE KEY chanid (chanid,starttime,system,rating),"
+-"  KEY starttime (starttime,system)"
++"  UNIQUE KEY chanid (chanid,starttime,`system`,rating),"
++"  KEY starttime (starttime,`system`)"
+ ") ENGINE=MyISAM DEFAULT CHARSET=utf8;",
+ "CREATE TABLE recordedseek ("
+ "  chanid int(10) unsigned NOT NULL DEFAULT '0',"
+diff --git a/mythtv/libs/libmythtv/programdata.cpp b/mythtv/libs/libmythtv/programdata.cpp
+index b46a15d64b8..f8b97913758 100644
+--- a/mythtv/libs/libmythtv/programdata.cpp
++++ b/mythtv/libs/libmythtv/programdata.cpp
+@@ -759,7 +759,7 @@ uint DBEvent::UpdateDB(
+     {
+         query.prepare(
+             "INSERT IGNORE INTO programrating "
+-            "       ( chanid, starttime, system, rating) "
++            "       ( chanid, starttime, `system`, rating) "
+             "VALUES (:CHANID, :START,    :SYS,  :RATING)");
+         query.bindValue(":CHANID", chanid);
+         query.bindValue(":START",  starttime);
+@@ -1062,7 +1062,7 @@ uint DBEvent::InsertDB(MSqlQuery &query, uint chanid) const
+     {
+         query.prepare(
+             "INSERT IGNORE INTO programrating "
+-            "       ( chanid, starttime, system, rating) "
++            "       ( chanid, starttime, `system`, rating) "
+             "VALUES (:CHANID, :START,    :SYS,  :RATING)");
+         query.bindValue(":CHANID", chanid);
+         query.bindValue(":START",  starttime);
+@@ -1231,7 +1231,7 @@ uint ProgInfo::InsertDB(MSqlQuery &query, uint chanid) const
+     {
+         query.prepare(
+             "INSERT IGNORE INTO programrating "
+-            "       ( chanid, starttime, system, rating) "
++            "       ( chanid, starttime, `system`, rating) "
+             "VALUES (:CHANID, :START,    :SYS,  :RATING)");
+         query.bindValue(":CHANID", chanid);
+         query.bindValue(":START",  starttime);
+diff --git a/mythtv/programs/mythfrontend/progdetails.cpp b/mythtv/programs/mythfrontend/progdetails.cpp
+index 9265292c35e..4a9673017c4 100644
+--- a/mythtv/programs/mythfrontend/progdetails.cpp
++++ b/mythtv/programs/mythfrontend/progdetails.cpp
+@@ -46,7 +46,7 @@ QString ProgDetails::getRatings(bool recorded, uint chanid, QDateTime startts)
+ {
+     QString table = (recorded) ? "recordedrating" : "programrating";
+     QString sel = QString(
+-        "SELECT system, rating FROM %1 "
++        "SELECT `system`, rating FROM %1 "
+         "WHERE chanid  = :CHANID "
+         "AND starttime = :STARTTIME").arg(table);
+ 
+
+From 08ebf057c56bf67f177257e2306fc0181d6abd57 Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Sun, 24 Nov 2019 10:29:04 -0600
+Subject: [PATCH 78/79] DB: Care for MySQL v8.0 use of "system" as a reserverd
+ word
+
+Add: system to `system` changes for datadirect (that doesn't
+exist in v31-Pre.
+
+Thanks to jhavens1566
+
+Fixes #13516
+---
+ mythtv/libs/libmythtv/datadirect.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/datadirect.cpp b/mythtv/libs/libmythtv/datadirect.cpp
+index e6477fdf21e..9cd7178786e 100644
+--- a/mythtv/libs/libmythtv/datadirect.cpp
++++ b/mythtv/libs/libmythtv/datadirect.cpp
+@@ -881,7 +881,7 @@ void DataDirectProcessor::DataDirectProgramUpdate(void)
+ #endif
+ 
+     if (!query.exec("INSERT IGNORE INTO programrating (chanid, starttime, "
+-                    "system, rating) SELECT dd_v_program.chanid, "
++                    "`system`, rating) SELECT dd_v_program.chanid, "
+                     "DATE_ADD(starttime, INTERVAL channel.tmoffset MINUTE), "
+                     " 'MPAA', "
+                     "mpaarating FROM dd_v_program, channel WHERE "
+@@ -890,7 +890,7 @@ void DataDirectProcessor::DataDirectProgramUpdate(void)
+         MythDB::DBError("Inserting into programrating table", query);
+ 
+     if (!query.exec("INSERT IGNORE INTO programrating (chanid, starttime, "
+-                    "system, rating) SELECT dd_v_program.chanid, "
++                    "`system`, rating) SELECT dd_v_program.chanid, "
+                     "DATE_ADD(starttime, INTERVAL channel.tmoffset MINUTE), "
+                     "'VCHIP', "
+                     "tvrating FROM dd_v_program, channel WHERE tvrating != ''"
+
+From a27754ae7f7ec04f6046fcfd61e336986dc2c750 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <kdewaal@mythtv.org>
+Date: Fri, 29 Nov 2019 21:38:40 +0100
+Subject: [PATCH 79/79] Extend instance locking in HDHomeRun stream handler
+
+Extend the instance locking already present in HDHRStreamHandler
+functions TunerGet and TunerSet to GetTunerStatus.
+This fixes a segfault in libhdhomerun, reported in ticket #13519,
+that appeared when doing a UK DVB-T/T2 scan with offset frequencies.
+The segfault happened because GetTunerStatus was called from the
+HDHRSignalMonitor in a different thread than the TunerGet/TunerSet functions.
+Extend the instance locking also to the HDHRStreamHandler::run function
+where the libhdhomerun functions are called. This should fix the segfault
+in the mythbackend startup as reported in ticket #9027.
+
+Refs #9027
+
+Fixes #13519
+
+(cherry picked from commit ec2a518f20385b06f0fe730fa6f567409f34d50e)
+Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+---
+ .../libmythtv/recorders/hdhrstreamhandler.cpp | 27 ++++++++++++-------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/recorders/hdhrstreamhandler.cpp b/mythtv/libs/libmythtv/recorders/hdhrstreamhandler.cpp
+index 9eb32c9c78e..88ad4be5c33 100644
+--- a/mythtv/libs/libmythtv/recorders/hdhrstreamhandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/hdhrstreamhandler.cpp
+@@ -117,16 +117,20 @@ void HDHRStreamHandler::run(void)
+ {
+     RunProlog();
+ 
+-    /* Create TS socket. */
+-    if (!hdhomerun_device_stream_start(_hdhomerun_device))
+     {
+-        LOG(VB_GENERAL, LOG_ERR, LOC +
+-            "Starting recording (set target failed). Aborting.");
+-        _error = true;
+-        RunEpilog();
+-        return;
++        QMutexLocker locker(&_hdhr_lock);
++
++        /* Create TS socket. */
++        if (!hdhomerun_device_stream_start(_hdhomerun_device))
++        {
++            LOG(VB_GENERAL, LOG_ERR, LOC +
++                "Starting recording (set target failed). Aborting.");
++            _error = true;
++            RunEpilog();
++            return;
++        }
++        hdhomerun_device_stream_flush(_hdhomerun_device);
+     }
+-    hdhomerun_device_stream_flush(_hdhomerun_device);
+ 
+     SetRunning(true, false, false);
+ 
+@@ -188,7 +192,10 @@ void HDHRStreamHandler::run(void)
+ 
+     RemoveAllPIDFilters();
+ 
+-    hdhomerun_device_stream_stop(_hdhomerun_device);
++    {
++        QMutexLocker locker(&_hdhr_lock);
++        hdhomerun_device_stream_stop(_hdhomerun_device);
++    }
+ 
+     if (VERBOSE_LEVEL_CHECK(VB_RECORD, LOG_INFO))
+     {
+@@ -476,6 +483,8 @@ QString HDHRStreamHandler::TunerSet(
+ 
+ void HDHRStreamHandler::GetTunerStatus(struct hdhomerun_tuner_status_t *status)
+ {
++    QMutexLocker locker(&_hdhr_lock);
++
+     hdhomerun_device_get_tuner_status(_hdhomerun_device, nullptr, status);
+ }
+ 
