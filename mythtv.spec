@@ -54,28 +54,25 @@
 ################################################################################
 
 # A list of which applications we want to put into the desktop menu system
-%define desktop_applications mythfrontend mythtv-setup
+%global desktop_applications mythfrontend mythtv-setup
 
 # git has used to fetch fixes diff
-%define githash 5cde0578d84926171b20c8f7e95a101e9b0b9457
-%define shorthash %(c=%{githash}; echo ${c:0:10})
+%global githash a27754ae7f7ec04f6046fcfd61e336986dc2c750
+%global shorthash %(c=%{githash}; echo ${c:0:10})
 
 # MythTV Version string -- preferably the output from git describe
-%define vers_string v30.0-69-g5cde0578d8
-%define rel_date 20190904
-%define rel_string .%{rel_date}git%{shorthash}
+%global vers_string v30.0-79-ga27754ae7f
+%global rel_date 20191226
+%global rel_string .%{rel_date}git%{shorthash}
 
-%define branch fixes/30
-
-# Harden build as mythbackend is long running.
-%global _hardened_build 1
+%global branch fixes/30
 
 #
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
 Version:        30.0
-Release:        12%{?rel_string}%{?dist}
+Release:        15%{?rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -88,6 +85,7 @@ Patch1:         %{name}-space_in_GB.patch
 Patch2:         %{name}-php72_fix.patch
 Patch3:         mythtv-python3.patch
 Patch4:         mythtv-py3_configure.patch
+Patch5:         mythtv-py3_urllib.patch
 
 
 ################################################################################
@@ -150,9 +148,6 @@ Patch4:         mythtv-py3_configure.patch
 
 Source10:  %{name}-PACKAGE-LICENSING
 Source11:  %{name}-ChangeLog
-Source101: mythbackend.sysconfig
-Source102: mythbackend.init
-Source103: %{name}.logrotate.sysv
 Source104: %{name}.logrotate.sysd
 Source105: mythbackend.service
 Source106: mythfrontend.png
@@ -1460,6 +1455,16 @@ exit 0
 
 
 %changelog
+* Thu Dec 26 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-15.20191226gita27754ae7f
+- Update to latest v30 fixes.
+- Clean up spec file and remove sysvinit sources.
+
+* Tue Dec 17 2019 Leigh Scott <leigh123linux@gmail.com> - 30.0-14.20190904git5cde0578d8
+- Mass rebuild for x264
+
+* Thu Nov 28 2019 Leigh Scott <leigh123linux@googlemail.com> - 30.0-13.20190904git5cde0578d8
+- Rebuild for new x265
+
 * Sun Sep 29 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-12.20190904git5cde0578d8
 - Fix packaging for backend only systems.
 
