@@ -13,7 +13,7 @@
          group.setAttribute("dir"  , directory );
  
          if (fsID == "total")
-@@ -495,9 +495,9 @@ void HttpStatus::FillStatusXML( QDomDocu
+@@ -497,9 +497,9 @@ void HttpStatus::FillStatusXML( QDomDocu
              {
                  iExpirable = query.value(0).toLongLong();
              }
@@ -26,7 +26,7 @@
              total = group;
          }
          else
-@@ -1267,36 +1267,36 @@ int HttpStatus::PrintMachineInfo( QTextS
+@@ -1269,36 +1269,36 @@ int HttpStatus::PrintMachineInfo( QTextS
                  << "          <ul>\r\n";
  
                  os << "            <li>Total Space: ";

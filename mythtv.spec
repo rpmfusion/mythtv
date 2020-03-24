@@ -33,7 +33,6 @@
 #
 # --without vdpau           Disable VDPAU support
 # --without vaapi           Disable VAAPI support
-# --without crystalhd       Disable Crystal HD support
 # --without perl            Disable building of the perl bindings
 # --without php             Disable building of the php bindings
 # --without python          Disable building of the python bindings
@@ -42,7 +41,6 @@
 #
 # --without mytharchive
 # --without mythbrowser
-# --without mythgallery
 # --without mythgame
 # --without mythmusic
 # --without mythnetvision
@@ -57,22 +55,22 @@
 %global desktop_applications mythfrontend mythtv-setup
 
 # git has used to fetch fixes diff
-%global githash a27754ae7f7ec04f6046fcfd61e336986dc2c750
+%global githash 9579662cdcb020440fdb358e044f417f20b55321
 %global shorthash %(c=%{githash}; echo ${c:0:10})
 
 # MythTV Version string -- preferably the output from git describe
-%global vers_string v30.0-79-ga27754ae7f
-%global rel_date 20191226
+%global vers_string v31.0
+%global rel_date 20200323
 %global rel_string .%{rel_date}git%{shorthash}
 
-%global branch fixes/30
+%global branch fixes/31
 
 #
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Version:        30.0
-Release:        15%{?rel_string}%{?dist}
+Version:        31.0
+Release:        1%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -80,12 +78,8 @@ Summary:        A digital video recorder (DVR) application
 License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
 URL:            http://www.mythtv.org/
 Source0:        https://github.com/MythTV/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
-Patch0:         https://github.com/MythTV/%{name}/compare/v%{version}..%{shorthash}.patch
+#Patch0:         https://github.com/MythTV/%{name}/compare/v%{version}..%{shorthash}.patch
 Patch1:         %{name}-space_in_GB.patch
-Patch2:         %{name}-php72_fix.patch
-Patch3:         mythtv-python3.patch
-Patch4:         mythtv-py3_configure.patch
-Patch5:         mythtv-py3_urllib.patch
 
 
 ################################################################################
@@ -102,7 +96,6 @@ Patch5:         mythtv-py3_urllib.patch
 # The following options are enabled by default.  Use --without to disable them
 %bcond_without vdpau
 %bcond_without vaapi
-%bcond_without crystalhd
 %bcond_without sdnotify
 %bcond_without perl
 %bcond_without php
@@ -113,17 +106,12 @@ Patch5:         mythtv-py3_urllib.patch
 %bcond_without plugins
 %bcond_without mytharchive
 %bcond_without mythbrowser
-%bcond_without mythgallery
 %bcond_without mythgame
 %bcond_without mythmusic
 %bcond_without mythnews
 %bcond_without mythweather
 %bcond_without mythzoneminder
-%if 0%{?fedora} || 0%{?rhel} > 7
-%bcond_without mythnetvision
-%else
 %bcond_with mythnetvision
-%endif
 
 # Python2 prefix for building on rhel
 %if 0%{?rhel} && 0%{?rhel} < 8
@@ -271,10 +259,6 @@ BuildRequires:  libvdpau-devel
 BuildRequires:  libva-devel
 %endif
 
-%if %{with crystalhd}
-BuildRequires:  libcrystalhd-devel
-%endif
-
 %if %{with sdnotify}
 BuildRequires:  systemd-devel
 %endif
@@ -313,23 +297,13 @@ BuildRequires:  perl(IO::Socket::INET6)
 %if %{with python}
 BuildRequires:  %{py_prefix}-devel
 BuildRequires:  %{py_prefix}-lxml
-%if 0%{?fedora} || 0%{?rhel} > 7
+BuildRequires:  %{py_prefix}-simplejson
 BuildRequires:  %{py_prefix}-mysql
-BuildRequires:  %{py_prefix}-urlgrabber
-%else
-BuildRequires:  python-urlgrabber
-BuildRequires:  MySQL-python
-%endif
 %endif
 
 # Plugin Build Requirements
 
 %if %{with plugins}
-
-%if %{with mythgallery}
-BuildRequires:  libexif-devel >= 0.6.9
-BuildRequires:  dcraw
-%endif
 
 %if %{with mythgame}
 BuildRequires:  zlib-devel
@@ -367,6 +341,7 @@ Requires:       perl(JSON)
 BuildRequires:  %{py_prefix}-pycurl
 BuildRequires:  %{py_prefix}-lxml
 BuildRequires:  %{py_prefix}-oauth
+BuildRequires:  %{py_prefix}-urllib3
 %endif
 
 %endif
@@ -440,6 +415,12 @@ Summary:   Library providing mythtv support
 Requires:  freetype%{?_isa} >= 2
 Requires:  qt5-qtbase-mysql%{?_isa}
 Requires:  libudisks2%{?_isa}
+
+# Handle package obsoletes here as this is the only "common" package.
+# mythgallery is dead
+Obsoletes:      mythgallery < 31
+# mythnetvision is buggy and doesn't want to build with python3-urllib3
+Obsoletes:      mythnetvision < 31
 
 %description libs
 Common library code for MythTV and add-on modules (development)
@@ -518,9 +499,6 @@ Requires: libvdpau-devel%{?_isa}
 Requires: libva-devel%{?_isa}
 %endif
 
-%if %{with crystalhd}
-Requires: libcrystalhd-devel%{?_isa}
-%endif
 
 %description devel
 This package contains the header files and libraries for developing
@@ -680,7 +658,7 @@ Provides a PHP-based interface to interacting with MythTV.
 Summary:        Python bindings for MythTV
 %if 0%{?fedora} > 30
 %{?python_provide:%python_provide python3-%{name}}
-Obsoletes:      python2-MythTV
+Obsoletes:      python2-MythTV < 30.0-9.20190601git6bd8cd4993
 %else
 %{?python_provide:%python_provide python2-%{name}}
 %{?python_provide:%python_provide python2-MythTV}
@@ -714,9 +692,6 @@ Requires:  mythmusic%{?_isa}      = %{version}-%{release}
 %endif
 %if %{with mythweather}
 Requires:  mythweather%{?_isa}    = %{version}-%{release}
-%endif
-%if %{with mythgallery}
-Requires:  mythgallery%{?_isa}    = %{version}-%{release}
 %endif
 %if %{with mythgame}
 Requires:  mythgame%{?_isa}       = %{version}-%{release}
@@ -784,18 +759,6 @@ navigation (right mouse opens and clos es the popup menu).
 
 MythBrowser also contains a BookmarkManager to manage the website
 links in a simple mythplugin.
-
-%endif
-################################################################################
-%if %{with mythgallery}
-
-%package -n mythgallery
-Summary:   A gallery/slideshow module for MythTV
-Requires:  mythtv-frontend-api%{?_isa} = %{mythfeapiver}
-Requires:  dcraw
-
-%description -n mythgallery
-A gallery/slideshow module for MythTV.
 
 %endif
 ################################################################################
@@ -868,6 +831,7 @@ Requires:  %{py_prefix}-MythTV = %{version}-%{release}
 Requires:  %{py_prefix}-pycurl
 Requires:  %{py_prefix} >= 2.5
 Requires:  %{py_prefix}-lxml
+Requires:  %{py_prefix}-urllib3
 # This is packaged in adobe's yum repo
 #Requires:  flash-plugin
 
@@ -938,9 +902,6 @@ pushd mythtv
     --mandir=%{_mandir}                         \
 %if ! %{with vdpau}
     --disable-vdpau                             \
-%endif
-%if ! %{with crystalhd}
-    --disable-crystalhd                         \
 %endif
 %if ! %{with vaapi}
     --disable-vaapi                             \
@@ -1019,13 +980,6 @@ pushd mythplugins
         --enable-mythbrowser \
     %else
         --disable-mythbrowser \
-    %endif
-    %if %{with mythgallery}
-        --enable-mythgallery \
-        --enable-exif \
-        --enable-new-exif \
-    %else
-        --disable-mythgallery \
     %endif
     %if %{with mythgame}
         --enable-mythgame \
@@ -1140,9 +1094,6 @@ pushd mythplugins
 %if %{with mythmusic}
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythmusic
 %endif
-%if %{with mythgallery}
-    mkdir -p %{buildroot}%{_localstatedir}/lib/pictures
-%endif
 %if %{with mythgame}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/nes/{roms,screens}
     mkdir -p %{buildroot}%{_datadir}/mythtv/games/snes/{roms,screens}
@@ -1173,7 +1124,7 @@ find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/us
 # Add the "mythtv" user, with membership in the audio and video group
 getent group mythtv >/dev/null || groupadd -r mythtv
 getent passwd mythtv >/dev/null || \
-    useradd -r -g mythtv -d %{_localstatedir}/lib/mythtv -s /sbin/nologin \
+    useradd -r -g mythtv -d %{_sysconfdir}/mythtv -s /sbin/nologin \
     -c "mythbackend user" mythtv
 # Make sure the mythtv user is in the audio and video group for existing
 # or new installs.
@@ -1184,7 +1135,7 @@ exit 0
 # Add the "mythtv" user, with membership in the audio and video group
 getent group mythtv >/dev/null || groupadd -r mythtv
 getent passwd mythtv >/dev/null || \
-    useradd -r -g mythtv -d %{_localstatedir}/lib/mythtv -s /sbin/nologin \
+    useradd -r -g mythtv -d %{_sysconfdir}/lib/mythtv -s /sbin/nologin \
     -c "mythbackend user" mythtv
 # Make sure the mythtv user is in the audio and video group for existing
 # or new installs.
@@ -1261,6 +1212,7 @@ exit 0
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
 %{_datadir}/mythtv/internetcontent/
 %{_datadir}/mythtv/html/
+%{_datadir}/mythtv/externrecorder/
 
 %files setup
 %{_bindir}/mythtv-setup
@@ -1275,7 +1227,6 @@ exit 0
 %{_bindir}/mythshutdown
 %{_bindir}/mythwelcome
 %dir %{_libdir}/mythtv
-%{_libdir}/mythtv/filters/
 %dir %{_libdir}/mythtv/plugins
 %dir %{_datadir}/mythtv/i18n
 %dir %{_datadir}/mythtv/fonts
@@ -1293,16 +1244,16 @@ exit 0
 %{_datadir}/mythtv/themes/
 
 %files libs
-%{_libdir}/libmyth-30.so.*
+%{_libdir}/libmyth-31.so.*
 %{_libdir}/libmythavutil.so.*
-%{_libdir}/libmythbase-30.so.*
-%{_libdir}/libmythfreemheg-30.so.*
-%{_libdir}/libmythmetadata-30.so.*
-%{_libdir}/libmythprotoserver-30.so.*
-%{_libdir}/libmythservicecontracts-30.so.*
-%{_libdir}/libmythtv-30.so.*
-%{_libdir}/libmythui-30.so.*
-%{_libdir}/libmythupnp-30.so.*
+%{_libdir}/libmythbase-31.so.*
+%{_libdir}/libmythfreemheg-31.so.*
+%{_libdir}/libmythmetadata-31.so.*
+%{_libdir}/libmythprotoserver-31.so.*
+%{_libdir}/libmythservicecontracts-31.so.*
+%{_libdir}/libmythtv-31.so.*
+%{_libdir}/libmythui-31.so.*
+%{_libdir}/libmythupnp-31.so.*
 
 %files devel
 %{_includedir}/*
@@ -1370,16 +1321,6 @@ exit 0
 %doc mythplugins/mythbrowser/README
 %{_libdir}/mythtv/plugins/libmythbrowser.so
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
-%endif
-
-%if %{with mythgallery}
-%files -n mythgallery
-%doc mythplugins/mythgallery/AUTHORS
-%doc mythplugins/mythgallery/COPYING
-%doc mythplugins/mythgallery/README
-%{_libdir}/mythtv/plugins/libmythgallery.so
-%{_datadir}/mythtv/i18n/mythgallery_*.qm
-%attr(0775,mythtv,mythtv) %{_localstatedir}/lib/pictures
 %endif
 
 %if %{with mythgame}
@@ -1455,6 +1396,11 @@ exit 0
 
 
 %changelog
+* Mon Mar 23 2020 Richard Shaw <hobbes1069@gmail.com> - 31.0-1
+- Update to v31.0.
+- Remove/Obsolete mythgallery package as it is no longer.
+- Remove/Obsolete mythnetvision as it is buggy.
+
 * Thu Dec 26 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-15.20191226gita27754ae7f
 - Update to latest v30 fixes.
 - Clean up spec file and remove sysvinit sources.
