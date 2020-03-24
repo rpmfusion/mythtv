@@ -1401,6 +1401,12 @@ exit 0
 - Remove/Obsolete mythgallery package as it is no longer.
 - Remove/Obsolete mythnetvision as it is buggy.
 
+* Sun Feb 23 2020 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 30.0-17.20191226gita27754ae7f
+- Rebuild for x265
+
+* Wed Feb 05 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 30.0-16.20191226gita27754ae7f
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Thu Dec 26 2019 Richard Shaw <hobbes1069@gmail.com> - 30.0-15.20191226gita27754ae7f
 - Update to latest v30 fixes.
 - Clean up spec file and remove sysvinit sources.
