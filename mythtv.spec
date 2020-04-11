@@ -70,7 +70,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1396,6 +1396,9 @@ exit 0
 
 
 %changelog
+* Sat Apr 11 2020 Leigh Scott <leigh123linux@gmail.com> - 31.0-2
+- Rebuild for new libcdio version
+
 * Mon Mar 23 2020 Richard Shaw <hobbes1069@gmail.com> - 31.0-1
 - Update to v31.0.
 - Remove/Obsolete mythgallery package as it is no longer.
