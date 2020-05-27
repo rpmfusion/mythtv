@@ -70,7 +70,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1245,7 +1245,6 @@ exit 0
 
 %files libs
 %{_libdir}/libmyth-31.so.*
-%{_libdir}/libmythavutil.so.*
 %{_libdir}/libmythbase-31.so.*
 %{_libdir}/libmythfreemheg-31.so.*
 %{_libdir}/libmythmetadata-31.so.*
@@ -1396,6 +1395,9 @@ exit 0
 
 
 %changelog
+* Wed May 27 2020 Richard Shaw <hobbes1069@gmail.com> - 31.0-2
+- Remove duplicate libavutil library in mythtv-libs.
+
 * Mon Mar 23 2020 Richard Shaw <hobbes1069@gmail.com> - 31.0-1
 - Update to v31.0.
 - Remove/Obsolete mythgallery package as it is no longer.
