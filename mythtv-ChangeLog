@@ -1,0 +1,133 @@
+commit aa63cae341f4001b5a447dc871f2d1962b883845
+Author: Philipp Matthias Hahn <pmhahn+mythtv@pmhahn.de>
+Date:   Mon Mar 30 09:53:27 2020 +0200
+
+    Python: Update JOBTYPEs
+    
+    89b6416b50c  78 (Robert McNamara          2011-07-03 16:49:38 -0700  79)     JOB_METADATA     = 0x0004,
+    ab33dd919ef  80 (John Poet                2018-03-08 16:02:25 -0700  80)     JOB_PREVIEW      = 0x0008,
+    
+    (cherry picked from commit f9bb4f76c864c65969ccc64541c30548c6f65344)
+
+commit c8c59f5548ce99d1248cb52e467e4c9e1100476e
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Sun Mar 22 19:00:37 2020 +0100
+
+    Updated "Remove duplicates" channel scan option
+    
+    Renamed the feature from "Remove duplicate channels" to "Remove duplicates".
+    Changed the default for this option to Selected/Checked.
+    Removed the check on individual channels across all scanned channels.
+    The implementation does not check for original network ID plus transport ID
+    on a per-transport basis, as suggested in ticket #12107 for DVB, but it checks
+    this on all channels in the transport. The implementation is also expected to work for ATSC.
+    Thanks to John Pilkington for numerous tests in the daily changing UK Freeview landscape.
+    
+    Refs #13472
+    Fixes #12107
+    
+    (cherry picked from commit 1b4d44b468de0a8c7ad2c25a1d779ce1dc2c06b8)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit fec7309d231992cc88156e7fe80fd060f5639142
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Fri Mar 20 23:37:32 2020 +0100
+
+    Fix for "Remove duplicate channels" scan option
+    
+    Fix counting bug in this new feature.
+    Fixed corner case in updating existing channels where
+    the same channel was present more than once in the database.
+    Improved debug output.
+    
+    (cherry picked from commit e9931870756c32d3c0ba85e6ab6a6d71130a571a)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit e0e09b6b69c8e95fb45d97f1a2a56d625cb2df77
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Thu Mar 19 23:55:26 2020 +0100
+
+    Scan option "Remove duplicate channels"
+    
+    Add new scan option to remove duplicate transports and duplicate
+    channels based on signal strength of the received signal.
+    This can be useful when receiving DVB-T2 and other OTA signals
+    when the same channels can sometimes be received from more than
+    one transmitter on different frequencies.
+    
+    Refs #13472
+    
+    (cherry picked from commit d0626e90287427408b28e2b0eabe12c0cb835118)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit f48478b4772547cfb67cea011a962f068a057ff6
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Mon Mar 16 23:24:11 2020 +0100
+
+    Add Full Scan option for DVB-C Netherlands
+    
+    Add an entry in the frequency tables for a "Full Scan" option
+    for DVB-C in The Netherlands. There is currently only one entry
+    which is the initial tuning frequency of the Ziggo network.
+    
+    (cherry picked from commit a74700c34657ef0cb99b4207f069e7881b4d948c)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit d052cbc41cce4201b7a578f3a0820a9c9d3771d9
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Sun Mar 15 22:26:28 2020 +0100
+
+    Signal strength of scanned transports
+    
+    Show the signal strength of the scanned transports in the transport list.
+    The transport list is shown if the "-v chanscan" option is given when running mythtv-setup.
+    The signal strengths are useful to determine which transport to choose when identical
+    transports can be received from different transmitters on different frequencies.
+    
+    Refs #13472
+    
+    (cherry picked from commit 31129946b719ff21b1a6cad86b2580ef8043a10f)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit 2ef589a8d742613ebe247362366cc045855b195c
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Sun Mar 15 22:10:01 2020 +0100
+
+    T2_terrestrial_delivery_system debug output
+    
+    Debug output of the T2 terrestrial delivery system descriptor added.
+    First version with only the mandatory fields.
+    
+    (cherry picked from commit 8bde08adc702f05344c12d6eeb2b6c6b37255924)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit 81d4056c2402882621590e7cd88ae8af5ba134aa
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Wed Mar 4 22:08:23 2020 +0100
+
+    Wait for NIT or MGT when scanning
+    
+    In mythtv-setup channel scan, wait for a NIT or a MGT when the
+    PAT/PMT have been found. This solves the problem that sometimes
+    channels are found but the channel names are missing.
+    
+    Refs #13472
+    
+    (cherry picked from commit ac67d5837062ab47aa6f9b93df001a2a245d32ad)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit f496eb12ea1eab92d9ca0e57856da66b54e9a0fa
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Fri Mar 27 17:28:58 2020 +0000
+
+    libmythtv.pro: Typo
+    
+    (cherry picked from commit 59b00df23e73d842552c0105a7f51c6a12de7796)
+
+commit 32ae89ef505c77cb520f1e601efef58890bdcb57
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Thu Mar 26 13:49:53 2020 +0000
+
+    MythCodecContext: Ignore hardware decoders when there is no GUI
+    
+    (cherry picked from commit 1e06407c6edb2f73eacb3b7bb9782bd9375912cd)
