@@ -157,7 +157,7 @@ Requires(postun): systemd
 
 BuildRequires:  gcc-c++ lzo-devel
 # For binary diff support
-BuildRequires:  git
+BuildRequires:  git-core
 BuildRequires:  perl-generators
 BuildRequires:  desktop-file-utils
 BuildRequires:  qt5-qtbase-devel >= 5.2
@@ -838,7 +838,7 @@ on demand content.
 ################################################################################
 
 %prep
-%autosetup -p1 -n %{name}-%{version}
+%autosetup -S git -p1 -n %{name}-%{version}
 
 
 # Remove exe permissions
