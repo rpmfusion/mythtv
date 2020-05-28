@@ -70,7 +70,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        3%{?dist}%{rel_string}
+Release:        3%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
