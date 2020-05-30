@@ -70,7 +70,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        3%{rel_string}%{?dist}
+Release:        4%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1378,6 +1378,9 @@ exit 0
 
 
 %changelog
+* Sat May 30 2020 Leigh Scott <leigh123linux@gmail.com> - 31.0-4.20200527gitfc90482281
+- Rebuild for python-3.9
+
 * Wed May 27 2020 Richard Shaw <hobbes1069@gmail.com> - 31.0-3.20200527gitfc90482281
 - Update to latest fixes/31, fc90482281.
 - Update from fixes/31 and clean up spec file conditionals.
