@@ -357,8 +357,8 @@ Requires:  mythplugins%{?_isa}        = %{version}-%{release}
 # Reminder this one is noarch - and not a sub-package (no EVR)
 Requires:  mythweb                    = %{version}
 Requires:  mythffmpeg%{?_isa}         = %{version}-%{release}
-Requires:  mysql-compat-server >= 5
-Requires:  mysql >= 5
+Requires:  mariadb
+Requires:  mariadb-connector-c-devel
 %{?fedora:Recommends:  xmltv}
 
 # Generate the required mythtv-frontend-api version string here so we only
