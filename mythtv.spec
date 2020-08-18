@@ -70,7 +70,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        7%{rel_string}%{?dist}
+Release:        8%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1378,6 +1378,9 @@ exit 0
 
 
 %changelog
+* Tue Aug 18 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 31.0-8.20200527gitfc90482281
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Tue Jul 07 2020 Sérgio Basto <sergio@serjux.com> - 31.0-7.20200527gitfc90482281
 - Mass rebuild for x264
 
