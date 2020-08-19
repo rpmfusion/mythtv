@@ -178,8 +178,10 @@ BuildRequires:  nasm
 # X, and Xv video support
 BuildRequires:  libXmu-devel
 BuildRequires:  libXv-devel
+### Will not likely be required in a future release
 BuildRequires:  libXxf86vm-devel
 BuildRequires:  libXinerama-devel
+###
 BuildRequires:  libXrandr-devel
 BuildRequires:  mesa-libGLU-devel
 %ifarch %arm
