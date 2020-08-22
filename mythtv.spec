@@ -1,3 +1,5 @@
+%define _lto_cflags %{nil}
+
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
 # by:   Chris Petersen <cpetersen@mythtv.org>
