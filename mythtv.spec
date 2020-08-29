@@ -57,12 +57,12 @@
 %global desktop_applications mythfrontend mythtv-setup
 
 # git has used to fetch fixes diff
-%global githash fc9048228105e0bf416990f97c3ce3c2eceb3201
+%global githash ab0c38a4764c29019f1fe10c8a8315bb85d65150
 %global shorthash %(c=%{githash}; echo ${c:0:10})
 
 # MythTV Version string -- preferably the output from git describe
-%global vers_string v31.0-47-gfc90482281
-%global rel_date 20200527
+%global vers_string v31.0-89-gab0c38a476
+%global rel_date 20200829
 %global rel_string .%{rel_date}git%{shorthash}
 
 %global branch fixes/31
@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        8%{rel_string}%{?dist}
+Release:        9%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1382,6 +1382,9 @@ exit 0
 
 
 %changelog
+* Sat Aug 29 2020 Richard Shaw <hobbes1069@gmail.com> - 31.0-9.20200829gitab0c38a476
+- Update to latest fixes/v31.
+
 * Tue Aug 18 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 31.0-8.20200527gitfc90482281
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 

@@ -1,7 +1,7 @@
 From 32ae89ef505c77cb520f1e601efef58890bdcb57 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Thu, 26 Mar 2020 13:49:53 +0000
-Subject: [PATCH 01/47] MythCodecContext: Ignore hardware decoders when there
+Subject: [PATCH 01/89] MythCodecContext: Ignore hardware decoders when there
  is no GUI
 
 (cherry picked from commit 1e06407c6edb2f73eacb3b7bb9782bd9375912cd)
@@ -30,7 +30,7 @@ index 0880bf8212f..5932fafc780 100644
 From f496eb12ea1eab92d9ca0e57856da66b54e9a0fa Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Fri, 27 Mar 2020 17:28:58 +0000
-Subject: [PATCH 02/47] libmythtv.pro: Typo
+Subject: [PATCH 02/89] libmythtv.pro: Typo
 
 (cherry picked from commit 59b00df23e73d842552c0105a7f51c6a12de7796)
 ---
@@ -54,7 +54,7 @@ index 036228f2d31..f1b0248d220 100644
 From 81d4056c2402882621590e7cd88ae8af5ba134aa Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Wed, 4 Mar 2020 22:08:23 +0100
-Subject: [PATCH 03/47] Wait for NIT or MGT when scanning
+Subject: [PATCH 03/89] Wait for NIT or MGT when scanning
 
 In mythtv-setup channel scan, wait for a NIT or a MGT when the
 PAT/PMT have been found. This solves the problem that sometimes
@@ -108,7 +108,7 @@ index 52c6bb1d606..0f2ebae0744 100644
 From 2ef589a8d742613ebe247362366cc045855b195c Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Sun, 15 Mar 2020 22:10:01 +0100
-Subject: [PATCH 04/47] T2_terrestrial_delivery_system debug output
+Subject: [PATCH 04/89] T2_terrestrial_delivery_system debug output
 
 Debug output of the T2 terrestrial delivery system descriptor added.
 First version with only the mandatory fields.
@@ -205,7 +205,7 @@ index e53a24e2c15..7d026ef10b1 100644
 From d052cbc41cce4201b7a578f3a0820a9c9d3771d9 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Sun, 15 Mar 2020 22:26:28 +0100
-Subject: [PATCH 05/47] Signal strength of scanned transports
+Subject: [PATCH 05/89] Signal strength of scanned transports
 
 Show the signal strength of the scanned transports in the transport list.
 The transport list is shown if the "-v chanscan" option is given when running mythtv-setup.
@@ -453,7 +453,7 @@ index d51a33ef087..a6c1e2c1681 100644
 From f48478b4772547cfb67cea011a962f068a057ff6 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Mon, 16 Mar 2020 23:24:11 +0100
-Subject: [PATCH 06/47] Add Full Scan option for DVB-C Netherlands
+Subject: [PATCH 06/89] Add Full Scan option for DVB-C Netherlands
 
 Add an entry in the frequency tables for a "Full Scan" option
 for DVB-C in The Netherlands. There is currently only one entry
@@ -528,7 +528,7 @@ index 55e021fa5cb..26416adfb74 100644
 From e0e09b6b69c8e95fb45d97f1a2a56d625cb2df77 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Thu, 19 Mar 2020 23:55:26 +0100
-Subject: [PATCH 07/47] Scan option "Remove duplicate channels"
+Subject: [PATCH 07/89] Scan option "Remove duplicate channels"
 
 Add new scan option to remove duplicate transports and duplicate
 channels based on signal strength of the received signal.
@@ -1150,7 +1150,7 @@ index 67ac7d54335..5f612cc2536 100644
 From fec7309d231992cc88156e7fe80fd060f5639142 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Fri, 20 Mar 2020 23:37:32 +0100
-Subject: [PATCH 08/47] Fix for "Remove duplicate channels" scan option
+Subject: [PATCH 08/89] Fix for "Remove duplicate channels" scan option
 
 Fix counting bug in this new feature.
 Fixed corner case in updating existing channels where
@@ -1368,7 +1368,7 @@ index 5f15d1f1b16..bfec5028844 100644
 From c8c59f5548ce99d1248cb52e467e4c9e1100476e Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Sun, 22 Mar 2020 19:00:37 +0100
-Subject: [PATCH 09/47] Updated "Remove duplicates" channel scan option
+Subject: [PATCH 09/89] Updated "Remove duplicates" channel scan option
 
 Renamed the feature from "Remove duplicate channels" to "Remove duplicates".
 Changed the default for this option to Selected/Checked.
@@ -1708,7 +1708,7 @@ index e7ba30e6756..a2e2979ec0b 100644
 From aa63cae341f4001b5a447dc871f2d1962b883845 Mon Sep 17 00:00:00 2001
 From: Philipp Matthias Hahn <pmhahn+mythtv@pmhahn.de>
 Date: Mon, 30 Mar 2020 09:53:27 +0200
-Subject: [PATCH 10/47] Python: Update JOBTYPEs
+Subject: [PATCH 10/89] Python: Update JOBTYPEs
 
 89b6416b50c  78 (Robert McNamara          2011-07-03 16:49:38 -0700  79)     JOB_METADATA     = 0x0004,
 ab33dd919ef  80 (John Poet                2018-03-08 16:02:25 -0700  80)     JOB_PREVIEW      = 0x0008,
@@ -1735,7 +1735,7 @@ index 167d71377ac..1f9e1203f63 100644
 From 57f25431f5a6935f6d6473323f7f66a7f6a80cc4 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Fri, 3 Apr 2020 11:09:51 +0100
-Subject: [PATCH 11/47] VAAPI: Fix direct rendering for Intel iHD series
+Subject: [PATCH 11/89] VAAPI: Fix direct rendering for Intel iHD series
  drivers
 
 ---
@@ -1804,7 +1804,7 @@ index 9819e981409..65bf676e3be 100644
 From 809ea6028d6b30315f88d6fbd3374317cedf4361 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Fri, 3 Apr 2020 11:46:43 +0100
-Subject: [PATCH 12/47] MythNVDECContext: Additional logging for decoder check
+Subject: [PATCH 12/89] MythNVDECContext: Additional logging for decoder check
 
 ---
  .../libmythtv/decoders/mythnvdeccontext.cpp   | 90 +++++++++++--------
@@ -1956,7 +1956,7 @@ index a54a340acc6..56f8187647c 100644
 From 2cd6ccb419cbab542c782f9b8df2cdfb7f406ee5 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Fri, 3 Apr 2020 17:02:09 +0100
-Subject: [PATCH 13/47] NVDEC: Fix decoder support check
+Subject: [PATCH 13/89] NVDEC: Fix decoder support check
 
 (cherry picked from commit a2f19766c768c5ef40f596e1edf30dc3afb6889c)
 ---
@@ -1980,7 +1980,7 @@ index 56f8187647c..04cb4601971 100644
 From 9258fb56250392eb49abeb71785e4166b78c48fd Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Tue, 31 Mar 2020 18:25:58 +0100
-Subject: [PATCH 14/47] configure: enable by default gnutls support in our copy
+Subject: [PATCH 14/89] configure: enable by default gnutls support in our copy
  of ffmpeg
 
 This is required to support playback from protocols using these schema :-
@@ -2058,7 +2058,7 @@ index 77aee2d0768..3a7ec61fd74 100755
 From ece4ff7ebc1b1383e62d11ad55bd9fa845185d90 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 7 Apr 2020 10:07:43 -0400
-Subject: [PATCH 15/47] Fix improper sorting of names that start with "An".
+Subject: [PATCH 15/89] Fix improper sorting of names that start with "An".
 
 The US English translation accidentally removed the space after this
 word, causing it to always be removed instead of just when it was a
@@ -2452,7 +2452,7 @@ index 478c77059ab..46fa7864631 100644
 From a465f1b03d505b0038ba5d40b11bb10039454733 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Tue, 7 Apr 2020 22:33:36 +0200
-Subject: [PATCH 16/47] Use const_iterator for QMap m_encoderList
+Subject: [PATCH 16/89] Use const_iterator for QMap m_encoderList
 
 Use const_iterator, constBegin, constEnd and constFind while accessing
 the tvList and pointers to the tvList such as m_encoderList and m_tvList.
@@ -2637,7 +2637,7 @@ index 7a9762ea46a..4ca86721472 100644
 From 3867297afe19fb6853143e9542688e66c7bc1f39 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 17/47] mythexternrec: Add a cleanup system command option to
+Subject: [PATCH 17/89] mythexternrec: Add a cleanup system command option to
  the config file.
 
 If [RECORDER][cleanup] is defined, it will be run whenever this external
@@ -2791,7 +2791,7 @@ index 71ca26079f1..e05e047d7cc 100644
 From 4f79764adab0faea6f0e76074358bef902b13f14 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 18/47] mythexternrec: Track channum so an unnecessary tune is
+Subject: [PATCH 18/89] mythexternrec: Track channum so an unnecessary tune is
  not issued on back-to-back recordings.
 
 (cherry picked from commit d8d3b7422b220cbecaec518b350373075797026e)
@@ -2874,7 +2874,7 @@ index fbaa2b7596c..b94e01d0c86 100644
 From 1244eddac0d8d65533b997eea67019aa1866acdd Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 19/47] Dvr::AddRecordSchedule: Allow last_record to be
+Subject: [PATCH 19/89] Dvr::AddRecordSchedule: Allow last_record to be
  specified.
 
 Scheduler::UpdateManuals: When creating the mythconverg.program entry,
@@ -3004,7 +3004,7 @@ index 7a6b1be80bc..5bf193c05ab 100644
 From 49e545531a8ef6383abeb76a03220ae3ee880f7b Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 20/47] mythexternrecorder: Allow use of channum with tuning
+Subject: [PATCH 20/89] mythexternrecorder: Allow use of channum with tuning
  command, even without a channel configuration file.
 
 (cherry picked from commit 356dd5e39a61e3a5e433508bd6afc937ca7c9e30)
@@ -3210,7 +3210,7 @@ index 967e5e89c2a..494d207242a 100644
 From a58ef59549d9accb5b874140a4a16823732bc4cf Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 21/47] ExternalChannel: When mythbackend is startting up,
+Subject: [PATCH 21/89] ExternalChannel: When mythbackend is startting up,
  don't /actually/ tune a channel.
 
 Tinning with an External Recorder can take a long time. As long as the
@@ -3289,7 +3289,7 @@ index 243934301ee..1a7fc75a7aa 100644
 From 74544819067773869c87c4b1974e46dc9ad9e41f Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 22/47] MythExternRecorder: Add support for long channel change
+Subject: [PATCH 22/89] MythExternRecorder: Add support for long channel change
  times.
 
 Add support for the external application to respond with "OK:Running" in
@@ -3723,7 +3723,7 @@ index e05e047d7cc..833ecb8a8c6 100644
 From ecb0c15b4cc3bd86905602f93a453bad6459c08a Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Sat, 4 Apr 2020 13:49:46 -0600
-Subject: [PATCH 23/47] ExtneralChannel: Use InProgress instead of running or
+Subject: [PATCH 23/89] ExtneralChannel: Use InProgress instead of running or
  starting to indicate a long running tunning operation.
 
 Thanks to Gary Buhrmaster for the suggestion.
@@ -3790,7 +3790,7 @@ index b9e02f6f2ea..1758d7e5395 100644
 From f8495fd1564df151436ebe941a490ce5f7d871c8 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Sun, 5 Apr 2020 18:04:33 -0600
-Subject: [PATCH 24/47] ExternRecorder: Fix live tv channel changes.
+Subject: [PATCH 24/89] ExternRecorder: Fix live tv channel changes.
 
 (cherry picked from commit 18fa5fff1b9ac862cea0c5e8a3fb8981052bd6a3)
 ---
@@ -3822,7 +3822,7 @@ index 445325bc835..a2acc946557 100644
 From daa1d5d8e2a617c2fadb01e22558e30f53aa86b4 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Wed, 8 Apr 2020 14:41:45 -0600
-Subject: [PATCH 25/47] ExternalRecorder: Allow for optional ICON field is
+Subject: [PATCH 25/89] ExternalRecorder: Allow for optional ICON field is
  channels.
 
 Any ExternalRecorder which supports fetching channel information can
@@ -3995,7 +3995,7 @@ index 1758d7e5395..5a8acb28619 100644
 From 2921af5591d127e4ff337d7c6c57e1015d28cfd8 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Sat, 11 Apr 2020 15:45:10 +0100
-Subject: [PATCH 26/47] version.sh: if found use DESCRIBE to get branch and
+Subject: [PATCH 26/89] version.sh: if found use DESCRIBE to get branch and
  version information
 
 The Ubuntu packaging scripts create a DESCRIBE file that has the branch and
@@ -4114,7 +4114,7 @@ index fd2c0be875f..56c04457622 100755
 From 3b54678feba714c514f32b38b0f5c1c6a74eaf3f Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Mon, 13 Apr 2020 17:12:12 +0100
-Subject: [PATCH 27/47] VAAPI: Fix compilation for older drivers
+Subject: [PATCH 27/89] VAAPI: Fix compilation for older drivers
 
 Fixes #13606
 
@@ -4144,7 +4144,7 @@ index 48be0267f11..c03766c6fad 100644
 From 4d0924203a33203eedc1d4cf0b3f242609d729ef Mon Sep 17 00:00:00 2001
 From: Nigel Jewell <nige@grufty.co.uk>
 Date: Sun, 12 Apr 2020 21:31:49 +0100
-Subject: [PATCH 28/47] Fix typo in 0851b35e3ded43ea738473bc60b8e5d13595b922
+Subject: [PATCH 28/89] Fix typo in 0851b35e3ded43ea738473bc60b8e5d13595b922
  comment
 
 (cherry picked from commit dca115895bcc7631fd4eb9dcfa0b4d838ed1e786)
@@ -4169,7 +4169,7 @@ index 56c04457622..d412cc0505d 100755
 From c8f62c1688bb2ceaedabb2563f434dac1d7d5694 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Wed, 15 Apr 2020 20:12:47 +0100
-Subject: [PATCH 29/47] FAQ: trivial change to force an update
+Subject: [PATCH 29/89] FAQ: trivial change to force an update
 
 ---
  mythtv/FAQ | 2 +-
@@ -4190,7 +4190,7 @@ index 593d3b9fea6..e4f6c451095 100644
 From 4e3935420ac0da8997d01ce77672f90d6dcbd78e Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Thu, 16 Apr 2020 22:22:20 +0200
-Subject: [PATCH 30/47] Fix "Full Scan" for DVB-T only tuners
+Subject: [PATCH 30/89] Fix "Full Scan" for DVB-T only tuners
 
 The "Full Scan" for tuners that can do only DVB-T and not DVB-T2
 was done correct but the modulation system was not entered in
@@ -4223,7 +4223,7 @@ index 543c7e1a9cd..98e9f9f7d4b 100644
 From 8bfc909dc70e8e9f156e66f7346f63e3e13660d5 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Sat, 18 Apr 2020 15:38:32 +0100
-Subject: [PATCH 31/47] HLSStreamHandler: fix the formatting of a debug
+Subject: [PATCH 31/89] HLSStreamHandler: fix the formatting of a debug
  statement
 
 Refs #13608
@@ -4250,7 +4250,7 @@ index 964f5396e46..22e0abae062 100644
 From 917a2087ef032b2c36a102cf4a2b220e10bf7bfe Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 21 Apr 2020 14:58:59 -0400
-Subject: [PATCH 32/47] Fix segfault in code called from MythMainWindow::Draw.
+Subject: [PATCH 32/89] Fix segfault in code called from MythMainWindow::Draw.
 
 This reverts three of the changes in 380102ce34.  In
 mythmainwindow.cpp while running the m_stackList, the call to
@@ -4317,7 +4317,7 @@ index 7bdfe41bb3b..619ba7f7f78 100644
 From 5f1993304e35042192aed059dd7cf8717b76c6a7 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 21 Apr 2020 15:24:15 -0400
-Subject: [PATCH 33/47] Fix incorrect data provided to UPnP client.
+Subject: [PATCH 33/89] Fix incorrect data provided to UPnP client.
 
 This bug was introduced in 77b560f3cc when converting from the
 obsolete QString::sprintf function to typical QString formatting using
@@ -4346,7 +4346,7 @@ index cda4f86a778..3a2bfbba3ce 100644
 From c0b8b6e036bdb531fe09be8005dcf1181d9333ec Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20Janiszewski?= <janisozaur+signed@gmail.com>
 Date: Tue, 30 Oct 2018 21:56:52 +0100
-Subject: [PATCH 34/47] Compare to `None` using identity `is` operator
+Subject: [PATCH 34/89] Compare to `None` using identity `is` operator
 
 This is a trivial change that replaces `==` operator with `is` operator, following PEP 8 guideline:
 
@@ -5728,7 +5728,7 @@ index 64eab727f03..76b98618920 100755
 From 3ccdb8c6d24e86a7282d32c14a1f4f09c87e9756 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Sun, 9 Feb 2020 19:03:03 -0600
-Subject: [PATCH 35/47] Python Bindings: fix warnings seen in *buntu packaging
+Subject: [PATCH 35/89] Python Bindings: fix warnings seen in *buntu packaging
 
 (cherry picked from commit 12f44c74ed60e3b0909040f30665c9d3fc58c17c)
 ---
@@ -5784,7 +5784,7 @@ index d1d7546c0eb..f7966fb6d69 100644
 From 723d46eaaa7be6bd760f2c5dfcb50b5410f315ec Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Mon, 27 Apr 2020 21:28:44 +0100
-Subject: [PATCH 36/47] libmythtv: Fix VideoToolbox framework name
+Subject: [PATCH 36/89] libmythtv: Fix VideoToolbox framework name
 
 Closes #13609
 
@@ -5810,7 +5810,7 @@ index f1b0248d220..646577cd5b5 100644
 From f5d75a6de7c4ac668e1a64cdf31c7100bc81b65b Mon Sep 17 00:00:00 2001
 From: Hans Dingemans <jpldingemans@gmail.com>
 Date: Fri, 21 Feb 2020 12:13:00 -0500
-Subject: [PATCH 37/47] mythfilldatabase: reduce memory usage.
+Subject: [PATCH 37/89] mythfilldatabase: reduce memory usage.
 
 Mythfilldatabase uses QDomDocument to parse and store the XML data that is read; according to QDomDocument documentation this object is not meant to handle large XML files; QXmlStreamReader should be used in these situations.
 
@@ -6980,7 +6980,7 @@ index 6d06aefe405..9fad22dc1e4 100644
 From a2b8c262dc96274ef55be25c510a4bbe9b6b52b2 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Tue, 3 Mar 2020 11:31:18 +0000
-Subject: [PATCH 38/47] mythfilldatabase: Fix 2 potential leaks
+Subject: [PATCH 38/89] mythfilldatabase: Fix 2 potential leaks
 
 - introduced in a9aa006139da24cb and picked up by coverity.
 
@@ -7016,7 +7016,7 @@ index 66157ffc648..a875020462b 100644
 From c8e779649384e9810bf8b2262a8f928b1986994d Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Fri, 6 Mar 2020 18:19:45 +0100
-Subject: [PATCH 39/47] BackendServerAddr and MasterServerName replaced
+Subject: [PATCH 39/89] BackendServerAddr and MasterServerName replaced
  MasterServerIP
 
 in V30, according ticket #13024.
@@ -7254,7 +7254,7 @@ index bb8f29630dc..7f5b0c759c8 100644
 From ce23a0225fcec2afbdfe5a7e82170e28f406c830 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Sun, 10 May 2020 12:22:25 +0200
-Subject: [PATCH 40/47] Fix mysql cursor class to handle bytearrays
+Subject: [PATCH 40/89] Fix mysql cursor class to handle bytearrays
 
 Newer Python MySQLdb modules call 'cursor.execute()' multiple times
 from 'cursor.executemany()'.
@@ -7293,7 +7293,7 @@ index 177a880a121..3f798198219 100644
 From 6a5afb4dba08fcd790279af97348f3e69ebec8c3 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Tue, 19 May 2020 18:08:50 +0100
-Subject: [PATCH 41/47] VDPAU: Try and fall 'back' to H264 Main support
+Subject: [PATCH 41/89] VDPAU: Try and fall 'back' to H264 Main support
 
 - if H264 constrained baseline is reported as not supported
 - this mimics the additional test carried out in FFmpeg
@@ -7337,7 +7337,7 @@ index b8d3b2d1ef2..47b4a927bed 100644
 From 7a31a2e35ccf338952f377d2885eb3af81defb54 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Tue, 12 May 2020 18:51:52 -0600
-Subject: [PATCH 42/47] mythexternrecorder: Add ondatastart command option
+Subject: [PATCH 42/89] mythexternrecorder: Add ondatastart command option
 
 The config file can now specify a command to run as soon as data is detected
 from the 'external' application.
@@ -7476,7 +7476,7 @@ index 833ecb8a8c6..7bbff574f27 100644
 From fa2165511fe0735c612be69445b6acafc05e4caa Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Sun, 17 May 2020 20:58:41 -0600
-Subject: [PATCH 43/47] mythexternrecorder: Add TUNER/newepisodecommand option.
+Subject: [PATCH 43/89] mythexternrecorder: Add TUNER/newepisodecommand option.
 
 Some streaming sources have a "bandwidth saver" option and therefore need
 touched occationally to keep them going. If provided, this command will be
@@ -7572,7 +7572,7 @@ index 63f549e8836..5d105691e26 100644
 From f9baf09e4397032f1a00d98b5085f912547380b6 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Sun, 17 May 2020 19:57:18 +0200
-Subject: [PATCH 44/47] Crash of backend on delete of program being recorded
+Subject: [PATCH 44/89] Crash of backend on delete of program being recorded
 
 Fix this crash and similar backend crashes in the scheduler
 by replacing all iterations over m_tvList/m_encoderLink/m_pEncoders
@@ -7857,7 +7857,7 @@ index 07eb8e74cc5..d5b2702877f 100644
 From 1ca7a4b09ef38cd6e108a26bdc358f280d6ae3d3 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Thu, 21 May 2020 16:27:21 -0500
-Subject: [PATCH 45/47] Python Bindings: Services API, logging & XML
+Subject: [PATCH 45/89] Python Bindings: Services API, logging & XML
  enhancements
 
 - Improve logging dump of 'postdata'
@@ -7936,7 +7936,7 @@ index 1f49389508f..fa817066f27 100644
 From 9380616198f4149d20bb5ef41c3ca0f14944290b Mon Sep 17 00:00:00 2001
 From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Date: Mon, 25 May 2020 11:52:11 -0500
-Subject: [PATCH 46/47] Always request a reschedule when running
+Subject: [PATCH 46/89] Always request a reschedule when running
  mythfilldatabase
 
 Previous edits incorrectly left it where the request was only done
@@ -7970,7 +7970,7 @@ index 3f764b16fb2..ef20217f1ce 100644
 From fc9048228105e0bf416990f97c3ce3c2eceb3201 Mon Sep 17 00:00:00 2001
 From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Date: Mon, 25 May 2020 12:02:17 -0500
-Subject: [PATCH 47/47] mythfilldatabase: remove program starttime order check
+Subject: [PATCH 47/89] mythfilldatabase: remove program starttime order check
 
 Closes #13623
 
@@ -8017,3 +8017,3870 @@ index a875020462b..0024819bc3d 100644
                      if (pginfo->m_clumpidx.isEmpty())
                          (*proglist)[pginfo->m_channel].push_back(*pginfo);
                      else
+
+From c89a7e3771ed094662710fdb18fe972d09a55955 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Mon, 1 Jun 2020 18:26:44 +0100
+Subject: [PATCH 48/89] MythDisplay: Track device pixel ratio
+
+(cherry picked from commit 907841a119d94edc4c66c1f1af1114c5ff012258)
+---
+ mythtv/libs/libmythui/mythdisplay.cpp | 14 +++++++++++++-
+ mythtv/libs/libmythui/mythdisplay.h   |  2 ++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythui/mythdisplay.cpp b/mythtv/libs/libmythui/mythdisplay.cpp
+index e3f1483a8c4..cf9b1d795c7 100644
+--- a/mythtv/libs/libmythui/mythdisplay.cpp
++++ b/mythtv/libs/libmythui/mythdisplay.cpp
+@@ -183,7 +183,10 @@ MythDisplay::MythDisplay()
+     m_screen = GetDesiredScreen();
+     DebugScreen(m_screen, "Using");
+     if (m_screen)
++    {
+         connect(m_screen, &QScreen::geometryChanged, this, &MythDisplay::GeometryChanged);
++        connect(m_screen, &QScreen::physicalDotsPerInchChanged, this, &MythDisplay::PhysicalDPIChanged);
++    }
+ 
+     connect(qGuiApp, &QGuiApplication::screenRemoved, this, &MythDisplay::ScreenRemoved);
+     connect(qGuiApp, &QGuiApplication::screenAdded, this, &MythDisplay::ScreenAdded);
+@@ -389,10 +392,18 @@ void MythDisplay::ScreenChanged(QScreen *qScreen)
+     DebugScreen(qScreen, "Changed to");
+     m_screen = qScreen;
+     connect(m_screen, &QScreen::geometryChanged, this, &MythDisplay::GeometryChanged);
++    connect(m_screen, &QScreen::physicalDotsPerInchChanged, this, &MythDisplay::PhysicalDPIChanged);
+     Initialise();
+     emit CurrentScreenChanged(qScreen);
+ }
+ 
++void MythDisplay::PhysicalDPIChanged(qreal DPI)
++{
++    LOG(VB_GENERAL, LOG_INFO, LOC + QString("Qt screen pixel ratio changed to %1")
++        .arg(DPI, 2, 'f', 2, '0'));
++    emit CurrentDPIChanged(DPI);
++}
++
+ void MythDisplay::PrimaryScreenChanged(QScreen* qScreen)
+ {
+     DebugScreen(qScreen, "New primary");
+@@ -475,7 +486,8 @@ void MythDisplay::DebugScreen(QScreen *qScreen, const QString &Message)
+ 
+     LOG(VB_GENERAL, LOG_INFO, LOC + QString("%1 screen '%2' %3")
+         .arg(Message).arg(qScreen->name()).arg(extra));
+-
++    LOG(VB_GENERAL, LOG_INFO, LOC + QString("Qt screen pixel ratio: %1")
++        .arg(qScreen->devicePixelRatio(), 2, 'f', 2, '0'));
+     LOG(VB_GENERAL, LOG_INFO, LOC + QString("Geometry: %1x%2+%3+%4 Size(Qt): %5mmx%6mm")
+         .arg(geom.width()).arg(geom.height()).arg(geom.left()).arg(geom.top())
+         .arg(qScreen->physicalSize().width()).arg(qScreen->physicalSize().height()));
+diff --git a/mythtv/libs/libmythui/mythdisplay.h b/mythtv/libs/libmythui/mythdisplay.h
+index 62600435384..d3b2a97a210 100644
+--- a/mythtv/libs/libmythui/mythdisplay.h
++++ b/mythtv/libs/libmythui/mythdisplay.h
+@@ -57,10 +57,12 @@ class MUI_PUBLIC MythDisplay : public QObject, public ReferenceCounter
+     void         ScreenAdded           (QScreen *qScreen);
+     void         ScreenRemoved         (QScreen *qScreen);
+     void         GeometryChanged       (const QRect &Geometry);
++    void         PhysicalDPIChanged    (qreal    DPI);
+ 
+   signals:
+     void         CurrentScreenChanged  (QScreen *qScreen);
+     void         ScreenCountChanged    (int Screens);
++    void         CurrentDPIChanged     (qreal    DPI);
+ 
+   protected:
+     MythDisplay();
+
+From 8c1fd6bb95bfc554d66a444cbfb177a2cd58c485 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Sat, 6 Jun 2020 14:30:55 +0100
+Subject: [PATCH 49/89] VDPAU: Extend logging of profile check
+
+(cherry picked from commit 43293708579193ff23459feba159cb9fab5259d1)
+---
+ .../libs/libmythtv/decoders/mythvdpauhelper.cpp  | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp b/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
+index 47b4a927bed..bb5ef391406 100644
+--- a/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
++++ b/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
+@@ -80,28 +80,30 @@ bool MythVDPAUHelper::ProfileCheck(VdpDecoderProfile Profile, uint32_t &Level,
+         return false;
+ 
+     INIT_ST
+-    VdpBool supported = 0;
++    VdpBool supported = VDP_FALSE;
+     status = m_vdpDecoderQueryCapabilities(m_device, Profile, &supported,
+                                            &Level, &Macros, &Width, &Height);
+     CHECK_ST
+ 
++    LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("ProfileCheck: Prof %1 Supp %2 Level %3 Macros %4 Width %5 Height %6 Status %7")
++        .arg(Profile).arg(supported).arg(Level).arg(Macros).arg(Width).arg(Height).arg(status));
++
+     if (((supported != VDP_TRUE) || (status != VDP_STATUS_OK)) &&
+         (Profile == VDP_DECODER_PROFILE_H264_CONSTRAINED_BASELINE))
+     {
++        LOG(VB_GENERAL, LOG_INFO, LOC + "Driver does not report support for H264 Constrained Baseline...");
++
+         // H264 Constrained baseline is reported as not supported on older chipsets but
+         // works due to support for H264 Main. Test for H264 main if constrained baseline
+         // fails - which mimics the fallback in FFmpeg.
+         status = m_vdpDecoderQueryCapabilities(m_device, VDP_DECODER_PROFILE_H264_MAIN, &supported,
+                                                &Level, &Macros, &Width, &Height);
+-        if (supported > 0)
+-        {
+-            LOG(VB_GENERAL, LOG_INFO, LOC + "Driver does not report support for H264 Constrained Baseline");
+-            LOG(VB_GENERAL, LOG_INFO, LOC + " - but assuming available as H264 Main is supported");
+-        }
+         CHECK_ST
++        if (supported == VDP_TRUE)
++            LOG(VB_GENERAL, LOG_INFO, LOC + "... but assuming available as H264 Main is supported");
+     }
+ 
+-    return supported > 0;
++    return supported == VDP_TRUE;
+ }
+ 
+ const VDPAUProfiles& MythVDPAUHelper::GetProfiles(void)
+
+From 672d45b7bd8f03514e9936a0abdcb5c6d17c3112 Mon Sep 17 00:00:00 2001
+From: Ian Campbell <ijc@hellion.org.uk>
+Date: Sat, 6 Jun 2020 09:06:46 -0400
+Subject: [PATCH 50/89] Fix musicmetadata handling of compilations.
+
+    Fixes #13585
+    Closes #192
+
+Signed-off-by: David Hampton <mythtv@love2code.net>
+
+(cherry picked from commit 1236aef0ae520294446ed91d91ed0e988976e183)
+
+-----
+
+Squashed commit of the following:
+
+commit ca6ffb883c9f32ec8a7f1461a0b4d71914e3c210
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Mon Mar 16 20:18:29 2020 +0800
+
+    musicmetadata: check for empty field before dumping to db
+
+    This ensures all the fields are properly filled in. In particular it ensures
+    that non-compilation albums have the compilation artist filled in to match the
+    artist, otherwise they all end up with "Unknown Artist" which in turn means
+    that albums which happen to have the same title (e.g. "Greatest Hits") all get
+    lumped into one.
+
+commit 88418b6c7c400d04440eeeaf232f571a1463b09a
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Mon Mar 16 20:02:28 2020 +0800
+
+    musicmetadata: clear id fields when main field is set
+
+    ... otherwise they are never recalculated when the actual value changes.
+
+commit a0e93004c18f3a34c2c2d450af72366860a19b4e
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Sun Mar 15 15:35:32 2020 +0800
+
+    musicmetadata: Fully update music_albums, including name and artist
+
+    Since these may have changed.
+
+commit 30898722aebbcfbd9d28557fcdbf2324379db2b6
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Sun Mar 15 15:33:43 2020 +0800
+
+    musicmetadata: Do not call `ensureSortFields` after `checkEmptyFields`
+
+    The latter already calls the former right at the end.
+
+commit 2e4a0e93768142c05bcfcd1b58f1b7db7bbde609
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Fri Feb 28 07:15:41 2020 +0800
+
+    musicmetadata: ensure compilation artist id is always set
+
+    I was observing that I had one `music_albums` entry per track on each
+    compilation album after the album was scanned the second time (first time it
+    went in correctly).
+
+    The issue was that on reloading from the DB the field was not being initialised
+    so remained as `-1` when the entry came to be written back, which because the
+    field in the DB is `unsigned` ended up being stored as `0`, so when subsequent
+    lookups try to find the album it failed every time (since the 0 in the database
+    matches neither -1 nor the >0 correct value) and a fresh one is inserted for
+    every track.
+
+    Fix this by adding and using `{get,set}CompilationArtistId` corresponding to
+    the uses of `{get,set}ArtistId`. I broke out `getCompilationArtistId` from the
+    within exiting `getArtistId` implementation.
+
+commit 56506e477ceb815081ed05aea3ff6656413b592a
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Wed Feb 19 20:05:22 2020 +0800
+
+    metaioflacvorbis: Handle ALBUMARTIST as a fallback for COMPILATION_ARTIST
+
+    Although there is no real standard this is as described in
+    https://picard.musicbrainz.org/docs/mappings/ and what one gets by default
+    using the picard tool (as I do).
+
+commit 1e303b005e4b613e4b965b1a5cbdc830b64020c2
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Thu Feb 27 20:00:05 2020 +0800
+
+    Support `mythutil --scanmusic --force` to ignore file timestamps
+
+    Useful after an upgrade (or while hacking) or if something else changed which
+    doesn't affect the timestamp of the file.
+---
+ .../libs/libmythmetadata/metaioflacvorbis.cpp | 10 +++++
+ .../libs/libmythmetadata/musicfilescanner.cpp | 17 +++++++-
+ .../libs/libmythmetadata/musicfilescanner.h   |  4 +-
+ mythtv/libs/libmythmetadata/musicmetadata.cpp | 39 +++++++++++++++++--
+ mythtv/libs/libmythmetadata/musicmetadata.h   | 12 +++++-
+ .../programs/mythutil/commandlineparser.cpp   |  2 +
+ mythtv/programs/mythutil/musicmetautils.cpp   |  4 +-
+ 7 files changed, 77 insertions(+), 11 deletions(-)
+
+diff --git a/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp b/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp
+index 142894835f6..b505fb6bb3b 100644
+--- a/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp
++++ b/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp
+@@ -125,6 +125,16 @@ MusicMetadata* MetaIOFLACVorbis::read(const QString &filename)
+             compilation = true;
+         }
+     }
++    else if (tag->contains("ALBUMARTIST"))
++    {
++        QString compilation_artist = TStringToQString(
++            tag->fieldListMap()["ALBUMARTIST"].toString()).trimmed();
++        if (compilation_artist != metadata->Artist())
++        {
++            metadata->setCompilationArtist(compilation_artist);
++            compilation = true;
++        }
++    }
+ 
+     if (!compilation && tag->contains("MUSICBRAINZ_ALBUMARTISTID"))
+     {
+diff --git a/mythtv/libs/libmythmetadata/musicfilescanner.cpp b/mythtv/libs/libmythmetadata/musicfilescanner.cpp
+index 8a43a3eee09..9b5e3212a48 100644
+--- a/mythtv/libs/libmythmetadata/musicfilescanner.cpp
++++ b/mythtv/libs/libmythmetadata/musicfilescanner.cpp
+@@ -13,7 +13,7 @@
+ #include <metaio.h>
+ #include <musicfilescanner.h>
+ 
+-MusicFileScanner::MusicFileScanner()
++MusicFileScanner::MusicFileScanner(bool force) : m_forceupdate{force}
+ {
+     MSqlQuery query(MSqlQuery::InitCon());
+ 
+@@ -318,6 +318,10 @@ void MusicFileScanner::AddFileToDB(const QString &filename, const QString &start
+                 data->setAlbumId(m_albumid[album_cache_string]);
+         }
+ 
++        int caid = m_artistid[data->CompilationArtist().toLower()];
++        if (caid > 0)
++            data->setCompilationArtistId(caid);
++
+         int gid = m_genreid[data->Genre().toLower()];
+         if (gid > 0)
+             data->setGenreId(gid);
+@@ -329,6 +333,9 @@ void MusicFileScanner::AddFileToDB(const QString &filename, const QString &start
+         m_artistid[data->Artist().toLower()] =
+             data->getArtistId();
+ 
++        m_artistid[data->CompilationArtist().toLower()] =
++            data->getCompilationArtistId();
++
+         m_genreid[data->Genre().toLower()] =
+             data->getGenreId();
+ 
+@@ -599,6 +606,10 @@ void MusicFileScanner::UpdateFileInDB(const QString &filename, const QString &st
+                 disk_meta->setAlbumId(m_albumid[album_cache_string]);
+         }
+ 
++        int caid = m_artistid[disk_meta->CompilationArtist().toLower()];
++        if (caid > 0)
++            disk_meta->setCompilationArtistId(caid);
++
+         int gid = m_genreid[disk_meta->Genre().toLower()];
+         if (gid > 0)
+             disk_meta->setGenreId(gid);
+@@ -613,6 +624,8 @@ void MusicFileScanner::UpdateFileInDB(const QString &filename, const QString &st
+         // Update the cache
+         m_artistid[disk_meta->Artist().toLower()]
+             = disk_meta->getArtistId();
++        m_artistid[disk_meta->CompilationArtist().toLower()]
++            = disk_meta->getCompilationArtistId();
+         m_genreid[disk_meta->Genre().toLower()]
+             = disk_meta->getGenreId();
+         album_cache_string = QString::number(disk_meta->getArtistId()) + "#" +
+@@ -803,7 +816,7 @@ void MusicFileScanner::ScanMusic(MusicLoadedMap &music_files)
+             {
+                 if (music_files[name].location == MusicFileScanner::kDatabase)
+                     continue;
+-                if (HasFileChanged(name, query.value(1).toString()))
++                if (m_forceupdate || HasFileChanged(name, query.value(1).toString()))
+                     music_files[name].location = MusicFileScanner::kNeedUpdate;
+                 else
+                 {
+diff --git a/mythtv/libs/libmythmetadata/musicfilescanner.h b/mythtv/libs/libmythmetadata/musicfilescanner.h
+index 5f2cae2ce13..8ceefdd189d 100644
+--- a/mythtv/libs/libmythmetadata/musicfilescanner.h
++++ b/mythtv/libs/libmythmetadata/musicfilescanner.h
+@@ -29,7 +29,7 @@ class META_PUBLIC MusicFileScanner
+ 
+     using MusicLoadedMap = QMap <QString, MusicFileData>;
+     public:
+-        MusicFileScanner(void);
++        MusicFileScanner(bool force = false);
+         ~MusicFileScanner(void) = default;
+ 
+         void SearchDirs(const QStringList &dirList);
+@@ -69,6 +69,8 @@ class META_PUBLIC MusicFileScanner
+         uint m_coverartAdded     {0};
+         uint m_coverartRemoved   {0};
+         uint m_coverartUpdated   {0};
++
++        bool m_forceupdate;
+ };
+ 
+ #endif // _MUSICFILESCANNER_H_
+diff --git a/mythtv/libs/libmythmetadata/musicmetadata.cpp b/mythtv/libs/libmythmetadata/musicmetadata.cpp
+index f5959d33973..bcf9d561f06 100644
+--- a/mythtv/libs/libmythmetadata/musicmetadata.cpp
++++ b/mythtv/libs/libmythmetadata/musicmetadata.cpp
+@@ -537,11 +537,20 @@ int MusicMetadata::getArtistId()
+             }
+             m_artistId = query.lastInsertId().toInt();
+         }
++    }
++
++    return m_artistId;
++}
++
++int MusicMetadata::getCompilationArtistId()
++{
++    if (m_compartistId < 0) {
++        MSqlQuery query(MSqlQuery::InitCon());
+ 
+         // Compilation Artist
+         if (m_artist == m_compilationArtist)
+         {
+-            m_compartistId = m_artistId;
++            m_compartistId = getArtistId();
+         }
+         else
+         {
+@@ -572,7 +581,7 @@ int MusicMetadata::getArtistId()
+         }
+     }
+ 
+-    return m_artistId;
++    return m_compartistId;
+ }
+ 
+ int MusicMetadata::getAlbumId()
+@@ -667,12 +676,17 @@ QString MusicMetadata::Url(uint index)
+ 
+ void MusicMetadata::dumpToDatabase()
+ {
++    checkEmptyFields();
++
+     if (m_directoryId < 0)
+         getDirectoryId();
+ 
+     if (m_artistId < 0)
+         getArtistId();
+ 
++    if (m_compartistId < 0)
++        getCompilationArtistId();
++
+     if (m_albumId < 0)
+         getAlbumId();
+ 
+@@ -764,10 +778,14 @@ void MusicMetadata::dumpToDatabase()
+     if (m_albumArt)
+         m_albumArt->dumpToDatabase();
+ 
+-    // make sure the compilation flag is updated
+-    query.prepare("UPDATE music_albums SET compilation = :COMPILATION, year = :YEAR "
++    // update the album
++    query.prepare("UPDATE music_albums SET album_name = :ALBUM_NAME, "
++                  "artist_id = :COMP_ARTIST_ID, compilation = :COMPILATION, "
++                  "year = :YEAR "
+                   "WHERE music_albums.album_id = :ALBUMID");
+     query.bindValue(":ALBUMID", m_albumId);
++    query.bindValue(":ALBUM_NAME", m_album);
++    query.bindValue(":COMP_ARTIST_ID", m_compartistId);
+     query.bindValue(":COMPILATION", m_compilation);
+     query.bindValue(":YEAR", m_year);
+ 
+@@ -849,16 +867,28 @@ inline QString MusicMetadata::formatReplaceSymbols(const QString &format)
+ void MusicMetadata::checkEmptyFields()
+ {
+     if (m_artist.isEmpty())
++    {
+         m_artist = tr("Unknown Artist", "Default artist if no artist");
++        m_artistId = -1;
++    }
+     // This should be the same as Artist if it's a compilation track or blank
+     if (!m_compilation || m_compilationArtist.isEmpty())
++    {
+         m_compilationArtist = m_artist;
++        m_compartistId = -1;
++    }
+     if (m_album.isEmpty())
++    {
+         m_album = tr("Unknown Album", "Default album if no album");
++        m_albumId = -1;
++    }
+     if (m_title.isEmpty())
+         m_title = m_filename;
+     if (m_genre.isEmpty())
++    {
+         m_genre = tr("Unknown Genre", "Default genre if no genre");
++        m_genreId = -1;
++    }
+     ensureSortFields();
+ }
+ 
+@@ -1537,6 +1567,7 @@ void AllMusic::resync()
+ 
+             dbMeta->setDirectoryId(query.value(11).toInt());
+             dbMeta->setArtistId(query.value(1).toInt());
++            dbMeta->setCompilationArtistId(query.value(3).toInt());
+             dbMeta->setAlbumId(query.value(4).toInt());
+             dbMeta->setTrackCount(query.value(19).toInt());
+             dbMeta->setFileSize(query.value(20).toULongLong());
+diff --git a/mythtv/libs/libmythmetadata/musicmetadata.h b/mythtv/libs/libmythmetadata/musicmetadata.h
+index 9dec96b1f65..c554a0befec 100644
+--- a/mythtv/libs/libmythmetadata/musicmetadata.h
++++ b/mythtv/libs/libmythmetadata/musicmetadata.h
+@@ -108,7 +108,6 @@ class META_PUBLIC MusicMetadata
+                    m_filename(std::move(lfilename))
+     {
+         checkEmptyFields();
+-        ensureSortFields();
+     }
+ 
+     MusicMetadata(int lid, QString lbroadcaster, QString lchannel, QString ldescription, UrlList lurls, QString llogourl,
+@@ -130,6 +129,7 @@ class META_PUBLIC MusicMetadata
+                    const QString &lartist_sort = nullptr)
+     {
+         m_artist = lartist;
++        m_artistId = -1;
+         m_artistSort = lartist_sort;
+         m_formattedArtist.clear(); m_formattedTitle.clear();
+         ensureSortFields();
+@@ -141,6 +141,7 @@ class META_PUBLIC MusicMetadata
+                               const QString &lcompilation_artist_sort = nullptr)
+     {
+         m_compilationArtist = lcompilation_artist;
++        m_compartistId = -1;
+         m_compilationArtistSort = lcompilation_artist_sort;
+         m_formattedArtist.clear(); m_formattedTitle.clear();
+         ensureSortFields();
+@@ -152,6 +153,7 @@ class META_PUBLIC MusicMetadata
+                   const QString &lalbum_sort = nullptr)
+     {
+         m_album = lalbum;
++        m_albumId = -1;
+         m_albumSort = lalbum_sort;
+         m_formattedArtist.clear(); m_formattedTitle.clear();
+         ensureSortFields();
+@@ -171,7 +173,10 @@ class META_PUBLIC MusicMetadata
+     QString FormatTitle();
+ 
+     QString Genre() const { return m_genre; }
+-    void setGenre(const QString &lgenre) { m_genre = lgenre; }
++    void setGenre(const QString &lgenre) {
++        m_genre = lgenre;
++        m_genreId = -1;
++    }
+ 
+     void setDirectoryId(int ldirectoryid) { m_directoryId = ldirectoryid; }
+     int getDirectoryId();
+@@ -179,6 +184,9 @@ class META_PUBLIC MusicMetadata
+     void setArtistId(int lartistid) { m_artistId = lartistid; }
+     int getArtistId();
+ 
++    void setCompilationArtistId(int lartistid) { m_compartistId = lartistid; }
++    int getCompilationArtistId();
++
+     void setAlbumId(int lalbumid) { m_albumId = lalbumid; }
+     int getAlbumId();
+ 
+diff --git a/mythtv/programs/mythutil/commandlineparser.cpp b/mythtv/programs/mythutil/commandlineparser.cpp
+index d6c8e146581..9483adf58b8 100644
+--- a/mythtv/programs/mythutil/commandlineparser.cpp
++++ b/mythtv/programs/mythutil/commandlineparser.cpp
+@@ -232,6 +232,8 @@ void MythUtilCommandLineParser::LoadArguments(void)
+         ->SetChildOf("notification");
+ 
+     // musicmetautils.cpp
++    add("--force", "musicforce", false, "Ignore file timestamps", "")
++        ->SetChildOf("scanmusic");
+     add("--songid", "songid", "", "ID of track to update", "")
+         ->SetChildOf("updatemeta");
+     add("--title", "title", "", "(optional) Title of track", "")
+diff --git a/mythtv/programs/mythutil/musicmetautils.cpp b/mythtv/programs/mythutil/musicmetautils.cpp
+index 969b3908eb1..0b34b188aa5 100644
+--- a/mythtv/programs/mythutil/musicmetautils.cpp
++++ b/mythtv/programs/mythutil/musicmetautils.cpp
+@@ -178,9 +178,9 @@ static int ExtractImage(const MythUtilCommandLineParser &cmdline)
+     return GENERIC_EXIT_OK;
+ }
+ 
+-static int ScanMusic(const MythUtilCommandLineParser &/*cmdline*/)
++static int ScanMusic(const MythUtilCommandLineParser &cmdline)
+ {
+-    auto *fscan = new MusicFileScanner();
++    auto *fscan = new MusicFileScanner(cmdline.toBool("musicforce"));
+     QStringList dirList;
+ 
+     if (!StorageGroup::FindDirs("Music", gCoreContext->GetHostName(), &dirList))
+
+From dd35db8df117b5f2d2c6706438dcf2e316c19d95 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Sat, 6 Jun 2020 22:09:21 +0100
+Subject: [PATCH 51/89] MythPlayer: Fix double rate CPU deinterlacing
+
+- the second field was not being processed as after the first pass the
+frame was marked 'already_deinterlaced'
+- was only obvious for yadif which broke av sync quite badly when
+running at double rate
+
+(cherry picked from commit 72c9209e158e3cba33f81515220af36e704bec66)
+---
+ mythtv/libs/libmythtv/mythdeinterlacer.cpp | 5 +++--
+ mythtv/libs/libmythtv/mythplayer.cpp       | 4 ++++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mythdeinterlacer.cpp b/mythtv/libs/libmythtv/mythdeinterlacer.cpp
+index 7c22a484d20..0b19b69b12f 100644
+--- a/mythtv/libs/libmythtv/mythdeinterlacer.cpp
++++ b/mythtv/libs/libmythtv/mythdeinterlacer.cpp
+@@ -70,13 +70,14 @@ void MythDeinterlacer::Filter(VideoFrame *Frame, FrameScanType Scan,
+                               VideoDisplayProfile *Profile, bool Force)
+ {
+     // nothing to see here
+-    if (!Frame || (Scan != kScan_Interlaced && Scan != kScan_Intr2ndField))
++
++    if (!Frame || !is_interlaced(Scan))
+     {
+         Cleanup();
+         return;
+     }
+ 
+-    if (Frame && Frame->already_deinterlaced)
++    if (Frame->already_deinterlaced)
+         return;
+ 
+     // Sanity check frame format
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index ec0d58d4c2a..7865bab69af 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -1868,7 +1868,11 @@ void MythPlayer::AVSync(VideoFrame *buffer)
+             m_osdLock.lock();
+             // Only double rate CPU deinterlacers require an extra call to ProcessFrame
+             if (GetDoubleRateOption(buffer, DEINT_CPU) && !GetDoubleRateOption(buffer, DEINT_SHADER))
++            {
++                // the first deinterlacing pass will have marked the frame as already deinterlaced
++                buffer->already_deinterlaced = false;
+                 m_videoOutput->ProcessFrame(buffer, m_osd, m_pipPlayers, ps);
++            }
+             m_videoOutput->PrepareFrame(buffer, ps, m_osd);
+             m_osdLock.unlock();
+             // Display the second field
+
+From aa753a179b3a08d0935f8adacc8d2611190bdac0 Mon Sep 17 00:00:00 2001
+From: John Poet <jpoet@mythtv.org>
+Date: Sat, 6 Jun 2020 20:29:45 -0600
+Subject: [PATCH 52/89] mythexternrecorder: ondatastart might need to know the
+ channel number.
+
+(cherry picked from commit 5cf1846f76ff3a18212c2d6693b4701bdf64c03f)
+---
+ mythtv/programs/mythexternrecorder/MythExternRecApp.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp b/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp
+index 6ce2d9919cf..514a6ca6b0e 100644
+--- a/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp
++++ b/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp
+@@ -305,6 +305,7 @@ Q_SLOT void MythExternRecApp::DataStarted(void)
+         return;
+ 
+     QString cmd = m_onDataStart;
++    cmd.replace("%CHANNUM%", m_tunedChannel);
+ 
+     LOG(VB_RECORD, LOG_INFO, LOC +
+         QString(" Data started, finishing tune: '%1'").arg(cmd));
+
+From 6b45963cf8a25a6b0852edf3943db9b6857bb939 Mon Sep 17 00:00:00 2001
+From: John Poet <jpoet@mythtv.org>
+Date: Sun, 7 Jun 2020 14:12:37 -0600
+Subject: [PATCH 53/89] mythexternrecorder: Fix "tuning" of channels by
+ external recorder, instead of separate "tuner".
+
+(cherry picked from commit d03307172137afeaa1f70e4f9e5458ff5f46570b)
+---
+ .../mythexternrecorder/MythExternRecApp.cpp   | 53 ++++++++++++-------
+ 1 file changed, 33 insertions(+), 20 deletions(-)
+
+diff --git a/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp b/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp
+index 514a6ca6b0e..624b30c98ab 100644
+--- a/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp
++++ b/mythtv/programs/mythexternrecorder/MythExternRecApp.cpp
+@@ -487,7 +487,7 @@ void MythExternRecApp::NewEpisodeStarting(const QString & channum)
+ Q_SLOT void MythExternRecApp::TuneChannel(const QString & serial,
+                                           const QString & channum)
+ {
+-    if (m_tuneCommand.isEmpty())
++    if (m_tuneCommand.isEmpty() && m_channelsIni.isEmpty())
+     {
+         LOG(VB_CHANNEL, LOG_ERR, LOC + ": No 'tuner' configured.");
+         emit SendMessage("TuneChannel", serial, "ERR:No 'tuner' configured.");
+@@ -509,7 +509,7 @@ Q_SLOT void MythExternRecApp::TuneChannel(const QString & serial,
+     m_desc    = m_recDesc;
+     m_command = m_recCommand;
+ 
+-    QString tune = m_tuneCommand;
++    QString tunecmd = m_tuneCommand;
+     QString url;
+ 
+     if (!m_channelsIni.isEmpty())
+@@ -527,7 +527,7 @@ Q_SLOT void MythExternRecApp::TuneChannel(const QString & serial,
+             LOG(VB_CHANNEL, LOG_ERR, LOC + ": " + msg);
+         }
+         else
+-            tune.replace("%URL%", url);
++            tunecmd.replace("%URL%", url);
+ 
+         if (!url.isEmpty() && m_command.indexOf("%URL%") >= 0)
+         {
+@@ -546,18 +546,9 @@ Q_SLOT void MythExternRecApp::TuneChannel(const QString & serial,
+     if (m_tuneProc.state() == QProcess::Running)
+         TerminateProcess(m_tuneProc, "Tune");
+ 
+-    tune.replace("%CHANNUM%", channum);
++    tunecmd.replace("%CHANNUM%", channum);
+     m_command.replace("%CHANNUM%", channum);
+ 
+-    m_tuneProc.start(tune);
+-    if (!m_tuneProc.waitForStarted())
+-    {
+-        QString errmsg = QString("Tune `%1` failed: ").arg(tune) + ENO;
+-        LOG(VB_CHANNEL, LOG_ERR, LOC + ": " + errmsg);
+-        emit SendMessage("TuneChannel", serial, QString("ERR:%1").arg(errmsg));
+-        return;
+-    }
+-
+     if (!m_logFile.isEmpty() && m_command.indexOf("%LOGFILE%") >= 0)
+     {
+         m_command.replace("%LOGFILE%", m_logFile);
+@@ -576,12 +567,32 @@ Q_SLOT void MythExternRecApp::TuneChannel(const QString & serial,
+ 
+     m_desc.replace("%URL%", url);
+     m_desc.replace("%CHANNUM%", channum);
+-    m_tuningChannel = channum;
+ 
+-    LOG(VB_CHANNEL, LOG_INFO, LOC + QString(": Started `%1` URL '%2'")
+-        .arg(tune).arg(url));
+-    emit SendMessage("TuneChannel", serial,
+-                     QString("OK:InProgress `%1`").arg(tune));
++    if (!m_tuneCommand.isEmpty())
++    {
++        m_tuningChannel = channum;
++        m_tuneProc.start(tunecmd);
++        if (!m_tuneProc.waitForStarted())
++        {
++            QString errmsg = QString("Tune `%1` failed: ").arg(tunecmd) + ENO;
++            LOG(VB_CHANNEL, LOG_ERR, LOC + ": " + errmsg);
++            emit SendMessage("TuneChannel", serial,
++                             QString("ERR:%1").arg(errmsg));
++            return;
++        }
++
++        LOG(VB_CHANNEL, LOG_INFO, LOC + QString(": Started `%1` URL '%2'")
++            .arg(tunecmd).arg(url));
++        emit SendMessage("TuneChannel", serial,
++                         QString("OK:InProgress `%1`").arg(tunecmd));
++    }
++    else
++    {
++        m_tunedChannel = channum;
++        emit SetDescription(Desc());
++        emit SendMessage("TuneChannel", serial,
++                         QString("OK:Tuned to %1").arg(m_tunedChannel));
++    }
+ }
+ 
+ Q_SLOT void MythExternRecApp::TuneStatus(const QString & serial)
+@@ -594,7 +605,8 @@ Q_SLOT void MythExternRecApp::TuneStatus(const QString & serial)
+         return;
+     }
+ 
+-    if (m_tuneProc.exitStatus() != QProcess::NormalExit)
++    if (!m_tuneCommand.isEmpty() &&
++        m_tuneProc.exitStatus() != QProcess::NormalExit)
+     {
+         QString errmsg = QString("'%1' failed: ")
+                          .arg(m_tuneProc.program()) + ENO;
+@@ -640,7 +652,8 @@ Q_SLOT void MythExternRecApp::LockTimeout(const QString & serial)
+ Q_SLOT void MythExternRecApp::HasTuner(const QString & serial)
+ {
+     emit SendMessage("HasTuner", serial, QString("OK:%1")
+-                     .arg(m_tuneCommand.isEmpty() ? "No" : "Yes"));
++                     .arg(m_tuneCommand.isEmpty() &&
++                          m_channelsIni.isEmpty() ? "No" : "Yes"));
+ }
+ 
+ Q_SLOT void MythExternRecApp::HasPictureAttributes(const QString & serial)
+
+From 445cf1fe6be324245dfc1c548d265bec147f711c Mon Sep 17 00:00:00 2001
+From: John Poet <jpoet@mythtv.org>
+Date: Sun, 7 Jun 2020 14:37:09 -0600
+Subject: [PATCH 54/89] ExternalStreamHandler: Use DEBUG log level for
+ TunerStatus
+
+(cherry picked from commit 118db4df5d0fc70971f7aa1d4f468f41bf3baa81)
+---
+ mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+index 87548086a1b..74265cf9bd3 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+@@ -1449,7 +1449,9 @@ bool ExternalStreamHandler::ProcessVer2(const QString & command,
+                 m_ioErrCnt = 0;
+                 if (!okay)
+                     level = LOG_WARNING;
+-                else if (command.startsWith("SendBytes"))
++                else if (command.startsWith("SendBytes") ||
++                         (command.startsWith("TuneStatus") &&
++                          result == "OK:InProgress"))
+                     level = LOG_DEBUG;
+ 
+                 LOG(VB_RECORD, level,
+
+From 0d8e6f1b14e6d670e54c70fac80cde797e100111 Mon Sep 17 00:00:00 2001
+From: Paul Harrison <mythtv@sky.com>
+Date: Thu, 27 Feb 2020 17:52:31 +0000
+Subject: [PATCH 55/89] Merge pull request #191 from
+ ijc/musicmetadata-disc-number
+
+mythmusic fixes for multiple discs
+
+(cherry picked from commit 90a86400ae13e8dcff7d7ddb1b469409a8e3cc03)
+---
+ mythplugins/mythmusic/mythmusic/playlist.cpp  |  4 +++-
+ .../libs/libmythmetadata/metaioflacvorbis.cpp | 24 +++++++++++++++++++
+ 2 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/mythplugins/mythmusic/mythmusic/playlist.cpp b/mythplugins/mythmusic/mythmusic/playlist.cpp
+index f0ca201e079..86addc845b4 100644
+--- a/mythplugins/mythmusic/mythmusic/playlist.cpp
++++ b/mythplugins/mythmusic/mythmusic/playlist.cpp
+@@ -386,8 +386,10 @@ void Playlist::shuffleTracks(MusicPlayer::ShuffleMode shuffleMode)
+                     }
+                     else
+                     {
+-                        album_order = Ialbum->second * 1000;
++                        album_order = Ialbum->second * 10000;
+                     }
++                    if (mdata->DiscNumber() != -1)
++                        album_order += mdata->DiscNumber()*100;
+                     album_order += mdata->Track();
+ 
+                     songMap.insert(album_order, m_songs.at(x));
+diff --git a/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp b/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp
+index b505fb6bb3b..ae9cdee0473 100644
+--- a/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp
++++ b/mythtv/libs/libmythmetadata/metaioflacvorbis.cpp
+@@ -149,6 +149,30 @@ MusicMetadata* MetaIOFLACVorbis::read(const QString &filename)
+     if (metadata->Length() <= 0)
+         metadata->setLength(getTrackLength(flacfile));
+ 
++    if (tag->contains("DISCNUMBER"))
++    {
++        bool valid = false;
++        int n = tag->fieldListMap()["DISCNUMBER"].toString().toInt(&valid);
++        if (valid)
++            metadata->setDiscNumber(n);
++    }
++
++    if (tag->contains("TOTALTRACKS"))
++    {
++        bool valid = false;
++        int n = tag->fieldListMap()["TOTALTRACKS"].toString().toInt(&valid);
++        if (valid)
++            metadata->setTrackCount(n);
++    }
++
++    if (tag->contains("TOTALDISCS"))
++    {
++        bool valid = false;
++        int n = tag->fieldListMap()["TOTALDISCS"].toString().toInt(&valid);
++        if (valid)
++            metadata->setDiscCount(n);
++    }
++
+     delete flacfile;
+ 
+     return metadata;
+
+From d8ecd8fe7c85165fe3c818a6d07e7ca9472e7735 Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Wed, 10 Jun 2020 19:24:00 +0200
+Subject: [PATCH 56/89] Python: fix timestamp calculation
+
+Python 3.8 changed the handling of the 'datetime' class:
+According release notes ("What's New In Python 3.8"):
+Arithmetic operations between subclasses of datetime.date or
+datetime.datetime and datetime.timedelta objects now return an
+instance of the subclass, rather than the base class.
+
+This caused an error in the calculation of a 'timestamp'.
+
+Tested with python2.7, python3.6 and python3.8.
+No other occurences of similar arithmetic operations identified.
+
+Fixes #13622
+
+(cherry picked from commit 24db137ee6435ae0f1ecc51c580ef1b3d5936402)
+---
+ mythtv/bindings/python/MythTV/utility/dt.py | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/mythtv/bindings/python/MythTV/utility/dt.py b/mythtv/bindings/python/MythTV/utility/dt.py
+index ef61749a56f..97ef75a243a 100644
+--- a/mythtv/bindings/python/MythTV/utility/dt.py
++++ b/mythtv/bindings/python/MythTV/utility/dt.py
+@@ -475,10 +475,11 @@ def mythformat(self):
+         return self.astimezone(self.UTCTZ()).strftime('%Y%m%d%H%M%S')
+ 
+     def timestamp(self):
+-         # utc time = local time - utc offset
+-         utc_naive = self.replace(tzinfo=None) - self.utcoffset()
+-         utc_epoch = self.utcfromtimestamp(0).replace(tzinfo=None)
+-         return ((utc_naive - utc_epoch).total_seconds())
++        # utc time = local time - utc offset
++        utc_naive = self.replace(tzinfo=None) - self.utcoffset()
++        utc_naive = utc_naive.replace(tzinfo=None)
++        utc_epoch = self.utcfromtimestamp(0).replace(tzinfo=None)
++        return ((utc_naive - utc_epoch).total_seconds())
+ 
+     def rfcformat(self):
+         return self.strftime('%a, %d %b %Y %H:%M:%S %z')
+
+From 4c990647889687b5a5ee5951d289a5f0777dda90 Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Wed, 10 Jun 2020 19:25:02 +0200
+Subject: [PATCH 57/89] Set MySQL Mode explicitely when starting a session
+
+Newer SQL server enable the 'strict' MySQL Modes
+"STRICT_TRANS_TABLES" and/or "STRICT_ALL_TABLES",
+which cause an error on committing to tables with fields,
+having no default value defined.
+
+An example: table "jobqueue", field "args", type "blob".
+
+This change sets explicitely the "SQL Mode" per python session
+like 'libmythbase' does it.
+
+Tested with python2.7, python3.6 and python3.8.
+
+(cherry picked from commit 968712b9280b7220d73a44da709cbed655f1ee0a)
+---
+ mythtv/bindings/python/MythTV/_conn_mysqldb.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mythtv/bindings/python/MythTV/_conn_mysqldb.py b/mythtv/bindings/python/MythTV/_conn_mysqldb.py
+index 3f798198219..6f50433036b 100644
+--- a/mythtv/bindings/python/MythTV/_conn_mysqldb.py
++++ b/mythtv/bindings/python/MythTV/_conn_mysqldb.py
+@@ -24,6 +24,7 @@ def dbconnect(dbconn, log):
+                            use_unicode=True,
+                            charset='utf8')
+     db.autocommit(True)
++    db.set_sql_mode("")    # reset default sql_mode
+     return db
+ 
+ class LoggedCursor( MySQLdb.cursors.Cursor ):
+
+From 134ebd7b2938dfede4a916932e52146cf66c4a9c Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Wed, 10 Jun 2020 19:28:39 +0200
+Subject: [PATCH 58/89] Python: Resolve deprecation warnings
+
+Python3.8 shows a couple of deprecation warnings when running
+with the "-Wall" switch:
+
+The method locale.format() will be removed in a future version of Python.
+Use 'locale.format_string()' instead.
+
+DeprecationWarning: isAlive() is deprecated, use is_alive() instead.
+
+Tested with python2.7, python3.6 and python3.8.
+
+(cherry picked from commit e3f7f092fde8a81cfa8de2a808ce64cc3fa1d83c)
+---
+ mythtv/bindings/python/MythTV/altdict.py             | 2 +-
+ mythtv/bindings/python/MythTV/utility/dequebuffer.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/bindings/python/MythTV/altdict.py b/mythtv/bindings/python/MythTV/altdict.py
+index a90e9c3baa1..90b4fd606d6 100644
+--- a/mythtv/bindings/python/MythTV/altdict.py
++++ b/mythtv/bindings/python/MythTV/altdict.py
+@@ -107,7 +107,7 @@ class DictData( OrdDict ):
+                 lambda x: datetime.fromRfc(x, datetime.UTCTZ())\
+                                   .astimezone(datetime.localTZ())]
+     _inv_trans = [  str,
+-                    lambda x: locale.format("%0.6f", x),
++                    lambda x: locale.format_string("%0.6f", x),
+                     lambda x: str(int(x)),
+                     lambda x: x,
+                     lambda x: str(int(x.timestamp())),
+diff --git a/mythtv/bindings/python/MythTV/utility/dequebuffer.py b/mythtv/bindings/python/MythTV/utility/dequebuffer.py
+index 650ac609d67..df4b537ced2 100644
+--- a/mythtv/bindings/python/MythTV/utility/dequebuffer.py
++++ b/mythtv/bindings/python/MythTV/utility/dequebuffer.py
+@@ -354,7 +354,7 @@ def _add_pipe(cls, pipe, buffer, mode=None):
+             # get IO mode from pipe
+             mode = pipe.mode
+ 
+-        if (cls._pollingthread is None) or not cls._pollingthread.isAlive():
++        if (cls._pollingthread is None) or not cls._pollingthread.is_alive():
+             # create new thread, and set it to not block shutdown
+             cls._pollingthread = _PollingThread()
+             cls._pollingthread.daemon = True
+
+From 16e06262ba588597496306467dbea845d5f53c47 Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Sun, 31 May 2020 20:20:21 -0400
+Subject: [PATCH 59/89] Fix missing Qt 5.15 include in mythpainter.cpp.
+
+(cherry picked from commit f12096ba57c37f8966b9cc8fa2a775255862df9f)
+---
+ mythtv/libs/libmythui/mythpainter.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mythtv/libs/libmythui/mythpainter.cpp b/mythtv/libs/libmythui/mythpainter.cpp
+index 4435efb78a2..d70010839d0 100644
+--- a/mythtv/libs/libmythui/mythpainter.cpp
++++ b/mythtv/libs/libmythui/mythpainter.cpp
+@@ -5,6 +5,7 @@
+ // QT headers
+ #include <QRect>
+ #include <QPainter>
++#include <QPainterPath>
+ 
+ // libmythbase headers
+ #include "mythlogging.h"
+
+From 9e47ae9d385be2b5fdb72007aad998443fbab11d Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Tue, 16 Jun 2020 17:30:20 +0100
+Subject: [PATCH 60/89] MythOpenGLVideo: Fix chroma sampling for multiplanar
+ formats when resizing
+
+- we need GL_NEAREST for YUY2 and when using unsigned integers texture
+formats (GLES3.X for 10bit)
+- but it introduces some sampling errors for the chroma planes as, while
+the textures are not being resized for the first pass, the chroma planes
+are a different size to the main texture.
+- so where possible, use GL_LINEAR to filter the chroma planes and
+improve playback quality in the bulk of cases.
+
+(cherry picked from commit 3a4da22e3b1fa941d3495a6950ef6e5a6bfef7ab)
+---
+ .../libs/libmythtv/opengl/mythopenglvideo.cpp | 20 ++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/opengl/mythopenglvideo.cpp b/mythtv/libs/libmythtv/opengl/mythopenglvideo.cpp
+index 6313fdafaa5..0fd86ae50a9 100644
+--- a/mythtv/libs/libmythtv/opengl/mythopenglvideo.cpp
++++ b/mythtv/libs/libmythtv/opengl/mythopenglvideo.cpp
+@@ -303,8 +303,8 @@ bool MythOpenGLVideo::AddDeinterlacer(const VideoFrame *Frame, FrameScanType Sca
+         sizes.emplace_back(QSize(m_videoDim));
+         m_prevTextures = MythVideoTexture::CreateTextures(m_render, m_inputType, m_outputType, sizes);
+         m_nextTextures = MythVideoTexture::CreateTextures(m_render, m_inputType, m_outputType, sizes);
+-        // ensure we use GL_NEAREST if resizing is already active
+-        if (m_resizing)
++        // ensure we use GL_NEAREST if resizing is already active and needed
++        if (m_resizing & Sampling)
+         {
+             MythVideoTexture::SetTextureFilters(m_render, m_prevTextures, QOpenGLTexture::Nearest);
+             MythVideoTexture::SetTextureFilters(m_render, m_nextTextures, QOpenGLTexture::Nearest);
+@@ -803,7 +803,12 @@ void MythOpenGLVideo::PrepareFrame(VideoFrame *Frame, bool TopFieldFirst, FrameS
+         // N.B. not needed for the basic deinterlacer
+         if (deinterlacing && !basicdeinterlacing && (m_videoDispDim.height() > m_displayVideoRect.height()))
+             resize |= Deinterlacer;
+-        // UYVY packed pixels must be sampled exactly
++
++        // NB GL_NEAREST introduces some 'minor' chroma sampling errors
++        // for the following 2 cases. For YUY2 this may be better handled in the
++        // shader. For GLES3.0 10bit textures - Vulkan is probably the better solution.
++
++        // UYVY packed pixels must be sampled exactly with GL_NEAREST
+         if (FMT_YUY2 == m_outputType)
+             resize |= Sampling;
+         // unsigned integer texture formats need GL_NEAREST sampling
+@@ -850,9 +855,10 @@ void MythOpenGLVideo::PrepareFrame(VideoFrame *Frame, bool TopFieldFirst, FrameS
+     else if (!m_resizing && resize)
+     {
+         // framebuffer will be created as needed below
+-        MythVideoTexture::SetTextureFilters(m_render, m_inputTextures, QOpenGLTexture::Nearest);
+-        MythVideoTexture::SetTextureFilters(m_render, m_prevTextures, QOpenGLTexture::Nearest);
+-        MythVideoTexture::SetTextureFilters(m_render, m_nextTextures, QOpenGLTexture::Nearest);
++        QOpenGLTexture::Filter filter = (resize & Sampling) ? QOpenGLTexture::Nearest : QOpenGLTexture::Linear;
++        MythVideoTexture::SetTextureFilters(m_render, m_inputTextures, filter);
++        MythVideoTexture::SetTextureFilters(m_render, m_prevTextures, filter);
++        MythVideoTexture::SetTextureFilters(m_render, m_nextTextures, filter);
+         m_resizing = resize;
+         LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("Resizing from %1x%2 to %3x%4 for %5")
+             .arg(m_videoDispDim.width()).arg(m_videoDispDim.height())
+@@ -863,7 +869,7 @@ void MythOpenGLVideo::PrepareFrame(VideoFrame *Frame, bool TopFieldFirst, FrameS
+     // check hardware frames have the correct filtering
+     if (hwframes)
+     {
+-        QOpenGLTexture::Filter filter = resize ? QOpenGLTexture::Nearest : QOpenGLTexture::Linear;
++        QOpenGLTexture::Filter filter = (resize & Sampling) ? QOpenGLTexture::Nearest : QOpenGLTexture::Linear;
+         if (inputtextures[0]->m_filter != filter)
+             MythVideoTexture::SetTextureFilters(m_render, inputtextures, filter);
+     }
+
+From e9e48d190e11b51051dfea9485dc4f903af7b8e9 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Thu, 18 Jun 2020 11:22:02 +0100
+Subject: [PATCH 61/89] VDPAU: Further extend debug logging of support tests
+
+(cherry picked from commit 43714e821ba5e53a4e3e9726c658fb4b2aaeccea)
+---
+ .../libmythtv/decoders/mythvdpaucontext.cpp     | 17 +++++++++++++----
+ .../libs/libmythtv/decoders/mythvdpauhelper.cpp | 11 +++++++++--
+ 2 files changed, 22 insertions(+), 6 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/decoders/mythvdpaucontext.cpp b/mythtv/libs/libmythtv/decoders/mythvdpaucontext.cpp
+index 73d31dd9139..b80eeaad22f 100644
+--- a/mythtv/libs/libmythtv/decoders/mythvdpaucontext.cpp
++++ b/mythtv/libs/libmythtv/decoders/mythvdpaucontext.cpp
+@@ -168,18 +168,27 @@ MythCodecID MythVDPAUContext::GetSupportedCodec(AVCodecContext **Context,
+         vdpau = false;
+         for (auto vdpauprofile : profiles)
+         {
+-            if (vdpauprofile.first == mythprofile &&
+-                vdpauprofile.second.Supported((*Context)->width, (*Context)->height, (*Context)->level))
++            bool match = vdpauprofile.first == mythprofile;
++            if (match)
+             {
+-                vdpau = true;
+-                break;
++                LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Trying %1")
++                    .arg(MythCodecContext::GetProfileDescription(mythprofile, QSize())));
++                if (vdpauprofile.second.Supported((*Context)->width, (*Context)->height, (*Context)->level))
++                {
++                    vdpau = true;
++                    break;
++                }
+             }
+         }
+     }
+ 
+     // H264 needs additional checks for old hardware
+     if (vdpau && (success == kCodec_H264_VDPAU || success == kCodec_H264_VDPAU_DEC))
++    {
+         vdpau = MythVDPAUHelper::CheckH264Decode(*Context);
++        if (!vdpau)
++            LOG(VB_PLAYBACK, LOG_DEBUG, LOC + "H264 decode check failed");
++    }
+ 
+     QString desc = QString("'%1 %2 %3 %4x%5'")
+         .arg(codec).arg(profile).arg(pixfmt).arg((*Context)->width).arg((*Context)->height);
+diff --git a/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp b/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
+index bb5ef391406..9bddec96d65 100644
+--- a/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
++++ b/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
+@@ -38,8 +38,15 @@ VDPAUCodec::VDPAUCodec(MythCodecContext::CodecProfile Profile, QSize Size, uint3
+ bool VDPAUCodec::Supported(int Width, int Height, int Level)
+ {
+     uint32_t macros = static_cast<uint32_t>(((Width + 15) & ~15) * ((Height + 15) & ~15)) / 256;
+-    return (Width <= m_maxSize.width()) && (Height <= m_maxSize.height()) &&
+-           (macros <= m_maxMacroBlocks) && (static_cast<uint32_t>(Level) <= m_maxLevel);
++    bool result = (Width <= m_maxSize.width()) && (Height <= m_maxSize.height()) &&
++                  (macros <= m_maxMacroBlocks) && (static_cast<uint32_t>(Level) <= m_maxLevel);
++    if (!result)
++    {
++        LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Not supported: Size %1x%2 > %3x%4, MBs %5 > %6, Level %7 > %8")
++                .arg(Width).arg(Height).arg(m_maxSize.width()).arg(m_maxSize.height())
++                .arg(macros).arg(m_maxMacroBlocks).arg(Level).arg(m_maxLevel));
++    }
++    return result;
+ }
+ 
+ bool MythVDPAUHelper::HaveVDPAU(void)
+
+From 94423151e51e155472531d80a7e24b875a13b13c Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Thu, 18 Jun 2020 11:25:09 +0100
+Subject: [PATCH 62/89] MythPlayer: Use yadif for deinterlacing previews
+ (regression)
+
+- the cpu deinterlacers were re-factored shortly before v31 and yadif is
+now 'high' quality
+
+(cherry picked from commit d3378789e99f00ec9c2b911cc244ffec6b82b6d6)
+---
+ mythtv/libs/libmythtv/mythplayer.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mythplayer.cpp b/mythtv/libs/libmythtv/mythplayer.cpp
+index 7865bab69af..1eecc103cfe 100644
+--- a/mythtv/libs/libmythtv/mythplayer.cpp
++++ b/mythtv/libs/libmythtv/mythplayer.cpp
+@@ -4526,9 +4526,9 @@ char *MythPlayer::GetScreenGrabAtFrame(uint64_t FrameNum, bool Absolute,
+ 
+     if (frame->interlaced_frame)
+     {
+-        // Use medium quality - which is currently yadif
++        // Use high quality - which is currently yadif
+         frame->deinterlace_double = DEINT_NONE;
+-        frame->deinterlace_allowed = frame->deinterlace_single = DEINT_CPU | DEINT_MEDIUM;
++        frame->deinterlace_allowed = frame->deinterlace_single = DEINT_CPU | DEINT_HIGH;
+         MythDeinterlacer deinterlacer;
+         deinterlacer.Filter(frame, kScan_Interlaced, nullptr, true);
+     }
+
+From bcd9a63ec012adeb4a028d6873c512bb93afa3e2 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Mon, 22 Jun 2020 18:36:33 +0100
+Subject: [PATCH 63/89] VDPAU: Fall 'back' to H264 Main profile for
+ H264Baseline
+
+- as well as constrained baseline
+
+(cherry picked from commit d3719e6b110c76b188a3e4217ed5e253d2f6bd7b)
+---
+ mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp b/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
+index 9bddec96d65..d529f1b5453 100644
+--- a/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
++++ b/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
+@@ -96,13 +96,16 @@ bool MythVDPAUHelper::ProfileCheck(VdpDecoderProfile Profile, uint32_t &Level,
+         .arg(Profile).arg(supported).arg(Level).arg(Macros).arg(Width).arg(Height).arg(status));
+ 
+     if (((supported != VDP_TRUE) || (status != VDP_STATUS_OK)) &&
+-        (Profile == VDP_DECODER_PROFILE_H264_CONSTRAINED_BASELINE))
++        (Profile == VDP_DECODER_PROFILE_H264_CONSTRAINED_BASELINE ||
++         Profile == VDP_DECODER_PROFILE_H264_BASELINE))
+     {
+-        LOG(VB_GENERAL, LOG_INFO, LOC + "Driver does not report support for H264 Constrained Baseline...");
++        LOG(VB_GENERAL, LOG_INFO, LOC + QString("Driver does not report support for H264 %1Baseline")
++            .arg(Profile == VDP_DECODER_PROFILE_H264_CONSTRAINED_BASELINE ? "Constrained " : ""));
+ 
+         // H264 Constrained baseline is reported as not supported on older chipsets but
+         // works due to support for H264 Main. Test for H264 main if constrained baseline
+         // fails - which mimics the fallback in FFmpeg.
++        // Updated to included baseline... not so sure about that:)
+         status = m_vdpDecoderQueryCapabilities(m_device, VDP_DECODER_PROFILE_H264_MAIN, &supported,
+                                                &Level, &Macros, &Width, &Height);
+         CHECK_ST
+@@ -350,9 +353,7 @@ bool MythVDPAUHelper::CheckH264Decode(AVCodecContext *Context)
+     switch (Context->profile & ~FF_PROFILE_H264_INTRA)
+     {
+         case FF_PROFILE_H264_BASELINE: profile = VDP_DECODER_PROFILE_H264_BASELINE; break;
+-#ifdef VDP_DECODER_PROFILE_H264_CONSTRAINED_BASELINE
+         case FF_PROFILE_H264_CONSTRAINED_BASELINE: profile = VDP_DECODER_PROFILE_H264_CONSTRAINED_BASELINE; break;
+-#endif
+         case FF_PROFILE_H264_MAIN: profile = VDP_DECODER_PROFILE_H264_MAIN; break;
+         case FF_PROFILE_H264_HIGH: profile = VDP_DECODER_PROFILE_H264_HIGH; break;
+ #ifdef VDP_DECODER_PROFILE_H264_EXTENDED
+
+From 1182a9abea4724d8af0b8690f04e39779855fce9 Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Mon, 22 Jun 2020 13:23:25 -0500
+Subject: [PATCH 64/89] Python Bindings: care for python3.3+ use of ElementTree
+
+Fedora 33 is using Python 3.9 and no longer has cElementTree.
+Which was depracated in v3.3, thanks GB.
+
+https://docs.python.org/3/library/xml.etree.elementtree.html
+(cherry picked from commit d7c0c5d263d62312559b1c96f375b5f081cf564b)
+---
+ mythtv/bindings/python/MythTV/dataheap.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/bindings/python/MythTV/dataheap.py b/mythtv/bindings/python/MythTV/dataheap.py
+index a50c762734d..bfb84d10dcb 100644
+--- a/mythtv/bindings/python/MythTV/dataheap.py
++++ b/mythtv/bindings/python/MythTV/dataheap.py
+@@ -15,7 +15,13 @@
+ 
+ import re
+ import locale
+-import xml.etree.cElementTree as etree
++
++# TODO: if Python 3.3+ is in use by all distributions, use ElementTree only.
++try:
++    import xml.etree.cElementTree as etree
++except ImportError:
++    import xml.etree.ElementTree as etree
++
+ from datetime import date, time
+ 
+ _default_datetime = datetime(1900,1,1, tzinfo=datetime.UTCTZ())
+
+From b89d76fa944a5dfc61e96eaa532eb399d92419ab Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <kdewaal@mythtv.org>
+Date: Tue, 5 May 2020 23:36:21 +0200
+Subject: [PATCH 65/89] Transport Editor updates
+
+Show the DVB-C parameter edit page for HDHomeRun tuners when they can do DVB-C.
+Previously the ATSC parameter edit page was shown.
+Show the DVB-T2 parameter edit page for HDHomeRun tuners when they can do other DVB.
+Previously the ATSC parameter edit page was shown.
+Fixed a problem where sometimes the Transport Editor did not show any
+transports when there were only a small number of transports in the video source.
+FIxed a problem where the modulation system was not saved in the transport when a
+DVB-S (not a DVB-S2) tuner and the transports came from the NIT transport loop.
+
+(cherry picked from commit fcf9e8e79fd4971d298cd8c3a53466d256f7f0ff)
+
+Fixes #13640
+
+Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+---
+ mythtv/libs/libmythtv/cardutil.cpp        | 18 +++++++-------
+ mythtv/libs/libmythtv/cardutil.h          |  6 +++++
+ mythtv/libs/libmythtv/dtvmultiplex.cpp    |  2 +-
+ mythtv/libs/libmythtv/sourceutil.cpp      | 23 ++++++++++++++++++
+ mythtv/libs/libmythtv/sourceutil.h        |  1 +
+ mythtv/libs/libmythtv/transporteditor.cpp | 29 ++++++++++++++---------
+ 6 files changed, 58 insertions(+), 21 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/cardutil.cpp b/mythtv/libs/libmythtv/cardutil.cpp
+index f9098e7d911..5f2d8940ee2 100644
+--- a/mythtv/libs/libmythtv/cardutil.cpp
++++ b/mythtv/libs/libmythtv/cardutil.cpp
+@@ -265,7 +265,7 @@ bool CardUtil::IsTunerShared(uint inputidA, uint inputidB)
+ 
+     if (!query.exec())
+     {
+-        MythDB::DBError("CardUtil::is_tuner_shared", query);
++        MythDB::DBError("CardUtil::is_tuner_shared()", query);
+         return false;
+     }
+ 
+@@ -320,7 +320,7 @@ bool CardUtil::IsInputTypePresent(const QString &rawtype, QString hostname)
+ 
+     if (!query.exec())
+     {
+-        MythDB::DBError("CardUtil::IsInputTypePresent", query);
++        MythDB::DBError("CardUtil::IsInputTypePresent()", query);
+         return false;
+     }
+ 
+@@ -1229,7 +1229,7 @@ QString get_on_input(const QString &to_get, uint inputid)
+     query.bindValue(":INPUTID", inputid);
+ 
+     if (!query.exec())
+-        MythDB::DBError("CardUtil::get_on_source", query);
++        MythDB::DBError("CardUtil::get_on_input", query);
+     else if (query.next())
+         return query.value(0).toString();
+ 
+@@ -1597,7 +1597,7 @@ vector<uint> CardUtil::GetInputIDs(uint sourceid)
+ 
+     if (!query.exec())
+     {
+-        MythDB::DBError("CardUtil::GetInputIDs()", query);
++        MythDB::DBError("CardUtil::GetInputIDs(sourceid)", query);
+         return list;
+     }
+ 
+@@ -1618,7 +1618,7 @@ bool CardUtil::SetStartChannel(uint inputid, const QString &channum)
+ 
+     if (!query.exec())
+     {
+-        MythDB::DBError("set_startchan", query);
++        MythDB::DBError("CardUtil::SetStartChannel", query);
+         return false;
+     }
+ 
+@@ -1836,7 +1836,7 @@ int CardUtil::CreateCardInput(const uint inputid,
+ 
+     if (!query.exec())
+     {
+-        MythDB::DBError("CreateCardInput", query);
++        MythDB::DBError("CardUtil::CreateCardInput()", query);
+         return -1;
+     }
+ 
+@@ -1853,7 +1853,7 @@ uint CardUtil::CreateInputGroup(const QString &name)
+     query.bindValue(":GROUPNAME", name);
+     if (!query.exec())
+     {
+-        MythDB::DBError("CreateNewInputGroup 0", query);
++        MythDB::DBError("CardUtil::CreateNewInputGroup 0", query);
+         return 0;
+     }
+ 
+@@ -1863,7 +1863,7 @@ uint CardUtil::CreateInputGroup(const QString &name)
+     query.prepare("SELECT MAX(inputgroupid) FROM inputgroup");
+     if (!query.exec())
+     {
+-        MythDB::DBError("CreateNewInputGroup 1", query);
++        MythDB::DBError("CardUtil::CreateNewInputGroup 1", query);
+         return 0;
+     }
+ 
+@@ -1878,7 +1878,7 @@ uint CardUtil::CreateInputGroup(const QString &name)
+     query.bindValue(":GROUPNAME", name);
+     if (!query.exec())
+     {
+-        MythDB::DBError("CreateNewInputGroup 2", query);
++        MythDB::DBError("CardUtil::CreateNewInputGroup 2", query);
+         return 0;
+     }
+ 
+diff --git a/mythtv/libs/libmythtv/cardutil.h b/mythtv/libs/libmythtv/cardutil.h
+index 416c29da3b9..55aae9d9ac0 100644
+--- a/mythtv/libs/libmythtv/cardutil.h
++++ b/mythtv/libs/libmythtv/cardutil.h
+@@ -79,10 +79,16 @@ class MTV_PUBLIC CardUtil
+             return ERROR_PROBE;
+         if ("QPSK" == name)
+             return QPSK;
++        if ("DVBS" == name)
++            return DVBS;
+         if ("QAM" == name)
+             return QAM;
++        if ("DVBC" == name)
++            return DVBC;
+         if ("OFDM" == name)
+             return OFDM;
++        if ("DVBT" == name)
++            return DVBT;
+         if ("ATSC" == name)
+             return ATSC;
+         if ("V4L" == name)
+diff --git a/mythtv/libs/libmythtv/dtvmultiplex.cpp b/mythtv/libs/libmythtv/dtvmultiplex.cpp
+index 6477d526e1e..a55f1251ee2 100644
+--- a/mythtv/libs/libmythtv/dtvmultiplex.cpp
++++ b/mythtv/libs/libmythtv/dtvmultiplex.cpp
+@@ -509,7 +509,7 @@ bool DTVMultiplex::FillFromDeliverySystemDesc(DTVTunerType type,
+                     return false;
+                 }
+ 
+-                return ParseDVB_S_and_C(
++                return ParseDVB_S(
+                     QString::number(cd.FrequencykHz()),  "a",
+                     QString::number(cd.SymbolRateHz()), cd.FECInnerString(),
+                     cd.ModulationString(),
+diff --git a/mythtv/libs/libmythtv/sourceutil.cpp b/mythtv/libs/libmythtv/sourceutil.cpp
+index b9758d9fd48..9a8334c84aa 100644
+--- a/mythtv/libs/libmythtv/sourceutil.cpp
++++ b/mythtv/libs/libmythtv/sourceutil.cpp
+@@ -65,6 +65,29 @@ QString SourceUtil::GetSourceName(uint sourceid)
+     return query.value(0).toString();
+ }
+ 
++uint SourceUtil::GetSourceID(const QString &name)
++{
++    MSqlQuery query(MSqlQuery::InitCon());
++
++    query.prepare(
++        "SELECT sourceid "
++        "FROM videosource "
++        "WHERE name = :NAME");
++    query.bindValue(":NAME", name);
++
++    if (!query.exec())
++    {
++        MythDB::DBError("SourceUtil::GetSourceID()", query);
++        return 0;
++    }
++    if (!query.next())
++    {
++        return 0;
++    }
++
++    return query.value(0).toUInt();
++}
++
+ QString SourceUtil::GetChannelSeparator(uint sourceid)
+ {
+     MSqlQuery query(MSqlQuery::InitCon());
+diff --git a/mythtv/libs/libmythtv/sourceutil.h b/mythtv/libs/libmythtv/sourceutil.h
+index 496c6959c7e..666e9a3a321 100644
+--- a/mythtv/libs/libmythtv/sourceutil.h
++++ b/mythtv/libs/libmythtv/sourceutil.h
+@@ -17,6 +17,7 @@ class MTV_PUBLIC SourceUtil
+   public:
+     static bool    HasDigitalChannel(uint sourceid);
+     static QString GetSourceName(uint sourceid);
++    static uint    GetSourceID(const QString &name);
+     static QString GetChannelSeparator(uint sourceid);
+     static QString GetChannelFormat(uint sourceid);
+     static uint    GetChannelCount(uint sourceid);
+diff --git a/mythtv/libs/libmythtv/transporteditor.cpp b/mythtv/libs/libmythtv/transporteditor.cpp
+index dae14fece8e..0359370a245 100644
+--- a/mythtv/libs/libmythtv/transporteditor.cpp
++++ b/mythtv/libs/libmythtv/transporteditor.cpp
+@@ -35,6 +35,7 @@ using namespace std;
+ 
+ #include "transporteditor.h"
+ #include "videosource.h"
++#include "sourceutil.h"
+ #include "mythcorecontext.h"
+ #include "mythdb.h"
+ 
+@@ -109,6 +110,14 @@ static CardUtil::INPUT_TYPES get_cardtype(uint sourceid)
+             cardtype = CardUtil::ProbeSubTypeName(cardid);
+         nType = CardUtil::toInputType(cardtype);
+ 
++        if (nType == CardUtil::HDHOMERUN)
++        {
++            if (CardUtil::HDHRdoesDVBC(CardUtil::GetVideoDevice(cardid)))
++                nType = CardUtil::DVBC;
++            else if (CardUtil::HDHRdoesDVB(CardUtil::GetVideoDevice(cardid)))
++                nType = CardUtil::DVBT2;
++        }
++
+         if ((CardUtil::ERROR_OPEN    == nType) ||
+             (CardUtil::ERROR_UNKNOWN == nType) ||
+             (CardUtil::ERROR_PROBE   == nType))
+@@ -161,27 +170,22 @@ static CardUtil::INPUT_TYPES get_cardtype(uint sourceid)
+     return cardtypes[0];
+ }
+ 
+-void TransportListEditor::SetSourceID(uint _sourceid)
++void TransportListEditor::SetSourceID(uint sourceid)
+ {
+     for (auto *setting : m_list)
+         removeChild(setting);
+     m_list.clear();
+ 
+-#if 0
+-    LOG(VB_GENERAL, LOG_DEBUG, QString("TransportList::SetSourceID(%1)")
+-                                   .arg(_sourceid));
+-#endif
+-
+-    if (!_sourceid)
++    if (!sourceid)
+     {
+         m_sourceid = 0;
+     }
+     else
+     {
+-        m_cardtype = get_cardtype(_sourceid);
++        m_cardtype = get_cardtype(sourceid);
+         m_sourceid = ((CardUtil::ERROR_OPEN    == m_cardtype) ||
+                       (CardUtil::ERROR_UNKNOWN == m_cardtype) ||
+-                      (CardUtil::ERROR_PROBE   == m_cardtype)) ? 0 : _sourceid;
++                      (CardUtil::ERROR_PROBE   == m_cardtype)) ? 0 : sourceid;
+     }
+ }
+ 
+@@ -204,11 +208,14 @@ TransportListEditor::TransportListEditor(uint sourceid) :
+     SetSourceID(sourceid);
+ }
+ 
+-void TransportListEditor::SetSourceID(const QString& sourceid)
++void TransportListEditor::SetSourceID(const QString& name)
+ {
+     if (m_isLoading)
+         return;
+-    SetSourceID(sourceid.toUInt());
++
++    uint sourceid = SourceUtil::GetSourceID(name);
++
++    SetSourceID(sourceid);
+     Load();
+ }
+ 
+
+From 261eeff1bd1a5ec8a3573f5957238961793d9356 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Thu, 25 Jun 2020 11:04:14 +0100
+Subject: [PATCH 66/89] VDPAU: Extend FFmpeg constrained baseline check to
+ include baseline
+
+- to match the changes in our own code.
+
+(cherry picked from commit f142e8535fa61db91454f571b57d479c9130515f)
+---
+ mythtv/external/FFmpeg/libavcodec/vdpau.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/external/FFmpeg/libavcodec/vdpau.c b/mythtv/external/FFmpeg/libavcodec/vdpau.c
+index 167f06d7aeb..2e7e8d757ca 100644
+--- a/mythtv/external/FFmpeg/libavcodec/vdpau.c
++++ b/mythtv/external/FFmpeg/libavcodec/vdpau.c
+@@ -243,7 +243,9 @@ int ff_vdpau_common_init(AVCodecContext *avctx, VdpDecoderProfile profile,
+     status = decoder_query_caps(vdctx->device, profile, &supported, &max_level,
+                                 &max_mb, &max_width, &max_height);
+ #ifdef VDP_DECODER_PROFILE_H264_CONSTRAINED_BASELINE
+-    if ((status != VDP_STATUS_OK || supported != VDP_TRUE) && profile == VDP_DECODER_PROFILE_H264_CONSTRAINED_BASELINE) {
++    if ((status != VDP_STATUS_OK || supported != VDP_TRUE) &&
++        (profile == VDP_DECODER_PROFILE_H264_CONSTRAINED_BASELINE ||
++         profile == VDP_DECODER_PROFILE_H264_BASELINE)) {
+         profile = VDP_DECODER_PROFILE_H264_MAIN;
+         status = decoder_query_caps(vdctx->device, profile, &supported,
+                                     &max_level, &max_mb,
+
+From a675ee1e110fca3ea61a197729ca42c899db94f9 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Thu, 25 Jun 2020 11:34:54 +0100
+Subject: [PATCH 67/89] VDPAU: Disable level checks in MythTV and FFmpeg
+
+- per the FFmpeg docs, this should be the default and it is causing
+hardware acceleration to fail on older VDPAU devices.
+
+(cherry picked from commit 9995644dac9047e04a8c09ebfe029099aa915ec9)
+---
+ mythtv/libs/libmythtv/decoders/mythvdpaucontext.cpp | 3 ++-
+ mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp  | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/decoders/mythvdpaucontext.cpp b/mythtv/libs/libmythtv/decoders/mythvdpaucontext.cpp
+index b80eeaad22f..56e57ee2d26 100644
+--- a/mythtv/libs/libmythtv/decoders/mythvdpaucontext.cpp
++++ b/mythtv/libs/libmythtv/decoders/mythvdpaucontext.cpp
+@@ -106,7 +106,8 @@ int MythVDPAUContext::InitialiseContext(AVCodecContext* Context)
+     }
+ 
+     auto* vdpaudevicectx = static_cast<AVVDPAUDeviceContext*>(hwdevicecontext->hwctx);
+-    if (av_vdpau_bind_context(Context, vdpaudevicectx->device, vdpaudevicectx->get_proc_address, 0) != 0)
++    if (av_vdpau_bind_context(Context, vdpaudevicectx->device,
++                              vdpaudevicectx->get_proc_address, AV_HWACCEL_FLAG_IGNORE_LEVEL) != 0)
+     {
+         LOG(VB_GENERAL, LOG_ERR, LOC + "Failed to bind VDPAU context");
+         av_buffer_unref(&hwdeviceref);
+diff --git a/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp b/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
+index d529f1b5453..918ce6275f7 100644
+--- a/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
++++ b/mythtv/libs/libmythtv/decoders/mythvdpauhelper.cpp
+@@ -37,9 +37,10 @@ VDPAUCodec::VDPAUCodec(MythCodecContext::CodecProfile Profile, QSize Size, uint3
+ 
+ bool VDPAUCodec::Supported(int Width, int Height, int Level)
+ {
++    // Note - level checks are now ignored here and in FFmpeg
+     uint32_t macros = static_cast<uint32_t>(((Width + 15) & ~15) * ((Height + 15) & ~15)) / 256;
+     bool result = (Width <= m_maxSize.width()) && (Height <= m_maxSize.height()) &&
+-                  (macros <= m_maxMacroBlocks) && (static_cast<uint32_t>(Level) <= m_maxLevel);
++                  (macros <= m_maxMacroBlocks) /*&& (static_cast<uint32_t>(Level) <= m_maxLevel)*/;
+     if (!result)
+     {
+         LOG(VB_PLAYBACK, LOG_DEBUG, LOC + QString("Not supported: Size %1x%2 > %3x%4, MBs %5 > %6, Level %7 > %8")
+
+From ade713f98c5846e9c5f08a76e72cbe24ad7057ef Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Fri, 5 Jun 2020 14:21:59 -0400
+Subject: [PATCH 68/89] Services: Add new GetStreamInfo method
+
+GetStreamInfo gets basic stream information for a video or recording, including
+frame rate, picture dimensons and video codec, as well as audio codec and number
+of channels. The information is obtained from the ffmpeg avformat apis.
+
+(cherry picked from commit a2af89101bd4a4a28e83f85fbcd7b30456a01ca8)
+---
+ .../datacontracts/videoStreamInfo.h           |  93 ++++++++++++
+ .../datacontracts/videoStreamInfoList.h       |  99 +++++++++++++
+ .../libmythservicecontracts.pro               |   2 +
+ .../services/videoServices.h                  |   6 +
+ mythtv/libs/libmythtv/mythavutil.cpp          | 138 ++++++++++++++++++
+ mythtv/libs/libmythtv/mythavutil.h            |  36 +++++
+ .../programs/mythbackend/services/video.cpp   |  51 +++++++
+ mythtv/programs/mythbackend/services/video.h  |   2 +
+ 8 files changed, 427 insertions(+)
+ create mode 100644 mythtv/libs/libmythservicecontracts/datacontracts/videoStreamInfo.h
+ create mode 100644 mythtv/libs/libmythservicecontracts/datacontracts/videoStreamInfoList.h
+
+diff --git a/mythtv/libs/libmythservicecontracts/datacontracts/videoStreamInfo.h b/mythtv/libs/libmythservicecontracts/datacontracts/videoStreamInfo.h
+new file mode 100644
+index 00000000000..176d4d998b9
+--- /dev/null
++++ b/mythtv/libs/libmythservicecontracts/datacontracts/videoStreamInfo.h
+@@ -0,0 +1,93 @@
++//////////////////////////////////////////////////////////////////////////////
++// Program Name: videoStreamInfo.h
++// Created     : May. 30, 2020
++//
++// Copyright (c) 2020 Peter Bennett <pbennett@mythtv.org>
++//
++// Licensed under the GPL v2 or later, see COPYING for details
++//
++//////////////////////////////////////////////////////////////////////////////
++
++#ifndef VIDEOSTREAMINFO_H_
++#define VIDEOSTREAMINFO_H_
++
++#include <QString>
++#include <QDateTime>
++
++#include "serviceexp.h"
++#include "datacontracthelper.h"
++
++namespace DTC
++{
++
++/////////////////////////////////////////////////////////////////////////////
++
++class SERVICE_PUBLIC VideoStreamInfo : public QObject
++{
++    Q_OBJECT
++    Q_CLASSINFO( "version"    , "1.00" );
++
++    Q_PROPERTY( QString         CodecType       READ CodecType        WRITE setCodecType      )
++    Q_PROPERTY( QString         CodecName       READ CodecName        WRITE setCodecName      )
++    Q_PROPERTY( int             Width           READ Width            WRITE setWidth          )
++    Q_PROPERTY( int             Height          READ Height           WRITE setHeight         )
++    Q_PROPERTY( float           AspectRatio     READ AspectRatio      WRITE setAspectRatio    )
++    Q_PROPERTY( QString         FieldOrder      READ FieldOrder       WRITE setFieldOrder     )
++    Q_PROPERTY( float           FrameRate       READ FrameRate        WRITE setFrameRate      )
++    Q_PROPERTY( float           AvgFrameRate    READ AvgFrameRate     WRITE setAvgFrameRate   )
++    Q_PROPERTY( int             Channels        READ Channels         WRITE setChannels       )
++    Q_PROPERTY( qlonglong       Duration        READ Duration         WRITE setDuration       )
++
++    PROPERTYIMP    ( QString    , CodecType      )
++    PROPERTYIMP    ( QString    , CodecName      )
++    PROPERTYIMP    ( int        , Width          )
++    PROPERTYIMP    ( int        , Height         )
++    PROPERTYIMP    ( float      , AspectRatio    )
++    PROPERTYIMP    ( QString    , FieldOrder     )
++    PROPERTYIMP    ( float      , FrameRate      )
++    PROPERTYIMP    ( float      , AvgFrameRate   )
++    PROPERTYIMP    ( int        , Channels       )
++    PROPERTYIMP    ( qlonglong  , Duration       )
++
++    public:
++
++        static inline void InitializeCustomTypes();
++
++        Q_INVOKABLE VideoStreamInfo(QObject *parent = nullptr)
++                        : QObject         ( parent ),
++                          m_Width         ( 0      ),
++                          m_Height        ( 0      ),
++                          m_AspectRatio   ( 0      ),
++                          m_FrameRate     ( 0      ),
++                          m_AvgFrameRate  ( 0      ),
++                          m_Channels      ( 0      ),
++                          m_Duration      ( 0      )
++        {
++        }
++
++        void Copy( const VideoStreamInfo *src )
++        {
++            m_CodecType         = src->m_CodecType    ;
++            m_CodecName         = src->m_CodecName    ;
++            m_Width             = src->m_Width        ;
++            m_Height            = src->m_Height       ;
++            m_AspectRatio       = src->m_AspectRatio  ;
++            m_FieldOrder        = src->m_FieldOrder   ;
++            m_FrameRate         = src->m_FrameRate    ;
++            m_AvgFrameRate      = src->m_AvgFrameRate ;
++            m_Channels          = src->m_Channels     ;
++            m_Duration          = src->m_Duration     ;
++        }
++
++    private:
++        Q_DISABLE_COPY(VideoStreamInfo);
++};
++
++inline void VideoStreamInfo::InitializeCustomTypes()
++{
++    qRegisterMetaType< VideoStreamInfo* >();
++}
++
++} // namespace DTC
++
++#endif
+diff --git a/mythtv/libs/libmythservicecontracts/datacontracts/videoStreamInfoList.h b/mythtv/libs/libmythservicecontracts/datacontracts/videoStreamInfoList.h
+new file mode 100644
+index 00000000000..fa9e417fcf0
+--- /dev/null
++++ b/mythtv/libs/libmythservicecontracts/datacontracts/videoStreamInfoList.h
+@@ -0,0 +1,99 @@
++//////////////////////////////////////////////////////////////////////////////
++// Program Name: videoStreamInfoList.h
++// Created     : May. 30, 2020
++//
++// Copyright (c) 2011 Peter Bennett <pbennett@mythtv.org>
++//
++// Licensed under the GPL v2 or later, see COPYING for details
++//
++//////////////////////////////////////////////////////////////////////////////
++
++#ifndef VIDEOSTREAMINFOLIST_H_
++#define VIDEOSTREAMINFOLIST_H_
++
++#include <QVariantList>
++
++#include "serviceexp.h"
++#include "datacontracthelper.h"
++
++#include "videoStreamInfo.h"
++
++namespace DTC
++{
++
++class SERVICE_PUBLIC VideoStreamInfoList : public QObject
++{
++    Q_OBJECT
++    Q_CLASSINFO( "version", "1.00" );
++
++    // Q_CLASSINFO Used to augment Metadata for properties.
++    // See datacontracthelper.h for details
++
++    Q_CLASSINFO( "VideoStreamInfos", "type=DTC::VideoStreamInfo");
++    Q_CLASSINFO( "AsOf"            , "transient=true" );
++
++    Q_PROPERTY( int          Count          READ Count           WRITE setCount          )
++    Q_PROPERTY( QDateTime    AsOf           READ AsOf            WRITE setAsOf           )
++    Q_PROPERTY( QString      Version        READ Version         WRITE setVersion        )
++    Q_PROPERTY( QString      ProtoVer       READ ProtoVer        WRITE setProtoVer       )
++    Q_PROPERTY( int          ErrorCode      READ ErrorCode       WRITE setErrorCode      )
++    Q_PROPERTY( QString      ErrorMsg       READ ErrorMsg        WRITE setErrorMsg       )
++
++    Q_PROPERTY( QVariantList VideoStreamInfos READ VideoStreamInfos DESIGNABLE true )
++
++    PROPERTYIMP       ( int         , Count           )
++    PROPERTYIMP       ( QDateTime   , AsOf            )
++    PROPERTYIMP       ( QString     , Version         )
++    PROPERTYIMP       ( QString     , ProtoVer        )
++    PROPERTYIMP       ( int         , ErrorCode       )
++    PROPERTYIMP       ( QString     , ErrorMsg        )
++
++    PROPERTYIMP_RO_REF( QVariantList, VideoStreamInfos );
++
++    public:
++
++        static inline void InitializeCustomTypes();
++
++        Q_INVOKABLE VideoStreamInfoList(QObject *parent = nullptr)
++            : QObject( parent ),
++              m_Count         ( 0      )
++        {
++        }
++
++        void Copy( const VideoStreamInfoList *src )
++        {
++            m_Count         = src->m_Count          ;
++            m_AsOf          = src->m_AsOf           ;
++            m_Version       = src->m_Version        ;
++            m_ProtoVer      = src->m_ProtoVer       ;
++            m_ErrorCode     = src->m_ErrorCode      ;
++            m_ErrorMsg      = src->m_ErrorMsg       ;
++
++            CopyListContents< VideoStreamInfo >( this, m_VideoStreamInfos, src->m_VideoStreamInfos );
++        }
++
++        VideoStreamInfo *AddNewVideoStreamInfo()
++        {
++            // We must make sure the object added to the QVariantList has
++            // a parent of 'this'
++
++            auto *pObject = new VideoStreamInfo( this );
++            m_VideoStreamInfos.append( QVariant::fromValue<QObject *>( pObject ));
++
++            return pObject;
++        }
++
++    private:
++        Q_DISABLE_COPY(VideoStreamInfoList);
++};
++
++inline void VideoStreamInfoList::InitializeCustomTypes()
++{
++    qRegisterMetaType< VideoStreamInfoList* >();
++
++    VideoStreamInfo::InitializeCustomTypes();
++}
++
++} // namespace DTC
++
++#endif
+diff --git a/mythtv/libs/libmythservicecontracts/libmythservicecontracts.pro b/mythtv/libs/libmythservicecontracts/libmythservicecontracts.pro
+index 2c4a0e12d5f..aee335ac7ff 100644
+--- a/mythtv/libs/libmythservicecontracts/libmythservicecontracts.pro
++++ b/mythtv/libs/libmythservicecontracts/libmythservicecontracts.pro
+@@ -39,6 +39,7 @@ HEADERS += datacontracts/channelInfoList.h       datacontracts/videoSource.h
+ HEADERS += datacontracts/videoSourceList.h       datacontracts/videoMultiplex.h
+ HEADERS += datacontracts/videoMultiplexList.h    datacontracts/videoMetadataInfo.h
+ HEADERS += datacontracts/videoMetadataInfoList.h datacontracts/blurayInfo.h
++HEADERS += datacontracts/videoStreamInfoList.h   datacontracts/videoStreamInfo.h
+ HEADERS += datacontracts/timeZoneInfo.h          datacontracts/videoLookupInfo.h
+ HEADERS += datacontracts/videoLookupInfoList.h   datacontracts/versionInfo.h
+ HEADERS += datacontracts/lineup.h                datacontracts/captureCard.h
+@@ -103,6 +104,7 @@ incDatacontracts.files += datacontracts/wolInfo.h             datacontracts/chan
+ incDatacontracts.files += datacontracts/videoSource.h         datacontracts/videoSourceList.h
+ incDatacontracts.files += datacontracts/videoMultiplex.h      datacontracts/videoMultiplexList.h
+ incDatacontracts.files += datacontracts/videoMetadataInfo.h   datacontracts/videoMetadataInfoList.h
++incDatacontracts.files += datacontracts/videoSTreamInfo.h     datacontracts/videoStreamInfoList.h
+ incDatacontracts.files += datacontracts/musicMetadataInfo.h   datacontracts/musicMetadataInfoList.h
+ incDatacontracts.files += datacontracts/blurayInfo.h          datacontracts/videoLookupInfo.h
+ incDatacontracts.files += datacontracts/timeZoneInfo.h        datacontracts/videoLookupInfoList.h
+diff --git a/mythtv/libs/libmythservicecontracts/services/videoServices.h b/mythtv/libs/libmythservicecontracts/services/videoServices.h
+index 894df6632eb..2ec7c6a333c 100644
+--- a/mythtv/libs/libmythservicecontracts/services/videoServices.h
++++ b/mythtv/libs/libmythservicecontracts/services/videoServices.h
+@@ -21,6 +21,7 @@
+ #include "datacontracts/videoMetadataInfoList.h"
+ #include "datacontracts/videoLookupInfoList.h"
+ #include "datacontracts/blurayInfo.h"
++#include "datacontracts/videoStreamInfoList.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////////////////////////////////////////////////////
+@@ -57,6 +58,7 @@ class SERVICE_PUBLIC VideoServices : public Service  //, public QScriptable ???
+             DTC::VideoMetadataInfoList::InitializeCustomTypes();
+             DTC::VideoLookupList::InitializeCustomTypes();
+             DTC::BlurayInfo::InitializeCustomTypes();
++            DTC::VideoStreamInfoList::InitializeCustomTypes();
+         }
+ 
+     public slots:
+@@ -130,6 +132,10 @@ class SERVICE_PUBLIC VideoServices : public Service  //, public QScriptable ???
+                                                                        const QString &Genres,
+                                                                        const QString &Cast,
+                                                                        const QString &Countries) = 0;
++
++        virtual DTC::VideoStreamInfoList*     GetStreamInfo (          const QString &StorageGroup,
++                                                                       const QString &FileName  ) = 0;
++
+ };
+ 
+ #endif
+diff --git a/mythtv/libs/libmythtv/mythavutil.cpp b/mythtv/libs/libmythtv/mythavutil.cpp
+index 0905bf6ada7..4f18e37cca2 100644
+--- a/mythtv/libs/libmythtv/mythavutil.cpp
++++ b/mythtv/libs/libmythtv/mythavutil.cpp
+@@ -20,6 +20,7 @@ extern "C" {
+ #include "libavformat/avformat.h"
+ }
+ #include <QMutexLocker>
++#include <QFile>
+ 
+ AVPixelFormat FrameTypeToPixelFormat(VideoFrameType type)
+ {
+@@ -576,3 +577,140 @@ void MythCodecMap::freeAllCodecContexts()
+         freeCodecContext(stream);
+     }
+ }
++
++MythStreamInfoList::MythStreamInfoList(QString filename)
++{
++    const int probeBufferSize = 8 * 1024;
++    AVInputFormat *fmt      = nullptr;
++    AVProbeData probe;
++    memset(&probe, 0, sizeof(AVProbeData));
++    probe.filename = "";
++    probe.buf = new unsigned char[probeBufferSize + AVPROBE_PADDING_SIZE];
++    probe.buf_size = probeBufferSize;
++    memset(probe.buf, 0, probeBufferSize + AVPROBE_PADDING_SIZE);
++    av_log_set_level(AV_LOG_FATAL);
++    m_errorCode = 0;
++    if (filename == "")
++        m_errorCode = 97;
++    QFile infile(filename);
++    if (m_errorCode == 0 && !infile.open(QIODevice::ReadOnly))
++        m_errorCode = 99;
++    if (m_errorCode==0) {
++        int64_t leng = infile.read(reinterpret_cast<char*>(probe.buf), probeBufferSize);
++        probe.buf_size = static_cast<int>(leng);
++        infile.close();
++        fmt = av_probe_input_format(&probe, static_cast<int>(true));
++        if (fmt == nullptr)
++            m_errorCode = 98;
++    }
++    AVFormatContext *ctx = nullptr;
++    if (m_errorCode==0)
++    {
++        ctx = avformat_alloc_context();
++        m_errorCode = avformat_open_input(&ctx, filename.toUtf8(), fmt, nullptr);
++    }
++    if (m_errorCode==0)
++        m_errorCode = avformat_find_stream_info(ctx, nullptr);
++
++    if (m_errorCode==0)
++    {
++        for (uint ix = 0; ix < ctx->nb_streams; ix++)
++        {
++            AVStream *stream = ctx->streams[ix];
++            if (stream == nullptr)
++                continue;
++            AVCodecParameters *codecpar = stream->codecpar;
++            const AVCodecDescriptor* desc = nullptr;
++            if (codecpar != nullptr)
++                desc = avcodec_descriptor_get(codecpar->codec_id);
++            MythStreamInfo info;
++            info.m_codecType = ' ';
++            switch (codecpar->codec_type)
++            {
++                case AVMEDIA_TYPE_VIDEO:
++                    info.m_codecType = 'V';
++                    break;
++                case AVMEDIA_TYPE_AUDIO:
++                    info.m_codecType = 'A';
++                    break;
++                case AVMEDIA_TYPE_SUBTITLE:
++                    info.m_codecType = 'S';
++                    break;
++                default:
++                    continue;
++            }
++            if (desc != nullptr)
++                info.m_codecName = desc->name;
++            info.m_duration  = stream->duration * stream->time_base.num / stream->time_base.den;
++            if (info.m_codecType == 'V')
++            {
++                if (codecpar != nullptr)
++                {
++                    info.m_width  = codecpar->width;
++                    info.m_height = codecpar->height;
++                    info.m_SampleAspectRatio = static_cast<float>(codecpar->sample_aspect_ratio.num)
++                        / static_cast<float>(codecpar->sample_aspect_ratio.den);
++                    switch (codecpar->field_order)
++                    {
++                        case AV_FIELD_PROGRESSIVE:
++                            info.m_fieldOrder = "PR";
++                            break;
++                        case AV_FIELD_TT:
++                            info.m_fieldOrder = "TT";
++                            break;
++                        case AV_FIELD_BB:
++                            info.m_fieldOrder = "BB";
++                            break;
++                        case AV_FIELD_TB:
++                            info.m_fieldOrder = "TB";
++                            break;
++                        case AV_FIELD_BT:
++                            info.m_fieldOrder = "BT";
++                            break;
++                        default:
++                            break;
++                    }
++                }
++                info.m_frameRate = static_cast<float>(stream->r_frame_rate.num)
++                    / static_cast<float>(stream->r_frame_rate.den);
++                info.m_avgFrameRate = static_cast<float>(stream->avg_frame_rate.num)
++                    / static_cast<float>(stream->avg_frame_rate.den);
++            }
++            if (info.m_codecType == 'A')
++                info.m_channels = codecpar->channels;
++            m_streamInfoList.append(info);
++        }
++    }
++    if (m_errorCode != 0)
++    {
++        switch(m_errorCode) {
++            case 97:
++                m_errorMsg = "File Not Found";
++                break;
++            case 98:
++                m_errorMsg = "av_probe_input_format returned no result";
++                break;
++            case 99:
++                m_errorMsg = "File could not be opened";
++                break;
++            default:
++                char errbuf[256];
++                if (av_strerror(m_errorCode, errbuf, sizeof errbuf) == 0)
++                    m_errorMsg = QString(errbuf);
++                else
++                    m_errorMsg = "UNKNOWN";
++        }
++        LOG(VB_GENERAL, LOG_ERR,
++            QString("MythStreamInfoList failed for %1. Error code:%2 Message:%3")
++            .arg(filename).arg(m_errorCode).arg(m_errorMsg));
++
++    }
++
++    if (ctx != nullptr)
++    {
++        avformat_close_input(&ctx);
++        avformat_free_context(ctx);
++    }
++    if (probe.buf != nullptr)
++        delete probe.buf;
++}
+\ No newline at end of file
+diff --git a/mythtv/libs/libmythtv/mythavutil.h b/mythtv/libs/libmythtv/mythavutil.h
+index c58dcf1c0a9..a3730e54e82 100644
+--- a/mythtv/libs/libmythtv/mythavutil.h
++++ b/mythtv/libs/libmythtv/mythavutil.h
+@@ -16,6 +16,7 @@ extern "C" {
+ 
+ #include <QMap>
+ #include <QMutex>
++#include <QVector>
+ 
+ struct AVFilterGraph;
+ struct AVFilterContext;
+@@ -198,4 +199,39 @@ class MTV_PUBLIC MythPictureDeinterlacer
+     float               m_ar;
+     bool                m_errored       {false};
+ };
++
++
++class MTV_PUBLIC MythStreamInfo {
++public:
++    // These are for All types
++    char                m_codecType {' '};   // V=video, A=audio, S=subtitle
++    QString             m_codecName;
++    int64_t             m_duration {0};
++    // These are for Video only
++    int                 m_width {0};
++    int                 m_height {0};
++    float               m_SampleAspectRatio {0.0};
++    // AV_FIELD_TT,          //< Top coded_first, top displayed first
++    // AV_FIELD_BB,          //< Bottom coded first, bottom displayed first
++    // AV_FIELD_TB,          //< Top coded first, bottom displayed first
++    // AV_FIELD_BT,          //< Bottom coded first, top displayed first
++    QString             m_fieldOrder {"UN"};   // UNknown, PRogressive, TT, BB, TB, BT
++    float               m_frameRate {0.0};
++    float               m_avgFrameRate {0.0};
++    // This is for audio only
++    int                 m_channels {0};
++};
++
++
++/*
++*   Class to get stream info, used by service Video/GetStreamInfo
++*/
++class MTV_PUBLIC MythStreamInfoList {
++public:
++    MythStreamInfoList(QString filename);
++    int                     m_errorCode         {0};
++    QString                 m_errorMsg;
++    QVector<MythStreamInfo> m_streamInfoList;
++};
++
+ #endif
+diff --git a/mythtv/programs/mythbackend/services/video.cpp b/mythtv/programs/mythbackend/services/video.cpp
+index 80ace227497..bc023185665 100644
+--- a/mythtv/programs/mythbackend/services/video.cpp
++++ b/mythtv/programs/mythbackend/services/video.cpp
+@@ -44,6 +44,7 @@
+ #include "mythdate.h"
+ #include "serviceUtil.h"
+ #include "mythmiscutil.h"
++#include "mythavutil.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ //
+@@ -780,6 +781,56 @@ bool Video::UpdateVideoMetadata ( int           nId,
+     return true;
+ }
+ 
++/////////////////////////////////////////////////////////////////////////////
++// Jun 3, 2020
++// Service to get stream info for all streams in a media file.
++// This gets some basic info. If anything more is needed it can be added,
++// depending on whether it is available from ffmpeg avformat apis.
++// See the MythStreamInfoList class for the code that uses avformat to
++// extract the information.
++/////////////////////////////////////////////////////////////////////////////
++
++DTC::VideoStreamInfoList* Video::GetStreamInfo
++           ( const QString &storageGroup,
++             const QString &FileName  )
++{
++
++    // Search for the filename
++
++    StorageGroup storage( storageGroup );
++    QString sFullFileName = storage.FindFile( FileName );
++    MythStreamInfoList infos(sFullFileName);
++
++    // The constructor of this class reads the file and gets the needed
++    // information.
++    auto *pVideoStreamInfos = new DTC::VideoStreamInfoList();
++
++    pVideoStreamInfos->setCount         ( infos.m_streamInfoList.size() );
++    pVideoStreamInfos->setAsOf          ( MythDate::current() );
++    pVideoStreamInfos->setVersion       ( MYTH_BINARY_VERSION );
++    pVideoStreamInfos->setProtoVer      ( MYTH_PROTO_VERSION  );
++    pVideoStreamInfos->setErrorCode     ( infos.m_errorCode   );
++    pVideoStreamInfos->setErrorMsg      ( infos.m_errorMsg    );
++
++    for( int n = 0; n < infos.m_streamInfoList.size() ; n++ )
++    {
++        DTC::VideoStreamInfo *pVideoStreamInfo = pVideoStreamInfos->AddNewVideoStreamInfo();
++        const MythStreamInfo &info = infos.m_streamInfoList.at(n);
++        pVideoStreamInfo->setCodecType       ( QString(QChar(info.m_codecType)) );
++        pVideoStreamInfo->setCodecName       ( info.m_codecName   );
++        pVideoStreamInfo->setWidth           ( info.m_width 			   );
++        pVideoStreamInfo->setHeight          ( info.m_height 			   );
++        pVideoStreamInfo->setAspectRatio     ( info.m_SampleAspectRatio    );
++        pVideoStreamInfo->setFieldOrder      ( info.m_fieldOrder           );
++        pVideoStreamInfo->setFrameRate       ( info.m_frameRate            );
++        pVideoStreamInfo->setAvgFrameRate    ( info.m_avgFrameRate 		   );
++        pVideoStreamInfo->setChannels        ( info.m_channels   );
++        pVideoStreamInfo->setDuration        ( info.m_duration   );
++
++    }
++    return pVideoStreamInfos;
++}
++
+ /////////////////////////////////////////////////////////////////////////////
+ //
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/mythtv/programs/mythbackend/services/video.h b/mythtv/programs/mythbackend/services/video.h
+index 93469c246b9..5f49e65d1df 100644
+--- a/mythtv/programs/mythbackend/services/video.h
++++ b/mythtv/programs/mythbackend/services/video.h
+@@ -114,6 +114,8 @@ class Video : public VideoServices
+ 
+         DTC::BlurayInfo*          GetBluray          ( const QString  &Path      ) override; // VideoServices
+ 
++        DTC::VideoStreamInfoList* GetStreamInfo ( const QString &StorageGroup,
++                                                  const QString &FileName  ) override;  // VideoServices
+ };
+ 
+ // --------------------------------------------------------------------------
+
+From 8a0c4f9bd2d9567ccbdb4151d7c03068388b45a6 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Mon, 29 Jun 2020 17:15:57 +0100
+Subject: [PATCH 69/89] macos: Handle high DPI displays
+
+- behaviour should be unchanged for non-macos installations
+- the underlying problem is that when macos is using high DPI, the
+windowing system reports e.g. 1920x1080 as the window size but the
+underlying OpenGL context is using the full resolution e.g. 3840x2160.
+- video playback is actually easiest - as we just scale the video
+window/viewport as needed - and everything else falls into place.
+- the UI painter is slightly more complicated as our UI images are at
+the lower resolution - and the entire UI code is operating on the
+reported window size. So scale incoming rendering data as required,
+which also requires some tweaking of the texture vertices.
+
+Refs #13618
+---
+ mythtv/libs/libmythtv/mythvideoout.cpp        |  2 +-
+ mythtv/libs/libmythtv/videooutwindow.cpp      | 30 +++++++--
+ mythtv/libs/libmythtv/videooutwindow.h        |  5 ++
+ mythtv/libs/libmythui/mythpainter.h           |  4 +-
+ .../libmythui/opengl/mythpainteropengl.cpp    | 62 ++++++++++++++++---
+ .../libs/libmythui/opengl/mythpainteropengl.h |  9 +++
+ .../libmythui/opengl/mythrenderopengl.cpp     | 10 +--
+ .../libs/libmythui/opengl/mythrenderopengl.h  |  4 +-
+ 8 files changed, 105 insertions(+), 21 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mythvideoout.cpp b/mythtv/libs/libmythtv/mythvideoout.cpp
+index ee4b759d814..888b283cfcc 100644
+--- a/mythtv/libs/libmythtv/mythvideoout.cpp
++++ b/mythtv/libs/libmythtv/mythvideoout.cpp
+@@ -1020,7 +1020,7 @@ void MythVideoOutput::InitDisplayMeasurements(void)
+         .arg(displayaspect).arg(source));
+ 
+     // Get the window and screen resolutions
+-    QSize window = m_window.GetWindowRect().size();
++    QSize window = m_window.GetRawWindowRect().size();
+     QSize screen = m_display->GetResolution();
+ 
+     // If not running fullscreen, adjust for window size and ignore any video
+diff --git a/mythtv/libs/libmythtv/videooutwindow.cpp b/mythtv/libs/libmythtv/videooutwindow.cpp
+index af8af15c312..9c7326f11cb 100644
+--- a/mythtv/libs/libmythtv/videooutwindow.cpp
++++ b/mythtv/libs/libmythtv/videooutwindow.cpp
+@@ -38,6 +38,11 @@
+ 
+ #define LOC QString("VideoWin: ")
+ 
++#define SCALED_RECT(SRC, SCALE) QRect{ static_cast<int>(SRC.left()   * SCALE), \
++                                       static_cast<int>(SRC.top()    * SCALE), \
++                                       static_cast<int>(SRC.width()  * SCALE), \
++                                       static_cast<int>(SRC.height() * SCALE) }
++
+ static float fix_aspect(float raw);
+ static float snap(float value, float snapto, float diff);
+ 
+@@ -63,6 +68,14 @@ void VideoOutWindow::ScreenChanged(QScreen */*screen*/)
+     MoveResize();
+ }
+ 
++void VideoOutWindow::PhysicalDPIChanged(qreal /*DPI*/)
++{
++    // PopulateGeometry will update m_devicePixelRatio
++    PopulateGeometry();
++    m_windowRect = m_displayVisibleRect = SCALED_RECT(m_rawWindowRect, m_devicePixelRatio);
++    MoveResize();
++}
++
+ void VideoOutWindow::PopulateGeometry(void)
+ {
+     if (!m_display)
+@@ -72,6 +85,10 @@ void VideoOutWindow::PopulateGeometry(void)
+     if (!screen)
+         return;
+ 
++#ifdef Q_OS_MACOS
++    m_devicePixelRatio = screen->devicePixelRatio();
++#endif
++
+     if (MythDisplay::SpanAllScreens() && MythDisplay::GetScreenCount() > 1)
+     {
+         m_screenGeometry = screen->virtualGeometry();
+@@ -416,6 +433,9 @@ bool VideoOutWindow::Init(const QSize &VideoDim, const QSize &VideoDispDim,
+     {
+         m_display = Display;
+         connect(m_display, &MythDisplay::CurrentScreenChanged, this, &VideoOutWindow::ScreenChanged);
++#ifdef Q_OS_MACOS
++        connect(m_display, &MythDisplay::PhysicalDPIChanged,   this, &VideoOutWindow::PhysicalDPIChanged);
++#endif
+     }
+ 
+     if (m_display)
+@@ -429,7 +449,8 @@ bool VideoOutWindow::Init(const QSize &VideoDim, const QSize &VideoDispDim,
+ 
+     // N.B. we are always confined to the window size so use that for the initial
+     // displayVisibleRect
+-    m_windowRect = m_displayVisibleRect = WindowRect;
++    m_rawWindowRect = WindowRect;
++    m_windowRect = m_displayVisibleRect = SCALED_RECT(WindowRect, m_devicePixelRatio);
+ 
+     int pbp_width = m_displayVisibleRect.width() / 2;
+     if (m_pipState == kPBPLeft || m_pipState == kPBPRight)
+@@ -613,12 +634,13 @@ void VideoOutWindow::SetDisplayAspect(float DisplayAspect)
+ 
+ void VideoOutWindow::SetWindowSize(QSize Size)
+ {
+-    if (Size != m_windowRect.size())
++    if (Size != m_rawWindowRect.size())
+     {
+-        QRect rect(m_windowRect.topLeft(), Size);
++        QRect rect(m_rawWindowRect.topLeft(), Size);
+         LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("New window rect: %1x%2+%3+%4")
+             .arg(rect.width()).arg(rect.height()).arg(rect.left()).arg(rect.top()));
+-        m_windowRect = m_displayVisibleRect = rect;
++        m_rawWindowRect = rect;
++        m_windowRect = m_displayVisibleRect = SCALED_RECT(rect, m_devicePixelRatio);
+         MoveResize();
+     }
+ }
+diff --git a/mythtv/libs/libmythtv/videooutwindow.h b/mythtv/libs/libmythtv/videooutwindow.h
+index 9480045c921..cce077b5fde 100644
+--- a/mythtv/libs/libmythtv/videooutwindow.h
++++ b/mythtv/libs/libmythtv/videooutwindow.h
+@@ -45,6 +45,7 @@ class VideoOutWindow : public QObject
+ 
+   public slots:
+     void ScreenChanged          (QScreen *screen);
++    void PhysicalDPIChanged     (qreal  /*DPI*/);
+ 
+     // Sets
+     void InputChanged           (const QSize &VideoDim, const QSize &VideoDispDim, float Aspect);
+@@ -74,6 +75,7 @@ class VideoOutWindow : public QObject
+     float    GetOverridenVideoAspect(void) const { return m_videoAspectOverride;}
+     QRect    GetDisplayVisibleRect(void)   const { return m_displayVisibleRect; }
+     QRect    GetWindowRect(void)           const { return m_windowRect; }
++    QRect    GetRawWindowRect(void)        const { return m_rawWindowRect; }
+     QRect    GetScreenGeometry(void)       const { return m_screenGeometry; }
+     QRect    GetVideoRect(void)            const { return m_videoRect; }
+     QRect    GetDisplayVideoRect(void)     const { return m_displayVideoRect; }
+@@ -115,6 +117,7 @@ class VideoOutWindow : public QObject
+     bool    m_dbScalingAllowed {true};  ///< disable this to prevent overscan/underscan
+     bool    m_dbUseGUISize     {false}; ///< Use the gui size for video window
+     QRect   m_screenGeometry   {0,0,1024,768}; ///< Full screen geometry
++    qreal   m_devicePixelRatio {1.0};
+ 
+     // Manual Zoom
+     float   m_manualVertScale  {1.0F}; ///< Manually applied vertical scaling.
+@@ -147,6 +150,8 @@ class VideoOutWindow : public QObject
+     QRect   m_displayVisibleRect {0,0,0,0};
+     /// Rectangle describing QWidget bounds.
+     QRect   m_windowRect {0,0,0,0};
++    /// Rectangle describing QWidget bounds - not adjusted for high DPI scaling (macos)
++    QRect   m_rawWindowRect {0,0,0,0};
+     /// Used to save the display_visible_rect for
+     /// restoration after video embedding ends.
+     QRect   m_tmpDisplayVisibleRect {0,0,0,0};
+diff --git a/mythtv/libs/libmythui/mythpainter.h b/mythtv/libs/libmythui/mythpainter.h
+index b6b054a8136..67175a1ed51 100644
+--- a/mythtv/libs/libmythui/mythpainter.h
++++ b/mythtv/libs/libmythui/mythpainter.h
+@@ -29,8 +29,10 @@ class UIEffects;
+ using LayoutVector = QVector<QTextLayout *>;
+ using FormatVector = QVector<QTextLayout::FormatRange>;
+ 
+-class MUI_PUBLIC MythPainter
++class MUI_PUBLIC MythPainter : public QObject
+ {
++    Q_OBJECT
++
+   public:
+     MythPainter();
+     /** MythPainter destructor.
+diff --git a/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp b/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp
+index 8fec14d3c20..abbb7685f0a 100644
+--- a/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp
++++ b/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp
+@@ -20,10 +20,20 @@ MythOpenGLPainter::MythOpenGLPainter(MythRenderOpenGL *Render, QWidget *Parent)
+ 
+     if (!m_render)
+         LOG(VB_GENERAL, LOG_ERR, "OpenGL painter has no render device");
++
++#ifdef Q_OS_MACOS
++     m_display = MythDisplay::AcquireRelease();
++     CurrentDPIChanged(m_parent->devicePixelRatioF());
++     connect(m_display, &MythDisplay::CurrentDPIChanged, this, &MythOpenGLPainter::CurrentDPIChanged);
++#endif
+ }
+ 
+ MythOpenGLPainter::~MythOpenGLPainter()
+ {
++#ifdef Q_OS_MACOS
++    MythDisplay::AcquireRelease(false);
++#endif
++
+     if (!m_render)
+         return;
+     if (!m_render->IsReady())
+@@ -84,6 +94,13 @@ void MythOpenGLPainter::ClearCache(void)
+     m_imageToTextureMap.clear();
+ }
+ 
++void MythOpenGLPainter::CurrentDPIChanged(qreal DPI)
++{
++    m_pixelRatio = DPI;
++    m_usingHighDPI = !qFuzzyCompare(m_pixelRatio, 1.0);
++    LOG(VB_GENERAL, LOG_INFO, QString("High DPI scaling %1").arg(m_usingHighDPI ? "enabled" : "disabled"));
++}
++
+ void MythOpenGLPainter::Begin(QPaintDevice *Parent)
+ {
+     MythPainter::Begin(Parent);
+@@ -109,13 +126,17 @@ void MythOpenGLPainter::Begin(QPaintDevice *Parent)
+             buf = m_render->CreateVBO(static_cast<int>(MythRenderOpenGL::kVertexSize));
+     }
+ 
++    QSize currentsize = m_parent->size();
++
+     // check if we need to adjust cache sizes
+-    if (m_lastSize != m_parent->size())
++    // NOTE - don't use the scaled size if using high DPI. Our images are at the lower
++    // resolution
++    if (m_lastSize != currentsize)
+     {
+         // This will scale the cache depending on the resolution in use
+         static const int s_onehd = 1920 * 1080;
+         static const int s_basesize = 64;
+-        m_lastSize = m_parent->size();
++        m_lastSize = currentsize;
+         float hdscreens = (static_cast<float>(m_lastSize.width() + 1) * m_lastSize.height()) / s_onehd;
+         int cpu = qMax(static_cast<int>(hdscreens * s_basesize), s_basesize);
+         int gpu = cpu * 3 / 2;
+@@ -130,8 +151,11 @@ void MythOpenGLPainter::Begin(QPaintDevice *Parent)
+ 
+     if (m_target || m_swapControl)
+     {
++        // If we are master and using high DPI then scale the viewport
++        if (m_swapControl && m_usingHighDPI)
++            currentsize *= m_pixelRatio;
+         m_render->BindFramebuffer(m_target);
+-        m_render->SetViewPort(QRect(0, 0, m_parent->width(), m_parent->height()));
++        m_render->SetViewPort(QRect(0, 0, currentsize.width(), currentsize.height()));
+         m_render->SetBackground(0, 0, 0, 0);
+         m_render->ClearFramebuffer();
+     }
+@@ -221,12 +245,25 @@ MythGLTexture* MythOpenGLPainter::GetTextureFromCache(MythImage *Image)
+     return texture;
+ }
+ 
++#ifdef Q_OS_MACOS
++#define DEST dest
++#else
++#define DEST Dest
++#endif
++
+ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
+                                   const QRect &Source, int Alpha)
+ {
+     if (m_render)
+     {
+-        // Drawing an image  multiple times with the same VBO will stall most GPUs as
++#ifdef Q_OS_MACOS
++        QRect dest = QRect(static_cast<int>(Dest.left()   * m_pixelRatio),
++                           static_cast<int>(Dest.top()    * m_pixelRatio),
++                           static_cast<int>(Dest.width()  * m_pixelRatio),
++                           static_cast<int>(Dest.height() * m_pixelRatio));
++#endif
++
++        // Drawing an image multiple times with the same VBO will stall most GPUs as
+         // the VBO is re-mapped whilst still in use. Use a pooled VBO instead.
+         MythGLTexture *texture = GetTextureFromCache(Image);
+         if (texture && m_mappedTextures.contains(texture))
+@@ -234,7 +271,7 @@ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
+             QOpenGLBuffer *vbo = texture->m_vbo;
+             texture->m_vbo = m_mappedBufferPool[m_mappedBufferPoolIdx];
+             texture->m_destination = QRect();
+-            m_render->DrawBitmap(texture, m_target, Source, Dest, nullptr, Alpha);
++            m_render->DrawBitmap(texture, m_target, Source, DEST, nullptr, Alpha, m_pixelRatio);
+             texture->m_destination = QRect();
+             texture->m_vbo = vbo;
+             if (++m_mappedBufferPoolIdx >= MAX_BUFFER_POOL)
+@@ -242,17 +279,26 @@ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
+         }
+         else
+         {
+-            m_render->DrawBitmap(texture, m_target, Source, Dest, nullptr, Alpha);
++            m_render->DrawBitmap(texture, m_target, Source, DEST, nullptr, Alpha, m_pixelRatio);
+             m_mappedTextures.append(texture);
+         }
+     }
+ }
+ 
++/*! \brief Draw a rectangle
++ *
++ * If it is a simple rectangle, then use our own shaders for rendering (which
++ * saves texture memory but may not be as accurate as Qt rendering) otherwise
++ * fallback to Qt painting to a QImage, which is uploaded as a texture.
++ *
++ * \note If high DPI scaling is in use, just use Qt painting rather than
++ * handling all of the adjustments required for pen width etc etc.
++*/
+ void MythOpenGLPainter::DrawRect(const QRect &Area, const QBrush &FillBrush,
+                                  const QPen &LinePen, int Alpha)
+ {
+     if ((FillBrush.style() == Qt::SolidPattern ||
+-         FillBrush.style() == Qt::NoBrush) && m_render)
++         FillBrush.style() == Qt::NoBrush) && m_render && !m_usingHighDPI)
+     {
+         m_render->DrawRect(m_target, Area, FillBrush, LinePen, Alpha);
+         return;
+@@ -265,7 +311,7 @@ void MythOpenGLPainter::DrawRoundRect(const QRect &Area, int CornerRadius,
+                                       const QPen &LinePen, int Alpha)
+ {
+     if ((FillBrush.style() == Qt::SolidPattern ||
+-         FillBrush.style() == Qt::NoBrush) && m_render)
++         FillBrush.style() == Qt::NoBrush) && m_render && !m_usingHighDPI)
+     {
+         m_render->DrawRoundRect(m_target, Area, CornerRadius, FillBrush,
+                                   LinePen, Alpha);
+diff --git a/mythtv/libs/libmythui/opengl/mythpainteropengl.h b/mythtv/libs/libmythui/opengl/mythpainteropengl.h
+index 097577231fa..540f7db79df 100644
+--- a/mythtv/libs/libmythui/opengl/mythpainteropengl.h
++++ b/mythtv/libs/libmythui/opengl/mythpainteropengl.h
+@@ -6,6 +6,7 @@
+ #include <QQueue>
+ 
+ // MythTV
++#include "mythdisplay.h"
+ #include "mythpainter.h"
+ #include "mythimage.h"
+ 
+@@ -22,6 +23,8 @@ class QOpenGLFramebufferObject;
+ 
+ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
+ {
++    Q_OBJECT
++
+   public:
+     explicit MythOpenGLPainter(MythRenderOpenGL *Render = nullptr, QWidget *Parent = nullptr);
+    ~MythOpenGLPainter() override;
+@@ -46,6 +49,9 @@ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
+     void PushTransformation(const UIEffects &Fx, QPointF Center = QPointF()) override;
+     void PopTransformation(void) override;
+ 
++  public slots:
++    void CurrentDPIChanged(qreal DPI);
++
+   protected:
+     void  ClearCache(void);
+     MythGLTexture* GetTextureFromCache(MythImage *Image);
+@@ -60,6 +66,9 @@ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
+     QOpenGLFramebufferObject* m_target { nullptr };
+     bool              m_swapControl { true };
+     QSize             m_lastSize { };
++    qreal             m_pixelRatio   { 1.0     };
++    MythDisplay*      m_display      { nullptr };
++    bool              m_usingHighDPI { false   };
+ 
+     QMap<MythImage *, MythGLTexture*> m_imageToTextureMap;
+     std::list<MythImage *>     m_ImageExpireList;
+diff --git a/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp b/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp
+index e34320f3dcf..684740c5848 100644
+--- a/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp
++++ b/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp
+@@ -804,7 +804,7 @@ void MythRenderOpenGL::ClearFramebuffer(void)
+ 
+ void MythRenderOpenGL::DrawBitmap(MythGLTexture *Texture, QOpenGLFramebufferObject *Target,
+                                   const QRect &Source, const QRect &Destination,
+-                                  QOpenGLShaderProgram *Program, int Alpha)
++                                  QOpenGLShaderProgram *Program, int Alpha, qreal Scale)
+ {
+     makeCurrent();
+ 
+@@ -827,7 +827,7 @@ void MythRenderOpenGL::DrawBitmap(MythGLTexture *Texture, QOpenGLFramebufferObje
+ 
+     QOpenGLBuffer* buffer = Texture->m_vbo;
+     buffer->bind();
+-    if (UpdateTextureVertices(Texture, Source, Destination, 0))
++    if (UpdateTextureVertices(Texture, Source, Destination, 0, Scale))
+     {
+         if (m_extraFeaturesUsed & kGLBufferMap)
+         {
+@@ -1262,7 +1262,7 @@ QStringList MythRenderOpenGL::GetDescription(void)
+ }
+ 
+ bool MythRenderOpenGL::UpdateTextureVertices(MythGLTexture *Texture, const QRect &Source,
+-                                             const QRect &Destination, int Rotation)
++                                             const QRect &Destination, int Rotation, qreal Scale)
+ {
+     if (!Texture || (Texture && Texture->m_size.isEmpty()))
+         return false;
+@@ -1301,8 +1301,8 @@ bool MythRenderOpenGL::UpdateTextureVertices(MythGLTexture *Texture, const QRect
+     data[4 + TEX_OFFSET] = data[6 + TEX_OFFSET];
+     data[5 + TEX_OFFSET] = data[1 + TEX_OFFSET];
+ 
+-    width  = Texture->m_crop ? min(width, Destination.width())   : Destination.width();
+-    height = Texture->m_crop ? min(height, Destination.height()) : Destination.height();
++    width  = Texture->m_crop ? min(static_cast<int>(width * Scale), Destination.width())   : Destination.width();
++    height = Texture->m_crop ? min(static_cast<int>(height * Scale), Destination.height()) : Destination.height();
+ 
+     data[2] = data[0] = Destination.left();
+     data[5] = data[1] = Destination.top();
+diff --git a/mythtv/libs/libmythui/opengl/mythrenderopengl.h b/mythtv/libs/libmythui/opengl/mythrenderopengl.h
+index 199f0d642be..2ccb9a60d5b 100644
+--- a/mythtv/libs/libmythui/opengl/mythrenderopengl.h
++++ b/mythtv/libs/libmythui/opengl/mythrenderopengl.h
+@@ -143,7 +143,7 @@ class MUI_PUBLIC MythRenderOpenGL : public QOpenGLContext, public QOpenGLFunctio
+ 
+     void  DrawBitmap(MythGLTexture *Texture, QOpenGLFramebufferObject *Target,
+                      const QRect &Source, const QRect &Destination,
+-                     QOpenGLShaderProgram *Program, int Alpha = 255);
++                     QOpenGLShaderProgram *Program, int Alpha = 255, qreal Scale = 1.0);
+     void  DrawBitmap(MythGLTexture **Textures, uint TextureCount,
+                      QOpenGLFramebufferObject *Target,
+                      const QRect &Source, const QRect &Destination,
+@@ -171,7 +171,7 @@ class MUI_PUBLIC MythRenderOpenGL : public QOpenGLContext, public QOpenGLFunctio
+     void  SetMatrixView(void);
+     void  DeleteFramebuffers(void);
+     static bool UpdateTextureVertices(MythGLTexture *Texture, const QRect &Source,
+-                                      const QRect &Destination, int Rotation);
++                                      const QRect &Destination, int Rotation, qreal Scale = 1.0);
+     GLfloat* GetCachedVertices(GLuint Type, const QRect &Area);
+     void  ExpireVertices(int Max = 0);
+     void  GetCachedVBO(GLuint Type, const QRect &Area);
+
+From 3ef7db67fec2a2d843cea673d14240d9ee512332 Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Fri, 3 Jul 2020 19:45:12 -0500
+Subject: [PATCH 70/89] Games Plugin: change system to `system` for MySQL v8
+
+(cherry picked from commit 94931c00dc5b67d72503fd112846f148a8e942c4)
+---
+ mythplugins/mythgame/mythgame/gameui.cpp | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/mythplugins/mythgame/mythgame/gameui.cpp b/mythplugins/mythgame/mythgame/gameui.cpp
+index 2146fac0009..71e48750fe0 100644
+--- a/mythplugins/mythgame/mythgame/gameui.cpp
++++ b/mythplugins/mythgame/mythgame/gameui.cpp
+@@ -112,7 +112,7 @@ void GameUI::BuildTree()
+     {
+         QString system = GameHandler::getHandler(i)->SystemName();
+         if (i == 0)
+-            systemFilter = "system in ('" + system + "'";
++            systemFilter = "`system` in ('" + system + "'";
+         else
+             systemFilter += ",'" + system + "'";
+     }
+@@ -655,7 +655,7 @@ QString GameUI::getFillSql(MythGenericTree *node) const
+     if ((childLevel == "gamename") && (m_gameShowFileName))
+     {
+         columns = childIsLeaf
+-                    ? "romname,system,year,genre,gamename"
++                    ? "romname,`system`,year,genre,gamename"
+                     : "romname";
+ 
+         if (m_showHashed)
+@@ -665,7 +665,7 @@ QString GameUI::getFillSql(MythGenericTree *node) const
+     else if ((childLevel == "gamename") && (layer.length() == 1))
+     {
+         columns = childIsLeaf
+-                    ? childLevel + ",system,year,genre,gamename"
++                    ? childLevel + ",`system`,year,genre,gamename"
+                     : childLevel;
+ 
+         if (m_showHashed)
+@@ -680,7 +680,7 @@ QString GameUI::getFillSql(MythGenericTree *node) const
+     {
+ 
+         columns = childIsLeaf
+-                    ? childLevel + ",system,year,genre,gamename"
++                    ? childLevel + ",`system`,year,genre,gamename"
+                     : childLevel;
+     }
+ 
+
+From 0add177794446f98e0dfc4b40d628017e864701f Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Mon, 6 Jul 2020 22:07:23 -0500
+Subject: [PATCH 71/89] MacOS: remove hard-coded python2.6 PYTHONPATH code
+
+Based on a patch from John Hoyt, and thanks for testing
+on MacOS.
+
+This could prevent the location of Python packages in
+the future if the OSX packaging sets --python=python
+(for example). Currently the version is included in
+the Python executable's file name:
+
+    --python=/opt/local/bin/python3.8
+
+Fixes #13643
+
+(cherry picked from commit d30fd541c74a37d589548eadb9d225b2a96563ab)
+---
+ mythtv/programs/mythbackend/main.cpp        | 3 ++-
+ mythtv/programs/mythfrontend/main.cpp       | 3 ++-
+ mythtv/programs/mythmetadatalookup/main.cpp | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/mythtv/programs/mythbackend/main.cpp b/mythtv/programs/mythbackend/main.cpp
+index 7cf7f5b6440..ddbef2fa539 100644
+--- a/mythtv/programs/mythbackend/main.cpp
++++ b/mythtv/programs/mythbackend/main.cpp
+@@ -96,8 +96,9 @@ int main(int argc, char **argv)
+ #ifdef Q_OS_MAC
+     QString path = QCoreApplication::applicationDirPath();
+     setenv("PYTHONPATH",
+-           QString("%1/../Resources/lib/python2.6/site-packages:%2")
++           QString("%1/../Resources/lib/%2/site-packages:%3")
+            .arg(path)
++           .arg(QFileInfo(PYTHON_EXE).fileName())
+            .arg(QProcessEnvironment::systemEnvironment().value("PYTHONPATH"))
+            .toUtf8().constData(), 1);
+ #endif
+diff --git a/mythtv/programs/mythfrontend/main.cpp b/mythtv/programs/mythfrontend/main.cpp
+index 16bc8819bea..fa713e5d51e 100644
+--- a/mythtv/programs/mythfrontend/main.cpp
++++ b/mythtv/programs/mythfrontend/main.cpp
+@@ -1868,8 +1868,9 @@ int main(int argc, char **argv)
+ #ifdef Q_OS_MAC
+     QString path = QCoreApplication::applicationDirPath();
+     setenv("PYTHONPATH",
+-           QString("%1/../Resources/lib/python2.6/site-packages:%2")
++           QString("%1/../Resources/lib/%2/site-packages:%3")
+            .arg(path)
++           .arg(QFileInfo(PYTHON_EXE).fileName())
+            .arg(QProcessEnvironment::systemEnvironment().value("PYTHONPATH"))
+            .toUtf8().constData(), 1);
+ #endif
+diff --git a/mythtv/programs/mythmetadatalookup/main.cpp b/mythtv/programs/mythmetadatalookup/main.cpp
+index 423b7190419..78393d9cbe5 100644
+--- a/mythtv/programs/mythmetadatalookup/main.cpp
++++ b/mythtv/programs/mythmetadatalookup/main.cpp
+@@ -68,8 +68,9 @@ int main(int argc, char *argv[])
+ #ifdef Q_OS_MAC
+     QString path = QCoreApplication::applicationDirPath();
+     setenv("PYTHONPATH",
+-           QString("%1/../Resources/lib/python2.6/site-packages:%2")
++           QString("%1/../Resources/lib/%2/site-packages:%3")
+            .arg(path)
++           .arg(QFileInfo(PYTHON_EXE).fileName())
+            .arg(QProcessEnvironment::systemEnvironment().value("PYTHONPATH"))
+            .toUtf8().constData(), 1);
+ #endif
+
+From 8212a9b7bf0354894013b102f88e4ef9d827c26c Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Sat, 11 Jul 2020 11:47:01 +0100
+Subject: [PATCH 72/89] VDPAU: Fix VDPAU rendering for AMD/Gallium
+
+Fixes #13253
+
+(cherry picked from commit 2fb7e4cb51408343ef40e13d099ca9802a576a8c)
+---
+ mythtv/libs/libmythtv/opengl/mythvdpauinterop.cpp | 8 +++++---
+ mythtv/libs/libmythtv/opengl/mythvdpauinterop.h   | 1 +
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/opengl/mythvdpauinterop.cpp b/mythtv/libs/libmythtv/opengl/mythvdpauinterop.cpp
+index e01dd9b50c1..a20dca8d9bc 100644
+--- a/mythtv/libs/libmythtv/opengl/mythvdpauinterop.cpp
++++ b/mythtv/libs/libmythtv/opengl/mythvdpauinterop.cpp
+@@ -109,7 +109,7 @@ bool MythVDPAUInterop::InitNV(AVVDPAUDeviceContext* DeviceContext)
+     if (!DeviceContext || !m_context)
+         return false;
+ 
+-    if (m_initNV && m_finiNV && m_registerNV && m_accessNV && m_mapNV &&
++    if (m_initNV && m_finiNV && m_registerNV && m_accessNV && m_mapNV && m_unmapNV &&
+         m_helper && m_helper->IsValid())
+         return true;
+ 
+@@ -119,11 +119,12 @@ bool MythVDPAUInterop::InitNV(AVVDPAUDeviceContext* DeviceContext)
+     m_registerNV = reinterpret_cast<MYTH_VDPAUREGOUTSURFNV>(m_context->GetProcAddress("glVDPAURegisterOutputSurfaceNV"));
+     m_accessNV   = reinterpret_cast<MYTH_VDPAUSURFACCESSNV>(m_context->GetProcAddress("glVDPAUSurfaceAccessNV"));
+     m_mapNV      = reinterpret_cast<MYTH_VDPAUMAPSURFNV>(m_context->GetProcAddress("glVDPAUMapSurfacesNV"));
++    m_unmapNV    = reinterpret_cast<MYTH_VDPAUMAPSURFNV>(m_context->GetProcAddress("glVDPAUUnmapSurfacesNV"));
+ 
+     delete m_helper;
+     m_helper = nullptr;
+ 
+-    if (m_initNV && m_finiNV && m_registerNV && m_accessNV && m_mapNV)
++    if (m_initNV && m_finiNV && m_registerNV && m_accessNV && m_mapNV && m_unmapNV)
+     {
+         m_helper = new MythVDPAUHelper(DeviceContext);
+         if (m_helper->IsValid())
+@@ -198,7 +199,6 @@ bool MythVDPAUInterop::InitVDPAU(AVVDPAUDeviceContext* DeviceContext, VdpVideoSu
+             else
+             {
+                 m_accessNV(m_outputSurfaceReg, QOpenGLBuffer::ReadOnly);
+-                m_mapNV(1, &m_outputSurfaceReg);
+             }
+         }
+         return true;
+@@ -347,9 +347,11 @@ vector<MythVideoTexture*> MythVDPAUInterop::Acquire(MythRenderOpenGL *Context,
+     }
+ 
+     // Render surface
++    m_unmapNV(1, &m_outputSurfaceReg);
+     m_helper->MixerRender(m_mixer, surface, m_outputSurface, Scan,
+                           Frame->interlaced_reversed ? !Frame->top_field_first :
+                           Frame->top_field_first, m_referenceFrames);
++    m_mapNV(1, &m_outputSurfaceReg);
+     return m_openglTextures[DUMMY_INTEROP_ID];
+ }
+ 
+diff --git a/mythtv/libs/libmythtv/opengl/mythvdpauinterop.h b/mythtv/libs/libmythtv/opengl/mythvdpauinterop.h
+index 79f7bb40b8d..6a8b3bf6b9d 100644
+--- a/mythtv/libs/libmythtv/opengl/mythvdpauinterop.h
++++ b/mythtv/libs/libmythtv/opengl/mythvdpauinterop.h
+@@ -65,6 +65,7 @@ class MythVDPAUInterop : public MythOpenGLInterop
+     MYTH_VDPAUREGOUTSURFNV m_registerNV     { nullptr };
+     MYTH_VDPAUSURFACCESSNV m_accessNV       { nullptr };
+     MYTH_VDPAUMAPSURFNV m_mapNV             { nullptr };
++    MYTH_VDPAUMAPSURFNV m_unmapNV           { nullptr };
+     MythCodecID         m_codec             { kCodec_NONE };
+     bool                m_preempted         { false   };
+     bool                m_preemptedWarning  { false   };
+
+From 7bf1284867b94509cdbf473cb6e216c0c36145f1 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Fri, 10 Jul 2020 15:00:58 -0400
+Subject: [PATCH 73/89] Services: Add new Video GetSavedBookmark and
+ SetSavedBookmark methods
+
+Previously these methods only existed for recordings. Now adding
+similar methods for Videos.
+
+(cherry picked from commit 48557d32c25903c58042b9b4b2c71e5da8631390)
+---
+ .../services/videoServices.h                  |  6 ++
+ .../programs/mythbackend/services/video.cpp   | 94 +++++++++++++++++++
+ mythtv/programs/mythbackend/services/video.h  |  5 +
+ 3 files changed, 105 insertions(+)
+
+diff --git a/mythtv/libs/libmythservicecontracts/services/videoServices.h b/mythtv/libs/libmythservicecontracts/services/videoServices.h
+index 2ec7c6a333c..b1d439e1ed1 100644
+--- a/mythtv/libs/libmythservicecontracts/services/videoServices.h
++++ b/mythtv/libs/libmythservicecontracts/services/videoServices.h
+@@ -47,6 +47,7 @@ class SERVICE_PUBLIC VideoServices : public Service  //, public QScriptable ???
+     Q_CLASSINFO( "RemoveVideoFromDB_Method",           "POST" )
+     Q_CLASSINFO( "UpdateVideoWatchedStatus_Method",    "POST" )
+     Q_CLASSINFO( "UpdateVideoMetadata_Method",         "POST" )
++    Q_CLASSINFO( "SetSavedBookmark_Method",            "POST" )
+ 
+     public:
+ 
+@@ -136,6 +137,11 @@ class SERVICE_PUBLIC VideoServices : public Service  //, public QScriptable ???
+         virtual DTC::VideoStreamInfoList*     GetStreamInfo (          const QString &StorageGroup,
+                                                                        const QString &FileName  ) = 0;
+ 
++        virtual long                          GetSavedBookmark       ( int           Id) = 0;
++
++        virtual bool                          SetSavedBookmark       ( int           Id,
++                                                                       long          Offset ) = 0;
++
+ };
+ 
+ #endif
+diff --git a/mythtv/programs/mythbackend/services/video.cpp b/mythtv/programs/mythbackend/services/video.cpp
+index bc023185665..03eef32d94a 100644
+--- a/mythtv/programs/mythbackend/services/video.cpp
++++ b/mythtv/programs/mythbackend/services/video.cpp
+@@ -831,6 +831,100 @@ DTC::VideoStreamInfoList* Video::GetStreamInfo
+     return pVideoStreamInfos;
+ }
+ 
++/////////////////////////////////////////////////////////////////////////////
++// Get bookmark of a video as a frame number.
++/////////////////////////////////////////////////////////////////////////////
++
++long Video::GetSavedBookmark( int  Id )
++{
++    MSqlQuery query(MSqlQuery::InitCon());
++
++    query.prepare("SELECT filename "
++                  "FROM videometadata "
++                  "WHERE intid = :ID ");
++    query.bindValue(":ID", Id);
++
++    if (!query.exec())
++    {
++        MythDB::DBError("Video::GetSavedBookmark", query);
++        return 0;
++    }
++
++    QString fileName;
++
++    if (query.next())
++        fileName = query.value(0).toString();
++    else
++    {
++        LOG(VB_GENERAL, LOG_ERR, QString("Video/GetSavedBookmark Video id %1 Not found.").arg(Id));
++        return -1;
++    }
++
++    ProgramInfo pi(fileName,
++                         nullptr, // _plot,
++                         nullptr, // _title,
++                         nullptr, // const QString &_sortTitle,
++                         nullptr, // const QString &_subtitle,
++                         nullptr, // const QString &_sortSubtitle,
++                         nullptr, // const QString &_director,
++                         0, // int _season,
++                         0, // int _episode,
++                         nullptr, // const QString &_inetref,
++                         0, // uint _length_in_minutes,
++                         0, // uint _year,
++                         nullptr); //const QString &_programid);
++
++    long ret = pi.QueryBookmark();
++    return ret;
++}
++
++/////////////////////////////////////////////////////////////////////////////
++// Set bookmark of a video as a frame number.
++/////////////////////////////////////////////////////////////////////////////
++
++bool Video::SetSavedBookmark( int  Id, long Offset )
++{
++    MSqlQuery query(MSqlQuery::InitCon());
++
++    query.prepare("SELECT filename "
++                  "FROM videometadata "
++                  "WHERE intid = :ID ");
++    query.bindValue(":ID", Id);
++
++    if (!query.exec())
++    {
++        MythDB::DBError("Video::SetSavedBookmark", query);
++        return false;
++    }
++
++    QString fileName;
++
++    if (query.next())
++        fileName = query.value(0).toString();
++    else
++    {
++        LOG(VB_GENERAL, LOG_ERR, QString("Video/SetSavedBookmark Video id %1 Not found.").arg(Id));
++        return false;
++    }
++
++    ProgramInfo pi(fileName,
++                         nullptr, // _plot,
++                         nullptr, // _title,
++                         nullptr, // const QString &_sortTitle,
++                         nullptr, // const QString &_subtitle,
++                         nullptr, // const QString &_sortSubtitle,
++                         nullptr, // const QString &_director,
++                         0, // int _season,
++                         0, // int _episode,
++                         nullptr, // const QString &_inetref,
++                         0, // uint _length_in_minutes,
++                         0, // uint _year,
++                         nullptr); //const QString &_programid);
++
++    pi.SaveBookmark(Offset);
++    return true;
++}
++
+ /////////////////////////////////////////////////////////////////////////////
+ //
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/mythtv/programs/mythbackend/services/video.h b/mythtv/programs/mythbackend/services/video.h
+index 5f49e65d1df..fdafadf1781 100644
+--- a/mythtv/programs/mythbackend/services/video.h
++++ b/mythtv/programs/mythbackend/services/video.h
+@@ -110,6 +110,11 @@ class Video : public VideoServices
+                                                              const QString &Countries
+         ) override; // VideoServices
+ 
++        long                      GetSavedBookmark (         int   Id ) override;
++
++        bool                      SetSavedBookmark (         int   Id,
++                                                             long  Offset ) override;
++
+         /* Bluray Methods */
+ 
+         DTC::BlurayInfo*          GetBluray          ( const QString  &Path      ) override; // VideoServices
+
+From 167c8d56e20167a5cc39f1ab8b301313a562b929 Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Thu, 16 Jul 2020 07:55:45 -0500
+Subject: [PATCH 74/89] Plugins/dbcheck: Replace CHARACTER SET 'default' with
+ 'utf8'
+
+Fix required for MySQL v8 because using 'default' CHARACTER
+SET results in a "You have an error in your SQL syntax"
+message.
+
+There are two cases to solve.
+
+ 1. New systems that will execute the DBSchemaVer changes
+    for the mytharchive, mythgame, mythmusic & mythweather
+    plugin tables. The origial Trac ticket.
+
+ 2. Existing systems that have up to date DBSchemaVer for
+    the above but need a new version to use the unambiguous
+    character set. Not solved here, just to get the the
+    above fixed.
+
+Refs #13577
+---
+ .../mytharchive/mytharchive/dbcheck.cpp       | 10 +++----
+ mythplugins/mythgame/mythgame/dbcheck.cpp     |  6 ++--
+ mythplugins/mythmusic/mythmusic/dbcheck.cpp   | 30 +++++++++----------
+ .../mythweather/mythweather/dbcheck.cpp       | 18 +++++------
+ 4 files changed, 32 insertions(+), 32 deletions(-)
+
+diff --git a/mythplugins/mytharchive/mytharchive/dbcheck.cpp b/mythplugins/mytharchive/mytharchive/dbcheck.cpp
+index 4bc4b4de57e..9f3cc0ae40c 100644
+--- a/mythplugins/mytharchive/mytharchive/dbcheck.cpp
++++ b/mythplugins/mytharchive/mytharchive/dbcheck.cpp
+@@ -143,12 +143,12 @@ bool UpgradeArchiveDatabaseSchema(void)
+             QString("ALTER DATABASE %1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;")
+                     .arg(gContext->GetDatabaseParams().m_dbName),
+             "ALTER TABLE archiveitems"
+-            "  DEFAULT CHARACTER SET default,"
+-            "  MODIFY title varchar(128) CHARACTER SET utf8 default NULL,"
+-            "  MODIFY subtitle varchar(128) CHARACTER SET utf8 default NULL,"
++            "  DEFAULT CHARACTER SET utf8,"
++            "  MODIFY title varchar(128) CHARACTER SET utf8 NULL,"
++            "  MODIFY subtitle varchar(128) CHARACTER SET utf8 NULL,"
+             "  MODIFY description text CHARACTER SET utf8,"
+-            "  MODIFY startdate varchar(30) CHARACTER SET utf8 default NULL,"
+-            "  MODIFY starttime varchar(30) CHARACTER SET utf8 default NULL,"
++            "  MODIFY startdate varchar(30) CHARACTER SET utf8 NULL,"
++            "  MODIFY starttime varchar(30) CHARACTER SET utf8 NULL,"
+             "  MODIFY filename text CHARACTER SET utf8 NOT NULL,"
+             "  MODIFY cutlist text CHARACTER SET utf8;",
+             ""
+diff --git a/mythplugins/mythgame/mythgame/dbcheck.cpp b/mythplugins/mythgame/mythgame/dbcheck.cpp
+index dc7de5972cb..47f22fe68eb 100644
+--- a/mythplugins/mythgame/mythgame/dbcheck.cpp
++++ b/mythplugins/mythgame/mythgame/dbcheck.cpp
+@@ -343,7 +343,7 @@ QString("ALTER DATABASE %1 DEFAULT CHARACTER SET latin1;")
+ QString("ALTER DATABASE %1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;")
+         .arg(gContext->GetDatabaseParams().m_dbName),
+ "ALTER TABLE gamemetadata"
+-"  DEFAULT CHARACTER SET default,"
++"  DEFAULT CHARACTER SET utf8,"
+ "  MODIFY `system` varchar(128) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY romname varchar(128) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY gamename varchar(128) CHARACTER SET utf8 NOT NULL default '',"
+@@ -356,7 +356,7 @@ QString("ALTER DATABASE %1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;")
+ "  MODIFY crc_value varchar(64) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY version varchar(64) CHARACTER SET utf8 NOT NULL default '';",
+ "ALTER TABLE gameplayers"
+-"  DEFAULT CHARACTER SET default,"
++"  DEFAULT CHARACTER SET utf8,"
+ "  MODIFY playername varchar(64) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY workingpath varchar(255) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY rompath varchar(255) CHARACTER SET utf8 NOT NULL default '',"
+@@ -365,7 +365,7 @@ QString("ALTER DATABASE %1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;")
+ "  MODIFY gametype varchar(64) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY extensions varchar(128) CHARACTER SET utf8 NOT NULL default '';",
+ "ALTER TABLE romdb"
+-"  DEFAULT CHARACTER SET default,"
++"  DEFAULT CHARACTER SET utf8,"
+ "  MODIFY crc varchar(64) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY name varchar(128) CHARACTER SET utf8 NOT NULL default '',"
+ "  MODIFY description varchar(128) CHARACTER SET utf8 NOT NULL default '',"
+diff --git a/mythplugins/mythmusic/mythmusic/dbcheck.cpp b/mythplugins/mythmusic/mythmusic/dbcheck.cpp
+index eef679d1c02..17c17666359 100644
+--- a/mythplugins/mythmusic/mythmusic/dbcheck.cpp
++++ b/mythplugins/mythmusic/mythmusic/dbcheck.cpp
+@@ -788,49 +788,49 @@ static bool doUpgradeMusicDatabaseSchema(QString &dbver)
+                     .arg(gContext->GetDatabaseParams().m_dbName),
+             // NOLINTNEXTLINE(bugprone-suspicious-missing-comma)
+             "ALTER TABLE music_albumart"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY filename varchar(255) CHARACTER SET utf8 NOT NULL default '';",
+             "ALTER TABLE music_albums"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY album_name varchar(255) CHARACTER SET utf8 NOT NULL default '';",
+             "ALTER TABLE music_artists"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY artist_name varchar(255) CHARACTER SET utf8 NOT NULL default '';",
+             "ALTER TABLE music_directories"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY path text CHARACTER SET utf8 NOT NULL;",
+             "ALTER TABLE music_genres"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY genre varchar(255) CHARACTER SET utf8 NOT NULL default '';",
+             "ALTER TABLE music_playlists"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY playlist_name varchar(255) CHARACTER SET utf8 NOT NULL default '',"
+             "  MODIFY playlist_songs text CHARACTER SET utf8 NOT NULL,"
+             "  MODIFY hostname varchar(64) CHARACTER SET utf8 NOT NULL default '';",
+             "ALTER TABLE music_smartplaylist_categories"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY name varchar(128) CHARACTER SET utf8 NOT NULL;",
+             "ALTER TABLE music_smartplaylist_items"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY field varchar(50) CHARACTER SET utf8 NOT NULL,"
+             "  MODIFY operator varchar(20) CHARACTER SET utf8 NOT NULL,"
+             "  MODIFY value1 varchar(255) CHARACTER SET utf8 NOT NULL,"
+             "  MODIFY value2 varchar(255) CHARACTER SET utf8 NOT NULL;",
+             "ALTER TABLE music_smartplaylists"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY name varchar(128) CHARACTER SET utf8 NOT NULL,"
+             "  MODIFY orderby varchar(128) CHARACTER SET utf8 NOT NULL default '';",
+             "ALTER TABLE music_songs"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY filename text CHARACTER SET utf8 NOT NULL,"
+             "  MODIFY name varchar(255) CHARACTER SET utf8 NOT NULL default '',"
+             "  MODIFY format varchar(4) CHARACTER SET utf8 NOT NULL default '0',"
+-            "  MODIFY mythdigest varchar(255) CHARACTER SET utf8 default NULL,"
+-            "  MODIFY description varchar(255) CHARACTER SET utf8 default NULL,"
+-            "  MODIFY comment varchar(255) CHARACTER SET utf8 default NULL,"
+-            "  MODIFY eq_preset varchar(255) CHARACTER SET utf8 default NULL;",
++            "  MODIFY mythdigest varchar(255) CHARACTER SET utf8 NULL,"
++            "  MODIFY description varchar(255) CHARACTER SET utf8 NULL,"
++            "  MODIFY comment varchar(255) CHARACTER SET utf8 NULL,"
++            "  MODIFY eq_preset varchar(255) CHARACTER SET utf8 NULL;",
+             "ALTER TABLE music_stats"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SEt utf8,"
+             "  MODIFY total_time varchar(12) CHARACTER SET utf8 NOT NULL default '0',"
+             "  MODIFY total_size varchar(10) CHARACTER SET utf8 NOT NULL default '0';",
+             ""
+diff --git a/mythplugins/mythweather/mythweather/dbcheck.cpp b/mythplugins/mythweather/mythweather/dbcheck.cpp
+index 0e5a053acee..50ac049becf 100644
+--- a/mythplugins/mythweather/mythweather/dbcheck.cpp
++++ b/mythplugins/mythweather/mythweather/dbcheck.cpp
+@@ -165,21 +165,21 @@ bool InitializeDatabase()
+         updates << QString("ALTER DATABASE %1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;")
+                 .arg(gContext->GetDatabaseParams().m_dbName) <<
+             "ALTER TABLE weatherdatalayout"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SET utf8,"
+             "  MODIFY location varchar(64) CHARACTER SET utf8 NOT NULL,"
+             "  MODIFY dataitem varchar(64) CHARACTER SET utf8 NOT NULL;" <<
+             "ALTER TABLE weatherscreens"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SET utf8,"
+             "  MODIFY container varchar(64) CHARACTER SET utf8 NOT NULL,"
+-            "  MODIFY hostname varchar(64) CHARACTER SET utf8 default NULL;" <<
++            "  MODIFY hostname varchar(64) CHARACTER SET utf8 NULL;" <<
+             "ALTER TABLE weathersourcesettings"
+-            "  DEFAULT CHARACTER SET default,"
++            "  DEFAULT CHARACTER SET utf8,"
+             "  MODIFY source_name varchar(64) CHARACTER SET utf8 NOT NULL,"
+-            "  MODIFY hostname varchar(64) CHARACTER SET utf8 default NULL,"
+-            "  MODIFY path varchar(255) CHARACTER SET utf8 default NULL,"
+-            "  MODIFY author varchar(128) CHARACTER SET utf8 default NULL,"
+-            "  MODIFY version varchar(32) CHARACTER SET utf8 default NULL,"
+-            "  MODIFY email varchar(255) CHARACTER SET utf8 default NULL,"
++            "  MODIFY hostname varchar(64) CHARACTER SET utf8 NULL,"
++            "  MODIFY path varchar(255) CHARACTER SET utf8 NULL,"
++            "  MODIFY author varchar(128) CHARACTER SET utf8 NULL,"
++            "  MODIFY version varchar(32) CHARACTER SET utf8 NULL,"
++            "  MODIFY email varchar(255) CHARACTER SET utf8 NULL,"
+             "  MODIFY types mediumtext CHARACTER SET utf8;";
+ 
+         if (!performActualUpdate(updates, "1003", dbver))
+
+From 62af47c971c30d2201705302ab260147b7fffd26 Mon Sep 17 00:00:00 2001
+From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date: Sat, 13 Jun 2020 23:50:45 +0000
+Subject: [PATCH 75/89] add missing(?) log message when grabber interrupted
+
+Signed-off-by: David Hampton <mythtv@love2code.net>
+(cherry picked from commit da860e00f7ca51e709485cb7358546a551b46828)
+---
+ mythtv/programs/mythfilldatabase/filldata.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/programs/mythfilldatabase/filldata.cpp b/mythtv/programs/mythfilldatabase/filldata.cpp
+index f320857c186..db751bebf39 100644
+--- a/mythtv/programs/mythfilldatabase/filldata.cpp
++++ b/mythtv/programs/mythfilldatabase/filldata.cpp
+@@ -194,6 +194,8 @@ bool FillData::GrabData(const Source& source, int offset)
+         {
+             m_interrupted = true;
+             status = QObject::tr("FAILED: XMLTV grabber ran but was interrupted.");
++            LOG(VB_GENERAL, LOG_ERR,
++                QString("XMLTV grabber ran but was interrupted."));
+         }
+         else
+         {
+
+From 396dd023e60aecf667d2e7affa63bb18b468c660 Mon Sep 17 00:00:00 2001
+From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date: Sat, 13 Jun 2020 23:54:59 +0000
+Subject: [PATCH 76/89] eliminate extranous LOC in logging
+
+All the other LOG_ERR logging in mythfilldata do not
+include the LOC field.  Eliminate it for consistency
+in the logging output
+
+Signed-off-by: David Hampton <mythtv@love2code.net>
+(cherry picked from commit a8eeda8f0ed97cc6aca025d2a517110eb11b5aa9)
+---
+ mythtv/programs/mythfilldatabase/filldata.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/programs/mythfilldatabase/filldata.cpp b/mythtv/programs/mythfilldatabase/filldata.cpp
+index db751bebf39..1e42900832e 100644
+--- a/mythtv/programs/mythfilldatabase/filldata.cpp
++++ b/mythtv/programs/mythfilldatabase/filldata.cpp
+@@ -201,7 +201,7 @@ bool FillData::GrabData(const Source& source, int offset)
+         {
+             status = QObject::tr("FAILED: XMLTV grabber returned error code %1.")
+                             .arg(systemcall_status);
+-            LOG(VB_GENERAL, LOG_ERR, LOC +
++            LOG(VB_GENERAL, LOG_ERR,
+                 QString("XMLTV grabber returned error code %1")
+                     .arg(systemcall_status));
+         }
+
+From 85dec4804c286483794bb4d11646ef1ff910c0ee Mon Sep 17 00:00:00 2001
+From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date: Sun, 14 Jun 2020 00:01:39 +0000
+Subject: [PATCH 77/89] Enable output from the grabber to be logged
+
+Invoke the running of the grabber such that the output is
+actually captured and logged if the verbose xmltv option
+is specified (the header/trailer implies that at some time
+in the past the output was made available in the logs, but
+it has not been included for some time).
+
+Signed-off-by: David Hampton <mythtv@love2code.net>
+(cherry picked from commit be1c88665a79e654f12f818944732101b0fcbcfc)
+---
+ mythtv/programs/mythfilldatabase/filldata.cpp | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/programs/mythfilldatabase/filldata.cpp b/mythtv/programs/mythfilldatabase/filldata.cpp
+index 1e42900832e..e3c97bd8016 100644
+--- a/mythtv/programs/mythfilldatabase/filldata.cpp
++++ b/mythtv/programs/mythfilldatabase/filldata.cpp
+@@ -178,9 +178,20 @@ bool FillData::GrabData(const Source& source, int offset)
+     LOG(VB_XMLTV, LOG_INFO,
+             "----------------- Start of XMLTV output -----------------");
+ 
+-    uint systemcall_status = myth_system(command, kMSRunShell);
++    MythSystemLegacy run_grabber(command, kMSRunShell | kMSStdErr);
++
++    run_grabber.Run();
++    uint systemcall_status = run_grabber.Wait();
+     bool succeeded = (systemcall_status == GENERIC_EXIT_OK);
+ 
++    QByteArray result = run_grabber.ReadAllErr();
++    QTextStream ostream(result);
++    while (!ostream.atEnd())
++        {
++            QString line = ostream.readLine().simplified();
++            LOG(VB_XMLTV, LOG_INFO, line);
++        }
++
+     LOG(VB_XMLTV, LOG_INFO,
+             "------------------ End of XMLTV output ------------------");
+ 
+
+From 8602e978777fc20bea760ff37b620017f77a1fc1 Mon Sep 17 00:00:00 2001
+From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date: Sun, 14 Jun 2020 00:19:39 +0000
+Subject: [PATCH 78/89] Update XMLTV loglevel in programdata
+
+Change the loglevel in programdata to be the same as
+EIT updates for the equivalent changes (i.e. debug).
+This allows a run of mythfilldatabase with the options
+of --verbose general,xmltv with the default loglevel
+of info to not blather on about the expected case of
+adding, deleting, updating programs (i.e. making the
+usage easier to review), but just include the XMLTV
+logging that likely matters for the average use case.
+
+Last of four patches. Fixes #13633.
+
+Signed-off-by: David Hampton <mythtv@love2code.net>
+(cherry picked from commit 6e61aa988fe1cbc260798d5be53c496f66b04f4f)
+---
+ mythtv/libs/libmythtv/programdata.cpp | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/programdata.cpp b/mythtv/libs/libmythtv/programdata.cpp
+index e32c678e861..8495e941558 100644
+--- a/mythtv/libs/libmythtv/programdata.cpp
++++ b/mythtv/libs/libmythtv/programdata.cpp
+@@ -1205,7 +1205,7 @@ void ProgInfo::Squeeze(void)
+  */
+ uint ProgInfo::InsertDB(MSqlQuery &query, uint chanid) const
+ {
+-    LOG(VB_XMLTV, LOG_INFO,
++    LOG(VB_XMLTV, LOG_DEBUG,
+         QString("Inserting new program    : %1 - %2 %3 %4")
+             .arg(m_starttime.toString(Qt::ISODate))
+             .arg(m_endtime.toString(Qt::ISODate))
+@@ -1426,14 +1426,14 @@ void ProgramData::FixProgramList(QList<ProgInfo*> &fixlist)
+                 tokeep = it, todelete = cur;
+ 
+ 
+-            LOG(VB_XMLTV, LOG_INFO,
++            LOG(VB_XMLTV, LOG_DEBUG,
+                 QString("Removing conflicting program: %1 - %2 %3 %4")
+                     .arg((*todelete)->m_starttime.toString(Qt::ISODate))
+                     .arg((*todelete)->m_endtime.toString(Qt::ISODate))
+                     .arg((*todelete)->m_channel)
+                     .arg((*todelete)->m_title));
+ 
+-            LOG(VB_XMLTV, LOG_INFO,
++            LOG(VB_XMLTV, LOG_DEBUG,
+                 QString("Conflicted with            : %1 - %2 %3 %4")
+                     .arg((*tokeep)->m_starttime.toString(Qt::ISODate))
+                     .arg((*tokeep)->m_endtime.toString(Qt::ISODate))
+@@ -1684,7 +1684,7 @@ bool ProgramData::IsUnchanged(
+ bool ProgramData::DeleteOverlaps(
+     MSqlQuery &query, uint chanid, const ProgInfo &pi)
+ {
+-    if (VERBOSE_LEVEL_CHECK(VB_XMLTV, LOG_INFO))
++    if (VERBOSE_LEVEL_CHECK(VB_XMLTV, LOG_DEBUG))
+     {
+         // Get overlaps..
+         query.prepare(
+@@ -1705,7 +1705,7 @@ bool ProgramData::DeleteOverlaps(
+ 
+         do
+         {
+-            LOG(VB_XMLTV, LOG_INFO,
++            LOG(VB_XMLTV, LOG_DEBUG,
+                 QString("Removing existing program: %1 - %2 %3 %4")
+                 .arg(MythDate::as_utc(query.value(1).toDateTime()).toString(Qt::ISODate))
+                 .arg(MythDate::as_utc(query.value(2).toDateTime()).toString(Qt::ISODate))
+
+From 89d1991ef285567f8b46f287786b2d8ca1fb9236 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Wed, 15 Jul 2020 15:13:26 -0400
+Subject: [PATCH 79/89] Android: Fix support for android 5
+
+For android 5 we need to build with api level 21 and that level does
+not have the ftello and fseeko functions.
+
+(cherry picked from commit b76dbf4214614fa4cd572cc38c62481bb97e0146)
+---
+ mythtv/libs/libmythbase/mythcommandlineparser.cpp | 6 ++++++
+ mythtv/programs/mythcommflag/main.cpp             | 7 +++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/mythtv/libs/libmythbase/mythcommandlineparser.cpp b/mythtv/libs/libmythbase/mythcommandlineparser.cpp
+index e58f2a55b0d..d20ad9d29e3 100644
+--- a/mythtv/libs/libmythbase/mythcommandlineparser.cpp
++++ b/mythtv/libs/libmythbase/mythcommandlineparser.cpp
+@@ -20,6 +20,12 @@
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
+ 
++#if defined ANDROID && __ANDROID_API__ < 24
++// ftello and fseeko do not exist in android before api level 24
++#define ftello ftell
++#define fseeko fseek
++#endif
++
+ // C++ headers
+ #include <algorithm>
+ #include <csignal>
+diff --git a/mythtv/programs/mythcommflag/main.cpp b/mythtv/programs/mythcommflag/main.cpp
+index a9575bf18ff..f6e60ab8419 100644
+--- a/mythtv/programs/mythcommflag/main.cpp
++++ b/mythtv/programs/mythcommflag/main.cpp
+@@ -1,3 +1,10 @@
++
++#if defined ANDROID && __ANDROID_API__ < 24
++// ftello and fseeko do not exist in android before api level 24
++#define ftello ftell
++#define fseeko fseek
++#endif
++
+ // POSIX headers
+ #include <unistd.h>
+ #include <sys/time.h> // for gettimeofday
+
+From f7a1f4b1a0204f624985d872395c7d689ca91da2 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <kdewaal@mythtv.org>
+Date: Thu, 16 Jul 2020 21:26:02 +0200
+Subject: [PATCH 80/89] Create key for DVB channel master lock only once
+
+Create master key only once and use that each time the lock is requested instead of creating the key every time again. This solves the problem that the database is accessed 40 times per second for the source ID of a capture card for each capture card while monitoring the signal status.
+
+Fixes #13649
+
+(cherry picked from commit 7277ae9af33093bdf50b532888bd49b5a2d69bb0)
+Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+---
+ .../libs/libmythtv/recorders/dvbchannel.cpp   | 31 +++++++------------
+ mythtv/libs/libmythtv/recorders/dvbchannel.h  |  3 +-
+ 2 files changed, 14 insertions(+), 20 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/recorders/dvbchannel.cpp b/mythtv/libs/libmythtv/recorders/dvbchannel.cpp
+index 9158cd75548..47957a16c7e 100644
+--- a/mythtv/libs/libmythtv/recorders/dvbchannel.cpp
++++ b/mythtv/libs/libmythtv/recorders/dvbchannel.cpp
+@@ -77,12 +77,13 @@ DVBChannel::DVBChannel(QString aDevice, TVRec *parent)
+     : DTVChannel(parent), m_device(std::move(aDevice))
+ {
+     s_master_map_lock.lockForWrite();
+-    QString key = CardUtil::GetDeviceName(DVB_DEV_FRONTEND, m_device);
++    m_key = CardUtil::GetDeviceName(DVB_DEV_FRONTEND, m_device);
+     if (m_pParent)
+-        key += QString(":%1")
++        m_key += QString(":%1")
+             .arg(CardUtil::GetSourceID(m_pParent->GetInputId()));
+-    s_master_map[key].push_back(this); // == RegisterForMaster
+-    auto *master = static_cast<DVBChannel*>(s_master_map[key].front());
++
++    s_master_map[m_key].push_back(this); // == RegisterForMaster
++    auto *master = dynamic_cast<DVBChannel*>(s_master_map[m_key].front());
+     if (master == this)
+     {
+         m_dvbCam = new DVBCam(m_device);
+@@ -103,17 +104,13 @@ DVBChannel::~DVBChannel()
+     // set a new master if there are other instances and we're the master
+     // whether we are the master or not remove us from the map..
+     s_master_map_lock.lockForWrite();
+-    QString key = CardUtil::GetDeviceName(DVB_DEV_FRONTEND, m_device);
+-    if (m_pParent)
+-        key += QString(":%1")
+-            .arg(CardUtil::GetSourceID(m_pParent->GetInputId()));
+-    auto *master = static_cast<DVBChannel*>(s_master_map[key].front());
++    auto *master = dynamic_cast<DVBChannel*>(s_master_map[m_key].front());
+     if (master == this)
+     {
+-        s_master_map[key].pop_front();
++        s_master_map[m_key].pop_front();
+         DVBChannel *new_master = nullptr;
+-        if (!s_master_map[key].empty())
+-            new_master = dynamic_cast<DVBChannel*>(s_master_map[key].front());
++        if (!s_master_map[m_key].empty())
++            new_master = dynamic_cast<DVBChannel*>(s_master_map[m_key].front());
+         if (new_master)
+         {
+             QMutexLocker master_locker(&(master->m_hwLock));
+@@ -123,7 +120,7 @@ DVBChannel::~DVBChannel()
+     }
+     else
+     {
+-        s_master_map[key].removeAll(this);
++        s_master_map[m_key].removeAll(this);
+     }
+     s_master_map_lock.unlock();
+ 
+@@ -131,7 +128,7 @@ DVBChannel::~DVBChannel()
+ 
+     // if we're the last one out delete dvbcam
+     s_master_map_lock.lockForRead();
+-    MasterMap::iterator mit = s_master_map.find(key);
++    MasterMap::iterator mit = s_master_map.find(m_key);
+     if ((*mit).empty())
+         delete m_dvbCam;
+     m_dvbCam = nullptr;
+@@ -1358,11 +1355,7 @@ void DVBChannel::ReturnMasterLock(DVBChannel* &dvbm)
+ 
+ DVBChannel *DVBChannel::GetMasterLock(void) const
+ {
+-    QString key = CardUtil::GetDeviceName(DVB_DEV_FRONTEND, m_device);
+-    if (m_pParent)
+-        key += QString(":%1")
+-            .arg(CardUtil::GetSourceID(m_pParent->GetInputId()));
+-    DTVChannel *master = DTVChannel::GetMasterLock(key);
++    DTVChannel *master = DTVChannel::GetMasterLock(m_key);
+     auto *dvbm = dynamic_cast<DVBChannel*>(master);
+     if (master && !dvbm)
+         DTVChannel::ReturnMasterLock(master);
+diff --git a/mythtv/libs/libmythtv/recorders/dvbchannel.h b/mythtv/libs/libmythtv/recorders/dvbchannel.h
+index 2ce0898e4dc..99caaabf3a1 100644
+--- a/mythtv/libs/libmythtv/recorders/dvbchannel.h
++++ b/mythtv/libs/libmythtv/recorders/dvbchannel.h
+@@ -162,7 +162,8 @@ class DVBChannel : public DTVChannel
+     // Other State
+                       /// File descriptor for tuning hardware
+     int               m_fdFrontend          {-1};
+-    QString           m_device;      ///< DVB Device
++    QString           m_device;                 // DVB Device
++    QString           m_key;                    // master lock key
+                       /// true iff our driver munges PMT
+     bool              m_hasCrcBug           {false};
+ 
+
+From 05a613f9faaf9193f86fc29a3e42e730e401a27f Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Thu, 30 Jul 2020 08:58:37 -0500
+Subject: [PATCH 81/89] dbcheck: quote yet another MySQL v8 reserved work
+
+Forum user reports being unable to upgrade a 0.25 DB to v31.
+
+Enclose the function column name in grave accents.
+---
+ mythtv/libs/libmythtv/dbcheck.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/dbcheck.cpp b/mythtv/libs/libmythtv/dbcheck.cpp
+index 329a716a4db..90915e6cc8c 100644
+--- a/mythtv/libs/libmythtv/dbcheck.cpp
++++ b/mythtv/libs/libmythtv/dbcheck.cpp
+@@ -1787,7 +1787,7 @@ nullptr
+ " ADD COLUMN tid INT(11) NOT NULL DEFAULT '0' AFTER pid, "
+ " ADD COLUMN filename VARCHAR(255) NOT NULL DEFAULT '' AFTER thread, "
+ " ADD COLUMN line INT(11) NOT NULL DEFAULT '0' AFTER filename, "
+-" ADD COLUMN function VARCHAR(255) NOT NULL DEFAULT '' AFTER line;",
++" ADD COLUMN `function` VARCHAR(255) NOT NULL DEFAULT '' AFTER line;",
+ nullptr
+ };
+ 
+
+From e537ea801af3a1d69c6fd0dbf8060ff22ba34cf2 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Wed, 29 Jul 2020 16:08:57 +0100
+Subject: [PATCH 82/89] Wayland: Fix alpha blending
+
+- each window in wayland has its own buffer/texture and these are always
+composited with alpha blending
+- as a result any alpha blended areas of our UI will allow the
+underlying window to be visible if the window/surface buffer has a
+buffer with alpha
+- usually the default surface format does not request a buffer with
+alpha but when wayland decorations are enabled, Qt overrides the alpha
+depth
+- so as a workaround, disable Qt wayland decorations, which we don't
+need anyway
+- note - this may not be the best solution. Using
+wl_surface_set_opaque_region on our surface would allow the compositor
+to optimise rendering as it knows it does not need to show anything
+hidden by the window. In testing this works but requires linking to
+libwayland-client and including Qt private headers (which is far from
+ideal)
+
+- Fixes #13483
+
+(cherry picked from commit b6e7e18a4c209a0dd246c4624db918af0d5152ff)
+---
+ mythtv/libs/libmythui/mythdisplay.cpp | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/mythtv/libs/libmythui/mythdisplay.cpp b/mythtv/libs/libmythui/mythdisplay.cpp
+index cf9b1d795c7..2470ef3ae8c 100644
+--- a/mythtv/libs/libmythui/mythdisplay.cpp
++++ b/mythtv/libs/libmythui/mythdisplay.cpp
+@@ -1059,6 +1059,7 @@ void MythDisplay::ConfigureQtGUI(int SwapInterval)
+ {
+     // Set the default surface format. Explicitly required on some platforms.
+     QSurfaceFormat format;
++    format.setAlphaBufferSize(0);
+     format.setDepthBufferSize(0);
+     format.setStencilBufferSize(0);
+     format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+@@ -1071,6 +1072,20 @@ void MythDisplay::ConfigureQtGUI(int SwapInterval)
+     // of the MythPushButton widgets, and they don't use the themed background.
+     QApplication::setDesktopSettingsAware(false);
+ #endif
++
++    // If Wayland decorations are enabled, the default framebuffer format is forced
++    // to use alpha. This framebuffer is rendered with alpha blending by the wayland
++    // compositor - so any translucent areas of our UI will allow the underlying
++    // window to bleed through.
++    // N.B. this is probably not the most performant solution as compositors MAY
++    // still render hidden windows. A better solution is probably to call
++    // wl_surface_set_opaque_region on the wayland surface. This is confirmed to work
++    // and should allow the compositor to optimise rendering for opaque areas. It does
++    // however require linking to libwayland-client AND including private Qt headers
++    // to retrieve the surface and compositor structures (the latter being a significant issue).
++    // see also setAlphaBufferSize above
++    setenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1", 0);
++
+ #if defined (Q_OS_LINUX) && defined (USING_EGL)
+     // We want to use EGL for VAAPI/MMAL/DRMPRIME rendering to ensure we
+     // can use zero copy video buffers for the best performance (N.B. not tested
+
+From 3322b374c1850fd2fec170db15a3be349db73b8d Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Tue, 11 Aug 2020 13:12:38 -0500
+Subject: [PATCH 83/89] mythfilldatabase: mark --dd-grab-all as deprecated
+
+Add a log warning, but continue running.
+
+(cherry picked from commit 91a3646e5bffc03638f3a75b15c2bc04c73fa746)
+---
+ mythtv/programs/mythfilldatabase/commandlineparser.cpp | 4 ++++
+ mythtv/programs/mythfilldatabase/main.cpp              | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/mythtv/programs/mythfilldatabase/commandlineparser.cpp b/mythtv/programs/mythfilldatabase/commandlineparser.cpp
+index 787e46b5f0b..b3b9f7e38d5 100644
+--- a/mythtv/programs/mythfilldatabase/commandlineparser.cpp
++++ b/mythtv/programs/mythfilldatabase/commandlineparser.cpp
+@@ -164,4 +164,8 @@ void MythFillDatabaseCommandLineParser::LoadArguments(void)
+     add("--mark-repeats", "oldmarkrepeats", "", "", "")
+         ->SetRemoved("This is now the default behavior. Use\n"
+            "          --no-mark-repeats to disable.", "0.25");
++    add("--dd-grab-all", "ddgraball", false, "", "")
++        ->SetDeprecated("It's no longer valid with Schedules Direct XMLTV.\n"
++          "          Remove in mythtv-setup General -> Program Schedule\n"
++          "          -> Downloading Options -> Guide Data Arguements");
+ }
+diff --git a/mythtv/programs/mythfilldatabase/main.cpp b/mythtv/programs/mythfilldatabase/main.cpp
+index ef20217f1ce..b197347128e 100644
+--- a/mythtv/programs/mythfilldatabase/main.cpp
++++ b/mythtv/programs/mythfilldatabase/main.cpp
+@@ -82,6 +82,10 @@ int main(int argc, char *argv[])
+     if (retval != GENERIC_EXIT_OK)
+         return retval;
+ 
++    if (cmdline.toBool("ddgraball"))
++        LOG(VB_GENERAL, LOG_WARNING,
++            "Invalid option, see: mythfilldatabase --help dd-grab-all");
++
+     if (cmdline.toBool("manual"))
+     {
+         cout << "###\n";
+
+From fb389f2100bc5179390de1cbab80cb410b1e2520 Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Sun, 16 Aug 2020 14:18:40 -0500
+Subject: [PATCH 84/89] Fix issue with daily and weekly, manual, recording
+ rules.
+
+Commit 5f6697ec removed the setting of subtitle to the recording time.
+That broke duplicate checking in most cases.  This change forces all
+future rules to use no duplicate checking.
+
+(cherry picked from commit a28191023de31e36efaf23a2d837b4b1725ec73b)
+---
+ mythtv/programs/mythbackend/services/dvr.cpp    | 10 ++++++++--
+ mythtv/programs/mythfrontend/manualschedule.cpp |  1 +
+ mythtv/programs/mythfrontend/scheduleeditor.cpp |  5 ++++-
+ 3 files changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/mythtv/programs/mythbackend/services/dvr.cpp b/mythtv/programs/mythbackend/services/dvr.cpp
+index d5b2702877f..46cf87e29ef 100644
+--- a/mythtv/programs/mythbackend/services/dvr.cpp
++++ b/mythtv/programs/mythbackend/services/dvr.cpp
+@@ -1141,7 +1141,10 @@ uint Dvr::AddRecordSchedule   (
+ 
+     rule.m_type = recTypeFromString(sType);
+     rule.m_searchType = searchTypeFromString(sSearchType);
+-    rule.m_dupMethod = dupMethodFromString(sDupMethod);
++    if (rule.m_searchType == kManualSearch)
++        rule.m_dupMethod = kDupCheckNone;
++    else
++        rule.m_dupMethod = dupMethodFromString(sDupMethod);
+     rule.m_dupIn = dupInFromString(sDupIn);
+ 
+     if (sRecProfile.isEmpty())
+@@ -1284,7 +1287,10 @@ bool Dvr::UpdateRecordSchedule ( uint      nRecordId,
+ 
+     pRule.m_type = recTypeFromString(sType);
+     pRule.m_searchType = searchTypeFromString(sSearchType);
+-    pRule.m_dupMethod = dupMethodFromString(sDupMethod);
++    if (pRule.m_searchType == kManualSearch)
++        pRule.m_dupMethod = kDupCheckNone;
++    else
++        pRule.m_dupMethod = dupMethodFromString(sDupMethod);
+     pRule.m_dupIn = dupInFromString(sDupIn);
+ 
+     if (sRecProfile.isEmpty())
+diff --git a/mythtv/programs/mythfrontend/manualschedule.cpp b/mythtv/programs/mythfrontend/manualschedule.cpp
+index e8e2b349b02..521f8707f68 100644
+--- a/mythtv/programs/mythfrontend/manualschedule.cpp
++++ b/mythtv/programs/mythfrontend/manualschedule.cpp
+@@ -219,6 +219,7 @@ void ManualSchedule::recordClicked(void)
+     auto *record = new RecordingRule();
+     record->LoadByProgram(&p);
+     record->m_searchType = kManualSearch;
++    record->m_dupMethod = kDupCheckNone;
+ 
+     MythScreenStack *mainStack = GetMythMainWindow()->GetMainStack();
+     auto *schededit = new ScheduleEditor(mainStack, record);
+diff --git a/mythtv/programs/mythfrontend/scheduleeditor.cpp b/mythtv/programs/mythfrontend/scheduleeditor.cpp
+index cdb7f6d68b5..ddd18d4e26c 100644
+--- a/mythtv/programs/mythfrontend/scheduleeditor.cpp
++++ b/mythtv/programs/mythfrontend/scheduleeditor.cpp
+@@ -2138,6 +2138,7 @@ void SchedOptMixin::RuleChanged(void)
+                         m_rule->m_type != kDontRecord);
+     bool isSingle = (m_rule->m_type == kSingleRecord ||
+                      m_rule->m_type == kOverrideRecord);
++    bool isManual = (m_rule->m_searchType == kManualSearch);
+ 
+     if (m_prioritySpin)
+         m_prioritySpin->SetEnabled(isScheduled);
+@@ -2146,7 +2147,9 @@ void SchedOptMixin::RuleChanged(void)
+     if (m_endoffsetSpin)
+         m_endoffsetSpin->SetEnabled(isScheduled);
+     if (m_dupmethodList)
+-        m_dupmethodList->SetEnabled(isScheduled && !isSingle);
++        m_dupmethodList->SetEnabled(
++            isScheduled && !isSingle &&
++            (!isManual || m_rule->m_dupMethod != kDupCheckNone));
+     if (m_dupscopeList)
+         m_dupscopeList->SetEnabled(isScheduled && !isSingle &&
+                                    m_rule->m_dupMethod != kDupCheckNone);
+
+From d3088629deadc957eb26ba3f6b16698b6e7f668b Mon Sep 17 00:00:00 2001
+From: Stuart Auchterlonie <stuarta@mythtv.org>
+Date: Tue, 18 Aug 2020 22:45:26 +0100
+Subject: [PATCH 85/89] Refs #12307 - Respect the user setting to disable media
+ monitor
+
+Also fix a typo in the message stating it is disabled.
+
+(cherry picked from commit d09f11da0e946a099cfbe04f5b64c32eb3e7ee64)
+---
+ mythtv/libs/libmyth/mediamonitor-unix.cpp | 9 ++++++++-
+ mythtv/libs/libmyth/mythmediamonitor.cpp  | 2 +-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmyth/mediamonitor-unix.cpp b/mythtv/libs/libmyth/mediamonitor-unix.cpp
+index 04df271132e..367b0f8c164 100644
+--- a/mythtv/libs/libmyth/mediamonitor-unix.cpp
++++ b/mythtv/libs/libmyth/mediamonitor-unix.cpp
+@@ -38,6 +38,7 @@ using namespace std;
+ #include "mythmediamonitor.h"
+ #include "mediamonitor-unix.h"
+ #include "mythconfig.h"
++#include "mythcorecontext.h"
+ #include "mythcdrom.h"
+ #include "mythhdd.h"
+ #include "mythlogging.h"
+@@ -119,7 +120,13 @@ MediaMonitorUnix::MediaMonitorUnix(QObject* par,
+                 : MediaMonitor(par, interval, allowEject)
+ {
+     CheckFileSystemTable();
+-    CheckMountable();
++    if (!gCoreContext->GetBoolSetting("MonitorDrives", false)) {
++        LOG(VB_GENERAL, LOG_NOTICE, "MediaMonitor disabled by user setting.");
++    }
++    else
++    {
++        CheckMountable();
++    }
+ 
+     LOG(VB_MEDIA, LOG_INFO, "Initial device list...\n" + listDevices());
+ }
+diff --git a/mythtv/libs/libmyth/mythmediamonitor.cpp b/mythtv/libs/libmyth/mythmediamonitor.cpp
+index c93de12c9fe..d9bf7ae2630 100644
+--- a/mythtv/libs/libmyth/mythmediamonitor.cpp
++++ b/mythtv/libs/libmyth/mythmediamonitor.cpp
+@@ -460,7 +460,7 @@ void MediaMonitor::StartMonitoring(void)
+     if (m_Active)
+         return;
+     if (!gCoreContext->GetBoolSetting("MonitorDrives", false)) {
+-        LOG(VB_MEDIA, LOG_NOTICE, "MediaMonitor diasabled by user setting.");
++        LOG(VB_MEDIA, LOG_NOTICE, "MediaMonitor disabled by user setting.");
+         return;
+     }
+ 
+
+From 623192215ae0d08af094a11e148efdac664eb2bc Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <kdewaal@mythtv.org>
+Date: Sun, 23 Aug 2020 21:09:34 +0200
+Subject: [PATCH 86/89] Accept VBOX version numbers starting with VT
+
+(cherry picked from commit 083367b4907afbb40c5ee0adbb402a1aabc92468)
+Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+---
+ mythtv/libs/libmythtv/recorders/vboxutils.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/recorders/vboxutils.cpp b/mythtv/libs/libmythtv/recorders/vboxutils.cpp
+index bc316e4ebfa..d3fff12317b 100644
+--- a/mythtv/libs/libmythtv/recorders/vboxutils.cpp
++++ b/mythtv/libs/libmythtv/recorders/vboxutils.cpp
+@@ -240,7 +240,8 @@ bool VBox::checkVersion(QString &version)
+         sList = version.split('.');
+ 
+         // sanity check this looks like a VBox version string
+-        if (sList.count() < 3 || !(version.startsWith("VB.") || version.startsWith("VJ.")))
++        if (sList.count() < 3 || !(version.startsWith("VB.") || version.startsWith("VJ.")
++            || version.startsWith("VT.")))
+         {
+             LOG(VB_GENERAL, LOG_INFO, LOC + QString("Failed to parse version from %1").arg(version));
+             delete xmlDoc;
+
+From aac5e7f0f454a95a69de15f40d62306f11033060 Mon Sep 17 00:00:00 2001
+From: Bill Meek <billmeek@mythtv.org>
+Date: Thu, 27 Aug 2020 16:10:55 -0500
+Subject: [PATCH 87/89] mythfilldatabase: Change one more LOG to debug
+
+For users that don't run MFDB using the --only-update-guide
+switch, only print these with xmltv:debug:
+
+    Match found for xmltvid I30415.json.schedulesdirect.org to channel WTTW-HD (11101)
+
+Eliminates potentially hundreds of message on every run.
+
+(cherry picked from commit bcbcb356dc8ceaf3579474e6772fd451eb8d8fd7)
+---
+ mythtv/programs/mythfilldatabase/channeldata.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/programs/mythfilldatabase/channeldata.cpp b/mythtv/programs/mythfilldatabase/channeldata.cpp
+index 5b2c5811427..caafde56b11 100644
+--- a/mythtv/programs/mythfilldatabase/channeldata.cpp
++++ b/mythtv/programs/mythfilldatabase/channeldata.cpp
+@@ -264,7 +264,7 @@ void ChannelData::handleChannels(int id, ChannelInfoList *chanlist)
+         ChannelInfo dbChan = FindMatchingChannel(*i, existingChannels);
+         if (dbChan.m_chanId > 0) // Channel exists, updating
+         {
+-            LOG(VB_XMLTV, LOG_NOTICE,
++            LOG(VB_XMLTV, LOG_DEBUG,
+                     QString("Match found for xmltvid %1 to channel %2 (%3)")
+                         .arg((*i).m_xmltvId).arg(dbChan.m_name).arg(dbChan.m_chanId));
+             if (m_interactive)
+
+From 5c395c59e26a1989c2cc1aced55506dbc1d9be7a Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Wed, 26 Aug 2020 22:51:23 +0200
+Subject: [PATCH 88/89] Python Bindings: Open video/recoring in binary mode
+
+Since the exported function `ftopen` is meant for videos or
+recordings, open those type of files in binary mode.
+
+Tested with python2.7 and python3.6
+
+Refs #13475
+
+Thanks to Jay Harbeston, who reported this issue
+See
+http://lists.mythtv.org/pipermail/mythtv-users/2020-August/404781.html
+
+(cherry picked from commit c2ff157ca0a983850f372dd90a66352c8f3c8062)
+---
+ mythtv/bindings/python/MythTV/mythproto.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/mythtv/bindings/python/MythTV/mythproto.py b/mythtv/bindings/python/MythTV/mythproto.py
+index 6b00ba222cb..5aa730cef87 100644
+--- a/mythtv/bindings/python/MythTV/mythproto.py
++++ b/mythtv/bindings/python/MythTV/mythproto.py
+@@ -288,7 +288,7 @@ def ftopen(file, mode, forceremote=False, nooverwrite=False, db=None, \
+             for sg in sgs:
+                 if sg.dirname in path:
+                     if sg.local:
+-                        return open(sg.dirname+filename, mode)
++                        return open(sg.dirname+filename, mode+'b')
+                     else:
+                         return protoopen(host, filename, sgroup)
+ 
+@@ -307,9 +307,9 @@ def ftopen(file, mode, forceremote=False, nooverwrite=False, db=None, \
+                 path = sg.dirname+filename.rsplit('/',1)[0]
+                 if not os.access(path, os.F_OK):
+                     os.makedirs(path)
+-            log(log.FILE, log.INFO, 'Opening local file (w)',
++            log(log.FILE, log.INFO, 'Opening local file (wb)',
+                 sg.dirname+filename)
+-            return open(sg.dirname+filename, mode)
++            return open(sg.dirname+filename, mode+'b')
+ 
+         # fallback to remote write
+         else:
+@@ -322,9 +322,9 @@ def ftopen(file, mode, forceremote=False, nooverwrite=False, db=None, \
+         sg = findfile(filename, sgroup, db)
+         if sg is not None:
+             # file found, open local
+-            log(log.FILE, log.INFO, 'Opening local file (r)',
++            log(log.FILE, log.INFO, 'Opening local file (rb)',
+                 sg.dirname+filename)
+-            return open(sg.dirname+filename, mode)
++            return open(sg.dirname+filename, mode+'b')
+         else:
+         # file not found, open remote
+             return protoopen(host, filename, sgroup)
+
+From ab0c38a4764c29019f1fe10c8a8315bb85d65150 Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Wed, 26 Aug 2020 23:50:26 +0200
+Subject: [PATCH 89/89] Python Bindings: Add robustness on using paths to
+ videos or recordings
+
+Storage Group paths may be defined with or without trailing slash ('/').
+Accept both.
+
+Thanks to Jay Harbeston, who reported this issue
+See
+http://lists.mythtv.org/pipermail/mythtv-users/2020-August/404781.html
+
+(cherry picked from commit a9736fc1d24d1eacee80a418249d8e6ae78a6f3f)
+---
+ mythtv/bindings/python/MythTV/mythproto.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/mythtv/bindings/python/MythTV/mythproto.py b/mythtv/bindings/python/MythTV/mythproto.py
+index 5aa730cef87..a89d50f6ef4 100644
+--- a/mythtv/bindings/python/MythTV/mythproto.py
++++ b/mythtv/bindings/python/MythTV/mythproto.py
+@@ -288,7 +288,7 @@ def ftopen(file, mode, forceremote=False, nooverwrite=False, db=None, \
+             for sg in sgs:
+                 if sg.dirname in path:
+                     if sg.local:
+-                        return open(sg.dirname+filename, mode+'b')
++                        return open(os.path.join(sg.dirname, filename), mode+'b')
+                     else:
+                         return protoopen(host, filename, sgroup)
+ 
+@@ -304,12 +304,12 @@ def ftopen(file, mode, forceremote=False, nooverwrite=False, db=None, \
+             sg = sorted(sgs, key=lambda sg: sg.free, reverse=True)[0]
+             # create folder if it does not exist
+             if filename.find('/') != -1:
+-                path = sg.dirname+filename.rsplit('/',1)[0]
++                path = os.path.join(sg.dirname, filename.rsplit('/',1)[0])
+                 if not os.access(path, os.F_OK):
+                     os.makedirs(path)
+             log(log.FILE, log.INFO, 'Opening local file (wb)',
+-                sg.dirname+filename)
+-            return open(sg.dirname+filename, mode+'b')
++                os.path.join(sg.dirname, filename))
++            return open(os.path.join(sg.dirname, filename), mode+'b')
+ 
+         # fallback to remote write
+         else:
+@@ -323,8 +323,8 @@ def ftopen(file, mode, forceremote=False, nooverwrite=False, db=None, \
+         if sg is not None:
+             # file found, open local
+             log(log.FILE, log.INFO, 'Opening local file (rb)',
+-                sg.dirname+filename)
+-            return open(sg.dirname+filename, mode+'b')
++                os.path.join(sg.dirname, filename))
++            return open(os.path.join(sg.dirname, filename), mode+'b')
+         else:
+         # file not found, open remote
+             return protoopen(host, filename, sgroup)
