@@ -1,3 +1,1452 @@
+commit eb3c84de5fe12831d386d15452aeb7658841e072
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Oct 12 15:36:27 2020 -0500
+
+    Fix longstanding issue with Scheduler::getConflicting().
+    
+    Somewhere along the line, probably in a refactoring or cleanup,
+    getConflicting() was broken by making it use FindNextConflict().  The
+    problem is that FindNextConflict() strictly checks inputs and when
+    getConflicting() is called, the inputs for non-recording programs have
+    already been removed.  This fix adds an ignoreinput parameter to be
+    used when FindNextConflict() is called from getConflicting().
+    
+    (cherry picked from commit 93c278d430c9f7252aff762783556568433cda02)
+
+commit 577dd50df1cf6c6629eb708ee3a88a724bdbedff
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Sat Oct 10 22:12:48 2020 +0200
+
+    Python Bindings: Allow searching for collections
+    
+    The ttvdb.py script does not return a valid xml when searching
+    for an ID without season or episode, like
+    'ttvdb.py -D 282022'.
+    Provide means to search for a collection, which is proven to work:
+    'ttvdb.py -C 282022'.
+    
+    (cherry picked from commit 708b35de5410b03c147c7af0822ae5a05897a9d7)
+
+commit d285bdd9948655f98914ea47f61efa290bb86e85
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Wed Oct 7 08:09:28 2020 +0100
+
+    MetadataDownload: Fix clang-tidy warning - else after continue
+    
+    (cherry picked from commit d78f56e083f44224509bae53ffcdfbd21cca446a)
+
+commit 5a366872567c6c29390f8847cfaec6f7e027ae5b
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Tue Oct 6 20:40:16 2020 +0200
+
+    Metadata Lookup: Add an experimental feature in automatic mode
+    
+    In case that no exact matches have been found during automatic lookup,
+    return the head of the list proposed by the grabber.
+    
+    This helps a lot, if a tv-series name is given by the file names
+    in English, but the lookup was done in a different language.
+    
+    Anyway, it unconditionally sets the first presented item, even the
+    match was not exactly found by MythTV.
+    
+    One needs to set the environment variable "EXPERIMENTAL_METADATA_GRAB"
+    prior to the execution of mythfrontend or mythmetadatalookup.
+    
+    (cherry picked from commit 75cf2569817437f5282776193d4ef11f8261fa2a)
+
+commit 30017d33d692a8aa5823d317ce741dbf092fd8cd
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Tue Oct 6 20:25:31 2020 +0200
+
+    Metadata Lookup: Handle 'mxml' and 'nfo' files only once
+    
+    Videos in the video storage group may have an associated file
+    describing the metadata (ending with '.mxml' or '.nfo').
+    See https://www.mythtv.org/wiki/MythTV_Universal_Metadata_Format
+    
+    We should read that file only once, otherwise a lookup reports
+    a single match twice.
+    
+    (cherry picked from commit 3f73316eb86fb018659f5607b6ad3604f0d03d1d)
+
+commit f450e74550936e719134cf817d1fb7dc4e3e259e
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Tue Oct 6 20:01:03 2020 +0200
+
+    Automated metadata lookup: Pass through automatic flag
+    
+    If a new metadata lookup is spun off during lookup, pass through
+    the 'automatic' flag if we are in automatic mode.
+    
+    (cherry picked from commit 87aac2f356444a80bb8d8f17e5b27e2f16ff1566)
+
+commit 4ab0425bd5e774978f170d3c76f9855072b09307
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Tue Oct 6 19:52:32 2020 +0200
+
+    Automated metadata lookup: Return if no match found
+    
+    When performing a lookup in automatic mode, do not present a list
+    of all similar matches. Instead, terminate that lookup with a
+    failure notification only.
+    
+    If a metadata lookup is done on a fresh and large video library,
+    the amount of popped up selection lists might get very big, and one
+    loses the context to what filename the selection list is meant for.
+    
+    (cherry picked from commit c9ada72c7384fe1651b37d41d337c1af0459c780)
+
+commit 6ad0b90949c956048aa8daccfb3da49b45f62e7e
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Thu Oct 1 21:45:08 2020 +0200
+
+    Fix running a metadata grabber twice in manual mode
+    
+    Commit e81c7fd added accuracy of retrieving metadata in automatic mode,
+    but leads to some inefficiency in the use of manual mode:
+    
+    If the search for an exact match was not successful, the other grabber
+    is called twice and appends its result twice.
+    
+    This commit combines the intention of commit 2f9424c for non-automatic
+    mode and the commit for automatic mode (2738b98).
+    
+    (cherry picked from commit 6f85a40f370bf8e9b88b6ab0b98f6f8bebee4d8f)
+
+commit 47a45b1e2e972ba2a5f0a464fef9a968e98138c4
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Thu Oct 1 21:21:12 2020 +0200
+
+    Revert commit 2738b98, but add robustness
+    
+    Commit 2738b98 removed the functionality to download fanart and coverart
+    upon a manual search for metadata.
+    The reason was that it produces an endless loop inside the `Videodialog`
+    selection of the correct item.
+    
+    I re-add this feature with more logging and - hopefully - adding
+    robustness.
+    We can now distinguish between a failure of the returned lookup data
+    and a hiccup in the implementation of the 'ReferenceCounter' classes.
+    
+    (cherry picked from commit bbd25ebc0cbee76ad6f45604b8b023aa19b316ed)
+
+commit 76edb08de77d76d2e7baf1ea1fa7072032b6dc4c
+Author: Bas Hulsken <bhulsken@hotmail.com>
+Date:   Tue Jul 7 10:09:32 2020 +0200
+
+    extend metadatagrabber timeout to 3 minutes
+    
+    (cherry picked from commit e17de9cd618838e14081322051b199e278100c2b)
+
+commit a7d51639918e7fd1fc0b896248817ac7db732bcf
+Author: Paul Gardiner <mythtv@glidos.net>
+Date:   Sat Sep 26 16:22:22 2020 +0100
+
+    Fix incorrect artwork urls returned from ttvdb grabber
+    
+    When performing a manual search for metadata for a video, the artwork
+    fetch was failing: no thumbnail was shown and no artwork was being
+    associated with the video. Ticket 13518 mentioned strange urls containing
+    "banners/_cache//banners". This commit fixes the bad urls and seems to
+    restore the downloading of the artwork. I don't know what led to the need
+    for this.
+    
+    (cherry picked from commit 08c7045c2f123a60b6d5d913daef7753cd53649d)
+
+commit 070623c6c65ffbc1fc635cf8a8333a4173d6b35f
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Wed Oct 7 07:36:29 2020 +0100
+
+    Fix 0.31 build
+
+commit abad9e2de7c771029e8b0333d55643855be2a6bf
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Tue Sep 29 15:25:24 2020 -0400
+
+    Fix bug caused by commit a3ae3a8
+    
+    Problem was that in Terra theme, watched icon was not disappearing
+    when an unwatched show was selected.
+    
+    This reverts part of the above mentioned commit that was causing
+    this problem.
+    
+    (cherry picked from commit dbf9baa1b6caefe4132cbd9a06f8cf74a07f1d92)
+
+commit 8ca77476484b7179cbd1843d715e0145e13744c6
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Wed Sep 16 21:00:25 2020 +0200
+
+    Time for preview max 10 minutes into the program
+    
+    The time of the preview is 1/3 of the total program duration
+    limited to 10 minutes after the start of the program.
+    This limit is added to prevent accidentally revealing the
+    result of sport events in long recordings.
+    
+    (cherry picked from commit b571d81175804f3e8cbc4c47e40232f1f76f0f96)
+    Signed-off-by: Klaas de Waal <klaas@kldo.nl>
+
+commit 2e1cccb628f92091641657f67f25852c746a7887
+Author: Klaas de Waal <klaas@kldo.nl>
+Date:   Mon Sep 21 22:40:12 2020 +0200
+
+    Support DMBTH (DTMB) as DVB-T
+    
+    Select tuner type DVB-T when the card supports modulation system DMBTH (DTMB).
+    This restore the behavior of MythTV v30 that was lost in v31.
+    
+    Refs #13472
+
+commit 8e36eda32195b9ad2cd3bc4f2120efb32e87a926
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Mon Sep 21 20:51:38 2020 +0100
+
+    MythVideoOutput: Ensure deinterlacers are updated after input change
+    
+    Closes #222
+
+commit 2b753d95fdc7ea2223f32c790b2f84c901b6bc50
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Mon Sep 21 20:28:41 2020 +0100
+
+    AvFormatDecoder: Fix potential error in DVD aspect ratio
+    
+    - from last commit, zero is not a valid aspect ratio
+    
+    Refs #225
+    
+    (cherry picked from commit cc682b107deda27dd8a4caaf83a80044011723e3)
+
+commit 55dd6a75dfb06e47b66d87874ae30470441decbb
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Mon Sep 21 20:18:48 2020 +0100
+
+    AvFormatDecoder: Fix some DVD menus with VAAPI and VDPAU
+    
+    - as noted in the code, overriding the aspect ratio from the DVD
+    ringbuffer broke aspect ratio change detection and we were continually
+    resetting the decoder - with fairly disastrous results
+    
+    Refs #225
+    
+    (cherry picked from commit 6f9825338a3622a2c433f31c08e11d07f7becfbe)
+
+commit ea0831c74a1c7bcb116eff79691ef24612343a62
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Sat Sep 19 09:06:36 2020 +0100
+
+    macos High DPI: Fix scaling of embedded video
+    
+    - when high DPI is in use, we need to apply the correct scaling to
+      both the embedding rect and ITV resize rect
+    - as for the window rect, store the 'raw' values and use these as
+      comparators for detecting change
+    
+    Refs #206
+
+commit 01bc4fc628a2b294c931b467894254eff1871c2f
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Sat Sep 19 09:03:01 2020 +0100
+
+    High DPI scaling: Fix displaying the ProgramGuide when embedded
+    
+    - previously, when playing video, we disabled framebuffer clearing, setting of the viewport and any high dpi scaling in the painter.
+    - when high dpi was being used, this broke rendering of the programme guide etc
+    - we now differentiate beween control over the framebuffer and the viewport, and allow the painter to set the viewport (and scaling) when embedding - and the guide is rendered correctly
+    
+    Adapted from 88add49a414aed581a in master
+    
+    Refs #206
+
+commit 21ef6eed645d42488cc3506794f2a6f955cb227d
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Fri Sep 18 10:47:11 2020 +0100
+
+    workflows: Don't build macOS
+    
+    Something has obviously changed in master versus .31 for QtWebkit support. As this build is just informative, disable macOS which does not have webkit
+
+commit 674fd1eb16aa052afd277a857cf68b65870ac3e9
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Fri Sep 18 09:55:13 2020 +0100
+
+    workflows: Don't build mythbrowser
+
+commit b5f1d03fa8040dbf94621eb6d52cb30b7832fd3d
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Thu Sep 17 13:58:13 2020 +0100
+
+    macOS video: Fix scaling of video after an input change (high dpi)
+    
+    - when the display is using high DPI, after an input change we re-init MythVideoBounds but with the current display rectangle; that has already been scaled for high DPI - leading to a doubling of the display rectangle on each input change and a halving of the displayed video.
+    - reset MythVideoBounds using its 'raw' window rect - which will then have the scaling applied again - and all is good
+    - should only affect macos with high dpi in use
+    
+    Refs #206
+
+commit 0942abd9ec355443ad477dce735167206ba4faf5
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Thu Sep 17 13:56:02 2020 +0100
+
+    macOS video: Fix scaling of OSD
+    
+    - when high dpi is in use
+    
+    Refs #206
+
+commit b033cd7b75a9220c46e230e2a62802e923119332
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Mon Sep 14 18:51:12 2020 +0100
+
+    TV: Fix crash when playback exits and guide grid is showing
+    
+    - not normally a problem in live tv but if playback is allowed to
+    continue while embedding, the frontend crashes hard when the GuideGrid
+    object loses its player
+    - so emit a PlaybackExiting signal and listen for it in the GuideGrid
+    - the GuideGrid will continue to show until exited properly - at which
+    point the user will drop back to the last UI screen before playback
+    started - which I guess makes sense...
+    
+    Refs #202
+    
+    (cherry picked from commit 849c2b3243d3de9b857594097d8081325482b568)
+
+commit 48b2a03b78c74cc4268df91f442a4a5e5c3af363
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Tue Sep 15 10:18:08 2020 +0100
+
+    Add github workflow for fixes/31
+
+commit 2cff5c78b2227eb69efb22e384e20bad90b804ae
+Author: David Engel <dengel@mythtv.org>
+Date:   Tue Sep 8 16:30:32 2020 -0500
+
+    Backport onc foreach fix from master commit 11df0636c5a.
+    
+    I believe the use of foreach at this location has been causing some of
+    my backend crashes.
+
+commit b282809197febe7a7619e99c3b3067215a62afc3
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Aug 26 15:51:54 2020 -0400
+
+    Service API: Fix bug where "New Episodes Only" corrupts value of DupIn
+    
+    DupIn value carries two meanings, "New Episodes Only" flag as well as
+    flag for searching in current, old or both when cheing duplicates.
+    Changed the API methods to have one more parameter, for new episodes
+    only.
+    
+    (cherry picked from commit 9d084c2e42ec15aacb71a48792f6ddf200479ca1)
+
+commit 40841f5804501478a271369da2bc4ee93418a9dc
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Sun Aug 30 12:26:33 2020 +0200
+
+    No discontinuity for first TS packet of PID
+    
+    Initialize all elements of m_continuityCounter to 0xff.
+    This is an essential part of the existing code that avoids giving continuity
+    error messages for the first transport stream packet received on a PID.
+    The initialization code is present in mythtv v30 but has been accidentally
+    removed moving forward to mythtv v31.
+
+commit ab0c38a4764c29019f1fe10c8a8315bb85d65150
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Wed Aug 26 23:50:26 2020 +0200
+
+    Python Bindings: Add robustness on using paths to videos or recordings
+    
+    Storage Group paths may be defined with or without trailing slash ('/').
+    Accept both.
+    
+    Thanks to Jay Harbeston, who reported this issue
+    See
+    http://lists.mythtv.org/pipermail/mythtv-users/2020-August/404781.html
+    
+    (cherry picked from commit a9736fc1d24d1eacee80a418249d8e6ae78a6f3f)
+
+commit 5c395c59e26a1989c2cc1aced55506dbc1d9be7a
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Wed Aug 26 22:51:23 2020 +0200
+
+    Python Bindings: Open video/recoring in binary mode
+    
+    Since the exported function `ftopen` is meant for videos or
+    recordings, open those type of files in binary mode.
+    
+    Tested with python2.7 and python3.6
+    
+    Refs #13475
+    
+    Thanks to Jay Harbeston, who reported this issue
+    See
+    http://lists.mythtv.org/pipermail/mythtv-users/2020-August/404781.html
+    
+    (cherry picked from commit c2ff157ca0a983850f372dd90a66352c8f3c8062)
+
+commit aac5e7f0f454a95a69de15f40d62306f11033060
+Author: Bill Meek <billmeek@mythtv.org>
+Date:   Thu Aug 27 16:10:55 2020 -0500
+
+    mythfilldatabase: Change one more LOG to debug
+    
+    For users that don't run MFDB using the --only-update-guide
+    switch, only print these with xmltv:debug:
+    
+        Match found for xmltvid I30415.json.schedulesdirect.org to channel WTTW-HD (11101)
+    
+    Eliminates potentially hundreds of message on every run.
+    
+    (cherry picked from commit bcbcb356dc8ceaf3579474e6772fd451eb8d8fd7)
+
+commit 623192215ae0d08af094a11e148efdac664eb2bc
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Sun Aug 23 21:09:34 2020 +0200
+
+    Accept VBOX version numbers starting with VT
+    
+    (cherry picked from commit 083367b4907afbb40c5ee0adbb402a1aabc92468)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit d3088629deadc957eb26ba3f6b16698b6e7f668b
+Author: Stuart Auchterlonie <stuarta@mythtv.org>
+Date:   Tue Aug 18 22:45:26 2020 +0100
+
+    Refs #12307 - Respect the user setting to disable media monitor
+    
+    Also fix a typo in the message stating it is disabled.
+    
+    (cherry picked from commit d09f11da0e946a099cfbe04f5b64c32eb3e7ee64)
+
+commit fb389f2100bc5179390de1cbab80cb410b1e2520
+Author: David Engel <dengel@mythtv.org>
+Date:   Sun Aug 16 14:18:40 2020 -0500
+
+    Fix issue with daily and weekly, manual, recording rules.
+    
+    Commit 5f6697ec removed the setting of subtitle to the recording time.
+    That broke duplicate checking in most cases.  This change forces all
+    future rules to use no duplicate checking.
+    
+    (cherry picked from commit a28191023de31e36efaf23a2d837b4b1725ec73b)
+
+commit 3322b374c1850fd2fec170db15a3be349db73b8d
+Author: Bill Meek <billmeek@mythtv.org>
+Date:   Tue Aug 11 13:12:38 2020 -0500
+
+    mythfilldatabase: mark --dd-grab-all as deprecated
+    
+    Add a log warning, but continue running.
+    
+    (cherry picked from commit 91a3646e5bffc03638f3a75b15c2bc04c73fa746)
+
+commit e537ea801af3a1d69c6fd0dbf8060ff22ba34cf2
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Wed Jul 29 16:08:57 2020 +0100
+
+    Wayland: Fix alpha blending
+    
+    - each window in wayland has its own buffer/texture and these are always
+    composited with alpha blending
+    - as a result any alpha blended areas of our UI will allow the
+    underlying window to be visible if the window/surface buffer has a
+    buffer with alpha
+    - usually the default surface format does not request a buffer with
+    alpha but when wayland decorations are enabled, Qt overrides the alpha
+    depth
+    - so as a workaround, disable Qt wayland decorations, which we don't
+    need anyway
+    - note - this may not be the best solution. Using
+    wl_surface_set_opaque_region on our surface would allow the compositor
+    to optimise rendering as it knows it does not need to show anything
+    hidden by the window. In testing this works but requires linking to
+    libwayland-client and including Qt private headers (which is far from
+    ideal)
+    
+    - Fixes #13483
+    
+    (cherry picked from commit b6e7e18a4c209a0dd246c4624db918af0d5152ff)
+
+commit 05a613f9faaf9193f86fc29a3e42e730e401a27f
+Author: Bill Meek <billmeek@mythtv.org>
+Date:   Thu Jul 30 08:58:37 2020 -0500
+
+    dbcheck: quote yet another MySQL v8 reserved work
+    
+    Forum user reports being unable to upgrade a 0.25 DB to v31.
+    
+    Enclose the function column name in grave accents.
+
+commit f7a1f4b1a0204f624985d872395c7d689ca91da2
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Thu Jul 16 21:26:02 2020 +0200
+
+    Create key for DVB channel master lock only once
+    
+    Create master key only once and use that each time the lock is requested instead of creating the key every time again. This solves the problem that the database is accessed 40 times per second for the source ID of a capture card for each capture card while monitoring the signal status.
+    
+    Fixes #13649
+    
+    (cherry picked from commit 7277ae9af33093bdf50b532888bd49b5a2d69bb0)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit 89d1991ef285567f8b46f287786b2d8ca1fb9236
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Wed Jul 15 15:13:26 2020 -0400
+
+    Android: Fix support for android 5
+    
+    For android 5 we need to build with api level 21 and that level does
+    not have the ftello and fseeko functions.
+    
+    (cherry picked from commit b76dbf4214614fa4cd572cc38c62481bb97e0146)
+
+commit 8602e978777fc20bea760ff37b620017f77a1fc1
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Sun Jun 14 00:19:39 2020 +0000
+
+    Update XMLTV loglevel in programdata
+    
+    Change the loglevel in programdata to be the same as
+    EIT updates for the equivalent changes (i.e. debug).
+    This allows a run of mythfilldatabase with the options
+    of --verbose general,xmltv with the default loglevel
+    of info to not blather on about the expected case of
+    adding, deleting, updating programs (i.e. making the
+    usage easier to review), but just include the XMLTV
+    logging that likely matters for the average use case.
+    
+    Last of four patches. Fixes #13633.
+    
+    Signed-off-by: David Hampton <mythtv@love2code.net>
+    (cherry picked from commit 6e61aa988fe1cbc260798d5be53c496f66b04f4f)
+
+commit 85dec4804c286483794bb4d11646ef1ff910c0ee
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Sun Jun 14 00:01:39 2020 +0000
+
+    Enable output from the grabber to be logged
+    
+    Invoke the running of the grabber such that the output is
+    actually captured and logged if the verbose xmltv option
+    is specified (the header/trailer implies that at some time
+    in the past the output was made available in the logs, but
+    it has not been included for some time).
+    
+    Signed-off-by: David Hampton <mythtv@love2code.net>
+    (cherry picked from commit be1c88665a79e654f12f818944732101b0fcbcfc)
+
+commit 396dd023e60aecf667d2e7affa63bb18b468c660
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Sat Jun 13 23:54:59 2020 +0000
+
+    eliminate extranous LOC in logging
+    
+    All the other LOG_ERR logging in mythfilldata do not
+    include the LOC field.  Eliminate it for consistency
+    in the logging output
+    
+    Signed-off-by: David Hampton <mythtv@love2code.net>
+    (cherry picked from commit a8eeda8f0ed97cc6aca025d2a517110eb11b5aa9)
+
+commit 62af47c971c30d2201705302ab260147b7fffd26
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Sat Jun 13 23:50:45 2020 +0000
+
+    add missing(?) log message when grabber interrupted
+    
+    Signed-off-by: David Hampton <mythtv@love2code.net>
+    (cherry picked from commit da860e00f7ca51e709485cb7358546a551b46828)
+
+commit 167c8d56e20167a5cc39f1ab8b301313a562b929
+Author: Bill Meek <billmeek@mythtv.org>
+Date:   Thu Jul 16 07:55:45 2020 -0500
+
+    Plugins/dbcheck: Replace CHARACTER SET 'default' with 'utf8'
+    
+    Fix required for MySQL v8 because using 'default' CHARACTER
+    SET results in a "You have an error in your SQL syntax"
+    message.
+    
+    There are two cases to solve.
+    
+     1. New systems that will execute the DBSchemaVer changes
+        for the mytharchive, mythgame, mythmusic & mythweather
+        plugin tables. The origial Trac ticket.
+    
+     2. Existing systems that have up to date DBSchemaVer for
+        the above but need a new version to use the unambiguous
+        character set. Not solved here, just to get the the
+        above fixed.
+    
+    Refs #13577
+
+commit 7bf1284867b94509cdbf473cb6e216c0c36145f1
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Fri Jul 10 15:00:58 2020 -0400
+
+    Services: Add new Video GetSavedBookmark and SetSavedBookmark methods
+    
+    Previously these methods only existed for recordings. Now adding
+    similar methods for Videos.
+    
+    (cherry picked from commit 48557d32c25903c58042b9b4b2c71e5da8631390)
+
+commit 8212a9b7bf0354894013b102f88e4ef9d827c26c
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Sat Jul 11 11:47:01 2020 +0100
+
+    VDPAU: Fix VDPAU rendering for AMD/Gallium
+    
+    Fixes #13253
+    
+    (cherry picked from commit 2fb7e4cb51408343ef40e13d099ca9802a576a8c)
+
+commit 0add177794446f98e0dfc4b40d628017e864701f
+Author: Bill Meek <billmeek@mythtv.org>
+Date:   Mon Jul 6 22:07:23 2020 -0500
+
+    MacOS: remove hard-coded python2.6 PYTHONPATH code
+    
+    Based on a patch from John Hoyt, and thanks for testing
+    on MacOS.
+    
+    This could prevent the location of Python packages in
+    the future if the OSX packaging sets --python=python
+    (for example). Currently the version is included in
+    the Python executable's file name:
+    
+        --python=/opt/local/bin/python3.8
+    
+    Fixes #13643
+    
+    (cherry picked from commit d30fd541c74a37d589548eadb9d225b2a96563ab)
+
+commit 3ef7db67fec2a2d843cea673d14240d9ee512332
+Author: Bill Meek <billmeek@mythtv.org>
+Date:   Fri Jul 3 19:45:12 2020 -0500
+
+    Games Plugin: change system to `system` for MySQL v8
+    
+    (cherry picked from commit 94931c00dc5b67d72503fd112846f148a8e942c4)
+
+commit 8a0c4f9bd2d9567ccbdb4151d7c03068388b45a6
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Mon Jun 29 17:15:57 2020 +0100
+
+    macos: Handle high DPI displays
+    
+    - behaviour should be unchanged for non-macos installations
+    - the underlying problem is that when macos is using high DPI, the
+    windowing system reports e.g. 1920x1080 as the window size but the
+    underlying OpenGL context is using the full resolution e.g. 3840x2160.
+    - video playback is actually easiest - as we just scale the video
+    window/viewport as needed - and everything else falls into place.
+    - the UI painter is slightly more complicated as our UI images are at
+    the lower resolution - and the entire UI code is operating on the
+    reported window size. So scale incoming rendering data as required,
+    which also requires some tweaking of the texture vertices.
+    
+    Refs #13618
+
+commit ade713f98c5846e9c5f08a76e72cbe24ad7057ef
+Author: Peter Bennett <pbennett@mythtv.org>
+Date:   Fri Jun 5 14:21:59 2020 -0400
+
+    Services: Add new GetStreamInfo method
+    
+    GetStreamInfo gets basic stream information for a video or recording, including
+    frame rate, picture dimensons and video codec, as well as audio codec and number
+    of channels. The information is obtained from the ffmpeg avformat apis.
+    
+    (cherry picked from commit a2af89101bd4a4a28e83f85fbcd7b30456a01ca8)
+
+commit a675ee1e110fca3ea61a197729ca42c899db94f9
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Thu Jun 25 11:34:54 2020 +0100
+
+    VDPAU: Disable level checks in MythTV and FFmpeg
+    
+    - per the FFmpeg docs, this should be the default and it is causing
+    hardware acceleration to fail on older VDPAU devices.
+    
+    (cherry picked from commit 9995644dac9047e04a8c09ebfe029099aa915ec9)
+
+commit 261eeff1bd1a5ec8a3573f5957238961793d9356
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Thu Jun 25 11:04:14 2020 +0100
+
+    VDPAU: Extend FFmpeg constrained baseline check to include baseline
+    
+    - to match the changes in our own code.
+    
+    (cherry picked from commit f142e8535fa61db91454f571b57d479c9130515f)
+
+commit b89d76fa944a5dfc61e96eaa532eb399d92419ab
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Tue May 5 23:36:21 2020 +0200
+
+    Transport Editor updates
+    
+    Show the DVB-C parameter edit page for HDHomeRun tuners when they can do DVB-C.
+    Previously the ATSC parameter edit page was shown.
+    Show the DVB-T2 parameter edit page for HDHomeRun tuners when they can do other DVB.
+    Previously the ATSC parameter edit page was shown.
+    Fixed a problem where sometimes the Transport Editor did not show any
+    transports when there were only a small number of transports in the video source.
+    FIxed a problem where the modulation system was not saved in the transport when a
+    DVB-S (not a DVB-S2) tuner and the transports came from the NIT transport loop.
+    
+    (cherry picked from commit fcf9e8e79fd4971d298cd8c3a53466d256f7f0ff)
+    
+    Fixes #13640
+    
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit 1182a9abea4724d8af0b8690f04e39779855fce9
+Author: Bill Meek <billmeek@mythtv.org>
+Date:   Mon Jun 22 13:23:25 2020 -0500
+
+    Python Bindings: care for python3.3+ use of ElementTree
+    
+    Fedora 33 is using Python 3.9 and no longer has cElementTree.
+    Which was depracated in v3.3, thanks GB.
+    
+    https://docs.python.org/3/library/xml.etree.elementtree.html
+    (cherry picked from commit d7c0c5d263d62312559b1c96f375b5f081cf564b)
+
+commit bcd9a63ec012adeb4a028d6873c512bb93afa3e2
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Mon Jun 22 18:36:33 2020 +0100
+
+    VDPAU: Fall 'back' to H264 Main profile for H264Baseline
+    
+    - as well as constrained baseline
+    
+    (cherry picked from commit d3719e6b110c76b188a3e4217ed5e253d2f6bd7b)
+
+commit 94423151e51e155472531d80a7e24b875a13b13c
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Thu Jun 18 11:25:09 2020 +0100
+
+    MythPlayer: Use yadif for deinterlacing previews (regression)
+    
+    - the cpu deinterlacers were re-factored shortly before v31 and yadif is
+    now 'high' quality
+    
+    (cherry picked from commit d3378789e99f00ec9c2b911cc244ffec6b82b6d6)
+
+commit e9e48d190e11b51051dfea9485dc4f903af7b8e9
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Thu Jun 18 11:22:02 2020 +0100
+
+    VDPAU: Further extend debug logging of support tests
+    
+    (cherry picked from commit 43714e821ba5e53a4e3e9726c658fb4b2aaeccea)
+
+commit 9e47ae9d385be2b5fdb72007aad998443fbab11d
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Tue Jun 16 17:30:20 2020 +0100
+
+    MythOpenGLVideo: Fix chroma sampling for multiplanar formats when
+    resizing
+    
+    - we need GL_NEAREST for YUY2 and when using unsigned integers texture
+    formats (GLES3.X for 10bit)
+    - but it introduces some sampling errors for the chroma planes as, while
+    the textures are not being resized for the first pass, the chroma planes
+    are a different size to the main texture.
+    - so where possible, use GL_LINEAR to filter the chroma planes and
+    improve playback quality in the bulk of cases.
+    
+    (cherry picked from commit 3a4da22e3b1fa941d3495a6950ef6e5a6bfef7ab)
+
+commit 16e06262ba588597496306467dbea845d5f53c47
+Author: David Hampton <mythtv@love2code.net>
+Date:   Sun May 31 20:20:21 2020 -0400
+
+    Fix missing Qt 5.15 include in mythpainter.cpp.
+    
+    (cherry picked from commit f12096ba57c37f8966b9cc8fa2a775255862df9f)
+
+commit 134ebd7b2938dfede4a916932e52146cf66c4a9c
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Wed Jun 10 19:28:39 2020 +0200
+
+    Python: Resolve deprecation warnings
+    
+    Python3.8 shows a couple of deprecation warnings when running
+    with the "-Wall" switch:
+    
+    The method locale.format() will be removed in a future version of Python.
+    Use 'locale.format_string()' instead.
+    
+    DeprecationWarning: isAlive() is deprecated, use is_alive() instead.
+    
+    Tested with python2.7, python3.6 and python3.8.
+    
+    (cherry picked from commit e3f7f092fde8a81cfa8de2a808ce64cc3fa1d83c)
+
+commit 4c990647889687b5a5ee5951d289a5f0777dda90
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Wed Jun 10 19:25:02 2020 +0200
+
+    Set MySQL Mode explicitely when starting a session
+    
+    Newer SQL server enable the 'strict' MySQL Modes
+    "STRICT_TRANS_TABLES" and/or "STRICT_ALL_TABLES",
+    which cause an error on committing to tables with fields,
+    having no default value defined.
+    
+    An example: table "jobqueue", field "args", type "blob".
+    
+    This change sets explicitely the "SQL Mode" per python session
+    like 'libmythbase' does it.
+    
+    Tested with python2.7, python3.6 and python3.8.
+    
+    (cherry picked from commit 968712b9280b7220d73a44da709cbed655f1ee0a)
+
+commit d8ecd8fe7c85165fe3c818a6d07e7ca9472e7735
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Wed Jun 10 19:24:00 2020 +0200
+
+    Python: fix timestamp calculation
+    
+    Python 3.8 changed the handling of the 'datetime' class:
+    According release notes ("What's New In Python 3.8"):
+    Arithmetic operations between subclasses of datetime.date or
+    datetime.datetime and datetime.timedelta objects now return an
+    instance of the subclass, rather than the base class.
+    
+    This caused an error in the calculation of a 'timestamp'.
+    
+    Tested with python2.7, python3.6 and python3.8.
+    No other occurences of similar arithmetic operations identified.
+    
+    Fixes #13622
+    
+    (cherry picked from commit 24db137ee6435ae0f1ecc51c580ef1b3d5936402)
+
+commit 0d8e6f1b14e6d670e54c70fac80cde797e100111
+Author: Paul Harrison <mythtv@sky.com>
+Date:   Thu Feb 27 17:52:31 2020 +0000
+
+    Merge pull request #191 from ijc/musicmetadata-disc-number
+    
+    mythmusic fixes for multiple discs
+    
+    (cherry picked from commit 90a86400ae13e8dcff7d7ddb1b469409a8e3cc03)
+
+commit 445cf1fe6be324245dfc1c548d265bec147f711c
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Jun 7 14:37:09 2020 -0600
+
+    ExternalStreamHandler: Use DEBUG log level for TunerStatus
+    
+    (cherry picked from commit 118db4df5d0fc70971f7aa1d4f468f41bf3baa81)
+
+commit 6b45963cf8a25a6b0852edf3943db9b6857bb939
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Jun 7 14:12:37 2020 -0600
+
+    mythexternrecorder: Fix "tuning" of channels by external recorder, instead of separate "tuner".
+    
+    (cherry picked from commit d03307172137afeaa1f70e4f9e5458ff5f46570b)
+
+commit aa753a179b3a08d0935f8adacc8d2611190bdac0
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sat Jun 6 20:29:45 2020 -0600
+
+    mythexternrecorder: ondatastart might need to know the channel number.
+    
+    (cherry picked from commit 5cf1846f76ff3a18212c2d6693b4701bdf64c03f)
+
+commit dd35db8df117b5f2d2c6706438dcf2e316c19d95
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Sat Jun 6 22:09:21 2020 +0100
+
+    MythPlayer: Fix double rate CPU deinterlacing
+    
+    - the second field was not being processed as after the first pass the
+    frame was marked 'already_deinterlaced'
+    - was only obvious for yadif which broke av sync quite badly when
+    running at double rate
+    
+    (cherry picked from commit 72c9209e158e3cba33f81515220af36e704bec66)
+
+commit 672d45b7bd8f03514e9936a0abdcb5c6d17c3112
+Author: Ian Campbell <ijc@hellion.org.uk>
+Date:   Sat Jun 6 09:06:46 2020 -0400
+
+    Fix musicmetadata handling of compilations.
+    
+        Fixes #13585
+        Closes #192
+    
+    Signed-off-by: David Hampton <mythtv@love2code.net>
+    
+    (cherry picked from commit 1236aef0ae520294446ed91d91ed0e988976e183)
+    
+    -----
+    
+    Squashed commit of the following:
+    
+    commit ca6ffb883c9f32ec8a7f1461a0b4d71914e3c210
+    Author: Ian Campbell <ijc@hellion.org.uk>
+    Date:   Mon Mar 16 20:18:29 2020 +0800
+    
+        musicmetadata: check for empty field before dumping to db
+    
+        This ensures all the fields are properly filled in. In particular it ensures
+        that non-compilation albums have the compilation artist filled in to match the
+        artist, otherwise they all end up with "Unknown Artist" which in turn means
+        that albums which happen to have the same title (e.g. "Greatest Hits") all get
+        lumped into one.
+    
+    commit 88418b6c7c400d04440eeeaf232f571a1463b09a
+    Author: Ian Campbell <ijc@hellion.org.uk>
+    Date:   Mon Mar 16 20:02:28 2020 +0800
+    
+        musicmetadata: clear id fields when main field is set
+    
+        ... otherwise they are never recalculated when the actual value changes.
+    
+    commit a0e93004c18f3a34c2c2d450af72366860a19b4e
+    Author: Ian Campbell <ijc@hellion.org.uk>
+    Date:   Sun Mar 15 15:35:32 2020 +0800
+    
+        musicmetadata: Fully update music_albums, including name and artist
+    
+        Since these may have changed.
+    
+    commit 30898722aebbcfbd9d28557fcdbf2324379db2b6
+    Author: Ian Campbell <ijc@hellion.org.uk>
+    Date:   Sun Mar 15 15:33:43 2020 +0800
+    
+        musicmetadata: Do not call `ensureSortFields` after `checkEmptyFields`
+    
+        The latter already calls the former right at the end.
+    
+    commit 2e4a0e93768142c05bcfcd1b58f1b7db7bbde609
+    Author: Ian Campbell <ijc@hellion.org.uk>
+    Date:   Fri Feb 28 07:15:41 2020 +0800
+    
+        musicmetadata: ensure compilation artist id is always set
+    
+        I was observing that I had one `music_albums` entry per track on each
+        compilation album after the album was scanned the second time (first time it
+        went in correctly).
+    
+        The issue was that on reloading from the DB the field was not being initialised
+        so remained as `-1` when the entry came to be written back, which because the
+        field in the DB is `unsigned` ended up being stored as `0`, so when subsequent
+        lookups try to find the album it failed every time (since the 0 in the database
+        matches neither -1 nor the >0 correct value) and a fresh one is inserted for
+        every track.
+    
+        Fix this by adding and using `{get,set}CompilationArtistId` corresponding to
+        the uses of `{get,set}ArtistId`. I broke out `getCompilationArtistId` from the
+        within exiting `getArtistId` implementation.
+    
+    commit 56506e477ceb815081ed05aea3ff6656413b592a
+    Author: Ian Campbell <ijc@hellion.org.uk>
+    Date:   Wed Feb 19 20:05:22 2020 +0800
+    
+        metaioflacvorbis: Handle ALBUMARTIST as a fallback for COMPILATION_ARTIST
+    
+        Although there is no real standard this is as described in
+        https://picard.musicbrainz.org/docs/mappings/ and what one gets by default
+        using the picard tool (as I do).
+    
+    commit 1e303b005e4b613e4b965b1a5cbdc830b64020c2
+    Author: Ian Campbell <ijc@hellion.org.uk>
+    Date:   Thu Feb 27 20:00:05 2020 +0800
+    
+        Support `mythutil --scanmusic --force` to ignore file timestamps
+    
+        Useful after an upgrade (or while hacking) or if something else changed which
+        doesn't affect the timestamp of the file.
+
+commit 8c1fd6bb95bfc554d66a444cbfb177a2cd58c485
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Sat Jun 6 14:30:55 2020 +0100
+
+    VDPAU: Extend logging of profile check
+    
+    (cherry picked from commit 43293708579193ff23459feba159cb9fab5259d1)
+
+commit c89a7e3771ed094662710fdb18fe972d09a55955
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Mon Jun 1 18:26:44 2020 +0100
+
+    MythDisplay: Track device pixel ratio
+    
+    (cherry picked from commit 907841a119d94edc4c66c1f1af1114c5ff012258)
+
+commit fc9048228105e0bf416990f97c3ce3c2eceb3201
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Mon May 25 12:02:17 2020 -0500
+
+    mythfilldatabase: remove program starttime order check
+    
+    Closes #13623
+    
+    Signed-off-by: Bill Meek <billmeek@mythtv.org>
+    (cherry picked from commit 1f8b759dd7b047bde1b5c52f2471c79cd1619e30)
+
+commit 9380616198f4149d20bb5ef41c3ca0f14944290b
+Author: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Date:   Mon May 25 11:52:11 2020 -0500
+
+    Always request a reschedule when running mythfilldatabase
+    
+    Previous edits incorrectly left it where the request was only done
+    when repeats were marked.
+    
+    Fixes #13625
+    
+    Signed-off-by: David Engel <dengel@mythtv.org>
+    (cherry picked from commit 1ba15e5cdb91f121b60ae96358021d668cf73a71)
+
+commit 1ca7a4b09ef38cd6e108a26bdc358f280d6ae3d3
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Thu May 21 16:27:21 2020 -0500
+
+    Python Bindings: Services API, logging & XML enhancements
+    
+    - Improve logging dump of 'postdata'
+    - Add an option to return raw XML data, {'rawxml': True}
+    
+    Some lxml.etree functions, e.g. fromstring()/tostring() cause pylint 'I'
+    messages. users may want to add the following to their .pylintrc (or just
+    add # pylint: disable=c-extension-no-member inline):
+    
+        [MESSAGE-CONTROL]
+        disable=c-extension-no-member
+    
+    Closes #13619
+    
+    Signed-off-by: Bill Meek <billmeek@mythtv.org>
+    (cherry picked from commit 1a1b69836515a5ec77b09c4559a3bb729af9cd7b)
+
+commit f9baf09e4397032f1a00d98b5085f912547380b6
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Sun May 17 19:57:18 2020 +0200
+
+    Crash of backend on delete of program being recorded
+    
+    Fix this crash and similar backend crashes in the scheduler
+    by replacing all iterations over m_tvList/m_encoderLink/m_pEncoders
+    from using the Qt extension foreach to the C++11 range-based for loop.
+    The foreach apparently makes a deep copy of the container thereby
+    invalidating the iterators that may be active on the same container
+    simultaneously in a different thread.
+    As an additional safeguard the qAsConst, a Qt-specific variant
+    of std:as_const, is added to all loops.
+    
+    Fixes #13571
+    
+    (cherry picked from commit 8e2872679315547abc3c2f1a91e0f7b8baac79dc)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit fa2165511fe0735c612be69445b6acafc05e4caa
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun May 17 20:58:41 2020 -0600
+
+    mythexternrecorder: Add TUNER/newepisodecommand option.
+    
+    
+    Some streaming sources have a "bandwidth saver" option and therefore need
+    touched occationally to keep them going. If provided, this command will be
+    executed whenever a new 'episode' starts up if the recording is already
+    running on the desired "channel".
+    
+    (cherry picked from commit 07b49fc2546bbc4b4d7a85ffb4943d65a1986fbb)
+
+commit 7a31a2e35ccf338952f377d2885eb3af81defb54
+Author: John Poet <jpoet@mythtv.org>
+Date:   Tue May 12 18:51:52 2020 -0600
+
+    mythexternrecorder: Add ondatastart command option
+    
+    
+    The config file can now specify a command to run as soon as data is detected
+    from the 'external' application.
+    
+    (cherry picked from commit e4d9172d6e1e636fd61e1484f858cb4010380b50)
+
+commit 6a5afb4dba08fcd790279af97348f3e69ebec8c3
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Tue May 19 18:08:50 2020 +0100
+
+    VDPAU: Try and fall 'back' to H264 Main support
+    
+    - if H264 constrained baseline is reported as not supported
+    - this mimics the additional test carried out in FFmpeg
+    - N.B. untested but as far as I can tell this should get this profile
+    working again on older chipsets.
+    
+    (cherry picked from commit 7eb2231803ec9851d91bc7461c184079c65385d5)
+
+commit ce23a0225fcec2afbdfe5a7e82170e28f406c830
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Sun May 10 12:22:25 2020 +0200
+
+    Fix mysql cursor class to handle bytearrays
+    
+    Newer Python MySQLdb modules call 'cursor.execute()' multiple times
+    from 'cursor.executemany()'.
+    With python3 and python3-MySQLdb > 1.4.0 these call-backs containing
+    a query are bytearrays, resulting in a traceback in the '_sanitize' method.
+    
+    Note: This '_sanitize' method is only needed when creating a query within
+    the Python Bindings, but not necessary when python-mysqldb itself calls the
+    cursor.execute() method.
+    
+    Fixes #13614
+    
+    (cherry picked from commit b2e9c6a44233570704554894bf45e01bfa8e26a7)
+
+commit c8e779649384e9810bf8b2262a8f928b1986994d
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Fri Mar 6 18:19:45 2020 +0100
+
+    BackendServerAddr and MasterServerName replaced MasterServerIP
+    
+    in V30, according ticket #13024.
+    
+    Replace any occurrences of the deprecated settings and allow
+    'BackendServerAddr(MasterServerName)' to be an alias for the
+    host-ip as well.
+    
+    Fixes #13593
+    
+    (cherry picked from commit 105faee393b682e79a336d7ee893f82f8c10a896)
+
+commit a2b8c262dc96274ef55be25c510a4bbe9b6b52b2
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Tue Mar 3 11:31:18 2020 +0000
+
+    mythfilldatabase: Fix 2 potential leaks
+    
+    - introduced in a9aa006139da24cb and picked up by coverity.
+    
+    (cherry picked from commit cf282591a249864215c82cb7248153b3033d6ea1)
+
+commit f5d75a6de7c4ac668e1a64cdf31c7100bc81b65b
+Author: Hans Dingemans <jpldingemans@gmail.com>
+Date:   Fri Feb 21 12:13:00 2020 -0500
+
+    mythfilldatabase: reduce memory usage.
+    
+    Mythfilldatabase uses QDomDocument to parse and store the XML data that is read; according to QDomDocument documentation this object is not meant to handle large XML files; QXmlStreamReader should be used in these situations.
+    
+    This commit replaces QDomDocument by QXmlStreamreader.
+    
+    A test showed that memory usage dropped from 5.6 GB to 698 MB.
+    
+    Fixes #13517
+    
+    Signed-off-by: Peter Bennett <pbennett@mythtv.org>
+    (cherry picked from commit a9aa006139da24cbad861a2c25d57fa3f71aba2a)
+
+commit 723d46eaaa7be6bd760f2c5dfcb50b5410f315ec
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Mon Apr 27 21:28:44 2020 +0100
+
+    libmythtv: Fix VideoToolbox framework name
+    
+    Closes #13609
+    
+    (cherry picked from commit 00b8defa6d27bb5688b3217f597adb1faac4773f)
+
+commit 3ccdb8c6d24e86a7282d32c14a1f4f09c87e9756
+Author: Bill Meek <billmeek@mythtv.org>
+Date:   Sun Feb 9 19:03:03 2020 -0600
+
+    Python Bindings: fix warnings seen in *buntu packaging
+    
+    (cherry picked from commit 12f44c74ed60e3b0909040f30665c9d3fc58c17c)
+
+commit c0b8b6e036bdb531fe09be8005dcf1181d9333ec
+Author: Michał Janiszewski <janisozaur+signed@gmail.com>
+Date:   Tue Oct 30 21:56:52 2018 +0100
+
+    Compare to `None` using identity `is` operator
+    
+    This is a trivial change that replaces `==` operator with `is` operator, following PEP 8 guideline:
+    
+    > Comparisons to singletons like None should always be done with is or is not, never the equality operators.
+    
+    https://legacy.python.org/dev/peps/pep-0008/#programming-recommendations
+    
+    Closes #13343
+    
+    (cherry picked from commit 2e7e9e82ae71e958a7844e768d3d2758cf6df3ad)
+    
+    Signed-off-by: Bill Meek <billmeek@mythtv.org>
+
+commit 5f1993304e35042192aed059dd7cf8717b76c6a7
+Author: David Hampton <mythtv@love2code.net>
+Date:   Tue Apr 21 15:24:15 2020 -0400
+
+    Fix incorrect data provided to UPnP client.
+    
+    This bug was introduced in 77b560f3cc when converting from the
+    obsolete QString::sprintf function to typical QString formatting using
+    QString::arg.  In one case the arguments were all converted, but the
+    format string wasn't .  Fix that format string.
+    
+    Fixes #13612.
+
+commit 917a2087ef032b2c36a102cf4a2b220e10bf7bfe
+Author: David Hampton <mythtv@love2code.net>
+Date:   Tue Apr 21 14:58:59 2020 -0400
+
+    Fix segfault in code called from MythMainWindow::Draw.
+    
+    This reverts three of the changes in 380102ce34.  In
+    mythmainwindow.cpp while running the m_stackList, the call to
+    MythScreenStack::GetDrawOrder can apparently modify m_stackList or
+    something that it points to.  Reverting the range-based for loops and
+    restoring the original for loops prevents the crash.
+    
+    Fixes #13613.
+
+commit 8bfc909dc70e8e9f156e66f7346f63e3e13660d5
+Author: Paul Harrison <paul@mythqml.net>
+Date:   Sat Apr 18 15:38:32 2020 +0100
+
+    HLSStreamHandler: fix the formatting of a debug statement
+    
+    Refs #13608
+    
+    (cherry picked from commit 2b31dbf2ff30ea73b5865918719d14076c39f0cf)
+
+commit 4e3935420ac0da8997d01ce77672f90d6dcbd78e
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Thu Apr 16 22:22:20 2020 +0200
+
+    Fix "Full Scan" for DVB-T only tuners
+    
+    The "Full Scan" for tuners that can do only DVB-T and not DVB-T2
+    was done correct but the modulation system was not entered in
+    the transport in the database. This is now fixed.
+    This gave problems in mythbackend when used with DVB-T/T2 tuners
+    because these need the modulation system information.
+    
+    (cherry picked from commit a618b675fdd3b388221159e4d72cf15e56b2dfe4)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit c8f62c1688bb2ceaedabb2563f434dac1d7d5694
+Author: Paul Harrison <paul@mythqml.net>
+Date:   Wed Apr 15 20:12:47 2020 +0100
+
+    FAQ: trivial change to force an update
+
+commit 4d0924203a33203eedc1d4cf0b3f242609d729ef
+Author: Nigel Jewell <nige@grufty.co.uk>
+Date:   Sun Apr 12 21:31:49 2020 +0100
+
+    Fix typo in 0851b35e3ded43ea738473bc60b8e5d13595b922 comment
+    
+    (cherry picked from commit dca115895bcc7631fd4eb9dcfa0b4d838ed1e786)
+
+commit 3b54678feba714c514f32b38b0f5c1c6a74eaf3f
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Mon Apr 13 17:12:12 2020 +0100
+
+    VAAPI: Fix compilation for older drivers
+    
+    Fixes #13606
+    
+    (cherry picked from commit 394245f0dbab1f2680b5a6edc67764debe3d9dfd)
+
+commit 2921af5591d127e4ff337d7c6c57e1015d28cfd8
+Author: Paul Harrison <paul@mythqml.net>
+Date:   Sat Apr 11 15:45:10 2020 +0100
+
+    version.sh: if found use DESCRIBE to get branch and version information
+    
+    The Ubuntu packaging scripts create a DESCRIBE file that has the branch and
+    version information we need so use that if it's found.
+    
+    (cherry picked from commit 0851b35e3ded43ea738473bc60b8e5d13595b922)
+
+commit daa1d5d8e2a617c2fadb01e22558e30f53aa86b4
+Author: John Poet <jpoet@mythtv.org>
+Date:   Wed Apr 8 14:41:45 2020 -0600
+
+    ExternalRecorder: Allow for optional ICON field is channels.
+    
+    Any ExternalRecorder which supports fetching channel information can
+    now supply the icon image filename.  That information will be
+    populated into the mythconverg.channel table. The file is NOT
+    /installed/ anywhere and must exist where mythbackend looks for such
+    files.
+    
+    (cherry picked from commit be7417fa483f650980767d053fc0cf4a20eac8f2)
+
+commit f8495fd1564df151436ebe941a490ce5f7d871c8
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sun Apr 5 18:04:33 2020 -0600
+
+    ExternRecorder: Fix live tv channel changes.
+    
+    (cherry picked from commit 18fa5fff1b9ac862cea0c5e8a3fb8981052bd6a3)
+
+commit ecb0c15b4cc3bd86905602f93a453bad6459c08a
+Author: John Poet <jpoet@mythtv.org>
+Date:   Sat Apr 4 13:49:46 2020 -0600
+
+    ExtneralChannel: Use InProgress instead of running or starting to indicate a long running tunning operation.
+    
+    Thanks to Gary Buhrmaster for the suggestion.
+    
+    (cherry picked from commit 1dd0408e236e354f72eaed02c1119bb2b3f4a157)
+
+commit 74544819067773869c87c4b1974e46dc9ad9e41f
+Author: John Poet <jpoet@mythtv.org>
+Date:   Fri Apr 3 10:09:18 2020 -0600
+
+    MythExternRecorder: Add support for long channel change times.
+    
+    Add support for the external application to respond with "OK:Running" in
+    response to a tuning request.  The external application must then respond to
+    "TuningStatus" message.
+    
+    This keeps LiveTV from timing out after 7 seconds when the tuning command
+    takes a long time. It also lets mythbackend start up much faster, since it
+    doesn't have to wait for a tuning command to complete before initializing
+    the next tuner.
+    
+    (cherry picked from commit 9a973f5b560c51b83f4af87c2e1a3bf82a5dbd77)
+
+commit a58ef59549d9accb5b874140a4a16823732bc4cf
+Author: John Poet <jpoet@mythtv.org>
+Date:   Fri Apr 3 10:09:18 2020 -0600
+
+    ExternalChannel: When mythbackend is startting up, don't /actually/ tune a channel.
+    
+    Tinning with an External Recorder can take a long time. As long as the
+    External Recorder can be executed, assume tinning a channel will succeed.
+    
+    (cherry picked from commit 7c0b1421c49173a8955f6e090fbac9fc3d280ea4)
+
+commit 49e545531a8ef6383abeb76a03220ae3ee880f7b
+Author: John Poet <jpoet@mythtv.org>
+Date:   Fri Apr 3 10:09:18 2020 -0600
+
+    mythexternrecorder: Allow use of channum with tuning command, even without a channel configuration file.
+    
+    (cherry picked from commit 356dd5e39a61e3a5e433508bd6afc937ca7c9e30)
+
+commit 1244eddac0d8d65533b997eea67019aa1866acdd
+Author: John Poet <jpoet@mythtv.org>
+Date:   Fri Apr 3 10:09:18 2020 -0600
+
+    Dvr::AddRecordSchedule: Allow last_record to be specified.
+    
+    Scheduler::UpdateManuals: When creating the mythconverg.program entry,
+    populate program.originalairdate from record.last_record.
+    
+    
+    A little bit of a hack, but it is the cleanest solution without adding
+    another variable to mythconverg.record.
+    
+    (cherry picked from commit 56277c79b7474d87c31bc67785972df16620115e)
+
+commit 4f79764adab0faea6f0e76074358bef902b13f14
+Author: John Poet <jpoet@mythtv.org>
+Date:   Fri Apr 3 10:09:18 2020 -0600
+
+    mythexternrec: Track channum so an unnecessary tune is not issued on back-to-back recordings.
+    
+    (cherry picked from commit d8d3b7422b220cbecaec518b350373075797026e)
+
+commit 3867297afe19fb6853143e9542688e66c7bc1f39
+Author: John Poet <jpoet@mythtv.org>
+Date:   Fri Apr 3 10:09:18 2020 -0600
+
+    mythexternrec: Add a cleanup system command option to the config file.
+    
+    If [RECORDER][cleanup] is defined, it will be run whenever this external
+    recorder is shut down.
+    
+    (cherry picked from commit d5dacff66275b7e45a7c2cf3dadfadcc7fc2a87f)
+
+commit a465f1b03d505b0038ba5d40b11bb10039454733
+Author: Klaas de Waal <kdewaal@mythtv.org>
+Date:   Tue Apr 7 22:33:36 2020 +0200
+
+    Use const_iterator for QMap m_encoderList
+    
+    Use const_iterator, constBegin, constEnd and constFind while accessing
+    the tvList and pointers to the tvList such as m_encoderList and m_tvList.
+    This fixes the problem of crashing while deleting a recording.
+    When deleting, the m_encoderList is accessed by more than one thread.
+    The QMap is documented to be re-entrant but this appears to be only the case
+    when the QMap is accessed with the const variants of the member functions.
+    
+    Fixes #13571
+    
+    (cherry picked from commit 4192aab4d31301596b506c47507e8c3d872cc18f)
+    Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
+
+commit ece4ff7ebc1b1383e62d11ad55bd9fa845185d90
+Author: David Hampton <mythtv@love2code.net>
+Date:   Tue Apr 7 10:07:43 2020 -0400
+
+    Fix improper sorting of names that start with "An".
+    
+    The US English translation accidentally removed the space after this
+    word, causing it to always be removed instead of just when it was a
+    separate word.
+    
+    Fixes #13603.
+    
+    (cherry picked from commit 5d3743c7989813d4297ff97ba8959cf17b659889)
+
+commit 9258fb56250392eb49abeb71785e4166b78c48fd
+Author: Paul Harrison <paul@mythqml.net>
+Date:   Tue Mar 31 18:25:58 2020 +0100
+
+    configure: enable by default gnutls support in our copy of ffmpeg
+    
+    This is required to support playback from protocols using these schema :-
+    https, rtmps, rtmpts and tls.
+    
+    Support is enabled by default if gnutls is found but can be explicitly
+    disabled by passing --disable-gnutls to ./configure
+    
+    (cherry picked from commit 427d87b0c62d9c51a0ce8543b770abda73dfc6fc)
+
+commit 2cd6ccb419cbab542c782f9b8df2cdfb7f406ee5
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Fri Apr 3 17:02:09 2020 +0100
+
+    NVDEC: Fix decoder support check
+    
+    (cherry picked from commit a2f19766c768c5ef40f596e1edf30dc3afb6889c)
+
+commit 809ea6028d6b30315f88d6fbd3374317cedf4361
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Fri Apr 3 11:46:43 2020 +0100
+
+    MythNVDECContext: Additional logging for decoder check
+
+commit 57f25431f5a6935f6d6473323f7f66a7f6a80cc4
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Fri Apr 3 11:09:51 2020 +0100
+
+    VAAPI: Fix direct rendering for Intel iHD series drivers
+
 commit aa63cae341f4001b5a447dc871f2d1962b883845
 Author: Philipp Matthias Hahn <pmhahn+mythtv@pmhahn.de>
 Date:   Mon Mar 30 09:53:27 2020 +0200

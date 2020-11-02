@@ -57,12 +57,12 @@
 %global desktop_applications mythfrontend mythtv-setup
 
 # git has used to fetch fixes diff
-%global githash ab0c38a4764c29019f1fe10c8a8315bb85d65150
+%global githash eb3c84de5fe12831d386d15452aeb7658841e072
 %global shorthash %(c=%{githash}; echo ${c:0:10})
 
 # MythTV Version string -- preferably the output from git describe
-%global vers_string v31.0-89-gab0c38a476
-%global rel_date 20200829
+%global vers_string v31.0-118-geb3c84de5f
+%global rel_date 20201031
 %global rel_string .%{rel_date}git%{shorthash}
 
 %global branch fixes/31
@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        9%{rel_string}%{?dist}
+Release:        10%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1382,6 +1382,9 @@ exit 0
 
 
 %changelog
+* Sat Oct 31 2020 Richard Shaw <hobbes1069@gmail.com> - 31.0-10.20201031giteb3c84de5f
+- Update to latest fixes/31.
+
 * Sat Aug 29 2020 Richard Shaw <hobbes1069@gmail.com> - 31.0-9.20200829gitab0c38a476
 - Update to latest fixes/v31.
 

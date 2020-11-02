@@ -1,7 +1,7 @@
 From 32ae89ef505c77cb520f1e601efef58890bdcb57 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Thu, 26 Mar 2020 13:49:53 +0000
-Subject: [PATCH 01/89] MythCodecContext: Ignore hardware decoders when there
+Subject: [PATCH 001/118] MythCodecContext: Ignore hardware decoders when there
  is no GUI
 
 (cherry picked from commit 1e06407c6edb2f73eacb3b7bb9782bd9375912cd)
@@ -30,7 +30,7 @@ index 0880bf8212f..5932fafc780 100644
 From f496eb12ea1eab92d9ca0e57856da66b54e9a0fa Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Fri, 27 Mar 2020 17:28:58 +0000
-Subject: [PATCH 02/89] libmythtv.pro: Typo
+Subject: [PATCH 002/118] libmythtv.pro: Typo
 
 (cherry picked from commit 59b00df23e73d842552c0105a7f51c6a12de7796)
 ---
@@ -54,7 +54,7 @@ index 036228f2d31..f1b0248d220 100644
 From 81d4056c2402882621590e7cd88ae8af5ba134aa Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Wed, 4 Mar 2020 22:08:23 +0100
-Subject: [PATCH 03/89] Wait for NIT or MGT when scanning
+Subject: [PATCH 003/118] Wait for NIT or MGT when scanning
 
 In mythtv-setup channel scan, wait for a NIT or a MGT when the
 PAT/PMT have been found. This solves the problem that sometimes
@@ -108,7 +108,7 @@ index 52c6bb1d606..0f2ebae0744 100644
 From 2ef589a8d742613ebe247362366cc045855b195c Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Sun, 15 Mar 2020 22:10:01 +0100
-Subject: [PATCH 04/89] T2_terrestrial_delivery_system debug output
+Subject: [PATCH 004/118] T2_terrestrial_delivery_system debug output
 
 Debug output of the T2 terrestrial delivery system descriptor added.
 First version with only the mandatory fields.
@@ -205,7 +205,7 @@ index e53a24e2c15..7d026ef10b1 100644
 From d052cbc41cce4201b7a578f3a0820a9c9d3771d9 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Sun, 15 Mar 2020 22:26:28 +0100
-Subject: [PATCH 05/89] Signal strength of scanned transports
+Subject: [PATCH 005/118] Signal strength of scanned transports
 
 Show the signal strength of the scanned transports in the transport list.
 The transport list is shown if the "-v chanscan" option is given when running mythtv-setup.
@@ -453,7 +453,7 @@ index d51a33ef087..a6c1e2c1681 100644
 From f48478b4772547cfb67cea011a962f068a057ff6 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Mon, 16 Mar 2020 23:24:11 +0100
-Subject: [PATCH 06/89] Add Full Scan option for DVB-C Netherlands
+Subject: [PATCH 006/118] Add Full Scan option for DVB-C Netherlands
 
 Add an entry in the frequency tables for a "Full Scan" option
 for DVB-C in The Netherlands. There is currently only one entry
@@ -528,7 +528,7 @@ index 55e021fa5cb..26416adfb74 100644
 From e0e09b6b69c8e95fb45d97f1a2a56d625cb2df77 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Thu, 19 Mar 2020 23:55:26 +0100
-Subject: [PATCH 07/89] Scan option "Remove duplicate channels"
+Subject: [PATCH 007/118] Scan option "Remove duplicate channels"
 
 Add new scan option to remove duplicate transports and duplicate
 channels based on signal strength of the received signal.
@@ -1150,7 +1150,7 @@ index 67ac7d54335..5f612cc2536 100644
 From fec7309d231992cc88156e7fe80fd060f5639142 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Fri, 20 Mar 2020 23:37:32 +0100
-Subject: [PATCH 08/89] Fix for "Remove duplicate channels" scan option
+Subject: [PATCH 008/118] Fix for "Remove duplicate channels" scan option
 
 Fix counting bug in this new feature.
 Fixed corner case in updating existing channels where
@@ -1368,7 +1368,7 @@ index 5f15d1f1b16..bfec5028844 100644
 From c8c59f5548ce99d1248cb52e467e4c9e1100476e Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Sun, 22 Mar 2020 19:00:37 +0100
-Subject: [PATCH 09/89] Updated "Remove duplicates" channel scan option
+Subject: [PATCH 009/118] Updated "Remove duplicates" channel scan option
 
 Renamed the feature from "Remove duplicate channels" to "Remove duplicates".
 Changed the default for this option to Selected/Checked.
@@ -1708,7 +1708,7 @@ index e7ba30e6756..a2e2979ec0b 100644
 From aa63cae341f4001b5a447dc871f2d1962b883845 Mon Sep 17 00:00:00 2001
 From: Philipp Matthias Hahn <pmhahn+mythtv@pmhahn.de>
 Date: Mon, 30 Mar 2020 09:53:27 +0200
-Subject: [PATCH 10/89] Python: Update JOBTYPEs
+Subject: [PATCH 010/118] Python: Update JOBTYPEs
 
 89b6416b50c  78 (Robert McNamara          2011-07-03 16:49:38 -0700  79)     JOB_METADATA     = 0x0004,
 ab33dd919ef  80 (John Poet                2018-03-08 16:02:25 -0700  80)     JOB_PREVIEW      = 0x0008,
@@ -1735,7 +1735,7 @@ index 167d71377ac..1f9e1203f63 100644
 From 57f25431f5a6935f6d6473323f7f66a7f6a80cc4 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Fri, 3 Apr 2020 11:09:51 +0100
-Subject: [PATCH 11/89] VAAPI: Fix direct rendering for Intel iHD series
+Subject: [PATCH 011/118] VAAPI: Fix direct rendering for Intel iHD series
  drivers
 
 ---
@@ -1804,7 +1804,8 @@ index 9819e981409..65bf676e3be 100644
 From 809ea6028d6b30315f88d6fbd3374317cedf4361 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Fri, 3 Apr 2020 11:46:43 +0100
-Subject: [PATCH 12/89] MythNVDECContext: Additional logging for decoder check
+Subject: [PATCH 012/118] MythNVDECContext: Additional logging for decoder
+ check
 
 ---
  .../libmythtv/decoders/mythnvdeccontext.cpp   | 90 +++++++++++--------
@@ -1956,7 +1957,7 @@ index a54a340acc6..56f8187647c 100644
 From 2cd6ccb419cbab542c782f9b8df2cdfb7f406ee5 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Fri, 3 Apr 2020 17:02:09 +0100
-Subject: [PATCH 13/89] NVDEC: Fix decoder support check
+Subject: [PATCH 013/118] NVDEC: Fix decoder support check
 
 (cherry picked from commit a2f19766c768c5ef40f596e1edf30dc3afb6889c)
 ---
@@ -1980,8 +1981,8 @@ index 56f8187647c..04cb4601971 100644
 From 9258fb56250392eb49abeb71785e4166b78c48fd Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Tue, 31 Mar 2020 18:25:58 +0100
-Subject: [PATCH 14/89] configure: enable by default gnutls support in our copy
- of ffmpeg
+Subject: [PATCH 014/118] configure: enable by default gnutls support in our
+ copy of ffmpeg
 
 This is required to support playback from protocols using these schema :-
 https, rtmps, rtmpts and tls.
@@ -2058,7 +2059,7 @@ index 77aee2d0768..3a7ec61fd74 100755
 From ece4ff7ebc1b1383e62d11ad55bd9fa845185d90 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 7 Apr 2020 10:07:43 -0400
-Subject: [PATCH 15/89] Fix improper sorting of names that start with "An".
+Subject: [PATCH 015/118] Fix improper sorting of names that start with "An".
 
 The US English translation accidentally removed the space after this
 word, causing it to always be removed instead of just when it was a
@@ -2452,7 +2453,7 @@ index 478c77059ab..46fa7864631 100644
 From a465f1b03d505b0038ba5d40b11bb10039454733 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Tue, 7 Apr 2020 22:33:36 +0200
-Subject: [PATCH 16/89] Use const_iterator for QMap m_encoderList
+Subject: [PATCH 016/118] Use const_iterator for QMap m_encoderList
 
 Use const_iterator, constBegin, constEnd and constFind while accessing
 the tvList and pointers to the tvList such as m_encoderList and m_tvList.
@@ -2637,7 +2638,7 @@ index 7a9762ea46a..4ca86721472 100644
 From 3867297afe19fb6853143e9542688e66c7bc1f39 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 17/89] mythexternrec: Add a cleanup system command option to
+Subject: [PATCH 017/118] mythexternrec: Add a cleanup system command option to
  the config file.
 
 If [RECORDER][cleanup] is defined, it will be run whenever this external
@@ -2791,8 +2792,8 @@ index 71ca26079f1..e05e047d7cc 100644
 From 4f79764adab0faea6f0e76074358bef902b13f14 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 18/89] mythexternrec: Track channum so an unnecessary tune is
- not issued on back-to-back recordings.
+Subject: [PATCH 018/118] mythexternrec: Track channum so an unnecessary tune
+ is not issued on back-to-back recordings.
 
 (cherry picked from commit d8d3b7422b220cbecaec518b350373075797026e)
 ---
@@ -2874,7 +2875,7 @@ index fbaa2b7596c..b94e01d0c86 100644
 From 1244eddac0d8d65533b997eea67019aa1866acdd Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 19/89] Dvr::AddRecordSchedule: Allow last_record to be
+Subject: [PATCH 019/118] Dvr::AddRecordSchedule: Allow last_record to be
  specified.
 
 Scheduler::UpdateManuals: When creating the mythconverg.program entry,
@@ -3004,7 +3005,7 @@ index 7a6b1be80bc..5bf193c05ab 100644
 From 49e545531a8ef6383abeb76a03220ae3ee880f7b Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 20/89] mythexternrecorder: Allow use of channum with tuning
+Subject: [PATCH 020/118] mythexternrecorder: Allow use of channum with tuning
  command, even without a channel configuration file.
 
 (cherry picked from commit 356dd5e39a61e3a5e433508bd6afc937ca7c9e30)
@@ -3210,7 +3211,7 @@ index 967e5e89c2a..494d207242a 100644
 From a58ef59549d9accb5b874140a4a16823732bc4cf Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 21/89] ExternalChannel: When mythbackend is startting up,
+Subject: [PATCH 021/118] ExternalChannel: When mythbackend is startting up,
  don't /actually/ tune a channel.
 
 Tinning with an External Recorder can take a long time. As long as the
@@ -3289,8 +3290,8 @@ index 243934301ee..1a7fc75a7aa 100644
 From 74544819067773869c87c4b1974e46dc9ad9e41f Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Fri, 3 Apr 2020 10:09:18 -0600
-Subject: [PATCH 22/89] MythExternRecorder: Add support for long channel change
- times.
+Subject: [PATCH 022/118] MythExternRecorder: Add support for long channel
+ change times.
 
 Add support for the external application to respond with "OK:Running" in
 response to a tuning request.  The external application must then respond to
@@ -3723,7 +3724,7 @@ index e05e047d7cc..833ecb8a8c6 100644
 From ecb0c15b4cc3bd86905602f93a453bad6459c08a Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Sat, 4 Apr 2020 13:49:46 -0600
-Subject: [PATCH 23/89] ExtneralChannel: Use InProgress instead of running or
+Subject: [PATCH 023/118] ExtneralChannel: Use InProgress instead of running or
  starting to indicate a long running tunning operation.
 
 Thanks to Gary Buhrmaster for the suggestion.
@@ -3790,7 +3791,7 @@ index b9e02f6f2ea..1758d7e5395 100644
 From f8495fd1564df151436ebe941a490ce5f7d871c8 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Sun, 5 Apr 2020 18:04:33 -0600
-Subject: [PATCH 24/89] ExternRecorder: Fix live tv channel changes.
+Subject: [PATCH 024/118] ExternRecorder: Fix live tv channel changes.
 
 (cherry picked from commit 18fa5fff1b9ac862cea0c5e8a3fb8981052bd6a3)
 ---
@@ -3822,7 +3823,7 @@ index 445325bc835..a2acc946557 100644
 From daa1d5d8e2a617c2fadb01e22558e30f53aa86b4 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Wed, 8 Apr 2020 14:41:45 -0600
-Subject: [PATCH 25/89] ExternalRecorder: Allow for optional ICON field is
+Subject: [PATCH 025/118] ExternalRecorder: Allow for optional ICON field is
  channels.
 
 Any ExternalRecorder which supports fetching channel information can
@@ -3995,7 +3996,7 @@ index 1758d7e5395..5a8acb28619 100644
 From 2921af5591d127e4ff337d7c6c57e1015d28cfd8 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Sat, 11 Apr 2020 15:45:10 +0100
-Subject: [PATCH 26/89] version.sh: if found use DESCRIBE to get branch and
+Subject: [PATCH 026/118] version.sh: if found use DESCRIBE to get branch and
  version information
 
 The Ubuntu packaging scripts create a DESCRIBE file that has the branch and
@@ -4114,7 +4115,7 @@ index fd2c0be875f..56c04457622 100755
 From 3b54678feba714c514f32b38b0f5c1c6a74eaf3f Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Mon, 13 Apr 2020 17:12:12 +0100
-Subject: [PATCH 27/89] VAAPI: Fix compilation for older drivers
+Subject: [PATCH 027/118] VAAPI: Fix compilation for older drivers
 
 Fixes #13606
 
@@ -4144,7 +4145,7 @@ index 48be0267f11..c03766c6fad 100644
 From 4d0924203a33203eedc1d4cf0b3f242609d729ef Mon Sep 17 00:00:00 2001
 From: Nigel Jewell <nige@grufty.co.uk>
 Date: Sun, 12 Apr 2020 21:31:49 +0100
-Subject: [PATCH 28/89] Fix typo in 0851b35e3ded43ea738473bc60b8e5d13595b922
+Subject: [PATCH 028/118] Fix typo in 0851b35e3ded43ea738473bc60b8e5d13595b922
  comment
 
 (cherry picked from commit dca115895bcc7631fd4eb9dcfa0b4d838ed1e786)
@@ -4169,7 +4170,7 @@ index 56c04457622..d412cc0505d 100755
 From c8f62c1688bb2ceaedabb2563f434dac1d7d5694 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Wed, 15 Apr 2020 20:12:47 +0100
-Subject: [PATCH 29/89] FAQ: trivial change to force an update
+Subject: [PATCH 029/118] FAQ: trivial change to force an update
 
 ---
  mythtv/FAQ | 2 +-
@@ -4190,7 +4191,7 @@ index 593d3b9fea6..e4f6c451095 100644
 From 4e3935420ac0da8997d01ce77672f90d6dcbd78e Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Thu, 16 Apr 2020 22:22:20 +0200
-Subject: [PATCH 30/89] Fix "Full Scan" for DVB-T only tuners
+Subject: [PATCH 030/118] Fix "Full Scan" for DVB-T only tuners
 
 The "Full Scan" for tuners that can do only DVB-T and not DVB-T2
 was done correct but the modulation system was not entered in
@@ -4223,7 +4224,7 @@ index 543c7e1a9cd..98e9f9f7d4b 100644
 From 8bfc909dc70e8e9f156e66f7346f63e3e13660d5 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Sat, 18 Apr 2020 15:38:32 +0100
-Subject: [PATCH 31/89] HLSStreamHandler: fix the formatting of a debug
+Subject: [PATCH 031/118] HLSStreamHandler: fix the formatting of a debug
  statement
 
 Refs #13608
@@ -4250,7 +4251,8 @@ index 964f5396e46..22e0abae062 100644
 From 917a2087ef032b2c36a102cf4a2b220e10bf7bfe Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 21 Apr 2020 14:58:59 -0400
-Subject: [PATCH 32/89] Fix segfault in code called from MythMainWindow::Draw.
+Subject: [PATCH 032/118] Fix segfault in code called from
+ MythMainWindow::Draw.
 
 This reverts three of the changes in 380102ce34.  In
 mythmainwindow.cpp while running the m_stackList, the call to
@@ -4317,7 +4319,7 @@ index 7bdfe41bb3b..619ba7f7f78 100644
 From 5f1993304e35042192aed059dd7cf8717b76c6a7 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 21 Apr 2020 15:24:15 -0400
-Subject: [PATCH 33/89] Fix incorrect data provided to UPnP client.
+Subject: [PATCH 033/118] Fix incorrect data provided to UPnP client.
 
 This bug was introduced in 77b560f3cc when converting from the
 obsolete QString::sprintf function to typical QString formatting using
@@ -4346,7 +4348,7 @@ index cda4f86a778..3a2bfbba3ce 100644
 From c0b8b6e036bdb531fe09be8005dcf1181d9333ec Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20Janiszewski?= <janisozaur+signed@gmail.com>
 Date: Tue, 30 Oct 2018 21:56:52 +0100
-Subject: [PATCH 34/89] Compare to `None` using identity `is` operator
+Subject: [PATCH 034/118] Compare to `None` using identity `is` operator
 
 This is a trivial change that replaces `==` operator with `is` operator, following PEP 8 guideline:
 
@@ -5728,7 +5730,8 @@ index 64eab727f03..76b98618920 100755
 From 3ccdb8c6d24e86a7282d32c14a1f4f09c87e9756 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Sun, 9 Feb 2020 19:03:03 -0600
-Subject: [PATCH 35/89] Python Bindings: fix warnings seen in *buntu packaging
+Subject: [PATCH 035/118] Python Bindings: fix warnings seen in *buntu
+ packaging
 
 (cherry picked from commit 12f44c74ed60e3b0909040f30665c9d3fc58c17c)
 ---
@@ -5784,7 +5787,7 @@ index d1d7546c0eb..f7966fb6d69 100644
 From 723d46eaaa7be6bd760f2c5dfcb50b5410f315ec Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Mon, 27 Apr 2020 21:28:44 +0100
-Subject: [PATCH 36/89] libmythtv: Fix VideoToolbox framework name
+Subject: [PATCH 036/118] libmythtv: Fix VideoToolbox framework name
 
 Closes #13609
 
@@ -5810,7 +5813,7 @@ index f1b0248d220..646577cd5b5 100644
 From f5d75a6de7c4ac668e1a64cdf31c7100bc81b65b Mon Sep 17 00:00:00 2001
 From: Hans Dingemans <jpldingemans@gmail.com>
 Date: Fri, 21 Feb 2020 12:13:00 -0500
-Subject: [PATCH 37/89] mythfilldatabase: reduce memory usage.
+Subject: [PATCH 037/118] mythfilldatabase: reduce memory usage.
 
 Mythfilldatabase uses QDomDocument to parse and store the XML data that is read; according to QDomDocument documentation this object is not meant to handle large XML files; QXmlStreamReader should be used in these situations.
 
@@ -6980,7 +6983,7 @@ index 6d06aefe405..9fad22dc1e4 100644
 From a2b8c262dc96274ef55be25c510a4bbe9b6b52b2 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Tue, 3 Mar 2020 11:31:18 +0000
-Subject: [PATCH 38/89] mythfilldatabase: Fix 2 potential leaks
+Subject: [PATCH 038/118] mythfilldatabase: Fix 2 potential leaks
 
 - introduced in a9aa006139da24cb and picked up by coverity.
 
@@ -7016,7 +7019,7 @@ index 66157ffc648..a875020462b 100644
 From c8e779649384e9810bf8b2262a8f928b1986994d Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Fri, 6 Mar 2020 18:19:45 +0100
-Subject: [PATCH 39/89] BackendServerAddr and MasterServerName replaced
+Subject: [PATCH 039/118] BackendServerAddr and MasterServerName replaced
  MasterServerIP
 
 in V30, according ticket #13024.
@@ -7254,7 +7257,7 @@ index bb8f29630dc..7f5b0c759c8 100644
 From ce23a0225fcec2afbdfe5a7e82170e28f406c830 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Sun, 10 May 2020 12:22:25 +0200
-Subject: [PATCH 40/89] Fix mysql cursor class to handle bytearrays
+Subject: [PATCH 040/118] Fix mysql cursor class to handle bytearrays
 
 Newer Python MySQLdb modules call 'cursor.execute()' multiple times
 from 'cursor.executemany()'.
@@ -7293,7 +7296,7 @@ index 177a880a121..3f798198219 100644
 From 6a5afb4dba08fcd790279af97348f3e69ebec8c3 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Tue, 19 May 2020 18:08:50 +0100
-Subject: [PATCH 41/89] VDPAU: Try and fall 'back' to H264 Main support
+Subject: [PATCH 041/118] VDPAU: Try and fall 'back' to H264 Main support
 
 - if H264 constrained baseline is reported as not supported
 - this mimics the additional test carried out in FFmpeg
@@ -7337,7 +7340,7 @@ index b8d3b2d1ef2..47b4a927bed 100644
 From 7a31a2e35ccf338952f377d2885eb3af81defb54 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Tue, 12 May 2020 18:51:52 -0600
-Subject: [PATCH 42/89] mythexternrecorder: Add ondatastart command option
+Subject: [PATCH 042/118] mythexternrecorder: Add ondatastart command option
 
 The config file can now specify a command to run as soon as data is detected
 from the 'external' application.
@@ -7476,7 +7479,8 @@ index 833ecb8a8c6..7bbff574f27 100644
 From fa2165511fe0735c612be69445b6acafc05e4caa Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Sun, 17 May 2020 20:58:41 -0600
-Subject: [PATCH 43/89] mythexternrecorder: Add TUNER/newepisodecommand option.
+Subject: [PATCH 043/118] mythexternrecorder: Add TUNER/newepisodecommand
+ option.
 
 Some streaming sources have a "bandwidth saver" option and therefore need
 touched occationally to keep them going. If provided, this command will be
@@ -7572,7 +7576,7 @@ index 63f549e8836..5d105691e26 100644
 From f9baf09e4397032f1a00d98b5085f912547380b6 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Sun, 17 May 2020 19:57:18 +0200
-Subject: [PATCH 44/89] Crash of backend on delete of program being recorded
+Subject: [PATCH 044/118] Crash of backend on delete of program being recorded
 
 Fix this crash and similar backend crashes in the scheduler
 by replacing all iterations over m_tvList/m_encoderLink/m_pEncoders
@@ -7857,7 +7861,7 @@ index 07eb8e74cc5..d5b2702877f 100644
 From 1ca7a4b09ef38cd6e108a26bdc358f280d6ae3d3 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Thu, 21 May 2020 16:27:21 -0500
-Subject: [PATCH 45/89] Python Bindings: Services API, logging & XML
+Subject: [PATCH 045/118] Python Bindings: Services API, logging & XML
  enhancements
 
 - Improve logging dump of 'postdata'
@@ -7936,7 +7940,7 @@ index 1f49389508f..fa817066f27 100644
 From 9380616198f4149d20bb5ef41c3ca0f14944290b Mon Sep 17 00:00:00 2001
 From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Date: Mon, 25 May 2020 11:52:11 -0500
-Subject: [PATCH 46/89] Always request a reschedule when running
+Subject: [PATCH 046/118] Always request a reschedule when running
  mythfilldatabase
 
 Previous edits incorrectly left it where the request was only done
@@ -7970,7 +7974,8 @@ index 3f764b16fb2..ef20217f1ce 100644
 From fc9048228105e0bf416990f97c3ce3c2eceb3201 Mon Sep 17 00:00:00 2001
 From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Date: Mon, 25 May 2020 12:02:17 -0500
-Subject: [PATCH 47/89] mythfilldatabase: remove program starttime order check
+Subject: [PATCH 047/118] mythfilldatabase: remove program starttime order
+ check
 
 Closes #13623
 
@@ -8021,7 +8026,7 @@ index a875020462b..0024819bc3d 100644
 From c89a7e3771ed094662710fdb18fe972d09a55955 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Mon, 1 Jun 2020 18:26:44 +0100
-Subject: [PATCH 48/89] MythDisplay: Track device pixel ratio
+Subject: [PATCH 048/118] MythDisplay: Track device pixel ratio
 
 (cherry picked from commit 907841a119d94edc4c66c1f1af1114c5ff012258)
 ---
@@ -8094,7 +8099,7 @@ index 62600435384..d3b2a97a210 100644
 From 8c1fd6bb95bfc554d66a444cbfb177a2cd58c485 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Sat, 6 Jun 2020 14:30:55 +0100
-Subject: [PATCH 49/89] VDPAU: Extend logging of profile check
+Subject: [PATCH 049/118] VDPAU: Extend logging of profile check
 
 (cherry picked from commit 43293708579193ff23459feba159cb9fab5259d1)
 ---
@@ -8147,7 +8152,7 @@ index 47b4a927bed..bb5ef391406 100644
 From 672d45b7bd8f03514e9936a0abdcb5c6d17c3112 Mon Sep 17 00:00:00 2001
 From: Ian Campbell <ijc@hellion.org.uk>
 Date: Sat, 6 Jun 2020 09:06:46 -0400
-Subject: [PATCH 50/89] Fix musicmetadata handling of compilations.
+Subject: [PATCH 050/118] Fix musicmetadata handling of compilations.
 
     Fixes #13585
     Closes #192
@@ -8549,7 +8554,7 @@ index 969b3908eb1..0b34b188aa5 100644
 From dd35db8df117b5f2d2c6706438dcf2e316c19d95 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Sat, 6 Jun 2020 22:09:21 +0100
-Subject: [PATCH 51/89] MythPlayer: Fix double rate CPU deinterlacing
+Subject: [PATCH 051/118] MythPlayer: Fix double rate CPU deinterlacing
 
 - the second field was not being processed as after the first pass the
 frame was marked 'already_deinterlaced'
@@ -8603,8 +8608,8 @@ index ec0d58d4c2a..7865bab69af 100644
 From aa753a179b3a08d0935f8adacc8d2611190bdac0 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Sat, 6 Jun 2020 20:29:45 -0600
-Subject: [PATCH 52/89] mythexternrecorder: ondatastart might need to know the
- channel number.
+Subject: [PATCH 052/118] mythexternrecorder: ondatastart might need to know
+ the channel number.
 
 (cherry picked from commit 5cf1846f76ff3a18212c2d6693b4701bdf64c03f)
 ---
@@ -8627,7 +8632,7 @@ index 6ce2d9919cf..514a6ca6b0e 100644
 From 6b45963cf8a25a6b0852edf3943db9b6857bb939 Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Sun, 7 Jun 2020 14:12:37 -0600
-Subject: [PATCH 53/89] mythexternrecorder: Fix "tuning" of channels by
+Subject: [PATCH 053/118] mythexternrecorder: Fix "tuning" of channels by
  external recorder, instead of separate "tuner".
 
 (cherry picked from commit d03307172137afeaa1f70e4f9e5458ff5f46570b)
@@ -8748,7 +8753,7 @@ index 514a6ca6b0e..624b30c98ab 100644
 From 445cf1fe6be324245dfc1c548d265bec147f711c Mon Sep 17 00:00:00 2001
 From: John Poet <jpoet@mythtv.org>
 Date: Sun, 7 Jun 2020 14:37:09 -0600
-Subject: [PATCH 54/89] ExternalStreamHandler: Use DEBUG log level for
+Subject: [PATCH 054/118] ExternalStreamHandler: Use DEBUG log level for
  TunerStatus
 
 (cherry picked from commit 118db4df5d0fc70971f7aa1d4f468f41bf3baa81)
@@ -8775,7 +8780,7 @@ index 87548086a1b..74265cf9bd3 100644
 From 0d8e6f1b14e6d670e54c70fac80cde797e100111 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <mythtv@sky.com>
 Date: Thu, 27 Feb 2020 17:52:31 +0000
-Subject: [PATCH 55/89] Merge pull request #191 from
+Subject: [PATCH 055/118] Merge pull request #191 from
  ijc/musicmetadata-disc-number
 
 mythmusic fixes for multiple discs
@@ -8841,7 +8846,7 @@ index b505fb6bb3b..ae9cdee0473 100644
 From d8ecd8fe7c85165fe3c818a6d07e7ca9472e7735 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Wed, 10 Jun 2020 19:24:00 +0200
-Subject: [PATCH 56/89] Python: fix timestamp calculation
+Subject: [PATCH 056/118] Python: fix timestamp calculation
 
 Python 3.8 changed the handling of the 'datetime' class:
 According release notes ("What's New In Python 3.8"):
@@ -8885,7 +8890,7 @@ index ef61749a56f..97ef75a243a 100644
 From 4c990647889687b5a5ee5951d289a5f0777dda90 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Wed, 10 Jun 2020 19:25:02 +0200
-Subject: [PATCH 57/89] Set MySQL Mode explicitely when starting a session
+Subject: [PATCH 057/118] Set MySQL Mode explicitely when starting a session
 
 Newer SQL server enable the 'strict' MySQL Modes
 "STRICT_TRANS_TABLES" and/or "STRICT_ALL_TABLES",
@@ -8920,7 +8925,7 @@ index 3f798198219..6f50433036b 100644
 From 134ebd7b2938dfede4a916932e52146cf66c4a9c Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Wed, 10 Jun 2020 19:28:39 +0200
-Subject: [PATCH 58/89] Python: Resolve deprecation warnings
+Subject: [PATCH 058/118] Python: Resolve deprecation warnings
 
 Python3.8 shows a couple of deprecation warnings when running
 with the "-Wall" switch:
@@ -8968,7 +8973,7 @@ index 650ac609d67..df4b537ced2 100644
 From 16e06262ba588597496306467dbea845d5f53c47 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Sun, 31 May 2020 20:20:21 -0400
-Subject: [PATCH 59/89] Fix missing Qt 5.15 include in mythpainter.cpp.
+Subject: [PATCH 059/118] Fix missing Qt 5.15 include in mythpainter.cpp.
 
 (cherry picked from commit f12096ba57c37f8966b9cc8fa2a775255862df9f)
 ---
@@ -8991,7 +8996,7 @@ index 4435efb78a2..d70010839d0 100644
 From 9e47ae9d385be2b5fdb72007aad998443fbab11d Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Tue, 16 Jun 2020 17:30:20 +0100
-Subject: [PATCH 60/89] MythOpenGLVideo: Fix chroma sampling for multiplanar
+Subject: [PATCH 060/118] MythOpenGLVideo: Fix chroma sampling for multiplanar
  formats when resizing
 
 - we need GL_NEAREST for YUY2 and when using unsigned integers texture
@@ -9063,7 +9068,7 @@ index 6313fdafaa5..0fd86ae50a9 100644
 From e9e48d190e11b51051dfea9485dc4f903af7b8e9 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Thu, 18 Jun 2020 11:22:02 +0100
-Subject: [PATCH 61/89] VDPAU: Further extend debug logging of support tests
+Subject: [PATCH 061/118] VDPAU: Further extend debug logging of support tests
 
 (cherry picked from commit 43714e821ba5e53a4e3e9726c658fb4b2aaeccea)
 ---
@@ -9133,7 +9138,7 @@ index bb5ef391406..9bddec96d65 100644
 From 94423151e51e155472531d80a7e24b875a13b13c Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Thu, 18 Jun 2020 11:25:09 +0100
-Subject: [PATCH 62/89] MythPlayer: Use yadif for deinterlacing previews
+Subject: [PATCH 062/118] MythPlayer: Use yadif for deinterlacing previews
  (regression)
 
 - the cpu deinterlacers were re-factored shortly before v31 and yadif is
@@ -9164,7 +9169,7 @@ index 7865bab69af..1eecc103cfe 100644
 From bcd9a63ec012adeb4a028d6873c512bb93afa3e2 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Mon, 22 Jun 2020 18:36:33 +0100
-Subject: [PATCH 63/89] VDPAU: Fall 'back' to H264 Main profile for
+Subject: [PATCH 063/118] VDPAU: Fall 'back' to H264 Main profile for
  H264Baseline
 
 - as well as constrained baseline
@@ -9211,7 +9216,8 @@ index 9bddec96d65..d529f1b5453 100644
 From 1182a9abea4724d8af0b8690f04e39779855fce9 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Mon, 22 Jun 2020 13:23:25 -0500
-Subject: [PATCH 64/89] Python Bindings: care for python3.3+ use of ElementTree
+Subject: [PATCH 064/118] Python Bindings: care for python3.3+ use of
+ ElementTree
 
 Fedora 33 is using Python 3.9 and no longer has cElementTree.
 Which was depracated in v3.3, thanks GB.
@@ -9245,7 +9251,7 @@ index a50c762734d..bfb84d10dcb 100644
 From b89d76fa944a5dfc61e96eaa532eb399d92419ab Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Tue, 5 May 2020 23:36:21 +0200
-Subject: [PATCH 65/89] Transport Editor updates
+Subject: [PATCH 065/118] Transport Editor updates
 
 Show the DVB-C parameter edit page for HDHomeRun tuners when they can do DVB-C.
 Previously the ATSC parameter edit page was shown.
@@ -9515,7 +9521,7 @@ index dae14fece8e..0359370a245 100644
 From 261eeff1bd1a5ec8a3573f5957238961793d9356 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Thu, 25 Jun 2020 11:04:14 +0100
-Subject: [PATCH 66/89] VDPAU: Extend FFmpeg constrained baseline check to
+Subject: [PATCH 066/118] VDPAU: Extend FFmpeg constrained baseline check to
  include baseline
 
 - to match the changes in our own code.
@@ -9544,7 +9550,7 @@ index 167f06d7aeb..2e7e8d757ca 100644
 From a675ee1e110fca3ea61a197729ca42c899db94f9 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Thu, 25 Jun 2020 11:34:54 +0100
-Subject: [PATCH 67/89] VDPAU: Disable level checks in MythTV and FFmpeg
+Subject: [PATCH 067/118] VDPAU: Disable level checks in MythTV and FFmpeg
 
 - per the FFmpeg docs, this should be the default and it is causing
 hardware acceleration to fail on older VDPAU devices.
@@ -9589,7 +9595,7 @@ index d529f1b5453..918ce6275f7 100644
 From ade713f98c5846e9c5f08a76e72cbe24ad7057ef Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Fri, 5 Jun 2020 14:21:59 -0400
-Subject: [PATCH 68/89] Services: Add new GetStreamInfo method
+Subject: [PATCH 068/118] Services: Add new GetStreamInfo method
 
 GetStreamInfo gets basic stream information for a video or recording, including
 frame rate, picture dimensons and video codec, as well as audio codec and number
@@ -10156,7 +10162,7 @@ index 93469c246b9..5f49e65d1df 100644
 From 8a0c4f9bd2d9567ccbdb4151d7c03068388b45a6 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Mon, 29 Jun 2020 17:15:57 +0100
-Subject: [PATCH 69/89] macos: Handle high DPI displays
+Subject: [PATCH 069/118] macos: Handle high DPI displays
 
 - behaviour should be unchanged for non-macos installations
 - the underlying problem is that when macos is using high DPI, the
@@ -10581,7 +10587,7 @@ index 199f0d642be..2ccb9a60d5b 100644
 From 3ef7db67fec2a2d843cea673d14240d9ee512332 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Fri, 3 Jul 2020 19:45:12 -0500
-Subject: [PATCH 70/89] Games Plugin: change system to `system` for MySQL v8
+Subject: [PATCH 070/118] Games Plugin: change system to `system` for MySQL v8
 
 (cherry picked from commit 94931c00dc5b67d72503fd112846f148a8e942c4)
 ---
@@ -10632,7 +10638,7 @@ index 2146fac0009..71e48750fe0 100644
 From 0add177794446f98e0dfc4b40d628017e864701f Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Mon, 6 Jul 2020 22:07:23 -0500
-Subject: [PATCH 71/89] MacOS: remove hard-coded python2.6 PYTHONPATH code
+Subject: [PATCH 071/118] MacOS: remove hard-coded python2.6 PYTHONPATH code
 
 Based on a patch from John Hoyt, and thanks for testing
 on MacOS.
@@ -10702,7 +10708,7 @@ index 423b7190419..78393d9cbe5 100644
 From 8212a9b7bf0354894013b102f88e4ef9d827c26c Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Sat, 11 Jul 2020 11:47:01 +0100
-Subject: [PATCH 72/89] VDPAU: Fix VDPAU rendering for AMD/Gallium
+Subject: [PATCH 072/118] VDPAU: Fix VDPAU rendering for AMD/Gallium
 
 Fixes #13253
 
@@ -10775,7 +10781,7 @@ index 79f7bb40b8d..6a8b3bf6b9d 100644
 From 7bf1284867b94509cdbf473cb6e216c0c36145f1 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Fri, 10 Jul 2020 15:00:58 -0400
-Subject: [PATCH 73/89] Services: Add new Video GetSavedBookmark and
+Subject: [PATCH 073/118] Services: Add new Video GetSavedBookmark and
  SetSavedBookmark methods
 
 Previously these methods only existed for recordings. Now adding
@@ -10937,7 +10943,7 @@ index 5f49e65d1df..fdafadf1781 100644
 From 167c8d56e20167a5cc39f1ab8b301313a562b929 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Thu, 16 Jul 2020 07:55:45 -0500
-Subject: [PATCH 74/89] Plugins/dbcheck: Replace CHARACTER SET 'default' with
+Subject: [PATCH 074/118] Plugins/dbcheck: Replace CHARACTER SET 'default' with
  'utf8'
 
 Fix required for MySQL v8 because using 'default' CHARACTER
@@ -11124,7 +11130,7 @@ index 0e5a053acee..50ac049becf 100644
 From 62af47c971c30d2201705302ab260147b7fffd26 Mon Sep 17 00:00:00 2001
 From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Date: Sat, 13 Jun 2020 23:50:45 +0000
-Subject: [PATCH 75/89] add missing(?) log message when grabber interrupted
+Subject: [PATCH 075/118] add missing(?) log message when grabber interrupted
 
 Signed-off-by: David Hampton <mythtv@love2code.net>
 (cherry picked from commit da860e00f7ca51e709485cb7358546a551b46828)
@@ -11149,7 +11155,7 @@ index f320857c186..db751bebf39 100644
 From 396dd023e60aecf667d2e7affa63bb18b468c660 Mon Sep 17 00:00:00 2001
 From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Date: Sat, 13 Jun 2020 23:54:59 +0000
-Subject: [PATCH 76/89] eliminate extranous LOC in logging
+Subject: [PATCH 076/118] eliminate extranous LOC in logging
 
 All the other LOG_ERR logging in mythfilldata do not
 include the LOC field.  Eliminate it for consistency
@@ -11178,7 +11184,7 @@ index db751bebf39..1e42900832e 100644
 From 85dec4804c286483794bb4d11646ef1ff910c0ee Mon Sep 17 00:00:00 2001
 From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Date: Sun, 14 Jun 2020 00:01:39 +0000
-Subject: [PATCH 77/89] Enable output from the grabber to be logged
+Subject: [PATCH 077/118] Enable output from the grabber to be logged
 
 Invoke the running of the grabber such that the output is
 actually captured and logged if the verbose xmltv option
@@ -11222,7 +11228,7 @@ index 1e42900832e..e3c97bd8016 100644
 From 8602e978777fc20bea760ff37b620017f77a1fc1 Mon Sep 17 00:00:00 2001
 From: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Date: Sun, 14 Jun 2020 00:19:39 +0000
-Subject: [PATCH 78/89] Update XMLTV loglevel in programdata
+Subject: [PATCH 078/118] Update XMLTV loglevel in programdata
 
 Change the loglevel in programdata to be the same as
 EIT updates for the equivalent changes (i.e. debug).
@@ -11293,7 +11299,7 @@ index e32c678e861..8495e941558 100644
 From 89d1991ef285567f8b46f287786b2d8ca1fb9236 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Wed, 15 Jul 2020 15:13:26 -0400
-Subject: [PATCH 79/89] Android: Fix support for android 5
+Subject: [PATCH 079/118] Android: Fix support for android 5
 
 For android 5 we need to build with api level 21 and that level does
 not have the ftello and fseeko functions.
@@ -11340,7 +11346,7 @@ index a9575bf18ff..f6e60ab8419 100644
 From f7a1f4b1a0204f624985d872395c7d689ca91da2 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Thu, 16 Jul 2020 21:26:02 +0200
-Subject: [PATCH 80/89] Create key for DVB channel master lock only once
+Subject: [PATCH 080/118] Create key for DVB channel master lock only once
 
 Create master key only once and use that each time the lock is requested instead of creating the key every time again. This solves the problem that the database is accessed 40 times per second for the source ID of a capture card for each capture card while monitoring the signal status.
 
@@ -11446,7 +11452,7 @@ index 2ce0898e4dc..99caaabf3a1 100644
 From 05a613f9faaf9193f86fc29a3e42e730e401a27f Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Thu, 30 Jul 2020 08:58:37 -0500
-Subject: [PATCH 81/89] dbcheck: quote yet another MySQL v8 reserved work
+Subject: [PATCH 081/118] dbcheck: quote yet another MySQL v8 reserved work
 
 Forum user reports being unable to upgrade a 0.25 DB to v31.
 
@@ -11472,7 +11478,7 @@ index 329a716a4db..90915e6cc8c 100644
 From e537ea801af3a1d69c6fd0dbf8060ff22ba34cf2 Mon Sep 17 00:00:00 2001
 From: Mark Kendall <mark.kendall@gmail.com>
 Date: Wed, 29 Jul 2020 16:08:57 +0100
-Subject: [PATCH 82/89] Wayland: Fix alpha blending
+Subject: [PATCH 082/118] Wayland: Fix alpha blending
 
 - each window in wayland has its own buffer/texture and these are always
 composited with alpha blending
@@ -11535,7 +11541,7 @@ index cf9b1d795c7..2470ef3ae8c 100644
 From 3322b374c1850fd2fec170db15a3be349db73b8d Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Tue, 11 Aug 2020 13:12:38 -0500
-Subject: [PATCH 83/89] mythfilldatabase: mark --dd-grab-all as deprecated
+Subject: [PATCH 083/118] mythfilldatabase: mark --dd-grab-all as deprecated
 
 Add a log warning, but continue running.
 
@@ -11577,7 +11583,7 @@ index ef20217f1ce..b197347128e 100644
 From fb389f2100bc5179390de1cbab80cb410b1e2520 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Sun, 16 Aug 2020 14:18:40 -0500
-Subject: [PATCH 84/89] Fix issue with daily and weekly, manual, recording
+Subject: [PATCH 084/118] Fix issue with daily and weekly, manual, recording
  rules.
 
 Commit 5f6697ec removed the setting of subtitle to the recording time.
@@ -11658,8 +11664,8 @@ index cdb7f6d68b5..ddd18d4e26c 100644
 From d3088629deadc957eb26ba3f6b16698b6e7f668b Mon Sep 17 00:00:00 2001
 From: Stuart Auchterlonie <stuarta@mythtv.org>
 Date: Tue, 18 Aug 2020 22:45:26 +0100
-Subject: [PATCH 85/89] Refs #12307 - Respect the user setting to disable media
- monitor
+Subject: [PATCH 085/118] Refs #12307 - Respect the user setting to disable
+ media monitor
 
 Also fix a typo in the message stating it is disabled.
 
@@ -11713,7 +11719,7 @@ index c93de12c9fe..d9bf7ae2630 100644
 From 623192215ae0d08af094a11e148efdac664eb2bc Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <kdewaal@mythtv.org>
 Date: Sun, 23 Aug 2020 21:09:34 +0200
-Subject: [PATCH 86/89] Accept VBOX version numbers starting with VT
+Subject: [PATCH 086/118] Accept VBOX version numbers starting with VT
 
 (cherry picked from commit 083367b4907afbb40c5ee0adbb402a1aabc92468)
 Signed-off-by: Klaas de Waal <kdewaal@mythtv.org>
@@ -11739,7 +11745,7 @@ index bc316e4ebfa..d3fff12317b 100644
 From aac5e7f0f454a95a69de15f40d62306f11033060 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Thu, 27 Aug 2020 16:10:55 -0500
-Subject: [PATCH 87/89] mythfilldatabase: Change one more LOG to debug
+Subject: [PATCH 087/118] mythfilldatabase: Change one more LOG to debug
 
 For users that don't run MFDB using the --only-update-guide
 switch, only print these with xmltv:debug:
@@ -11770,7 +11776,7 @@ index 5b2c5811427..caafde56b11 100644
 From 5c395c59e26a1989c2cc1aced55506dbc1d9be7a Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Wed, 26 Aug 2020 22:51:23 +0200
-Subject: [PATCH 88/89] Python Bindings: Open video/recoring in binary mode
+Subject: [PATCH 088/118] Python Bindings: Open video/recoring in binary mode
 
 Since the exported function `ftopen` is meant for videos or
 recordings, open those type of files in binary mode.
@@ -11829,7 +11835,7 @@ index 6b00ba222cb..5aa730cef87 100644
 From ab0c38a4764c29019f1fe10c8a8315bb85d65150 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Wed, 26 Aug 2020 23:50:26 +0200
-Subject: [PATCH 89/89] Python Bindings: Add robustness on using paths to
+Subject: [PATCH 089/118] Python Bindings: Add robustness on using paths to
  videos or recordings
 
 Storage Group paths may be defined with or without trailing slash ('/').
@@ -11884,3 +11890,1890 @@ index 5aa730cef87..a89d50f6ef4 100644
          else:
          # file not found, open remote
              return protoopen(host, filename, sgroup)
+
+From 40841f5804501478a271369da2bc4ee93418a9dc Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <kdewaal@mythtv.org>
+Date: Sun, 30 Aug 2020 12:26:33 +0200
+Subject: [PATCH 090/118] No discontinuity for first TS packet of PID
+
+Initialize all elements of m_continuityCounter to 0xff.
+This is an essential part of the existing code that avoids giving continuity
+error messages for the first transport stream packet received on a PID.
+The initialization code is present in mythtv v30 but has been accidentally
+removed moving forward to mythtv v31.
+---
+ mythtv/libs/libmythtv/recorders/dtvrecorder.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
+index 3c1248ea14f..a868c6f0489 100644
+--- a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
++++ b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
+@@ -55,6 +55,8 @@ DTVRecorder::DTVRecorder(TVRec *rec) :
+         gCoreContext->GetNumSetting("MinimumRecordingQuality", 95);
+ 
+     m_containerFormat = formatMPEG2_TS;
++
++    memset(m_continuityCounter, 0xff, sizeof(m_continuityCounter));
+ }
+ 
+ DTVRecorder::~DTVRecorder(void)
+
+From b282809197febe7a7619e99c3b3067215a62afc3 Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Wed, 26 Aug 2020 15:51:54 -0400
+Subject: [PATCH 091/118] Service API: Fix bug where "New Episodes Only"
+ corrupts value of DupIn
+
+DupIn value carries two meanings, "New Episodes Only" flag as well as
+flag for searching in current, old or both when cheing duplicates.
+Changed the API methods to have one more parameter, for new episodes
+only.
+
+(cherry picked from commit 9d084c2e42ec15aacb71a48792f6ddf200479ca1)
+---
+ mythtv/libs/libmyth/recordingtypes.cpp        | 23 ++++++++++++++++---
+ mythtv/libs/libmyth/recordingtypes.h          |  2 ++
+ .../datacontracts/recRule.h                   |  6 ++++-
+ .../services/dvrServices.h                    |  2 ++
+ mythtv/programs/mythbackend/services/dvr.cpp  |  6 +++--
+ mythtv/programs/mythbackend/services/dvr.h    |  8 +++++--
+ .../mythbackend/services/serviceUtil.cpp      |  1 +
+ 7 files changed, 40 insertions(+), 8 deletions(-)
+
+diff --git a/mythtv/libs/libmyth/recordingtypes.cpp b/mythtv/libs/libmyth/recordingtypes.cpp
+index cc86b2be17c..86658d05e46 100644
+--- a/mythtv/libs/libmyth/recordingtypes.cpp
++++ b/mythtv/libs/libmyth/recordingtypes.cpp
+@@ -161,6 +161,8 @@ QString toString(RecordingDupInType recdupin)
+             return QObject::tr("Previous Recordings");
+         case kDupsInAll:
+             return QObject::tr("All Recordings");
++        // TODO: This is wrong, kDupsNewEpi is returned in conjunction with
++        // one of the other values.
+         case kDupsNewEpi:
+             return QObject::tr("New Episodes Only");
+         default:
+@@ -179,6 +181,8 @@ QString toDescription(RecordingDupInType recdupin)
+         case kDupsInAll:
+             return QObject::tr("Look for duplicates in current and previous "
+                                "recordings");
++        // TODO: This is wrong, kDupsNewEpi is returned in conjunction with
++        // one of the other values.
+         case kDupsNewEpi:
+             return QObject::tr("Record new episodes only");
+         default:
+@@ -188,6 +192,8 @@ QString toDescription(RecordingDupInType recdupin)
+ 
+ QString toRawString(RecordingDupInType recdupin)
+ {
++    // Remove "New Episodes" flag
++    recdupin = (RecordingDupInType) (recdupin & (-1 - kDupsNewEpi));
+     switch (recdupin)
+     {
+         case kDupsInRecorded:
+@@ -196,13 +202,17 @@ QString toRawString(RecordingDupInType recdupin)
+             return QString("Previous Recordings");
+         case kDupsInAll:
+             return QString("All Recordings");
+-        case kDupsNewEpi:
+-            return QString("New Episodes Only");
+         default:
+             return QString("Unknown");
+     }
+ }
+ 
++// New Episodes Only is a flag added to DupIn
++bool newEpifromDupIn(RecordingDupInType recdupin)
++{
++    return (recdupin & kDupsNewEpi);
++}
++
+ RecordingDupInType dupInFromString(const QString& type)
+ {
+     if (type.toLower() == "current recordings" || type.toLower() == "current")
+@@ -212,10 +222,17 @@ RecordingDupInType dupInFromString(const QString& type)
+     if (type.toLower() == "all recordings" || type.toLower() == "all")
+         return kDupsInAll;
+     if (type.toLower() == "new episodes only" || type.toLower() == "new")
+-        return kDupsNewEpi;
++        return static_cast<RecordingDupInType> (kDupsInAll | kDupsNewEpi);
+     return kDupsInAll;
+ }
+ 
++RecordingDupInType dupInFromStringAndBool(const QString& type, bool newEpisodesOnly) {
++    RecordingDupInType result = dupInFromString(type);
++    if (newEpisodesOnly)
++        result = static_cast<RecordingDupInType> (result | kDupsNewEpi);
++    return result;
++}
++
+ QString toString(RecordingDupMethodType duptype)
+ {
+     switch (duptype)
+diff --git a/mythtv/libs/libmyth/recordingtypes.h b/mythtv/libs/libmyth/recordingtypes.h
+index ccb02120d56..c5654dd6b16 100644
+--- a/mythtv/libs/libmyth/recordingtypes.h
++++ b/mythtv/libs/libmyth/recordingtypes.h
+@@ -50,7 +50,9 @@ enum RecordingDupInType
+ MPUBLIC QString toString(RecordingDupInType rectype);
+ MPUBLIC QString toDescription(RecordingDupInType rectype);
+ MPUBLIC QString toRawString(RecordingDupInType rectype);
++MPUBLIC bool newEpifromDupIn(RecordingDupInType recdupin);
+ MPUBLIC RecordingDupInType dupInFromString(const QString& type);
++MPUBLIC RecordingDupInType dupInFromStringAndBool(const QString& type, bool newEpisodesOnly);
+ 
+ enum RecordingDupMethodType
+ {
+diff --git a/mythtv/libs/libmythservicecontracts/datacontracts/recRule.h b/mythtv/libs/libmythservicecontracts/datacontracts/recRule.h
+index 9fe14910d82..518e9417026 100644
+--- a/mythtv/libs/libmythservicecontracts/datacontracts/recRule.h
++++ b/mythtv/libs/libmythservicecontracts/datacontracts/recRule.h
+@@ -15,7 +15,7 @@ namespace DTC
+ class SERVICE_PUBLIC RecRule : public QObject
+ {
+     Q_OBJECT
+-    Q_CLASSINFO( "version"    , "2.00" );
++    Q_CLASSINFO( "version"    , "2.10" );
+ 
+     Q_PROPERTY( int             Id              READ Id               WRITE setId             )
+     Q_PROPERTY( int             ParentId        READ ParentId         WRITE setParentId       )
+@@ -46,6 +46,7 @@ class SERVICE_PUBLIC RecRule : public QObject
+     Q_PROPERTY( int             EndOffset       READ EndOffset        WRITE setEndOffset      )
+     Q_PROPERTY( QString         DupMethod       READ DupMethod        WRITE setDupMethod      )
+     Q_PROPERTY( QString         DupIn           READ DupIn            WRITE setDupIn          )
++    Q_PROPERTY( bool            NewEpisOnly     READ NewEpisOnly      WRITE setNewEpisOnly    )
+     Q_PROPERTY( uint            Filter          READ Filter           WRITE setFilter         )
+ 
+     Q_PROPERTY( QString         RecProfile      READ RecProfile       WRITE setRecProfile     )
+@@ -97,6 +98,7 @@ class SERVICE_PUBLIC RecRule : public QObject
+     PROPERTYIMP    ( int        , EndOffset      )
+     PROPERTYIMP    ( QString    , DupMethod      )
+     PROPERTYIMP    ( QString    , DupIn          )
++    PROPERTYIMP    ( bool       , NewEpisOnly    )
+     PROPERTYIMP    ( uint       , Filter         )
+     PROPERTYIMP    ( QString    , RecProfile     )
+     PROPERTYIMP    ( QString    , RecGroup       )
+@@ -135,6 +137,7 @@ class SERVICE_PUBLIC RecRule : public QObject
+               m_PreferredInput( 0      ),
+               m_StartOffset   ( 0      ),
+               m_EndOffset     ( 0      ),
++              m_NewEpisOnly   ( false  ),
+               m_Filter        ( 0      ),
+               m_AutoExpire    ( false  ),
+               m_MaxEpisodes   ( 0      ),
+@@ -179,6 +182,7 @@ class SERVICE_PUBLIC RecRule : public QObject
+             m_EndOffset     = src->m_EndOffset     ;
+             m_DupMethod     = src->m_DupMethod     ;
+             m_DupIn         = src->m_DupIn         ;
++            m_NewEpisOnly   = src->m_NewEpisOnly   ;
+             m_Filter        = src->m_Filter        ;
+             m_RecProfile    = src->m_RecProfile    ;
+             m_RecGroup      = src->m_RecGroup      ;
+diff --git a/mythtv/libs/libmythservicecontracts/services/dvrServices.h b/mythtv/libs/libmythservicecontracts/services/dvrServices.h
+index 47ae6c71c98..d3041751ad6 100644
+--- a/mythtv/libs/libmythservicecontracts/services/dvrServices.h
++++ b/mythtv/libs/libmythservicecontracts/services/dvrServices.h
+@@ -213,6 +213,7 @@ class SERVICE_PUBLIC DvrServices : public Service  //, public QScriptable ???
+                                                            QDateTime LastRecorded,
+                                                            QString   DupMethod,
+                                                            QString   DupIn,
++                                                           bool      NewEpisOnly,
+                                                            uint      Filter,
+                                                            QString   RecProfile,
+                                                            QString   RecGroup,
+@@ -255,6 +256,7 @@ class SERVICE_PUBLIC DvrServices : public Service  //, public QScriptable ???
+                                                            int       EndOffset,
+                                                            QString   DupMethod,
+                                                            QString   DupIn,
++                                                           bool      NewEpisOnly,
+                                                            uint      Filter,
+                                                            QString   RecProfile,
+                                                            QString   RecGroup,
+diff --git a/mythtv/programs/mythbackend/services/dvr.cpp b/mythtv/programs/mythbackend/services/dvr.cpp
+index 46cf87e29ef..60cd91af903 100644
+--- a/mythtv/programs/mythbackend/services/dvr.cpp
++++ b/mythtv/programs/mythbackend/services/dvr.cpp
+@@ -1095,6 +1095,7 @@ uint Dvr::AddRecordSchedule   (
+                                QDateTime lastrectsRaw,
+                                QString   sDupMethod,
+                                QString   sDupIn,
++                               bool      bNewEpisOnly,
+                                uint      nFilter,
+                                QString   sRecProfile,
+                                QString   sRecGroup,
+@@ -1145,7 +1146,7 @@ uint Dvr::AddRecordSchedule   (
+         rule.m_dupMethod = kDupCheckNone;
+     else
+         rule.m_dupMethod = dupMethodFromString(sDupMethod);
+-    rule.m_dupIn = dupInFromString(sDupIn);
++    rule.m_dupIn = dupInFromStringAndBool(sDupIn, bNewEpisOnly);
+ 
+     if (sRecProfile.isEmpty())
+         sRecProfile = "Default";
+@@ -1242,6 +1243,7 @@ bool Dvr::UpdateRecordSchedule ( uint      nRecordId,
+                                  int       nEndOffset,
+                                  QString   sDupMethod,
+                                  QString   sDupIn,
++                                 bool      bNewEpisOnly,
+                                  uint      nFilter,
+                                  QString   sRecProfile,
+                                  QString   sRecGroup,
+@@ -1291,7 +1293,7 @@ bool Dvr::UpdateRecordSchedule ( uint      nRecordId,
+         pRule.m_dupMethod = kDupCheckNone;
+     else
+         pRule.m_dupMethod = dupMethodFromString(sDupMethod);
+-    pRule.m_dupIn = dupInFromString(sDupIn);
++    pRule.m_dupIn = dupInFromStringAndBool(sDupIn, bNewEpisOnly);
+ 
+     if (sRecProfile.isEmpty())
+         sRecProfile = "Default";
+diff --git a/mythtv/programs/mythbackend/services/dvr.h b/mythtv/programs/mythbackend/services/dvr.h
+index 5bf193c05ab..3799f27488b 100644
+--- a/mythtv/programs/mythbackend/services/dvr.h
++++ b/mythtv/programs/mythbackend/services/dvr.h
+@@ -176,6 +176,7 @@ class Dvr : public DvrServices
+                                                 QDateTime lastrectsRaw,
+                                                 QString   DupMethod,
+                                                 QString   DupIn,
++                                                bool      NewEpisOnly,
+                                                 uint      Filter,
+                                                 QString   RecProfile,
+                                                 QString   RecGroup,
+@@ -218,6 +219,7 @@ class Dvr : public DvrServices
+                                                   int       EndOffset,
+                                                   QString   DupMethod,
+                                                   QString   DupIn,
++                                                  bool      NewEpisOnly,
+                                                   uint      Filter,
+                                                   QString   RecProfile,
+                                                   QString   RecGroup,
+@@ -494,7 +496,8 @@ class ScriptableDvr : public QObject
+                                     rule->PreferredInput(), rule->StartOffset(),
+                                     rule->EndOffset(),      rule->LastRecorded(),
+                                     rule->DupMethod(),
+-                                    rule->DupIn(),          rule->Filter(),
++                                    rule->DupIn(),          rule->NewEpisOnly(),
++                                    rule->Filter(),
+                                     rule->RecProfile(),     rule->RecGroup(),
+                                     rule->StorageGroup(),   rule->PlayGroup(),
+                                     rule->AutoExpire(),     rule->MaxEpisodes(),
+@@ -527,7 +530,8 @@ class ScriptableDvr : public QObject
+                                     rule->SearchType(),     rule->RecPriority(),
+                                     rule->PreferredInput(), rule->StartOffset(),
+                                     rule->EndOffset(),      rule->DupMethod(),
+-                                    rule->DupIn(),          rule->Filter(),
++                                    rule->DupIn(),          rule->NewEpisOnly(),
++                                    rule->Filter(),
+                                     rule->RecProfile(),     rule->RecGroup(),
+                                     rule->StorageGroup(),   rule->PlayGroup(),
+                                     rule->AutoExpire(),     rule->MaxEpisodes(),
+diff --git a/mythtv/programs/mythbackend/services/serviceUtil.cpp b/mythtv/programs/mythbackend/services/serviceUtil.cpp
+index b1d5071d6a4..bfce03776dd 100644
+--- a/mythtv/programs/mythbackend/services/serviceUtil.cpp
++++ b/mythtv/programs/mythbackend/services/serviceUtil.cpp
+@@ -299,6 +299,7 @@ void FillRecRuleInfo( DTC::RecRule  *pRecRule,
+     pRecRule->setEndOffset      (  pRule->m_endOffset              );
+     pRecRule->setDupMethod      (  toRawString(pRule->m_dupMethod) );
+     pRecRule->setDupIn          (  toRawString(pRule->m_dupIn)     );
++    pRecRule->setNewEpisOnly    (  newEpifromDupIn(pRule->m_dupIn) );
+     pRecRule->setFilter         (  pRule->m_filter                 );
+     pRecRule->setRecProfile     (  pRule->m_recProfile             );
+     pRecRule->setRecGroup       (  RecordingInfo::GetRecgroupString(pRule->m_recGroupID) );
+
+From 2cff5c78b2227eb69efb22e384e20bad90b804ae Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Tue, 8 Sep 2020 16:30:32 -0500
+Subject: [PATCH 092/118] Backport onc foreach fix from master commit
+ 11df0636c5a.
+
+I believe the use of foreach at this location has been causing some of
+my backend crashes.
+---
+ mythtv/libs/libmythbase/mythdbcon.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythbase/mythdbcon.cpp b/mythtv/libs/libmythbase/mythdbcon.cpp
+index 102395fcaed..1df2f65be3d 100644
+--- a/mythtv/libs/libmythbase/mythdbcon.cpp
++++ b/mythtv/libs/libmythbase/mythdbcon.cpp
+@@ -472,7 +472,7 @@ void MDBManager::CloseDatabases()
+     m_pool[QThread::currentThread()].clear();
+     m_lock.unlock();
+ 
+-    foreach (auto & conn, list)
++    for (auto *conn : qAsConst(list))
+     {
+         LOG(VB_DATABASE, LOG_INFO,
+             "Closing DB connection named '" + conn->m_name + "'");
+
+From 48b2a03b78c74cc4268df91f442a4a5e5c3af363 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Tue, 15 Sep 2020 10:18:08 +0100
+Subject: [PATCH 093/118] Add github workflow for fixes/31
+
+---
+ .github/workflows/buildfixes31.yml | 85 ++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 .github/workflows/buildfixes31.yml
+
+diff --git a/.github/workflows/buildfixes31.yml b/.github/workflows/buildfixes31.yml
+new file mode 100644
+index 00000000000..ec42bc4f6b8
+--- /dev/null
++++ b/.github/workflows/buildfixes31.yml
+@@ -0,0 +1,85 @@
++name: fixes/31
++
++on:
++  push:
++    branches: [ fixes/31 ]
++  pull_request:
++    branches: [ fixes/31 ]
++
++jobs:
++  build:
++    name: build
++    strategy:
++      matrix:
++        os: ['ubuntu-18.04', 'macos-10.15']
++        cc: ['gcc', 'clang']
++        include:
++          - cc: 'gcc'
++            cxx: 'g++'
++          - cc: 'clang'
++            cxx: 'clang++'  
++      fail-fast: false
++    runs-on: ${{ matrix.os }}
++
++    steps:
++    - name: Checkout fixes/31
++      uses: actions/checkout@v2
++      
++    - name: Setup build environment
++      run: echo "::set-env name=MYTHTV_CONFIG::--prefix=${{ github.workspace }}/build/install --cc=${{ matrix.cc }} --cxx=${{ matrix.cxx }}"
++      
++    - name: Check ccache
++      uses: actions/cache@v2
++      with:
++        path: ~/.ccache
++        key: ${{ matrix.os }}-${{ matrix.cc }}-ccache-${{ github.sha }}
++        restore-keys: ${{ matrix.os }}-${{ matrix.cc }}-ccache
++  
++    # N.B. These dependencies are for the fixes/31 branch. The list is intended to provide as much code coverage as possible (i.e. enable as many options as possible)
++    - name: Install core dependencies (linux)
++      run: |
++        sudo apt update
++        sudo apt install ccache qt5-qmake qtscript5-dev nasm libsystemd-dev libfreetype6-dev libmp3lame-dev libx264-dev libx265-dev libxrandr-dev libxml2-dev libavahi-compat-libdnssd-dev libasound2-dev liblzo2-dev libhdhomerun-dev libsamplerate0-dev libva-dev libdrm-dev libvdpau-dev libass-dev libpulse-dev libcec-dev libfftw3-dev libssl-dev libtag1-dev libbluray-dev libbluray-bdj libgnutls28-dev libqt5webkit5-dev libvpx-dev python3-mysqldb python3-lxml python3-simplejson python3-future libdbi-perl libdbd-mysql-perl libnet-upnp-perl libio-socket-inet6-perl libxml-simple-perl libqt5sql5-mysql libxxf86vm-dev libxinerama-dev libexiv2-dev
++      if: runner.os == 'Linux'
++      
++    - name: Install core dependencies (macOS)
++      run: |
++        brew install pkg-config ccache qt5 nasm libsamplerate taglib lzo libcec libbluray fftw libass libhdhomerun dav1d x264 x265 libvpx openssl exiv2
++        brew link qt5 --force
++        echo "::set-env name=MYTHTV_CONFIG::$MYTHTV_CONFIG --extra-cxxflags=-I/usr/local/include --extra-ldflags=-L/usr/local/lib"
++      if: runner.os == 'macOS'
++      
++    - name: Configure core
++      working-directory: ./mythtv
++      run: ./configure $MYTHTV_CONFIG --enable-libmp3lame --enable-libvpx --enable-libx264 --enable-libx265 --enable-bdjava
++      
++    - name: Make core
++      working-directory: ./mythtv
++      run: make all_no_test -j4
++    
++    - name: Install core
++      working-directory: ./mythtv
++      run: make install
++      
++    # QTest requires a QT SQL plugin - but there are currently none available via brew on macOS
++    - name: Unit test core
++      working-directory: ./mythtv
++      run: make test
++      if: runner.os == 'Linux'
++    
++    - name: Install plugin dependencies (linux)
++      run: sudo apt install libvorbis-dev libflac++-dev libminizip-dev libcdio-dev libcdio-paranoia-dev python3-oauth python3-pycurl
++           libxml-xpath-perl libdate-manip-perl libdatetime-format-iso8601-perl libsoap-lite-perl libjson-perl libimage-size-perl
++      if: runner.os == 'Linux'
++      
++    - name: Install plugin dependencies (macOS)
++      run: brew install minizip flac libvorbis libcdio
++      if: runner.os == 'macOS'
++      
++    - name: Configure plugins
++      working-directory: ./mythplugins
++      run: ./configure $MYTHTV_CONFIG
++    
++    - name: Make plugins
++      working-directory: ./mythplugins
++      run: make -j4
+
+From b033cd7b75a9220c46e230e2a62802e923119332 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Mon, 14 Sep 2020 18:51:12 +0100
+Subject: [PATCH 094/118] TV: Fix crash when playback exits and guide grid is
+ showing
+
+- not normally a problem in live tv but if playback is allowed to
+continue while embedding, the frontend crashes hard when the GuideGrid
+object loses its player
+- so emit a PlaybackExiting signal and listen for it in the GuideGrid
+- the GuideGrid will continue to show until exited properly - at which
+point the user will drop back to the last UI screen before playback
+started - which I guess makes sense...
+
+Refs #202
+
+(cherry picked from commit 849c2b3243d3de9b857594097d8081325482b568)
+---
+ mythtv/libs/libmythtv/tv_play.cpp          |  3 +++
+ mythtv/libs/libmythtv/tv_play.h            |  3 +++
+ mythtv/programs/mythfrontend/guidegrid.cpp | 13 +++++++++++++
+ mythtv/programs/mythfrontend/guidegrid.h   |  3 +++
+ 4 files changed, 22 insertions(+)
+
+diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
+index 7679b6acde0..9bfae2cd32f 100644
+--- a/mythtv/libs/libmythtv/tv_play.cpp
++++ b/mythtv/libs/libmythtv/tv_play.cpp
+@@ -2602,6 +2602,9 @@ void TV::StopStuff(PlayerContext *mctx, PlayerContext *ctx,
+         LOC + QString("For player ctx %1 -- begin")
+             .arg(find_player_index(ctx)));
+ 
++    emit PlaybackExiting(this);
++    m_isEmbedded = false;
++
+     SetActive(mctx, 0, false);
+ 
+     if (ctx->m_buffer)
+diff --git a/mythtv/libs/libmythtv/tv_play.h b/mythtv/libs/libmythtv/tv_play.h
+index 05940d35557..421cda89814 100644
+--- a/mythtv/libs/libmythtv/tv_play.h
++++ b/mythtv/libs/libmythtv/tv_play.h
+@@ -330,6 +330,9 @@ class MTV_PUBLIC TV : public QObject, public MenuItemDisplayer
+     void timerEvent(QTimerEvent *te) override; // QObject
+     void StopPlayback(void);
+ 
++  signals:
++    void PlaybackExiting(TV* Player);
++
+   protected:
+     // Protected event handling
+     void customEvent(QEvent *e) override; // QObject
+diff --git a/mythtv/programs/mythfrontend/guidegrid.cpp b/mythtv/programs/mythfrontend/guidegrid.cpp
+index 6bf47163aff..9001182bf47 100644
+--- a/mythtv/programs/mythfrontend/guidegrid.cpp
++++ b/mythtv/programs/mythfrontend/guidegrid.cpp
+@@ -518,6 +518,19 @@ GuideGrid::GuideGrid(MythScreenStack *parent,
+                         m_originalStartTime.time().second());
+     m_currentStartTime = m_originalStartTime.addSecs(secsoffset);
+     m_threadPool.setMaxThreadCount(1);
++
++    if (m_player)
++        connect(m_player, &TV::PlaybackExiting, this, &GuideGrid::PlayerExiting);
++}
++
++void GuideGrid::PlayerExiting(TV* Player)
++{
++    if (Player && (Player == m_player))
++    {
++        m_player->StopEmbedding();
++        HideTVWindow();
++        m_player = nullptr;
++    }
+ }
+ 
+ bool GuideGrid::Create()
+diff --git a/mythtv/programs/mythfrontend/guidegrid.h b/mythtv/programs/mythfrontend/guidegrid.h
+index dde085348d6..83062a98eae 100644
+--- a/mythtv/programs/mythfrontend/guidegrid.h
++++ b/mythtv/programs/mythfrontend/guidegrid.h
+@@ -134,6 +134,9 @@ class GuideGrid : public ScheduleCommon, public JumpToChannelListener
+     uint GetCurrentStartChannel(void) const { return m_currentStartChannel; }
+     QDateTime GetCurrentStartTime(void) const { return m_currentStartTime; }
+ 
++  public slots:
++    void PlayerExiting(TV* Player);
++
+   protected slots:
+     void cursorLeft();
+     void cursorRight();
+
+From 0942abd9ec355443ad477dce735167206ba4faf5 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Thu, 17 Sep 2020 13:56:02 +0100
+Subject: [PATCH 095/118] macOS video: Fix scaling of OSD
+
+- when high dpi is in use
+
+Refs #206
+---
+ mythtv/libs/libmythui/opengl/mythpainteropengl.cpp | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp b/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp
+index abbb7685f0a..0d58bc27e76 100644
+--- a/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp
++++ b/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp
+@@ -256,11 +256,12 @@ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
+ {
+     if (m_render)
+     {
++        qreal pixelratio = (m_swapControl && m_usingHighDPI) ? m_pixelRatio : 1.0;
+ #ifdef Q_OS_MACOS
+-        QRect dest = QRect(static_cast<int>(Dest.left()   * m_pixelRatio),
+-                           static_cast<int>(Dest.top()    * m_pixelRatio),
+-                           static_cast<int>(Dest.width()  * m_pixelRatio),
+-                           static_cast<int>(Dest.height() * m_pixelRatio));
++        QRect dest = QRect(static_cast<int>(Dest.left()   * pixelratio),
++                           static_cast<int>(Dest.top()    * pixelratio),
++                           static_cast<int>(Dest.width()  * pixelratio),
++                           static_cast<int>(Dest.height() * pixelratio));
+ #endif
+ 
+         // Drawing an image multiple times with the same VBO will stall most GPUs as
+@@ -271,7 +272,7 @@ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
+             QOpenGLBuffer *vbo = texture->m_vbo;
+             texture->m_vbo = m_mappedBufferPool[m_mappedBufferPoolIdx];
+             texture->m_destination = QRect();
+-            m_render->DrawBitmap(texture, m_target, Source, DEST, nullptr, Alpha, m_pixelRatio);
++            m_render->DrawBitmap(texture, m_target, Source, DEST, nullptr, Alpha, pixelratio);
+             texture->m_destination = QRect();
+             texture->m_vbo = vbo;
+             if (++m_mappedBufferPoolIdx >= MAX_BUFFER_POOL)
+@@ -279,7 +280,7 @@ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
+         }
+         else
+         {
+-            m_render->DrawBitmap(texture, m_target, Source, DEST, nullptr, Alpha, m_pixelRatio);
++            m_render->DrawBitmap(texture, m_target, Source, DEST, nullptr, Alpha, pixelratio);
+             m_mappedTextures.append(texture);
+         }
+     }
+
+From b5f1d03fa8040dbf94621eb6d52cb30b7832fd3d Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Thu, 17 Sep 2020 13:58:13 +0100
+Subject: [PATCH 096/118] macOS video: Fix scaling of video after an input
+ change (high dpi)
+
+- when the display is using high DPI, after an input change we re-init MythVideoBounds but with the current display rectangle; that has already been scaled for high DPI - leading to a doubling of the display rectangle on each input change and a halving of the displayed video.
+- reset MythVideoBounds using its 'raw' window rect - which will then have the scaling applied again - and all is good
+- should only affect macos with high dpi in use
+
+Refs #206
+---
+ mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp b/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp
+index 225c58fe259..d70eb05975a 100644
+--- a/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp
++++ b/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp
+@@ -424,7 +424,7 @@ void MythVideoOutputOpenGL::ProcessFrame(VideoFrame *Frame, OSD */*osd*/,
+             m_dbDisplayProfile->SetInput(m_window.GetVideoDispDim(), 0 , codecName);
+ 
+         bool ok = Init(m_newVideoDim, m_newVideoDispDim, m_newAspect,
+-                       m_display, m_window.GetDisplayVisibleRect(), m_newCodecId);
++                       m_display, m_window.GetRawWindowRect(), m_newCodecId);
+         m_newCodecId = kCodec_NONE;
+         m_newVideoDim = QSize();
+         m_newVideoDispDim = QSize();
+
+From 674fd1eb16aa052afd277a857cf68b65870ac3e9 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Fri, 18 Sep 2020 09:55:13 +0100
+Subject: [PATCH 097/118] workflows: Don't build mythbrowser
+
+---
+ .github/workflows/buildfixes31.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/.github/workflows/buildfixes31.yml b/.github/workflows/buildfixes31.yml
+index ec42bc4f6b8..894da832c27 100644
+--- a/.github/workflows/buildfixes31.yml
++++ b/.github/workflows/buildfixes31.yml
+@@ -78,7 +78,7 @@ jobs:
+       
+     - name: Configure plugins
+       working-directory: ./mythplugins
+-      run: ./configure $MYTHTV_CONFIG
++      run: ./configure $MYTHTV_CONFIG --disable-mythbrowser
+     
+     - name: Make plugins
+       working-directory: ./mythplugins
+
+From 21ef6eed645d42488cc3506794f2a6f955cb227d Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Fri, 18 Sep 2020 10:47:11 +0100
+Subject: [PATCH 098/118] workflows: Don't build macOS
+
+Something has obviously changed in master versus .31 for QtWebkit support. As this build is just informative, disable macOS which does not have webkit
+---
+ .github/workflows/buildfixes31.yml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/.github/workflows/buildfixes31.yml b/.github/workflows/buildfixes31.yml
+index 894da832c27..f3910f9ff91 100644
+--- a/.github/workflows/buildfixes31.yml
++++ b/.github/workflows/buildfixes31.yml
+@@ -11,7 +11,7 @@ jobs:
+     name: build
+     strategy:
+       matrix:
+-        os: ['ubuntu-18.04', 'macos-10.15']
++        os: ['ubuntu-18.04']
+         cc: ['gcc', 'clang']
+         include:
+           - cc: 'gcc'
+@@ -78,7 +78,7 @@ jobs:
+       
+     - name: Configure plugins
+       working-directory: ./mythplugins
+-      run: ./configure $MYTHTV_CONFIG --disable-mythbrowser
++      run: ./configure $MYTHTV_CONFIG
+     
+     - name: Make plugins
+       working-directory: ./mythplugins
+
+From 01bc4fc628a2b294c931b467894254eff1871c2f Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Sat, 19 Sep 2020 09:03:01 +0100
+Subject: [PATCH 099/118] High DPI scaling: Fix displaying the ProgramGuide
+ when embedded
+
+- previously, when playing video, we disabled framebuffer clearing, setting of the viewport and any high dpi scaling in the painter.
+- when high dpi was being used, this broke rendering of the programme guide etc
+- we now differentiate beween control over the framebuffer and the viewport, and allow the painter to set the viewport (and scaling) when embedding - and the guide is rendered correctly
+
+Adapted from 88add49a414aed581a in master
+
+Refs #206
+---
+ .../libmythtv/opengl/mythvideooutopengl.cpp   |  8 ++++++--
+ .../libmythui/opengl/mythpainteropengl.cpp    | 20 ++++++++++++-------
+ .../libs/libmythui/opengl/mythpainteropengl.h | 14 +++++++++++--
+ 3 files changed, 31 insertions(+), 11 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp b/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp
+index d70eb05975a..0c8afe4e85f 100644
+--- a/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp
++++ b/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp
+@@ -139,7 +139,7 @@ MythVideoOutputOpenGL::MythVideoOutputOpenGL(QString Profile)
+     }
+ 
+     // we need to control buffer swapping
+-    m_openGLPainter->SetSwapControl(false);
++    m_openGLPainter->SetViewControl(MythOpenGLPainter::None);
+ 
+     // Create OpenGLVideo
+     QRect dvr = GetDisplayVisibleRect();
+@@ -164,7 +164,7 @@ MythVideoOutputOpenGL::~MythVideoOutputOpenGL()
+     }
+     m_openGLVideoPiPsReady.clear();
+     if (m_openGLPainter)
+-        m_openGLPainter->SetSwapControl(true);
++        m_openGLPainter->SetViewControl(MythOpenGLPainter::Viewport | MythOpenGLPainter::Framebuffer);
+     delete m_openGLVideo;
+     if (m_render)
+     {
+@@ -580,6 +580,9 @@ void MythVideoOutputOpenGL::PrepareFrame(VideoFrame *Frame, FrameScanType Scan,
+     // main UI when embedded
+     if (m_window.IsEmbedding())
+     {
++        // If we are using high dpi, the painter needs to set the appropriate
++        // viewport and enable scaling of its images
++        m_openGLPainter->SetViewControl(MythOpenGLPainter::Viewport);
+         MythMainWindow *win = GetMythMainWindow();
+         if (win && win->GetPaintWindow())
+         {
+@@ -595,6 +598,7 @@ void MythVideoOutputOpenGL::PrepareFrame(VideoFrame *Frame, FrameScanType Scan,
+                 m_render->SetViewPort(main, true);
+             }
+         }
++        m_openGLPainter->SetViewControl(MythOpenGLPainter::None);
+     }
+ 
+     // video
+diff --git a/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp b/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp
+index 0d58bc27e76..2510d479c60 100644
+--- a/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp
++++ b/mythtv/libs/libmythui/opengl/mythpainteropengl.cpp
+@@ -149,16 +149,20 @@ void MythOpenGLPainter::Begin(QPaintDevice *Parent)
+     DeleteTextures();
+     m_render->makeCurrent();
+ 
+-    if (m_target || m_swapControl)
++    if (m_target || m_viewControl.testFlag(Framebuffer))
+     {
+-        // If we are master and using high DPI then scale the viewport
+-        if (m_swapControl && m_usingHighDPI)
+-            currentsize *= m_pixelRatio;
+         m_render->BindFramebuffer(m_target);
+-        m_render->SetViewPort(QRect(0, 0, currentsize.width(), currentsize.height()));
+         m_render->SetBackground(0, 0, 0, 0);
+         m_render->ClearFramebuffer();
+     }
++
++    if (m_target || m_viewControl.testFlag(Viewport))
++    {
++        // If using high DPI then scale the viewport
++        if (m_usingHighDPI)
++            currentsize *= m_pixelRatio;
++        m_render->SetViewPort(QRect(0, 0, currentsize.width(), currentsize.height()));
++    }
+ }
+ 
+ void MythOpenGLPainter::End(void)
+@@ -171,7 +175,7 @@ void MythOpenGLPainter::End(void)
+ 
+     if (VERBOSE_LEVEL_CHECK(VB_GPU, LOG_INFO))
+         m_render->logDebugMarker("PAINTER_FRAME_END");
+-    if (m_target == nullptr && m_swapControl)
++    if (m_target == nullptr && m_viewControl.testFlag(Framebuffer))
+     {
+         m_render->Flush();
+         m_render->swapBuffers();
+@@ -256,7 +260,9 @@ void MythOpenGLPainter::DrawImage(const QRect &Dest, MythImage *Image,
+ {
+     if (m_render)
+     {
+-        qreal pixelratio = (m_swapControl && m_usingHighDPI) ? m_pixelRatio : 1.0;
++        qreal pixelratio = 1.0;
++        if (m_usingHighDPI && m_viewControl.testFlag(Viewport))
++            pixelratio = m_pixelRatio;
+ #ifdef Q_OS_MACOS
+         QRect dest = QRect(static_cast<int>(Dest.left()   * pixelratio),
+                            static_cast<int>(Dest.top()    * pixelratio),
+diff --git a/mythtv/libs/libmythui/opengl/mythpainteropengl.h b/mythtv/libs/libmythui/opengl/mythpainteropengl.h
+index 540f7db79df..06407b93802 100644
+--- a/mythtv/libs/libmythui/opengl/mythpainteropengl.h
++++ b/mythtv/libs/libmythui/opengl/mythpainteropengl.h
+@@ -26,11 +26,19 @@ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
+     Q_OBJECT
+ 
+   public:
++    enum ViewControl
++    {
++        None        = 0x00,
++        Viewport    = 0x01,
++        Framebuffer = 0x02
++    };
++    Q_DECLARE_FLAGS(ViewControls, ViewControl)
++
+     explicit MythOpenGLPainter(MythRenderOpenGL *Render = nullptr, QWidget *Parent = nullptr);
+    ~MythOpenGLPainter() override;
+ 
+     void SetTarget(QOpenGLFramebufferObject* NewTarget) { m_target = NewTarget; }
+-    void SetSwapControl(bool Swap) { m_swapControl = Swap; }
++    void SetViewControl(ViewControls Control) { m_viewControl = Control; }
+     void DeleteTextures(void);
+ 
+     // MythPainter
+@@ -64,7 +72,7 @@ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
+     QWidget          *m_parent { nullptr };
+     MythRenderOpenGL *m_render { nullptr };
+     QOpenGLFramebufferObject* m_target { nullptr };
+-    bool              m_swapControl { true };
++    ViewControls      m_viewControl { Viewport | Framebuffer };
+     QSize             m_lastSize { };
+     qreal             m_pixelRatio   { 1.0     };
+     MythDisplay*      m_display      { nullptr };
+@@ -81,4 +89,6 @@ class MUI_PUBLIC MythOpenGLPainter : public MythPainter
+     bool                       m_mappedBufferPoolReady { false };
+ };
+ 
++Q_DECLARE_OPERATORS_FOR_FLAGS(MythOpenGLPainter::ViewControls)
++
+ #endif
+
+From ea0831c74a1c7bcb116eff79691ef24612343a62 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Sat, 19 Sep 2020 09:06:36 +0100
+Subject: [PATCH 100/118] macos High DPI: Fix scaling of embedded video
+
+- when high DPI is in use, we need to apply the correct scaling to
+  both the embedding rect and ITV resize rect
+- as for the window rect, store the 'raw' values and use these as
+  comparators for detecting change
+
+Refs #206
+---
+ mythtv/libs/libmythtv/videooutwindow.cpp | 29 ++++++++++++++++--------
+ mythtv/libs/libmythtv/videooutwindow.h   |  6 ++---
+ 2 files changed, 22 insertions(+), 13 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/videooutwindow.cpp b/mythtv/libs/libmythtv/videooutwindow.cpp
+index 9c7326f11cb..a5d76e7ae7e 100644
+--- a/mythtv/libs/libmythtv/videooutwindow.cpp
++++ b/mythtv/libs/libmythtv/videooutwindow.cpp
+@@ -647,22 +647,25 @@ void VideoOutWindow::SetWindowSize(QSize Size)
+ 
+ void VideoOutWindow::SetITVResize(QRect Rect)
+ {
+-    QRect oldrect = m_itvDisplayVideoRect;
++    QRect oldrect = m_rawItvDisplayVideoRect;
+     if (Rect.isEmpty())
+     {
+         m_itvResizing = false;
+         m_itvDisplayVideoRect = QRect();
++        m_rawItvDisplayVideoRect = QRect();
+     }
+     else
+     {
+         m_itvResizing = true;
+-        m_itvDisplayVideoRect = Rect;
++        m_rawItvDisplayVideoRect = Rect;
++        m_itvDisplayVideoRect = SCALED_RECT(Rect, m_devicePixelRatio);
+     }
+-    if (m_itvDisplayVideoRect != oldrect)
++    if (m_rawItvDisplayVideoRect != oldrect)
+     {
+-        LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("New ITV display rect: %1x%2+%3+%4")
++        LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("New ITV display rect: %1x%2+%3+%4 (Scale: %1)")
+             .arg(m_itvDisplayVideoRect.width()).arg(m_itvDisplayVideoRect.height())
+-            .arg(m_itvDisplayVideoRect.left()).arg(m_itvDisplayVideoRect.right()));
++            .arg(m_itvDisplayVideoRect.left()).arg(m_itvDisplayVideoRect.right())
++            .arg(m_devicePixelRatio));
+         MoveResize();
+     }
+ }
+@@ -701,14 +704,19 @@ void VideoOutWindow::ResizeDisplayWindow(const QRect &Rect, bool SaveVisibleRect
+  */
+ void VideoOutWindow::EmbedInWidget(const QRect &Rect)
+ {
+-    if (m_embedding && (Rect == m_embeddingRect))
++    if (m_embedding && (Rect == m_rawEmbeddingRect))
+         return;
+-    LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("New embedding rect: %1x%2+%3+%4")
+-        .arg(Rect.width()).arg(Rect.height()).arg(Rect.left()).arg(Rect.top()));
+-    m_embeddingRect = Rect;
++
++    m_rawEmbeddingRect = Rect;
++    m_embeddingRect = SCALED_RECT(Rect, m_devicePixelRatio);
+     bool savevisiblerect = !m_embedding;
+     m_embedding = true;
+-    m_displayVideoRect = Rect;
++    m_displayVideoRect = m_embeddingRect;
++
++    LOG(VB_PLAYBACK, LOG_INFO, LOC + QString("New embedding rect: %1x%2+%3+%4 (Scale: %1)")
++        .arg(m_embeddingRect.width()).arg(m_embeddingRect.height())
++        .arg(m_embeddingRect.left()).arg(m_embeddingRect.top())
++        .arg(m_devicePixelRatio));
+     ResizeDisplayWindow(m_displayVideoRect, savevisiblerect);
+ }
+ 
+@@ -721,6 +729,7 @@ void VideoOutWindow::StopEmbedding(void)
+     if (!m_embedding)
+         return;
+     LOG(VB_PLAYBACK, LOG_INFO, LOC + "Stopped embedding");
++    m_rawEmbeddingRect = QRect();
+     m_embeddingRect = QRect();
+     m_displayVisibleRect = m_tmpDisplayVisibleRect;
+     m_embedding = false;
+diff --git a/mythtv/libs/libmythtv/videooutwindow.h b/mythtv/libs/libmythtv/videooutwindow.h
+index cce077b5fde..a5efc757f52 100644
+--- a/mythtv/libs/libmythtv/videooutwindow.h
++++ b/mythtv/libs/libmythtv/videooutwindow.h
+@@ -79,10 +79,8 @@ class VideoOutWindow : public QObject
+     QRect    GetScreenGeometry(void)       const { return m_screenGeometry; }
+     QRect    GetVideoRect(void)            const { return m_videoRect; }
+     QRect    GetDisplayVideoRect(void)     const { return m_displayVideoRect; }
+-    QRect    GetEmbeddingRect(void)        const { return m_embeddingRect; }
++    QRect    GetEmbeddingRect(void)        const { return m_rawEmbeddingRect; }
+     bool     UsingGuiSize(void)            const { return m_dbUseGUISize; }
+-    bool     GetITVResizing(void)          const { return m_itvResizing; }
+-    QRect    GetITVDisplayRect(void)       const { return m_itvDisplayVideoRect; }
+     QString  GetZoomString(void)           const;
+     AspectOverrideMode GetAspectOverride(void) const { return m_videoAspectOverrideMode; }
+     AdjustFillMode GetAdjustFill(void)     const { return m_adjustFill;      }
+@@ -157,10 +155,12 @@ class VideoOutWindow : public QObject
+     QRect   m_tmpDisplayVisibleRect {0,0,0,0};
+     /// Embedded video rectangle
+     QRect   m_embeddingRect;
++    QRect   m_rawEmbeddingRect;
+ 
+     // Interactive TV (MHEG) video embedding
+     bool    m_itvResizing {false};
+     QRect   m_itvDisplayVideoRect;
++    QRect   m_rawItvDisplayVideoRect;
+ 
+     /// State variables
+     bool    m_embedding  {false};
+
+From 55dd6a75dfb06e47b66d87874ae30470441decbb Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Mon, 21 Sep 2020 20:18:48 +0100
+Subject: [PATCH 101/118] AvFormatDecoder: Fix some DVD menus with VAAPI and
+ VDPAU
+
+- as noted in the code, overriding the aspect ratio from the DVD
+ringbuffer broke aspect ratio change detection and we were continually
+resetting the decoder - with fairly disastrous results
+
+Refs #225
+
+(cherry picked from commit 6f9825338a3622a2c433f31c08e11d07f7becfbe)
+---
+ mythtv/libs/libmythtv/decoders/avformatdecoder.cpp | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp b/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp
+index 7ce2f85b6e6..dce359edb5d 100644
+--- a/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp
++++ b/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp
+@@ -3153,8 +3153,9 @@ void AvFormatDecoder::MpegPreProcessPkt(AVStream *stream, AVPacket *pkt)
+             int  height = static_cast<int>(seq->height()) >> context->lowres;
+             float aspect = seq->aspect(context->codec_id == AV_CODEC_ID_MPEG1VIDEO);
+             if (stream->sample_aspect_ratio.num)
+-                aspect = static_cast<float>(av_q2d(stream->sample_aspect_ratio) *
+-                                                              width / height);
++                aspect = static_cast<float>(av_q2d(stream->sample_aspect_ratio) * width / height);
++            if (aspect_override >= 0.0F)
++                aspect = aspect_override;
+             float seqFPS = seq->fps();
+ 
+             bool changed = (width  != m_currentWidth );
+@@ -3166,13 +3167,8 @@ void AvFormatDecoder::MpegPreProcessPkt(AVStream *stream, AVPacket *pkt)
+             // ratio changes
+             bool forceaspectchange = !qFuzzyCompare(m_currentAspect + 10.0F, aspect + 10.0F) &&
+                                       m_mythCodecCtx && m_mythCodecCtx->DecoderWillResetOnAspect();
+-
+             m_currentAspect = aspect;
+ 
+-            // N.B. this will break aspect ratio change detection above
+-            if (aspect_override > 0.0F)
+-                m_currentAspect = aspect_override;
+-
+             if (changed || forceaspectchange)
+             {
+                 if (m_privateDec)
+
+From 2b753d95fdc7ea2223f32c790b2f84c901b6bc50 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Mon, 21 Sep 2020 20:28:41 +0100
+Subject: [PATCH 102/118] AvFormatDecoder: Fix potential error in DVD aspect
+ ratio
+
+- from last commit, zero is not a valid aspect ratio
+
+Refs #225
+
+(cherry picked from commit cc682b107deda27dd8a4caaf83a80044011723e3)
+---
+ mythtv/libs/libmythtv/decoders/avformatdecoder.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp b/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp
+index dce359edb5d..7165b73581c 100644
+--- a/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp
++++ b/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp
+@@ -3154,7 +3154,7 @@ void AvFormatDecoder::MpegPreProcessPkt(AVStream *stream, AVPacket *pkt)
+             float aspect = seq->aspect(context->codec_id == AV_CODEC_ID_MPEG1VIDEO);
+             if (stream->sample_aspect_ratio.num)
+                 aspect = static_cast<float>(av_q2d(stream->sample_aspect_ratio) * width / height);
+-            if (aspect_override >= 0.0F)
++            if (aspect_override > 0.0F)
+                 aspect = aspect_override;
+             float seqFPS = seq->fps();
+ 
+
+From 8e36eda32195b9ad2cd3bc4f2120efb32e87a926 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Mon, 21 Sep 2020 20:51:38 +0100
+Subject: [PATCH 103/118] MythVideoOutput: Ensure deinterlacers are updated
+ after input change
+
+Closes #222
+---
+ mythtv/libs/libmythtv/mythvideoout.cpp              | 10 ++++++++++
+ mythtv/libs/libmythtv/mythvideoout.h                |  3 +++
+ mythtv/libs/libmythtv/mythvideooutnull.cpp          |  4 ++++
+ mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp |  3 +++
+ 4 files changed, 20 insertions(+)
+
+diff --git a/mythtv/libs/libmythtv/mythvideoout.cpp b/mythtv/libs/libmythtv/mythvideoout.cpp
+index 888b283cfcc..2326c84b7c6 100644
+--- a/mythtv/libs/libmythtv/mythvideoout.cpp
++++ b/mythtv/libs/libmythtv/mythvideoout.cpp
+@@ -369,11 +369,18 @@ void MythVideoOutput::SetDeinterlacing(bool Enable, bool DoubleRate, MythDeintTy
+ {
+     if (!Enable)
+     {
++        m_deinterlacing = false;
++        m_deinterlacing2X = false;
++        m_forcedDeinterlacer = DEINT_NONE;
+         m_videoBuffers.SetDeinterlacing(DEINT_NONE, DEINT_NONE, m_videoCodecID);
+         LOG(VB_PLAYBACK, LOG_INFO, LOC + "Disabled all deinterlacing");
+         return;
+     }
+ 
++    m_deinterlacing   = Enable;
++    m_deinterlacing2X = DoubleRate;
++    m_forcedDeinterlacer = Force;
++
+     MythDeintType singlerate = DEINT_NONE;
+     MythDeintType doublerate = DEINT_NONE;
+     if (DEINT_NONE != Force)
+@@ -427,6 +434,9 @@ bool MythVideoOutput::InputChanged(const QSize &VideoDim, const QSize &VideoDisp
+         m_dbDisplayProfile->SetInput(m_window.GetVideoDispDim(), 0 ,codecName);
+     m_videoCodecID = CodecID;
+     DiscardFrames(true, true);
++
++    // Update deinterlacers for any input change
++    SetDeinterlacing(m_deinterlacing, m_deinterlacing2X, m_forcedDeinterlacer);
+     return true;
+ }
+ /**
+diff --git a/mythtv/libs/libmythtv/mythvideoout.h b/mythtv/libs/libmythtv/mythvideoout.h
+index c26550a69dd..b2314cefec7 100644
+--- a/mythtv/libs/libmythtv/mythvideoout.h
++++ b/mythtv/libs/libmythtv/mythvideoout.h
+@@ -171,6 +171,9 @@ class MythVideoOutput
+     StereoscopicMode     m_stereo                {kStereoscopicModeNone};
+     MythAVCopy           m_copyFrame;
+     MythDeinterlacer     m_deinterlacer;
++    bool                 m_deinterlacing      { false };
++    bool                 m_deinterlacing2X    { false };
++    MythDeintType        m_forcedDeinterlacer { DEINT_NONE };
+ };
+ 
+ #endif // MYTH_VIDEOOUT_H_
+diff --git a/mythtv/libs/libmythtv/mythvideooutnull.cpp b/mythtv/libs/libmythtv/mythvideooutnull.cpp
+index 2171bce90a4..c28ae10797a 100644
+--- a/mythtv/libs/libmythtv/mythvideooutnull.cpp
++++ b/mythtv/libs/libmythtv/mythvideooutnull.cpp
+@@ -205,6 +205,10 @@ void MythVideoOutputNull::SetDeinterlacing(bool Enable, bool DoubleRate, MythDei
+         MythVideoOutput::SetDeinterlacing(Enable, DoubleRate, Force);
+         return;
+     }
++
++    m_deinterlacing   = false;
++    m_deinterlacing2X = false;
++    m_forcedDeinterlacer = DEINT_NONE;
+     m_videoBuffers.SetDeinterlacing(DEINT_NONE, DEINT_NONE, m_videoCodecID);
+ }
+ 
+diff --git a/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp b/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp
+index 0c8afe4e85f..0e0447194f0 100644
+--- a/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp
++++ b/mythtv/libs/libmythtv/opengl/mythvideooutopengl.cpp
+@@ -434,6 +434,9 @@ void MythVideoOutputOpenGL::ProcessFrame(VideoFrame *Frame, OSD */*osd*/,
+         if (wasembedding && ok)
+             EmbedInWidget(oldrect);
+ 
++        // Update deinterlacers for any input change
++        SetDeinterlacing(m_deinterlacing, m_deinterlacing2X, m_forcedDeinterlacer);
++
+         if (!ok)
+             return;
+     }
+
+From 2e1cccb628f92091641657f67f25852c746a7887 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Mon, 21 Sep 2020 22:40:12 +0200
+Subject: [PATCH 104/118] Support DMBTH (DTMB) as DVB-T
+
+Select tuner type DVB-T when the card supports modulation system DMBTH (DTMB).
+This restore the behavior of MythTV v30 that was lost in v31.
+
+Refs #13472
+---
+ mythtv/libs/libmythtv/cardutil.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/mythtv/libs/libmythtv/cardutil.cpp b/mythtv/libs/libmythtv/cardutil.cpp
+index 5f2d8940ee2..005d0e5a197 100644
+--- a/mythtv/libs/libmythtv/cardutil.cpp
++++ b/mythtv/libs/libmythtv/cardutil.cpp
+@@ -770,6 +770,9 @@ DTVTunerType CardUtil::ConvertToTunerType(DTVModulationSystem delsys)
+         case DTVModulationSystem::kModulationSystem_DVBT2:
+             tunertype = DTVTunerType::kTunerTypeDVBT2;
+             break;
++        case DTVModulationSystem::kModulationSystem_DMBTH:
++            tunertype = DTVTunerType::kTunerTypeDVBT;
++            break;
+         case DTVModulationSystem::kModulationSystem_ATSC:
+             tunertype = DTVTunerType::kTunerTypeATSC;
+             break;
+
+From 8ca77476484b7179cbd1843d715e0145e13744c6 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <kdewaal@mythtv.org>
+Date: Wed, 16 Sep 2020 21:00:25 +0200
+Subject: [PATCH 105/118] Time for preview max 10 minutes into the program
+
+The time of the preview is 1/3 of the total program duration
+limited to 10 minutes after the start of the program.
+This limit is added to prevent accidentally revealing the
+result of sport events in long recordings.
+
+(cherry picked from commit b571d81175804f3e8cbc4c47e40232f1f76f0f96)
+Signed-off-by: Klaas de Waal <klaas@kldo.nl>
+---
+ mythtv/libs/libmythtv/previewgenerator.cpp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/previewgenerator.cpp b/mythtv/libs/libmythtv/previewgenerator.cpp
+index d78f9ab9bd2..e2e3ef6483b 100644
+--- a/mythtv/libs/libmythtv/previewgenerator.cpp
++++ b/mythtv/libs/libmythtv/previewgenerator.cpp
+@@ -677,7 +677,10 @@ bool PreviewGenerator::LocalPreviewRun(void)
+         }
+         if (programDuration > 0)
+         {
+-            captime = startEarly + (programDuration / 3);
++            captime = programDuration / 3;
++            if (captime > 600)
++                captime = 600;
++            captime += startEarly;
+         }
+         if (captime < 0)
+             captime = 600;
+
+From abad9e2de7c771029e8b0333d55643855be2a6bf Mon Sep 17 00:00:00 2001
+From: Peter Bennett <pbennett@mythtv.org>
+Date: Tue, 29 Sep 2020 15:25:24 -0400
+Subject: [PATCH 106/118] Fix bug caused by commit a3ae3a8
+
+Problem was that in Terra theme, watched icon was not disappearing
+when an unwatched show was selected.
+
+This reverts part of the above mentioned commit that was causing
+this problem.
+
+(cherry picked from commit dbf9baa1b6caefe4132cbd9a06f8cf74a07f1d92)
+---
+ mythtv/libs/libmythui/mythuistatetype.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythui/mythuistatetype.cpp b/mythtv/libs/libmythui/mythuistatetype.cpp
+index 2d1237787b5..229d99be36c 100644
+--- a/mythtv/libs/libmythui/mythuistatetype.cpp
++++ b/mythtv/libs/libmythui/mythuistatetype.cpp
+@@ -93,7 +93,7 @@ bool MythUIStateType::DisplayState(const QString &name)
+     if (i != m_ObjectsByName.end())
+         m_CurrentState = i.value();
+     else
+-        return false;
++        m_currentState = nullptr;
+ 
+     if (m_CurrentState != old)
+     {
+
+From 070623c6c65ffbc1fc635cf8a8333a4173d6b35f Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Wed, 7 Oct 2020 07:36:29 +0100
+Subject: [PATCH 107/118] Fix 0.31 build
+
+---
+ mythtv/libs/libmythui/mythuistatetype.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythui/mythuistatetype.cpp b/mythtv/libs/libmythui/mythuistatetype.cpp
+index 229d99be36c..39808cc1988 100644
+--- a/mythtv/libs/libmythui/mythuistatetype.cpp
++++ b/mythtv/libs/libmythui/mythuistatetype.cpp
+@@ -93,7 +93,7 @@ bool MythUIStateType::DisplayState(const QString &name)
+     if (i != m_ObjectsByName.end())
+         m_CurrentState = i.value();
+     else
+-        m_currentState = nullptr;
++        m_CurrentState = nullptr;
+ 
+     if (m_CurrentState != old)
+     {
+
+From a7d51639918e7fd1fc0b896248817ac7db732bcf Mon Sep 17 00:00:00 2001
+From: Paul Gardiner <mythtv@glidos.net>
+Date: Sat, 26 Sep 2020 16:22:22 +0100
+Subject: [PATCH 108/118] Fix incorrect artwork urls returned from ttvdb
+ grabber
+
+When performing a manual search for metadata for a video, the artwork
+fetch was failing: no thumbnail was shown and no artwork was being
+associated with the video. Ticket 13518 mentioned strange urls containing
+"banners/_cache//banners". This commit fixes the bad urls and seems to
+restore the downloading of the artwork. I don't know what led to the need
+for this.
+
+(cherry picked from commit 08c7045c2f123a60b6d5d913daef7753cd53649d)
+---
+ .../bindings/python/MythTV/ttvdb/XSLT/tvdbQuery.xsl  | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbQuery.xsl b/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbQuery.xsl
+index bf7ad06a82e..ee6c8ade816 100644
+--- a/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbQuery.xsl
++++ b/mythtv/bindings/python/MythTV/ttvdb/XSLT/tvdbQuery.xsl
+@@ -48,22 +48,22 @@
+                         <xsl:if test=".//poster/text() != ''">
+                             <xsl:element name="image">
+                                 <xsl:attribute name="type">coverart</xsl:attribute>
+-                                <xsl:attribute name="url"><xsl:value-of select="concat('http://www.thetvdb.com/banners/', normalize-space(poster))"/></xsl:attribute>
+-                                <xsl:attribute name="thumb"><xsl:value-of select="concat('http://www.thetvdb.com/banners/_cache/', normalize-space(poster))"/></xsl:attribute>
++                                <xsl:attribute name="url"><xsl:value-of select="concat('http://www.thetvdb.com', normalize-space(poster))"/></xsl:attribute>
++                                <xsl:attribute name="thumb"><xsl:value-of select="tvdbXpath:replace(concat('http://www.thetvdb.com', normalize-space(poster)), '/banners/', '/banners/_cache/')"/></xsl:attribute>
+                             </xsl:element>
+                         </xsl:if>
+                         <xsl:if test=".//fanart/text() != ''">
+                             <xsl:element name="image">
+                                 <xsl:attribute name="type">fanart</xsl:attribute>
+-                                <xsl:attribute name="url"><xsl:value-of select="concat('http://www.thetvdb.com/banners/', normalize-space(fanart))"/></xsl:attribute>
+-                                <xsl:attribute name="thumb"><xsl:value-of select="concat('http://www.thetvdb.com/banners/_cache/', normalize-space(fanart))"/></xsl:attribute>
++                                <xsl:attribute name="url"><xsl:value-of select="concat('http://www.thetvdb.com', normalize-space(fanart))"/></xsl:attribute>
++                                <xsl:attribute name="thumb"><xsl:value-of select="tvdbXpath:replace(concat('http://www.thetvdb.com', normalize-space(fanart)), '/banners/', '/banners/_cache/')"/></xsl:attribute>
+                             </xsl:element>
+                         </xsl:if>
+                         <xsl:if test=".//banner/text() != ''">
+                             <xsl:element name="image">
+                                 <xsl:attribute name="type">banner</xsl:attribute>
+-                                <xsl:attribute name="url"><xsl:value-of select="concat('http://www.thetvdb.com/banners/', normalize-space(banner))"/></xsl:attribute>
+-                                <xsl:attribute name="thumb"><xsl:value-of select="concat('http://www.thetvdb.com/banners/_cache/', normalize-space(banner))"/></xsl:attribute>
++                                <xsl:attribute name="url"><xsl:value-of select="concat('http://www.thetvdb.com', normalize-space(banner))"/></xsl:attribute>
++                                <xsl:attribute name="thumb"><xsl:value-of select="tvdbXpath:replace(concat('http://www.thetvdb.com', normalize-space(banner)), '/banners/', '/banners/_cache/')"/></xsl:attribute>
+                             </xsl:element>
+                         </xsl:if>
+                     </images>
+
+From 76edb08de77d76d2e7baf1ea1fa7072032b6dc4c Mon Sep 17 00:00:00 2001
+From: Bas Hulsken <bhulsken@hotmail.com>
+Date: Tue, 7 Jul 2020 10:09:32 +0200
+Subject: [PATCH 109/118] extend metadatagrabber timeout to 3 minutes
+
+(cherry picked from commit e17de9cd618838e14081322051b199e278100c2b)
+---
+ mythtv/libs/libmythmetadata/metadatagrabber.cpp | 2 +-
+ mythtv/programs/scripts/metadata/Movie/tmdb3.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythmetadata/metadatagrabber.cpp b/mythtv/libs/libmythmetadata/metadatagrabber.cpp
+index 9907eb4e95b..d9c0c1ebb7a 100644
+--- a/mythtv/libs/libmythmetadata/metadatagrabber.cpp
++++ b/mythtv/libs/libmythmetadata/metadatagrabber.cpp
+@@ -425,7 +425,7 @@ MetadataLookupList MetaGrabberScript::RunGrabber(const QStringList &args,
+         .arg(m_fullcommand).arg(args.join(" ")));
+ 
+     grabber.Run();
+-    if (grabber.Wait(60) != GENERIC_EXIT_OK)
++    if (grabber.Wait(180) != GENERIC_EXIT_OK)
+         return list;
+ 
+     QByteArray result = grabber.ReadAll();
+diff --git a/mythtv/programs/scripts/metadata/Movie/tmdb3.py b/mythtv/programs/scripts/metadata/Movie/tmdb3.py
+index 2757e2fa7a4..972cfaa9eab 100755
+--- a/mythtv/programs/scripts/metadata/Movie/tmdb3.py
++++ b/mythtv/programs/scripts/metadata/Movie/tmdb3.py
+@@ -289,7 +289,7 @@ def main():
+     opts, args = parser.parse_args()
+ 
+     signal.signal(signal.SIGALRM, timeouthandler)
+-    signal.alarm(30)
++    signal.alarm(180)
+ 
+     if opts.version:
+         buildVersion()
+
+From 47a45b1e2e972ba2a5f0a464fef9a968e98138c4 Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Thu, 1 Oct 2020 21:21:12 +0200
+Subject: [PATCH 110/118] Revert commit 2738b98, but add robustness
+
+Commit 2738b98 removed the functionality to download fanart and coverart
+upon a manual search for metadata.
+The reason was that it produces an endless loop inside the `Videodialog`
+selection of the correct item.
+
+I re-add this feature with more logging and - hopefully - adding
+robustness.
+We can now distinguish between a failure of the returned lookup data
+and a hiccup in the implementation of the 'ReferenceCounter' classes.
+
+(cherry picked from commit bbd25ebc0cbee76ad6f45604b8b023aa19b316ed)
+---
+ mythtv/programs/mythfrontend/videodlg.cpp | 27 +++++++++++++++++++++--
+ mythtv/programs/mythfrontend/videodlg.h   |  2 +-
+ 2 files changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/mythtv/programs/mythfrontend/videodlg.cpp b/mythtv/programs/mythfrontend/videodlg.cpp
+index a9ae42cb097..345acb93eb8 100644
+--- a/mythtv/programs/mythfrontend/videodlg.cpp
++++ b/mythtv/programs/mythfrontend/videodlg.cpp
+@@ -51,6 +51,8 @@
+ // for ImageDLFailureEvent
+ #include "metadataimagedownload.h"
+ 
++#define LOC_MML QString("Manual Metadata Lookup: ")
++
+ static const QString _Location = "MythVideo";
+ 
+ namespace
+@@ -3506,12 +3508,33 @@ void VideoDialog::ToggleWatched()
+     }
+ }
+ 
+-void VideoDialog::OnVideoSearchListSelection(const RefCountHandler<MetadataLookup>& lookup)
++void VideoDialog::OnVideoSearchListSelection(RefCountHandler<MetadataLookup> lookup)
+ {
+     if (!lookup)
+         return;
+ 
+-    OnVideoSearchDone(lookup);
++    if(!lookup->GetInetref().isEmpty() && lookup->GetInetref() != "00000000")
++    {
++        LOG(VB_GENERAL, LOG_INFO, LOC_MML +
++            QString("Selected Item: Type: %1%2 : Subtype: %3%4%5 : InetRef: %6")
++                .arg(lookup->GetType() == kMetadataVideo ? "Video" : "")
++                .arg(lookup->GetType() == kMetadataRecording ? "Recording" : "")
++                .arg(lookup->GetSubtype() == kProbableMovie ? "Movie" : "")
++                .arg(lookup->GetSubtype() == kProbableTelevision ? "Television" : "")
++                .arg(lookup->GetSubtype() == kUnknownVideo ? "Unknown" : "")
++                .arg(lookup->GetInetref()));
++
++        lookup->SetStep(kLookupData);
++        lookup->IncrRef();
++        m_metadataFactory->Lookup(lookup);
++    }
++    else
++    {
++        LOG(VB_GENERAL, LOG_ERR, LOC_MML +
++            QString("Selected Item has no InetRef Number!"));
++
++        OnVideoSearchDone(lookup);
++    }
+ }
+ 
+ void VideoDialog::OnParentalChange(int amount)
+diff --git a/mythtv/programs/mythfrontend/videodlg.h b/mythtv/programs/mythfrontend/videodlg.h
+index 3747f5a4d40..cdadd7ee5a3 100644
+--- a/mythtv/programs/mythfrontend/videodlg.h
++++ b/mythtv/programs/mythfrontend/videodlg.h
+@@ -131,7 +131,7 @@ class VideoDialog : public MythScreenType
+     void OnParentalChange(int amount);
+ 
+     // Called when the underlying data for an item changes
+-    void OnVideoSearchListSelection(const RefCountHandler<MetadataLookup>& lookup);
++    void OnVideoSearchListSelection(RefCountHandler<MetadataLookup> lookup);
+ 
+     void doVideoScan();
+ 
+
+From 6ad0b90949c956048aa8daccfb3da49b45f62e7e Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Thu, 1 Oct 2020 21:45:08 +0200
+Subject: [PATCH 111/118] Fix running a metadata grabber twice in manual mode
+
+Commit e81c7fd added accuracy of retrieving metadata in automatic mode,
+but leads to some inefficiency in the use of manual mode:
+
+If the search for an exact match was not successful, the other grabber
+is called twice and appends its result twice.
+
+This commit combines the intention of commit 2f9424c for non-automatic
+mode and the commit for automatic mode (2738b98).
+
+(cherry picked from commit 6f85a40f370bf8e9b88b6ab0b98f6f8bebee4d8f)
+---
+ .../libs/libmythmetadata/metadatadownload.cpp | 21 ++++++-------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
+
+diff --git a/mythtv/libs/libmythmetadata/metadatadownload.cpp b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+index 2ecebd0fef7..5b60f2b1b84 100644
+--- a/mythtv/libs/libmythmetadata/metadatadownload.cpp
++++ b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+@@ -93,20 +93,24 @@ void MetadataDownload::run()
+             if (lookup->GetSubtype() == kProbableTelevision)
+             {
+                 list = handleTelevision(lookup);
+-                if (findExactMatchCount(list, lookup->GetBaseTitle(), true) == 0)
++                if ((findExactMatchCount(list, lookup->GetBaseTitle(), true) == 0) ||
++                    (list.size() > 1 && !lookup->GetAutomatic()))
+                 {
+                     // There are no exact match prospects with artwork from TV search,
+                     // so add in movies, where we might find a better match.
++                    // In case of manual mode and ambiguous result, add it as well.
+                     list.append(handleMovie(lookup));
+                 }
+             }
+             else if (lookup->GetSubtype() == kProbableMovie)
+             {
+                 list = handleMovie(lookup);
+-                if (findExactMatchCount(list, lookup->GetBaseTitle(), true) == 0)
++                if ((findExactMatchCount(list, lookup->GetBaseTitle(), true) == 0) ||
++                    (list.size() > 1 && !lookup->GetAutomatic()))
+                 {
+                     // There are no exact match prospects with artwork from Movie search
+                     // so add in television, where we might find a better match.
++                    // In case of manual mode and ambiguous result, add it as well.
+                     list.append(handleTelevision(lookup));
+                 }
+             }
+@@ -115,19 +119,6 @@ void MetadataDownload::run()
+                 // will try both movie and TV
+                 list = handleVideoUndetermined(lookup);
+             }
+-
+-            if ((list.isEmpty() ||
+-                 (list.size() > 1 && !lookup->GetAutomatic())) &&
+-                lookup->GetSubtype() == kProbableTelevision)
+-            {
+-                list.append(handleMovie(lookup));
+-            }
+-            else if ((list.isEmpty() ||
+-                      (list.size() > 1 && !lookup->GetAutomatic())) &&
+-                     lookup->GetSubtype() == kProbableMovie)
+-            {
+-                list.append(handleTelevision(lookup));
+-            }
+         }
+         else if (lookup->GetType() == kMetadataGame)
+             list = handleGame(lookup);
+
+From 4ab0425bd5e774978f170d3c76f9855072b09307 Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Tue, 6 Oct 2020 19:52:32 +0200
+Subject: [PATCH 112/118] Automated metadata lookup: Return if no match found
+
+When performing a lookup in automatic mode, do not present a list
+of all similar matches. Instead, terminate that lookup with a
+failure notification only.
+
+If a metadata lookup is done on a fresh and large video library,
+the amount of popped up selection lists might get very big, and one
+loses the context to what filename the selection list is meant for.
+
+(cherry picked from commit c9ada72c7384fe1651b37d41d337c1af0459c780)
+---
+ mythtv/libs/libmythmetadata/metadatadownload.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/libs/libmythmetadata/metadatadownload.cpp b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+index 5b60f2b1b84..4566270ef74 100644
+--- a/mythtv/libs/libmythmetadata/metadatadownload.cpp
++++ b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+@@ -167,8 +167,10 @@ void MetadataDownload::run()
+                     continue;
+                 }
+ 
++                // nothing more we can do in automatic mode
+                 QCoreApplication::postEvent(m_parent,
+                     new MetadataLookupFailure(MetadataLookupList() << lookup));
++                continue;
+             }
+ 
+             LOG(VB_GENERAL, LOG_INFO,
+
+From f450e74550936e719134cf817d1fb7dc4e3e259e Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Tue, 6 Oct 2020 20:01:03 +0200
+Subject: [PATCH 113/118] Automated metadata lookup: Pass through automatic
+ flag
+
+If a new metadata lookup is spun off during lookup, pass through
+the 'automatic' flag if we are in automatic mode.
+
+(cherry picked from commit 87aac2f356444a80bb8d8f17e5b27e2f16ff1566)
+---
+ mythtv/libs/libmythmetadata/metadatadownload.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/libs/libmythmetadata/metadatadownload.cpp b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+index 4566270ef74..56d0cd87c83 100644
+--- a/mythtv/libs/libmythmetadata/metadatadownload.cpp
++++ b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+@@ -154,6 +154,8 @@ void MetadataDownload::run()
+                 {
+                     MetadataLookup *newlookup = bestLookup;
+ 
++                    // pass through automatic type
++                    newlookup->SetAutomatic(true);
+                     // bestlookup is owned by list, we need an extra reference
+                     newlookup->IncrRef();
+                     newlookup->SetStep(kLookupData);
+
+From 30017d33d692a8aa5823d317ce741dbf092fd8cd Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Tue, 6 Oct 2020 20:25:31 +0200
+Subject: [PATCH 114/118] Metadata Lookup: Handle 'mxml' and 'nfo' files only
+ once
+
+Videos in the video storage group may have an associated file
+describing the metadata (ending with '.mxml' or '.nfo').
+See https://www.mythtv.org/wiki/MythTV_Universal_Metadata_Format
+
+We should read that file only once, otherwise a lookup reports
+a single match twice.
+
+(cherry picked from commit 3f73316eb86fb018659f5607b6ad3604f0d03d1d)
+---
+ .../libs/libmythmetadata/metadatadownload.cpp | 105 ++++++++----------
+ 1 file changed, 44 insertions(+), 61 deletions(-)
+
+diff --git a/mythtv/libs/libmythmetadata/metadatadownload.cpp b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+index 56d0cd87c83..d5ea413fe7b 100644
+--- a/mythtv/libs/libmythmetadata/metadatadownload.cpp
++++ b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+@@ -90,34 +90,51 @@ void MetadataDownload::run()
+         if (lookup->GetType() == kMetadataVideo ||
+             lookup->GetType() == kMetadataRecording)
+         {
+-            if (lookup->GetSubtype() == kProbableTelevision)
++            // First, look for mxml and nfo files in video storage groups
++            if (lookup->GetType() == kMetadataVideo &&
++                !lookup->GetFilename().isEmpty())
+             {
+-                list = handleTelevision(lookup);
+-                if ((findExactMatchCount(list, lookup->GetBaseTitle(), true) == 0) ||
+-                    (list.size() > 1 && !lookup->GetAutomatic()))
+-                {
+-                    // There are no exact match prospects with artwork from TV search,
+-                    // so add in movies, where we might find a better match.
+-                    // In case of manual mode and ambiguous result, add it as well.
+-                    list.append(handleMovie(lookup));
+-                }
++                QString mxml = getMXMLPath(lookup->GetFilename());
++                QString nfo = getNFOPath(lookup->GetFilename());
++
++                if (!mxml.isEmpty())
++                    list = readMXML(mxml, lookup);
++                else if (!nfo.isEmpty())
++                    list = readNFO(nfo, lookup);
+             }
+-            else if (lookup->GetSubtype() == kProbableMovie)
++
++            // If nothing found, create lookups based on filename
++            if (list.isEmpty())
+             {
+-                list = handleMovie(lookup);
+-                if ((findExactMatchCount(list, lookup->GetBaseTitle(), true) == 0) ||
+-                    (list.size() > 1 && !lookup->GetAutomatic()))
++                if (lookup->GetSubtype() == kProbableTelevision)
+                 {
+-                    // There are no exact match prospects with artwork from Movie search
+-                    // so add in television, where we might find a better match.
+-                    // In case of manual mode and ambiguous result, add it as well.
+-                    list.append(handleTelevision(lookup));
++                    list = handleTelevision(lookup);
++                    if ((findExactMatchCount(list, lookup->GetBaseTitle(), true) == 0) ||
++                        (list.size() > 1 && !lookup->GetAutomatic()))
++                    {
++                        // There are no exact match prospects with artwork from TV search,
++                        // so add in movies, where we might find a better match.
++                        // In case of manual mode and ambiguous result, add it as well.
++                        list.append(handleMovie(lookup));
++                    }
++                }
++                else if (lookup->GetSubtype() == kProbableMovie)
++                {
++                    list = handleMovie(lookup);
++                    if ((findExactMatchCount(list, lookup->GetBaseTitle(), true) == 0) ||
++                        (list.size() > 1 && !lookup->GetAutomatic()))
++                    {
++                        // There are no exact match prospects with artwork from Movie search
++                        // so add in television, where we might find a better match.
++                        // In case of manual mode and ambiguous result, add it as well.
++                        list.append(handleTelevision(lookup));
++                    }
++                }
++                else
++                {
++                    // will try both movie and TV
++                    list = handleVideoUndetermined(lookup);
+                 }
+-            }
+-            else
+-            {
+-                // will try both movie and TV
+-                list = handleVideoUndetermined(lookup);
+             }
+         }
+         else if (lookup->GetType() == kMetadataGame)
+@@ -562,8 +579,8 @@ MetadataLookupList MetadataDownload::handleGame(MetadataLookup *lookup)
+ /**
+  * handleMovie:
+  * attempt to find movie data via the following (in order)
+- * 1- Local MXML
+- * 2- Local NFO
++ * 1- Local MXML: already done before
++ * 2- Local NFO: already done
+  * 3- By title
+  * 4- By inetref (if present)
+  */
+@@ -571,23 +588,6 @@ MetadataLookupList MetadataDownload::handleMovie(MetadataLookup *lookup)
+ {
+     MetadataLookupList list;
+ 
+-    QString mxml;
+-    QString nfo;
+-
+-    if (!lookup->GetFilename().isEmpty())
+-    {
+-        mxml = getMXMLPath(lookup->GetFilename());
+-        nfo = getNFOPath(lookup->GetFilename());
+-    }
+-
+-    if (!mxml.isEmpty())
+-        list = readMXML(mxml, lookup);
+-    else if (!nfo.isEmpty())
+-        list = readNFO(nfo, lookup);
+-
+-    if (!list.isEmpty())
+-        return list;
+-
+     MetaGrabberScript grabber =
+         MetaGrabberScript::GetGrabber(kGrabberMovie, lookup);
+ 
+@@ -616,8 +616,8 @@ MetadataLookupList MetadataDownload::handleMovie(MetadataLookup *lookup)
+ /**
+  * handleTelevision
+  * attempt to find television data via the following (in order)
+- * 1- Local MXML
+- * 2- Local NFO
++ * 1- Local MXML: already done before
++ * 2- Local NFO: already done
+  * 3- By inetref with subtitle
+  * 4- By inetref with season and episode
+  * 5- By inetref
+@@ -628,23 +628,6 @@ MetadataLookupList MetadataDownload::handleTelevision(MetadataLookup *lookup)
+ {
+     MetadataLookupList list;
+ 
+-    QString mxml;
+-    QString nfo;
+-
+-    if (!lookup->GetFilename().isEmpty())
+-    {
+-        mxml = getMXMLPath(lookup->GetFilename());
+-        nfo = getNFOPath(lookup->GetFilename());
+-    }
+-
+-    if (!mxml.isEmpty())
+-        list = readMXML(mxml, lookup);
+-    else if (!nfo.isEmpty())
+-        list = readNFO(nfo, lookup);
+-
+-    if (!list.isEmpty())
+-        return list;
+-
+     MetaGrabberScript grabber =
+         MetaGrabberScript::GetGrabber(kGrabberTelevision, lookup);
+     bool searchcollection = false;
+
+From 5a366872567c6c29390f8847cfaec6f7e027ae5b Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Tue, 6 Oct 2020 20:40:16 +0200
+Subject: [PATCH 115/118] Metadata Lookup: Add an experimental feature in
+ automatic mode
+
+In case that no exact matches have been found during automatic lookup,
+return the head of the list proposed by the grabber.
+
+This helps a lot, if a tv-series name is given by the file names
+in English, but the lookup was done in a different language.
+
+Anyway, it unconditionally sets the first presented item, even the
+match was not exactly found by MythTV.
+
+One needs to set the environment variable "EXPERIMENTAL_METADATA_GRAB"
+prior to the execution of mythfrontend or mythmetadatalookup.
+
+(cherry picked from commit 75cf2569817437f5282776193d4ef11f8261fa2a)
+---
+ .../libs/libmythmetadata/metadatadownload.cpp | 32 ++++++++++++++++---
+ 1 file changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/mythtv/libs/libmythmetadata/metadatadownload.cpp b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+index d5ea413fe7b..0ce2647e858 100644
+--- a/mythtv/libs/libmythmetadata/metadatadownload.cpp
++++ b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+@@ -1,3 +1,6 @@
++// C/C++
++#include <cstdlib>
++
+ // qt
+ #include <QCoreApplication>
+ #include <QEvent>
+@@ -186,10 +189,31 @@ void MetadataDownload::run()
+                     continue;
+                 }
+ 
+-                // nothing more we can do in automatic mode
+-                QCoreApplication::postEvent(m_parent,
+-                    new MetadataLookupFailure(MetadataLookupList() << lookup));
+-                continue;
++                // Experimental:
++                // If nothing matches, always return the first found item
++                if (getenv("EXPERIMENTAL_METADATA_GRAB"))
++                {
++                    MetadataLookup *newlookup = list.takeFirst();
++
++                    // pass through automatic type
++                    newlookup->SetAutomatic(true);   // ### XXX RER
++                    newlookup->SetStep(kLookupData);
++                    // Type may have changed
++                    LookupType ret = GuessLookupType(newlookup);
++                    if (ret != kUnknownVideo)
++                    {
++                        newlookup->SetSubtype(ret);
++                    }
++                    prependLookup(newlookup);
++                    continue;
++                }
++                else
++                {
++                    // nothing more we can do in automatic mode
++                    QCoreApplication::postEvent(m_parent,
++                        new MetadataLookupFailure(MetadataLookupList() << lookup));
++                    continue;
++                }
+             }
+ 
+             LOG(VB_GENERAL, LOG_INFO,
+
+From d285bdd9948655f98914ea47f61efa290bb86e85 Mon Sep 17 00:00:00 2001
+From: Mark Kendall <mark.kendall@gmail.com>
+Date: Wed, 7 Oct 2020 08:09:28 +0100
+Subject: [PATCH 116/118] MetadataDownload: Fix clang-tidy warning - else after
+ continue
+
+(cherry picked from commit d78f56e083f44224509bae53ffcdfbd21cca446a)
+---
+ mythtv/libs/libmythmetadata/metadatadownload.cpp | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/mythtv/libs/libmythmetadata/metadatadownload.cpp b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+index 0ce2647e858..2869793c8b8 100644
+--- a/mythtv/libs/libmythmetadata/metadatadownload.cpp
++++ b/mythtv/libs/libmythmetadata/metadatadownload.cpp
+@@ -207,13 +207,11 @@ void MetadataDownload::run()
+                     prependLookup(newlookup);
+                     continue;
+                 }
+-                else
+-                {
+-                    // nothing more we can do in automatic mode
+-                    QCoreApplication::postEvent(m_parent,
+-                        new MetadataLookupFailure(MetadataLookupList() << lookup));
+-                    continue;
+-                }
++
++                // nothing more we can do in automatic mode
++                QCoreApplication::postEvent(m_parent,
++                    new MetadataLookupFailure(MetadataLookupList() << lookup));
++                continue;
+             }
+ 
+             LOG(VB_GENERAL, LOG_INFO,
+
+From 577dd50df1cf6c6629eb708ee3a88a724bdbedff Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Sat, 10 Oct 2020 22:12:48 +0200
+Subject: [PATCH 117/118] Python Bindings: Allow searching for collections
+
+The ttvdb.py script does not return a valid xml when searching
+for an ID without season or episode, like
+'ttvdb.py -D 282022'.
+Provide means to search for a collection, which is proven to work:
+'ttvdb.py -C 282022'.
+
+(cherry picked from commit 708b35de5410b03c147c7af0822ae5a05897a9d7)
+---
+ mythtv/bindings/python/MythTV/system.py | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/mythtv/bindings/python/MythTV/system.py b/mythtv/bindings/python/MythTV/system.py
+index f7966fb6d69..3f4f5e2196f 100644
+--- a/mythtv/bindings/python/MythTV/system.py
++++ b/mythtv/bindings/python/MythTV/system.py
+@@ -390,9 +390,10 @@ def sortedSearch(self, phrase, subtitle=None, tolerance=None):
+         return sorted(self.search(phrase, subtitle, tolerance), \
+                         key=lambda r: r.levenshtein)
+ 
+-    def grabInetref(self, inetref, season=None, episode=None):
++    def grabInetref(self, inetref, season=None, episode=None, search_collection=False):
+         """
+-        obj.grabInetref(inetref, season=None, episode=None) -> metadata object
++        obj.grabInetref(inetref, season=None, episode=None, search_collection=False)
++                -> metadata object
+ 
+             Returns a direct search for a specific movie or episode.
+             'inetref' can be an existing VideoMetadata object, and
+@@ -411,7 +412,10 @@ def grabInetref(self, inetref, season=None, episode=None):
+         # inetref may expand to "my_grabber_script.xyz_1234" or "9876"
+         args = list(args)
+         args[0] = args[0].split("_")[-1]
+-        return next(self.command('-D', *args))
++        if search_collection:
++            return next(self.command('-C', *args))
++        else:
++            return next(self.command('-D', *args))
+ 
+ class SystemEvent( System ):
+     """
+
+From eb3c84de5fe12831d386d15452aeb7658841e072 Mon Sep 17 00:00:00 2001
+From: David Engel <dengel@mythtv.org>
+Date: Mon, 12 Oct 2020 15:36:27 -0500
+Subject: [PATCH 118/118] Fix longstanding issue with
+ Scheduler::getConflicting().
+
+Somewhere along the line, probably in a refactoring or cleanup,
+getConflicting() was broken by making it use FindNextConflict().  The
+problem is that FindNextConflict() strictly checks inputs and when
+getConflicting() is called, the inputs for non-recording programs have
+already been removed.  This fix adds an ignoreinput parameter to be
+used when FindNextConflict() is called from getConflicting().
+
+(cherry picked from commit 93c278d430c9f7252aff762783556568433cda02)
+---
+ mythtv/programs/mythbackend/scheduler.cpp | 8 +++++---
+ mythtv/programs/mythbackend/scheduler.h   | 3 ++-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index b787be27ce3..383f3c91ba5 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -1065,7 +1065,8 @@ bool Scheduler::FindNextConflict(
+     const RecordingInfo *p,
+     RecConstIter      &iter,
+     OpenEndType        openEnd,
+-    uint              *paffinity) const
++    uint              *paffinity,
++    bool              ignoreinput) const
+ {
+     uint affinity = 0;
+     for ( ; iter != cardlist.end(); ++iter)
+@@ -1082,7 +1083,7 @@ bool Scheduler::FindNextConflict(
+         if (debugConflicts)
+             msg = QString("comparing with '%1' ").arg(q->GetTitle());
+ 
+-        if (p->GetInputID() != q->GetInputID())
++        if (p->GetInputID() != q->GetInputID() && !ignoreinput)
+         {
+             const vector <uint> &conflicting_inputs =
+                 m_sinputInfoMap[p->GetInputID()].m_conflictingInputs;
+@@ -1715,7 +1716,8 @@ void Scheduler::getConflicting(RecordingInfo *pginfo, RecList *retlist)
+     QReadLocker tvlocker(&TVRec::s_inputsLock);
+ 
+     RecConstIter i = m_recList.begin();
+-    for (; FindNextConflict(m_recList, pginfo, i); ++i)
++    for (; FindNextConflict(m_recList, pginfo, i, openEndNever,
++                            nullptr, true); ++i)
+     {
+         const RecordingInfo *p = *i;
+         retlist->push_back(new RecordingInfo(*p));
+diff --git a/mythtv/programs/mythbackend/scheduler.h b/mythtv/programs/mythbackend/scheduler.h
+index d0cb90cac9c..bc8050c5f91 100644
+--- a/mythtv/programs/mythbackend/scheduler.h
++++ b/mythtv/programs/mythbackend/scheduler.h
+@@ -158,7 +158,8 @@ class Scheduler : public MThread, public MythScheduler
+     bool FindNextConflict(const RecList &cardlist,
+                           const RecordingInfo *p, RecConstIter &iter,
+                           OpenEndType openEnd = openEndNever,
+-                          uint *paffinity = nullptr) const;
++                          uint *paffinity = nullptr,
++                          bool ignoreinput = false) const;
+     const RecordingInfo *FindConflict(const RecordingInfo *p,
+                                       OpenEndType openEnd = openEndNever,
+                                       uint *affinity = nullptr,
