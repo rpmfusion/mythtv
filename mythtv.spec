@@ -361,7 +361,7 @@ Requires:  mythplugins%{?_isa}        = %{version}-%{release}
 # Reminder this one is noarch - and not a sub-package (no EVR)
 Requires:  mythweb                    = %{version}
 Requires:  mythffmpeg%{?_isa}         = %{version}-%{release}
-Requires:  mariadb
+Requires:  mariadb-server
 Requires:  mariadb-connector-c-devel
 %{?fedora:Recommends:  xmltv}
 
@@ -1382,6 +1382,9 @@ exit 0
 
 
 %changelog
+* Mon Dec 07 2020 Sérgio Basto <sergio@serjux.com>
+- Fix for rfbz #5843
+
 * Fri Nov 27 2020 Sérgio Basto <sergio@serjux.com> - 31.0-11.20201031giteb3c84de5f
 - Mass rebuild for x264-0.161
 
