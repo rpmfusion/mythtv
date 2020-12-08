@@ -167,7 +167,7 @@ BuildRequires:  qt5-qtscript-devel >= 5.2
 BuildRequires:  qt5-qtwebkit-devel >= 5.2
 BuildRequires:  freetype-devel >= 2
 %if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:  mariadb-connector-c-devel
+#BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel >= 5
 %endif
@@ -361,8 +361,8 @@ Requires:  mythplugins%{?_isa}        = %{version}-%{release}
 # Reminder this one is noarch - and not a sub-package (no EVR)
 Requires:  mythweb                    = %{version}
 Requires:  mythffmpeg%{?_isa}         = %{version}-%{release}
+Requires:  mariadb
 Requires:  mariadb-server
-Requires:  mariadb-connector-c-devel
 %{?fedora:Recommends:  xmltv}
 
 # Generate the required mythtv-frontend-api version string here so we only
