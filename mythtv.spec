@@ -167,7 +167,7 @@ BuildRequires:  qt5-qtscript-devel >= 5.2
 BuildRequires:  qt5-qtwebkit-devel >= 5.2
 BuildRequires:  freetype-devel >= 2
 %if 0%{?fedora} || 0%{?rhel} >= 8
-#BuildRequires:  mariadb-connector-c-devel
+BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel >= 5
 %endif
