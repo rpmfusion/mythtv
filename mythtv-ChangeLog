@@ -1,3 +1,123 @@
+commit 016630a35cd24d3d1e4eca11e62758161d5af92f
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Fri Jan 8 18:06:54 2021 +0100
+
+    Fix adding missing coverart in ttvdb.py
+    
+    and ignore incomplete urls.
+    
+    Refs #298
+    
+    (cherry picked from commit 3b41c311d97a8dfb9ca87b365517d35b87e2db83)
+
+commit e8d34eacf75bd7c1aa86c709aabc1098f0bfccc3
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Wed Jan 6 15:10:54 2021 +0100
+
+    Be robust if grabber ttvdb.py does not return any banners.
+    
+    Refs #298
+    
+    (cherry picked from commit 817d97101f211ad7d755e3ef3fe3eaa072384528)
+
+commit 0bc3cdfbf7b649e6060db3fa6b67be54f788b00e
+Author: David Engel <dengel@mythtv.org>
+Date:   Mon Dec 28 17:18:13 2020 -0600
+
+    Fix handling of deleted channels in Scheduler::GetAllScheduled()
+    
+    Deleted channels should not be joined at all.  Joining them only on
+    chanid and then filtering in the where clause caused valid rules to
+    not be included.
+    
+    Fixes #295
+    
+    (cherry picked from commit 6157a1772ac4f005aa144c9f97cb317b3d341746)
+
+commit e9b795a1e43023b4141a28b9c620213097cdfbfe
+Author: Paul Harrison <paul@mythqml.net>
+Date:   Tue Dec 8 18:02:06 2020 +0000
+
+    Guide Data: allow for previously shown dates before 1940
+    
+    According to Google the first commercial movie screening was December 28, 1895
+    so allow all dates after that but still reject any dates before that just
+    in case.
+    
+    (cherry picked from commit aeca3d714402abe9c9ef837231f88824eba373c4)
+
+commit f29a663a2577d832584ef289e118ff7d1cbade6a
+Author: Paul Harrison <paul@mythqml.net>
+Date:   Sat Dec 5 18:14:49 2020 +0000
+
+    VBox: use the common part of the UDN to identify VBoxes found by UPnP
+    
+    (cherry picked from commit cc9b462e7254f96ad370db6405481421d4b8caf9)
+
+commit f42a3dbbd159bfc6028d78b6f507596e196af1cc
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Tue Dec 8 19:46:11 2020 +0100
+
+    TMDB3.py: Sort coverarts by system language or 'en', if none found for given language
+    
+    The grabber script tmdb3.py  already sorts the posters
+    by the given language, but if no poster of given language
+    was found, we sort by system language and then by language "en".
+    
+    Refs #180
+    
+    (cherry picked from commit 2940cbcaa26d22b65070ea5871db7b72b1c96fbc)
+
+commit e174aa49f5841bb05ac038e0ec8e57200e3c3419
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Tue Dec 8 19:27:52 2020 +0100
+
+    Temporary fix for missing coverart for seasons from ttvdb.py
+    
+    If ttvdb.py does not return any coverart for specific seasons,
+    use the global coverart from series and patch the xml output.
+    
+    (cherry picked from commit 735802a37a3e10792deb6d3b1a74be93fc4bdde9)
+
+commit 6b93a8acd8c9eaf74b7ca66eedb54299edc5e012
+Author: Roland Ernst <rcrernst@gmail.com>
+Date:   Tue Dec 8 19:20:02 2020 +0100
+
+    Fix ttvdb.py to get coverarts for seasons.
+    
+    Fetching the coverart with the scrip ttvdb.py fails,
+    if the artwork is listed in data['_banners']['season'],
+    but the section data['_banners']['poster'] is missing.
+    In this case, the xslt transformation does not work as expected.
+    
+    Checked with ttvdb.py -l de -a CH -D 89901 36 4
+    
+    (cherry picked from commit 8d6eaf2888f571c7e4c7d21b0909082c772ac659)
+
+commit 102dbe673325fccbc5bf073f94e43fb292bea4b6
+Author: John Hoyt <john.hoyt@gmail.com>
+Date:   Thu Nov 26 13:14:27 2020 -0500
+
+    backport master:d0d9a4e to fixes/31 - Fix audioconvert test failures when compiling X86 optimized code.
+
+commit a087a172311a253bfe488e9139c0c603b7ae4853
+Author: John Hoyt <john.hoyt@gmail.com>
+Date:   Thu Nov 26 13:13:30 2020 -0500
+
+    backport master:5c180c6  to fixes/31 - Fix deprecation warnings in OSX audio
+
+commit 207ccf1aeb333152fa5f17d0b4898f8605ccc2ca
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Wed Nov 25 21:20:12 2020 +0000
+
+    Typos in buildfixes31.yml
+
+commit f829ab8c6888dce04d79fbb5c5e38b6069894f78
+Author: Mark Kendall <mark.kendall@gmail.com>
+Date:   Wed Nov 25 21:17:15 2020 +0000
+
+    Update buildfixes31.yml
+
 commit eb3c84de5fe12831d386d15452aeb7658841e072
 Author: David Engel <dengel@mythtv.org>
 Date:   Mon Oct 12 15:36:27 2020 -0500

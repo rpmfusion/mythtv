@@ -1384,6 +1384,7 @@ exit 0
 %changelog
 * Sun Jan 17 2021 Sérgio Basto <sergio@serjux.com> - 31.0-12.130.20210108git016630a35c
 - Update to 31.0.130.20210108git016630a35c from branch fixes/31
+- Restore helper script update_fixes.sh
 
 * Mon Dec 07 2020 Sérgio Basto <sergio@serjux.com>
 - Fix for rfbz #5843
