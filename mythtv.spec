@@ -117,13 +117,9 @@ Patch1:         %{name}-space_in_GB.patch
 
 # Python2 prefix for building on rhel
 %if 0%{?rhel} && 0%{?rhel} < 8
-%global py_prefix python
-%endif
-
-%if 0%{?fedora} || 0%{?rhel} >= 8
-%global py_prefix python3
-%else
 %global py_prefix python2
+%else
+%global py_prefix python3
 %endif
 
 
@@ -264,7 +260,11 @@ BuildRequires:  systemd-devel
 %endif
 
 %if %{with mythgame}
+%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  minizip-compat-devel
+%else
+BuildRequires:  minizip-devel
+%endif
 %endif
 
 
@@ -292,9 +292,14 @@ BuildRequires:  perl(IO::Socket::INET6)
 
 %if %{with python}
 BuildRequires:  %{py_prefix}-devel
-BuildRequires:  %{py_prefix}-lxml
 BuildRequires:  %{py_prefix}-simplejson
+%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  %{py_prefix}-mysql
+BuildRequires:  %{py_prefix}-lxml
+%else
+BuildRequires:  MySQL-python
+BuildRequires:  python-lxml
+%endif
 %endif
 
 # Plugin Build Requirements
@@ -416,7 +421,9 @@ Requires:  libudisks2%{?_isa}
 # mythgallery is dead
 Obsoletes:      mythgallery < 31
 # mythnetvision is buggy and doesn't want to build with python3-urllib3
+%if !%{with mythnetvision}
 Obsoletes:      mythnetvision < 31
+%endif
 
 %description libs
 Common library code for MythTV and add-on modules (development)
@@ -893,9 +900,9 @@ pushd mythtv
 %if ! %{with vaapi}
     --disable-vaapi                             \
 %endif
-    --enable-bdjava                             \
 %if 0%{?fedora} || 0%{?rhel} >= 8
     --python=%{__python3}                       \
+    --enable-libvpx                             \
 %else
     --python=%{__python2}                       \
 %endif
@@ -903,7 +910,6 @@ pushd mythtv
     --enable-libx264                            \
     --enable-libx265                            \
     --enable-libxvid                            \
-    --enable-libvpx                             \
 %if !%{with perl}
     --without-bindings=perl                     \
 %endif
@@ -1385,6 +1391,10 @@ exit 0
 * Sun Jan 17 2021 Sérgio Basto <sergio@serjux.com> - 31.0-12.130.20210108git016630a35c
 - Update to 31.0.130.20210108git016630a35c from branch fixes/31
 - Restore helper script update_fixes.sh
+- Fixing el7 build, we can't enable libvpx on el7
+- Fixing el7 build, libmythbluray are not used yet
+  https://code.mythtv.org/cgit/mythtv/commit/?id=7a913df1ad2b44567c79cb248d3c40e6c3a6c347
+  Bluray java is only build on el7, disabling it for now.
 
 * Mon Dec 07 2020 Sérgio Basto <sergio@serjux.com>
 - Fix for rfbz #5843
