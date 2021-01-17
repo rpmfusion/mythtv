@@ -34,6 +34,6 @@ echo Press enter to build current branch.; read dummy;
 rfpkg push && rfpkg build --nowait
 for repo in $REPOS ; do
 echo Press enter to build on branch $repo; read dummy;
-git checkout $repo && git merge master && git push && fedpkg build --nowait; git checkout master
+git checkout $repo && git merge master && git push && rfpkg build --nowait; git checkout master
 done
 
