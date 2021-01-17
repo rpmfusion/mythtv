@@ -57,13 +57,13 @@
 %global desktop_applications mythfrontend mythtv-setup
 
 # git has used to fetch fixes diff
-%global githash eb3c84de5fe12831d386d15452aeb7658841e072
+%global githash 016630a35cd24d3d1e4eca11e62758161d5af92f
 %global shorthash %(c=%{githash}; echo ${c:0:10})
 
 # MythTV Version string -- preferably the output from git describe
-%global vers_string v31.0-118-geb3c84de5f
+%global vers_string v31.0-130-g016630a35c
 %global rel_date 20201031
-%global rel_string .%{rel_date}git%{shorthash}
+%global rel_string .130.20210108git016630a35c
 
 %global branch fixes/31
 
@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        11%{rel_string}%{?dist}
+Release:        12%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1382,6 +1382,9 @@ exit 0
 
 
 %changelog
+* Sun Jan 17 2021 Sérgio Basto <sergio@serjux.com> - 31.0-12.130.20210108git016630a35c
+- Update to 31.0.130.20210108git016630a35c from branch fixes/31
+
 * Mon Dec 07 2020 Sérgio Basto <sergio@serjux.com>
 - Fix for rfbz #5843
 

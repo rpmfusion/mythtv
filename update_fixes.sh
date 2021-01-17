@@ -1,8 +1,8 @@
 if ! [ -d "mythtv" ]; then
     git clone git://github.com/MythTV/mythtv.git
 fi
-version=29.1
-branch=fixes/29
+version=31.0
+branch=fixes/31
 pushd mythtv
 git checkout $branch
 git pull
@@ -16,9 +16,9 @@ popd
 # Clean previous modifications on mythtv.spec
 echo Press enter to run: Clean previous modifications on mythtv.spec; read dummy;
 git checkout mythtv.spec
-sed -i "s|^%define vers_string .*|%define vers_string $newdescrib|" mythtv.spec
-sed -i "s|^%define rel_string .*|%define rel_string $relversion|" mythtv.spec
-sed -i "s|^%define githash .*|%define githash $githash|" mythtv.spec
+sed -i "s|global vers_string .*|global vers_string $newdescrib|" mythtv.spec
+sed -i "s|global rel_string .*|global rel_string $relversion|" mythtv.spec
+sed -i "s|global githash .*|global githash $githash|" mythtv.spec
 rpmdev-bumpspec -c "Update to $version$relversion from branch $branch " mythtv.spec
 spectool -g mythtv.spec
 echo Press enter to run: rfpkg new-sources mythtv-${version}.tar.gz v${version}..${shorthash}.patch; read dummy;
