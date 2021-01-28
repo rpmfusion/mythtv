@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        12%{rel_string}%{?dist}
+Release:        13%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -167,7 +167,9 @@ BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel >= 5
 %endif
+%if 0%{?fedora} || 0%{?rhel} < 8
 BuildRequires:  libcec-devel >= 1.7
+%endif
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -1388,6 +1390,9 @@ exit 0
 
 
 %changelog
+* Thu Jan 28 2021 Sérgio Basto <sergio@serjux.com> - 31.0-13.130.20210108git016630a35c
+- Disable libcec on el8
+
 * Sun Jan 17 2021 Sérgio Basto <sergio@serjux.com> - 31.0-12.130.20210108git016630a35c
 - Update to 31.0.130.20210108git016630a35c from branch fixes/31
 - Restore helper script update_fixes.sh
