@@ -72,7 +72,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        13%{rel_string}%{?dist}
+Release:        14%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1390,6 +1390,9 @@ exit 0
 
 
 %changelog
+* Wed Feb 03 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 31.0-14.130.20210108git016630a35c
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Thu Jan 28 2021 Sérgio Basto <sergio@serjux.com> - 31.0-13.130.20210108git016630a35c
 - Disable libcec on el8
 
