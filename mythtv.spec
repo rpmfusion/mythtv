@@ -1,4 +1,5 @@
-%define _lto_cflags %{nil}
+# The full MythTV Version string is computed from the output of git describe.
+%global vers_string v31.0-147-g05c16580e1
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -52,18 +53,19 @@
 #
 
 ################################################################################
+%define _lto_cflags %{nil}
+
+# The build date is today
+%global bld_date %(date +"%Y%m%d")
+
+# These values are computed from git describe provided earlier
+%global githash %(c=%{vers_string}; echo $c|cut -d"-" -f3)
+%global shorthash %(c=%{githash}; echo ${c:1:11})
+%global commits %(c=%{vers_string}; echo $c|cut -d"-" -f2)
+%global rel_string .%{commits}.%{bld_date}git%{shorthash}
 
 # A list of which applications we want to put into the desktop menu system
 %global desktop_applications mythfrontend mythtv-setup
-
-# git has used to fetch fixes diff
-%global githash b6ddf202a496dac180218a6581344251804f2086
-%global shorthash %(c=%{githash}; echo ${c:0:10})
-
-# MythTV Version string -- preferably the output from git describe
-%global vers_string v31.0-139-gb6ddf202a4
-%global rel_date 20210226
-%global rel_string .139.20210226gitb6ddf202a4
 
 %global branch fixes/31
 
@@ -72,7 +74,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        16%{rel_string}%{?dist}
+Release:        17%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1390,6 +1392,10 @@ exit 0
 
 
 %changelog
+* Wed Apr 21 2021 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-17.147.20210421git05c16580e1
+- Update to latest fixes/31.
+- Auto compute the version string soley from git describe
+
 * Wed Apr 14 2021 Leigh Scott <leigh123linux@gmail.com> - 31.0-16.139.20210226gitb6ddf202a4
 - Rebuild for new x265
 
