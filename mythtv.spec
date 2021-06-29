@@ -557,7 +557,9 @@ reachable via the network.
 
 %package backend
 Summary:    Server component of mythtv (a DVR)
+%if 0%{?fedora}
 Requires:   lame
+%endif
 Requires:   mythtv-common%{?_isa} = %{version}-%{release}
 Requires:   mythtv-libs%{?_isa}   = %{version}-%{release}
 Requires:   mythtv-setup%{?_isa}
