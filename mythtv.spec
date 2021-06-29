@@ -1,5 +1,5 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v31.0-147-g05c16580e1
+%global vers_string v31.0-158-g0680b37c68
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -74,7 +74,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        18%{rel_string}%{?dist}
+Release:        19%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1394,6 +1394,10 @@ exit 0
 
 
 %changelog
+* Tue Jun 29 2021 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-17.147.20210629git0680b37c68
+- Update to latest fixes/31
+- Don't require lame binary on el8
+
 * Tue Jun 15 2021 Leigh Scott <leigh123linux@gmail.com> - 31.0-18.147.20210615git05c16580e1
 - Rebuild for python-3.10
 
