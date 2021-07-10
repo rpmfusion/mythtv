@@ -74,7 +74,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        19%{rel_string}%{?dist}
+Release:        20%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1396,6 +1396,9 @@ exit 0
 
 
 %changelog
+* Sat Jul 10 2021 Sérgio Basto <sergio@serjux.com> - 31.0-20.158.20210710git0680b37c68
+- Mass rebuild for x264-0.163
+
 * Tue Jun 29 2021 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-17.147.20210629git0680b37c68
 - Update to latest fixes/31
 - Don't require lame binary on el8
