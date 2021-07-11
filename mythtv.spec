@@ -1,6 +1,11 @@
 # The full MythTV Version string is computed from the output of git describe.
 %global vers_string v31.0-158-g0680b37c68
 
+# The git date of last commit on mythtv repo
+# git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
+%global git_date 20210610
+
+
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
 # by:   Chris Petersen <cpetersen@mythtv.org>
@@ -55,14 +60,11 @@
 ################################################################################
 %define _lto_cflags %{nil}
 
-# The build date is today
-%global bld_date %(date +"%Y%m%d")
-
 # These values are computed from git describe provided earlier
 %global githash %(c=%{vers_string}; echo $c|cut -d"-" -f3)
 %global shorthash %(c=%{githash}; echo ${c:1:11})
 %global commits %(c=%{vers_string}; echo $c|cut -d"-" -f2)
-%global rel_string .%{commits}.%{bld_date}git%{shorthash}
+%global rel_string .%{commits}.%{git_date}git%{shorthash}
 
 # A list of which applications we want to put into the desktop menu system
 %global desktop_applications mythfrontend mythtv-setup
