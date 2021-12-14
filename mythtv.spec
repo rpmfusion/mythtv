@@ -76,7 +76,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        22%{rel_string}%{?dist}
+Release:        23%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -535,7 +535,14 @@ Requires:  lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common%{?_isa}       = %{version}-%{release}
 Requires:  mythtv-base-themes%{?_isa}  = %{version}-%{release}
-Requires:  mysql%{?_isa} >= 5
+	
+# RHBZ 1838780 - mariadb lacks mysql provides on el8
+%if 0%{?fedora} || 0%{?rhel} >= 8
+Requires:       (mysql%{?_isa} >= 5 or mariadb%{?_isa})
+%else
+Requires:       mysql%{?_isa} >= 5
+%endif
+
 Requires:  %{py_prefix}-MythTV       = %{version}-%{release}
 %if 0%{?fedora} || 0%{?rhel} >= 8
 Recommends: libaacs%{?_isa}
@@ -1397,6 +1404,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Tue Dec 12 2021 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-23.167.20211108git25f1bb1d12
+- RHBZ 1838780 mariadb lacks mysql provides on el8
+
 * Sat Dec 11 2021 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-22.167.20211108git25f1bb1d12
 - Update to latest fixes/31
 
