@@ -1,10 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v31.0-167-g25f1bb1d12
+%global vers_string v31.0-173-g4f7953f6ee
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20211108
-
+%global git_date 20220120
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -76,7 +75,7 @@
 #
 Name:           mythtv
 Version:        31.0
-Release:        24%{rel_string}%{?dist}
+Release:        25%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -171,9 +170,7 @@ BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel >= 5
 %endif
-%if 0%{?fedora} || 0%{?rhel} < 8
 BuildRequires:  libcec-devel >= 1.7
-%endif
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -1404,6 +1401,10 @@ exit 0
 ################################################################################
 
 %changelog
+* Sat Jan 22 2021 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-25.167.20220120gitg4f7953f6e
+- Update to latest fixes/31
+- Reenable libcec on el8
+
 * Tue Dec 14 2021 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-24.167.20211108git25f1bb1d12
 - Don't require mariadb. Let end user choose the db engine.
 
