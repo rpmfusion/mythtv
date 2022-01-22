@@ -1401,7 +1401,7 @@ exit 0
 ################################################################################
 
 %changelog
-* Sat Jan 22 2021 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-25.167.20220120gitg4f7953f6e
+* Sat Jan 22 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-25.167.20220120gitg4f7953f6e
 - Update to latest fixes/31
 - Reenable libcec on el8
 
