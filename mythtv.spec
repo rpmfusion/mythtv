@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v31.0-173-g4f7953f6ee
+%global vers_string v32.0-30-g26079f815a
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20220120
+%global git_date 20220510
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -74,8 +74,8 @@
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Version:        31.0
-Release:        26%{rel_string}%{?dist}
+Version:        32.0
+Release:        1%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -294,6 +294,7 @@ BuildRequires:  perl(IO::Socket::INET6)
 %endif
 
 %if %{with python}
+BuildRequires:  %{py_prefix}-setuptools
 BuildRequires:  %{py_prefix}-devel
 BuildRequires:  %{py_prefix}-simplejson
 %if 0%{?fedora} || 0%{?rhel} >= 8
@@ -317,7 +318,9 @@ BuildRequires:  zlib-devel
 %endif
 
 BuildRequires: ncurses-devel
-
+BuildRequires: soundtouch-devel
+BuildRequires: libzip-devel
+BuildRequires: expat-devel
 
 %if %{with mythweather}
 Requires:       mythweather      >= %{version}
@@ -1175,11 +1178,9 @@ exit 0
 
 %files docs
 %doc mythtv/README*
-%doc mythtv/UPGRADING
 %doc mythtv/AUTHORS
-%license mythtv/COPYING
-%doc mythtv/FAQ
-%doc mythtv/database mythtv/keys.txt
+%doc mythtv/database
+%doc mythtv/keybindings.txt
 %doc mythtv/contrib
 
 %files common
@@ -1251,15 +1252,16 @@ exit 0
 %{_datadir}/mythtv/themes/
 
 %files libs
-%{_libdir}/libmyth-31.so.*
-%{_libdir}/libmythbase-31.so.*
-%{_libdir}/libmythfreemheg-31.so.*
-%{_libdir}/libmythmetadata-31.so.*
-%{_libdir}/libmythprotoserver-31.so.*
-%{_libdir}/libmythservicecontracts-31.so.*
-%{_libdir}/libmythtv-31.so.*
-%{_libdir}/libmythui-31.so.*
-%{_libdir}/libmythupnp-31.so.*
+%{_libdir}/libmyth-32.so.*
+%{_libdir}/libmythbase-32.so.*
+%{_libdir}/libmythfreemheg-32.so.*
+%{_libdir}/libmythmetadata-32.so.*
+%{_libdir}/libmythprotoserver-32.so.*
+%{_libdir}/libmythservicecontracts-32.so.*
+%{_libdir}/libmythtv-32.so.*
+%{_libdir}/libmythui-32.so.*
+%{_libdir}/libmythupnp-32.so.*
+%{_libdir}/libmythexiv2-*.so.32*
 
 %files devel
 %{_includedir}/*
@@ -1304,7 +1306,6 @@ exit 0
 
 %if %{with plugins}
 %files -n mythplugins
-%doc mythplugins/COPYING
 
 %if %{with mytharchive}
 %files -n mytharchive
@@ -1323,7 +1324,6 @@ exit 0
 %if %{with mythbrowser}
 %files -n mythbrowser
 %doc mythplugins/mythbrowser/AUTHORS
-%doc mythplugins/mythbrowser/COPYING
 %doc mythplugins/mythbrowser/README
 %{_libdir}/mythtv/plugins/libmythbrowser.so
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
@@ -1357,7 +1357,6 @@ exit 0
 %if %{with mythnews}
 %files -n mythnews
 %doc mythplugins/mythnews/AUTHORS
-%doc mythplugins/mythnews/COPYING
 %doc mythplugins/mythnews/README
 %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
@@ -1401,8 +1400,9 @@ exit 0
 ################################################################################
 
 %changelog
-* Wed Feb 09 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 31.0-26.173.20220120git4f7953f6ee
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+* Thu May 12 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 32.0-1.30.20220120gitg26079f815
+- Update to latest fixes/32
+- Add python setuptools, soundtouch, libzip, and expat build dependencies
 
 * Sat Jan 22 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 31.0-25.167.20220120gitg4f7953f6e
 - Update to latest fixes/31
