@@ -1,0 +1,73 @@
+--- a/mythtv/programs/mythbackend/httpstatus.cpp
++++ b/mythtv/programs/mythbackend/httpstatus.cpp
+@@ -466,9 +466,9 @@ void HttpStatus::FillStatusXML( QDomDocu
+         QDomElement group = pDoc->createElement("Group");
+ 
+         group.setAttribute("id"   , fsID );
+-        group.setAttribute("total", (int)(iTotal>>10) );
+-        group.setAttribute("used" , (int)(iUsed>>10)  );
+-        group.setAttribute("free" , (int)(iAvail>>10) );
++        group.setAttribute("total", (int)(iTotal>>20) );
++        group.setAttribute("used" , (int)(iUsed>>20)  );
++        group.setAttribute("free" , (int)(iAvail>>20) );
+         group.setAttribute("dir"  , directory );
+ 
+         if (fsID == "total")
+@@ -497,9 +497,9 @@ void HttpStatus::FillStatusXML( QDomDocu
+             {
+                 iExpirable = query.value(0).toLongLong();
+             }
+-            group.setAttribute("livetv", (int)(iLiveTV>>20) );
+-            group.setAttribute("deleted", (int)(iDeleted>>20) );
+-            group.setAttribute("expirable", (int)(iExpirable>>20) );
++            group.setAttribute("livetv", (int)(iLiveTV>>30) );
++            group.setAttribute("deleted", (int)(iDeleted>>30) );
++            group.setAttribute("expirable", (int)(iExpirable>>30) );
+             total = group;
+         }
+         else
+@@ -1269,36 +1269,36 @@ int HttpStatus::PrintMachineInfo( QTextS
+                 << "          <ul>\r\n";
+ 
+                 os << "            <li>Total Space: ";
+-                sRep = QString("%L1").arg(nTotal) + " MB";
++                sRep = QString("%L1").arg(nTotal) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "            <li>Space Used: ";
+-                sRep = QString("%L1").arg(nUsed) + " MB";
++                sRep = QString("%L1").arg(nUsed) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "            <li>Space Free: ";
+-                sRep = QString("%L1").arg(nFree) + " MB";
++                sRep = QString("%L1").arg(nFree) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 if ((nLiveTV + nDeleted + nExpirable) > 0)
+                 {
+                     os << "            <li>Space Available "
+                           "After Auto-expire: ";
+-                    sRep = QString("%L1").arg(nUsed) + " MB";
++                    sRep = QString("%L1").arg(nUsed) + " GB";
+                     sRep = QString("%L1").arg(nFree + nLiveTV +
+-                                      nDeleted + nExpirable) + " MB";
++                                      nDeleted + nExpirable) + " GB";
+                     os << sRep << "\r\n";
+                     os << "              <ul>\r\n";
+                     os << "                <li>Space Used by LiveTV: ";
+-                    sRep = QString("%L1").arg(nLiveTV) + " MB";
++                    sRep = QString("%L1").arg(nLiveTV) + " GB";
+                     os << sRep << "</li>\r\n";
+                     os << "                <li>Space Used by "
+                           "Deleted Recordings: ";
+-                    sRep = QString("%L1").arg(nDeleted) + " MB";
++                    sRep = QString("%L1").arg(nDeleted) + " GB";
+                     os << sRep << "</li>\r\n";
+                     os << "                <li>Space Used by "
+                           "Auto-expirable Recordings: ";
+-                    sRep = QString("%L1").arg(nExpirable) + " MB";
++                    sRep = QString("%L1").arg(nExpirable) + " GB";
+                     os << sRep << "</li>\r\n";
+                     os << "              </ul>\r\n";
+                     os << "            </li>\r\n";
