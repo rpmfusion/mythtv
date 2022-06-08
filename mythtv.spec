@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v32.0-30-g26079f815a
+%global vers_string v32.0-36-g7077a824d2
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20220510
+%global git_date 20220605
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -68,7 +68,7 @@
 # A list of which applications we want to put into the desktop menu system
 %global desktop_applications mythfrontend mythtv-setup
 
-%global branch fixes/31
+%global branch fixes/32
 
 #
 # Basic descriptive tags for this package:
@@ -1400,6 +1400,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Wed Jun 08 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 32.0-1.36.20220605gitg7077a824d
+- Update to latest fixes/32
+
 * Thu May 12 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 32.0-1.30.20220120gitg26079f815
 - Update to latest fixes/32
 - Add python setuptools, soundtouch, libzip, and expat build dependencies

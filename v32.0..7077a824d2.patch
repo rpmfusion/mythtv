@@ -1,7 +1,7 @@
 From 28d360e98916ae065292fa29675c48faff742923 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Thu, 24 Feb 2022 11:40:20 +0000
-Subject: [PATCH 01/29] Revert "NuppelVideoRecorder.cpp: convert to QtEndian"
+Subject: [PATCH 01/35] Revert "NuppelVideoRecorder.cpp: convert to QtEndian"
 
 This commit is causing problems with the Ubuntu s390x builds and
 possibly other big endian builds.
@@ -165,7 +165,7 @@ index d880ff574bf..81ac26cc4ff 100644
 From 56275b303bf7c7fec99993d1fff568708d0b985b Mon Sep 17 00:00:00 2001
 From: Anton Khirnov <anton@khirnov.net>
 Date: Thu, 24 Feb 2022 11:11:28 -0500
-Subject: [PATCH 02/29] configure: link to libatomic when it's present
+Subject: [PATCH 02/35] configure: link to libatomic when it's present
 
 C11 atomics in some configurations (e.g. 64bit operations on ppc64 with
 GCC) require linking to libatomic.
@@ -234,7 +234,7 @@ index c9fc6dc1ba4..19cae20bab6 100755
 From 75cf5040eff2aa6b7dc075462311de7c277b9375 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Martin=20Storsj=C3=B6?= <martin@martin.st>
 Date: Thu, 24 Feb 2022 20:00:00 -0500
-Subject: [PATCH 03/29] configure: arm: Don't add -march= to the compiler if no
+Subject: [PATCH 03/35] configure: arm: Don't add -march= to the compiler if no
  preference was passed
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -296,7 +296,7 @@ index 19cae20bab6..a270a5a9fcf 100755
 From 75b942fd8cdf6979463c72c75e2919e18552c644 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Sat, 26 Feb 2022 11:13:47 -0500
-Subject: [PATCH 04/29] Fix CPU detection for armhf
+Subject: [PATCH 04/35] Fix CPU detection for armhf
 
 This applies the same fix in MythTV as was applied in 75cf504 to FFmpeg.
 The same code is in MythTV and needs the same fix.
@@ -329,7 +329,7 @@ index d7349a91cd4..fda2057a282 100755
 From 44a45272517a8122369d74f149dc86432afe3ac0 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Mon, 28 Feb 2022 21:23:06 +0100
-Subject: [PATCH 05/29] Remove extraneous ? character in Sat>IP OPTIONS message
+Subject: [PATCH 05/35] Remove extraneous ? character in Sat>IP OPTIONS message
 
 The extraneous ? character occurs when the QUrl query is initialized to an empty string "".
 Fixed by replacing the "" by a QString() in the OPTIONS and the PLAY query composition.
@@ -369,7 +369,7 @@ index 502b49f8d12..531eb64b009 100644
 From e78a0c0042ea20240adef7566676ddeec4c2fb88 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Fri, 4 Mar 2022 10:44:01 -0600
-Subject: [PATCH 06/29] Fix playback hangs at end of file.
+Subject: [PATCH 06/35] Fix playback hangs at end of file.
 
 Refs #511
 
@@ -403,7 +403,7 @@ index 8f7ac450c67..6a9f0738ebd 100644
 From 043507cd6f638af4033ae7faca00dec4edc8deb2 Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Wed, 9 Mar 2022 20:53:30 -0600
-Subject: [PATCH 07/29] Fig logic bug in std::chrono conversion commit
+Subject: [PATCH 07/35] Fig logic bug in std::chrono conversion commit
  c71a8672.
 
 Signed-off-by: David Engel <dengel@mythtv.org>
@@ -429,7 +429,7 @@ index 6a9f0738ebd..ebd060fd4d5 100644
 From ae60e8302fab769dd0aacb091d195b1cef08ad9c Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Thu, 10 Mar 2022 20:30:13 -0600
-Subject: [PATCH 08/29] Use separate end-of-playback checks for
+Subject: [PATCH 08/35] Use separate end-of-playback checks for
  audio-only/mostly content and normal/video-only content.
 
 Refs #511
@@ -479,7 +479,7 @@ index 7041fa996fe..bb50f71d8cc 100644
 From 36c5630035864fa5d8efdaec8b0ef6c98067bc67 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Mon, 14 Mar 2022 11:57:26 -0400
-Subject: [PATCH 09/29] Fix MythDate::formatTime to handle times greater than
+Subject: [PATCH 09/35] Fix MythDate::formatTime to handle times greater than
  24 hours.
 
 (cherry picked from commit 2d7a09e40f55c13e203994aa4031f7de111fc97f)
@@ -562,7 +562,7 @@ index 17722debbec..e84e536e3ec 100644
 From d5fe42fc6b994c716c70901173d876c53200b50c Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 15 Mar 2022 17:41:48 -0400
-Subject: [PATCH 10/29] Better fix for MythDate::formatTime to handle
+Subject: [PATCH 10/35] Better fix for MythDate::formatTime to handle
  overflows.
 
 Fixes #520.
@@ -855,7 +855,7 @@ index 85aaaadd14f..9b0e604bb1c 100644
 From 9dcf2bb01eba126d304c323503c78ce36bbf595b Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Wed, 16 Mar 2022 12:42:28 -0400
-Subject: [PATCH 11/29] mythcommflag/CommDetector2.cpp: fix missed
+Subject: [PATCH 11/35] mythcommflag/CommDetector2.cpp: fix missed
  MythDate::fortmatTime() uses
 
 hh should be HH; missed chop not replaced.
@@ -900,7 +900,7 @@ index 244e8693602..aef37a8c1cf 100644
 From 5432d11672605878a7ab1964996edc7b0103087d Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Wed, 16 Mar 2022 14:09:35 -0400
-Subject: [PATCH 12/29] MythDate::formatTime(): update doxygen comment
+Subject: [PATCH 12/35] MythDate::formatTime(): update doxygen comment
 
 (cherry picked from commit 259a7fbe911da2ca229a513786172fcefeb8af07)
 ---
@@ -928,7 +928,7 @@ index 57eaceecd78..65c2b168e63 100644
 From f69ce764b78a15989455957eda235d5b1993a08a Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Thu, 24 Mar 2022 17:44:32 -0400
-Subject: [PATCH 13/29] Validate AV stream index before accessing stream.
+Subject: [PATCH 13/35] Validate AV stream index before accessing stream.
 
 Fixes #528.
 
@@ -956,7 +956,7 @@ index 95a0a8d9489..8af5cc853e8 100644
 From dcf7e13cce89f363d20a9cdd3922a7741cc214a9 Mon Sep 17 00:00:00 2001
 From: John Hoyt <john.hoyt@gmail.com>
 Date: Sun, 3 Apr 2022 07:35:20 -0400
-Subject: [PATCH 14/29] Add missing include <array> to mythdate
+Subject: [PATCH 14/35] Add missing include <array> to mythdate
 
 ---
  mythtv/libs/libmythbase/mythdate.cpp | 1 +
@@ -978,7 +978,7 @@ index 65c2b168e63..e7d2a99188a 100644
 From 5b54d3bf89a6278c01169287ace4a0fd02cc2233 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Tue, 29 Mar 2022 22:26:45 +0200
-Subject: [PATCH 15/29] Add symbolrate to transport list in mythtv-setup log
+Subject: [PATCH 15/35] Add symbolrate to transport list in mythtv-setup log
 
 The symbolrate is added to the transport list
 that is logged by mythtv-setup.
@@ -1014,7 +1014,7 @@ index c7bc185f6d7..303c2c28f4e 100644
 From 560b425776dfced77ceb9a83b13f32cf00ff2d94 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Thu, 7 Apr 2022 19:51:20 -0400
-Subject: [PATCH 16/29] Service API V2: Last Play Position APIs
+Subject: [PATCH 16/35] Service API V2: Last Play Position APIs
 
 This adds 4 APIs:
 V2Dvr::GetLastPlayPos
@@ -1319,7 +1319,7 @@ index 8e339bef1dd..639236a044a 100644
 From 1eacadd5f413197746cb61ea036c522c65f95936 Mon Sep 17 00:00:00 2001
 From: acediac <git.zon@dfgh.net>
 Date: Sat, 9 Apr 2022 22:49:25 +1000
-Subject: [PATCH 17/29] mythfrontend audio fixes for macOS
+Subject: [PATCH 17/35] mythfrontend audio fixes for macOS
 
 - Fixed audio device detection
 - Fixed Surround Sound channel capability detection (5.1+ speakers)
@@ -1611,7 +1611,7 @@ index ef5cacc2913..7e18a10a62c 100644
 From cd109ec6c08f578e1b0965e4726e6046d75af8e8 Mon Sep 17 00:00:00 2001
 From: acediac <git.zon@dfgh.net>
 Date: Sat, 9 Apr 2022 22:57:38 +1000
-Subject: [PATCH 18/29] Potential memory corruption problems in audiooutputbase
+Subject: [PATCH 18/35] Potential memory corruption problems in audiooutputbase
 
 (cherry picked from commit 81aeb49c456ff4ecab82c2297b22c38bd70d706d)
 ---
@@ -1662,7 +1662,7 @@ index 69c28f2cc3d..d920d14dd0c 100644
 From 9070e9e65b42b19b3a54c21117a07f627418999f Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Fri, 8 Apr 2022 13:10:03 -0400
-Subject: [PATCH 19/29] Fix zmserver compilation on rawhide.
+Subject: [PATCH 19/35] Fix zmserver compilation on rawhide.
 
 (cherry picked from commit 9d2c68fdf4512be7aac95310d0bc69d54be63ac3)
 ---
@@ -1685,7 +1685,7 @@ index 5e13cb48e0b..f6ac052867a 100644
 From bbd8355d8dbb5ef78080312c2d632232ea03b504 Mon Sep 17 00:00:00 2001
 From: Stuart Auchterlonie <stuarta@mythtv.org>
 Date: Mon, 11 Apr 2022 22:20:23 +0100
-Subject: [PATCH 20/29] [webapp] fix encoder status when recording
+Subject: [PATCH 20/35] [webapp] fix encoder status when recording
 
 (cherry picked from commit 3da1ca7bc3c72a41cf7a910680cfb8e5ead4b49e)
 ---
@@ -1759,7 +1759,7 @@ index 554b0193b17..312ccafcf63 100644
 From bfae001d5cbb6e6012c3971e605d961e639e1eb7 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sun, 3 Apr 2022 18:39:20 +0200
-Subject: [PATCH 21/29] Determine tuner type in ChannelScanSM constructor
+Subject: [PATCH 21/35] Determine tuner type in ChannelScanSM constructor
 
 Initialize the m_scanDTVTunerType with the tuner type as found
 in the card already in the ChannelScanSM constructor.
@@ -1796,7 +1796,7 @@ index d7de02b7fd9..12411eb9196 100644
 From ec4558f3e1bbc021d771276a288039924f181a8b Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Wed, 20 Apr 2022 21:39:32 +0200
-Subject: [PATCH 22/29] Update preview picture after record playback exit
+Subject: [PATCH 22/35] Update preview picture after record playback exit
 
 When exiting a record playback, the preview thumbnail picture that is shown
 at the right/bottom corner of the MythCenter-wide theme, is updated to show
@@ -1876,7 +1876,7 @@ index 653b37c344b..40f5cda7e75 100644
 From daa4e7e4474c019714d21674ee7e18f3bc89624d Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Fri, 22 Apr 2022 21:04:59 +0200
-Subject: [PATCH 23/29] Animation update interval lower bound
+Subject: [PATCH 23/35] Animation update interval lower bound
 
 Add a lower bound of 10ms for the animation update interval.
 The animation is used in the MythBuntu theme and there it can cause a stall of
@@ -1912,7 +1912,7 @@ index bfdc30710ff..69f9da7e655 100644
 From 130f7054da73f8a23d04aacf683d743a449a4ec5 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Tue, 26 Apr 2022 16:03:25 -0500
-Subject: [PATCH 24/29] Fix wakeup calculations in HLS.
+Subject: [PATCH 24/35] Fix wakeup calculations in HLS.
 
 The std::chrono changes in commit 41225f80 inadvertently contained
 bugs that caused the wakeup times to be too low, often 0 (aka no
@@ -1989,7 +1989,7 @@ index 2294f107a8a..22d1f377b72 100644
 From 839d0f9ab6c7ced958bb5372376ab862461ae6d8 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Tue, 26 Apr 2022 17:12:08 -0500
-Subject: [PATCH 25/29] Add cast needed by some compilers to last previous
+Subject: [PATCH 25/35] Add cast needed by some compilers to last previous
  commit.
 
 (cherry picked from commit e2877111bec395c6baa0468fc41adbb3526e2d69)
@@ -2015,7 +2015,7 @@ index 22d1f377b72..4db927faac7 100644
 From ea669e1f825896355ebc3f428553d887b4d5b4c1 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Wed, 27 Apr 2022 23:42:50 +0200
-Subject: [PATCH 26/29] Jump back in live TV
+Subject: [PATCH 26/35] Jump back in live TV
 
 When jumping back in live TV and the jump time interval is larger than the
 current play position then a jump is done to the end of the recording instead
@@ -2045,7 +2045,7 @@ index ebd060fd4d5..b68254f31bd 100644
 From d80a8da3f0163e6020ce2b6c76b5b31571fae2df Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Fri, 29 Apr 2022 23:35:08 +0200
-Subject: [PATCH 27/29] Jump forward to next live TV segment
+Subject: [PATCH 27/35] Jump forward to next live TV segment
 
 If playback is at the end of an earlier program in the live TV chain,
 skipping forward jumps to the end of the next program
@@ -2077,7 +2077,7 @@ index b68254f31bd..c8c742725c2 100644
 From c4fc53c651edbcf695694ee12807b9bc1b4f79ca Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Sat, 7 May 2022 17:43:11 -0400
-Subject: [PATCH 28/29] Services V2: Fix content length when length > 2 GB
+Subject: [PATCH 28/35] Services V2: Fix content length when length > 2 GB
 
 Third parameter of std::accumulate determines the return type, so it has
 to be explicitly cast to a uint64 to support 64 bit return.
@@ -2106,7 +2106,7 @@ index 5e685632130..c4611197857 100644
 From 26079f815a1723021dbe6a13eca0e66018f71e7b Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Fri, 6 May 2022 20:47:05 +0200
-Subject: [PATCH 29/29] Free AVPacket with av_packet_free
+Subject: [PATCH 29/35] Free AVPacket with av_packet_free
 
 Free AVPacket allocated with av_packet_alloc with av_packet_free
 instead of with av_packet_unref followed by a delete statement.
@@ -2157,3 +2157,371 @@ index 8af5cc853e8..4e3f9691a1b 100644
          }
  
          m_prevGopPos = 0;
+
+From 53c77f01324e5d35dfb08827e16cb0a83b702213 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Thu, 12 May 2022 23:21:08 +0200
+Subject: [PATCH 30/35] EIT start delay
+
+Compute the second component of the EIT start delay with the highest
+input number instead of with the number of inputs.
+The input number can be higher than the number of inputs because inputs (capture cards)
+can be deleted and because new inputs always get a higher number.
+This then can lead to a EIT start delay that is larger than intended.
+
+(cherry picked from commit ef1323cade687a3d769ba6d0c1b18c389eb9135e)
+---
+ mythtv/libs/libmythtv/tv_rec.cpp | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/tv_rec.cpp b/mythtv/libs/libmythtv/tv_rec.cpp
+index f2d1a6eb8f2..7c37a2ed49a 100644
+--- a/mythtv/libs/libmythtv/tv_rec.cpp
++++ b/mythtv/libs/libmythtv/tv_rec.cpp
+@@ -1248,20 +1248,20 @@ static bool is_dishnet_eit(uint inputid)
+     return false;
+ }
+ 
+-// Number of capturecard instances including multirec instances
+-static int num_inputs(void)
++// Highest capturecard instance number including multirec instances
++static int get_highest_input(void)
+ {
+     MSqlQuery query(MSqlQuery::InitCon());
+ 
+     QString str =
+-        "SELECT COUNT(cardid) "
++        "SELECT MAX(cardid) "
+         "FROM capturecard ";
+ 
+     query.prepare(str);
+ 
+     if (!query.exec() || !query.isActive())
+     {
+-        MythDB::DBError("num_inputs", query);
++        MythDB::DBError("highest_input", query);
+         return -1;
+     }
+     if (query.next())
+@@ -1278,11 +1278,11 @@ static std::chrono::seconds eit_start_rand(uint inputId, std::chrono::seconds ei
+     auto timeout = std::chrono::seconds(MythRandom(0, eitTransportTimeout.count() / 3));
+ #endif
+ 
+-    // Get the number of inputs and the position of the current input
++    // Use the highest input number and the current input number
+     // to distribute the scan start evenly over eitTransportTimeout
+-    int no_inputs = num_inputs();
+-    if (no_inputs > 0)
+-        timeout += eitTransportTimeout * inputId / no_inputs;
++    int highest_input = get_highest_input();
++    if (highest_input > 0)
++        timeout += eitTransportTimeout * inputId / highest_input;
+ 
+     return timeout;
+ }
+
+From b6286af7d82f81082f8d07dfcee3f7f8c9ab2542 Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Thu, 12 May 2022 21:06:41 +0200
+Subject: [PATCH 31/35] Python Bindings: Add compatibility to MariaDB 10.6
+
+MariaDB 10.6 introduced a new keyword 'offset' which collides with
+the field 'offset' from the recordedseek table.
+
+Solution:
+Backtick all queries related to to this table (in class DBDataRef
+and its descendants) to fix this collision.
+Note: The Python Bindings use the field names of a SQL table as
+properties, therefore simple back-ticking 'offset' won't work.
+
+The related MySQL error is:
+
+MythTV.exceptions.MythDBError: MySQL error 1064:
+You have an error in your SQL syntax;
+check the manual that corresponds to your MariaDB server version
+for the right syntax to use near 'offset,type FROM recordedseek WHERE ...
+
+Tested with python3.6 and python3.10 .
+
+(cherry picked from commit 094648aa7a78095a37db496fa11956a100ae5b0c)
+---
+ mythtv/bindings/python/MythTV/database.py | 30 +++++++++++------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/mythtv/bindings/python/MythTV/database.py b/mythtv/bindings/python/MythTV/database.py
+index d02de716032..d33bb70666b 100644
+--- a/mythtv/bindings/python/MythTV/database.py
++++ b/mythtv/bindings/python/MythTV/database.py
+@@ -550,9 +550,9 @@ def _populate(self, force=False, data=None):
+         if data is None:
+             with self._db as cursor:
+                 cursor.execute("""SELECT %s FROM %s WHERE %s""" % \
+-                            (','.join(self._datfields),
++                            (','.join(['`%s`' %x for x in self._datfields]),
+                              self._table,
+-                             ' AND '.join(['%s=?' % f for f in self._ref])),
++                             ' AND '.join(['`%s`=?' % f for f in self._ref])),
+                          self._refdat)
+                 for row in cursor:
+                     list.append(self, self.SubData(zip(self._datfields, row)))
+@@ -607,9 +607,9 @@ def commit(self):
+                 wf = []
+                 for i,v in enumerate(data):
+                     if v is None:
+-                        wf.append('%s IS ?' % fields[i])
++                        wf.append('`%s` IS ?' % fields[i])
+                     else:
+-                        wf.append('%s=?' % fields[i])
++                        wf.append('`%s`=?' % fields[i])
+                 cursor.execute("""DELETE FROM %s WHERE %s""" % \
+                                    (self._table, ' AND '.join(wf)), data)
+ 
+@@ -621,7 +621,7 @@ def commit(self):
+             if len(data) > 0:
+                 cursor.executemany("""INSERT INTO %s (%s) VALUES(%s)""" % \
+                                     (self._table,
+-                                     ','.join(fields),
++                                     ','.join(['`%s`' %x for x in fields]),
+                                      ','.join(['?' for a in fields])), data)
+         self._origdata = self.deepcopy()
+ 
+@@ -705,18 +705,18 @@ def _populate(self, force=False, data=None):
+         if self._populated and (not force):
+             return
+         datfields = self._datfields
+-        reffield = '%s.%s' % (self._table[1],self._cref[-1])
++        reffield = '`%s`.`%s`' % (self._table[1],self._cref[-1])
+ 
+         if data is None:
+             with self._db as cursor:
+                 cursor.execute("""SELECT %s FROM %s JOIN %s ON %s WHERE %s""" % \
+-                          (','.join(datfields+[reffield]),
++                          (','.join(['`%s`' %x for x in datfields]+[reffield]),
+                              self._table[0],
+                              self._table[1],
+-                             '%s.%s=%s.%s' % \
++                             '`%s`.`%s`=`%s`.`%s`' % \
+                                     (self._table[0], self._cref[0],
+                                      self._table[1], self._cref[-1]),
+-                             ' AND '.join(['%s=?' % f for f in self._ref])),
++                             ' AND '.join(['`%s`=?' % f for f in self._ref])),
+                         self._refdat)
+ 
+                 for row in cursor:
+@@ -748,7 +748,7 @@ def commit(self):
+                 fields = self._crdatfields
+                 cursor.execute("""SELECT %s FROM %s WHERE %s""" % \
+                             (self._cref[-1], self._table[1],
+-                             ' AND '.join(['%s=?' % f for f in fields])),
++                             ' AND '.join(['`%s`=?' % f for f in fields])),
+                         data)
+                 res = cursor.fetchone()
+                 if res is not None:
+@@ -758,7 +758,7 @@ def commit(self):
+                 else:
+                     cursor.execute("""INSERT INTO %s (%s) VALUES(%s)""" % \
+                             (self._table[1],
+-                             ','.join(self._crdatfields),
++                             ','.join(['`%s`' %x for x in self._crdatfields]),
+                              ','.join(['?' for a in data])),
+                         data)
+                     d._cref = cursor.lastrowid
+@@ -768,7 +768,7 @@ def commit(self):
+                 fields = self._rdatfields+self._cref[:1]+self._ref
+                 cursor.execute("""INSERT INTO %s (%s) VALUES(%s)""" % \
+                         (self._table[0],
+-                         ','.join(fields),
++                         ','.join(['`%s`' %x for x in fields]),
+                          ','.join(['?' for a in data])),
+                     data)
+ 
+@@ -780,14 +780,14 @@ def commit(self):
+                 fields = self._rdatfields+self._cref[:1]+self._ref
+                 cursor.execute("""DELETE FROM %s WHERE %s""" % \
+                         (self._table[0],
+-                         ' AND '.join(['%s=?' % f for f in fields])),
++                         ' AND '.join(['`%s`=?' % f for f in fields])),
+                     data)
+             # remove unused cross-references
+             for cr in crefs:
+-                cursor.execute("""SELECT COUNT(1) FROM %s WHERE %s=?""" % \
++                cursor.execute("""SELECT COUNT(1) FROM %s WHERE `%s`=?""" % \
+                         (self._table[0], self._cref[0]), [cr])
+                 if cursor.fetchone()[0] == 0:
+-                    cursor.execute("""DELETE FROM %s WHERE %s=?""" % \
++                    cursor.execute("""DELETE FROM %s WHERE `%s`=?""" % \
+                             (self._table[1], self._cref[-1]), [cr])
+                 cursor.nextset()
+ 
+
+From 98c82d515d53ef57431d6bbfcd4264543a42426b Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Thu, 26 May 2022 12:30:10 -0400
+Subject: [PATCH 32/35] Fix problem with GetStatus API call while playing
+ video.
+
+This bug was introduced while fixing a problem where all the network
+control "play" commands were duplicated by MythTV.  Most of the "play"
+commands are idempotent, so the only place the duplication was visible
+was the "play speed pause" command.
+
+Fixing that problem using a different method restores the
+functionality of the GetStatus API call.
+
+Fixes #545.
+
+(cherry picked from commit 07511117eef755794defc185c6c681f765535848)
+---
+ mythtv/libs/libmythtv/tv_play.cpp               | 14 +++++++-------
+ mythtv/programs/mythfrontend/networkcontrol.cpp | 13 +++++++++++--
+ 2 files changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/tv_play.cpp b/mythtv/libs/libmythtv/tv_play.cpp
+index ec2eab695f5..2803837fb23 100644
+--- a/mythtv/libs/libmythtv/tv_play.cpp
++++ b/mythtv/libs/libmythtv/tv_play.cpp
+@@ -2905,11 +2905,12 @@ void TV::HandleSpeedChangeTimerEvent()
+ /// 2021, this filter is only used to redirect some events from the
+ /// MythMainWindow object to the TV object.
+ ///
+-/// \warning If an event will be received by both the MythMainWindow object
+-/// and the TV object, block it instead of redirecting it. Redirecting it
+-/// just causes the event to be handled twice, once in the direct call from
+-/// Qt to TV::event and once in the call from Qt to this function to
+-/// TV::event.
++/// \warning Be careful if an event is broadcast to all objects
++/// instead of being set directly to a specific object.  For a
++/// broadcast event, Qt will: 1) call TV::customEvent, and 2) call
++/// this function to find out whether it should call
++/// MythMainWindow::customEvent. If this function calls
++/// TV::customEvent, then the same event gets processed twice.
+ ///
+ /// \param  Object The QObject whose events are being filtered.
+ /// \param  Event  The QEvent that is about to be passed to Object->event().
+@@ -2944,8 +2945,7 @@ bool TV::eventFilter(QObject* Object, QEvent* Event)
+         Event->type() == MythEvent::kUpdateTvProgressEventType ||
+         Event->type() == MythMediaEvent::kEventType)
+     {
+-        // DO NOT call TV::customEvent here!
+-        // customEvent(Event);
++        customEvent(Event);
+         return true;
+     }
+ 
+diff --git a/mythtv/programs/mythfrontend/networkcontrol.cpp b/mythtv/programs/mythfrontend/networkcontrol.cpp
+index a4228de4d3a..b5f937f4f01 100644
+--- a/mythtv/programs/mythfrontend/networkcontrol.cpp
++++ b/mythtv/programs/mythfrontend/networkcontrol.cpp
+@@ -912,8 +912,17 @@ QString NetworkControl::processPlay(NetworkCommand *nc, int clientID)
+ 
+     if (!message.isEmpty())
+     {
+-        MythEvent me(message);
+-        gCoreContext->dispatch(me);
++        // Don't broadcast this event as the TV object will see it
++        // twice: once directly from the Qt event system, and once
++        // because its filtering all events before they are sent to
++        // the main window.  Its much easier to get a pointer to the
++        // MainWindow object than is is to a pointer to the TV object,
++        // so send the event directly there.  The TV object will get
++        // it anyway because because of the filter hook.  (The last
++        // third of this function requires you to be in playback mode
++        // so the TV object is guaranteed to exist.)
++        auto *me = new MythEvent(message);
++        qApp->postEvent(GetMythMainWindow(), me);
+     }
+ 
+     return result;
+
+From ef9d17307fa1237e35234dd96be55c95c42cde88 Mon Sep 17 00:00:00 2001
+From: Korbinian Rosenegger <kroseneg@schmidham.net>
+Date: Fri, 11 Mar 2022 09:57:52 +0100
+Subject: [PATCH 33/35] Show transcoding profiles menu when job is _not_
+ running
+
+The transcoding profiles menu needs to be shown when the transcoding job
+is not running.
+With commit bf15fbee54 the logic was inverted accidently.
+
+(cherry picked from commit 1d1ca314697bed07f7f22cf0a6c5445ccd77bdc9)
+---
+ mythtv/programs/mythfrontend/playbackbox.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/programs/mythfrontend/playbackbox.cpp b/mythtv/programs/mythfrontend/playbackbox.cpp
+index abed3de46bb..8e9236b28e8 100644
+--- a/mythtv/programs/mythfrontend/playbackbox.cpp
++++ b/mythtv/programs/mythfrontend/playbackbox.cpp
+@@ -3208,7 +3208,7 @@ MythMenu* PlaybackBox::createJobMenu()
+         bool running = JobQueue::IsJobQueuedOrRunning(
+             kJobs[i], pginfo->GetChanID(), pginfo->GetRecordingStartTime());
+ 
+-        MythMenu *submenu = ((kJobs[i] == JOB_TRANSCODE) && running)
++        MythMenu *submenu = ((kJobs[i] == JOB_TRANSCODE) && !running)
+             ? createTranscodingProfilesMenu() : nullptr;
+         menu->AddItem((running) ? stop_desc : start_desc,
+                       kMySlots[i * 2 + (running ? 0 : 1)], submenu);
+
+From 8347647e4208e0963270eddd1724182c61f3d15d Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Tue, 31 May 2022 23:58:59 +0200
+Subject: [PATCH 34/35] Change default Unicable frequency to 1210MHz
+
+The previous default value was 1400MHz which is not a valid Unicable userband frequency.
+The new default value of 1210MHz is the frequency of the first userband.
+
+(cherry picked from commit 1a15ff133f22e5fe5cd331dcf1e25023a0758522)
+---
+ mythtv/libs/libmythtv/diseqc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/diseqc.h b/mythtv/libs/libmythtv/diseqc.h
+index e3f01619d7e..191daf8c83c 100644
+--- a/mythtv/libs/libmythtv/diseqc.h
++++ b/mythtv/libs/libmythtv/diseqc.h
+@@ -389,7 +389,7 @@ class DiSEqCDevSCR : public DiSEqCDevDevice
+     // Commands
+     void Reset(void) override; // DiSEqCDevDevice
+     bool Execute(const DiSEqCDevSettings &settings, const DTVMultiplex &tuning) override; // DiSEqCDevDevice
+-    bool         PowerOff(void) const;
++    bool PowerOff(void) const;
+     bool Load(void) override; // DiSEqCDevDevice
+     bool Store(void) const override; // DiSEqCDevDevice
+ 
+@@ -435,7 +435,7 @@ class DiSEqCDevSCR : public DiSEqCDevDevice
+ 
+   private:
+     uint             m_scrUserband   {0};    /* 0-7 */
+-    uint             m_scrFrequency  {1400};
++    uint             m_scrFrequency  {1210};
+     int              m_scrPin        {-1};   /* 0-255, -1=disabled */
+ 
+     DiSEqCDevDevice *m_child         {nullptr};
+
+From 7077a824d2e746f305bcb215ea687220abaa17db Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Sat, 4 Jun 2022 21:05:22 +0200
+Subject: [PATCH 35/35] Fix AdaptationFieldSize function
+
+Use the data() function to get a pointer to access the fifth element of
+a transport stream packet instead of directly accessing the fifth element of a
+std::array that maps only the first four bytes of the transport stream packet.
+
+(cherry picked from commit 0c16cbdbffecf20f95a812eff3fe1dc80495c789)
+---
+ mythtv/libs/libmythtv/mpeg/tspacket.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/mpeg/tspacket.h b/mythtv/libs/libmythtv/mpeg/tspacket.h
+index 0a971c436ff..a15ff12c346 100644
+--- a/mythtv/libs/libmythtv/mpeg/tspacket.h
++++ b/mythtv/libs/libmythtv/mpeg/tspacket.h
+@@ -94,7 +94,7 @@ class MTV_PUBLIC TSHeader
+     bool Scrambled(void) const { return bool(m_tsData[3]&0x80); }
+     bool HasAdaptationField(void) const { return bool(m_tsData[3] & 0x20); }
+     size_t AdaptationFieldSize(void) const
+-    { return (HasAdaptationField() ? static_cast<size_t>(m_tsData[4]) : 0); }
++    { return (HasAdaptationField() ? static_cast<size_t>(data()[4]) : 0); }
+     bool HasPayload(void) const { return bool(m_tsData[3] & 0x10); }
+ 
+     bool GetDiscontinuityIndicator(void) const
