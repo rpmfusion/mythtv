@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v32.0-36-g7077a824d2
+%global vers_string v32.0-44-g4cf469cbbf
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20220605
+%global git_date 20220625
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        32.0
-Release:        3%{rel_string}%{?dist}
+Release:        1%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1400,6 +1400,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Sat Jun 25 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 32.0-1.44.20220625gitg4cf469cbb
+- Update to latest fixes/32, fixes rpmfusion bz#6327
+
 * Tue Jun 21 2022 Paul Howarth <paul@city-fan.org> - 32.0-3.36.20220605git7077a824d2
 - Perl 5.36 rebuild
 
