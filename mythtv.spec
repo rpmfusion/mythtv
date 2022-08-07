@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        32.0
-Release:        1%{rel_string}%{?dist}
+Release:        2%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1400,6 +1400,10 @@ exit 0
 ################################################################################
 
 %changelog
+* Sun Aug 07 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 32.0-2.44.20220625git4cf469cbbf
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
+  5.1
+
 * Sat Jun 25 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 32.0-1.44.20220625gitg4cf469cbb
 - Update to latest fixes/32, fixes rpmfusion bz#6327
 
