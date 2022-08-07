@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        32.0
-Release:        2%{rel_string}%{?dist}
+Release:        3%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -298,7 +298,7 @@ BuildRequires:  %{py_prefix}-setuptools
 BuildRequires:  %{py_prefix}-devel
 BuildRequires:  %{py_prefix}-simplejson
 %if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:  %{py_prefix}-mysql
+BuildRequires:  %{py_prefix}-mysqlclient
 BuildRequires:  %{py_prefix}-lxml
 %else
 BuildRequires:  MySQL-python
@@ -686,7 +686,7 @@ Obsoletes:      python2-MythTV < 30.0-9.20190601git6bd8cd4993
 BuildArch:      noarch
 
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:       %{py_prefix}-mysql
+Requires:       %{py_prefix}-mysqlclient
 Requires:       %{py_prefix}-lxml
 %else
 Requires:       MySQL-python
@@ -750,7 +750,7 @@ Requires:  ffmpeg%{?_isa} >= 0.4.9
 Requires:  mjpegtools%{?_isa} >= 1.6.2
 Requires:  genisoimage%{?_isa}
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Requires:  %{py_prefix}-mysql
+Requires:  %{py_prefix}-mysqlclient
 Requires:  %{py_prefix}-pillow
 %else
 Requires:  MySQL-python
@@ -1400,6 +1400,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Sun Aug 07 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 32.0-3.44.20220625gitg4cf469cbb
+- python-mysql has been deprecated. Build against python-mysqlclient instead
+
 * Sun Aug 07 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 32.0-2.44.20220625git4cf469cbbf
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
   5.1
