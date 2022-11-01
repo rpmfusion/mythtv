@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v32.0-44-g4cf469cbbf
+%global vers_string v32.0-67-gba52c13223
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20220625
+%global git_date 20221020
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        32.0
-Release:        3%{rel_string}%{?dist}
+Release:        5%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1400,6 +1400,10 @@ exit 0
 ################################################################################
 
 %changelog
+* Tue Nov 01 2022 Richard Shaw <hobbes1069@gmail.com> - 32.0-5.67.20221020gitba52c13223
+- Update to 32.0.67.20221020gitba52c13223 from branch fixes/32
+- Move git checkout in update script to use https as the git protocol seems to be down.
+
 * Sun Aug 07 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 32.0-3.44.20220625gitg4cf469cbb
 - python-mysql has been deprecated. Build against python-mysqlclient instead
 

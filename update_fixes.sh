@@ -1,11 +1,11 @@
-RAWHIDE=35
-REPOS="f34 f33 el8 el7"
+RAWHIDE=37
+REPOS="f36 f35 f34 el8 el7"
 
 if ! [ -d "mythtv" ]; then
-    git clone git://github.com/MythTV/mythtv.git
+    git clone https://github.com/MythTV/mythtv.git
 fi
-version=31.0
-branch=fixes/31
+version=32.0
+branch=fixes/32
 pushd mythtv
 git checkout $branch
 git pull
