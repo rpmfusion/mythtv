@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v32.0-67-gba52c13223
+%global vers_string v32.0-76-g44f88ed468
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20221020
+%global git_date 20221129
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -75,7 +75,7 @@
 #
 Name:           mythtv
 Version:        32.0
-Release:        5%{rel_string}%{?dist}
+Release:        6%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -443,7 +443,6 @@ Summary:   Development files for mythtv
 
 Requires:  mythtv-libs%{?_isa} = %{version}-%{release}
 
-Requires:  freetype-devel%{?_isa} >= 2
 %if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  mariadb-connector-c-devel
 %else
@@ -452,62 +451,6 @@ BuildRequires:  mariadb-devel >= 5
 Requires:  qt5-qtbase-devel%{?_isa} >= 5.2
 Requires:  qt5-qtscript-devel%{?_isa} >= 5.2
 Requires:  qt5-qtwebkit-devel%{?_isa} >= 5.2
-Requires:  lm_sensors-devel%{?_isa}
-Requires:  lirc-devel%{?_isa}
-
-# X, and Xv video support
-Requires:  libXmu-devel%{?_isa}
-Requires:  libXv-devel%{?_isa}
-Requires:  libXvMC-devel%{?_isa}
-Requires:  libXxf86vm-devel%{?_isa}
-# Reminder this one is noarch
-Requires:  xorg-x11-proto-devel
-
-# OpenGL video output and vsync support
-Requires:  mesa-libGL-devel%{?_isa}
-Requires:  mesa-libGLU-devel%{?_isa}
-
-# Misc A/V format support
-Requires:  fftw-devel%{?_isa} >= 3
-Requires:  flac-devel%{?_isa} >= 1.0.4
-Requires:  gsm-devel%{?_isa}
-Requires:  lame-devel%{?_isa}
-Requires:  libdca-devel%{?_isa}
-Requires:  libdvdnav-devel%{?_isa}
-Requires:  libdvdread-devel%{?_isa} >= 0.9.4
-Requires:  libfame-devel%{?_isa} >= 0.9.0
-Requires:  libogg-devel%{?_isa}
-Requires:  libtheora-devel%{?_isa}
-Requires:  libvorbis-devel%{?_isa} >= 1.0
-Requires:  mjpegtools-devel%{?_isa} >= 1.6.1
-Requires:  taglib-devel%{?_isa} >= 1.5
-Requires:  x264-devel%{?_isa}
-Requires:  x265-devel%{?_isa}
-Requires:  xvidcore-devel%{?_isa} >= 0.9.1
-
-# Audio framework support
-Requires:  alsa-lib-devel%{?_isa}
-Requires:  jack-audio-connection-kit-devel%{?_isa}
-%if %{with pulseaudio}
-Requires:  pulseaudio-libs-devel%{?_isa}
-%endif
-
-# Need dvb headers for dvb support (not arched)
-Requires:  kernel-headers
-
-# FireWire cable box support
-Requires:  libavc1394-devel%{?_isa}
-Requires:  libiec61883-devel%{?_isa}
-Requires:  libraw1394-devel%{?_isa}
-
-%if %{with vdpau}
-Requires: libvdpau-devel%{?_isa}
-%endif
-
-%if %{with vaapi}
-Requires: libva-devel%{?_isa}
-%endif
-
 
 %description devel
 This package contains the header files and libraries for developing
@@ -1400,6 +1343,10 @@ exit 0
 ################################################################################
 
 %changelog
+* Sun Dec 04 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 32.0-6.76.20221129gitg44f88ed46
+- Update to latest fixes/32
+- Take a minimalist approach with devel subpackage dependencies by removing most. See bz 6501
+
 * Tue Nov 01 2022 Richard Shaw <hobbes1069@gmail.com> - 32.0-5.67.20221020gitba52c13223
 - Update to 32.0.67.20221020gitba52c13223 from branch fixes/32
 - Move git checkout in update script to use https as the git protocol seems to be down.

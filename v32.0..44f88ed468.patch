@@ -1,7 +1,7 @@
 From 28d360e98916ae065292fa29675c48faff742923 Mon Sep 17 00:00:00 2001
 From: Paul Harrison <paul@mythqml.net>
 Date: Thu, 24 Feb 2022 11:40:20 +0000
-Subject: [PATCH 01/66] Revert "NuppelVideoRecorder.cpp: convert to QtEndian"
+Subject: [PATCH 01/75] Revert "NuppelVideoRecorder.cpp: convert to QtEndian"
 
 This commit is causing problems with the Ubuntu s390x builds and
 possibly other big endian builds.
@@ -165,7 +165,7 @@ index d880ff574bf..81ac26cc4ff 100644
 From 56275b303bf7c7fec99993d1fff568708d0b985b Mon Sep 17 00:00:00 2001
 From: Anton Khirnov <anton@khirnov.net>
 Date: Thu, 24 Feb 2022 11:11:28 -0500
-Subject: [PATCH 02/66] configure: link to libatomic when it's present
+Subject: [PATCH 02/75] configure: link to libatomic when it's present
 
 C11 atomics in some configurations (e.g. 64bit operations on ppc64 with
 GCC) require linking to libatomic.
@@ -234,7 +234,7 @@ index c9fc6dc1ba4..19cae20bab6 100755
 From 75cf5040eff2aa6b7dc075462311de7c277b9375 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Martin=20Storsj=C3=B6?= <martin@martin.st>
 Date: Thu, 24 Feb 2022 20:00:00 -0500
-Subject: [PATCH 03/66] configure: arm: Don't add -march= to the compiler if no
+Subject: [PATCH 03/75] configure: arm: Don't add -march= to the compiler if no
  preference was passed
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -296,7 +296,7 @@ index 19cae20bab6..a270a5a9fcf 100755
 From 75b942fd8cdf6979463c72c75e2919e18552c644 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Sat, 26 Feb 2022 11:13:47 -0500
-Subject: [PATCH 04/66] Fix CPU detection for armhf
+Subject: [PATCH 04/75] Fix CPU detection for armhf
 
 This applies the same fix in MythTV as was applied in 75cf504 to FFmpeg.
 The same code is in MythTV and needs the same fix.
@@ -329,7 +329,7 @@ index d7349a91cd4..fda2057a282 100755
 From 44a45272517a8122369d74f149dc86432afe3ac0 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Mon, 28 Feb 2022 21:23:06 +0100
-Subject: [PATCH 05/66] Remove extraneous ? character in Sat>IP OPTIONS message
+Subject: [PATCH 05/75] Remove extraneous ? character in Sat>IP OPTIONS message
 
 The extraneous ? character occurs when the QUrl query is initialized to an empty string "".
 Fixed by replacing the "" by a QString() in the OPTIONS and the PLAY query composition.
@@ -369,7 +369,7 @@ index 502b49f8d12..531eb64b009 100644
 From e78a0c0042ea20240adef7566676ddeec4c2fb88 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Fri, 4 Mar 2022 10:44:01 -0600
-Subject: [PATCH 06/66] Fix playback hangs at end of file.
+Subject: [PATCH 06/75] Fix playback hangs at end of file.
 
 Refs #511
 
@@ -403,7 +403,7 @@ index 8f7ac450c67..6a9f0738ebd 100644
 From 043507cd6f638af4033ae7faca00dec4edc8deb2 Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Wed, 9 Mar 2022 20:53:30 -0600
-Subject: [PATCH 07/66] Fig logic bug in std::chrono conversion commit
+Subject: [PATCH 07/75] Fig logic bug in std::chrono conversion commit
  c71a8672.
 
 Signed-off-by: David Engel <dengel@mythtv.org>
@@ -429,7 +429,7 @@ index 6a9f0738ebd..ebd060fd4d5 100644
 From ae60e8302fab769dd0aacb091d195b1cef08ad9c Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Thu, 10 Mar 2022 20:30:13 -0600
-Subject: [PATCH 08/66] Use separate end-of-playback checks for
+Subject: [PATCH 08/75] Use separate end-of-playback checks for
  audio-only/mostly content and normal/video-only content.
 
 Refs #511
@@ -479,7 +479,7 @@ index 7041fa996fe..bb50f71d8cc 100644
 From 36c5630035864fa5d8efdaec8b0ef6c98067bc67 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Mon, 14 Mar 2022 11:57:26 -0400
-Subject: [PATCH 09/66] Fix MythDate::formatTime to handle times greater than
+Subject: [PATCH 09/75] Fix MythDate::formatTime to handle times greater than
  24 hours.
 
 (cherry picked from commit 2d7a09e40f55c13e203994aa4031f7de111fc97f)
@@ -562,7 +562,7 @@ index 17722debbec..e84e536e3ec 100644
 From d5fe42fc6b994c716c70901173d876c53200b50c Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Tue, 15 Mar 2022 17:41:48 -0400
-Subject: [PATCH 10/66] Better fix for MythDate::formatTime to handle
+Subject: [PATCH 10/75] Better fix for MythDate::formatTime to handle
  overflows.
 
 Fixes #520.
@@ -855,7 +855,7 @@ index 85aaaadd14f..9b0e604bb1c 100644
 From 9dcf2bb01eba126d304c323503c78ce36bbf595b Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Wed, 16 Mar 2022 12:42:28 -0400
-Subject: [PATCH 11/66] mythcommflag/CommDetector2.cpp: fix missed
+Subject: [PATCH 11/75] mythcommflag/CommDetector2.cpp: fix missed
  MythDate::fortmatTime() uses
 
 hh should be HH; missed chop not replaced.
@@ -900,7 +900,7 @@ index 244e8693602..aef37a8c1cf 100644
 From 5432d11672605878a7ab1964996edc7b0103087d Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Wed, 16 Mar 2022 14:09:35 -0400
-Subject: [PATCH 12/66] MythDate::formatTime(): update doxygen comment
+Subject: [PATCH 12/75] MythDate::formatTime(): update doxygen comment
 
 (cherry picked from commit 259a7fbe911da2ca229a513786172fcefeb8af07)
 ---
@@ -928,7 +928,7 @@ index 57eaceecd78..65c2b168e63 100644
 From f69ce764b78a15989455957eda235d5b1993a08a Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Thu, 24 Mar 2022 17:44:32 -0400
-Subject: [PATCH 13/66] Validate AV stream index before accessing stream.
+Subject: [PATCH 13/75] Validate AV stream index before accessing stream.
 
 Fixes #528.
 
@@ -956,7 +956,7 @@ index 95a0a8d9489..8af5cc853e8 100644
 From dcf7e13cce89f363d20a9cdd3922a7741cc214a9 Mon Sep 17 00:00:00 2001
 From: John Hoyt <john.hoyt@gmail.com>
 Date: Sun, 3 Apr 2022 07:35:20 -0400
-Subject: [PATCH 14/66] Add missing include <array> to mythdate
+Subject: [PATCH 14/75] Add missing include <array> to mythdate
 
 ---
  mythtv/libs/libmythbase/mythdate.cpp | 1 +
@@ -978,7 +978,7 @@ index 65c2b168e63..e7d2a99188a 100644
 From 5b54d3bf89a6278c01169287ace4a0fd02cc2233 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Tue, 29 Mar 2022 22:26:45 +0200
-Subject: [PATCH 15/66] Add symbolrate to transport list in mythtv-setup log
+Subject: [PATCH 15/75] Add symbolrate to transport list in mythtv-setup log
 
 The symbolrate is added to the transport list
 that is logged by mythtv-setup.
@@ -1014,7 +1014,7 @@ index c7bc185f6d7..303c2c28f4e 100644
 From 560b425776dfced77ceb9a83b13f32cf00ff2d94 Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Thu, 7 Apr 2022 19:51:20 -0400
-Subject: [PATCH 16/66] Service API V2: Last Play Position APIs
+Subject: [PATCH 16/75] Service API V2: Last Play Position APIs
 
 This adds 4 APIs:
 V2Dvr::GetLastPlayPos
@@ -1319,7 +1319,7 @@ index 8e339bef1dd..639236a044a 100644
 From 1eacadd5f413197746cb61ea036c522c65f95936 Mon Sep 17 00:00:00 2001
 From: acediac <git.zon@dfgh.net>
 Date: Sat, 9 Apr 2022 22:49:25 +1000
-Subject: [PATCH 17/66] mythfrontend audio fixes for macOS
+Subject: [PATCH 17/75] mythfrontend audio fixes for macOS
 
 - Fixed audio device detection
 - Fixed Surround Sound channel capability detection (5.1+ speakers)
@@ -1611,7 +1611,7 @@ index ef5cacc2913..7e18a10a62c 100644
 From cd109ec6c08f578e1b0965e4726e6046d75af8e8 Mon Sep 17 00:00:00 2001
 From: acediac <git.zon@dfgh.net>
 Date: Sat, 9 Apr 2022 22:57:38 +1000
-Subject: [PATCH 18/66] Potential memory corruption problems in audiooutputbase
+Subject: [PATCH 18/75] Potential memory corruption problems in audiooutputbase
 
 (cherry picked from commit 81aeb49c456ff4ecab82c2297b22c38bd70d706d)
 ---
@@ -1662,7 +1662,7 @@ index 69c28f2cc3d..d920d14dd0c 100644
 From 9070e9e65b42b19b3a54c21117a07f627418999f Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Fri, 8 Apr 2022 13:10:03 -0400
-Subject: [PATCH 19/66] Fix zmserver compilation on rawhide.
+Subject: [PATCH 19/75] Fix zmserver compilation on rawhide.
 
 (cherry picked from commit 9d2c68fdf4512be7aac95310d0bc69d54be63ac3)
 ---
@@ -1685,7 +1685,7 @@ index 5e13cb48e0b..f6ac052867a 100644
 From bbd8355d8dbb5ef78080312c2d632232ea03b504 Mon Sep 17 00:00:00 2001
 From: Stuart Auchterlonie <stuarta@mythtv.org>
 Date: Mon, 11 Apr 2022 22:20:23 +0100
-Subject: [PATCH 20/66] [webapp] fix encoder status when recording
+Subject: [PATCH 20/75] [webapp] fix encoder status when recording
 
 (cherry picked from commit 3da1ca7bc3c72a41cf7a910680cfb8e5ead4b49e)
 ---
@@ -1759,7 +1759,7 @@ index 554b0193b17..312ccafcf63 100644
 From bfae001d5cbb6e6012c3971e605d961e639e1eb7 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sun, 3 Apr 2022 18:39:20 +0200
-Subject: [PATCH 21/66] Determine tuner type in ChannelScanSM constructor
+Subject: [PATCH 21/75] Determine tuner type in ChannelScanSM constructor
 
 Initialize the m_scanDTVTunerType with the tuner type as found
 in the card already in the ChannelScanSM constructor.
@@ -1796,7 +1796,7 @@ index d7de02b7fd9..12411eb9196 100644
 From ec4558f3e1bbc021d771276a288039924f181a8b Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Wed, 20 Apr 2022 21:39:32 +0200
-Subject: [PATCH 22/66] Update preview picture after record playback exit
+Subject: [PATCH 22/75] Update preview picture after record playback exit
 
 When exiting a record playback, the preview thumbnail picture that is shown
 at the right/bottom corner of the MythCenter-wide theme, is updated to show
@@ -1876,7 +1876,7 @@ index 653b37c344b..40f5cda7e75 100644
 From daa4e7e4474c019714d21674ee7e18f3bc89624d Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Fri, 22 Apr 2022 21:04:59 +0200
-Subject: [PATCH 23/66] Animation update interval lower bound
+Subject: [PATCH 23/75] Animation update interval lower bound
 
 Add a lower bound of 10ms for the animation update interval.
 The animation is used in the MythBuntu theme and there it can cause a stall of
@@ -1912,7 +1912,7 @@ index bfdc30710ff..69f9da7e655 100644
 From 130f7054da73f8a23d04aacf683d743a449a4ec5 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Tue, 26 Apr 2022 16:03:25 -0500
-Subject: [PATCH 24/66] Fix wakeup calculations in HLS.
+Subject: [PATCH 24/75] Fix wakeup calculations in HLS.
 
 The std::chrono changes in commit 41225f80 inadvertently contained
 bugs that caused the wakeup times to be too low, often 0 (aka no
@@ -1989,7 +1989,7 @@ index 2294f107a8a..22d1f377b72 100644
 From 839d0f9ab6c7ced958bb5372376ab862461ae6d8 Mon Sep 17 00:00:00 2001
 From: David Engel <dengel@mythtv.org>
 Date: Tue, 26 Apr 2022 17:12:08 -0500
-Subject: [PATCH 25/66] Add cast needed by some compilers to last previous
+Subject: [PATCH 25/75] Add cast needed by some compilers to last previous
  commit.
 
 (cherry picked from commit e2877111bec395c6baa0468fc41adbb3526e2d69)
@@ -2015,7 +2015,7 @@ index 22d1f377b72..4db927faac7 100644
 From ea669e1f825896355ebc3f428553d887b4d5b4c1 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Wed, 27 Apr 2022 23:42:50 +0200
-Subject: [PATCH 26/66] Jump back in live TV
+Subject: [PATCH 26/75] Jump back in live TV
 
 When jumping back in live TV and the jump time interval is larger than the
 current play position then a jump is done to the end of the recording instead
@@ -2045,7 +2045,7 @@ index ebd060fd4d5..b68254f31bd 100644
 From d80a8da3f0163e6020ce2b6c76b5b31571fae2df Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Fri, 29 Apr 2022 23:35:08 +0200
-Subject: [PATCH 27/66] Jump forward to next live TV segment
+Subject: [PATCH 27/75] Jump forward to next live TV segment
 
 If playback is at the end of an earlier program in the live TV chain,
 skipping forward jumps to the end of the next program
@@ -2077,7 +2077,7 @@ index b68254f31bd..c8c742725c2 100644
 From c4fc53c651edbcf695694ee12807b9bc1b4f79ca Mon Sep 17 00:00:00 2001
 From: Peter Bennett <pbennett@mythtv.org>
 Date: Sat, 7 May 2022 17:43:11 -0400
-Subject: [PATCH 28/66] Services V2: Fix content length when length > 2 GB
+Subject: [PATCH 28/75] Services V2: Fix content length when length > 2 GB
 
 Third parameter of std::accumulate determines the return type, so it has
 to be explicitly cast to a uint64 to support 64 bit return.
@@ -2106,7 +2106,7 @@ index 5e685632130..c4611197857 100644
 From 26079f815a1723021dbe6a13eca0e66018f71e7b Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Fri, 6 May 2022 20:47:05 +0200
-Subject: [PATCH 29/66] Free AVPacket with av_packet_free
+Subject: [PATCH 29/75] Free AVPacket with av_packet_free
 
 Free AVPacket allocated with av_packet_alloc with av_packet_free
 instead of with av_packet_unref followed by a delete statement.
@@ -2161,7 +2161,7 @@ index 8af5cc853e8..4e3f9691a1b 100644
 From 53c77f01324e5d35dfb08827e16cb0a83b702213 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Thu, 12 May 2022 23:21:08 +0200
-Subject: [PATCH 30/66] EIT start delay
+Subject: [PATCH 30/75] EIT start delay
 
 Compute the second component of the EIT start delay with the highest
 input number instead of with the number of inputs.
@@ -2223,7 +2223,7 @@ index f2d1a6eb8f2..7c37a2ed49a 100644
 From b6286af7d82f81082f8d07dfcee3f7f8c9ab2542 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Thu, 12 May 2022 21:06:41 +0200
-Subject: [PATCH 31/66] Python Bindings: Add compatibility to MariaDB 10.6
+Subject: [PATCH 31/75] Python Bindings: Add compatibility to MariaDB 10.6
 
 MariaDB 10.6 introduced a new keyword 'offset' which collides with
 the field 'offset' from the recordedseek table.
@@ -2357,7 +2357,7 @@ index d02de716032..d33bb70666b 100644
 From 98c82d515d53ef57431d6bbfcd4264543a42426b Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Thu, 26 May 2022 12:30:10 -0400
-Subject: [PATCH 32/66] Fix problem with GetStatus API call while playing
+Subject: [PATCH 32/75] Fix problem with GetStatus API call while playing
  video.
 
 This bug was introduced while fixing a problem where all the network
@@ -2436,7 +2436,7 @@ index a4228de4d3a..b5f937f4f01 100644
 From ef9d17307fa1237e35234dd96be55c95c42cde88 Mon Sep 17 00:00:00 2001
 From: Korbinian Rosenegger <kroseneg@schmidham.net>
 Date: Fri, 11 Mar 2022 09:57:52 +0100
-Subject: [PATCH 33/66] Show transcoding profiles menu when job is _not_
+Subject: [PATCH 33/75] Show transcoding profiles menu when job is _not_
  running
 
 The transcoding profiles menu needs to be shown when the transcoding job
@@ -2465,7 +2465,7 @@ index abed3de46bb..8e9236b28e8 100644
 From 8347647e4208e0963270eddd1724182c61f3d15d Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Tue, 31 May 2022 23:58:59 +0200
-Subject: [PATCH 34/66] Change default Unicable frequency to 1210MHz
+Subject: [PATCH 34/75] Change default Unicable frequency to 1210MHz
 
 The previous default value was 1400MHz which is not a valid Unicable userband frequency.
 The new default value of 1210MHz is the frequency of the first userband.
@@ -2501,7 +2501,7 @@ index e3f01619d7e..191daf8c83c 100644
 From 7077a824d2e746f305bcb215ea687220abaa17db Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sat, 4 Jun 2022 21:05:22 +0200
-Subject: [PATCH 35/66] Fix AdaptationFieldSize function
+Subject: [PATCH 35/75] Fix AdaptationFieldSize function
 
 Use the data() function to get a pointer to access the fifth element of
 a transport stream packet instead of directly accessing the fifth element of a
@@ -2529,7 +2529,7 @@ index 0a971c436ff..a15ff12c346 100644
 From 66573a3f9b95bd6b218e363da2eac76738f990c4 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Wed, 15 Jun 2022 15:54:05 -0400
-Subject: [PATCH 36/66] Fix two logging relay functions to use
+Subject: [PATCH 36/75] Fix two logging relay functions to use
  QString::vasprintf.
 
 The code now calls QString::vasprintf, and not QString::asprintf like
@@ -2571,7 +2571,7 @@ index 481a156c667..42aa7ad8330 100644
 From a26786f5b4f6890557274ab8435258447db7915c Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Thu, 16 Jun 2022 19:42:15 -0400
-Subject: [PATCH 37/66] Fix the std::vector ring_peek/poke functions to use
+Subject: [PATCH 37/75] Fix the std::vector ring_peek/poke functions to use
  pass by reference.
 
 Refs #581
@@ -2643,7 +2643,7 @@ index 4c954604b53..beaf29e2bae 100644
 From 3bd5ef574c77b92095c5e2089d21473666f95830 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Mon, 20 Jun 2022 00:46:37 -0400
-Subject: [PATCH 38/66] mpeg2fix needs additional setup for FFmpeg 4.3 release.
+Subject: [PATCH 38/75] mpeg2fix needs additional setup for FFmpeg 4.3 release.
 
 Refs: #581 #588
 (cherry picked from commit 8f99b9a78611d34b08c3411cb48e910c5cc37b13)
@@ -2669,7 +2669,7 @@ index 42aa7ad8330..cc13738174c 100644
 From 7bb5162be039ba2905efea0acf85b076c9be6769 Mon Sep 17 00:00:00 2001
 From: Stuart Auchterlonie <stuarta@mythtv.org>
 Date: Wed, 22 Jun 2022 08:27:28 +0100
-Subject: [PATCH 39/66] extra include required on freebsd 13.1
+Subject: [PATCH 39/75] extra include required on freebsd 13.1
 
 (cherry picked from commit e60b4b35a19214e541ee3647e0d07007997367c1)
 ---
@@ -2693,7 +2693,7 @@ index 38e6100bb8c..695425e8134 100644
 From 501f85b389d8b626cbe4325fff1c18d84fbe25c9 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Fri, 24 Jun 2022 22:46:46 +0200
-Subject: [PATCH 40/66] Revert "Trim whitespace from beginning and end of
+Subject: [PATCH 40/75] Revert "Trim whitespace from beginning and end of
  lyrics lines."
 
 This reverts commit dee0dabda1c5b2c95b17f2365f8c68e8b66e3734.
@@ -2745,7 +2745,7 @@ index 9e371e6ad40..dccd0407468 100644
 From b09ce5de48c1eabc433615011016cee4e50cfce8 Mon Sep 17 00:00:00 2001
 From: Timothy D Witham <twitham@sbcglobal.net>
 Date: Sat, 25 Jun 2022 01:17:14 -0500
-Subject: [PATCH 41/66] Fix #579 LCD time by replacing colon with space.
+Subject: [PATCH 41/75] Fix #579 LCD time by replacing colon with space.
 
 (cherry picked from commit 5c2f8090e3a1051f2459d28060eaf531177d57f8)
 ---
@@ -2769,7 +2769,7 @@ index 71881f22b10..be249bed9d3 100644
 From 811dad0e91b223bcd3e6f17950e81d296d93fc65 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Thu, 23 Jun 2022 22:13:09 +0200
-Subject: [PATCH 42/66] Discard transport stream packets with invalid
+Subject: [PATCH 42/75] Discard transport stream packets with invalid
  adaptation field length
 
 See ISO/IEC 13818-1 : 2000 (E). 2.4.3.5 Semantic definition of fields in adaptation field
@@ -2818,7 +2818,7 @@ index b06ec00d9a2..c1ce2f102be 100644
 From 4cf469cbbf02eb9343de4b776d3fee6d19b6af5d Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Fri, 24 Jun 2022 21:33:46 +0200
-Subject: [PATCH 43/66] Remove superfluous VERBOSE_LEVEL_CHECK macro in
+Subject: [PATCH 43/75] Remove superfluous VERBOSE_LEVEL_CHECK macro in
  adaptation field size check
 
 This check is not needed because LOG is a macro that starts with the VERBOSE_LEVEL_CHECK
@@ -2853,7 +2853,7 @@ index c1ce2f102be..09b9599d20a 100644
 From 66ba83839a20e7c9adf0347ab6963dcdf1a58e6e Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Fri, 24 Jun 2022 17:07:00 -0400
-Subject: [PATCH 44/66] MythEDID: fix out of bounds memory access
+Subject: [PATCH 44/75] MythEDID: fix out of bounds memory access
 
 found by valgrind while investigating segmentation faults that
 occured randomly on startup of mythfrontend.
@@ -2889,7 +2889,7 @@ index 9940c24992b..704fbd09b7f 100644
 From 2514e9eb4d53d4c0690ebc80f9c4b88405835129 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sun, 26 Jun 2022 20:41:00 +0200
-Subject: [PATCH 45/66] Remove quotes in filelyrics.py argument values
+Subject: [PATCH 45/75] Remove quotes in filelyrics.py argument values
 
 The string quotes around each argument value in the command to start filelyrics.py causes a failure in reading the .lrc file.
 This is a regression; behavior of fixes/31 is correct but fixes/32 and master is broken.
@@ -2925,7 +2925,7 @@ index cf42f396357..21126b9b60e 100644
 From ced41a5f8f5a53c685755cde67fbe16206c9aa55 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Thu, 30 Jun 2022 22:26:16 +0200
-Subject: [PATCH 46/66] Option to exit playback and clear last played position
+Subject: [PATCH 46/75] Option to exit playback and clear last played position
 
 Add the "Clear last played position and exit" choice to the "Action on playback exit"
 configuration in mythfrontend/Setup/Video/Playback/General Playback.
@@ -3046,7 +3046,7 @@ index e2fcc817adb..e92eee290ed 100644
 From 6b2d23d4de0fe9034c81cbc5893f8febf38594a0 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sun, 10 Jul 2022 08:18:52 +0200
-Subject: [PATCH 47/66] Revert "Option to exit playback and clear last played
+Subject: [PATCH 47/75] Revert "Option to exit playback and clear last played
  position"
 
 This reverts commit ced41a5f8f5a53c685755cde67fbe16206c9aa55.
@@ -3153,7 +3153,7 @@ index e92eee290ed..e2fcc817adb 100644
 From b0db4141b336648b2b89ec0c488e920f0d0b1f48 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sun, 10 Jul 2022 21:22:58 +0200
-Subject: [PATCH 48/66] Option to exit playback and clear last played position
+Subject: [PATCH 48/75] Option to exit playback and clear last played position
 
 Add the "Clear last played position and exit" choice to the "Action on playback exit"
 configuration in mythfrontend/Setup/Video/Playback/General Playback.
@@ -3280,7 +3280,7 @@ index e2fcc817adb..67bd6dd460d 100644
 From b615b139d85a4024307cdaf7ff2ff7b01e5cd513 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Sun, 12 Jun 2022 18:42:16 -0500
-Subject: [PATCH 49/66] UserJobs/Events: quotes in %MATCH% type variables can
+Subject: [PATCH 49/75] UserJobs/Events: quotes in %MATCH% type variables can
  cause lost text
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -3330,7 +3330,7 @@ index 7f6fe7c421f..02079a7d691 100644
 From 365406638a4a9239e114e5ad3353d9411545a3d5 Mon Sep 17 00:00:00 2001
 From: Bill Meek <billmeek@mythtv.org>
 Date: Sat, 16 Jul 2022 14:41:20 -0500
-Subject: [PATCH 50/66] programinfo.cpp: adds comment about quotes in %MATCH%
+Subject: [PATCH 50/75] programinfo.cpp: adds comment about quotes in %MATCH%
  variables
 
 (cherry picked from commit a31c085783948070a3840c5190370599043fd629)
@@ -3357,7 +3357,7 @@ index 02079a7d691..4e3f5fd36a8 100644
 From e72127d5d90151d338decbe1cc044c38cca5e203 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Fri, 22 Jul 2022 22:11:07 +0200
-Subject: [PATCH 51/66] SatIP SETUP status handling
+Subject: [PATCH 51/75] SatIP SETUP status handling
 
 After SETUP, update status only after SETUP successful.
 This should enable a retry when the SETUP is not succesful.
@@ -3400,7 +3400,7 @@ index 17e607a3329..5e76a8f42c7 100644
 From d761e9f0565a7702daa7be15b84ab899e7af7156 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Tue, 26 Jul 2022 12:42:20 +0200
-Subject: [PATCH 52/66] Size of recording start time field in MythCenter-wide
+Subject: [PATCH 52/75] Size of recording start time field in MythCenter-wide
 
 Increase the width of the field showing the recording
 start time in theme MythCenter-wide from 94 to 104.
@@ -3471,7 +3471,7 @@ index 61ebab7e298..2a8ca1ab096 100644
 From 8550188f02d0c10402444f5e2e55d21352f3f38d Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sat, 23 Jul 2022 13:48:00 +0200
-Subject: [PATCH 53/66] Add tuning data for Eutelsat 7 satellite
+Subject: [PATCH 53/75] Add tuning data for Eutelsat 7 satellite
 
 This is the tuning data for one transponder on Eutelsat 7 from which
 all other transponders can be found with a "Full Scan (Tuned)".
@@ -3519,7 +3519,7 @@ index 94e97078024..46bf7d77cc7 100644
 From f458821fa0f7fd70bbba22469234d882b0ee7fe9 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sun, 24 Jul 2022 17:43:25 +0200
-Subject: [PATCH 54/66] EIT fixup for Eutelsat 7.0E satellite
+Subject: [PATCH 54/75] EIT fixup for Eutelsat 7.0E satellite
 
 Needed for the guide data in the Turkish language.
 
@@ -3546,7 +3546,7 @@ index 98c0572380b..901bb991236 100644
 From 6e1706ee66c94dff097c2e3b91ff1d312d8992f5 Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Wed, 27 Jul 2022 14:06:10 -0400
-Subject: [PATCH 55/66] GitHub Actions: add Ubuntu 22.04 builder
+Subject: [PATCH 55/75] GitHub Actions: add Ubuntu 22.04 builder
 
 ---
  .github/workflows/buildfixes32.yml | 12 ++++++++++--
@@ -3589,7 +3589,7 @@ index b9a557f9384..b1fe6f6d7e1 100644
 From c9e66de14b1770ad09bdf1df39e65bf6a6c0f54a Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Wed, 27 Jul 2022 14:07:10 -0400
-Subject: [PATCH 56/66] GitHub Actions: update macOS versions
+Subject: [PATCH 56/75] GitHub Actions: update macOS versions
 
 The macOS-10.15 environment is deprecated and will be removed on August 30th, 2022.
 ---
@@ -3613,7 +3613,7 @@ index b1fe6f6d7e1..22e312121ec 100644
 From c11ed8650141bff134e8537eb984ce57e46fad79 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Fri, 29 Jul 2022 16:55:38 -0400
-Subject: [PATCH 57/66] Fix MythCenter-wide format to not duplicate year in
+Subject: [PATCH 57/75] Fix MythCenter-wide format to not duplicate year in
  recordings page.
 
 Remove the 'startyear' field which apparently only contains a value in
@@ -3658,7 +3658,7 @@ index dd7442bb9c0..00d68afce33 100644
 From cf553e438c0c2cf09a47aa9d40810f61e4ba1db5 Mon Sep 17 00:00:00 2001
 From: Bill Meek <bmeek@mythtv.org>
 Date: Wed, 27 Jul 2022 08:15:14 -0500
-Subject: [PATCH 58/66] Housekeeper: allows initial INSERTs to the housekeeping
+Subject: [PATCH 58/75] Housekeeper: allows initial INSERTs to the housekeeping
  table
 
 Fresh DBs have no entries in housekeeping. INSERTs weren't
@@ -3817,7 +3817,7 @@ index 637875f7e97..7eda555f04b 100644
 From e5c974e40248d335be477a02fa5742582690e2d9 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sat, 13 Aug 2022 18:37:55 +0200
-Subject: [PATCH 59/66] Revert "Potential memory corruption problems in
+Subject: [PATCH 59/75] Revert "Potential memory corruption problems in
  audiooutputbase"
 
 This reverts commit 81aeb49c456ff4ecab82c2297b22c38bd70d706d.
@@ -3908,7 +3908,7 @@ index d920d14dd0c..69c28f2cc3d 100644
 From 6c0b5cc5c37507b9fb454a137092be5b61b4f137 Mon Sep 17 00:00:00 2001
 From: ulmus-scott <scott.the.elm@gmail.com>
 Date: Sat, 8 Jan 2022 19:06:02 -0500
-Subject: [PATCH 60/66] libmythfreemheg: replace nonstandard <malloc.h> with
+Subject: [PATCH 60/75] libmythfreemheg: replace nonstandard <malloc.h> with
  <cstdlib>
 
 (cherry picked from commit 30f8922d548cbedeac8f72692f0f0b22003af48f)
@@ -3978,7 +3978,7 @@ index f63adc1a47f..12f478517c0 100644
 From 659a080e9a545114295cef8dc8ea34e4d9f1d8ee Mon Sep 17 00:00:00 2001
 From: ulmus-scott <scott.the.elm@gmail.com>
 Date: Sat, 8 Jan 2022 19:15:25 -0500
-Subject: [PATCH 61/66] configure: remove unused malloc.h and memalign checks
+Subject: [PATCH 61/75] configure: remove unused malloc.h and memalign checks
 
 (cherry picked from commit 47c6ed9d34dfaebb91e7f43cdb426586873dcf2b)
 ---
@@ -4055,7 +4055,7 @@ index fda2057a282..3540f4a1885 100755
 From 668f9409cef9f8de41331629264c6b7c8626ddb3 Mon Sep 17 00:00:00 2001
 From: ulmus-scott <scott.the.elm@gmail.com>
 Date: Sat, 8 Jan 2022 19:45:16 -0500
-Subject: [PATCH 62/66] libmythfreemheg/BaseClasses.h: remove unnecessary
+Subject: [PATCH 62/75] libmythfreemheg/BaseClasses.h: remove unnecessary
  include "config.h"
 
 Programs.cpp needed reordering of includes for HAVE_GETTIMEOFDAY (-Wundef)
@@ -4107,7 +4107,7 @@ index ba58f6773c6..1e85c6bb564 100644
 From dfb1bc1fd309702b71dcbc5e8029c36b63d09294 Mon Sep 17 00:00:00 2001
 From: ulmus-scott <scott.the.elm@gmail.com>
 Date: Sat, 8 Jan 2022 20:27:39 -0500
-Subject: [PATCH 63/66] libmythfreemheg/Programs.cpp: remove unnecessary
+Subject: [PATCH 63/75] libmythfreemheg/Programs.cpp: remove unnecessary
  includes
 
 <sys/timeb.h> is unused
@@ -4145,7 +4145,7 @@ index 1e85c6bb564..ce593841414 100644
 From b135b27364812ef1bbc65baa3712abd55cc04882 Mon Sep 17 00:00:00 2001
 From: ulmus-scott <scott.the.elm@gmail.com>
 Date: Sat, 8 Jan 2022 20:47:12 -0500
-Subject: [PATCH 64/66] libmythfreemheg/Programs.cpp: remove more unnecessary
+Subject: [PATCH 64/75] libmythfreemheg/Programs.cpp: remove more unnecessary
  headers
 
 no symbols are used from either (myth)config.h or compat.h
@@ -4173,7 +4173,7 @@ index ce593841414..351dc5ded8e 100644
 From b6ef30288fd81d93d2c3ad34ac9adb61c257aebb Mon Sep 17 00:00:00 2001
 From: ulmus-scott <scott.the.elm@gmail.com>
 Date: Sun, 9 Jan 2022 04:02:29 -0500
-Subject: [PATCH 65/66] libmythfreemheg/Programs.cpp: finish conversion to
+Subject: [PATCH 65/75] libmythfreemheg/Programs.cpp: finish conversion to
  QDateTime
 
 <ctime> and "mythchrono.h" are no longer needed
@@ -4304,7 +4304,7 @@ index 351dc5ded8e..5035ed2491e 100644
 From ba52c132238b16a4bbca3d243c8ee9dd483bc3da Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Wed, 19 Oct 2022 22:07:21 +0200
-Subject: [PATCH 66/66] Live TV select channel from another video source
+Subject: [PATCH 66/75] Live TV select channel from another video source
 
 In Live TV mode it is possible to select any other channel by entering the channel number.
 In fixes/32 and in master this is broken; it is now only possible to select a channel in
@@ -4345,3 +4345,712 @@ index 78aa5c2f9f2..8c812ccc499 100644
      return chanid;
  }
  
+
+From 18f5b48ee111a98c9f7e6734e80fb95cb06835a9 Mon Sep 17 00:00:00 2001
+From: Scott Theisen <scott.the.elm@gmail.com>
+Date: Thu, 3 Nov 2022 21:00:26 +0100
+Subject: [PATCH 67/75] HEVCParser: fix parsing of st_ref_pic_set( stRpsIdx )
+
+This caused the bitstream to become misaligned for the
+satelite channel FashionTV UHD, which then caused the
+framerate to become an incorrect value.
+
+Fixes #650
+
+Signed-off-by: Klaas de Waal <klaas@kldo.nl>
+---
+ mythtv/libs/libmythtv/mpeg/HEVCParser.cpp | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mpeg/HEVCParser.cpp b/mythtv/libs/libmythtv/mpeg/HEVCParser.cpp
+index 21ef82902ee..75fb59b0a23 100644
+--- a/mythtv/libs/libmythtv/mpeg/HEVCParser.cpp
++++ b/mythtv/libs/libmythtv/mpeg/HEVCParser.cpp
+@@ -1110,6 +1110,7 @@ static bool shortTermRefPicSet(GetBitContext * gb, int stRPSIdx,
+ 
+         for (int j = 0; j <= RefRPS->NumDeltaPocs; ++j)
+         {
++            used_by_curr_pic_flag[j] = get_bits1(gb); // u(1)
+             /*
+               use_delta_flag[ j ] equal to 1 specifies that the
+               j-th entry in the source candidate short-term RPS
+@@ -1120,8 +1121,14 @@ static bool shortTermRefPicSet(GetBitContext * gb, int stRPSIdx,
+               short-term RPS. When use_delta_flag[ j ] is not
+               present, its value is inferred to be equal to 1.
+             */
+-            bool val = get_bits1(gb);
+-            use_delta_flag[j] = used_by_curr_pic_flag[j] ? val : true;
++            if (!used_by_curr_pic_flag[j])
++            {
++                use_delta_flag[j] = get_bits1(gb); // u(1)
++            }
++            else
++            {
++                use_delta_flag[j] = true;
++            }
+         }
+ 
+ 
+
+From 987da09e83ca80181afdd24a1b457faadd1f2c9f Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Fri, 18 Nov 2022 19:19:13 +0100
+Subject: [PATCH 68/75] AVFrame deinterlacer
+
+The AVFrame deinterlacer is used by mytharchivehelper to create thumbnail images.
+In commit bb6365f the code has been updated to use the MythVideoFrame deinterlacer;
+previously a local implementation was used.
+This commit introduced an error in the conversion from AVFrame to MythVideoFrame.
+MythVideoFrame expects the video data to be stored in a contiguous memory area, with
+one base pointer and various offsets pointing to the different areas (Y, U, V).
+AVFrame has three pointers and can and does use separate memory areas.
+The original code used pointer subtractions to compute the offsets for MythVideoFrame
+but this only works if the video memory is one contigous memory area.
+If not, it leads to segfaults.
+This is now fixed by copying the AVFrame video data into a temporary buffer
+and passing that to the deinterlacer.
+Note that commit bb6365f has not been reverted because the MythVideoFrame deinterlacer
+gives a better picture quality than the original AVFrame deinterlacer.
+Thanks to @bshanteau for reporting the problem.
+Thanks to @rcrdnalor for analyzing the problem.
+
+Refs #633
+
+(cherry picked from commit d8976e59ea42793a44c8980f452954d21f2ca08d)
+---
+ mythtv/libs/libmythtv/mythavutil.cpp | 52 ++++++++++++++++++++++------
+ 1 file changed, 42 insertions(+), 10 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mythavutil.cpp b/mythtv/libs/libmythtv/mythavutil.cpp
+index 7bf5e3b5516..4f4425d71a9 100644
+--- a/mythtv/libs/libmythtv/mythavutil.cpp
++++ b/mythtv/libs/libmythtv/mythavutil.cpp
+@@ -140,25 +140,57 @@ void MythAVUtil::DeinterlaceAVFrame(AVFrame *Frame)
+     if (VideoFrameType type = PixelFormatToFrameType(static_cast<AVPixelFormat>(Frame->format));
+         MythVideoFrame::YUVFormat(type))
+     {
+-        MythVideoFrame mythframe(type, Frame->data[0],
+-                                 MythVideoFrame::GetBufferSize(type, Frame->width, Frame->height),
+-                                 Frame->width, Frame->height);
++        // AVFrame video data consists of 3 independent buffers.
++        // MythVideoFrame requires video data to be in one memory block.
++        // Create a copy of the frame with all video data in one memory block.
++        AVFrame tempFrame = *Frame;
++        AVFrame *tf = &tempFrame;
++
++        size_t b0 = tf->buf[0]->size;
++        size_t b1 = tf->buf[1]->size;
++        size_t b2 = tf->buf[2]->size;
++
++        // Extend size to a multiple of 16 bytes for MythVideoFrame alignment constraints
++        size_t b0a = ((b0 + 15) / 16) * 16;
++        size_t b1a = ((b1 + 15) / 16) * 16;
++        size_t b2a = ((b2 + 15) / 16) * 16;
++
++        // Allocate contiguous buffer with enough space for the three segments
++        uint8_t *tbuf{ new uint8_t[b0a + b1a + b2a]{} };
++
++        tf->data[0] = tbuf;
++        tf->data[1] = tbuf + b0a;
++        tf->data[2] = tbuf + b0a + b1a;
++        memcpy(tf->data[0], tf->buf[0]->data, b0);
++        memcpy(tf->data[1], tf->buf[1]->data, b1);
++        memcpy(tf->data[2], tf->buf[2]->data, b2);
++
++        // Create a MythVideoFrame from the temporary AVFrame
++        MythVideoFrame mythframe(type, tf->data[0],
++                                 MythVideoFrame::GetBufferSize(type, tf->width, tf->height),
++                                 tf->width, tf->height);
+         mythframe.m_offsets[0] = 0;
+-        mythframe.m_offsets[1] = static_cast<int>(Frame->data[1] - Frame->data[0]);
+-        mythframe.m_offsets[2] = static_cast<int>(Frame->data[2] - Frame->data[0]);
+-        mythframe.m_pitches[0] = Frame->linesize[0];
+-        mythframe.m_pitches[1] = Frame->linesize[1];
+-        mythframe.m_pitches[2] = Frame->linesize[2];
++        mythframe.m_offsets[1] = tf->data[1] - tf->data[0];
++        mythframe.m_offsets[2] = tf->data[2] - tf->data[0];
++        mythframe.m_pitches[0] = tf->linesize[0];
++        mythframe.m_pitches[1] = tf->linesize[1];
++        mythframe.m_pitches[2] = tf->linesize[2];
+ 
++        // Deinterlacing
+         mythframe.m_deinterlaceSingle = DEINT_CPU | DEINT_MEDIUM;
+         mythframe.m_deinterlaceAllowed = DEINT_ALL;
+         MythDeinterlacer deinterlacer;
+         deinterlacer.Filter(&mythframe, kScan_Interlaced, nullptr, true);
++
++        // Copy back our deinterlaced frame and free the video buffer of the temporary AVFrame
++        memcpy(Frame->data[0], tf->data[0], b0);
++        memcpy(Frame->data[1], tf->data[1], b1);
++        memcpy(Frame->data[2], tf->data[2], b2);
++        delete[] tbuf;
++
+         // Must remove buffer before mythframe is deleted
+         mythframe.m_buffer = nullptr;
+     }
+-
+-
+ }
+ 
+ /// \brief Initialise AVFrame with content from MythVideoFrame
+
+From 2af1c2064ecc314e681a39937fe9eb06be048b5f Mon Sep 17 00:00:00 2001
+From: Scott Theisen <scott.the.elm@gmail.com>
+Date: Tue, 19 Jul 2022 14:30:18 -0400
+Subject: [PATCH 69/75] DTVRecorder::FindMPEG2Keyframes: fix frame counting
+ with field pictures
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+refs: https://github.com/MythTV/mythtv/issues/548
+
+See:
+ITU-T Rec. H.262 (2000 E)
+§6.1.1 Video sequence,
+§6.2.2 Video Sequence, and
+§6.3.10 Picture Coding Extension
+and Table 6-14 Meaning of picture_structure.
+
+When an interlaced stream is encoded with each coded frame
+consisting of two field pictures, the picture_header() (and its
+start code) appear twice per frame.  This causes the duration
+estimate to be twice what is should be by double counting frames.
+
+To fix this use the immediately following picture_coding_extension()
+for non-progressive sequences and only count a new frame at the
+first field to be presented instead of incorrectly counting each
+field picture as its own frame.
+
+(cherry picked from commit 2f2b7022b0dc8dcb322d25637b603f4679fdd387)
+---
+ .../libs/libmythtv/recorders/dtvrecorder.cpp  | 47 ++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
+index 0ca0d56fad9..6ca86f09e9c 100644
+--- a/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
++++ b/mythtv/libs/libmythtv/recorders/dtvrecorder.cpp
+@@ -445,7 +445,13 @@ bool DTVRecorder::FindMPEG2Keyframes(const TSPacket* tspacket)
+             // the next byte will be the PES packet stream id.
+             const int stream_id = m_startCode & 0x000000ff;
+             if (PESStreamID::PictureStartCode == stream_id)
+-                hasFrame = true;
++            {
++                if (m_progressiveSequence)
++                {
++                    hasFrame = true;
++                }
++                // else deterimine hasFrame from the following picture_coding_extension()
++            }
+             else if (PESStreamID::GOPStartCode == stream_id)
+             {
+                 m_lastGopSeen   = m_framesSeenCount;
+@@ -481,10 +487,47 @@ bool DTVRecorder::FindMPEG2Keyframes(const TSPacket* tspacket)
+                     case 0x8: /* picture coding extension */
+                         if (bytes_left >= 5)
+                         {
+-                            //int picture_structure = bufptr[2]&3;
++                            int picture_structure  = bufptr[2] & 3;
+                             int top_field_first = bufptr[3] & (1 << 7);
+                             int repeat_first_field = bufptr[3] & (1 << 1);
+                             int progressive_frame = bufptr[4] & (1 << 7);
++#if 0
++                            LOG(VB_RECORD, LOG_DEBUG, LOC +
++                                QString("picture_coding_extension(): (m_progressiveSequence: %1) picture_structure: %2 top_field_first: %3 repeat_first_field: %4 progressive_frame: %5")
++                                    .arg(QString::number(m_progressiveSequence , 2),
++                                         QString::number(picture_structure , 2),
++                                         QString::number(top_field_first , 2),
++                                         QString::number(repeat_first_field , 2),
++                                         QString::number(progressive_frame , 2)
++                                        )
++                               );
++#endif
++                            if (!m_progressiveSequence)
++                            {
++                                if (picture_structure == 0b00)
++                                {
++                                    ; // reserved
++                                }
++                                else if (picture_structure == 0b11)
++                                {
++                                    // frame picture (either interleaved interlaced or progressive)
++                                    hasFrame = true;
++                                }
++                                else if (picture_structure < 0b11)
++                                {
++                                    // field picture
++                                    // Only add a frame for the first presented field.
++                                    // Do not add a frame for each field picture.
++                                    if (top_field_first != 0)
++                                    {
++                                        hasFrame = (picture_structure == 0b01); // Top Field
++                                    }
++                                    else // top_field_first == 0
++                                    {
++                                        hasFrame = (picture_structure == 0b10); // Bottom Field
++                                    }
++                                }
++                            }
+ 
+                             /* check if we must repeat the frame */
+                             m_repeatPict = 1;
+
+From 8ff52c5438a9ffd2f6f5b328cde6171dbc38769c Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Tue, 30 Aug 2022 22:17:37 +0200
+Subject: [PATCH 70/75] Add release-date of an episode to tv-grabber ttvdb4.py
+
+The 'aired' field retrieved by the TV grabber for thetvdb.com API v4
+for a specific episode seems to be compatible to the 'releasedate'
+item of the xml format required by MythTV documented at
+https://www.mythtv.org/wiki/MythTV_Universal_Metadata_Format
+
+Refs #628
+
+(cherry picked from commit c11c85a674f8cf5c9dba51d6c29ea6c8607599e6)
+---
+ mythtv/bindings/python/ttvdbv4/myth4ttvdbv4.py | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/mythtv/bindings/python/ttvdbv4/myth4ttvdbv4.py b/mythtv/bindings/python/ttvdbv4/myth4ttvdbv4.py
+index 8844c7bd4ad..2f677bf31cf 100644
+--- a/mythtv/bindings/python/ttvdbv4/myth4ttvdbv4.py
++++ b/mythtv/bindings/python/ttvdbv4/myth4ttvdbv4.py
+@@ -406,6 +406,10 @@ def _format_xml(self, ser_x, sea_x=None, epi_x=None):
+             m.season = check_item(m, ("season", epi_x.seasonNumber), ignore=False)
+             m.episode = check_item(m, ("episode", epi_x.number), ignore=False)
+             m.runtime = check_item(m, ("runtime", epi_x.runtime), ignore=True)
++            if epi_x.aired:
++                # convert string to 'date' object, assuming ISO naming 
++                m.releasedate = convert_date(epi_x.aired[:10])
++
+         desc = strip_tags(desc).replace("\r\n", "").replace("\n", "")
+         m.description = check_item(m, ("description", desc))
+ 
+
+From 7faccdcb0aef3592eb1ba11c3e463329b2bb93bb Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Mon, 25 Jul 2022 18:47:30 +0200
+Subject: [PATCH 71/75] Fix fileinfo.xml generation in mytharchivehelper
+
+Plugin mytharchive:
+When ffmpeg cannot determine the codec of the provided stream,
+the whole buffer provided by `avcodec_string` is taken in the function
+`getFileInfo` to create an xml entry. Cleanup this buffer by removing
+'\0' characters. Otherwise, the return codec in the xml sequence will
+hold 256 zeros and mythburn.py fails to read this xml file.
+
+Refs #609
+
+(cherry picked from commit 99a6e078027db5df7353dc2883d57dbb380acb92)
+---
+ mythplugins/mytharchive/mytharchivehelper/main.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/mythplugins/mytharchive/mytharchivehelper/main.cpp b/mythplugins/mytharchive/mytharchivehelper/main.cpp
+index ab27adbfe71..84e86efc996 100644
+--- a/mythplugins/mytharchive/mytharchivehelper/main.cpp
++++ b/mythplugins/mytharchive/mytharchivehelper/main.cpp
+@@ -1966,7 +1966,7 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
+ #else
+                 QStringList param = QString::fromStdString(buf).split(',', Qt::SkipEmptyParts);
+ #endif
+-                QString codec = param[0].remove("Video:", Qt::CaseInsensitive);
++                QString codec = param[0].remove("Video:", Qt::CaseInsensitive).remove(QChar::Null);
+                 QDomElement stream = doc.createElement("video");
+                 stream.setAttribute("streamindex", i);
+                 stream.setAttribute("ffmpegindex", ffmpegIndex++);
+@@ -2097,7 +2097,7 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
+ #else
+                 QStringList param = QString::fromStdString(buf).split(',', Qt::SkipEmptyParts);
+ #endif
+-                QString codec = param[0].remove("Audio:", Qt::CaseInsensitive);
++                QString codec = param[0].remove("Audio:", Qt::CaseInsensitive).remove(QChar::Null);
+ 
+                 QDomElement stream = doc.createElement("audio");
+                 stream.setAttribute("streamindex", i);
+@@ -2171,7 +2171,7 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
+             {
+                 QDomElement stream = doc.createElement("data");
+                 stream.setAttribute("streamindex", i);
+-                stream.setAttribute("codec", QString::fromStdString(buf));
++                stream.setAttribute("codec", QString::fromStdString(buf).remove(QChar::Null));
+                 streams.appendChild(stream);
+ 
+                 break;
+
+From 878f897c6e976be1a6f0b0d9a34601002d23a010 Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Tue, 22 Nov 2022 22:03:11 +0100
+Subject: [PATCH 72/75] Additional fix to fileinfo.xml generation
+
+in mytharchivehelper.
+
+Commit 99a6e07 missed one item to cleanup this buffer
+by removing '\0' characters.
+This commit adds - hopefully - the last item to check.
+
+Refs #609
+
+(cherry picked from commit 427bc02c182be110ff255affa1fec265d769788c)
+---
+ mythplugins/mytharchive/mytharchivehelper/main.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythplugins/mytharchive/mytharchivehelper/main.cpp b/mythplugins/mytharchive/mytharchivehelper/main.cpp
+index 84e86efc996..3fe16f7f63c 100644
+--- a/mythplugins/mytharchive/mytharchivehelper/main.cpp
++++ b/mythplugins/mytharchive/mytharchivehelper/main.cpp
+@@ -2146,7 +2146,7 @@ static int getFileInfo(const QString& inFile, const QString& outFile, int lenMet
+ #else
+                 QStringList param = QString::fromStdString(buf).split(',', Qt::SkipEmptyParts);
+ #endif
+-                QString codec = param[0].remove("Subtitle:", Qt::CaseInsensitive);
++                QString codec = param[0].remove("Subtitle:", Qt::CaseInsensitive).remove(QChar::Null);
+ 
+                 QDomElement stream = doc.createElement("subtitle");
+                 stream.setAttribute("streamindex", i);
+
+From 1544bc29779433b68ac3eac23b0e95cbe3e28123 Mon Sep 17 00:00:00 2001
+From: Roland Ernst <rcrernst@gmail.com>
+Date: Fri, 17 Jun 2022 19:09:37 +0200
+Subject: [PATCH 73/75] Python tmdb3: Add API to get correct release dates
+
+The Movie Database deprecates the API call to `movie/{id}/releases`
+and favours `movie/{id}/release_dates` instead.
+
+The fetched dates are now sorted according the rules of themoviedb,
+if a release for a country is available.
+Otherwise, the primaray release date reported by `movie/{id}` is used.
+
+See
+https://www.themoviedb.org/
+https://developers.themoviedb.org/3/
+https://developers.themoviedb.org/3/movies/get-movie-release-dates
+https://developers.themoviedb.org/3/movies/get-movie-details
+
+(cherry picked from commit 6c3260c8b911a1f006eaf9a2130c4b014d7f9cf2)
+---
+ .../bindings/python/tmdb3/tmdb3/__init__.py   |  3 +-
+ mythtv/bindings/python/tmdb3/tmdb3/lookup.py  | 45 +++++++++++++-----
+ .../bindings/python/tmdb3/tmdb3/tmdb_api.py   | 46 ++++++++++++++++++-
+ 3 files changed, 79 insertions(+), 15 deletions(-)
+
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/__init__.py b/mythtv/bindings/python/tmdb3/tmdb3/__init__.py
+index b1917537dd6..591b6e24265 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/__init__.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/__init__.py
+@@ -2,7 +2,8 @@
+ from .tmdb_api import Configuration, searchMovie, searchMovieWithYear, \
+                      searchPerson, searchStudio, searchList, searchCollection, \
+                      searchSeries, Person, Movie, Collection, Genre, List, \
+-                     Series, Studio, Network, Episode, Season, __version__
++                     Series, Studio, Network, Episode, Season, ReleaseType, \
++                     __version__
+ from .request import Request, set_key, set_cache
+ from .locales import get_locale, set_locale
+ from .tmdb_auth import get_session, set_session
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/lookup.py b/mythtv/bindings/python/tmdb3/tmdb3/lookup.py
+index 65a4dac7a07..7ac547f4758 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/lookup.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/lookup.py
+@@ -12,7 +12,7 @@
+ #-----------------------
+ __title__ = "TheMovieDB.org V3"
+ __author__ = "Raymond Wagner, Roland Ernst"
+-__version__ = "0.3.9"
++__version__ = "0.3.10"
+ # 0.1.0 Initial version
+ # 0.2.0 Add language support, move cache to home directory
+ # 0.3.0 Enable version detection to allow use in MythTV
+@@ -30,6 +30,7 @@
+ # 0.3.7.a : Added compatibiliy to python3, tested with python 3.6 and 2.7
+ # 0.3.8 Sort posters by system language or 'en', if not found for given language
+ # 0.3.9 Support TV lookup
++# 0.3.10 Use new API for release dates for movies
+ 
+ # ~ from optparse import OptionParser
+ import sys
+@@ -45,7 +46,7 @@ def timeouthandler(signal, frame):
+ 
+ def buildSingle(inetref, opts):
+     from MythTV.tmdb3.tmdb_exceptions import TMDBRequestInvalid
+-    from MythTV.tmdb3 import Movie, get_locale
++    from MythTV.tmdb3 import Movie, ReleaseType, get_locale
+     from MythTV import VideoMetadata
+     from lxml import etree
+ 
+@@ -75,12 +76,11 @@ def buildSingle(inetref, opts):
+     if movie.title:
+         m.title = movie.title
+ 
+-    releases = list(movie.releases.items())
++    if movie.releasedate:
++        m.releasedate = movie.releasedate
++
++    releases = list(movie.cert_releases.items())
+ 
+-# get the release date for the wanted country
+-# TODO if that is not part of the reply use the primary release date (Primary=true)
+-# if that is not part of the reply use whatever release date is first in list
+-# if there is not a single release date in the reply, then leave it empty
+     if len(releases) > 0:
+         if opts.country:
+             # resort releases with selected country at top to ensure it
+@@ -89,17 +89,34 @@ def buildSingle(inetref, opts):
+             if opts.country in r[0]:
+                 index = r[0].index(opts.country)
+                 releases.insert(0, releases.pop(index))
+-
+-        m.releasedate = releases[0][1].releasedate
++                r_dates_country = releases[0][1].cert_release_dates
++                r_types_country = [x.releasetype for x in r_dates_country]
++                # from the mailing list: 
++                # https://www.themoviedb.org/talk/585ad032925141724d0514f4
++                # sort order for release dates: 2, 3, 1, min (4 ,5, 6)
++                sorted_dates = []
++                for rt in [ ReleaseType.Theatrical_limited,    # 2
++                            ReleaseType.Theatrical,            # 3
++                            ReleaseType.Premiere,              # 1
++                            ReleaseType.Digital,               # 4
++                            ReleaseType.Physical,              # 5
++                            ReleaseType.TV] :                  # 6
++                    if rt in r_types_country:
++                        r_index = r_types_country.index(rt)
++                        sorted_dates.append(r_dates_country[r_index].releasedate)
++                        if rt < ReleaseType.Digital:
++                            break
++                if len(sorted_dates) > 0:
++                    m.releasedate = min(sorted_dates)
+ 
+     m.inetref = str(movie.id)
+     if movie.collection:
+         m.collectionref = str(movie.collection.id)
+     if m.releasedate:
+         m.year = m.releasedate.year
+-    for country, release in releases:
+-        if release.certification:
+-            m.certifications[country] = release.certification
++    for country, releaseitem in releases:
++        if releaseitem.cert_release_dates[0].certification:
++            m.certifications[country] = releaseitem.cert_release_dates[0].certification
+     for genre in movie.genres:
+         m.categories.append(genre.name)
+     for studio in movie.studios:
+@@ -126,10 +143,14 @@ def buildSingle(inetref, opts):
+     # if no poster of given language was found,
+     # try to sort by system language and then by language "en"
+     system_language = py_locale.getdefaultlocale()[0].split("_")[0]
++    system_country = py_locale.getdefaultlocale()[0].split("_")[1]
+     locale_language = get_locale().language
++    locale_country = get_locale().country
+     if opts.debug:
+         print("system_language : ", system_language)
+         print("locale_language : ", locale_language)
++        print("system_country  : ", system_country)
++        print("locale_country  : ", locale_country)
+ 
+     loc_posters = movie.posters
+     if len(loc_posters) and loc_posters[0].language != locale_language \
+diff --git a/mythtv/bindings/python/tmdb3/tmdb3/tmdb_api.py b/mythtv/bindings/python/tmdb3/tmdb3/tmdb_api.py
+index 32e5dc9d08a..a1f993847fa 100644
+--- a/mythtv/bindings/python/tmdb3/tmdb3/tmdb_api.py
++++ b/mythtv/bindings/python/tmdb3/tmdb3/tmdb_api.py
+@@ -21,7 +21,7 @@
+ Preliminary API specifications can be found at
+ http://help.themoviedb.org/kb/api/about-3"""
+ 
+-__version__ = "v0.7.1"
++__version__ = "v0.7.3"
+ # 0.1.0  Initial development
+ # 0.2.0  Add caching mechanism for API queries
+ # 0.2.1  Temporary work around for broken search paging
+@@ -64,6 +64,7 @@
+ # 0.7.0.a  Added compatibility to python3, tested with python 3.6 and 2.7
+ # 0.7.1 Changes to support TV series lookup.
+ # 0.7.2 Removed support for python2.
++# 0.7.3 Added API for release dates
+ 
+ 
+ from .request import set_key, Request
+@@ -75,13 +76,14 @@
+ 
+ import json
+ import datetime
++from enum import IntEnum
+ 
+ DEBUG = False
+ 
+ 
+ def process_date(datestr):
+     try:
+-        return datetime.date(*[int(x) for x in datestr.split('-')])
++        return datetime.date(*[int(x) for x in datestr.split("T")[0].split('-')])
+     except (TypeError, ValueError):
+         import sys
+         import warnings
+@@ -316,6 +318,41 @@ def __repr__(self):
+         return "<{0.__class__.__name__} '{0.title}' ({0.country})>".format(self)
+ 
+ 
++class ReleaseType(IntEnum):
++    """
++    Release dates support for different types.
++    Proposed sort order for release dates: 2, 3, 1, min (4 ,5, 6)
++    """
++    Premiere            = 1
++    Theatrical_limited  = 2
++    Theatrical          = 3
++    Digital             = 4
++    Physical            = 5
++    TV                  = 6
++
++
++class CertReleaseItem(Element):
++    certification = Datapoint("certification")
++    language = Datapoint("iso_639_1")
++    releasedate = Datapoint("release_date", handler=process_date)
++    releasetype = Datapoint("type")
++
++    def __repr__(self):
++        return (
++            f"<{self.__class__.__name__} "
++            f"'{self.certification}', "
++            f"'{ReleaseType(self.releasetype).name}', "
++            f"{self.releasedate}>"
++        )
++
++class CertRelease(Element):
++    country = Datapoint("iso_3166_1")
++    cert_release_dates = Datalist("release_dates", handler=CertReleaseItem)
++
++    def __repr__(self):
++        return f"<{self.__class__.__name__} '{self.country}'>"
++
++
+ class Person(Element):
+     id = Datapoint('id', initarg=1)
+     name = Datapoint('name')
+@@ -622,6 +659,9 @@ def _populate_keywords(self):
+     def _populate_releases(self):
+         return Request('movie/{0}/releases'.format(self.id))
+ 
++    def _populate_cert_releases(self):
++        return Request(f"movie/{self.id}/release_dates")
++
+     def _populate_trailers(self):
+         return Request('movie/{0}/trailers'.format(self.id),
+                             language=self._locale.language)
+@@ -645,6 +685,8 @@ def _populate_translations(self):
+                         poller=_populate_keywords)
+     releases = Datadict('countries', handler=Release,
+                         poller=_populate_releases, attr='country')
++    cert_releases = Datadict("results", handler=CertRelease,
++                             poller=_populate_cert_releases, attr="country")
+     youtube_trailers = Datalist('youtube', handler=YoutubeTrailer,
+                                 poller=_populate_trailers)
+     apple_trailers = Datalist('quicktime', handler=AppleTrailer,
+
+From f358f305c36fe6d52915c74b55ba17e84855ee8e Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Mon, 28 Nov 2022 16:04:02 -0500
+Subject: [PATCH 74/75] Fix problem in scripts directory with "make clean;
+ make".
+
+The entire directory structure under the "obj" directory is created
+before the "make" command is executed. (Its created by qmake.)  Since
+none of those directories are created by "make", none of those
+directories should be deleted "make clean" command.  The appropriate
+place to remove the obj directory hierarchy is "make distclean", which
+is supposed to return the tree to its pristine distribution state.
+
+(cherry picked from commit 00e4fc531cb87e117e035f0e967b79847c9982f1)
+---
+ mythtv/programs/scripts/scripts.pro | 30 ++++-------------------------
+ 1 file changed, 4 insertions(+), 26 deletions(-)
+
+diff --git a/mythtv/programs/scripts/scripts.pro b/mythtv/programs/scripts/scripts.pro
+index 5bbb207945b..813bc9d82fa 100644
+--- a/mythtv/programs/scripts/scripts.pro
++++ b/mythtv/programs/scripts/scripts.pro
+@@ -63,28 +63,9 @@ using_bindings_python {
+ 
+     INSTALLS += hardwareprofile_scripts metadata_scripts internetcontent_scripts
+ 
+-    unix|macx|mingw:QMAKE_CLEAN += -r $${OBJECTS_DIR}/hardwareprofile/distros \
+-                                      $${OBJECTS_DIR}/internetcontent/nv_python_libs \
+-                                      $${OBJECTS_DIR}/metadata/Movie \
+-                                      $${OBJECTS_DIR}/metadata/Music \
+-                                      $${OBJECTS_DIR}/metadata/Television
+-    unix|macx|mingw:QMAKE_DISTCLEAN += -r $${OBJECTS_DIR}/hardwareprofile \
+-                                          $${OBJECTS_DIR}/internetcontent \
+-                                          $${OBJECTS_DIR}/metadata
+-    win32-msvc*:QMAKE_CLEAN += /s /f /q $${OBJECTS_DIR}/hardwareprofile/distros \
+-                                        $${OBJECTS_DIR}/internetcontent/nv_python_libs \
+-                                        $${OBJECTS_DIR}/metadata/Movie \
+-                                        $${OBJECTS_DIR}/metadata/Music \
+-                                        $${OBJECTS_DIR}/metadata/Television $$escape_expand(\n\t) \
+-                               rd /s /q $${OBJECTS_DIR}/hardwareprofile/distros \
+-                                        $${OBJECTS_DIR}/internetcontent/nv_python_libs \
+-                                        $${OBJECTS_DIR}/metadata/Movie \
+-                                        $${OBJECTS_DIR}/metadata/Music \
+-                                        $${OBJECTS_DIR}/metadata/Television
++    unix|macx|mingw:QMAKE_DISTCLEAN += -r $${OBJECTS_DIR}
+     win32-msvc*:QMAKE_DISTCLEAN += /s /f /q $${OBJECTS_DIR}/*.* $$escape_expand(\n\t) \
+-                                   rd /s /q $${OBJECTS_DIR}/hardwareprofile \
+-                                            $${OBJECTS_DIR}/internetcontent \
+-                                            $${OBJECTS_DIR}/metadata
++                                   rd /s /q $${OBJECTS_DIR}
+ 
+ } else {
+ 
+@@ -128,11 +109,8 @@ using_bindings_python {
+ 
+     }
+ 
+-    unix|macx|mingw:QMAKE_CLEAN += -r $${OBJECTS_DIR}/metadata/Music/*
+-    unix|macx|mingw:QMAKE_DISTCLEAN += -r $${OBJECTS_DIR}/metadata
+-    win32-msvc*:QMAKE_CLEAN += /s /f /q $${OBJECTS_DIR}/metadata/Music/*.* $$escape_expand(\n\t) \
+-                               rd /s /q $${OBJECTS_DIR}/metadata/Music/*.*
++    unix|macx|mingw:QMAKE_DISTCLEAN += -r $${OBJECTS_DIR}
+     win32-msvc*:QMAKE_DISTCLEAN += /s /f /q $${OBJECTS_DIR}/metadata/*.* $$escape_expand(\n\t) \
+-                                   rd /s /q $${OBJECTS_DIR}/metadata
++                                   rd /s /q $${OBJECTS_DIR}
+ 
+ }
+
+From 44f88ed46834d1a5180c3bd9c1bda95c744b281d Mon Sep 17 00:00:00 2001
+From: Steve Erlenborn <1751095+SteveErl@users.noreply.github.com>
+Date: Mon, 21 Nov 2022 21:33:18 -0600
+Subject: [PATCH 75/75] Set Subtitle in Change Recording Metadata Search
+
+After a metadata Search within the 'Edit Recording
+Metadata' screen, the subtitle value is mistakenly
+written to the Description field. Then that value
+is usually immediately overwritten by the real
+description value.
+
+This code change fixes the problem by properly
+writing to the Subtitle field.
+
+Resolves #667
+
+(cherry picked from commit fdf5b0915a9608e569ba6b33b79aa4b187057b50)
+---
+ mythtv/programs/mythfrontend/playbackbox.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/programs/mythfrontend/playbackbox.cpp b/mythtv/programs/mythfrontend/playbackbox.cpp
+index 8e9236b28e8..9471679173d 100644
+--- a/mythtv/programs/mythfrontend/playbackbox.cpp
++++ b/mythtv/programs/mythfrontend/playbackbox.cpp
+@@ -5472,7 +5472,7 @@ void RecMetadataEdit::QueryComplete(MetadataLookup *lookup)
+     m_episodeSpin->SetValue(lookup->GetEpisode());
+     if (!lookup->GetSubtitle().isEmpty())
+     {
+-        m_descriptionEdit->SetText(lookup->GetSubtitle());
++        m_subtitleEdit->SetText(lookup->GetSubtitle());
+     }
+     if (!lookup->GetDescription().isEmpty())
+     {
