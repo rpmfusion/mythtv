@@ -1,0 +1,502 @@
+From 3db72cc1d34609a1e07ec44b0d999c673501963c Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Mon, 6 Feb 2023 22:53:49 -0500
+Subject: [PATCH 1/4] Arch linux refuses to accept egrep. Switch to 'grep -E'.
+
+(cherry picked from commit bbcc7db3fdcd338af1889c8226c933cc7172715d)
+---
+ mythtv/version.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/version.sh b/mythtv/version.sh
+index 871d9748821..cbbd696721c 100755
+--- a/mythtv/version.sh
++++ b/mythtv/version.sh
+@@ -80,7 +80,7 @@ else
+     esac
+ fi
+ 
+-if ! echo "${SOURCE_VERSION}" | egrep -i "v[0-9]+.*"   ; then
++if ! echo "${SOURCE_VERSION}" | grep -Ei "v[0-9]+.*"   ; then
+     # Invalid version - use SRC_VERSION file
+     echo "WARNING: Invalid source version ${SOURCE_VERSION}, must start with v and a number, will use SRC_VERSION file instead"
+     . $GITTREEDIR/SRC_VERSION
+
+From 0c373c3b98e2cf8426457ff75be2935ec6f53248 Mon Sep 17 00:00:00 2001
+From: Mark Spieth <mspieth@digivation.com.au>
+Date: Sat, 11 Feb 2023 13:48:57 +1100
+Subject: [PATCH 2/4] Android: OpenSSL 1.1.1 load system CA certificates
+ explicitly Issue: 125
+
+* Move all android library dependencies to the packaging repo
+---
+ mythtv/programs/mythfrontend/mythfrontend.cpp |  6 +++
+ mythtv/programs/mythfrontend/mythfrontend.pro | 53 +------------------
+ 2 files changed, 8 insertions(+), 51 deletions(-)
+
+diff --git a/mythtv/programs/mythfrontend/mythfrontend.cpp b/mythtv/programs/mythfrontend/mythfrontend.cpp
+index 8cc6448a365..221fe507236 100644
+--- a/mythtv/programs/mythfrontend/mythfrontend.cpp
++++ b/mythtv/programs/mythfrontend/mythfrontend.cpp
+@@ -1892,6 +1892,12 @@ Q_DECL_EXPORT int main(int argc, char **argv)
+     SignalHandler::SetHandler(SIGUSR2, handleSIGUSR2);
+ #endif
+ 
++#if defined(Q_OS_ANDROID)
++    auto config = QSslConfiguration::defaultConfiguration();
++    config.setCaCertificates(QSslConfiguration::systemCaCertificates());
++    QSslConfiguration::setDefaultConfiguration(config);
++#endif
++
+     int retval = cmdline.ConfigureLogging();
+     if (retval != GENERIC_EXIT_OK)
+         return retval;
+diff --git a/mythtv/programs/mythfrontend/mythfrontend.pro b/mythtv/programs/mythfrontend/mythfrontend.pro
+index 0b17943c309..4b9913f9d93 100644
+--- a/mythtv/programs/mythfrontend/mythfrontend.pro
++++ b/mythtv/programs/mythfrontend/mythfrontend.pro
+@@ -132,55 +132,6 @@ using_libdns_sd {
+ }
+ 
+ android {
+-
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libbluray.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libicudata70.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libexiv2.14.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libfreetype.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libharfbuzz.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libfribidi.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libiconv.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libass.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libtag.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libxml2.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libfontconfig.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)liblzo2.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libicuuc70.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libicui18n70.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)mariadb/libmariadb.so
+-
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libexiv2.14.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)liblzo2.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libicudata65.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libicui18n65.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libicuuc65.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libbluray.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libxml2.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libfreetype.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)mariadb/libmariadb.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libfontconfig.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libtag.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libfribidi.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libass.so
+-    #ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libiconv.so
+-
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libmythavutil.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libmythpostproc.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libmythavfilter.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libmythswresample.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libmythswscale.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libmythavcodec.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIBCOMMON)libmythavformat.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIB)libmythbase-$${LIBVERSION}.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIB)libmythui-$${LIBVERSION}.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIB)libmythservicecontracts-$${LIBVERSION}.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIB)libmythupnp-$${LIBVERSION}.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIB)libmyth-$${LIBVERSION}.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIB)libmythtv-$${LIBVERSION}.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIB)libmythmetadata-$${LIBVERSION}.so
+-    ANDROID_EXTRA_LIBS += $$(MYTHINSTALLLIB)libmythprotoserver-$${LIBVERSION}.so
+-
+-    ANDROID_PACKAGE_SOURCE_DIR += $$(MYTHPACKAGEBASE)/android-package-source
+-
+-    ANDROID_MIN_SDK_VERSION = $$(ANDROID_MIN_SDK_VERSION)
++    message( myth android lib include $$(ANDROID_QT_DEPENDENCY_INCLUDE) )
++    include ( $$(ANDROID_QT_DEPENDENCY_INCLUDE) )
+ }
+
+From a803b198a84e04aa9a83dee5047193e431e9b3ed Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Thu, 9 Feb 2023 21:44:34 +0100
+Subject: [PATCH 3/4] Send REC_PENDING event before recording starts
+
+Fix the logic that sends the REC_PENDING event.
+- REC_PENDING event is sent always before the REC_STARTED.
+- REC_PENDING event is sent at 120, 90, 60 and 30 seconds before the start of the recording.
+- Start of the recording is the scheduled program start time plus the RecordPreRoll setting value.
+- When a recording is scheduled to start recording immediately then there is
+  one REC_PENDING event with 0 seconds immediately followed by the REC_STARTED event.
+- The setting WakeUpThreshold specifies how early the slave backends are signaled to start
+  before the recording is started. This setting is used as configured, but now with a minimum
+  value of RecordPreRoll plus 120 seconds so that there is always time for the REC_PENDING events.
+
+(cherry picked from commit 55a7d8293004b0cadb921a383b44a0fb9954a287)
+---
+ mythtv/programs/mythbackend/scheduler.cpp | 45 ++++++++++++++++-------
+ 1 file changed, 32 insertions(+), 13 deletions(-)
+
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index 2fc66467a10..aba76438cec 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -2118,6 +2118,10 @@ void Scheduler::run(void)
+                 idleWaitForRecordingTime =
+                     gCoreContext->GetDurSetting<std::chrono::minutes>("idleWaitForRecordingTime", 15min);
+ 
++                // Wakeup slaves at least 2 minutes before recording starts.
++                // This allows also REC_PENDING events.
++                wakeThreshold = std::max(wakeThreshold, prerollseconds + 120s);
++
+                 QElapsedTimer t; t.start();
+                 if (HandleReschedule())
+                 {
+@@ -2169,6 +2173,31 @@ void Scheduler::run(void)
+             }
+         }
+ 
++        // Wake any slave backends that need waking
++        curtime = MythDate::current();
++        for (auto it = startIter; it != m_recList.end(); ++it)
++        {
++            auto secsleft = std::chrono::seconds(curtime.secsTo((*it)->GetRecordingStartTime()));
++            auto timeBeforePreroll = secsleft - prerollseconds;
++            if (timeBeforePreroll <= wakeThreshold)
++            {
++                HandleWakeSlave(**it, prerollseconds);
++
++                // Adjust wait time until REC_PENDING event
++                if (timeBeforePreroll > 0s)
++                {
++                    std::chrono::seconds waitpending;
++                    if (timeBeforePreroll > 120s)
++                        waitpending = timeBeforePreroll -120s;
++                    else
++                        waitpending = std::min(timeBeforePreroll, 30s);
++                    nextWakeTime = MythDate::current().addSecs(waitpending.count());
++                }
++            }
++            else
++                break;
++        }
++
+         // Start any recordings that are due to be started
+         // & call RecordPending for recordings due to start in 30 seconds
+         // & handle RecStatus::Tuning updates
+@@ -2186,17 +2215,6 @@ void Scheduler::run(void)
+         if (m_recListChanged)
+             continue;
+ 
+-        /// Wake any slave backends that need waking
+-        curtime = MythDate::current();
+-        for (auto it = startIter; it != m_recList.end(); ++it)
+-        {
+-            auto secsleft = std::chrono::seconds(curtime.secsTo((*it)->GetRecordingStartTime()));
+-            if ((secsleft - prerollseconds) <= wakeThreshold)
+-                HandleWakeSlave(**it, prerollseconds);
+-            else
+-                break;
+-        }
+-
+         if (statuschanged)
+         {
+             MythEvent me("SCHEDULE_CHANGE");
+@@ -2547,13 +2565,14 @@ void Scheduler::HandleWakeSlave(RecordingInfo &ri, std::chrono::seconds prerolls
+     bool pendingEventSent = false;
+     for (size_t i = 0; i < kSysEventSecs.size(); i++)
+     {
+-        if (((secsleft - prerollseconds) <= kSysEventSecs[i]) && (secsleft > 0s) &&
++        auto pending_secs = std::max((secsleft - prerollseconds), 0s);
++        if ((pending_secs <= kSysEventSecs[i]) &&
+             (!m_sysEvents[i].contains(sysEventKey)))
+         {
+             if (!pendingEventSent)
+             {
+                 SendMythSystemRecEvent(
+-                    QString("REC_PENDING SECS %1").arg((secsleft - prerollseconds).count()), &ri);
++                    QString("REC_PENDING SECS %1").arg(pending_secs.count()), &ri);
+             }
+ 
+             m_sysEvents[i].insert(sysEventKey);
+
+From c273ed0f9a2491b7f6ec377be0a0a861f7788849 Mon Sep 17 00:00:00 2001
+From: jhoyt4 <john.hoyt@gmail.com>
+Date: Sat, 18 Feb 2023 09:42:47 -0500
+Subject: [PATCH 4/4] OSX: Handle constants deprecated for 11.7
+
+  - Fixes regression caused by deprecation of constants by Apple
+    in 11.5.7.
+  - Initial fix for macOS 12 introduced in commit 3787583
+
+(cherry picked from commit df7903b418da240e0ed5ea9bcb981a921ff4e8de)
+---
+ mythtv/libs/libmyth/audio/audiooutputca.cpp   | 44 +++++++++----------
+ .../libmythbase/platforms/mythpowerosx.cpp    |  8 ++--
+ mythtv/libs/libmythui/devices/AppleRemote.cpp |  8 ++--
+ .../libmythui/platforms/mythutilscocoa.mm     |  8 ++--
+ 4 files changed, 34 insertions(+), 34 deletions(-)
+
+diff --git a/mythtv/libs/libmyth/audio/audiooutputca.cpp b/mythtv/libs/libmyth/audio/audiooutputca.cpp
+index beef4941a62..a23c8bfcdf7 100644
+--- a/mythtv/libs/libmyth/audio/audiooutputca.cpp
++++ b/mythtv/libs/libmyth/audio/audiooutputca.cpp
+@@ -26,9 +26,9 @@
+ #include "libmythbase/mythcorecontext.h"
+ #include "audiooutputca.h"
+ 
+-#if !defined(MAC_OS_VERSION_12_0)
+-#define kAudioObjectPropertyElementMain kAudioObjectPropertyElementMaster
+-#endif
++// kAudioObjectPropertyElementMaster was deprecated in OS_X 12
++// kAudioObjectPropertyElementMaster defaults to a main/master port value of 0
++static constexpr int8_t kMythAudioObjectPropertyElementMain { 0 };
+ 
+ #define LOC QString("CoreAudio: ")
+ 
+@@ -551,7 +551,7 @@ AudioDeviceID CoreAudioData::GetDeviceWithName(const QString &deviceName)
+     {
+ 	kAudioHardwarePropertyDevices,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     OSStatus err = AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &pa,
+@@ -605,7 +605,7 @@ AudioDeviceID CoreAudioData::GetDefaultOutputDevice()
+     {
+ 	kAudioHardwarePropertyDefaultOutputDevice,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     // Find the ID of the default Device
+@@ -633,7 +633,7 @@ int CoreAudioData::GetTotalOutputChannels()
+     {
+ 	kAudioDevicePropertyStreamConfiguration,
+ 	kAudioDevicePropertyScopeOutput, // Scope needs to be set to output to find output streams
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     OSStatus err = AudioObjectGetPropertyDataSize(mDeviceID, &pa,
+@@ -677,7 +677,7 @@ QString *CoreAudioData::GetName()
+     {
+ 	kAudioObjectPropertyName,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     CFStringRef name;
+@@ -705,7 +705,7 @@ bool CoreAudioData::GetAutoHogMode()
+     {
+ 	kAudioHardwarePropertyHogModeIsAllowed,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     OSStatus err = AudioObjectGetPropertyData(kAudioObjectSystemObject, &pa, 0, nullptr, &size, &val);
+@@ -725,7 +725,7 @@ void CoreAudioData::SetAutoHogMode(bool enable)
+     {
+ 	kAudioHardwarePropertyHogModeIsAllowed,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     OSStatus err = AudioObjectSetPropertyData(kAudioObjectSystemObject, &pa, 0, nullptr,
+@@ -745,7 +745,7 @@ pid_t CoreAudioData::GetHogStatus()
+     {
+ 	kAudioDevicePropertyHogMode,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     OSStatus err = AudioObjectGetPropertyData(kAudioObjectSystemObject, &pa, 0, nullptr,
+@@ -767,7 +767,7 @@ bool CoreAudioData::SetHogStatus(bool hog)
+     {
+ 	kAudioDevicePropertyHogMode,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     // According to Jeff Moore (Core Audio, Apple), Setting kAudioDevicePropertyHogMode
+@@ -831,7 +831,7 @@ bool CoreAudioData::SetMixingSupport(bool mix)
+     {
+ 	kAudioDevicePropertySupportsMixing,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+     OSStatus err = AudioObjectSetPropertyData(mDeviceID, &pa, 0, nullptr,
+ 					      sizeof(mixEnable), &mixEnable);
+@@ -857,7 +857,7 @@ bool CoreAudioData::GetMixingSupport()
+     {
+ 	kAudioDevicePropertySupportsMixing,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+     OSStatus err = AudioObjectGetPropertyData(mDeviceID, &pa, 0, nullptr,
+ 					      &size, &val);
+@@ -879,7 +879,7 @@ AudioStreamIDVec CoreAudioData::StreamsList(AudioDeviceID d)
+     {
+ 	kAudioDevicePropertyStreams,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     err = AudioObjectGetPropertyDataSize(d, &pa,
+@@ -925,7 +925,7 @@ AudioStreamRangedVec CoreAudioData::FormatsList(AudioStreamID s)
+         // Bugfix: kAudioStreamPropertyPhysicalFormats, is meant to only give array of AudioStreamBasicDescription
+         kAudioStreamPropertyAvailablePhysicalFormats, // gives array of AudioStreamRangedDescription
+         kAudioObjectPropertyScopeGlobal,
+-        kAudioObjectPropertyElementMain
++        kMythAudioObjectPropertyElementMain
+     };
+ 
+     // Retrieve all the stream formats supported by this output stream
+@@ -987,7 +987,7 @@ RatesVec CoreAudioData::RatesList(AudioDeviceID d)
+     {
+ 	kAudioDevicePropertyAvailableNominalSampleRates,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     // retrieve size of rate list
+@@ -1119,7 +1119,7 @@ int CoreAudioData::OpenAnalog()
+     {
+ 	kAudioHardwarePropertyDevices,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     Debug("OpenAnalog: Entering");
+@@ -1511,7 +1511,7 @@ bool CoreAudioData::OpenSPDIF()
+ 	{
+ 	    kAudioStreamPropertyPhysicalFormat,
+ 	    kAudioObjectPropertyScopeGlobal,
+-	    kAudioObjectPropertyElementMain
++	    kMythAudioObjectPropertyElementMain
+ 	};
+ 
+         // Retrieve the original format of this stream first
+@@ -1628,7 +1628,7 @@ int CoreAudioData::AudioStreamChangeFormat(AudioStreamID               s,
+     {
+ 	kAudioStreamPropertyPhysicalFormat,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+     OSStatus err = AudioObjectSetPropertyData(s, &pa, 0, nullptr,
+ 					      sizeof(format), &format);
+@@ -1682,7 +1682,7 @@ void CoreAudioData::ResetAudioDevices()
+     {
+ 	kAudioHardwarePropertyDevices,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     OSStatus err = AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &pa,
+@@ -1728,7 +1728,7 @@ void CoreAudioData::ResetStream(AudioStreamID s)
+     {
+ 	kAudioStreamPropertyPhysicalFormat,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+ 
+@@ -1777,7 +1777,7 @@ QMap<QString, QString> *AudioOutputCA::GetDevices(const char */*type*/)
+     {
+ 	kAudioHardwarePropertyDevices,
+ 	kAudioObjectPropertyScopeGlobal,
+-	kAudioObjectPropertyElementMain
++	kMythAudioObjectPropertyElementMain
+     };
+ 
+     OSStatus err = AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &pa,
+diff --git a/mythtv/libs/libmythbase/platforms/mythpowerosx.cpp b/mythtv/libs/libmythbase/platforms/mythpowerosx.cpp
+index 60e4903be1e..bc743022016 100644
+--- a/mythtv/libs/libmythbase/platforms/mythpowerosx.cpp
++++ b/mythtv/libs/libmythbase/platforms/mythpowerosx.cpp
+@@ -8,9 +8,9 @@
+ #include <IOKit/ps/IOPSKeys.h>
+ #include <AvailabilityMacros.h>
+ 
+-#if !defined(MAC_OS_VERSION_12_0)
+-#define kIOMainPortDefault kIOMasterPortDefault
+-#endif
++// kIOMainPortDefault was deprecated in OS_X 12
++// kIOMainPortDefault defaults to a main/master port value of 0
++static constexpr int8_t kMythIOMainPortDefault { 0 };
+ 
+ #define LOC QString("PowerOSX: ")
+ 
+@@ -65,7 +65,7 @@ void MythPowerOSX::Init(void)
+ 
+     // Is there a battery?
+     CFArrayRef batteryinfo = NULL;
+-    if (IOPMCopyBatteryInfo(kIOMainPortDefault, &batteryinfo) == kIOReturnSuccess)
++    if (IOPMCopyBatteryInfo(kMythIOMainPortDefault, &batteryinfo) == kIOReturnSuccess)
+     {
+         CFRelease(batteryinfo);
+ 
+diff --git a/mythtv/libs/libmythui/devices/AppleRemote.cpp b/mythtv/libs/libmythui/devices/AppleRemote.cpp
+index 3749ba894c9..e79db57e270 100644
+--- a/mythtv/libs/libmythui/devices/AppleRemote.cpp
++++ b/mythtv/libs/libmythui/devices/AppleRemote.cpp
+@@ -23,9 +23,9 @@
+ 
+ #include "libmythbase/mythlogging.h"
+ 
+-#if !defined(MAC_OS_VERSION_12_0)
+-#define kIOMainPortDefault kIOMasterPortDefault
+-#endif
++// kIOMainPortDefault was deprecated in OS_X 12
++// kIOMainPortDefault defaults to a main/master port value of 0
++static constexpr int8_t kMythIOMainPortDefault { 0 };
+ 
+ AppleRemote*    AppleRemote::_instance = nullptr;
+ 
+@@ -193,7 +193,7 @@ static io_object_t _findAppleRemoteDevice(const char *devName)
+     hidMatchDictionary = IOServiceMatching(devName);
+ 
+     // check for matching devices
+-    ioReturnValue = IOServiceGetMatchingServices(kIOMainPortDefault,
++    ioReturnValue = IOServiceGetMatchingServices(kMythIOMainPortDefault,
+                                                  hidMatchDictionary,
+                                                  &hidObjectIterator);
+ 
+diff --git a/mythtv/libs/libmythui/platforms/mythutilscocoa.mm b/mythtv/libs/libmythui/platforms/mythutilscocoa.mm
+index 98b054f9874..d6da5c653c0 100644
+--- a/mythtv/libs/libmythui/platforms/mythutilscocoa.mm
++++ b/mythtv/libs/libmythui/platforms/mythutilscocoa.mm
+@@ -6,9 +6,9 @@
+ #import <IOKit/graphics/IOGraphicsLib.h>
+ #include <AvailabilityMacros.h>
+ 
+-#if !defined(MAC_OS_VERSION_12_0)
+-#define kIOMainPortDefault kIOMasterPortDefault
+-#endif
++// kIOMainPortDefault was deprecated in OS_X 12
++// kIOMainPortDefault defaults to a main/master port value of 0
++static constexpr int8_t kMythIOMainPortDefault { 0 };
+ 
+ CGDirectDisplayID GetOSXCocoaDisplay(void* View)
+ {
+@@ -44,7 +44,7 @@ QByteArray GetOSXEDID(CGDirectDisplayID Display)
+     CFMutableDictionaryRef matching = IOServiceMatching("IODisplayConnect");
+ 
+     io_iterator_t iter;
+-    if (IOServiceGetMatchingServices(kIOMainPortDefault, matching, &iter))
++    if (IOServiceGetMatchingServices(kMythIOMainPortDefault, matching, &iter))
+       return result;
+ 
+     io_service_t service = 0;

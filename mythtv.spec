@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v32.0-76-g44f88ed468
+%global vers_string v33.1-4-gc273ed0f9a
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20221129
+%global git_date 20230219
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -58,6 +58,7 @@
 
 ################################################################################
 %define _lto_cflags %{nil}
+%global py_prefix python3
 
 # These values are computed from git describe provided earlier
 %global githash %(c=%{vers_string}; echo $c|cut -d"-" -f3)
@@ -68,14 +69,12 @@
 # A list of which applications we want to put into the desktop menu system
 %global desktop_applications mythfrontend mythtv-setup
 
-%global branch fixes/32
-
 #
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Version:        32.0
-Release:        6%{rel_string}%{?dist}
+Version:        33.1
+Release:        1%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -86,6 +85,7 @@ Source0:        https://github.com/MythTV/%{name}/archive/v%{version}/%{name}-%{
 Patch0:         https://github.com/MythTV/%{name}/compare/v%{version}..%{shorthash}.patch
 Patch1:         %{name}-space_in_GB.patch
 
+%global major_rel %(c=%{version}; echo $c|cut -d"." -f1)
 
 ################################################################################
 
@@ -117,14 +117,6 @@ Patch1:         %{name}-space_in_GB.patch
 %bcond_without mythweather
 %bcond_without mythzoneminder
 %bcond_with mythnetvision
-
-# Python2 prefix for building on rhel
-%if 0%{?rhel} && 0%{?rhel} < 8
-%global py_prefix python2
-%else
-%global py_prefix python3
-%endif
-
 
 ################################################################################
 #
@@ -165,11 +157,7 @@ BuildRequires:  qt5-qtbase-devel >= 5.2
 BuildRequires:  qt5-qtscript-devel >= 5.2
 BuildRequires:  qt5-qtwebkit-devel >= 5.2
 BuildRequires:  freetype-devel >= 2
-%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  mariadb-connector-c-devel
-%else
-BuildRequires:  mariadb-devel >= 5
-%endif
 BuildRequires:  libcec-devel >= 1.7
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
@@ -242,13 +230,9 @@ BuildRequires:  libraw1394-devel
 BuildRequires:  hdhomerun-devel
 
 BuildRequires: %{py_prefix}-future
-%if 0%{?fedora} || 0%{?rhel} >= 8
 # For ttvdb.py, not available in EPEL
 BuildRequires: %{py_prefix}-requests
 BuildRequires: %{py_prefix}-requests-cache
-%else
-BuildRequires: python-requests
-%endif
 
 %if %{with vdpau}
 BuildRequires:  libvdpau-devel
@@ -263,11 +247,7 @@ BuildRequires:  systemd-devel
 %endif
 
 %if %{with mythgame}
-%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  minizip-compat-devel
-%else
-BuildRequires:  minizip-devel
-%endif
 %endif
 
 
@@ -297,13 +277,8 @@ BuildRequires:  perl(IO::Socket::INET6)
 BuildRequires:  %{py_prefix}-setuptools
 BuildRequires:  %{py_prefix}-devel
 BuildRequires:  %{py_prefix}-simplejson
-%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  %{py_prefix}-mysqlclient
 BuildRequires:  %{py_prefix}-lxml
-%else
-BuildRequires:  MySQL-python
-BuildRequires:  python-lxml
-%endif
 %endif
 
 # Plugin Build Requirements
@@ -443,11 +418,7 @@ Summary:   Development files for mythtv
 
 Requires:  mythtv-libs%{?_isa} = %{version}-%{release}
 
-%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  mariadb-connector-c-devel
-%else
-BuildRequires:  mariadb-devel >= 5
-%endif
 Requires:  qt5-qtbase-devel%{?_isa} >= 5.2
 Requires:  qt5-qtscript-devel%{?_isa} >= 5.2
 Requires:  qt5-qtwebkit-devel%{?_isa} >= 5.2
@@ -480,18 +451,10 @@ Requires:  mythtv-common%{?_isa}       = %{version}-%{release}
 Requires:  mythtv-base-themes%{?_isa}  = %{version}-%{release}
 	
 # RHBZ 1838780 - mariadb lacks mysql provides on el8
-%if 0%{?fedora} || 0%{?rhel} >= 8
 Requires:       (mysql%{?_isa} >= 5 or mariadb%{?_isa})
-%else
-Requires:       mysql%{?_isa} >= 5
-%endif
 
 Requires:  %{py_prefix}-MythTV       = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} >= 8
 Recommends: libaacs%{?_isa}
-%else
-Requires: libaacs%{?_isa}
-%endif
 %{?fedora:Requires:  google-droid-sans-mono-fonts}
 %{?fedora:Recommends:  mesa-vdpau-drivers%{?_isa}}
 Provides:  mythtv-frontend-api%{?_isa} = %{mythfeapiver}
@@ -516,12 +479,8 @@ Requires:   mythtv-common%{?_isa} = %{version}-%{release}
 Requires:   mythtv-libs%{?_isa}   = %{version}-%{release}
 Requires:   mythtv-setup%{?_isa}
 Requires:   %{py_prefix}-future
-%if 0%{?fedora} || 0%{?rhel} >= 8
 Requires:   %{py_prefix}-requests
 Requires:   %{py_prefix}-requests-cache
-%else
-Requires:   python-requests
-%endif
 
 Requires(pre): shadow-utils
 Conflicts:  xmltv-grabbers < 0.5.37
@@ -557,12 +516,8 @@ mythtv backend.
 Summary: Common components needed by multiple other MythTV components
 # For ttvdb.py
 Requires: %{py_prefix}-future
-%if 0%{?fedora} || 0%{?rhel} >= 8
 Requires:   %{py_prefix}-requests
 Requires:   %{py_prefix}-requests-cache
-%else
-Requires:   python-requests
-%endif
 
 %description common
 MythTV provides a unified graphical interface for recording and viewing
@@ -619,22 +574,12 @@ Provides a PHP-based interface to interacting with MythTV.
 
 %package -n %{py_prefix}-MythTV
 Summary:        Python bindings for MythTV
-%if 0%{?fedora} || 0%{?rhel} >= 8
 %{?python_provide:%python_provide python3-%{name}}
 Obsoletes:      python2-MythTV < 30.0-9.20190601git6bd8cd4993
-%else
-%{?python_provide:%python_provide python2-%{name}}
-%{?python_provide:%python_provide python2-MythTV}
-%endif
 BuildArch:      noarch
 
-%if 0%{?fedora} || 0%{?rhel} >= 8
 Requires:       %{py_prefix}-mysqlclient
 Requires:       %{py_prefix}-lxml
-%else
-Requires:       MySQL-python
-Requires:       python-lxml
-%endif
 
 %description -n %{py_prefix}-MythTV
 Provides a python-based interface to interacting with MythTV.
@@ -692,13 +637,8 @@ Requires:  dvdauthor%{?_isa} >= 0.6.11
 Requires:  ffmpeg%{?_isa} >= 0.4.9
 Requires:  mjpegtools%{?_isa} >= 1.6.2
 Requires:  genisoimage%{?_isa}
-%if 0%{?fedora} || 0%{?rhel} >= 8
 Requires:  %{py_prefix}-mysqlclient
 Requires:  %{py_prefix}-pillow
-%else
-Requires:  MySQL-python
-Requires:  python-pillow
-%endif
 Requires:  pmount%{?_isa}
 
 %description -n mytharchive
@@ -823,7 +763,7 @@ pushd mythtv
 # Set the mythtv --version string
 cat > EXPORTED_VERSION <<EOF
 SOURCE_VERSION=%{vers_string}
-BRANCH=%{branch}
+BRANCH=fixes/%{major_rel}
 EOF
 
 # Drop execute permissions on contrib bits, since they'll be %%doc
@@ -860,12 +800,8 @@ pushd mythtv
 %if ! %{with vaapi}
     --disable-vaapi                             \
 %endif
-%if 0%{?fedora} || 0%{?rhel} >= 8
     --python=%{__python3}                       \
     --enable-libvpx                             \
-%else
-    --python=%{__python2}                       \
-%endif
     --enable-libmp3lame                         \
     --enable-libx264                            \
     --enable-libx265                            \
@@ -965,12 +901,7 @@ pushd mythplugins
         --disable-mythnetvision \
     %endif
         --enable-opengl \
-%if 0%{?fedora} || 0%{?rhel} >= 8
-    --python=%{__python3}      \
-%else
-    --python=%{__python2}      \
-%endif
-        --enable-fftw
+        --python=%{__python3}
 
 %make_build V=1
     popd
@@ -1065,13 +996,8 @@ popd
 %endif
 
 # Fixes ERROR: ambiguous python shebang
-%if 0%{?fedora} || 0%{?rhel} >= 8
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python$:#!%{__python3}:' {} ';'
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/python$:#!%{__python3}:' {} ';'
-%else
-find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python$:#!%{__python2}:' {} ';'
-find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/python$:#!%{__python2}:' {} ';'
-%endif
 
 %pre common
 # Add the "mythtv" user, with membership in the audio and video group
@@ -1195,16 +1121,16 @@ exit 0
 %{_datadir}/mythtv/themes/
 
 %files libs
-%{_libdir}/libmyth-32.so.*
-%{_libdir}/libmythbase-32.so.*
-%{_libdir}/libmythfreemheg-32.so.*
-%{_libdir}/libmythmetadata-32.so.*
-%{_libdir}/libmythprotoserver-32.so.*
-%{_libdir}/libmythservicecontracts-32.so.*
-%{_libdir}/libmythtv-32.so.*
-%{_libdir}/libmythui-32.so.*
-%{_libdir}/libmythupnp-32.so.*
-%{_libdir}/libmythexiv2-*.so.32*
+%{_libdir}/libmyth-%{major_rel}.so.*
+%{_libdir}/libmythbase-%{major_rel}.so.*
+%{_libdir}/libmythfreemheg-%{major_rel}.so.*
+%{_libdir}/libmythmetadata-%{major_rel}.so.*
+%{_libdir}/libmythprotoserver-%{major_rel}.so.*
+%{_libdir}/libmythservicecontracts-%{major_rel}.so.*
+%{_libdir}/libmythtv-%{major_rel}.so.*
+%{_libdir}/libmythui-%{major_rel}.so.*
+%{_libdir}/libmythupnp-%{major_rel}.so.*
+%{_libdir}/libmythexiv2-*.so.%{major_rel}*
 
 %files devel
 %{_includedir}/*
@@ -1238,13 +1164,8 @@ exit 0
 %files -n %{py_prefix}-MythTV
 %{_bindir}/mythpython
 %{_bindir}/mythwikiscripts
-%if 0%{?fedora} || 0%{?rhel} >= 8
 %{python3_sitelib}/MythTV/
 %{python3_sitelib}/MythTV-*.egg-info
-%else
-%{python2_sitelib}/MythTV/
-%{python2_sitelib}/MythTV-*.egg-info
-%endif
 %endif
 
 %if %{with plugins}
@@ -1343,6 +1264,11 @@ exit 0
 ################################################################################
 
 %changelog
+* Sun Feb 26 2023 Andrew Bauer <zonexpertconsulting@outlook.com> - 33.1-1.4.20230219gitgc273ed0f9
+- Update to latest fixes/33
+- remove support for rhel7
+- mythtv no longer needs fftw
+
 * Sun Dec 04 2022 Andrew Bauer <zonexpertconsulting@outlook.com> - 32.0-6.76.20221129gitg44f88ed46
 - Update to latest fixes/32
 - Take a minimalist approach with devel subpackage dependencies by removing most. See bz 6501
