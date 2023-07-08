@@ -74,7 +74,7 @@
 #
 Name:           mythtv
 Version:        33.1
-Release:        1%{rel_string}%{?dist}
+Release:        2%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1264,6 +1264,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Sat Jul 08 2023 Leigh Scott <leigh123linux@gmail.com> - 33.1-2.4.20230219gitc273ed0f9a
+- Rebuilt for Python 3.12
+
 * Sun Feb 26 2023 Andrew Bauer <zonexpertconsulting@outlook.com> - 33.1-1.4.20230219gitgc273ed0f9
 - Update to latest fixes/33
 - remove support for rhel7
