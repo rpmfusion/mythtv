@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service version="1.0">
+<short>mythtv-webfrontend</short>
+<description>Browser based frontend that replaces Mythweb</description>
+  <port port="6544-6549" protocol="tcp"/>
+</service>
+

@@ -1,7 +1,8 @@
 From 3db72cc1d34609a1e07ec44b0d999c673501963c Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Mon, 6 Feb 2023 22:53:49 -0500
-Subject: [PATCH 1/4] Arch linux refuses to accept egrep. Switch to 'grep -E'.
+Subject: [PATCH 01/14] Arch linux refuses to accept egrep. Switch to 'grep
+ -E'.
 
 (cherry picked from commit bbcc7db3fdcd338af1889c8226c933cc7172715d)
 ---
@@ -25,7 +26,7 @@ index 871d9748821..cbbd696721c 100755
 From 0c373c3b98e2cf8426457ff75be2935ec6f53248 Mon Sep 17 00:00:00 2001
 From: Mark Spieth <mspieth@digivation.com.au>
 Date: Sat, 11 Feb 2023 13:48:57 +1100
-Subject: [PATCH 2/4] Android: OpenSSL 1.1.1 load system CA certificates
+Subject: [PATCH 02/14] Android: OpenSSL 1.1.1 load system CA certificates
  explicitly Issue: 125
 
 * Move all android library dependencies to the packaging repo
@@ -117,7 +118,7 @@ index 0b17943c309..4b9913f9d93 100644
 From a803b198a84e04aa9a83dee5047193e431e9b3ed Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Thu, 9 Feb 2023 21:44:34 +0100
-Subject: [PATCH 3/4] Send REC_PENDING event before recording starts
+Subject: [PATCH 03/14] Send REC_PENDING event before recording starts
 
 Fix the logic that sends the REC_PENDING event.
 - REC_PENDING event is sent always before the REC_STARTED.
@@ -220,7 +221,7 @@ index 2fc66467a10..aba76438cec 100644
 From c273ed0f9a2491b7f6ec377be0a0a861f7788849 Mon Sep 17 00:00:00 2001
 From: jhoyt4 <john.hoyt@gmail.com>
 Date: Sat, 18 Feb 2023 09:42:47 -0500
-Subject: [PATCH 4/4] OSX: Handle constants deprecated for 11.7
+Subject: [PATCH 04/14] OSX: Handle constants deprecated for 11.7
 
   - Fixes regression caused by deprecation of constants by Apple
     in 11.5.7.
@@ -500,3 +501,444 @@ index 98b054f9874..d6da5c653c0 100644
        return result;
  
      io_service_t service = 0;
+
+From 7f288be61b5fa653b5afd35b0ceea3b524ae8a1c Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Sun, 12 Mar 2023 20:54:07 +0100
+Subject: [PATCH 05/14] mythtv-setup hanging at Video Sources
+
+On Ubuntu 22.10 mythtv-setup hangs in Video Sources when creating a new Video source.
+The problem has been traced to running tv_find_grabbers by MythSystemLegacy.
+The fix consists of adding the kMSDontDisableDrawing flag to the invocation of MythSystemLegacy.
+It is not clear why this problem only appears on Ubuntu 22.10 and not on other distro's.
+
+Refs #690
+
+(cherry picked from commit 337500ecae712b48a2956bae5d786d6e90e4c667)
+---
+ mythtv/libs/libmythtv/videosource.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/videosource.cpp b/mythtv/libs/libmythtv/videosource.cpp
+index 6bb169409eb..1bb70946466 100644
+--- a/mythtv/libs/libmythtv/videosource.cpp
++++ b/mythtv/libs/libmythtv/videosource.cpp
+@@ -298,7 +298,7 @@ class XMLTVGrabber : public MythUIComboBoxSetting
+             args += "baseline";
+ 
+             MythSystemLegacy find_grabber_proc("tv_find_grabbers", args,
+-                                                kMSStdOut | kMSRunShell);
++                                                kMSStdOut | kMSRunShell | kMSDontDisableDrawing);
+             find_grabber_proc.Run(25s);
+             LOG(VB_GENERAL, LOG_INFO,
+                 loc + "Running 'tv_find_grabbers " + args.join(" ") + "'.");
+
+From b391cfb6a7ac87d245f697edb77c0114d67de683 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Fri, 17 Mar 2023 23:01:07 +0100
+Subject: [PATCH 06/14] Conversion of negative time values to string
+
+When converting a negative time value with format string "m:ss" there is
+a minus sign before the minutes and also a minus sign before the seconds.
+The implementation apparently only supports positive time interval values.
+The implementation is now extended to support negative time interval values
+by converting the absolute time value to string and then prepending a minus
+sign when the time value is negative.
+The implementation was introduced in commit 65b9c73adacabe38877c3e18af5d4a0545799c1
+"Better fix for MythDate::formatTime to handle overflows.", committed on Mar 16, 2022.
+
+Refs #733
+
+(cherry picked from commit c166849536ca2785184b5b6a20aec6bfd3b7a099)
+---
+ mythtv/libs/libmythbase/mythdate.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/mythtv/libs/libmythbase/mythdate.cpp b/mythtv/libs/libmythbase/mythdate.cpp
+index 8f3397241a6..21a307cb453 100644
+--- a/mythtv/libs/libmythbase/mythdate.cpp
++++ b/mythtv/libs/libmythbase/mythdate.cpp
+@@ -237,6 +237,9 @@ QString formatTime(std::chrono::milliseconds msecs, QString fmt)
+     static const QRegularExpression sRe("s+");
+     static const QRegularExpression zRe("z+");
+ 
++    bool negativeTime = msecs < 0ms;
++    msecs = std::chrono::milliseconds(std::abs(msecs.count()));
++
+     QRegularExpressionMatch match = hRe.match(fmt);
+     if (match.hasMatch())
+     {
+@@ -272,6 +275,10 @@ QString formatTime(std::chrono::milliseconds msecs, QString fmt)
+         QString text = StringUtil::intToPaddedString(value, width);
+         fmt.replace(match.capturedStart(), match.capturedLength(), text);
+     }
++
++    if (negativeTime)
++        fmt.prepend("-");
++
+     return fmt;
+ }
+ 
+
+From 142a8e070841c74d200e3444f6b815cde5452809 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Sun, 26 Mar 2023 14:29:59 +0200
+Subject: [PATCH 07/14] End-of-file in MythMusic
+
+Detect end-of-file when reading music files and return the AVERROR_EOF status to FFmpeg.
+In version 33 MythTV has upgraded to a version of FFmpeg that does require this.
+
+Refs #686
+
+(cherry picked from commit b9354c9f9e5672655a87078c15d6cda77702d89e)
+---
+ mythplugins/mythmusic/mythmusic/remoteavformatcontext.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/mythplugins/mythmusic/mythmusic/remoteavformatcontext.h b/mythplugins/mythmusic/mythmusic/remoteavformatcontext.h
+index 92c9c6264cf..0a1b713ff09 100644
+--- a/mythplugins/mythmusic/mythmusic/remoteavformatcontext.h
++++ b/mythplugins/mythmusic/mythmusic/remoteavformatcontext.h
+@@ -136,7 +136,9 @@ class RemoteAVFormatContext
+     static int ReadFunc(void *opaque, uint8_t *buf, int buf_size)
+     {
+         auto *rf = reinterpret_cast< RemoteFile* >(opaque);
+-        return rf->Read(buf, buf_size);
++        int len = rf->Read(buf, buf_size);
++        int ret = ((len == 0) && (buf_size > 0)) ? AVERROR_EOF : len;
++        return ret;
+     }
+ 
+     static int WriteFunc(void */*opaque*/, uint8_t */*buf*/, int/*buf_size*/)
+
+From f2a964ed814a08d8a3016e5b0b1f0979e4586360 Mon Sep 17 00:00:00 2001
+From: Jan Hambrecht <jaham@gmx.net>
+Date: Sat, 18 Mar 2023 23:16:08 +0100
+Subject: [PATCH 08/14] Fix detection of optical drives
+
+Checking for mount points is not reliable to determine if a block device
+is an optical drive. This commit uses the 'MediaCompatibility' property
+of the 'org.freedesktop.UDisks2.Drive' DBUS interface to check if the
+drive supports optical media.
+Also changes the function name in the log messages to match the function
+they are called from.
+
+(cherry picked from commit 998669de6114706d0459214ecc030aed7489afab)
+---
+ mythtv/libs/libmyth/mediamonitor-unix.cpp | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/mythtv/libs/libmyth/mediamonitor-unix.cpp b/mythtv/libs/libmyth/mediamonitor-unix.cpp
+index c9536f5584a..1a752c4aeb9 100644
+--- a/mythtv/libs/libmyth/mediamonitor-unix.cpp
++++ b/mythtv/libs/libmyth/mediamonitor-unix.cpp
+@@ -179,7 +179,8 @@ static QVariant DriveProperty(const QDBusObjectPath& o, const std::string& kszPr
+     {
+         v = iface.property(kszProperty.c_str());
+         LOG(VB_MEDIA, LOG_DEBUG, LOC +
+-            "Udisks2:Drive:" + kszProperty.c_str() + " : " + v.toString() );
++            "Udisks2:Drive:" + kszProperty.c_str() + " : " + 
++            (v.canConvert<QStringList>() ? v.toStringList().join(", ") : v.toString()) );
+     }
+     return v;
+ }
+@@ -193,18 +194,18 @@ static bool DetectDevice(const QDBusObjectPath& entry, MythUdisksDevice& device,
+ #if 0
+     QString devraw = block.property("Device").toString();
+     LOG(VB_MEDIA, LOG_DEBUG, LOC +
+-        "CheckMountable: Raw Device found: " + devraw);
++        "DetectDevice: Raw Device found: " + devraw);
+ #endif
+     if (!block.property("HintSystem").toBool() &&
+         !block.property("HintIgnore").toBool())
+     {
+         dev = block.property("Device").toString();
+         LOG(VB_MEDIA, LOG_DEBUG, LOC +
+-            "CheckMountable: Device found: " + dev);
++            "DetectDevice: Device found: " + dev);
+ 
+         bool readonly = block.property("ReadOnly").toBool();
+         LOG(VB_MEDIA, LOG_DEBUG, LOC +
+-            QString("CheckMountable: Device:ReadOnly '%1'").arg(readonly));
++            QString("DetectDevice: Device:ReadOnly '%1'").arg(readonly));
+ 
+         // ignore floppies, too slow
+         if (dev.startsWith("/dev/fd"))
+@@ -219,7 +220,7 @@ static bool DetectDevice(const QDBusObjectPath& entry, MythUdisksDevice& device,
+         bool isfsmountable = (properties.lastError().type() == QDBusError::NoError);
+ 
+         LOG(VB_MEDIA, LOG_DEBUG, LOC +
+-            QString("     CheckMountable:Entry:isfsmountable : %1").arg(isfsmountable));
++            QString("     DetectDevice:Entry:isfsmountable : %1").arg(isfsmountable));
+ 
+         // Get properties of the corresponding drive
+         // Note: the properties 'Optical' and 'OpticalBlank' needs a medium inserted
+@@ -229,17 +230,19 @@ static bool DetectDevice(const QDBusObjectPath& entry, MythUdisksDevice& device,
+             desc += " ";
+         desc += DriveProperty(drivePath, "Model").toString();
+         LOG(VB_MEDIA, LOG_DEBUG, LOC +
+-            QString("CheckMountable: Found drive '%1'").arg(desc));
++            QString("DetectDevice: Found drive '%1'").arg(desc));
++        const auto media = DriveProperty(drivePath, "MediaCompatibility").toStringList();
++        const bool isOptical = !media.filter("optical", Qt::CaseInsensitive).isEmpty();
+ #if 0
+-        LOG(VB_MEDIA, LOG_DEBUG, LOC + QString("CheckMountable:Drive:Optical : %1")
++        LOG(VB_MEDIA, LOG_DEBUG, LOC + QString("DetectDevice:Drive:Optical : %1")
+                 .arg(DriveProperty(drivePath, "Optical").toString()));
+-        LOG(VB_MEDIA, LOG_DEBUG, LOC + QString("CheckMountable:Drive:OpticalBlank : %1")
++        LOG(VB_MEDIA, LOG_DEBUG, LOC + QString("DetectDevice:Drive:OpticalBlank : %1")
+                 .arg(DriveProperty(drivePath, "OpticalBlank").toString()));
+ #endif
+ 
+         if (DriveProperty(drivePath, "Removable").toBool())
+         {
+-            if (readonly && !isfsmountable)
++            if (readonly && isOptical)
+             {
+                 device = UDisks2DVD;
+                 return true;
+
+From 44b1ac1d59aff9b9e4340e9a693a0e7a2b3e0799 Mon Sep 17 00:00:00 2001
+From: Jan Hambrecht <jaham@gmx.net>
+Date: Sun, 19 Mar 2023 16:20:43 +0100
+Subject: [PATCH 09/14] Remove checking 'ReadOnly' drive property
+
+When checking if a drive is an optical drive, rely only on the
+'MediaCompatibility' property and not the 'ReadOnly' property
+of the 'org.freedesktop.UDisks2.Drive' interface.
+
+(cherry picked from commit 9957ffab6c452c373bc60a1b9b9c3a3212d4f8f0)
+---
+ mythtv/libs/libmyth/mediamonitor-unix.cpp | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/mythtv/libs/libmyth/mediamonitor-unix.cpp b/mythtv/libs/libmyth/mediamonitor-unix.cpp
+index 1a752c4aeb9..85ef34218d4 100644
+--- a/mythtv/libs/libmyth/mediamonitor-unix.cpp
++++ b/mythtv/libs/libmyth/mediamonitor-unix.cpp
+@@ -203,10 +203,6 @@ static bool DetectDevice(const QDBusObjectPath& entry, MythUdisksDevice& device,
+         LOG(VB_MEDIA, LOG_DEBUG, LOC +
+             "DetectDevice: Device found: " + dev);
+ 
+-        bool readonly = block.property("ReadOnly").toBool();
+-        LOG(VB_MEDIA, LOG_DEBUG, LOC +
+-            QString("DetectDevice: Device:ReadOnly '%1'").arg(readonly));
+-
+         // ignore floppies, too slow
+         if (dev.startsWith("/dev/fd"))
+             return false;
+@@ -242,7 +238,7 @@ static bool DetectDevice(const QDBusObjectPath& entry, MythUdisksDevice& device,
+ 
+         if (DriveProperty(drivePath, "Removable").toBool())
+         {
+-            if (readonly && isOptical)
++            if (isOptical)
+             {
+                 device = UDisks2DVD;
+                 return true;
+
+From 0682d4d42dd50ad8592c522fe39fc8a81a11ee59 Mon Sep 17 00:00:00 2001
+From: Jan Hambrecht <jaham@gmx.net>
+Date: Sun, 19 Mar 2023 16:26:15 +0100
+Subject: [PATCH 10/14] Cleanup function 'DetectDevice'
+
+Remove dead code which is not going to be used anymore
+
+(cherry picked from commit 80b4911f15324440fbd04c3580922463f87a2ae1)
+---
+ mythtv/libs/libmyth/mediamonitor-unix.cpp | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+diff --git a/mythtv/libs/libmyth/mediamonitor-unix.cpp b/mythtv/libs/libmyth/mediamonitor-unix.cpp
+index 85ef34218d4..36aa9f4c906 100644
+--- a/mythtv/libs/libmyth/mediamonitor-unix.cpp
++++ b/mythtv/libs/libmyth/mediamonitor-unix.cpp
+@@ -191,11 +191,7 @@ static bool DetectDevice(const QDBusObjectPath& entry, MythUdisksDevice& device,
+ {
+     QDBusInterface block(UDISKS2_SVC, entry.path(), UDISKS2_SVC_BLOCK,
+                          QDBusConnection::systemBus() );
+-#if 0
+-    QString devraw = block.property("Device").toString();
+-    LOG(VB_MEDIA, LOG_DEBUG, LOC +
+-        "DetectDevice: Raw Device found: " + devraw);
+-#endif
++
+     if (!block.property("HintSystem").toBool() &&
+         !block.property("HintIgnore").toBool())
+     {
+@@ -229,12 +225,6 @@ static bool DetectDevice(const QDBusObjectPath& entry, MythUdisksDevice& device,
+             QString("DetectDevice: Found drive '%1'").arg(desc));
+         const auto media = DriveProperty(drivePath, "MediaCompatibility").toStringList();
+         const bool isOptical = !media.filter("optical", Qt::CaseInsensitive).isEmpty();
+-#if 0
+-        LOG(VB_MEDIA, LOG_DEBUG, LOC + QString("DetectDevice:Drive:Optical : %1")
+-                .arg(DriveProperty(drivePath, "Optical").toString()));
+-        LOG(VB_MEDIA, LOG_DEBUG, LOC + QString("DetectDevice:Drive:OpticalBlank : %1")
+-                .arg(DriveProperty(drivePath, "OpticalBlank").toString()));
+-#endif
+ 
+         if (DriveProperty(drivePath, "Removable").toBool())
+         {
+
+From 51cb10a67855bae82a97ca1995956622b0902021 Mon Sep 17 00:00:00 2001
+From: Bill Meek <bmeek@mythtv.org>
+Date: Mon, 10 Apr 2023 10:45:38 -0500
+Subject: [PATCH 11/14] ApplyRecordRecGroupChange: replace chanid/starttime
+ with recordedid
+
+Solves issue here: https://forum.mythtv.org/viewtopic.php?p=25852#p25852
+---
+ mythtv/libs/libmythtv/recordinginfo.cpp | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/recordinginfo.cpp b/mythtv/libs/libmythtv/recordinginfo.cpp
+index c5126376f47..a16c7f2c6bd 100644
+--- a/mythtv/libs/libmythtv/recordinginfo.cpp
++++ b/mythtv/libs/libmythtv/recordinginfo.cpp
+@@ -685,12 +685,10 @@ void RecordingInfo::ApplyRecordRecGroupChange(const QString &newrecgroup)
+     query.prepare("UPDATE recorded"
+                   " SET recgroup = :RECGROUP, "
+                   "     recgroupid = :RECGROUPID "
+-                  " WHERE chanid = :CHANID"
+-                  " AND starttime = :START ;");
++                  " WHERE recordedid = :RECORDEDID");
+     query.bindValue(":RECGROUP", null_to_empty(newrecgroup));
+     query.bindValue(":RECGROUPID", newrecgroupid);
+-    query.bindValue(":START", m_recStartTs);
+-    query.bindValue(":CHANID", m_chanId);
++    query.bindValue(":RECORDEDID", m_recordedId);
+ 
+     if (!query.exec())
+         MythDB::DBError("RecGroup update", query);
+
+From c4b7e4c43321154bf5eaa67af02b7ba7ea6bffb8 Mon Sep 17 00:00:00 2001
+From: Bill Meek <bmeek@mythtv.org>
+Date: Sun, 16 Apr 2023 23:59:37 -0500
+Subject: [PATCH 12/14] mythdbcon: force QMetaType::QDateTime values to use
+ MythDate::kDatabase
+
+This cares for a recent ibqt5sql5-mysql update in at least one
+distribution where it isn't removing timezone information from
+a query causing it to fail.
+
+Log example without patch:
+MSqlQuery::exec(DBManager16) UPDATE recorded SET recgroup = 'Deleted', recgroupid = 3 WHERE chanid = '10901' AND starttime = '2023-04-08T05:00:00.000Z' ; <<<< Took 0ms
+
+Log example with patch:
+MSqlQuery::exec(DBManager1) UPDATE recorded SET recgroup = 'Deleted', recgroupid = 3 WHERE chanid = '10901' AND starttime = '2023-04-07 05:30:00' ; <<<< Took 0ms
+
+Results seen by users on the Forum and mailing list.
+
+Credits to Mark, Roland and Klaas.
+
+See: https://forum.mythtv.org/viewtopic.php?p=25833#p25833
+
+The Debian solution is due 4/31/2023.
+
+(cherry picked from commit d889da2b0ebdbbfaa59051ae30a6b5b9a5930cdb)
+---
+ mythtv/libs/libmythbase/mythdbcon.cpp | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/mythtv/libs/libmythbase/mythdbcon.cpp b/mythtv/libs/libmythbase/mythdbcon.cpp
+index 1ec6e1ca7da..b1e251fd809 100644
+--- a/mythtv/libs/libmythbase/mythdbcon.cpp
++++ b/mythtv/libs/libmythbase/mythdbcon.cpp
+@@ -882,6 +882,15 @@ bool MSqlQuery::testDBConnection()
+ 
+ void MSqlQuery::bindValue(const QString &placeholder, const QVariant &val)
+ {
++#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
++    if (static_cast<QMetaType::Type>(val.type()) == QMetaType::QDateTime)
++    {
++        QSqlQuery::bindValue(placeholder,
++                             MythDate::toString(val.toDateTime(), MythDate::kDatabase),
++                             QSql::In);
++        return;
++    }
++#endif
+     QSqlQuery::bindValue(placeholder, val, QSql::In);
+ }
+ 
+@@ -897,6 +906,15 @@ void MSqlQuery::bindValueNoNull(const QString &placeholder, const QVariant &val)
+         QSqlQuery::bindValue(placeholder, QString(""), QSql::In);
+         return;
+     }
++#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
++    if (type == QMetaType::QDateTime)
++    {
++        QSqlQuery::bindValue(placeholder,
++                             MythDate::toString(val.toDateTime(), MythDate::kDatabase),
++                             QSql::In);
++        return;
++    }
++#endif
+     QSqlQuery::bindValue(placeholder, val, QSql::In);
+ }
+ 
+
+From 83e1df82c2094586a585b8d5cde9de14e9be0735 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Thu, 18 May 2023 21:00:28 +0200
+Subject: [PATCH 13/14] Fix mythbackend segfault after failed Live TV
+
+A failing Live TV can cause a segfault of mythbackend
+due to a delete of an already deleted object.
+This is not immediately obvious due to pointer
+aliasing but valgrind figures it out anyway.
+
+(cherry picked from commit 68b368673704f35072dbc3fb44e0c8444d737963)
+Signed-off-by: Klaas de Waal <klaas@kldo.nl>
+---
+ mythtv/libs/libmythtv/tv_rec.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/libs/libmythtv/tv_rec.cpp b/mythtv/libs/libmythtv/tv_rec.cpp
+index 7d16a16ddb1..d4a106c6b9e 100644
+--- a/mythtv/libs/libmythtv/tv_rec.cpp
++++ b/mythtv/libs/libmythtv/tv_rec.cpp
+@@ -4218,6 +4218,8 @@ void TVRec::TuningNewRecorder(MPEGStreamData *streamData)
+             gCoreContext->dispatch(me);
+         }
+         TeardownRecorder(kFlagKillRec);
++        if (m_tvChain)
++            rec = nullptr;
+         goto err_ret;
+     }
+ 
+
+From beaf2bacbe63da92da49e37807efa1738e1fa5c1 Mon Sep 17 00:00:00 2001
+From: MmAaXx500 <viktor.balogh45@gmail.com>
+Date: Thu, 6 Jul 2023 17:58:46 +0200
+Subject: [PATCH 14/14] Fix heap-use-after-free in TVRec with Live TV
+
+When playing Live TV continuously on the same channel, there is
+a moment when according to the guide one program ends and the next
+program begins. At this moment the Live TV recording is stopped and
+a new recording is started. There is small time period in between
+in which there is no valid program info and an update of the program
+info from another thread in that period results then in access
+of already deleted program info instance.
+Fixed by using the m_stateChangeLock to lock the complete sequence.
+
+Refs #768
+Refs #769
+
+Signed-off-by: Klaas de Waal <klaas@kldo.nl>
+---
+ mythtv/libs/libmythtv/tv_rec.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mythtv/libs/libmythtv/tv_rec.cpp b/mythtv/libs/libmythtv/tv_rec.cpp
+index d4a106c6b9e..2b1708176d4 100644
+--- a/mythtv/libs/libmythtv/tv_rec.cpp
++++ b/mythtv/libs/libmythtv/tv_rec.cpp
+@@ -3339,6 +3339,8 @@ void TVRec::RingBufferChanged(MythMediaBuffer *Buffer, RecordingInfo *pginfo, Re
+ {
+     LOG(VB_GENERAL, LOG_INFO, LOC + "RingBufferChanged()");
+ 
++    QMutexLocker lock(&m_stateChangeLock);
++
+     if (pginfo)
+     {
+         if (m_curRecording)

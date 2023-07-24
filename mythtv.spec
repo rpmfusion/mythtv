@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v33.1-4-gc273ed0f9a
+%global vers_string v33.1-14-gbeaf2bacbe
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20230219
+%global git_date 20230714
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -68,6 +68,10 @@
 
 # A list of which applications we want to put into the desktop menu system
 %global desktop_applications mythfrontend mythtv-setup
+
+# This is the correct folder for firewalld service files, even on x86_64
+# It is not used for shared objects
+%global fw_services %{_prefix}/lib/firewalld/services
 
 #
 # Basic descriptive tags for this package:
@@ -139,6 +143,9 @@ Source111: 99-mythbackend.rules
 Source112: mythjobqueue.service
 Source113: mythdb-optimize.service
 Source114: mythdb-optimize.timer
+# firewalld config for new webfrontend
+# https://www.mythtv.org/wiki/WebFrontend
+Source115: mythtv-webfrontend.xml
 
 # Global MythTV and Shared Build Requirements
 
@@ -459,6 +466,10 @@ Recommends: libaacs%{?_isa}
 %{?fedora:Recommends:  mesa-vdpau-drivers%{?_isa}}
 Provides:  mythtv-frontend-api%{?_isa} = %{mythfeapiver}
 
+# Mythfrontend dvd menu support comes from libdvdcss
+# https://www.mythtv.org/wiki/Using_MythTV#Optical_Disks
+Recommends: libdvdcss
+
 %description frontend
 MythTV provides a unified graphical interface for recording and viewing
 television programs.  Refer to the mythtv package for more information.
@@ -502,6 +513,9 @@ Requires:  freetype%{?_isa}
 Requires:  mythtv-backend%{?_isa} = %{version}-%{release}
 Requires:  mythtv-base-themes%{?_isa} = %{version}
 Requires:  google-droid-sans-fonts
+
+# Needed for svg channel icon support
+Requires: qt5-qtsvg
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -999,6 +1013,10 @@ popd
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python$:#!%{__python3}:' {} ';'
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/python$:#!%{__python3}:' {} ';'
 
+# Install firewalld config
+mkdir -p %{buildroot}%{fw_services}
+install -pm 0644 %{SOURCE115} %{buildroot}%{fw_services}/
+
 %pre common
 # Add the "mythtv" user, with membership in the audio and video group
 getent group mythtv >/dev/null || groupadd -r mythtv
@@ -1028,6 +1046,7 @@ exit 0
     %systemd_post mythbackend.service
     %systemd_post mythjobqueue.service
     %systemd_post mythdb-optimize.service
+    %{?firewalld_reload}
 
 %preun backend
     %systemd_preun mythbackend.service
@@ -1090,6 +1109,7 @@ exit 0
 %{_datadir}/mythtv/internetcontent/
 %{_datadir}/mythtv/html/
 %{_datadir}/mythtv/externrecorder/
+%{fw_services}/mythtv-webfrontend.xml
 
 %files setup
 %{_bindir}/mythtv-setup
@@ -1264,6 +1284,11 @@ exit 0
 ################################################################################
 
 %changelog
+* Mon Jul 24 2023 Andrew Bauer <zonexpertconsulting@outlook.com> - 33.1-1.14.20230714gitggbeaf2bacb
+- Update to latest fixes/33
+- add firewalld config for new web frontend
+- adjust runtime requirements
+
 * Sat Jul 08 2023 Leigh Scott <leigh123linux@gmail.com> - 33.1-2.4.20230219gitc273ed0f9a
 - Rebuilt for Python 3.12
 
