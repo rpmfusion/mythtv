@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v33.1-14-gbeaf2bacbe
+%global vers_string v33.1-15-g402c6d7758
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20230714
+%global git_date 20230725
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -469,6 +469,9 @@ Provides:  mythtv-frontend-api%{?_isa} = %{mythfeapiver}
 # Mythfrontend dvd menu support comes from libdvdcss
 # https://www.mythtv.org/wiki/Using_MythTV#Optical_Disks
 Recommends: libdvdcss
+
+# Disable the startup overview on newer Gnome desktops to allow proper kiosk mode
+Recommends: gnome-shell-extension-no-overview
 
 %description frontend
 MythTV provides a unified graphical interface for recording and viewing
@@ -1284,6 +1287,10 @@ exit 0
 ################################################################################
 
 %changelog
+* Tue Jul 25 2023 Andrew Bauer <zonexpertconsulting@outlook.com> - 33.1-1.15.20230725gitg402c6d775
+- Update to latest fixes/33 to fix ftbs on 6.5 kernel
+- recommend gnome-shell-extension-no-overview for mythfrontend
+
 * Mon Jul 24 2023 Andrew Bauer <zonexpertconsulting@outlook.com> - 33.1-1.14.20230714gitggbeaf2bacb
 - Update to latest fixes/33
 - add firewalld config for new web frontend
