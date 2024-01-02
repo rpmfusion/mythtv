@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v33.1-15-g402c6d7758
+%global vers_string v33.1-24-g6b442547f2
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20230725
+%global git_date 20240101
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -78,7 +78,7 @@
 #
 Name:           mythtv
 Version:        33.1
-Release:        2%{rel_string}%{?dist}
+Release:        1%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1287,6 +1287,10 @@ exit 0
 ################################################################################
 
 %changelog
+* Tue Jan 02 2024 Andrew Bauer <zonexpertconsulting@outlook.com> - 33.1-1.24.20240101gitg6b442547f
+- Update to latest fixes/33
+- update space_in_GB.patch to fix bz 6833
+
 * Tue Jul 25 2023 Andrew Bauer <zonexpertconsulting@outlook.com> - 33.1-1.15.20230725gitg402c6d775
 - Update to latest fixes/33 to fix ftbs on 6.5 kernel
 - recommend gnome-shell-extension-no-overview for mythfrontend

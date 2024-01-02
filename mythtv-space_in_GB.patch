@@ -1,32 +1,36 @@
+From 504cf92644f13dbd6453f0913fd433902bc41757 Mon Sep 17 00:00:00 2001
+From: Andrew Bauer <abauer@debian-desktop.derbauer.local.lan>
+Date: Mon, 1 Jan 2024 11:15:31 -0600
+Subject: [PATCH] display backend status info in GB, but only for html not xml
+
+---
+ mythtv/programs/mythbackend/httpstatus.cpp | 40 +++++++++++-----------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/mythtv/programs/mythbackend/httpstatus.cpp b/mythtv/programs/mythbackend/httpstatus.cpp
+index 0736c5038b6..b6c7dd46e2a 100644
 --- a/mythtv/programs/mythbackend/httpstatus.cpp
 +++ b/mythtv/programs/mythbackend/httpstatus.cpp
-@@ -466,9 +466,9 @@ void HttpStatus::FillStatusXML( QDomDocu
-         QDomElement group = pDoc->createElement("Group");
+@@ -1265,12 +1265,12 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, const QDomElement& info )
  
-         group.setAttribute("id"   , fsID );
--        group.setAttribute("total", (int)(iTotal>>10) );
--        group.setAttribute("used" , (int)(iUsed>>10)  );
--        group.setAttribute("free" , (int)(iAvail>>10) );
-+        group.setAttribute("total", (int)(iTotal>>20) );
-+        group.setAttribute("used" , (int)(iUsed>>20)  );
-+        group.setAttribute("free" , (int)(iAvail>>20) );
-         group.setAttribute("dir"  , directory );
- 
-         if (fsID == "total")
-@@ -497,9 +497,9 @@ void HttpStatus::FillStatusXML( QDomDocu
+             if (id == "total")
              {
-                 iExpirable = query.value(0).toLongLong();
-             }
--            group.setAttribute("livetv", (int)(iLiveTV>>20) );
--            group.setAttribute("deleted", (int)(iDeleted>>20) );
--            group.setAttribute("expirable", (int)(iExpirable>>20) );
-+            group.setAttribute("livetv", (int)(iLiveTV>>30) );
-+            group.setAttribute("deleted", (int)(iDeleted>>30) );
-+            group.setAttribute("expirable", (int)(iExpirable>>30) );
-             total = group;
-         }
-         else
-@@ -1269,36 +1269,36 @@ int HttpStatus::PrintMachineInfo( QTextS
+-                int nFree    = g.attribute("free" , "0" ).toInt();
+-                int nTotal   = g.attribute("total", "0" ).toInt();
+-                int nUsed    = g.attribute("used" , "0" ).toInt();
+-                int nLiveTV    = g.attribute("livetv" , "0" ).toInt();
+-                int nDeleted   = g.attribute("deleted", "0" ).toInt();
+-                int nExpirable = g.attribute("expirable" , "0" ).toInt();
++                int nFree    = (int)(g.attribute("free" , "0" ).toInt()>>10);
++                int nTotal   = (int)(g.attribute("total", "0" ).toInt()>>10);
++                int nUsed    = (int)(g.attribute("used" , "0" ).toInt()>>10);
++                int nLiveTV    = (int)(g.attribute("livetv" , "0" ).toInt()>>10);
++                int nDeleted   = (int)(g.attribute("deleted", "0" ).toInt()>>10);
++                int nExpirable = (int)(g.attribute("expirable" , "0" ).toInt()>>10);
+                 QString nDir = g.attribute("dir"  , "" );
+ 
+                 nDir.replace(",", ", ");
+@@ -1282,36 +1282,36 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, const QDomElement& info )
                  << "          <ul>\r\n";
  
                  os << "            <li>Total Space: ";
@@ -71,3 +75,35 @@
                      os << sRep << "</li>\r\n";
                      os << "              </ul>\r\n";
                      os << "            </li>\r\n";
+@@ -1341,9 +1341,9 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, const QDomElement& info )
+ 
+         if (!g.isNull() && g.tagName() == "Group")
+         {
+-            int nFree    = g.attribute("free" , "0" ).toInt();
+-            int nTotal   = g.attribute("total", "0" ).toInt();
+-            int nUsed    = g.attribute("used" , "0" ).toInt();
++            int nFree    = (int)(g.attribute("free" , "0" ).toInt()>>10);
++            int nTotal   = (int)(g.attribute("total", "0" ).toInt()>>10);
++            int nUsed    = (int)(g.attribute("used" , "0" ).toInt()>>10);
+             QString nDir = g.attribute("dir"  , "" );
+             QString id   = g.attribute("id"   , "" );
+ 
+@@ -1365,15 +1365,15 @@ int HttpStatus::PrintMachineInfo( QTextStream &os, const QDomElement& info )
+                 os << nDir << "</li>\r\n";
+ 
+                 os << "            <li>Total Space: ";
+-                sRep = QString("%L1").arg(nTotal) + " MB";
++                sRep = QString("%L1").arg(nTotal) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "            <li>Space Used: ";
+-                sRep = QString("%L1").arg(nUsed) + " MB";
++                sRep = QString("%L1").arg(nUsed) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "            <li>Space Free: ";
+-                sRep = QString("%L1").arg(nFree) + " MB";
++                sRep = QString("%L1").arg(nFree) + " GB";
+                 os << sRep << "</li>\r\n";
+ 
+                 os << "          </ul>\r\n"
