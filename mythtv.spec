@@ -78,7 +78,7 @@
 #
 Name:           mythtv
 Version:        33.1
-Release:        1%{rel_string}%{?dist}
+Release:        3%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1287,6 +1287,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Mon Jan 15 2024 Andrew Bauer <zonexpertconsulting@outlook.com> - 33.1-3.24.20240101gitg6b442547f
+- fix typo in release tag
+
 * Tue Jan 02 2024 Andrew Bauer <zonexpertconsulting@outlook.com> - 33.1-1.24.20240101gitg6b442547f
 - Update to latest fixes/33
 - update space_in_GB.patch to fix bz 6833
