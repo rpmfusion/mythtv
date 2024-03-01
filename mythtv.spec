@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v33.1-24-g6b442547f2
+%global vers_string v34.0-10-ga88dd47ba4
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20240101
+%global git_date 20240220
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -73,12 +73,20 @@
 # It is not used for shared objects
 %global fw_services %{_prefix}/lib/firewalld/services
 
+# using fedora packaging python macros to build the python-mythtv subpackage
+# requires a more significant rewrite. For now, just do this instead:
+%if 0%{?fedora} >= 39
+%global pyinfo dist
+%else
+%global pyinfo egg
+%endif
+
 #
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Version:        33.1
-Release:        4%{rel_string}%{?dist}
+Version:        34.0
+Release:        1%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -282,6 +290,8 @@ BuildRequires:  perl(IO::Socket::INET6)
 
 %if %{with python}
 BuildRequires:  %{py_prefix}-setuptools
+BuildRequires:  %{py_prefix}-pip
+BuildRequires:  %{py_prefix}-wheel
 BuildRequires:  %{py_prefix}-devel
 BuildRequires:  %{py_prefix}-simplejson
 BuildRequires:  %{py_prefix}-mysqlclient
@@ -1188,7 +1198,7 @@ exit 0
 %{_bindir}/mythpython
 %{_bindir}/mythwikiscripts
 %{python3_sitelib}/MythTV/
-%{python3_sitelib}/MythTV-*.egg-info
+%{python3_sitelib}/MythTV-*.%{pyinfo}-info
 %endif
 
 %if %{with plugins}
@@ -1287,6 +1297,10 @@ exit 0
 ################################################################################
 
 %changelog
+* Fri Mar 01 2024 Andrew Bauer <zonexpertconsulting@outlook.com> - 34.0-1.10.20240220gita88dd47ba4
+- 34.0 release
+- Updates to lastest fixes/34
+
 * Sun Feb 04 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 33.1-4.24.20240101git6b442547f2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
 
