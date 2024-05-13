@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v34.0-10-ga88dd47ba4
+%global vers_string v34.0-21-gd6398e090f
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20240220
+%global git_date 20240325
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -151,9 +151,10 @@ Source111: 99-mythbackend.rules
 Source112: mythjobqueue.service
 Source113: mythdb-optimize.service
 Source114: mythdb-optimize.timer
-# firewalld config for new webfrontend
-# https://www.mythtv.org/wiki/WebFrontend
+# firewalld config for new web application
+# https://www.mythtv.org/wiki/Web_Application
 Source115: mythtv-webfrontend.xml
+Source116: mythtv-webbackend.xml
 
 # Global MythTV and Shared Build Requirements
 
@@ -1026,9 +1027,10 @@ popd
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/env python$:#!%{__python3}:' {} ';'
 find %{buildroot}%{_datadir}/mythtv/ -type f -name "*.py" -exec sed -i '1s:#!/usr/bin/python$:#!%{__python3}:' {} ';'
 
-# Install firewalld config
+# Install firewalld configs
 mkdir -p %{buildroot}%{fw_services}
 install -pm 0644 %{SOURCE115} %{buildroot}%{fw_services}/
+install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 
 %pre common
 # Add the "mythtv" user, with membership in the audio and video group
@@ -1122,7 +1124,7 @@ exit 0
 %{_datadir}/mythtv/internetcontent/
 %{_datadir}/mythtv/html/
 %{_datadir}/mythtv/externrecorder/
-%{fw_services}/mythtv-webfrontend.xml
+%{fw_services}/mythtv-webbackend.xml
 
 %files setup
 %{_bindir}/mythtv-setup
@@ -1149,6 +1151,7 @@ exit 0
 %{_datadir}/mythtv/metadata/
 # Myth Video is now Video Gallery
 %attr(0775,mythtv,mythtv) %{_localstatedir}/lib/mythvideo
+%{fw_services}/mythtv-webfrontend.xml
 
 %files base-themes
 %{_datadir}/mythtv/themes/
@@ -1297,6 +1300,10 @@ exit 0
 ################################################################################
 
 %changelog
+* Mon May 13 2024 Andrew Bauer <zonexpertconsulting@outlook.com> - v34.0-1.21.20240325gitd6398e090f
+- Update to lastest fixes/34
+- Adjust firewalld config, fixes RFBZ 6922
+
 * Sat Apr 06 2024 Leigh Scott <leigh123linux@gmail.com> - 34.0-2.10.20240220gita88dd47ba4
 - Rebuild for new x265 version
 
