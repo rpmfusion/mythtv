@@ -86,7 +86,7 @@
 #
 Name:           mythtv
 Version:        34.0
-Release:        2%{rel_string}%{?dist}
+Release:        3%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1300,6 +1300,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Thu Jun 13 2024 Leigh Scott <leigh123linux@gmail.com> - 34.0-3.21.20240325gitd6398e090f
+- Rebuilt for Python 3.13
+
 * Mon May 13 2024 Andrew Bauer <zonexpertconsulting@outlook.com> - v34.0-1.21.20240325gitd6398e090f
 - Update to lastest fixes/34
 - Adjust firewalld config, fixes RFBZ 6922
