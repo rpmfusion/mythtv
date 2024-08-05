@@ -245,7 +245,6 @@ BuildRequires:  libraw1394-devel
 # Tuner support
 BuildRequires:  hdhomerun-devel
 
-BuildRequires: %{py_prefix}-future
 # For ttvdb.py, not available in EPEL
 BuildRequires: %{py_prefix}-requests
 BuildRequires: %{py_prefix}-requests-cache
@@ -294,7 +293,6 @@ BuildRequires:  %{py_prefix}-setuptools
 BuildRequires:  %{py_prefix}-pip
 BuildRequires:  %{py_prefix}-wheel
 BuildRequires:  %{py_prefix}-devel
-BuildRequires:  %{py_prefix}-simplejson
 BuildRequires:  %{py_prefix}-mysqlclient
 BuildRequires:  %{py_prefix}-lxml
 %endif
@@ -503,7 +501,6 @@ Requires:   lame
 Requires:   mythtv-common%{?_isa} = %{version}-%{release}
 Requires:   mythtv-libs%{?_isa}   = %{version}-%{release}
 Requires:   mythtv-setup%{?_isa}
-Requires:   %{py_prefix}-future
 Requires:   %{py_prefix}-requests
 Requires:   %{py_prefix}-requests-cache
 
@@ -543,7 +540,6 @@ mythtv backend.
 %package common
 Summary: Common components needed by multiple other MythTV components
 # For ttvdb.py
-Requires: %{py_prefix}-future
 Requires:   %{py_prefix}-requests
 Requires:   %{py_prefix}-requests-cache
 
