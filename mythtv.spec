@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v34.0-21-gd6398e090f
+%global vers_string v34.0-28-gc63d023aa8
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20240325
+%global git_date 20240704
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -86,7 +86,7 @@
 #
 Name:           mythtv
 Version:        34.0
-Release:        3%{rel_string}%{?dist}
+Release:        4%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1296,6 +1296,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Mon Sep 09 2024 Andrew Bauer <zonexpertconsulting@outlook.com> - v34.0-4.28.20240704gitc63d023aa8
+- Update to lastest fixes/34
+
 * Thu Jun 13 2024 Leigh Scott <leigh123linux@gmail.com> - 34.0-3.21.20240325gitd6398e090f
 - Rebuilt for Python 3.13
 
