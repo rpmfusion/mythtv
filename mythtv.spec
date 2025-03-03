@@ -86,7 +86,7 @@
 #
 Name:           mythtv
 Version:        35.0
-Release:        1%{rel_string}%{?dist}
+Release:        2%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -361,7 +361,7 @@ Requires:  %{py_prefix}-MythTV  = %{version}-%{release}
 Requires:  mythplugins%{?_isa}        = %{version}-%{release}
 %endif
 # Reminder this one is noarch - and not a sub-package (no EVR)
-Requires:  mythweb                    = %{version}
+Recommends:  mythweb                  = %{version}
 Requires:  mythffmpeg%{?_isa}         = %{version}-%{release}
 #Requires:  mariadb
 #Requires:  mariadb-server
@@ -1294,6 +1294,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Mon Mar 03 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - v35.0-2.2.20250302gitec351fd5c4
+- Change mythweb runtime requirement to recommends
+
 * Sun Mar 02 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - v35.0-1.2.20250302gitec351fd5c4
 - Update to lastest fixes/35
 
