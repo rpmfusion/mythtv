@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v34.0-28-gc63d023aa8
+%global vers_string v35.0-2-gec351fd5c4
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20240704
+%global git_date 20250302
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -85,8 +85,8 @@
 # Basic descriptive tags for this package:
 #
 Name:           mythtv
-Version:        34.0
-Release:        6%{rel_string}%{?dist}
+Version:        35.0
+Release:        1%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -924,7 +924,6 @@ pushd mythplugins
     %else
         --disable-mythnetvision \
     %endif
-        --enable-opengl \
         --python=%{__python3}
 
 %make_build V=1
@@ -1162,7 +1161,6 @@ exit 0
 %{_libdir}/libmythtv-%{major_rel}.so.*
 %{_libdir}/libmythui-%{major_rel}.so.*
 %{_libdir}/libmythupnp-%{major_rel}.so.*
-%{_libdir}/libmythexiv2-*.so.%{major_rel}*
 
 %files devel
 %{_includedir}/*
@@ -1296,6 +1294,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Sun Mar 02 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - v35.0-1.2.20250302gitec351fd5c4
+- Update to lastest fixes/35
+
 * Tue Jan 28 2025 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 34.0-6.28.20240704gitc63d023aa8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_42_Mass_Rebuild
 
