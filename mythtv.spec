@@ -86,7 +86,7 @@
 #
 Name:           mythtv
 Version:        35.0
-Release:        3%{rel_string}%{?dist}
+Release:        4%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1294,6 +1294,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Fri May 30 2025 Leigh Scott <leigh123linux@gmail.com> - 35.0-4.2.20250302gitec351fd5c4
+- Rebuild for new flac .so version
+
 * Fri Mar 07 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - v35.0-3.2.20250302gitec351fd5c4
 - Remove version requirement for mythweb
 
