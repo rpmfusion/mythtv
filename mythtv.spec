@@ -218,7 +218,7 @@ BuildRequires:  exiv2-devel
 # Audio framework support
 BuildRequires:  sox-devel
 BuildRequires:  alsa-lib-devel
-BuildRequires:  jack-audio-connection-kit-devel
+BuildRequires:  pipewire-jack-audio-connection-kit-devel
 %if %{with pulseaudio}
 BuildRequires:  pulseaudio-libs-devel
 %endif
