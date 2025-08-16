@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v35.0-2-gec351fd5c4
+%global vers_string v35.0-33-g931474b3a0
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20250302
+%global git_date 20250810
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -86,7 +86,7 @@
 #
 Name:           mythtv
 Version:        35.0
-Release:        5%{rel_string}%{?dist}
+Release:        6%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1294,6 +1294,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Sat Aug 16 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - v35.0-6.33.20250810git931474b3a0
+- Update to lastest fixes/35
+
 * Sun Jul 27 2025 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 35.0-5.2.20250302gitec351fd5c4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_43_Mass_Rebuild
 
