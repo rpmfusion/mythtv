@@ -73,12 +73,11 @@
 # It is not used for shared objects
 %global fw_services %{_prefix}/lib/firewalld/services
 
-# using fedora packaging python macros to build the python-mythtv subpackage
-# requires a more significant rewrite. For now, just do this instead:
-%if 0%{?fedora} >= 39
-%global pyinfo dist
+# fedora >= 43 normalizes python dist-info folder name
+%if 0%{?fedora} >= 43
+%global distinfo mythtv-%{version}.dist-info
 %else
-%global pyinfo egg
+%global distinfo MythTV-%{version}.dist-info
 %endif
 
 #
@@ -86,7 +85,7 @@
 #
 Name:           mythtv
 Version:        35.0
-Release:        6%{rel_string}%{?dist}
+Release:        7%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1195,7 +1194,7 @@ exit 0
 %{_bindir}/mythpython
 %{_bindir}/mythwikiscripts
 %{python3_sitelib}/MythTV/
-%{python3_sitelib}/MythTV-*.%{pyinfo}-info
+%{python3_sitelib}/%{distinfo}
 %endif
 
 %if %{with plugins}
@@ -1294,6 +1293,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Sat Aug 30 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - v35.0-7.33.20250810git931474b3a0
+- Fix failure to build with normalized .dist-info folder name
+
 * Sat Aug 16 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - v35.0-6.33.20250810git931474b3a0
 - Update to lastest fixes/35
 
