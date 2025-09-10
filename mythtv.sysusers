@@ -1,0 +1,3 @@
+u mythtv - "mythbackend user" /etc/mythtv /sbin/nologin
+m mythtv audio
+m mythtv video

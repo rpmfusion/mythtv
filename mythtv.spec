@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        35.0
-Release:        8%{rel_string}%{?dist}
+Release:        9%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -138,6 +138,7 @@ Patch1:         %{name}-space_in_GB.patch
 # Also update ChangeLog with git log v0.28..HEAD > ChangeLog
 # and update define vers_string to v0.28-52-ge6a60f7 with git describe
 
+Source3:   mythtv.sysusers
 Source10:  %{name}-PACKAGE-LICENSING
 Source11:  %{name}-ChangeLog
 Source104: %{name}.logrotate.sysd
@@ -162,6 +163,10 @@ BuildRequires:  systemd
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
+
+# sysusers config is now required
+BuildRequires:  systemd-rpm-macros
+%{?sysusers_requires_compat}
 
 BuildRequires:  gcc-c++ lzo-devel
 # For binary diff support
@@ -967,6 +972,9 @@ pushd mythtv
     install -p -m 0755 contrib/maintenance/optimize_mythdb.pl \
         %{buildroot}%{_bindir}/optimize_mythdb
 
+    # sysusers config
+    install -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysusersdir}/mythtv.conf
+
 # Desktop entries
     mkdir -p %{buildroot}%{_datadir}/pixmaps
     mkdir -p %{buildroot}%{_datadir}/applications
@@ -1027,29 +1035,7 @@ install -pm 0644 %{SOURCE115} %{buildroot}%{fw_services}/
 install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 
 %pre common
-# Add the "mythtv" user, with membership in the audio and video group
-getent group mythtv >/dev/null || groupadd -r mythtv
-getent passwd mythtv >/dev/null || \
-    useradd -r -g mythtv -d %{_sysconfdir}/mythtv -s /sbin/nologin \
-    -c "mythbackend user" mythtv
-# Make sure the mythtv user is in the audio and video group for existing
-# or new installs.
-usermod -a -G audio,video mythtv
-exit 0
-
-%pre -n mythmusic
-# Add the "mythtv" user, with membership in the audio and video group
-getent group mythtv >/dev/null || groupadd -r mythtv
-getent passwd mythtv >/dev/null || \
-    useradd -r -g mythtv -d %{_sysconfdir}/lib/mythtv -s /sbin/nologin \
-    -c "mythbackend user" mythtv
-# Make sure the mythtv user is in the audio and video group for existing
-# or new installs.
-usermod -a -G audio,video mythtv
-exit 0
-
-%ldconfig_scriptlets libs
-%ldconfig_scriptlets -n mythffmpeg
+%sysusers_create_compat %{SOURCE3}
 
 %post backend
     %systemd_post mythbackend.service
@@ -1093,6 +1079,7 @@ exit 0
 %{_datadir}/mythtv/locales/
 %{_datadir}/mythtv/metadata/
 %{_datadir}/mythtv/hardwareprofile/
+%{_sysusersdir}/mythtv.conf
 %attr(0775,-,mythtv) %dir %{_sysconfdir}/mythtv
 %attr(0664,-,mythtv) %config(noreplace) %{_sysconfdir}/mythtv/config.xml
 
@@ -1293,6 +1280,9 @@ exit 0
 ################################################################################
 
 %changelog
+* Wed Sep 10 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - 35.0-9.33.20250810git931474b3a0
+- Add sysusers support. Fixes RFBZ#7312
+
 * Thu Sep 04 2025 Sérgio Basto <sergio@serjux.com> - 35.0-8.33.20250810git931474b3a0
 - Rebuild for x264
 
