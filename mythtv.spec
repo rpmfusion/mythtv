@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        35.0
-Release:        9%{rel_string}%{?dist}
+Release:        10%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1280,6 +1280,9 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Fri Dec 12 2025 Nicolas Chauvet <kwizart@gmail.com> - 35.0-10.33.20250810git931474b3a0
+- Rebuilt for libbluray
+
 * Wed Sep 10 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - 35.0-9.33.20250810git931474b3a0
 - Add sysusers support. Fixes RFBZ#7312
 
