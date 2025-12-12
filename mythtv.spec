@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v35.0-33-g931474b3a0
+%global vers_string v35.0-45-g187b4cc6ca
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20250810
+%global git_date 20251203
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        35.0
-Release:        10%{rel_string}%{?dist}
+Release:        11%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -121,7 +121,11 @@ Patch1:         %{name}-space_in_GB.patch
 # All plugins get built by default, but you can disable them as you wish
 %bcond_without plugins
 %bcond_without mytharchive
+%if 0%{?fedora}
 %bcond_without mythbrowser
+%else
+%bcond_with mythbrowser
+%endif
 %bcond_without mythgame
 %bcond_without mythmusic
 %bcond_without mythnews
@@ -175,7 +179,8 @@ BuildRequires:  perl-generators
 BuildRequires:  desktop-file-utils
 BuildRequires:  qt5-qtbase-devel >= 5.2
 BuildRequires:  qt5-qtscript-devel >= 5.2
-BuildRequires:  qt5-qtwebkit-devel >= 5.2
+# qt5-qtwebkit has been retired in latest epel, effecting mythbrowser plugin
+%{?fedora:BuildRequires:  qt5-qtwebkit-devel >= 5.2}
 BuildRequires:  freetype-devel >= 2
 BuildRequires:  mariadb-connector-c-devel
 BuildRequires:  libcec-devel >= 1.7
@@ -441,7 +446,8 @@ Requires:  mythtv-libs%{?_isa} = %{version}-%{release}
 BuildRequires:  mariadb-connector-c-devel
 Requires:  qt5-qtbase-devel%{?_isa} >= 5.2
 Requires:  qt5-qtscript-devel%{?_isa} >= 5.2
-Requires:  qt5-qtwebkit-devel%{?_isa} >= 5.2
+# qt5-qtwebkit has been retired in latest epel, affecting mythbrowser plugin
+%{?fedora:BuildRequires:  qt5-qtwebkit-devel >= 5.2}
 
 %description devel
 This package contains the header files and libraries for developing
@@ -1280,6 +1286,10 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Fri Dec 12 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - 35.0-11.45.20251203git187b4cc6ca
+- update to latest fixes/35
+- qt5-webkit no longer available in latest epel. Disable Mythbrowser plugin.
+
 * Fri Dec 12 2025 Nicolas Chauvet <kwizart@gmail.com> - 35.0-10.33.20250810git931474b3a0
 - Rebuilt for libbluray
 
