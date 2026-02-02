@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        35.0
-Release:        11%{rel_string}%{?dist}
+Release:        12%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1286,6 +1286,9 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Mon Feb 02 2026 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 35.0-12.45.20251203git187b4cc6ca
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_44_Mass_Rebuild
+
 * Fri Dec 12 2025 Andrew Bauer <zonexpertconsulting@outlook.com> - 35.0-11.45.20251203git187b4cc6ca
 - update to latest fixes/35
 - qt5-webkit no longer available in latest epel. Disable Mythbrowser plugin.
