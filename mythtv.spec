@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        36.0
-Release:        1%{rel_string}%{?dist}
+Release:        2%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1268,6 +1268,9 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Fri Mar 20 2026 Nicolas Chauvet <kwizart@gmail.com> - 36.0-2.12.20260304git5c144a2522
+- Rebuilt for libvpx-1.16.0
+
 * Fri Mar 06 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-1.12.20260304git5c144a2522
 - update to latest fixes/36
 - build against qt6-base and qt6webengine
