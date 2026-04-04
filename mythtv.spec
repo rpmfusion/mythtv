@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        36.0
-Release:        2%{rel_string}%{?dist}
+Release:        3%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -969,10 +969,9 @@ pushd mythtv
     mkdir -p %{buildroot}%{_datadir}/pixmaps
     mkdir -p %{buildroot}%{_datadir}/applications
     for file in %{desktop_applications}; do
-      install -p $file.png %{buildroot}%{_datadir}/pixmaps/$file.png
+      install -m 644 -p $file.png %{buildroot}%{_datadir}/pixmaps/$file.png
       desktop-file-install \
         --dir %{buildroot}%{_datadir}/applications    \
-        --add-category Application        \
         --add-category AudioVideo         \
         $file.desktop
     done
@@ -1268,6 +1267,10 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Sat Apr 04 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-3.12.20260304git5c144a2522
+- apply workaround for qt6 and wayland compatibility discussed in mythtv issue 1334
+- modernize gnome desktop files
+
 * Fri Mar 20 2026 Nicolas Chauvet <kwizart@gmail.com> - 36.0-2.12.20260304git5c144a2522
 - Rebuilt for libvpx-1.16.0
 

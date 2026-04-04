@@ -1,8 +1,10 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=mythTV setup
 Comment=Setup for mythTV.
 Icon=mythtv-setup
-Exec=mythtv-setup
+# NO_EGL and --platform flags needed for compatibility with qt6 and wayland
+# For further details see https://github.com/MythTV/mythtv/issues/1334#issuecomment-4166180273
+# Additional changes may be needed for different environments
+Exec=env MYTHTV_NO_EGL=1 /usr/bin/mythtv-setup --platform xcb
 Terminal=false
 Type=Application
