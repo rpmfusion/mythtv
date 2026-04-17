@@ -1,7 +1,7 @@
 From 0bcc85b5906f0bcdd2af0af28b320e24d9e3a65f Mon Sep 17 00:00:00 2001
 From: Steve Erlenborn <1751095+SteveErl@users.noreply.github.com>
 Date: Tue, 27 Jan 2026 22:17:34 -0600
-Subject: [PATCH 01/12] Restrict No window! error log to frontend
+Subject: [PATCH 01/22] Restrict No window! error log to frontend
 
 MythVideoProfile::InitStatics() gets called for several
 applications, including mythfrontend, mythtranscode,
@@ -40,7 +40,7 @@ index b72dcf88cf9..54074617899 100644
 From a1e5ec2f256feb938a15b1944695876e479f54b4 Mon Sep 17 00:00:00 2001
 From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
 Date: Thu, 12 Feb 2026 21:05:12 +0000
-Subject: [PATCH 02/12] Translations: Update mythfrontend translation source
+Subject: [PATCH 02/22] Translations: Update mythfrontend translation source
  file (Polish)
 
 Signed-off-by: Nick Morrott <knowledgejunkie@gmail.com>
@@ -2373,7 +2373,7 @@ index 34f2f8276d9..e75c66321ae 100644
 From 662be785a833bb78c697d73f3f5f3bde277ab744 Mon Sep 17 00:00:00 2001
 From: Nick Morrott <knowledgejunkie@gmail.com>
 Date: Thu, 12 Feb 2026 21:09:17 +0000
-Subject: [PATCH 03/12] Translations: Update mythfrontend translation binary
+Subject: [PATCH 03/22] Translations: Update mythfrontend translation binary
  files
 
 (cherry picked from commit 6c5753df85fc37ea63135d553b61353c27f01cc3)
@@ -3576,7 +3576,7 @@ X8eV-kE}Bb3Zf!2IMBhu|(y#vq7;)IK
 From 45fce7035279533d7fa03f45f311ee72010eb502 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Mon, 9 Feb 2026 21:38:13 +0100
-Subject: [PATCH 04/12] Remove priority setting in mythpreviewgen.cpp
+Subject: [PATCH 04/22] Remove priority setting in mythpreviewgen.cpp
 
 If needed, the priority should be set from where the mythpreviewgen
 is started; it should not be hard-coded in the application itself.
@@ -3627,7 +3627,7 @@ index a13b2f52f91..6261d9e6665 100644
 From 0987a092580121708077ada8aeeab713d7addebf Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sat, 14 Feb 2026 21:45:52 +0100
-Subject: [PATCH 05/12] Parse EXTINF IPTV channel name
+Subject: [PATCH 05/22] Parse EXTINF IPTV channel name
 
 Change parsing of the IPTV channel name in an EXTINF record.
 When there is no "tvg-name" field use then the part of the
@@ -3659,7 +3659,7 @@ index b3a6b8a4cd0..b214b09f465 100644
 From b5d8ffb8fefda1a2b97975db0c34607b76a11c39 Mon Sep 17 00:00:00 2001
 From: Steve Erlenborn <1751095+SteveErl@users.noreply.github.com>
 Date: Thu, 12 Feb 2026 23:18:58 -0600
-Subject: [PATCH 06/12] Properly set initial playback volume for PCM Mixer
+Subject: [PATCH 06/22] Properly set initial playback volume for PCM Mixer
 
 For PulseAudio, set the initial playback volume
 to PCMMixerVolume when MixerControl is set to PCM.
@@ -3696,7 +3696,7 @@ index e1c70f19fbc..b168645d0c5 100644
 From f3598325d42d552041f66b954225215f7b3a702b Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Sat, 14 Feb 2026 13:24:09 -0500
-Subject: [PATCH 07/12] tidy: Fix uninitialized variable warning.
+Subject: [PATCH 07/22] tidy: Fix uninitialized variable warning.
 
 Give the volume the same default value as is passed to GetSetting().
 
@@ -3722,7 +3722,7 @@ index b168645d0c5..73436ef6f2e 100644
 From b58edb5e890a86019b30f3d4d52ca4ab26fa2028 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sun, 8 Feb 2026 15:15:47 +0100
-Subject: [PATCH 08/12] Skip low priority PIDs for SatIP
+Subject: [PATCH 08/22] Skip low priority PIDs for SatIP
 
 Create a PID list without the low priority PIDs. This does leave
 all the PIDs that are needed to receive the requested channel.
@@ -3791,7 +3791,7 @@ index 1b91c57c975..fd529a6a93b 100644
 From 12f51d7b0727871de8f8ffbdde2095b3a8c7f7ca Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Mon, 2 Mar 2026 21:48:16 +0100
-Subject: [PATCH 09/12] Revert "Skip low priority PIDs for SatIP"
+Subject: [PATCH 09/22] Revert "Skip low priority PIDs for SatIP"
 
 This reverts commit b58edb5e890a86019b30f3d4d52ca4ab26fa2028.
 
@@ -3843,7 +3843,7 @@ index fd529a6a93b..1b91c57c975 100644
 From dd1a9b5ffb19fe056b7592dd639219fb8ae36240 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Sun, 1 Mar 2026 22:21:04 +0100
-Subject: [PATCH 10/12] Remove German translation literal linefeed (`\n`) in
+Subject: [PATCH 10/22] Remove German translation literal linefeed (`\n`) in
  text
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -4328,7 +4328,7 @@ index d28df58753f..17ea76b6ef5 100644
 From c014a325bedba27451eb8da83f61f6856e256f92 Mon Sep 17 00:00:00 2001
 From: Nick Morrott <knowledgejunkie@gmail.com>
 Date: Thu, 5 Mar 2026 01:44:21 +0000
-Subject: [PATCH 11/12] Translations: Refresh mythfrontend translation binary
+Subject: [PATCH 11/22] Translations: Refresh mythfrontend translation binary
  file [de]
 
 ---
@@ -5896,7 +5896,7 @@ L`ru}MH1B@^me4H~
 From 5c144a2522cb72c300a708d79f0613b7dbd63299 Mon Sep 17 00:00:00 2001
 From: Nick Morrott <knowledgejunkie@gmail.com>
 Date: Thu, 5 Mar 2026 01:45:23 +0000
-Subject: [PATCH 12/12] Translations: Refresh mythplugins translation binary
+Subject: [PATCH 12/22] Translations: Refresh mythplugins translation binary
  files [de]
 
 ---
@@ -6003,3 +6003,2005 @@ zx&I~g0!nSBw|wyHMli<GG7f#=;JF+5uniWQgUMhAfAuD7gZ@GiXEdA3&1QG-*kI#7
 zLAmp7PJ7N|-`SAGFaDnh4L;5XN^oO3b-_kJ9R$>8U*jxz&6s5<oYOOG`3@(o{{S@;
 WMz75>%G(?`O!8;X+xr8jME?O=Q>nlJ
 
+
+From ababe58b73dc5f506ac42bed05f2bc45e80f87d1 Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Tue, 3 Mar 2026 21:05:24 +0100
+Subject: [PATCH 13/22] Skip low priority PIDs for SatIP -- v2
+
+Create a PID list without the low priority PIDs. This does leave
+all the PIDs that are needed to receive the requested channel.
+This does fix a problem with the Telestar Digibit SatIP server
+boxes; they cannot handle PID lists with more than 32 PIDs.
+The number of PIDs of a single channel is generally below 32 but
+with all the PMT PIDs of multiplex added the number of PIDs can
+be far more than 32.
+
+The low priority PIDs are used to receive the PMTs of the other
+programs in the same multiplex. This is theoretically somewhat useful
+when using Live TV to decrease channel switching time. This will
+however only be the case when the next channel is on the same
+multiplex as the current channel. Given that channels are usually
+ordered using Logical Channel Numbers and not on multiplex the
+feature of receiving all PMTs is rather useless and can possibly
+be removed from all the MythTV code.
+
+Fixed handling of special pid value 0x2000 which is used to
+signal that the whole transport stream has to be captured.
+
+Fixes #1292
+
+(cherry picked from commit 55a21cba94124fc7e22161ccd385151d92e5f3fd)
+---
+ .../recorders/satipstreamhandler.cpp          | 66 ++++++++++++-------
+ 1 file changed, 42 insertions(+), 24 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/recorders/satipstreamhandler.cpp b/mythtv/libs/libmythtv/recorders/satipstreamhandler.cpp
+index 1b91c57c975..810f265e860 100644
+--- a/mythtv/libs/libmythtv/recorders/satipstreamhandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/satipstreamhandler.cpp
+@@ -241,44 +241,62 @@ SatIPStreamHandler::~SatIPStreamHandler()
+ 
+ bool SatIPStreamHandler::UpdateFilters(void)
+ {
+-#ifdef DEBUG_PID_FILTERS
+-    LOG(VB_RECORD, LOG_DEBUG, LOC + "UpdateFilters()");
+-#endif // DEBUG_PID_FILTERS
+     QMutexLocker locker(&m_pidLock);
+ 
+-    QStringList pids;
+-
+-    if (m_pidInfo.contains(0x2000))
+-    {
+-        pids.append("all");
+-    }
+-    else
++#ifdef DEBUG_PID_FILTERS
+     {
++        QStringList pids;
+         for (auto it = m_pidInfo.cbegin(); it != m_pidInfo.cend(); ++it)
+             pids.append(QString("%1").arg(it.key()));
++        QString msg = QString("PIDS: '%1'").arg(pids.join(","));
++        LOG(VB_RECORD, LOG_INFO, LOC + msg);
+     }
+-#ifdef DEBUG_PID_FILTERS
+-    QString msg = QString("PIDS: '%1'").arg(pids.join(","));
+-    LOG(VB_RECORD, LOG_DEBUG, LOC + msg);
+ #endif // DEBUG_PID_FILTERS
+ 
+     bool rval = true;
+-    if (m_rtsp && m_oldpids != pids)
++    if (m_rtsp)
+     {
+-        QString pids_str = QString("pids=%1").arg(!pids.empty() ? pids.join(",") : "none");
+-        LOG(VB_RECORD, LOG_INFO, LOC + "Play(pids_str) " + pids_str);
++        QStringList pids;
++        if (m_pidInfo.contains(0x2000))
++        {
++            pids.append("all");
++        }
++        else
++        {
++            // Create a list without the low priority PIDs.
++            // This filters out the PMT PIDs of the channels
++            // on this multiplex that we do not want to receive.
++            for (auto it = m_pidInfo.cbegin(); it != m_pidInfo.cend(); ++it)
++            {
++                auto pid_priority = GetPIDPriority(it.key());
++                if (pid_priority == kPIDPriorityNormal ||
++                    pid_priority == kPIDPriorityHigh)
++                {
++                    pids.append(QString("%1").arg(it.key()));
++                }
++            }
++        }
+ 
+-        // Telestar Digibit R1 Sat>IP box cannot handle a lot of pids
+-        if (pids.size() > 32)
++        if (m_oldpids != pids)
+         {
+             LOG(VB_RECORD, LOG_INFO, LOC +
+-                QString("Receive full TS, number of PIDs:%1 is more than 32").arg(pids.size()));
+-            LOG(VB_RECORD, LOG_DEBUG, LOC + pids_str);
+-            pids_str = QString("pids=all");
+-        }
++                QString("Number of PIDs used:%1  All PIDs:%2").arg(pids.size()).arg(m_pidInfo.size()));
++
++            QString pids_str = QString("pids=%1").arg(!pids.empty() ? pids.join(",") : "none");
++            LOG(VB_RECORD, LOG_INFO, LOC + "Play(pids_str) " + pids_str);
++
++            // Telestar Digibit R1 Sat>IP box cannot handle a lot of pids
++            if (pids.size() > 32)
++            {
++                LOG(VB_RECORD, LOG_INFO, LOC +
++                    QString("Receive full TS, number of PIDs:%1 is more than 32").arg(pids.size()));
++                LOG(VB_RECORD, LOG_DEBUG, LOC + pids_str);
++                pids_str = QString("pids=all");
++            }
+ 
+-        rval = m_rtsp->Play(pids_str);
+-        m_oldpids = pids;
++            rval = m_rtsp->Play(pids_str);
++            m_oldpids = pids;
++        }
+     }
+ 
+     return rval;
+
+From 1b2cba948306d2899030e6319fb215c89b67ada4 Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Mon, 6 Apr 2026 00:59:05 -0400
+Subject: [PATCH 14/22] Fix parsing of ATSC Multiple String Structures.
+
+The code to parse mode 3F (straight UTF-16 characters) didn't properly
+create a value between 0 and 0xFFFF, but had additional high bits set.
+Qt5 silently truncated these high bits, but Qt6 throws an error.
+
+(cherry picked from commit 3948fca2bab9561000fad75e7215ff2cd70d7a9b)
+---
+ .../libs/libmythtv/mpeg/atscdescriptors.cpp   |   5 +-
+ .../test/test_mpegtables/test_mpegtables.cpp  | 127 ++++++++++++++++++
+ .../test/test_mpegtables/test_mpegtables.h    |   3 +
+ 3 files changed, 132 insertions(+), 3 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mpeg/atscdescriptors.cpp b/mythtv/libs/libmythtv/mpeg/atscdescriptors.cpp
+index 992f6836500..d6c81594349 100644
+--- a/mythtv/libs/libmythtv/mpeg/atscdescriptors.cpp
++++ b/mythtv/libs/libmythtv/mpeg/atscdescriptors.cpp
+@@ -145,9 +145,8 @@ QString MultipleStringStructure::Uncompressed(
+         // Standard Compression Scheme for Unicode (SCSU)
+         str=QString("TODO SCSU encoding");
+     } else if (mode==0x3f) { //  Unicode, UTF-16 Form
+-        const auto* ustr = reinterpret_cast<const unsigned short*>(buf);
+-        for (int j=0; j<(len>>1); j++)
+-            str.append( QChar( (ustr[j]<<8) | (ustr[j]>>8) ) );
++        for (int j=0; j<len; j+=2)
++            str.append( QChar( (buf[j]<<8) | buf[j+1] ) );
+     } else if (0x40<=mode && mode<=0x41) {
+         str = QString("TODO Tawain Characters");
+     } else if (0x48==mode) {
+diff --git a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.cpp b/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.cpp
+index 3f37e593a8e..4aefd5982c0 100644
+--- a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.cpp
++++ b/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.cpp
+@@ -2655,4 +2655,131 @@ void TestMPEGTables::atsc_huffman_test (void)
+     QCOMPARE(uncompressed.trimmed(), e_uncompressed);
+ }
+ 
++///
++// Test Multiple String Structure encoding.
++//
++Q_DECLARE_METATYPE(std::vector<uint8_t>);
++
++const std::vector<uint8_t> mss_00a {
++    0x01,
++    0x65, 0x6E, 0x67, 0x01,
++    /*1*/ 0x00, 0x00, 0x19,
++          0x4C, 0x6F, 0x63, 0x61, 0x6C, 0x20, 0x61, 0x6E,
++          0x64, 0x20, 0x72, 0x65, 0x67, 0x69, 0x6F, 0x6E,
++          0x61, 0x6C, 0x20, 0x6E, 0x65, 0x77, 0x73, 0x2E,
++          0x20 };
++const std::vector<uint8_t> mss_00b {
++    0x01,
++    0x65, 0x6E, 0x67, 0x02,
++    /*1*/ 0x00, 0x00, 0x10,
++          0x4C, 0x6F, 0x63, 0x61, 0x6C, 0x20, 0x61, 0x6E,
++          0x64, 0x20, 0x72, 0x65, 0x67, 0x69, 0x6F, 0x6E,
++
++    /*2*/ 0x00, 0x00, 0x09,
++          0x61, 0x6C, 0x20, 0x6E, 0x65, 0x77, 0x73, 0x2E,
++          0x20 };
++const std::vector<uint8_t> mss_01 {
++    0x01,
++    0x65, 0x6E, 0x67, 0x01,
++    /*1*/ 0x00, 0x01, 0x08,
++          0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
++const std::vector<uint8_t> mss_03 {
++    0x01,
++    0x65, 0x6E, 0x67, 0x01,
++    /*1*/ 0x00, 0x03, 0x08,
++          0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97 };
++const std::vector<uint8_t> mss_32 {
++    0x01,
++    0x65, 0x6E, 0x67, 0x02,
++    /*1*/ 0x00, 0x32, 0x08,
++          0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58,
++    /*2*/ 0x00, 0x32, 0x02,
++          0x59, 0x05A };
++const std::vector<uint8_t> mss_3f {
++    0x01,
++    0x65, 0x6E, 0x67, 0x01,
++    /*1*/ 0x00, 0x3F, 0x32,
++          0x00, 0x4C, 0x00, 0x6F, 0x00, 0x63, 0x00, 0x61,
++          0x00, 0x6C, 0x00, 0x20, 0x00, 0x61, 0x00, 0x6E,
++          0x00, 0x64, 0x00, 0x20, 0x00, 0x72, 0x00, 0x65,
++          0x00, 0x67, 0x00, 0x69, 0x00, 0x6F, 0x00, 0x6E,
++          0x00, 0x61, 0x00, 0x6C, 0x00, 0x20, 0x00, 0x6E,
++          0x00, 0x65, 0x00, 0x77, 0x00, 0x73, 0x00, 0x2E,
++          0x00, 0x20 };
++const std::vector<uint8_t> mss_mm_01 {
++    0x01,
++    0x65, 0x6E, 0x67, 0x03,
++    /*1*/ 0x00, 0x00, 0x05,
++          0x4C, 0x6F, 0x72, 0x65, 0x6D,
++    /*2*/ 0x00, 0x01, 0x02,
++          0x02, 0x2A,
++    /*3*/ 0x00, 0x00, 0x05,
++          0x49, 0x70, 0x73, 0x75, 0x6d };
++const std::vector<uint8_t> mss_mm_02 {
++    0x01,
++    0x65, 0x6E, 0x67, 0x04,
++    /*1*/ 0x00, 0x00, 0x05,
++          0x4C, 0x6F, 0x72, 0x65, 0x6D,
++    /*2*/ 0x00, 0x01, 0x02,
++          0x02, 0x2A,
++    /*3*/ 0x00, 0x02, 0x02,
++          0x00, 0x01,
++    /*4*/ 0x00, 0x00, 0x05,
++          0x49, 0x70, 0x73, 0x75, 0x6d };
++const std::vector<uint8_t> mss_mm_03 {
++    0x01,
++    0x65, 0x6E, 0x67, 0x03,
++    /*1*/ 0x00, 0x00, 0x05,
++          0x4C, 0x6F, 0x72, 0x65, 0x6D,
++    /*2*/ 0x00, 0x3F, 0x02,
++          0x02, 0x2A,
++    /*3*/ 0x00, 0x00, 0x05,
++          0x49, 0x70, 0x73, 0x75, 0x6d };
++const std::vector<uint8_t> mss_emoji {
++    0x01,
++    0x65, 0x6E, 0x67, 0x03,
++    /*1*/ 0x00, 0x3F, 0x08,
++          /* grinning face, melting face */
++          0xD8, 0x3D, 0xDE, 0x00, 0xD8, 0x3E, 0xDE, 0xE0,
++    /*2*/ 0x00, 0x3F, 0x04,
++          /* globe showing Americas */
++          0xD8, 0x3C, 0xDF, 0x0E,
++    /*3*/ 0x00, 0x3F, 0x0A,
++          /* woman surfing */
++          0xD8, 0x3C, 0xDF, 0xC4, 0x20, 0x0D, 0x26, 0x40,
++          0xFE, 0x0F };
++
++void TestMPEGTables::mss_test_data(void)
++{
++    QTest::addColumn<std::vector<uint8_t>>("encoded");
++    QTest::addColumn<QString>("expected");
++
++    QTest::newRow("mode 00.1")   << mss_00a   << "Local and regional news.";
++    QTest::newRow("mode 00.2")   << mss_00b   << "Local and regional news.";
++    QTest::newRow("mode 01")     << mss_01    << "ĀāĂăĄąĆć";
++    QTest::newRow("mode 03")     << mss_03    << "ΐΑΒΓΔΕΖΗ";
++    QTest::newRow("mode 32")     << mss_32    << "㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚";
++    QTest::newRow("mode 3f")     << mss_3f    << "Local and regional news.";
++    QTest::newRow("multimode 1") << mss_mm_01 << "LoremĂĪIpsum";
++    QTest::newRow("multimode 2") << mss_mm_02 << "LoremĂĪȀȁIpsum";
++    QTest::newRow("multimode 3") << mss_mm_03 << "LoremȪIpsum";
++    QTest::newRow("emojis")      << mss_emoji << "😀🫠🌎🏄‍♀️";
++};
++
++void TestMPEGTables::mss_test(void)
++{
++    QFETCH(std::vector<uint8_t>, encoded);
++    QFETCH(QString,              expected);
++
++    MultipleStringStructure mss { encoded.data() };
++    QString actual = "";
++    for (uint i = 0; i < mss.StringCount(); i++)
++        actual += mss.GetFullString(i);
++
++    QCOMPARE (mss.StringCount(),     1U);
++    QCOMPARE (mss.LanguageKey(0),    0x656E67);
++    QCOMPARE (mss.LanguageString(0), "eng");
++    QCOMPARE (actual, expected);
++}
++
+ QTEST_APPLESS_MAIN(TestMPEGTables)
+diff --git a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h b/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h
+index bd95f1ba118..50512d5aa73 100644
+--- a/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h
++++ b/mythtv/libs/libmythtv/test/test_mpegtables/test_mpegtables.h
+@@ -118,6 +118,9 @@ class TestMPEGTables: public QObject
+     /** test atsc huffman1 decoding */
+     static void atsc_huffman_test_data (void);
+     static void atsc_huffman_test (void);
++
++    static void mss_test_data(void);
++    static void mss_test(void);
+ };
+ 
+ #endif // LIBMYTHTV_TEST_MPEGTABLES_H
+
+From cd2c7cd21c67193bcb065e61f9ee2ff199cbb897 Mon Sep 17 00:00:00 2001
+From: Ian Campbell <ijc@hellion.org.uk>
+Date: Sat, 28 Feb 2026 09:46:38 +0000
+Subject: [PATCH 15/22] Use devicePixelRatio consistently,
+
+... rather than a mix of pixel ratio and DPI from two different sources.
+
+The code was initially setting `m_pixelRatio` based on
+`MythMainWindow::devicePixelRatioF()`.
+
+It was then updating it based on `MythDisplay::CurrentDPIChanged` signal which
+is forwarding `QScreen::physicalDotsPerInchChanged` from the `QScreen
+underlying the `MythDisplay` behind the `MythMainWindow`.
+
+This seems wrong/inconsistent in two ways:
+
+Firstly a `devicePixelRatio` is a different thing from a DPI. A pixel ratio is
+(from [QT 6 docs][qt6-ratio]):
+
+> This property holds the screen's ratio between physical pixels and
+> device-independent pixels.
+
+The [QT 5][qt5-ratio] says ~the same but also notes:
+
+> Common values are 1.0 on normal displays and 2.0 on "retina" displays. Higher
+> values are also possible.
+
+(QT 6's `QWindow` docs have similar wording)
+
+While DPI is (per [QT 6 docs][qt6-dpi]):
+
+> This property holds the number of physical dots or pixels per inch
+>
+> This value represents the pixel density on the screen's display
+
+(again [QT 5][qt5-dpi] says much the same). A DPI is in the tens-hundreds range
+depending on the display. e.g. on my UHD display at 1920x1080 it is ~110 and at
+3840x2160 it is ~55.
+
+Scaling the display by the pixel ratio (1.0-2.0) at some points and by the DPI
+(tens-hundreds) at others, based only on whether the resolution has changed
+makes no sense.
+
+Secondly taking the properies from two different places (initially the display
+and later the screen) at two different times is inconsistent. I believe scaling
+by the device pixel ratio makes sense so consistently set `m_pixelRatio` to
+that. Also retain the DPI as a new `m_DPI` although currently nothing is using
+it.
+
+Note that [QT 6][qt6-ratio] says of the ratio:
+
+> This function may return a value that differs from
+> QWindow::devicePixelRatio(), for instance on Wayland when using fractional
+> scaling, or if window properties that affect surface resolution are set.
+> Prefer using QWindow::devicePixelRatio().
+
+The code here does not currently have easy access to the `QWindow` so I have
+decided in the first pass to standardise on the properties of the `QScreen`.
+Accessing a `QWindow` and getting the appropriate events for it will take some
+replumbing since `MythDisplay::m_window` can change and can be null. Also there
+is no signal for DPI or ratio changes in this case, a handler for
+`QEvent::DevicePixelRatioChange` would be needed. Since the existing code also
+does not use a `QWindow` under any circumstances this change I feel is at least
+an improvement.
+
+This fixes https://github.com/MythTV/mythtv/issues/1300, I think it might also
+have a positive impact on the scaling issue described in
+https://github.com/MythTV/mythtv/issues/754#issuecomment-356838787a4.
+
+[qt6-ratio]: https://doc.qt.io/qt-6/qscreen.html#devicePixelRatio-prop
+[qt6-dpi]: https://doc.qt.io/qt-6/qscreen.html#logicalDotsPerInch-prop
+[qt5-ratio]: https://doc.qt.io/archives/qt-5.15/qscreen.html#devicePixelRatio-prop
+[qt5-dpi]: https://doc.qt.io/archives/qt-5.15/qscreen.html#logicalDotsPerInch-prop
+
+(cherry picked from commit 122a6d8880642f8a4b3073a716fc2eefe7180259)
+---
+ mythtv/libs/libmythui/mythpaintergpu.cpp | 12 +++++++-----
+ mythtv/libs/libmythui/mythpaintergpu.h   |  1 +
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/mythtv/libs/libmythui/mythpaintergpu.cpp b/mythtv/libs/libmythui/mythpaintergpu.cpp
+index f3b803b5b0a..9c35a7e171c 100644
+--- a/mythtv/libs/libmythui/mythpaintergpu.cpp
++++ b/mythtv/libs/libmythui/mythpaintergpu.cpp
+@@ -10,7 +10,9 @@ MythPainterGPU::MythPainterGPU(MythMainWindow* Parent)
+   : m_parent(Parent)
+ {
+     MythDisplay* display = m_parent->GetDisplay();
+-    CurrentDPIChanged(m_parent->devicePixelRatioF());
++    QScreen *screen = display->GetCurrentScreen();
++
++    CurrentDPIChanged(screen->physicalDotsPerInch());
+     connect(display, &MythDisplay::CurrentDPIChanged, this,
+             &MythPainterGPU::CurrentDPIChanged);
+ }
+@@ -22,9 +24,9 @@ void MythPainterGPU::SetViewControl(ViewControls Control)
+ 
+ void MythPainterGPU::CurrentDPIChanged(qreal DPI)
+ {
+-    m_pixelRatio = DPI;
++    QScreen *screen = m_parent->GetDisplay()->GetCurrentScreen();
++
++    m_DPI = DPI;
++    m_pixelRatio = screen->devicePixelRatio();
+     m_usingHighDPI = !qFuzzyCompare(m_pixelRatio, 1.0);
+-    LOG(VB_GENERAL, LOG_INFO,
+-        QString("High DPI scaling %1")
+-        .arg(m_usingHighDPI ? "enabled" : "disabled"));
+ }
+diff --git a/mythtv/libs/libmythui/mythpaintergpu.h b/mythtv/libs/libmythui/mythpaintergpu.h
+index e2109328d00..6f49b655079 100644
+--- a/mythtv/libs/libmythui/mythpaintergpu.h
++++ b/mythtv/libs/libmythui/mythpaintergpu.h
+@@ -33,6 +33,7 @@ class MUI_PUBLIC MythPainterGPU : public MythPainter
+     MythMainWindow* m_parent      { nullptr };
+     ViewControls   m_viewControl  { Viewport | Framebuffer };
+     qreal          m_pixelRatio   { 1.0     };
++    qreal          m_DPI          { 0.0     };
+     bool           m_usingHighDPI { false   };
+     QSize          m_lastSize;
+ };
+
+From d9f5a98858788c48df1e0b3156cc56b3771839fb Mon Sep 17 00:00:00 2001
+From: Ian Campbell <ijc@hellion.org.uk>
+Date: Wed, 11 Mar 2026 18:18:43 +0000
+Subject: [PATCH 16/22] Refactor signals relating to the screen changing
+
+There are several (`ScreenChanged`, `PhysicalDPIChanged`) taking arguments
+related to their naming but the recipients don't actually care about the
+details and just want to probe the current state.
+
+So simplify things into a single `DisplayChanged` signal.
+
+(cherry picked from commit 510478e8fcb71ce66444b1d0cbeff57e5698e5c8)
+---
+ mythtv/libs/libmythtv/mythvideobounds.cpp | 15 ++++-----------
+ mythtv/libs/libmythtv/mythvideobounds.h   |  3 +--
+ mythtv/libs/libmythui/mythdisplay.cpp     |  6 +++---
+ mythtv/libs/libmythui/mythdisplay.h       |  3 +--
+ mythtv/libs/libmythui/mythpaintergpu.cpp  | 10 +++++-----
+ mythtv/libs/libmythui/mythpaintergpu.h    |  3 +--
+ 6 files changed, 15 insertions(+), 25 deletions(-)
+
+diff --git a/mythtv/libs/libmythtv/mythvideobounds.cpp b/mythtv/libs/libmythtv/mythvideobounds.cpp
+index acb700dd074..53c06f86a0b 100644
+--- a/mythtv/libs/libmythtv/mythvideobounds.cpp
++++ b/mythtv/libs/libmythtv/mythvideobounds.cpp
+@@ -80,23 +80,16 @@ void MythVideoBounds::SetDisplay(MythDisplay *mDisplay)
+     }
+ 
+     m_display = mDisplay;
+-    connect(m_display, &MythDisplay::CurrentScreenChanged, this, &MythVideoBounds::ScreenChanged);
+-#ifdef Q_OS_MACOS
+-    connect(m_display, &MythDisplay::PhysicalDPIChanged,   this, &MythVideoBounds::PhysicalDPIChanged);
+-#endif
++    connect(m_display, &MythDisplay::DisplayChanged, this, &MythVideoBounds::DisplayChanged);
+ }
+ 
+-void MythVideoBounds::ScreenChanged(QScreen */*screen*/)
++void MythVideoBounds::DisplayChanged()
+ {
+     PopulateGeometry();
+-    MoveResize();
+-}
+-
+-void MythVideoBounds::PhysicalDPIChanged(qreal /*DPI*/)
+-{
++#ifdef Q_OS_MACOS
+     // PopulateGeometry will update m_devicePixelRatio
+-    PopulateGeometry();
+     m_windowRect = m_displayVisibleRect = SCALED_RECT(m_rawWindowRect, m_devicePixelRatio);
++#endif
+     MoveResize();
+ }
+ 
+diff --git a/mythtv/libs/libmythtv/mythvideobounds.h b/mythtv/libs/libmythtv/mythvideobounds.h
+index d4e1ce84311..1805e0d9c72 100644
+--- a/mythtv/libs/libmythtv/mythvideobounds.h
++++ b/mythtv/libs/libmythtv/mythvideobounds.h
+@@ -44,8 +44,7 @@ class MythVideoBounds : public QObject
+ 
+   public slots:
+     void RefreshVideoBoundsState();
+-    void ScreenChanged          (QScreen *screen);
+-    void PhysicalDPIChanged     (qreal  /*DPI*/);
++    void DisplayChanged         ();
+     void SourceChanged          (QSize VideoDim, QSize VideoDispDim, float Aspect);
+     void VideoAspectRatioChanged(float Aspect);
+     virtual void EmbedPlayback  (bool Embed, QRect Rect);
+diff --git a/mythtv/libs/libmythui/mythdisplay.cpp b/mythtv/libs/libmythui/mythdisplay.cpp
+index 4531bb2180c..cd5cb3ae219 100644
+--- a/mythtv/libs/libmythui/mythdisplay.cpp
++++ b/mythtv/libs/libmythui/mythdisplay.cpp
+@@ -442,14 +442,14 @@ void MythDisplay::ScreenChanged(QScreen *qScreen)
+     connect(m_screen, &QScreen::geometryChanged, this, &MythDisplay::GeometryChanged);
+     connect(m_screen, &QScreen::physicalDotsPerInchChanged, this, &MythDisplay::PhysicalDPIChanged);
+     Initialise();
+-    emit CurrentScreenChanged(qScreen);
++    emit DisplayChanged();
+ }
+ 
+ void MythDisplay::PhysicalDPIChanged(qreal DPI)
+ {
+     LOG(VB_GENERAL, LOG_INFO, LOC + QString("Qt screen pixel ratio changed to %1")
+         .arg(DPI, 2, 'f', 2, '0'));
+-    emit CurrentDPIChanged(DPI);
++    emit DisplayChanged();
+ }
+ 
+ void MythDisplay::PrimaryScreenChanged(QScreen* qScreen)
+@@ -1097,7 +1097,7 @@ void MythDisplay::WaitForScreenChange()
+     QTimer timer;
+     timer.setSingleShot(true);
+     connect(&timer, &QTimer::timeout,
+-            &timer, [](){ LOG(VB_GENERAL, LOG_WARNING, LOC + "Timed out wating for screen change"); });
++            &timer, [](){ LOG(VB_GENERAL, LOG_WARNING, LOC + "Timed out waiting for screen change"); });
+     QObject::connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);
+     QObject::connect(m_screen, &QScreen::geometryChanged, &loop, &QEventLoop::quit);
+     // 500ms maximum wait
+diff --git a/mythtv/libs/libmythui/mythdisplay.h b/mythtv/libs/libmythui/mythdisplay.h
+index 8d40572e4f6..e4742a9c1ac 100644
+--- a/mythtv/libs/libmythui/mythdisplay.h
++++ b/mythtv/libs/libmythui/mythdisplay.h
+@@ -63,9 +63,8 @@ class MUI_PUBLIC MythDisplay : public QObject
+     static void  GeometryChanged       (QRect Geometry);
+ 
+   signals:
+-    void         CurrentScreenChanged  (QScreen *qScreen);
++    void         DisplayChanged        ();
+     void         ScreenCountChanged    (int      Screens);
+-    void         CurrentDPIChanged     (qreal    DPI);
+ 
+   protected:
+     static MythDisplay* Create(MythMainWindow* MainWindow);
+diff --git a/mythtv/libs/libmythui/mythpaintergpu.cpp b/mythtv/libs/libmythui/mythpaintergpu.cpp
+index 9c35a7e171c..a0c49f31424 100644
+--- a/mythtv/libs/libmythui/mythpaintergpu.cpp
++++ b/mythtv/libs/libmythui/mythpaintergpu.cpp
+@@ -1,4 +1,5 @@
+ #include <QtGlobal>
++#include <QWindow>
+ 
+ // MythTV
+ #include "libmythbase/mythlogging.h"
+@@ -12,9 +13,9 @@ MythPainterGPU::MythPainterGPU(MythMainWindow* Parent)
+     MythDisplay* display = m_parent->GetDisplay();
+     QScreen *screen = display->GetCurrentScreen();
+ 
+-    CurrentDPIChanged(screen->physicalDotsPerInch());
+-    connect(display, &MythDisplay::CurrentDPIChanged, this,
+-            &MythPainterGPU::CurrentDPIChanged);
++    DisplayChanged();
++    connect(display, &MythDisplay::DisplayChanged, this,
++            &MythPainterGPU::DisplayChanged);
+ }
+ 
+ void MythPainterGPU::SetViewControl(ViewControls Control)
+@@ -22,11 +23,10 @@ void MythPainterGPU::SetViewControl(ViewControls Control)
+     m_viewControl = Control;
+ }
+ 
+-void MythPainterGPU::CurrentDPIChanged(qreal DPI)
++void MythPainterGPU::DisplayChanged()
+ {
+     QScreen *screen = m_parent->GetDisplay()->GetCurrentScreen();
+ 
+-    m_DPI = DPI;
+     m_pixelRatio = screen->devicePixelRatio();
+     m_usingHighDPI = !qFuzzyCompare(m_pixelRatio, 1.0);
+ }
+diff --git a/mythtv/libs/libmythui/mythpaintergpu.h b/mythtv/libs/libmythui/mythpaintergpu.h
+index 6f49b655079..dbb3236ad41 100644
+--- a/mythtv/libs/libmythui/mythpaintergpu.h
++++ b/mythtv/libs/libmythui/mythpaintergpu.h
+@@ -27,13 +27,12 @@ class MUI_PUBLIC MythPainterGPU : public MythPainter
+     void SetViewControl    (ViewControls Control);
+ 
+   public slots:
+-    void CurrentDPIChanged (qreal DPI);
++    void DisplayChanged ();
+ 
+   protected:
+     MythMainWindow* m_parent      { nullptr };
+     ViewControls   m_viewControl  { Viewport | Framebuffer };
+     qreal          m_pixelRatio   { 1.0     };
+-    qreal          m_DPI          { 0.0     };
+     bool           m_usingHighDPI { false   };
+     QSize          m_lastSize;
+ };
+
+From d1e2bb930e5adaae6a7b8b0252a6c5301942e385 Mon Sep 17 00:00:00 2001
+From: Ian Campbell <ijc@hellion.org.uk>
+Date: Sun, 15 Mar 2026 08:40:47 +0000
+Subject: [PATCH 17/22] Use `QWindow::devicePixelRatio()` when possible
+
+From the [Qt6 docs][]:
+
+> This function may return a value that differs from
+> QWindow::devicePixelRatio(), for instance on Wayland when using fractional
+> scaling, or if window properties that affect surface resolution are set.
+> Prefer using QWindow::devicePixelRatio().
+
+[Qt6 docs]: https://doc.qt.io/qt-6/qscreen.html#devicePixelRatio-prop
+
+(cherry picked from commit 2e8394160293455888afff6365bef43455bb52a8)
+---
+ mythtv/libs/libmythui/mythdisplay.cpp    | 5 +++++
+ mythtv/libs/libmythui/mythdisplay.h      | 1 +
+ mythtv/libs/libmythui/mythpaintergpu.cpp | 6 ++++--
+ 3 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/mythtv/libs/libmythui/mythdisplay.cpp b/mythtv/libs/libmythui/mythdisplay.cpp
+index cd5cb3ae219..d8b4e37ea90 100644
+--- a/mythtv/libs/libmythui/mythdisplay.cpp
++++ b/mythtv/libs/libmythui/mythdisplay.cpp
+@@ -341,6 +341,11 @@ QScreen* MythDisplay::GetCurrentScreen()
+     return m_screen;
+ }
+ 
++QWindow* MythDisplay::GetCurrentWindow()
++{
++    return m_window;
++}
++
+ QScreen *MythDisplay::GetDesiredScreen()
+ {
+     QScreen* newscreen = nullptr;
+diff --git a/mythtv/libs/libmythui/mythdisplay.h b/mythtv/libs/libmythui/mythdisplay.h
+index e4742a9c1ac..b91e7ccd8ca 100644
+--- a/mythtv/libs/libmythui/mythdisplay.h
++++ b/mythtv/libs/libmythui/mythdisplay.h
+@@ -37,6 +37,7 @@ class MUI_PUBLIC MythDisplay : public QObject
+     QStringList  GetDescription        ();
+     QRect        GetScreenBounds       ();
+     QScreen*     GetCurrentScreen      ();
++    QWindow*     GetCurrentWindow      ();
+     static int   GetScreenCount        ();
+     double       GetPixelAspectRatio   ();
+     QSize        GetGUIResolution      ();
+diff --git a/mythtv/libs/libmythui/mythpaintergpu.cpp b/mythtv/libs/libmythui/mythpaintergpu.cpp
+index a0c49f31424..a3cfb0e0cc8 100644
+--- a/mythtv/libs/libmythui/mythpaintergpu.cpp
++++ b/mythtv/libs/libmythui/mythpaintergpu.cpp
+@@ -25,8 +25,10 @@ void MythPainterGPU::SetViewControl(ViewControls Control)
+ 
+ void MythPainterGPU::DisplayChanged()
+ {
+-    QScreen *screen = m_parent->GetDisplay()->GetCurrentScreen();
++    MythDisplay* display = m_parent->GetDisplay();
++    QScreen *screen = display->GetCurrentScreen();
++    QWindow *window = display->GetCurrentWindow();
+ 
+-    m_pixelRatio = screen->devicePixelRatio();
++    m_pixelRatio = window ? window->devicePixelRatio() : screen->devicePixelRatio();
+     m_usingHighDPI = !qFuzzyCompare(m_pixelRatio, 1.0);
+ }
+
+From 756930d702565e3b2b8bc75a8fd96b35091852bf Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Wed, 8 Apr 2026 12:55:03 -0400
+Subject: [PATCH 18/22] Update cmake for Qt6.10 changes to private components.
+
+Prior to Qt6.10, checking for the qt "Gui" component would properly
+set both the "Gui" and the "GuiPrivate" targets.  Starting in 6.10,
+the code must explicitly check for the GuiPrivate component.
+
+This change is not backward compatible, so the code must currently
+check for the presence of Qt and the Gui component, obtain the version
+number from the results, and then perform an additional check for the
+GuiPrivate component.
+
+(cherry picked from commit c8886e6d8f87805c6be6db29f812f7053c5a10b6)
+---
+ cmake/MythFindQt.cmake | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/cmake/MythFindQt.cmake b/cmake/MythFindQt.cmake
+index 9cb9e82ebc2..7fe747e35db 100644
+--- a/cmake/MythFindQt.cmake
++++ b/cmake/MythFindQt.cmake
+@@ -63,8 +63,33 @@ foreach(component ${_REQUIRED_COMPONENTS} ${_OPTIONAL_COMPONENTS})
+     list(APPEND _components_missing ${component})
+   endif()
+ endforeach()
++
++#
++# Now that we know the Qt version installed, perform an additional
++# check for Qt >= 6.10.  Prior to this, checking for "Gui" also
++# checked for "GuiPrivate".  Starting with 6.10 an explicit check is
++# necessary.  Once 6.10 becoms the baseline, this can be folded into
++# the earlier _OPTIONAL_COMPONENTS variable.
++#
++if(${QT_PKG_NAME}_VERSION VERSION_GREATER_EQUAL "6.10")
++  set(QT_NO_PRIVATE_MODULE_WARNING ON)
++  find_package(
++    ${QT_PKG_NAME} ${QT_MIN_VERSION_STR} NO_MODULE
++    OPTIONAL_COMPONENTS GuiPrivate)
++  if(TARGET ${QT_PKG_NAME}::GuiPrivate)
++    list(APPEND _components_found "GuiPrivate")
++  else()
++    list(APPEND _components_missing "GuiPrivate")
++  endif()
++endif()
++
++#
++# Print which Qt components were found.
++#
++list(SORT _components_found)
+ list(JOIN _components_found " " _components_found_str)
+ if(_components_missing)
++  list(SORT _components_missing)
+   list(JOIN _components_missing " " _components_missing_str)
+ else()
+   set(_components_missing_str "(none)")
+
+From eda2abc46cc4e523bb1ff42ab19f4d09eb4e0f8f Mon Sep 17 00:00:00 2001
+From: Scott Theisen <scott.the.elm@gmail.com>
+Date: Tue, 7 Apr 2026 16:23:38 -0400
+Subject: [PATCH 19/22] Qt6: Fix abort from QChar in LIRC code
+
+The values of Qt::Key <= 0xFFFF correspond to Unicode
+code points. The Qt 6 QChar constructor aborts on any
+input value > 0xFFFF, so only attempt to create a QChar
+from keycode when it is a valid Unicode code point.
+
+Fixes:
+https://github.com/MythTV/mythtv/issues/1340
+(cherry picked from commit bcfa6436b170733f937b2e1acb4ae235943e55cf)
+---
+ mythtv/libs/libmythui/devices/lirc.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythui/devices/lirc.cpp b/mythtv/libs/libmythui/devices/lirc.cpp
+index 7b314f78624..50b568a2f8d 100644
+--- a/mythtv/libs/libmythui/devices/lirc.cpp
++++ b/mythtv/libs/libmythui/devices/lirc.cpp
+@@ -394,7 +394,7 @@ void LIRC::Process(const QByteArray &data)
+ #endif
+ 
+             QString text = "";
+-            if (!mod)
++            if (!mod && keycode <= 0xFFFF)
+                 text = QString(QChar(keycode));
+ 
+             QCoreApplication::postEvent(
+
+From b8e0499f8624e701b7e09cebce2612fbb55467ff Mon Sep 17 00:00:00 2001
+From: Klaas de Waal <klaas@kldo.nl>
+Date: Wed, 8 Apr 2026 16:22:48 +0200
+Subject: [PATCH 20/22] Include QtSystemDetection for Qt version >= 6.5.0
+
+Change the include condition from Qt 6.0.0 to Qt 6.5.0
+The include file QtSystemDetection, and many more, are split off
+from QtGlobal since Qt version 6.5.0 and not since 6.0.0.
+This is documented in https://doc.qt.io/qt-6/qtglobal.html
+This fixes compilation on Ubuntu 24.04.4 LTS which has
+Qt version 6.4.2.
+
+(cherry picked from commit 248f321d77926eecaf69be4f506a99d80e8ed781)
+---
+ mythtv/libs/libmyth/mythcontext.cpp                             | 2 +-
+ mythtv/libs/libmythbase/compat.h                                | 2 +-
+ mythtv/libs/libmythbase/dbutil.cpp                              | 2 +-
+ mythtv/libs/libmythbase/filesysteminfo.cpp                      | 2 +-
+ mythtv/libs/libmythbase/http/mythhttpserver.cpp                 | 2 +-
+ mythtv/libs/libmythbase/logging.cpp                             | 2 +-
+ mythtv/libs/libmythbase/loggingserver.cpp                       | 2 +-
+ mythtv/libs/libmythbase/loggingserver.h                         | 2 +-
+ mythtv/libs/libmythbase/mythcommandlineparser.cpp               | 2 +-
+ mythtv/libs/libmythbase/mythcorecontext.cpp                     | 2 +-
+ mythtv/libs/libmythbase/mythdirs.cpp                            | 2 +-
+ mythtv/libs/libmythbase/mythdownloadmanager.cpp                 | 2 +-
+ mythtv/libs/libmythbase/mythdownloadmanager.h                   | 2 +-
+ mythtv/libs/libmythbase/mythmedia.cpp                           | 2 +-
+ mythtv/libs/libmythbase/mythmiscutil.cpp                        | 2 +-
+ mythtv/libs/libmythbase/mythmiscutil.h                          | 2 +-
+ mythtv/libs/libmythbase/mythplugin.cpp                          | 2 +-
+ mythtv/libs/libmythbase/mythsocket.cpp                          | 2 +-
+ mythtv/libs/libmythbase/mythsystemlegacy.cpp                    | 2 +-
+ mythtv/libs/libmythbase/mythtimezone.cpp                        | 2 +-
+ mythtv/libs/libmythbase/portchecker.cpp                         | 2 +-
+ mythtv/libs/libmythbase/remotefile.cpp                          | 2 +-
+ mythtv/libs/libmythbase/signalhandling.cpp                      | 2 +-
+ mythtv/libs/libmythbase/signalhandling.h                        | 2 +-
+ mythtv/libs/libmythbase/test/test_logging/test_logging.cpp      | 2 +-
+ mythtv/libs/libmythbase/threadedfilewriter.cpp                  | 2 +-
+ mythtv/libs/libmythmetadata/metaioid3.h                         | 2 +-
+ mythtv/libs/libmythmetadata/videoutils.cpp                      | 2 +-
+ mythtv/libs/libmythprotoserver/requesthandler/basehandler.cpp   | 2 +-
+ .../libmythprotoserver/requesthandler/fileserverhandler.cpp     | 2 +-
+ mythtv/libs/libmythtv/audio/audiooutput.cpp                     | 2 +-
+ mythtv/libs/libmythtv/cardutil.cpp                              | 2 +-
+ mythtv/libs/libmythtv/channelscan/channelscanner.cpp            | 2 +-
+ mythtv/libs/libmythtv/channelscan/channelscanner.h              | 2 +-
+ mythtv/libs/libmythtv/channelscan/channelscanner_gui.cpp        | 2 +-
+ mythtv/libs/libmythtv/channelscan/channelscanner_web.cpp        | 2 +-
+ mythtv/libs/libmythtv/decoders/avformatdecoder.cpp              | 2 +-
+ mythtv/libs/libmythtv/io/mythiowrapper.cpp                      | 2 +-
+ mythtv/libs/libmythtv/mythvideooutgpu.cpp                       | 2 +-
+ mythtv/libs/libmythtv/programinfo.h                             | 2 +-
+ mythtv/libs/libmythtv/recorders/DeviceReadBuffer.cpp            | 2 +-
+ mythtv/libs/libmythtv/recorders/ExternalSignalMonitor.cpp       | 2 +-
+ mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp       | 2 +-
+ mythtv/libs/libmythtv/recorders/HLS/HLSReader.h                 | 2 +-
+ mythtv/libs/libmythtv/recorders/asisignalmonitor.cpp            | 2 +-
+ mythtv/libs/libmythtv/recorders/asistreamhandler.cpp            | 2 +-
+ mythtv/libs/libmythtv/recorders/hdhrchannel.cpp                 | 2 +-
+ mythtv/libs/libmythtv/recorders/hdhrsignalmonitor.cpp           | 2 +-
+ mythtv/libs/libmythtv/recorders/hdhrstreamhandler.cpp           | 2 +-
+ mythtv/libs/libmythtv/recorders/importrecorder.cpp              | 2 +-
+ mythtv/libs/libmythtv/recorders/iptvstreamhandler.cpp           | 2 +-
+ mythtv/libs/libmythtv/recorders/streamhandler.cpp               | 2 +-
+ mythtv/libs/libmythtv/videosource.cpp                           | 2 +-
+ mythtv/libs/libmythtv/videosource.h                             | 2 +-
+ mythtv/libs/libmythtv/visualisations/goom/zoom_filter_xmmx.cpp  | 2 +-
+ mythtv/libs/libmythui/mediamonitor.cpp                          | 2 +-
+ mythtv/libs/libmythui/mythdisplay.cpp                           | 2 +-
+ mythtv/libs/libmythui/mythmainwindow.cpp                        | 2 +-
+ mythtv/libs/libmythui/mythrender_d3d9.h                         | 2 +-
+ mythtv/libs/libmythui/platforms/mythdrmdevice.cpp               | 2 +-
+ mythtv/libs/libmythui/vulkan/mythrendervulkan.h                 | 2 +-
+ mythtv/libs/libmythupnp/httprequest.cpp                         | 2 +-
+ mythtv/libs/libmythupnp/httpserver.cpp                          | 2 +-
+ mythtv/libs/libmythupnp/httpserver.h                            | 2 +-
+ mythtv/programs/mythbackend/autoexpire.cpp                      | 2 +-
+ mythtv/programs/mythbackend/mainserver.cpp                      | 2 +-
+ mythtv/programs/mythbackend/mythbackend.cpp                     | 2 +-
+ mythtv/programs/mythbackend/scheduler.cpp                       | 2 +-
+ mythtv/programs/mythbackend/servicesv2/v2capture.cpp            | 2 +-
+ mythtv/programs/mythbackend/servicesv2/v2serviceUtil.cpp        | 2 +-
+ mythtv/programs/mythfrontend/audiogeneralsettings.cpp           | 2 +-
+ mythtv/programs/mythfrontend/mythfrontend.cpp                   | 2 +-
+ mythtv/programs/mythfrontend/statusbox.cpp                      | 2 +-
+ mythtv/programs/mythpreviewgen/mythpreviewgen.cpp               | 2 +-
+ mythtv/programs/mythtranscode/mpeg2fix.cpp                      | 2 +-
+ mythtv/programs/mythutil/mythutil.cpp                           | 2 +-
+ mythtv/programs/mythwelcome/welcomedialog.cpp                   | 2 +-
+ 77 files changed, 77 insertions(+), 77 deletions(-)
+
+diff --git a/mythtv/libs/libmyth/mythcontext.cpp b/mythtv/libs/libmyth/mythcontext.cpp
+index f33eb1274fa..4e2ca4ad452 100644
+--- a/mythtv/libs/libmyth/mythcontext.cpp
++++ b/mythtv/libs/libmyth/mythcontext.cpp
+@@ -9,7 +9,7 @@
+ #include <vector>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QCoreApplication>
+diff --git a/mythtv/libs/libmythbase/compat.h b/mythtv/libs/libmythbase/compat.h
+index bf19ed9c670..3ebc0b69088 100644
+--- a/mythtv/libs/libmythbase/compat.h
++++ b/mythtv/libs/libmythbase/compat.h
+@@ -6,7 +6,7 @@
+ #define COMPAT_H
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythbase/dbutil.cpp b/mythtv/libs/libmythbase/dbutil.cpp
+index e6118cf00fe..19d5038a803 100644
+--- a/mythtv/libs/libmythbase/dbutil.cpp
++++ b/mythtv/libs/libmythbase/dbutil.cpp
+@@ -6,7 +6,7 @@
+ #include <unistd.h>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QDir>
+diff --git a/mythtv/libs/libmythbase/filesysteminfo.cpp b/mythtv/libs/libmythbase/filesysteminfo.cpp
+index 96806c535ac..79d350f5490 100644
+--- a/mythtv/libs/libmythbase/filesysteminfo.cpp
++++ b/mythtv/libs/libmythbase/filesysteminfo.cpp
+@@ -1,7 +1,7 @@
+ #include "filesysteminfo.h"
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythbase/http/mythhttpserver.cpp b/mythtv/libs/libmythbase/http/mythhttpserver.cpp
+index 80f7460a937..c5203015d61 100644
+--- a/mythtv/libs/libmythbase/http/mythhttpserver.cpp
++++ b/mythtv/libs/libmythbase/http/mythhttpserver.cpp
+@@ -1,6 +1,6 @@
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QDirIterator>
+diff --git a/mythtv/libs/libmythbase/logging.cpp b/mythtv/libs/libmythbase/logging.cpp
+index f68797ce617..46280b25848 100644
+--- a/mythtv/libs/libmythbase/logging.cpp
++++ b/mythtv/libs/libmythbase/logging.cpp
+@@ -1,5 +1,5 @@
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QAtomicInt>
+diff --git a/mythtv/libs/libmythbase/loggingserver.cpp b/mythtv/libs/libmythbase/loggingserver.cpp
+index 9b797b1925a..be6060966bb 100644
+--- a/mythtv/libs/libmythbase/loggingserver.cpp
++++ b/mythtv/libs/libmythbase/loggingserver.cpp
+@@ -2,7 +2,7 @@
+ #include <thread>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QAtomicInt>
+diff --git a/mythtv/libs/libmythbase/loggingserver.h b/mythtv/libs/libmythbase/loggingserver.h
+index a24540d3e91..5656a3e247d 100644
+--- a/mythtv/libs/libmythbase/loggingserver.h
++++ b/mythtv/libs/libmythbase/loggingserver.h
+@@ -2,7 +2,7 @@
+ #define LOGGINGSERVER_H_
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QMutexLocker>
+diff --git a/mythtv/libs/libmythbase/mythcommandlineparser.cpp b/mythtv/libs/libmythbase/mythcommandlineparser.cpp
+index 86c8b565531..2012c5e5c8a 100644
+--- a/mythtv/libs/libmythbase/mythcommandlineparser.cpp
++++ b/mythtv/libs/libmythbase/mythcommandlineparser.cpp
+@@ -21,7 +21,7 @@
+ */
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythbase/mythcorecontext.cpp b/mythtv/libs/libmythbase/mythcorecontext.cpp
+index 95d1d9fcf23..aab4d2b85a7 100644
+--- a/mythtv/libs/libmythbase/mythcorecontext.cpp
++++ b/mythtv/libs/libmythbase/mythcorecontext.cpp
+@@ -2,7 +2,7 @@
+ 
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QCoreApplication>
+diff --git a/mythtv/libs/libmythbase/mythdirs.cpp b/mythtv/libs/libmythbase/mythdirs.cpp
+index 251500029b1..69fe702a8bc 100644
+--- a/mythtv/libs/libmythbase/mythdirs.cpp
++++ b/mythtv/libs/libmythbase/mythdirs.cpp
+@@ -2,7 +2,7 @@
+ #include <cstdlib>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QDir>
+diff --git a/mythtv/libs/libmythbase/mythdownloadmanager.cpp b/mythtv/libs/libmythbase/mythdownloadmanager.cpp
+index fbbd8e173fa..4c92027e969 100644
+--- a/mythtv/libs/libmythbase/mythdownloadmanager.cpp
++++ b/mythtv/libs/libmythbase/mythdownloadmanager.cpp
+@@ -1,6 +1,6 @@
+ // qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QCoreApplication>
+diff --git a/mythtv/libs/libmythbase/mythdownloadmanager.h b/mythtv/libs/libmythbase/mythdownloadmanager.h
+index f6ef303233e..d0f6f6a2eb4 100644
+--- a/mythtv/libs/libmythbase/mythdownloadmanager.h
++++ b/mythtv/libs/libmythbase/mythdownloadmanager.h
+@@ -2,7 +2,7 @@
+ #define MYTHDOWNLOADMANAGER_H
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QDateTime>
+diff --git a/mythtv/libs/libmythbase/mythmedia.cpp b/mythtv/libs/libmythbase/mythmedia.cpp
+index d5b02d3e4b0..cb24741c870 100644
+--- a/mythtv/libs/libmythbase/mythmedia.cpp
++++ b/mythtv/libs/libmythbase/mythmedia.cpp
+@@ -9,7 +9,7 @@
+ 
+ // Qt Headers
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QDir>
+diff --git a/mythtv/libs/libmythbase/mythmiscutil.cpp b/mythtv/libs/libmythbase/mythmiscutil.cpp
+index 1811389e010..f6705a5d86c 100644
+--- a/mythtv/libs/libmythbase/mythmiscutil.cpp
++++ b/mythtv/libs/libmythbase/mythmiscutil.cpp
+@@ -16,7 +16,7 @@
+ // System specific C headers
+ #include "compat.h"
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtProcessorDetection>
+ #include <QtSystemDetection>
+ #endif
+diff --git a/mythtv/libs/libmythbase/mythmiscutil.h b/mythtv/libs/libmythbase/mythmiscutil.h
+index 115e55af7c6..241e4282e95 100644
+--- a/mythtv/libs/libmythbase/mythmiscutil.h
++++ b/mythtv/libs/libmythbase/mythmiscutil.h
+@@ -7,7 +7,7 @@
+ #include <cstdint>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QString>
+diff --git a/mythtv/libs/libmythbase/mythplugin.cpp b/mythtv/libs/libmythbase/mythplugin.cpp
+index b65e79e742f..9e6e9df91d4 100644
+--- a/mythtv/libs/libmythbase/mythplugin.cpp
++++ b/mythtv/libs/libmythbase/mythplugin.cpp
+@@ -1,5 +1,5 @@
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythbase/mythsocket.cpp b/mythtv/libs/libmythbase/mythsocket.cpp
+index 2ec596f6cdd..e9289d39640 100644
+--- a/mythtv/libs/libmythbase/mythsocket.cpp
++++ b/mythtv/libs/libmythbase/mythsocket.cpp
+@@ -1,6 +1,6 @@
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QNetworkInterface> // for QNetworkInterface::allAddresses ()
+diff --git a/mythtv/libs/libmythbase/mythsystemlegacy.cpp b/mythtv/libs/libmythbase/mythsystemlegacy.cpp
+index 28c1b71053c..6cff2a11abb 100644
+--- a/mythtv/libs/libmythbase/mythsystemlegacy.cpp
++++ b/mythtv/libs/libmythbase/mythsystemlegacy.cpp
+@@ -35,7 +35,7 @@
+ 
+ // QT headers
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QCoreApplication>
+diff --git a/mythtv/libs/libmythbase/mythtimezone.cpp b/mythtv/libs/libmythbase/mythtimezone.cpp
+index f57456351e4..0c711766bfc 100644
+--- a/mythtv/libs/libmythbase/mythtimezone.cpp
++++ b/mythtv/libs/libmythbase/mythtimezone.cpp
+@@ -1,7 +1,7 @@
+ #include "mythtimezone.h"
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtEnvironmentVariables>
+ #include <QtSystemDetection>
+ #include <QtVersionChecks>
+diff --git a/mythtv/libs/libmythbase/portchecker.cpp b/mythtv/libs/libmythbase/portchecker.cpp
+index ac19a66f9da..19983ddf400 100644
+--- a/mythtv/libs/libmythbase/portchecker.cpp
++++ b/mythtv/libs/libmythbase/portchecker.cpp
+@@ -23,7 +23,7 @@
+ //////////////////////////////////////////////////////////////////////////////
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QCoreApplication>
+diff --git a/mythtv/libs/libmythbase/remotefile.cpp b/mythtv/libs/libmythbase/remotefile.cpp
+index 8b0cc228674..14f4ef5eba5 100644
+--- a/mythtv/libs/libmythbase/remotefile.cpp
++++ b/mythtv/libs/libmythbase/remotefile.cpp
+@@ -1,7 +1,7 @@
+ #include <iostream>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QFile>
+diff --git a/mythtv/libs/libmythbase/signalhandling.cpp b/mythtv/libs/libmythbase/signalhandling.cpp
+index 380f80ea1a2..d417346c648 100644
+--- a/mythtv/libs/libmythbase/signalhandling.cpp
++++ b/mythtv/libs/libmythbase/signalhandling.cpp
+@@ -1,5 +1,5 @@
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QObject>
+diff --git a/mythtv/libs/libmythbase/signalhandling.h b/mythtv/libs/libmythbase/signalhandling.h
+index 258eadb3261..9256424e068 100644
+--- a/mythtv/libs/libmythbase/signalhandling.h
++++ b/mythtv/libs/libmythbase/signalhandling.h
+@@ -2,7 +2,7 @@
+ #define SIGNALHANDLING_H_
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QObject>
+diff --git a/mythtv/libs/libmythbase/test/test_logging/test_logging.cpp b/mythtv/libs/libmythbase/test/test_logging/test_logging.cpp
+index 1b2ec93a346..c44b7180966 100644
+--- a/mythtv/libs/libmythbase/test/test_logging/test_logging.cpp
++++ b/mythtv/libs/libmythbase/test/test_logging/test_logging.cpp
+@@ -23,7 +23,7 @@
+ #include <sstream>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QTest>
+diff --git a/mythtv/libs/libmythbase/threadedfilewriter.cpp b/mythtv/libs/libmythbase/threadedfilewriter.cpp
+index 59c9ada8a8a..15a8bdf32b5 100644
+--- a/mythtv/libs/libmythbase/threadedfilewriter.cpp
++++ b/mythtv/libs/libmythbase/threadedfilewriter.cpp
+@@ -11,7 +11,7 @@
+ 
+ // Qt headers
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QString>
+diff --git a/mythtv/libs/libmythmetadata/metaioid3.h b/mythtv/libs/libmythmetadata/metaioid3.h
+index 1d033225dfc..f99c5f33fcb 100644
+--- a/mythtv/libs/libmythmetadata/metaioid3.h
++++ b/mythtv/libs/libmythmetadata/metaioid3.h
+@@ -2,7 +2,7 @@
+ #define METAIOID3_H_
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythmetadata/videoutils.cpp b/mythtv/libs/libmythmetadata/videoutils.cpp
+index c5a955681ea..5f035d32aa9 100644
+--- a/mythtv/libs/libmythmetadata/videoutils.cpp
++++ b/mythtv/libs/libmythmetadata/videoutils.cpp
+@@ -2,7 +2,7 @@
+ #include "videoutils.h"
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QDir>
+diff --git a/mythtv/libs/libmythprotoserver/requesthandler/basehandler.cpp b/mythtv/libs/libmythprotoserver/requesthandler/basehandler.cpp
+index 125cc2d106a..65566a21838 100644
+--- a/mythtv/libs/libmythprotoserver/requesthandler/basehandler.cpp
++++ b/mythtv/libs/libmythprotoserver/requesthandler/basehandler.cpp
+@@ -1,5 +1,5 @@
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QString>
+diff --git a/mythtv/libs/libmythprotoserver/requesthandler/fileserverhandler.cpp b/mythtv/libs/libmythprotoserver/requesthandler/fileserverhandler.cpp
+index 2afae77b9a7..7bd00ef0540 100644
+--- a/mythtv/libs/libmythprotoserver/requesthandler/fileserverhandler.cpp
++++ b/mythtv/libs/libmythprotoserver/requesthandler/fileserverhandler.cpp
+@@ -4,7 +4,7 @@
+ #include <unistd.h>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QReadLocker>
+diff --git a/mythtv/libs/libmythtv/audio/audiooutput.cpp b/mythtv/libs/libmythtv/audio/audiooutput.cpp
+index 9a5838345de..28a26b6ad75 100644
+--- a/mythtv/libs/libmythtv/audio/audiooutput.cpp
++++ b/mythtv/libs/libmythtv/audio/audiooutput.cpp
+@@ -6,7 +6,7 @@
+ 
+ // Qt utils: to parse audio list
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QtEndian>
+diff --git a/mythtv/libs/libmythtv/cardutil.cpp b/mythtv/libs/libmythtv/cardutil.cpp
+index fd9dd916c10..57592435cc3 100644
+--- a/mythtv/libs/libmythtv/cardutil.cpp
++++ b/mythtv/libs/libmythtv/cardutil.cpp
+@@ -12,7 +12,7 @@
+ 
+ // Qt headers
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QMap>
+diff --git a/mythtv/libs/libmythtv/channelscan/channelscanner.cpp b/mythtv/libs/libmythtv/channelscan/channelscanner.cpp
+index c27e665232c..caa9ef565c7 100644
+--- a/mythtv/libs/libmythtv/channelscan/channelscanner.cpp
++++ b/mythtv/libs/libmythtv/channelscan/channelscanner.cpp
+@@ -30,7 +30,7 @@
+ #include <algorithm>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/channelscan/channelscanner.h b/mythtv/libs/libmythtv/channelscan/channelscanner.h
+index 5244058a3e6..642f544805b 100644
+--- a/mythtv/libs/libmythtv/channelscan/channelscanner.h
++++ b/mythtv/libs/libmythtv/channelscan/channelscanner.h
+@@ -32,7 +32,7 @@
+ 
+ // Qt headers
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QCoreApplication>
+diff --git a/mythtv/libs/libmythtv/channelscan/channelscanner_gui.cpp b/mythtv/libs/libmythtv/channelscan/channelscanner_gui.cpp
+index d4696c304a3..b70e8e0b2bb 100644
+--- a/mythtv/libs/libmythtv/channelscan/channelscanner_gui.cpp
++++ b/mythtv/libs/libmythtv/channelscan/channelscanner_gui.cpp
+@@ -34,7 +34,7 @@
+ #include <algorithm>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/channelscan/channelscanner_web.cpp b/mythtv/libs/libmythtv/channelscan/channelscanner_web.cpp
+index 91765a9e4b1..fc1df28edc1 100644
+--- a/mythtv/libs/libmythtv/channelscan/channelscanner_web.cpp
++++ b/mythtv/libs/libmythtv/channelscan/channelscanner_web.cpp
+@@ -25,7 +25,7 @@
+ 
+ // Qt headers
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QCoreApplication>
+diff --git a/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp b/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp
+index 3d25446cdfd..f2ec9818c1d 100644
+--- a/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp
++++ b/mythtv/libs/libmythtv/decoders/avformatdecoder.cpp
+@@ -27,7 +27,7 @@ extern "C" {
+ 
+ #include "libmythbase/mythconfig.h"
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #include <QtVersionChecks>
+ #endif
+diff --git a/mythtv/libs/libmythtv/io/mythiowrapper.cpp b/mythtv/libs/libmythtv/io/mythiowrapper.cpp
+index 4d8e4fdd5e3..801d4684073 100644
+--- a/mythtv/libs/libmythtv/io/mythiowrapper.cpp
++++ b/mythtv/libs/libmythtv/io/mythiowrapper.cpp
+@@ -1,6 +1,6 @@
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QFile>
+diff --git a/mythtv/libs/libmythtv/mythvideooutgpu.cpp b/mythtv/libs/libmythtv/mythvideooutgpu.cpp
+index 6d5950a0a3c..739593321a0 100644
+--- a/mythtv/libs/libmythtv/mythvideooutgpu.cpp
++++ b/mythtv/libs/libmythtv/mythvideooutgpu.cpp
+@@ -1,5 +1,5 @@
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/programinfo.h b/mythtv/libs/libmythtv/programinfo.h
+index 94ea6bb103c..55c6d6a050e 100644
+--- a/mythtv/libs/libmythtv/programinfo.h
++++ b/mythtv/libs/libmythtv/programinfo.h
+@@ -9,7 +9,7 @@
+ #include <vector> // for GetNextRecordingList
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QStringList>
+diff --git a/mythtv/libs/libmythtv/recorders/DeviceReadBuffer.cpp b/mythtv/libs/libmythtv/recorders/DeviceReadBuffer.cpp
+index c97ba1f38a8..8c7a72de06c 100644
+--- a/mythtv/libs/libmythtv/recorders/DeviceReadBuffer.cpp
++++ b/mythtv/libs/libmythtv/recorders/DeviceReadBuffer.cpp
+@@ -6,7 +6,7 @@
+ #include <sys/types.h>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QString>
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalSignalMonitor.cpp b/mythtv/libs/libmythtv/recorders/ExternalSignalMonitor.cpp
+index 1bcb1a2c9f1..4b562022be9 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalSignalMonitor.cpp
++++ b/mythtv/libs/libmythtv/recorders/ExternalSignalMonitor.cpp
+@@ -4,7 +4,7 @@
+ #include <cstring>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+index b53c8c201e3..7b68073d92f 100644
+--- a/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/ExternalStreamHandler.cpp
+@@ -1,7 +1,7 @@
+ // -*- Mode: c++ -*-
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/HLS/HLSReader.h b/mythtv/libs/libmythtv/recorders/HLS/HLSReader.h
+index aaf894d98e9..bdcb6747740 100644
+--- a/mythtv/libs/libmythtv/recorders/HLS/HLSReader.h
++++ b/mythtv/libs/libmythtv/recorders/HLS/HLSReader.h
+@@ -8,7 +8,7 @@
+ #include <QString>
+ #include <QTextStream>
+ #include <QtGlobal> // Qt 5 for QtTypes and QtVersionChecks
+-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
++#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+ #include <QtTypes>
+ #endif
+ #include <QVector>
+diff --git a/mythtv/libs/libmythtv/recorders/asisignalmonitor.cpp b/mythtv/libs/libmythtv/recorders/asisignalmonitor.cpp
+index c5167fa9dfe..2fd97d98897 100644
+--- a/mythtv/libs/libmythtv/recorders/asisignalmonitor.cpp
++++ b/mythtv/libs/libmythtv/recorders/asisignalmonitor.cpp
+@@ -5,7 +5,7 @@
+ #include <cstring>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/asistreamhandler.cpp b/mythtv/libs/libmythtv/recorders/asistreamhandler.cpp
+index 2c7c4fc46d2..65ba999623c 100644
+--- a/mythtv/libs/libmythtv/recorders/asistreamhandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/asistreamhandler.cpp
+@@ -1,7 +1,7 @@
+ // -*- Mode: c++ -*-
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/hdhrchannel.cpp b/mythtv/libs/libmythtv/recorders/hdhrchannel.cpp
+index fc11ce6ce3b..cfc5f3ad635 100644
+--- a/mythtv/libs/libmythtv/recorders/hdhrchannel.cpp
++++ b/mythtv/libs/libmythtv/recorders/hdhrchannel.cpp
+@@ -5,7 +5,7 @@
+  */
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/hdhrsignalmonitor.cpp b/mythtv/libs/libmythtv/recorders/hdhrsignalmonitor.cpp
+index 90a2560b3be..97ed0c3ec1d 100644
+--- a/mythtv/libs/libmythtv/recorders/hdhrsignalmonitor.cpp
++++ b/mythtv/libs/libmythtv/recorders/hdhrsignalmonitor.cpp
+@@ -5,7 +5,7 @@
+ #include <cstring>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/hdhrstreamhandler.cpp b/mythtv/libs/libmythtv/recorders/hdhrstreamhandler.cpp
+index e276a469cea..aa6a33af9ff 100644
+--- a/mythtv/libs/libmythtv/recorders/hdhrstreamhandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/hdhrstreamhandler.cpp
+@@ -1,7 +1,7 @@
+ // -*- Mode: c++ -*-
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/importrecorder.cpp b/mythtv/libs/libmythtv/recorders/importrecorder.cpp
+index dba02a7142c..1d33ce957ed 100644
+--- a/mythtv/libs/libmythtv/recorders/importrecorder.cpp
++++ b/mythtv/libs/libmythtv/recorders/importrecorder.cpp
+@@ -19,7 +19,7 @@
+  */
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/iptvstreamhandler.cpp b/mythtv/libs/libmythtv/recorders/iptvstreamhandler.cpp
+index 763539c4c58..7e9ab1b84b6 100644
+--- a/mythtv/libs/libmythtv/recorders/iptvstreamhandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/iptvstreamhandler.cpp
+@@ -1,7 +1,7 @@
+ // -*- Mode: c++ -*-
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/recorders/streamhandler.cpp b/mythtv/libs/libmythtv/recorders/streamhandler.cpp
+index 9fbb7aa0c7b..08a621e2c14 100644
+--- a/mythtv/libs/libmythtv/recorders/streamhandler.cpp
++++ b/mythtv/libs/libmythtv/recorders/streamhandler.cpp
+@@ -7,7 +7,7 @@
+ #include "streamhandler.h"
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/videosource.cpp b/mythtv/libs/libmythtv/videosource.cpp
+index b0b852f4da3..4720c6986d3 100644
+--- a/mythtv/libs/libmythtv/videosource.cpp
++++ b/mythtv/libs/libmythtv/videosource.cpp
+@@ -1,7 +1,7 @@
+ // -*- Mode: c++ -*-
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/videosource.h b/mythtv/libs/libmythtv/videosource.h
+index 5ed39e70abc..a2e65830052 100644
+--- a/mythtv/libs/libmythtv/videosource.h
++++ b/mythtv/libs/libmythtv/videosource.h
+@@ -5,7 +5,7 @@
+ #include <vector>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/libs/libmythtv/visualisations/goom/zoom_filter_xmmx.cpp b/mythtv/libs/libmythtv/visualisations/goom/zoom_filter_xmmx.cpp
+index 13a9f113ca3..e0784301b74 100644
+--- a/mythtv/libs/libmythtv/visualisations/goom/zoom_filter_xmmx.cpp
++++ b/mythtv/libs/libmythtv/visualisations/goom/zoom_filter_xmmx.cpp
+@@ -2,7 +2,7 @@
+ #include "libmythbase/mythconfig.h"
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtProcessorDetection>
+ #endif
+ #if HAVE_MMX && !defined(Q_PROCESSOR_X86_64)
+diff --git a/mythtv/libs/libmythui/mediamonitor.cpp b/mythtv/libs/libmythui/mediamonitor.cpp
+index d0b12f80e3e..5bc5d0e7d25 100644
+--- a/mythtv/libs/libmythui/mediamonitor.cpp
++++ b/mythtv/libs/libmythui/mediamonitor.cpp
+@@ -9,7 +9,7 @@
+ 
+ // Qt headers
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QCoreApplication>
+diff --git a/mythtv/libs/libmythui/mythdisplay.cpp b/mythtv/libs/libmythui/mythdisplay.cpp
+index d8b4e37ea90..f485bf00452 100644
+--- a/mythtv/libs/libmythui/mythdisplay.cpp
++++ b/mythtv/libs/libmythui/mythdisplay.cpp
+@@ -3,7 +3,7 @@
+ 
+ //Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QTimer>
+diff --git a/mythtv/libs/libmythui/mythmainwindow.cpp b/mythtv/libs/libmythui/mythmainwindow.cpp
+index 06e151a4e02..775a09b13d5 100644
+--- a/mythtv/libs/libmythui/mythmainwindow.cpp
++++ b/mythtv/libs/libmythui/mythmainwindow.cpp
+@@ -12,7 +12,7 @@
+ 
+ // QT
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #include <QtVersionChecks>
+ #endif
+diff --git a/mythtv/libs/libmythui/mythrender_d3d9.h b/mythtv/libs/libmythui/mythrender_d3d9.h
+index ad2ded59b33..8684d424c4b 100644
+--- a/mythtv/libs/libmythui/mythrender_d3d9.h
++++ b/mythtv/libs/libmythui/mythrender_d3d9.h
+@@ -2,7 +2,7 @@
+ #define MYTHRENDER_D3D9_H
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QMap>
+diff --git a/mythtv/libs/libmythui/platforms/mythdrmdevice.cpp b/mythtv/libs/libmythui/platforms/mythdrmdevice.cpp
+index a8ce2272352..58d2ac420b8 100644
+--- a/mythtv/libs/libmythui/platforms/mythdrmdevice.cpp
++++ b/mythtv/libs/libmythui/platforms/mythdrmdevice.cpp
+@@ -2,7 +2,7 @@
+ 
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QDir>
+diff --git a/mythtv/libs/libmythui/vulkan/mythrendervulkan.h b/mythtv/libs/libmythui/vulkan/mythrendervulkan.h
+index 2ce6180d172..ee595bd0e2c 100644
+--- a/mythtv/libs/libmythui/vulkan/mythrendervulkan.h
++++ b/mythtv/libs/libmythui/vulkan/mythrendervulkan.h
+@@ -7,7 +7,7 @@
+ 
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtProcessorDetection>
+ #endif
+ #include <QVulkanWindowRenderer>
+diff --git a/mythtv/libs/libmythupnp/httprequest.cpp b/mythtv/libs/libmythupnp/httprequest.cpp
+index 1d6f40527cc..0dfc9069424 100644
+--- a/mythtv/libs/libmythupnp/httprequest.cpp
++++ b/mythtv/libs/libmythupnp/httprequest.cpp
+@@ -13,7 +13,7 @@
+ #include "httprequest.h"
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QFile>
+diff --git a/mythtv/libs/libmythupnp/httpserver.cpp b/mythtv/libs/libmythupnp/httpserver.cpp
+index b260d6cfc7b..9c27a1ac3a3 100644
+--- a/mythtv/libs/libmythupnp/httpserver.cpp
++++ b/mythtv/libs/libmythupnp/httpserver.cpp
+@@ -20,7 +20,7 @@
+ #include <thread>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ // POSIX headers
+diff --git a/mythtv/libs/libmythupnp/httpserver.h b/mythtv/libs/libmythupnp/httpserver.h
+index f338b27aef7..447821ad128 100644
+--- a/mythtv/libs/libmythupnp/httpserver.h
++++ b/mythtv/libs/libmythupnp/httpserver.h
+@@ -15,7 +15,7 @@
+ #define HTTPSERVER_H
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ // POSIX headers
+diff --git a/mythtv/programs/mythbackend/autoexpire.cpp b/mythtv/programs/mythbackend/autoexpire.cpp
+index 60d6c5bab1c..a271e4a1f26 100644
+--- a/mythtv/programs/mythbackend/autoexpire.cpp
++++ b/mythtv/programs/mythbackend/autoexpire.cpp
+@@ -1,5 +1,5 @@
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/programs/mythbackend/mainserver.cpp b/mythtv/programs/mythbackend/mainserver.cpp
+index 037117203a8..d92afb9ab88 100644
+--- a/mythtv/programs/mythbackend/mainserver.cpp
++++ b/mythtv/programs/mythbackend/mainserver.cpp
+@@ -15,7 +15,7 @@
+ #include "libmythbase/mythconfig.h"
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #ifndef Q_OS_WINDOWS
+diff --git a/mythtv/programs/mythbackend/mythbackend.cpp b/mythtv/programs/mythbackend/mythbackend.cpp
+index b82aa27dc10..eeb154ec2a7 100644
+--- a/mythtv/programs/mythbackend/mythbackend.cpp
++++ b/mythtv/programs/mythbackend/mythbackend.cpp
+@@ -8,7 +8,7 @@
+ #include <thread>
+ 
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #ifndef Q_OS_WINDOWS
+diff --git a/mythtv/programs/mythbackend/scheduler.cpp b/mythtv/programs/mythbackend/scheduler.cpp
+index ddb28eae69d..5497dfb35aa 100644
+--- a/mythtv/programs/mythbackend/scheduler.cpp
++++ b/mythtv/programs/mythbackend/scheduler.cpp
+@@ -1,5 +1,5 @@
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/programs/mythbackend/servicesv2/v2capture.cpp b/mythtv/programs/mythbackend/servicesv2/v2capture.cpp
+index f0dfc3b8d43..0a103373b55 100644
+--- a/mythtv/programs/mythbackend/servicesv2/v2capture.cpp
++++ b/mythtv/programs/mythbackend/servicesv2/v2capture.cpp
+@@ -25,7 +25,7 @@
+ 
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QList>
+diff --git a/mythtv/programs/mythbackend/servicesv2/v2serviceUtil.cpp b/mythtv/programs/mythbackend/servicesv2/v2serviceUtil.cpp
+index 551ad9ad0b3..51a6c0e336d 100644
+--- a/mythtv/programs/mythbackend/servicesv2/v2serviceUtil.cpp
++++ b/mythtv/programs/mythbackend/servicesv2/v2serviceUtil.cpp
+@@ -1,5 +1,5 @@
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ 
+diff --git a/mythtv/programs/mythfrontend/audiogeneralsettings.cpp b/mythtv/programs/mythfrontend/audiogeneralsettings.cpp
+index 71eb87ca9ea..76c1265d2cd 100644
+--- a/mythtv/programs/mythfrontend/audiogeneralsettings.cpp
++++ b/mythtv/programs/mythfrontend/audiogeneralsettings.cpp
+@@ -10,7 +10,7 @@
+ 
+ // Qt headers
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QCoreApplication>
+diff --git a/mythtv/programs/mythfrontend/mythfrontend.cpp b/mythtv/programs/mythfrontend/mythfrontend.cpp
+index ae9aa9bbefd..bf716ae2c02 100644
+--- a/mythtv/programs/mythfrontend/mythfrontend.cpp
++++ b/mythtv/programs/mythfrontend/mythfrontend.cpp
+@@ -11,7 +11,7 @@
+ 
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #ifdef Q_OS_ANDROID
+diff --git a/mythtv/programs/mythfrontend/statusbox.cpp b/mythtv/programs/mythfrontend/statusbox.cpp
+index 225cb669a1f..dd781b012b4 100644
+--- a/mythtv/programs/mythfrontend/statusbox.cpp
++++ b/mythtv/programs/mythfrontend/statusbox.cpp
+@@ -1,6 +1,6 @@
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QHostAddress>
+diff --git a/mythtv/programs/mythpreviewgen/mythpreviewgen.cpp b/mythtv/programs/mythpreviewgen/mythpreviewgen.cpp
+index 6261d9e6665..e649fc973d6 100644
+--- a/mythtv/programs/mythpreviewgen/mythpreviewgen.cpp
++++ b/mythtv/programs/mythpreviewgen/mythpreviewgen.cpp
+@@ -12,7 +12,7 @@
+ 
+ // Qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #ifndef Q_OS_WINDOWS
+diff --git a/mythtv/programs/mythtranscode/mpeg2fix.cpp b/mythtv/programs/mythtranscode/mpeg2fix.cpp
+index 369103c7ebb..4950f0a53a3 100644
+--- a/mythtv/programs/mythtranscode/mpeg2fix.cpp
++++ b/mythtv/programs/mythtranscode/mpeg2fix.cpp
+@@ -14,7 +14,7 @@
+ 
+ // Qt headers
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QFileInfo>
+diff --git a/mythtv/programs/mythutil/mythutil.cpp b/mythtv/programs/mythutil/mythutil.cpp
+index d911b5b8b8f..822a8b8a386 100644
+--- a/mythtv/programs/mythutil/mythutil.cpp
++++ b/mythtv/programs/mythutil/mythutil.cpp
+@@ -1,6 +1,6 @@
+ // Qt includes
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #ifndef Q_OS_WINDOWS
+diff --git a/mythtv/programs/mythwelcome/welcomedialog.cpp b/mythtv/programs/mythwelcome/welcomedialog.cpp
+index a6952fbd475..a4081e3501c 100644
+--- a/mythtv/programs/mythwelcome/welcomedialog.cpp
++++ b/mythtv/programs/mythwelcome/welcomedialog.cpp
+@@ -8,7 +8,7 @@
+ 
+ // qt
+ #include <QtGlobal>
+-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
++#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
+ #include <QtSystemDetection>
+ #endif
+ #include <QEvent>
+
+From e07cdacbf960351ad8342db44217a3d5eaf92d2a Mon Sep 17 00:00:00 2001
+From: Scott Theisen <scott.the.elm@gmail.com>
+Date: Sun, 5 Apr 2026 20:57:17 -0400
+Subject: [PATCH 21/22] Qt6: Fix OpenGL on Wayland and xcb EGL integration
+
+On Wayland, it previously deadlocked in QWaylandGLContext::makeCurrent()
+when MythRenderOpenGL::makeCurrent() is called in MythRenderOpenGL::Init().
+
+Forcing the xcb QPA with the environment variable QT_QPA_PLATFORM=xcb
+or the `--platform xcb` command-line flag causes
+`QEGLPlatformContext: eglMakeCurrent failed: 300d` (EGL_BAD_SURFACE)
+and a subsequent segmentation fault.
+
+The original code never destroyed the original QWindow::RasterSurface
+surface after setting the surface type to QWindow::OpenGLSurface, so
+Qt thought the QWindow::RasterSurface was a QWindow::OpenGLSurface
+which are incompatible.
+
+Destroying and then creating a new surface immediately after setting
+the surface type destroys the QWindow::RasterSurface and creates
+the desired QWindow::OpenGLSurface.
+
+Fixes:
+https://github.com/MythTV/mythtv/issues/754
+https://github.com/MythTV/mythtv/issues/1334
+(cherry picked from commit 373bce861d0b00ee972f3882e8386664b37fd93b)
+---
+ mythtv/libs/libmythui/opengl/mythrenderopengl.cpp | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp b/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp
+index 0b023f69291..f4f709bfe8c 100644
+--- a/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp
++++ b/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp
+@@ -96,6 +96,7 @@ MythRenderOpenGL* MythRenderOpenGL::Create(QWidget *Widget)
+     bool opengles = !qEnvironmentVariableIsEmpty("MYTHTV_OPENGL_ES");
+     bool core     = !qEnvironmentVariableIsEmpty("MYTHTV_OPENGL_CORE");
+     QSurfaceFormat format = QSurfaceFormat::defaultFormat();
++    format.setRenderableType(QSurfaceFormat::OpenGL);
+     if (core)
+     {
+         format.setProfile(QSurfaceFormat::CoreProfile);
+@@ -117,6 +118,7 @@ MythRenderOpenGL* MythRenderOpenGL::Create(QWidget *Widget)
+     if (VERBOSE_LEVEL_CHECK(VB_GPU, LOG_INFO))
+         format.setOption(QSurfaceFormat::DebugContext);
+ 
++    QSurfaceFormat::setDefaultFormat(format);
+     return new MythRenderOpenGL(format, Widget);
+ }
+ 
+@@ -545,8 +547,14 @@ void MythRenderOpenGL::SetWidget(QWidget *Widget)
+ #if defined(Q_OS_ANDROID) || (QT_VERSION > QT_VERSION_CHECK(6,3,0))
+     // Ensure surface type is always OpenGL
+     m_window->setSurfaceType(QWindow::OpenGLSurface);
+-    if (native && native->windowHandle())
++    m_window->destroy();
++    m_window->create();
++    if (native && native->windowHandle() != m_window)
++    {
+         native->windowHandle()->setSurfaceType(QWindow::OpenGLSurface);
++        native->windowHandle()->destroy();
++        native->windowHandle()->create();
++    }
+ #endif
+ 
+ #ifdef CONFIG_QTWEBENGINE
+
+From 0fb9e4f3159594893fc8d93a76aa94c877a1e9b9 Mon Sep 17 00:00:00 2001
+From: Scott Theisen <scott.the.elm@gmail.com>
+Date: Wed, 8 Apr 2026 16:26:40 -0400
+Subject: [PATCH 22/22] Qt6: Revise the fix for OpenGL on Wayland and xcb EGL
+ integration
+
+The original fix, 373bce861d0b00ee972f3882e8386664b37fd93b,
+broke the GUI for the eglfs QPA platform.
+
+Setting the surface type in the MythPainterWindowOpenGL
+constructor before creating the QWindow, which both winId()
+and setVisible(true) would do, is simpler and avoids the
+delay caused by destroying and creating a new surface.
+
+References:
+https://github.com/MythTV/mythtv/issues/754
+https://github.com/MythTV/mythtv/issues/1099
+https://github.com/MythTV/mythtv/issues/1334
+https://github.com/MythTV/mythtv/pull/1341
+(cherry picked from commit 7fb14ca0d296ef54d566efed621a364cf52b2364)
+---
+ .../opengl/mythpainterwindowopengl.cpp        | 14 +++++++++++--
+ .../libmythui/opengl/mythrenderopengl.cpp     | 20 -------------------
+ 2 files changed, 12 insertions(+), 22 deletions(-)
+
+diff --git a/mythtv/libs/libmythui/opengl/mythpainterwindowopengl.cpp b/mythtv/libs/libmythui/opengl/mythpainterwindowopengl.cpp
+index 2334cf1c653..4cd99f7b5dc 100644
+--- a/mythtv/libs/libmythui/opengl/mythpainterwindowopengl.cpp
++++ b/mythtv/libs/libmythui/opengl/mythpainterwindowopengl.cpp
+@@ -1,7 +1,10 @@
+-// MythTV
++#include "mythpainterwindowopengl.h"
++
++#include <QGuiApplication>
++#include <QWindow>
++
+ #include "libmythbase/mythlogging.h"
+ #include "mythmainwindow.h"
+-#include "opengl/mythpainterwindowopengl.h"
+ 
+ #define LOC QString("GLPaintWin: ")
+ 
+@@ -12,6 +15,13 @@ MythPainterWindowOpenGL::MythPainterWindowOpenGL(MythMainWindow *MainWin)
+     setAttribute(Qt::WA_NoSystemBackground);
+     setAttribute(Qt::WA_NativeWindow);
+     setAttribute(Qt::WA_DontCreateNativeAncestors);
++    // The eglfs QPA platform works without setting the surface type and
++    // can only have one OpenGLSurface, which must be the top level widget
++    // (which for us is currently the MythMainWindow).
++    if (QGuiApplication::platformName() != "eglfs" && windowHandle() != nullptr)
++    {
++        windowHandle()->setSurfaceType(QWindow::OpenGLSurface);
++    }
+     winId();
+ #ifdef Q_OS_MACOS
+      // must be visible before OpenGL initialisation on OSX
+diff --git a/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp b/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp
+index f4f709bfe8c..12a61f6d799 100644
+--- a/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp
++++ b/mythtv/libs/libmythui/opengl/mythrenderopengl.cpp
+@@ -24,11 +24,6 @@
+ 
+ #define LOC QString("OpenGL: ")
+ 
+-#ifdef Q_OS_ANDROID
+-#include <android/log.h>
+-#include <QWindow>
+-#endif
+-
+ static constexpr GLuint VERTEX_INDEX  { 0 };
+ static constexpr GLuint COLOR_INDEX   { 1 };
+ static constexpr GLuint TEXTURE_INDEX { 2 };
+@@ -96,7 +91,6 @@ MythRenderOpenGL* MythRenderOpenGL::Create(QWidget *Widget)
+     bool opengles = !qEnvironmentVariableIsEmpty("MYTHTV_OPENGL_ES");
+     bool core     = !qEnvironmentVariableIsEmpty("MYTHTV_OPENGL_CORE");
+     QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+-    format.setRenderableType(QSurfaceFormat::OpenGL);
+     if (core)
+     {
+         format.setProfile(QSurfaceFormat::CoreProfile);
+@@ -118,7 +112,6 @@ MythRenderOpenGL* MythRenderOpenGL::Create(QWidget *Widget)
+     if (VERBOSE_LEVEL_CHECK(VB_GPU, LOG_INFO))
+         format.setOption(QSurfaceFormat::DebugContext);
+ 
+-    QSurfaceFormat::setDefaultFormat(format);
+     return new MythRenderOpenGL(format, Widget);
+ }
+ 
+@@ -544,19 +537,6 @@ void MythRenderOpenGL::SetWidget(QWidget *Widget)
+         return;
+     }
+ 
+-#if defined(Q_OS_ANDROID) || (QT_VERSION > QT_VERSION_CHECK(6,3,0))
+-    // Ensure surface type is always OpenGL
+-    m_window->setSurfaceType(QWindow::OpenGLSurface);
+-    m_window->destroy();
+-    m_window->create();
+-    if (native && native->windowHandle() != m_window)
+-    {
+-        native->windowHandle()->setSurfaceType(QWindow::OpenGLSurface);
+-        native->windowHandle()->destroy();
+-        native->windowHandle()->create();
+-    }
+-#endif
+-
+ #ifdef CONFIG_QTWEBENGINE
+     auto * globalcontext = QOpenGLContext::globalShareContext();
+     if (globalcontext)

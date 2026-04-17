@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v36.0-12-g5c144a2522
+%global vers_string v36.0-22-g0fb9e4f315
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20260304
+%global git_date 20260410
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        36.0
-Release:        3%{rel_string}%{?dist}
+Release:        4%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -461,10 +461,6 @@ Requires:  lame
 Requires:  perl(XML::Simple)
 Requires:  mythtv-common%{?_isa}       = %{version}-%{release}
 Requires:  mythtv-base-themes%{?_isa}  = %{version}-%{release}
-
-# RHBZ 1838780 - mariadb lacks mysql provides on el8
-Requires:       (mysql%{?_isa} >= 5 or mariadb%{?_isa})
-
 Requires:  %{py_prefix}-MythTV       = %{version}-%{release}
 Recommends: libaacs%{?_isa}
 Requires:  google-droid-sans-mono-fonts
@@ -1267,6 +1263,10 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Thu Apr 16 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-4.22.20260410git0fb9e4f315
+- update to latest fixes/36 possible fix for RFBZ#7433
+- remove sql requires for frontend RFBZ#7436
+
 * Sat Apr 04 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-3.12.20260304git5c144a2522
 - apply workaround for qt6 and wayland compatibility discussed in mythtv issue 1334
 - modernize gnome desktop files
