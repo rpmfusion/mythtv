@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        36.0
-Release:        4%{rel_string}%{?dist}
+Release:        5%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1263,6 +1263,9 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Mon Apr 20 2026 Leigh Scott <leigh123linux@gmail.com> - 36.0-5.22.20260410git0fb9e4f315
+- Rebuild for new x265
+
 * Thu Apr 16 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-4.22.20260410git0fb9e4f315
 - update to latest fixes/36 possible fix for RFBZ#7433
 - remove sql requires for frontend RFBZ#7436
