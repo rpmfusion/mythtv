@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v36.0-22-g0fb9e4f315
+%global vers_string v36.0-25-gd75e183a35
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20260410
+%global git_date 20260522
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        36.0
-Release:        5%{rel_string}%{?dist}
+Release:        6%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1263,6 +1263,9 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Tue May 26 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-6.25.20260410gitd75e183a35
+- update to latest fixes/36
+
 * Mon Apr 20 2026 Leigh Scott <leigh123linux@gmail.com> - 36.0-5.22.20260410git0fb9e4f315
 - Rebuild for new x265
 
