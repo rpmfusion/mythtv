@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        36.0
-Release:        6%{rel_string}%{?dist}
+Release:        7%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1263,6 +1263,9 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Thu Jun 11 2026 Nicolas Chauvet <kwizart@gmail.com> - 36.0-7.25.20260522gitd75e183a35
+- rebuilt for python-3.15
+
 * Tue May 26 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-6.25.20260410gitd75e183a35
 - update to latest fixes/36
 
