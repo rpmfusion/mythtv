@@ -1,7 +1,7 @@
 From 0bcc85b5906f0bcdd2af0af28b320e24d9e3a65f Mon Sep 17 00:00:00 2001
 From: Steve Erlenborn <1751095+SteveErl@users.noreply.github.com>
 Date: Tue, 27 Jan 2026 22:17:34 -0600
-Subject: [PATCH 01/25] Restrict No window! error log to frontend
+Subject: [PATCH 01/27] Restrict No window! error log to frontend
 
 MythVideoProfile::InitStatics() gets called for several
 applications, including mythfrontend, mythtranscode,
@@ -40,7 +40,7 @@ index b72dcf88cf9..54074617899 100644
 From a1e5ec2f256feb938a15b1944695876e479f54b4 Mon Sep 17 00:00:00 2001
 From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
 Date: Thu, 12 Feb 2026 21:05:12 +0000
-Subject: [PATCH 02/25] Translations: Update mythfrontend translation source
+Subject: [PATCH 02/27] Translations: Update mythfrontend translation source
  file (Polish)
 
 Signed-off-by: Nick Morrott <knowledgejunkie@gmail.com>
@@ -2373,7 +2373,7 @@ index 34f2f8276d9..e75c66321ae 100644
 From 662be785a833bb78c697d73f3f5f3bde277ab744 Mon Sep 17 00:00:00 2001
 From: Nick Morrott <knowledgejunkie@gmail.com>
 Date: Thu, 12 Feb 2026 21:09:17 +0000
-Subject: [PATCH 03/25] Translations: Update mythfrontend translation binary
+Subject: [PATCH 03/27] Translations: Update mythfrontend translation binary
  files
 
 (cherry picked from commit 6c5753df85fc37ea63135d553b61353c27f01cc3)
@@ -3576,7 +3576,7 @@ X8eV-kE}Bb3Zf!2IMBhu|(y#vq7;)IK
 From 45fce7035279533d7fa03f45f311ee72010eb502 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Mon, 9 Feb 2026 21:38:13 +0100
-Subject: [PATCH 04/25] Remove priority setting in mythpreviewgen.cpp
+Subject: [PATCH 04/27] Remove priority setting in mythpreviewgen.cpp
 
 If needed, the priority should be set from where the mythpreviewgen
 is started; it should not be hard-coded in the application itself.
@@ -3627,7 +3627,7 @@ index a13b2f52f91..6261d9e6665 100644
 From 0987a092580121708077ada8aeeab713d7addebf Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sat, 14 Feb 2026 21:45:52 +0100
-Subject: [PATCH 05/25] Parse EXTINF IPTV channel name
+Subject: [PATCH 05/27] Parse EXTINF IPTV channel name
 
 Change parsing of the IPTV channel name in an EXTINF record.
 When there is no "tvg-name" field use then the part of the
@@ -3659,7 +3659,7 @@ index b3a6b8a4cd0..b214b09f465 100644
 From b5d8ffb8fefda1a2b97975db0c34607b76a11c39 Mon Sep 17 00:00:00 2001
 From: Steve Erlenborn <1751095+SteveErl@users.noreply.github.com>
 Date: Thu, 12 Feb 2026 23:18:58 -0600
-Subject: [PATCH 06/25] Properly set initial playback volume for PCM Mixer
+Subject: [PATCH 06/27] Properly set initial playback volume for PCM Mixer
 
 For PulseAudio, set the initial playback volume
 to PCMMixerVolume when MixerControl is set to PCM.
@@ -3696,7 +3696,7 @@ index e1c70f19fbc..b168645d0c5 100644
 From f3598325d42d552041f66b954225215f7b3a702b Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Sat, 14 Feb 2026 13:24:09 -0500
-Subject: [PATCH 07/25] tidy: Fix uninitialized variable warning.
+Subject: [PATCH 07/27] tidy: Fix uninitialized variable warning.
 
 Give the volume the same default value as is passed to GetSetting().
 
@@ -3722,7 +3722,7 @@ index b168645d0c5..73436ef6f2e 100644
 From b58edb5e890a86019b30f3d4d52ca4ab26fa2028 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sun, 8 Feb 2026 15:15:47 +0100
-Subject: [PATCH 08/25] Skip low priority PIDs for SatIP
+Subject: [PATCH 08/27] Skip low priority PIDs for SatIP
 
 Create a PID list without the low priority PIDs. This does leave
 all the PIDs that are needed to receive the requested channel.
@@ -3791,7 +3791,7 @@ index 1b91c57c975..fd529a6a93b 100644
 From 12f51d7b0727871de8f8ffbdde2095b3a8c7f7ca Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Mon, 2 Mar 2026 21:48:16 +0100
-Subject: [PATCH 09/25] Revert "Skip low priority PIDs for SatIP"
+Subject: [PATCH 09/27] Revert "Skip low priority PIDs for SatIP"
 
 This reverts commit b58edb5e890a86019b30f3d4d52ca4ab26fa2028.
 
@@ -3843,7 +3843,7 @@ index fd529a6a93b..1b91c57c975 100644
 From dd1a9b5ffb19fe056b7592dd639219fb8ae36240 Mon Sep 17 00:00:00 2001
 From: Roland Ernst <rcrernst@gmail.com>
 Date: Sun, 1 Mar 2026 22:21:04 +0100
-Subject: [PATCH 10/25] Remove German translation literal linefeed (`\n`) in
+Subject: [PATCH 10/27] Remove German translation literal linefeed (`\n`) in
  text
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -4328,7 +4328,7 @@ index d28df58753f..17ea76b6ef5 100644
 From c014a325bedba27451eb8da83f61f6856e256f92 Mon Sep 17 00:00:00 2001
 From: Nick Morrott <knowledgejunkie@gmail.com>
 Date: Thu, 5 Mar 2026 01:44:21 +0000
-Subject: [PATCH 11/25] Translations: Refresh mythfrontend translation binary
+Subject: [PATCH 11/27] Translations: Refresh mythfrontend translation binary
  file [de]
 
 ---
@@ -5896,7 +5896,7 @@ L`ru}MH1B@^me4H~
 From 5c144a2522cb72c300a708d79f0613b7dbd63299 Mon Sep 17 00:00:00 2001
 From: Nick Morrott <knowledgejunkie@gmail.com>
 Date: Thu, 5 Mar 2026 01:45:23 +0000
-Subject: [PATCH 12/25] Translations: Refresh mythplugins translation binary
+Subject: [PATCH 12/27] Translations: Refresh mythplugins translation binary
  files [de]
 
 ---
@@ -6007,7 +6007,7 @@ WMz75>%G(?`O!8;X+xr8jME?O=Q>nlJ
 From ababe58b73dc5f506ac42bed05f2bc45e80f87d1 Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Tue, 3 Mar 2026 21:05:24 +0100
-Subject: [PATCH 13/25] Skip low priority PIDs for SatIP -- v2
+Subject: [PATCH 13/27] Skip low priority PIDs for SatIP -- v2
 
 Create a PID list without the low priority PIDs. This does leave
 all the PIDs that are needed to receive the requested channel.
@@ -6131,7 +6131,7 @@ index 1b91c57c975..810f265e860 100644
 From 1b2cba948306d2899030e6319fb215c89b67ada4 Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Mon, 6 Apr 2026 00:59:05 -0400
-Subject: [PATCH 14/25] Fix parsing of ATSC Multiple String Structures.
+Subject: [PATCH 14/27] Fix parsing of ATSC Multiple String Structures.
 
 The code to parse mode 3F (straight UTF-16 characters) didn't properly
 create a value between 0 and 0xFFFF, but had additional high bits set.
@@ -6314,7 +6314,7 @@ index bd95f1ba118..50512d5aa73 100644
 From cd2c7cd21c67193bcb065e61f9ee2ff199cbb897 Mon Sep 17 00:00:00 2001
 From: Ian Campbell <ijc@hellion.org.uk>
 Date: Sat, 28 Feb 2026 09:46:38 +0000
-Subject: [PATCH 15/25] Use devicePixelRatio consistently,
+Subject: [PATCH 15/27] Use devicePixelRatio consistently,
 
 ... rather than a mix of pixel ratio and DPI from two different sources.
 
@@ -6436,7 +6436,7 @@ index e2109328d00..6f49b655079 100644
 From d9f5a98858788c48df1e0b3156cc56b3771839fb Mon Sep 17 00:00:00 2001
 From: Ian Campbell <ijc@hellion.org.uk>
 Date: Wed, 11 Mar 2026 18:18:43 +0000
-Subject: [PATCH 16/25] Refactor signals relating to the screen changing
+Subject: [PATCH 16/27] Refactor signals relating to the screen changing
 
 There are several (`ScreenChanged`, `PhysicalDPIChanged`) taking arguments
 related to their naming but the recipients don't actually care about the
@@ -6604,7 +6604,7 @@ index 6f49b655079..dbb3236ad41 100644
 From d1e2bb930e5adaae6a7b8b0252a6c5301942e385 Mon Sep 17 00:00:00 2001
 From: Ian Campbell <ijc@hellion.org.uk>
 Date: Sun, 15 Mar 2026 08:40:47 +0000
-Subject: [PATCH 17/25] Use `QWindow::devicePixelRatio()` when possible
+Subject: [PATCH 17/27] Use `QWindow::devicePixelRatio()` when possible
 
 From the [Qt6 docs][]:
 
@@ -6671,7 +6671,7 @@ index a0c49f31424..a3cfb0e0cc8 100644
 From 756930d702565e3b2b8bc75a8fd96b35091852bf Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Wed, 8 Apr 2026 12:55:03 -0400
-Subject: [PATCH 18/25] Update cmake for Qt6.10 changes to private components.
+Subject: [PATCH 18/27] Update cmake for Qt6.10 changes to private components.
 
 Prior to Qt6.10, checking for the qt "Gui" component would properly
 set both the "Gui" and the "GuiPrivate" targets.  Starting in 6.10,
@@ -6729,7 +6729,7 @@ index 9cb9e82ebc2..7fe747e35db 100644
 From eda2abc46cc4e523bb1ff42ab19f4d09eb4e0f8f Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Tue, 7 Apr 2026 16:23:38 -0400
-Subject: [PATCH 19/25] Qt6: Fix abort from QChar in LIRC code
+Subject: [PATCH 19/27] Qt6: Fix abort from QChar in LIRC code
 
 The values of Qt::Key <= 0xFFFF correspond to Unicode
 code points. The Qt 6 QChar constructor aborts on any
@@ -6760,7 +6760,7 @@ index 7b314f78624..50b568a2f8d 100644
 From b8e0499f8624e701b7e09cebce2612fbb55467ff Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Wed, 8 Apr 2026 16:22:48 +0200
-Subject: [PATCH 20/25] Include QtSystemDetection for Qt version >= 6.5.0
+Subject: [PATCH 20/27] Include QtSystemDetection for Qt version >= 6.5.0
 
 Change the include condition from Qt 6.0.0 to Qt 6.5.0
 The include file QtSystemDetection, and many more, are split off
@@ -7833,7 +7833,7 @@ index a6952fbd475..a4081e3501c 100644
 From e07cdacbf960351ad8342db44217a3d5eaf92d2a Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Sun, 5 Apr 2026 20:57:17 -0400
-Subject: [PATCH 21/25] Qt6: Fix OpenGL on Wayland and xcb EGL integration
+Subject: [PATCH 21/27] Qt6: Fix OpenGL on Wayland and xcb EGL integration
 
 On Wayland, it previously deadlocked in QWaylandGLContext::makeCurrent()
 when MythRenderOpenGL::makeCurrent() is called in MythRenderOpenGL::Init().
@@ -7900,7 +7900,7 @@ index 0b023f69291..f4f709bfe8c 100644
 From 0fb9e4f3159594893fc8d93a76aa94c877a1e9b9 Mon Sep 17 00:00:00 2001
 From: Scott Theisen <scott.the.elm@gmail.com>
 Date: Wed, 8 Apr 2026 16:26:40 -0400
-Subject: [PATCH 22/25] Qt6: Revise the fix for OpenGL on Wayland and xcb EGL
+Subject: [PATCH 22/27] Qt6: Revise the fix for OpenGL on Wayland and xcb EGL
  integration
 
 The original fix, 373bce861d0b00ee972f3882e8386664b37fd93b,
@@ -8009,7 +8009,7 @@ index f4f709bfe8c..12a61f6d799 100644
 From 4a9097b492c7ced258657fd7de980dce8b72b80e Mon Sep 17 00:00:00 2001
 From: Klaas de Waal <klaas@kldo.nl>
 Date: Sun, 12 Apr 2026 22:12:28 +0200
-Subject: [PATCH 23/25] Subtitles: Fix segfault by making loop "as_const"
+Subject: [PATCH 23/27] Subtitles: Fix segfault by making loop "as_const"
 
 Fix segfault in presenting subtitles by modernizing a loop construct
 and using "std:as_const". This prevents the list being modified
@@ -8042,7 +8042,7 @@ index 6b955533f50..71c21c122d3 100644
 From eedec9ebb75e28590c16c7d71fb2f992e16abd1a Mon Sep 17 00:00:00 2001
 From: David Hampton <mythtv@love2code.net>
 Date: Thu, 23 Apr 2026 10:25:34 -0400
-Subject: [PATCH 24/25] Fix parsing of UPnP ContentDirectory Browse requests.
+Subject: [PATCH 24/27] Fix parsing of UPnP ContentDirectory Browse requests.
 
 The parsing happens correctly, but the test of the result is inverted.
 This error appeared in 29d3a7ab6e which added code to track changes in
@@ -8072,7 +8072,7 @@ index 0dfc9069424..b0238975c17 100644
 From d75e183a35d0ad3791b3002e727f269a1a5c89cd Mon Sep 17 00:00:00 2001
 From: jhoyt4 <john.hoyt@gmail.com>
 Date: Fri, 22 May 2026 09:42:41 -0400
-Subject: [PATCH 25/25] macOS: address issue where maridb server requires ssl
+Subject: [PATCH 25/27] macOS: address issue where maridb server requires ssl
  connection
 
   resolves an issue reported in the forums where frontend will not
@@ -8099,3 +8099,191 @@ index 951cbc1df78..0f325e77792 100755
 -./@APP_EXE_NAME@ $@
 \ No newline at end of file
 +./@APP_EXE_NAME@ $@
+
+From a833aecd847ab9aa3d64c690ac2906273d9983fc Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Mon, 8 Jun 2026 17:36:06 -0400
+Subject: [PATCH 26/27] Fix test for whether or not a file might contain
+ subtitles.
+
+The IsSubtitlePossible test should return true if the file extension
+isn't in a list of files know not to have subtitles.
+---
+ mythtv/libs/libmythtv/io/mythfilebuffer.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mythtv/libs/libmythtv/io/mythfilebuffer.cpp b/mythtv/libs/libmythtv/io/mythfilebuffer.cpp
+index 2c660a53a98..f25717b1c77 100644
+--- a/mythtv/libs/libmythtv/io/mythfilebuffer.cpp
++++ b/mythtv/libs/libmythtv/io/mythfilebuffer.cpp
+@@ -131,7 +131,7 @@ static bool IsSubtitlePossible(const QString &Extension)
+     auto it = std::find_if(kSubExtNoCheck.cbegin(), kSubExtNoCheck.cend(),
+                            [Extension] (const QString& ext) -> bool
+                                {return ext.contains(Extension);});
+-    return (it != nullptr);
++    return (it == kSubExtNoCheck.cend());
+ }
+ 
+ static QString LocalSubtitleFilename(QFileInfo &FileInfo)
+
+From 7153bb6e34c973f7d19e44eb2cbead81d4236469 Mon Sep 17 00:00:00 2001
+From: David Hampton <mythtv@love2code.net>
+Date: Wed, 1 Jul 2026 19:19:54 -0400
+Subject: [PATCH 27/27] Add support for ECDSA (and other) TLS certificates
+
+(cherry picked from commit f63ab25f4b7da8ac22eaab88bdfa94e3809c1cbc)
+---
+ mythtv/libs/libmythbase/http/mythhttps.cpp | 44 +++++++++++-----------
+ mythtv/libs/libmythtv/mheg/netstream.cpp   |  6 ++-
+ mythtv/libs/libmythupnp/httpserver.cpp     | 36 +++++++++---------
+ 3 files changed, 43 insertions(+), 43 deletions(-)
+
+diff --git a/mythtv/libs/libmythbase/http/mythhttps.cpp b/mythtv/libs/libmythbase/http/mythhttps.cpp
+index 7b9ba125446..b54c9673e74 100644
+--- a/mythtv/libs/libmythbase/http/mythhttps.cpp
++++ b/mythtv/libs/libmythbase/http/mythhttps.cpp
+@@ -46,28 +46,6 @@ bool MythHTTPS::InitSSLServer(QSslConfiguration& Config)
+         configdir.chop(1);
+     configdir.append(QStringLiteral("/certificates/"));
+ 
+-    auto hostKeyPath = gCoreContext->GetSetting("hostSSLKey", "");
+-    if (hostKeyPath.isEmpty())
+-        hostKeyPath = configdir + "key.pem";
+-    LOG(VB_HTTP, LOG_DEBUG, LOC + "key " + hostKeyPath);
+-
+-    QFile hostKeyFile(hostKeyPath);
+-    if (!hostKeyFile.exists() || !hostKeyFile.open(QIODevice::ReadOnly))
+-    {
+-        LOG(VB_GENERAL, LOG_WARNING, LOC +
+-            QString("SSL Host key file (%1) does not exist or is not readable").arg(hostKeyPath));
+-        return false;
+-    }
+-
+-    auto rawHostKey = hostKeyFile.readAll();
+-    auto hostKey = QSslKey(rawHostKey, QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey);
+-    if (hostKey.isNull())
+-    {
+-        LOG(VB_GENERAL, LOG_ERR, LOC + QString("Unable to load host key from file (%1)").arg(hostKeyPath));
+-        return false;
+-    }
+-    Config.setPrivateKey(hostKey);
+-
+     auto hostCertPath = gCoreContext->GetSetting("hostSSLCertificate", "");
+     if (hostCertPath.isEmpty())
+         hostCertPath = configdir + "cert.pem";
+@@ -96,6 +74,28 @@ bool MythHTTPS::InitSSLServer(QSslConfiguration& Config)
+ 
+     Config.setLocalCertificate(hostCert);
+ 
++    auto hostKeyPath = gCoreContext->GetSetting("hostSSLKey", "");
++    if (hostKeyPath.isEmpty())
++        hostKeyPath = configdir + "key.pem";
++    LOG(VB_HTTP, LOG_DEBUG, LOC + "key " + hostKeyPath);
++
++    QFile hostKeyFile(hostKeyPath);
++    if (!hostKeyFile.exists() || !hostKeyFile.open(QIODevice::ReadOnly))
++    {
++        LOG(VB_GENERAL, LOG_WARNING, LOC +
++            QString("SSL Host key file (%1) does not exist or is not readable").arg(hostKeyPath));
++        return false;
++    }
++
++    auto rawHostKey = hostKeyFile.readAll();
++    auto hostKey = QSslKey(rawHostKey, hostCert.publicKey().algorithm(), QSsl::Pem, QSsl::PrivateKey);
++    if (hostKey.isNull())
++    {
++        LOG(VB_GENERAL, LOG_ERR, LOC + QString("Unable to load host key from file (%1)").arg(hostKeyPath));
++        return false;
++    }
++    Config.setPrivateKey(hostKey);
++
+     auto caCertPath = gCoreContext->GetSetting("caSSLCertificate", "");
+     bool caCertPathDefault {false};
+     if (caCertPath.isEmpty())
+diff --git a/mythtv/libs/libmythtv/mheg/netstream.cpp b/mythtv/libs/libmythtv/mheg/netstream.cpp
+index 73446b04c23..7fdc3cac635 100644
+--- a/mythtv/libs/libmythtv/mheg/netstream.cpp
++++ b/mythtv/libs/libmythtv/mheg/netstream.cpp
+@@ -222,10 +222,11 @@ bool NetStream::Request(const QUrl& url)
+         QString fname = gCoreContext->GetSetting("MhegClientCert", "");
+         if (!fname.isEmpty())
+         {
++            QSslCertificate cert;
+             QFile f1(QFile::exists(fname) ? fname : GetShareDir() + fname);
+             if (f1.open(QIODevice::ReadOnly))
+             {
+-                QSslCertificate cert(&f1, QSsl::Pem);
++                cert = QSslCertificate(&f1, QSsl::Pem);
+                 if (!cert.isNull())
+                     ssl.setLocalCertificate(cert);
+                 else
+@@ -246,7 +247,8 @@ bool NetStream::Request(const QUrl& url)
+                 QFile f2(QFile::exists(fname) ? fname : GetShareDir() + fname);
+                 if (f2.open(QIODevice::ReadOnly))
+                 {
+-                    QSslKey key(&f2, QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey,
++                    auto keyAlgo = cert.isNull() ? QSsl::Rsa : cert.publicKey().algorithm();
++                    QSslKey key(&f2, keyAlgo, QSsl::Pem, QSsl::PrivateKey,
+                         gCoreContext->GetSetting("MhegClientKeyPass", "").toLatin1());
+                     if (!key.isNull())
+                         ssl.setPrivateKey(key);
+diff --git a/mythtv/libs/libmythupnp/httpserver.cpp b/mythtv/libs/libmythupnp/httpserver.cpp
+index 9c27a1ac3a3..13e5d1e5a98 100644
+--- a/mythtv/libs/libmythupnp/httpserver.cpp
++++ b/mythtv/libs/libmythupnp/httpserver.cpp
+@@ -199,31 +199,12 @@ void HttpServer::LoadSSLConfig()
+         secureCiphers.append(*it);
+     }
+     m_sslConfig.setCiphers(secureCiphers);
+-#endif
+ 
+     QString hostKeyPath = gCoreContext->GetSetting("hostSSLKey", "");
+ 
+     if (hostKeyPath.isEmpty()) // No key, assume no SSL
+         return;
+ 
+-    QFile hostKeyFile(hostKeyPath);
+-    if (!hostKeyFile.exists() || !hostKeyFile.open(QIODevice::ReadOnly))
+-    {
+-        LOG(VB_GENERAL, LOG_ERR, QString("HttpServer: SSL Host key file (%1) does not exist or is not readable").arg(hostKeyPath));
+-        return;
+-    }
+-
+-#ifndef QT_NO_OPENSSL
+-    QByteArray rawHostKey = hostKeyFile.readAll();
+-    QSslKey hostKey = QSslKey(rawHostKey, QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey);
+-    if (!hostKey.isNull())
+-        m_sslConfig.setPrivateKey(hostKey);
+-    else
+-    {
+-        LOG(VB_GENERAL, LOG_ERR, QString("HttpServer: Unable to load host key from file (%1)").arg(hostKeyPath));
+-        return;
+-    }
+-
+     QString hostCertPath = gCoreContext->GetSetting("hostSSLCertificate", "");
+     QSslCertificate hostCert;
+     QList<QSslCertificate> certList = QSslCertificate::fromPath(hostCertPath);
+@@ -252,6 +233,23 @@ void HttpServer::LoadSSLConfig()
+         return;
+     }
+ 
++    QFile hostKeyFile(hostKeyPath);
++    if (!hostKeyFile.exists() || !hostKeyFile.open(QIODevice::ReadOnly))
++    {
++        LOG(VB_GENERAL, LOG_ERR, QString("HttpServer: SSL Host key file (%1) does not exist or is not readable").arg(hostKeyPath));
++        return;
++    }
++
++    QByteArray rawHostKey = hostKeyFile.readAll();
++    QSslKey hostKey = QSslKey(rawHostKey, hostCert.publicKey().algorithm(), QSsl::Pem, QSsl::PrivateKey);
++    if (!hostKey.isNull())
++        m_sslConfig.setPrivateKey(hostKey);
++    else
++    {
++        LOG(VB_GENERAL, LOG_ERR, QString("HttpServer: Unable to load host key from file (%1)").arg(hostKeyPath));
++        return;
++    }
++
+     QString caCertPath = gCoreContext->GetSetting("caSSLCertificate", "");
+     QList< QSslCertificate > CACertList = QSslCertificate::fromPath(caCertPath);
+ 

@@ -1,9 +1,9 @@
 # The full MythTV Version string is computed from the output of git describe.
-%global vers_string v36.0-25-gd75e183a35
+%global vers_string v36.0-27-g7153bb6e34
 
 # The git date of last commit on mythtv repo
 # git_date=$(git log -1 --format=%cd --date=format:"%Y%m%d")
-%global git_date 20260522
+%global git_date 20260701
 
 # Specfile for building MythTV and MythPlugins RPMs from a git checkout.
 #
@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        36.0
-Release:        7%{rel_string}%{?dist}
+Release:        8%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1263,6 +1263,10 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Sat Jul 04 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-8.27.20260410git7153bb6e34
+- update to latest fixes/36
+- rebuild for mariadb-connector-c
+
 * Thu Jun 11 2026 Nicolas Chauvet <kwizart@gmail.com> - 36.0-7.25.20260522gitd75e183a35
 - rebuilt for python-3.15
 
