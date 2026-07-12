@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        36.0
-Release:        8%{rel_string}%{?dist}
+Release:        9%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -176,6 +176,8 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qtwebengine-devel
 BuildRequires:  freetype-devel >= 2
+#REMINDER-TO-SELF: Once Conc-821 is resolved and a new version of mariadb connector is released, put a min version check here
+#https://jira.mariadb.org/browse/CONC-821
 BuildRequires:  mariadb-connector-c-devel
 BuildRequires:  libcec-devel >= 1.7
 BuildRequires:  libvpx-devel
@@ -1263,6 +1265,9 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Sun Jul 12 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-9.27.20260410git7153bb6e34
+- rebuild for mariadb-connector-c
+
 * Sat Jul 04 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-8.27.20260410git7153bb6e34
 - update to latest fixes/36
 - rebuild for mariadb-connector-c
