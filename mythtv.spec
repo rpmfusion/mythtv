@@ -85,7 +85,7 @@
 #
 Name:           mythtv
 Version:        36.0
-Release:        9%{rel_string}%{?dist}
+Release:        10%{rel_string}%{?dist}
 Summary:        A digital video recorder (DVR) application
 
 # The primary license is GPLv2+, but bits are borrowed from a number of
@@ -1265,6 +1265,9 @@ install -pm 0644 %{SOURCE116} %{buildroot}%{fw_services}/
 ################################################################################
 
 %changelog
+* Fri Jul 31 2026 Leigh Scott <leigh123linux@gmail.com> - 36.0-10.27.20260701git7153bb6e34
+- Rebuild for new x265
+
 * Sun Jul 12 2026 Andrew Bauer <zonexpertconsulting@outlook.com> - 36.0-9.27.20260410git7153bb6e34
 - rebuild for mariadb-connector-c
 
